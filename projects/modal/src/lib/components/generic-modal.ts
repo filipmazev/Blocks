@@ -49,8 +49,6 @@ export class GenericModalComponent<
     public backdropClickSubject = new Subject<MouseEvent>();
     public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
 
-    public footerTemplate = signal<TemplateRef<any> | null>(null);
-
     private _isOpen: boolean = true;
     public get isOpen(): boolean {
         return this._isOpen;
@@ -67,6 +65,8 @@ export class GenericModalComponent<
 
     protected hasBanner: boolean = false;
     protected hasDefaultContentWrapperClass: boolean = false;
+
+    protected footerTemplate = signal<TemplateRef<any> | null>(null);
 
     private isConfirmCloseModalOpen: boolean = false;
     private isSpecialMobileOverflowHandlingEnabled: boolean = false;
@@ -192,7 +192,9 @@ export class GenericModalComponent<
     //#region Public Template Methods
 
     public setFooterTemplate(template: TemplateRef<any>) {
-        this.footerTemplate.set(template); 
+        Promise.resolve().then(() => {
+            this.footerTemplate.set(template);
+        });
     }
     
     //#endregion

@@ -63,22 +63,33 @@ export class GenericModalService implements IGenericModalService {
 
     public open<D, R, C extends GenericModal<D, R> = GenericModal<D, R>>(component: ComponentType<C>, config?: IGenericModalConfig<D>): GenericModalRef<D, R, C> {
         if (!this.viewContainer || !this.renderer) {
-            throw new Error("ViewContainer and Renderer not set, please set the view container in the constructor of app.module.ts (by calling register), before opening a modal");
+            throw new Error(GenericModalErrors.GENERIC_MODAL_SERVICE_RENDERER_NOT_SET);
         }
 
-        const createInjector = Injector.create({
+        const dataInjector = Injector.create({
             providers: [{ provide: GENERIC_MODAL_DATA, useValue: config?.data }],
             parent: this.injector,
         });
 
+        const wrapperRef = this.viewContainer.createComponent(GenericModalComponent<D, R, C>, {
+            injector: dataInjector,
+        });
+
+        const contentInjector = Injector.create({
+            providers: [
+                { provide: GenericModalComponent, useValue: wrapperRef.instance }
+            ],
+            parent: wrapperRef.injector, 
+        });
+
+        const contentRef = this.viewContainer.createComponent(component, {
+            injector: contentInjector,
+        });
+
         const modal = new GenericModalRef<D, R, C>(
-            this.viewContainer.createComponent(component, {
-                injector: createInjector,
-            }),
+            contentRef,
             component,
-            this.viewContainer.createComponent(GenericModalComponent<D, R, C>, {
-                injector: createInjector,
-            }),
+            wrapperRef,
             this,
             new GenericModalConfig(config),
         );

@@ -1,4 +1,4 @@
-import { ComponentRef, OnDestroy, OnInit } from "@angular/core";
+import { ComponentRef, OnDestroy, OnInit, TemplateRef } from "@angular/core";
 import { Subject, Observable } from "rxjs";
 import { GenericModal } from "../classes/generic-modal";
 import { GenericModalConfig } from "../classes/generic-modal-config";
@@ -15,6 +15,7 @@ import { ModalCloseMode } from "../types/modal.types";
  * @param {Observable<MouseEvent>} backdropClick (required) The observable for the backdrop click event, will be used to listen for backdrop clicks (subscribed to the backdropClickSubject)
  * @param {Function} closeFunction (optional) The outside function to run when the modal closes (received from the config)
  * @param {Function} close (required) The function to run when the modal closes, will return the result of the modal
+ * @param {Function} setFooterTemplate (required) The function to set the footer template of the modal
  */
 export interface IGenericModalComponenet<
     D = any,
@@ -34,4 +35,6 @@ export interface IGenericModalComponenet<
 
     closeFunction?: Function;
     close: (state: ModalCloseMode, result: R | undefined, fromInsideInteraction: boolean, forceClose: boolean) => void;
+
+    setFooterTemplate: (template: TemplateRef<any>) => void;
 }

@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output } from '@angular/core';
 import { Subject, take } from 'rxjs';
 import { GenericModalConfig } from '../../../classes/generic-modal-config';
@@ -8,7 +8,8 @@ import * as swipeConst from '../../../constants/generic-modal-swipe.constants';
 @Component({
   selector: 'modal-swipeable',
   imports: [
-    NgClass
+    NgClass,
+    NgTemplateOutlet
   ],
   templateUrl: './modal-swipeable.html',
   styleUrl: './modal-swipeable.scss',

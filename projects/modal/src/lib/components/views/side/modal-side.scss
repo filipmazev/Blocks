@@ -1,18 +1,21 @@
 @use 'mixins' as *;
 
 .side-modal-content-wrapper {
-    position: fixed;
+position: fixed;
     top: 0;
     height: 100vh;
-    background: var(--modal_bg, #ffffff);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    z-index: 1050;
-    overflow-y: auto;
-    max-width: 85vw;
-    max-width: 85dvw;
+    height: 100dvh;
+    z-index: 3;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease-in-out;
+    padding: 1rem;
+    gap: 1rem; 
+    box-sizing: border-box;
+    overflow: hidden; 
+
+    &.with-footer {
+        justify-content: space-between;
+    }
 
     &.left {
         left: 0;
@@ -45,11 +48,11 @@
     }
 
     .side-modal-inner-content-container {
-        flex-grow: 1;
+        flex-grow: 1;    
         display: flex;
         flex-direction: column;
-        padding: 1rem;
-        gap: 2rem;
+        gap: 1rem;       
+        min-height: 0;   
     }
 
     @include respond-down(md) {
@@ -58,11 +61,25 @@
     }
 }
 
-.side-modal-content-wrapper {
-    max-height: 89vh;
-    max-height: 89dvh;
-    overflow-y: auto;   
+.side-modal-default-style {
+    background: var(--modal_bg, #ffffff);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 85vw;
+    max-width: 85dvw;
+}
+
+.side-modal-main-content-container {
+    flex-grow: 1;      
+    overflow-y: auto;  
+    min-height: 0; 
+    max-height: none;
 }
 
 .side-modal-footer {
+    flex-shrink: 0;    
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
 }

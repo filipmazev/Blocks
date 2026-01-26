@@ -6,15 +6,16 @@
         @if (hasBanner()) {
         <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
         }
-        <div class="side-modal-content-wrapper">
+        <div class="side-modal-main-content-container">
             <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
         </div>
-        @if (footerTemplate()) {
-        <div class="side-modal-footer">
-            <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
-        </div>
-        }
     </div>
+    
+    @if (footerTemplate()) {
+    <div class="side-modal-footer">
+        <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+    </div>
+    }
 </div>
 } @else {
 <modal-swipeable [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="innerIsOpen" [isAnimated]="isAnimated()"

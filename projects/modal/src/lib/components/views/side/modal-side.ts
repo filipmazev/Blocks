@@ -63,6 +63,8 @@ export class ModalSide<D = unknown> implements IGenericModalView<D> {
       'side-modal-content-wrapper': true,
       'side-modal-default-style': this.hasDefaultContentWrapperClass() || this.hasBanner(),
 
+      'with-footer': this.footerTemplate() !== null,
+
       'left': positionLeft,
       'right': positionRight,
 

@@ -17,4 +17,10 @@
         [style.animationDuration]="isAnimated() ? animationDuration().toString() + 'ms' : '0ms'">
         <ng-content></ng-content>
     </div>
+
+    @if (footerTemplate()) {
+    <div class="swipeable-modal-footer">
+        <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+    </div>
+    }
 </div>

@@ -4,12 +4,18 @@
     <div class="modal-overlay-wrapper">
         <div [ngClass]="modalClasses" (click)="$event.stopPropagation()">
             <div class="centered-modal-inner-content-container"
-                [class]="config() && config()?.style?.wrapperClasses ? config()?.style?.wrapperClasses : ''"
-                [style]="config() && config()?.style?.wrapperStyles ? config()?.style?.wrapperStyles : ''">
-                @if (hasBanner()) {
-                <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
-                }
-                <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+                [class]="config()?.style?.wrapperClasses ?? ''"
+                [style]="config()?.style?.wrapperStyles ?? ''">
+                
+                <div class="centered-modal-top-group">
+                    @if (hasBanner()) {
+                        <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
+                    }
+                    <div class="centered-modal-main-content-container">
+                        <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+                    </div>
+                </div>
+
                 @if (footerTemplate()) {
                 <div class="centered-modal-footer">
                     <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
