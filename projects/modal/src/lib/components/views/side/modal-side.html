@@ -1,0 +1,23 @@
+@if(!isSwipeableModalActive()) {
+<div [ngClass]="modalClasses" (click)="$event.stopPropagation()">
+    <div class="side-modal-inner-content-container"
+        [class]="config() && config()?.style?.wrapperClasses ? config()?.style?.wrapperClasses : ''"
+        [style]="config() && config()?.style?.wrapperStyles ? config()?.style?.wrapperStyles : ''">
+        @if (hasBanner()) {
+        <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
+        }
+        <div class="side-moda-content-wrapper">
+            <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+        </div>
+    </div>
+</div>
+} @else {
+<modal-swipeable [config]="config()" [isOpen]="innerIsOpen" [isAnimated]="isAnimated()"
+    [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
+    <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+</modal-swipeable>
+}
+
+<ng-template #contentTemplate>
+    <ng-content></ng-content>
+</ng-template>

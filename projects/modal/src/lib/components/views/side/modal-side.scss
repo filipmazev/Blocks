@@ -1,0 +1,65 @@
+@use 'mixins' as *;
+
+.side-modal-content-wrapper {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    background: var(--modal_bg, #ffffff);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1050;
+    overflow-y: auto;
+    max-width: 85vw;
+    max-width: 85dvw;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+
+    &.left {
+        left: 0;
+        transform: translateX(-100%);
+    }
+
+    &.right {
+        right: 0;
+        transform: translateX(100%);
+    }
+
+    &.side-modal-animate-in {
+        &.left {
+            transform: translateX(0);
+        }
+
+        &.right {
+            transform: translateX(0);
+        }
+    }
+
+    &.side-modal-animate-out {
+        &.left {
+            transform: translateX(-100%);
+        }
+
+        &.right {
+            transform: translateX(100%);
+        }
+    }
+
+    .side-modal-inner-content-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 2rem;
+    }
+
+    @include respond-down(md) {
+        max-width: 90vw;
+        max-width: 95dvw;
+    }
+}
+
+.side-moda-content-wrapper {
+    max-height: 89vh;
+    max-height: 89dvh;
+    overflow-y: auto;   
+}

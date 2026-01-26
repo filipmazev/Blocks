@@ -1,0 +1,26 @@
+@if(!isSwipeableModalActive()) {
+<div class="modal-overlay" [ngClass]="{'modal-backdrop': config()?.style?.hasBackdrop}" (click)="
+    config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null">
+    <div class="modal-overlay-wrapper">
+        <div [ngClass]="modalClasses" (click)="$event.stopPropagation()">
+            <div class="centered-modal-inner-content-container"
+                [class]="config() && config()?.style?.wrapperClasses ? config()?.style?.wrapperClasses : ''"
+                [style]="config() && config()?.style?.wrapperStyles ? config()?.style?.wrapperStyles : ''">
+                @if (hasBanner()) {
+                <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
+                }
+                <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+} @else {
+<modal-swipeable [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
+    [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
+    <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+</modal-swipeable>
+}
+
+<ng-template #contentTemplate>
+    <ng-content></ng-content>
+</ng-template>

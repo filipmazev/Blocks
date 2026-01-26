@@ -1,0 +1,28 @@
+<div class="modal-top-banner-container">
+    <div class="modal-top-banner-title-container">
+        @if (config() && config()?.bannerIcons && (config() && config()!.bannerIcons.length > 0)) {
+        @for (icon of config()?.bannerIcons; track icon) {
+        <img src="{{ icon }}" class="icon-style custom-svg-icon-color-dark-green" alt="" />
+        }
+        }
+
+        @if (config() && config()?.bannerText && (config() && config()!.bannerText.length > 0)) {
+        <div class="modal-banner-default-style">
+            <div class="generic-modal-banner-text">
+                <div>
+                    {{ config()?.bannerText }}
+                    <b> {{ config()?.bannerTextAnnotatedString }} </b>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    @if (config()?.disableClose !== true && config()?.style?.showCloseButton !== false) {
+    <svg (click)="close.emit('cancel')" aria-label="Close" class="banner-svg-close-button" viewBox="0 0 24 24"
+        fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.4 24L0 21.6L9.6 12L0 2.4L2.4 0L12 9.6L21.6 0L24 2.4L14.4 12L24 21.6L21.6 24L12 14.4L2.4 24Z"
+            fill="#ffffff" />
+    </svg>
+    }
+</div>

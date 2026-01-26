@@ -7,6 +7,14 @@
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
+    "paths": {
+      "modal": [
+        "./dist/modal"
+      ],
+      "common-parts": [
+        "./dist/common-parts"
+      ]
+    },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,

@@ -1,0 +1,84 @@
+.modal-banner-default-style {
+  font: lighter;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+}
+
+.modal-top-banner-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text_primary, #000000);
+  top: 0;
+  min-height: 2rem;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.modal-top-banner-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.banner-svg-close-button {
+  user-select: none;
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: 1.35rem;
+  width: 1.35rem;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: fill;
+
+}
+
+.banner-svg-close-button path {
+  transition: all 0.3s ease-in-out;
+}
+
+.banner-svg-close-button path {
+  fill: var(--text_primary, #000000);
+}
+
+@keyframes banner-display {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: auto;
+  }
+}
+
+@-webkit-keyframes banner-display {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: auto;
+  }
+}
+
+@-moz-keyframes banner-display {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    height: auto;
+  }
+}

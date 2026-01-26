@@ -1,0 +1,30 @@
+@if (config?.style?.hasBackdrop && (isSide || isSwipeableModalActive)) {
+<modal-backdrop [isAnimated]="isAnimated" [isOpen]="isOpen" (click)="onBackdropClick($event)">
+</modal-backdrop>
+}
+
+<ng-container #modalContainer>
+    @switch (true) {
+    @case (isSide) {
+    <modal-side [config]="config" [isOpen]="isOpen" [isAnimated]="isAnimated"
+        [isSwipeableModalActive]="isSwipeableModalActive" [animationDuration]="animationDuration"
+        [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)">
+        <ng-container [ngTemplateOutlet]="contentTemplate">
+        </ng-container>
+    </modal-side>
+    }
+    @case (isCentered) {
+    <modal-centered [config]="config" [isOpen]="isOpen" [isAnimated]="isAnimated"
+        [isSwipeableModalActive]="isSwipeableModalActive" [animationDuration]="animationDuration"
+        [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)"
+        (onBackdropClick)="onBackdropClick($event)">
+        <ng-container [ngTemplateOutlet]="contentTemplate">
+        </ng-container>
+    </modal-centered>
+    }
+    }
+</ng-container>
+
+<ng-template #contentTemplate>
+    <ng-container #dynamicContainer></ng-container>
+</ng-template>
