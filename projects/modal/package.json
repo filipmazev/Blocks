@@ -1,10 +1,10 @@
 {
-  "name": "modal",
-  "version": "0.0.1",
+  "name": "@filip.mazev/modal",
+  "version": "0.0.4",
   "peerDependencies": {
     "@angular/common": "^21.1.1",
     "@angular/core": "^21.1.1",
-    "common-parts": "file:dist/common-parts"
+    "@filip.mazev/common-parts": "^0.0.1"
   },
   "dependencies": {
     "tslib": "^2.3.0"

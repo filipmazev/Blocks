@@ -10,12 +10,17 @@
                 <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
                 }
                 <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+                @if (footerTemplate()) {
+                <div class="centered-modal-footer">
+                    <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+                </div>
+                }
             </div>
         </div>
     </div>
 </div>
 } @else {
-<modal-swipeable [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
+<modal-swipeable [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
     [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
 </modal-swipeable>

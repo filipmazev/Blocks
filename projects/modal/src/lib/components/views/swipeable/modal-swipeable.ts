@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, input, output } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output } from '@angular/core';
 import { Subject, take } from 'rxjs';
 import { GenericModalConfig } from '../../../classes/generic-modal-config';
 import { ModalCloseMode } from '../../../types/modal.types';
@@ -14,6 +14,8 @@ import * as swipeConst from '../../../constants/generic-modal-swipe.constants';
   styleUrl: './modal-swipeable.scss',
 })
 export class ModalSwipeable implements OnInit, OnDestroy {
+  readonly footerTemplate = input.required<TemplateRef<any> | null>();
+  
   readonly config = input.required<GenericModalConfig<any> | undefined>();
   readonly isOpen = input.required<boolean>();
   readonly isAnimated = input.required<boolean>();

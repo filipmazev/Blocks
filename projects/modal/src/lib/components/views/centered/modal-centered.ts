@@ -1,5 +1,5 @@
 import { NgTemplateOutlet, NgClass } from "@angular/common";
-import { Component, input, output, ViewChildren, QueryList } from "@angular/core";
+import { Component, input, output, ViewChildren, QueryList, TemplateRef } from "@angular/core";
 import { GenericModalConfig } from "../../../classes/generic-modal-config";
 import { IGenericModalView } from "../../../interfaces/igeneric-modal-view.interface";
 import { ModalCloseMode } from "../../../types/modal.types";
@@ -18,6 +18,8 @@ import { ModalSwipeable } from "../swipeable/modal-swipeable";
     styleUrl: './modal-centered.scss'
 })
 export class ModalCentered<D = unknown> implements IGenericModalView<D> {
+    readonly footerTemplate = input.required<TemplateRef<any> | null>();
+    
     readonly config = input.required<GenericModalConfig<D> | undefined>();
     readonly isOpen = input.required<boolean>();
     readonly isAnimated = input.required<boolean>();

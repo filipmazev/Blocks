@@ -9,4 +9,8 @@ export enum GenericModalWarnings {
     //#region Confirm close
     CONFIRM_MODAL_NESTING_NOT_SUPPORTED = "Cannot open a confirm modal from within a confirm modal. If you want to allow this behaviour, set bypassSelfCheck to true in the confirmCloseConfig.",
     //#endregion
+
+    //#region Directive usage
+    FOOTER_DIRECTIVE_OUTSIDE_MODAL = "[ModalFooter] Directive used outside of a GenericModalComponent.",
+    //#endregion
 }

@@ -1,5 +1,5 @@
 {
-  "name": "common-parts",
+  "name": "@filip.mazev/common-parts",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^21.1.1",

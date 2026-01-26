@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, inject, ChangeDetectorRef, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef } from "@angular/core";
+import { Component, inject, ChangeDetectorRef, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal } from "@angular/core";
 import { Subject, Observable, takeUntil, fromEvent, filter, take } from "rxjs";
 import { GenericModal } from "../classes/generic-modal";
 import { GenericModalConfig } from "../classes/generic-modal-config";
@@ -13,7 +13,7 @@ import { ModalSide } from "./views/side/modal-side";
 import { ModalSwipeable } from "./views/swipeable/modal-swipeable";
 import { ModalCloseMode } from "../types/modal.types";
 import { IGenericCloseResult } from "../interfaces/igeneric-close-result.interface";
-import { DeviceTypeService, ScrollLockService, WindowDimensions, WindowDimensionsService } from "common-parts";
+import { DeviceTypeService, ScrollLockService, WindowDimensions, WindowDimensionsService } from "@filip.mazev/common-parts";
 import * as animConst from "../constants/generic-modal-animation.constants";
 
 @Component({
@@ -48,6 +48,8 @@ export class GenericModalComponent<
     public closeFunction?: Function;
     public backdropClickSubject = new Subject<MouseEvent>();
     public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
+
+    public footerTemplate = signal<TemplateRef<any> | null>(null);
 
     private _isOpen: boolean = true;
     public get isOpen(): boolean {
@@ -185,6 +187,14 @@ export class GenericModalComponent<
         this.isSide = this.config?.style.position === "left" || this.config?.style.position === "right";
     }
 
+    //#endregion
+
+    //#region Public Template Methods
+
+    public setFooterTemplate(template: TemplateRef<any>) {
+        this.footerTemplate.set(template); 
+    }
+    
     //#endregion
 
     //#region Closing Methods

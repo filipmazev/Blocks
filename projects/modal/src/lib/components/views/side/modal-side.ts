@@ -1,5 +1,5 @@
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { Component, QueryList, ViewChildren, effect, input, output } from '@angular/core';
+import { Component, QueryList, TemplateRef, ViewChildren, effect, input, output } from '@angular/core';
 import { GenericModalConfig } from '../../../classes/generic-modal-config';
 import { IGenericModalView } from '../../../interfaces/igeneric-modal-view.interface';
 import { ModalCloseMode } from '../../../types/modal.types';
@@ -19,6 +19,8 @@ import * as animConst from '../../../constants/generic-modal-animation.constants
   styleUrl: './modal-side.scss',
 })
 export class ModalSide<D = unknown> implements IGenericModalView<D> {
+  readonly footerTemplate = input.required<TemplateRef<any> | null>();
+  
   readonly config = input.required<GenericModalConfig<D> | undefined>();
   readonly isOpen = input.required<boolean>();
 

@@ -18,7 +18,6 @@ export * from './lib/classes/generic-modal-style.config';
 
 export * from './lib/interfaces/igeneric-close-result.interface';
 export * from './lib/interfaces/igeneric-confirm-close.interface';
-export * from './lib/interfaces/igeneric-confirm-modal-data.interface';
 export * from './lib/interfaces/igeneric-modal-component.interface';
 export * from './lib/interfaces/igeneric-modal-config.interface';
 export * from './lib/interfaces/igeneric-modal-ref.interface';
@@ -35,6 +34,8 @@ export * from './lib/constants/generic-modal-text.constants';
 export * from './lib/enums/generic-modal-errors.enum';
 export * from './lib/enums/generic-modal-warnings.enum';
 export * from './lib/enums/generic-modal-state.enum';
+
+export * from './lib/directives/modal-footer.directive';
 
 export * from './lib/tokens/generic-modal-data.token';
 

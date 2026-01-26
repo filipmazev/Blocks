@@ -3,7 +3,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -13,7 +12,7 @@
       ],
       "common-parts": [
         "./dist/common-parts"
-      ]
+      ],
     },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -31,5 +30,5 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
 }
