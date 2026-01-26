@@ -1,6 +1,9 @@
 {
   "name": "@filip.mazev/common-parts",
-  "version": "0.0.2",
+  "version": "0.0.5",
+  "exports": {
+    "./mixins": "./lib/styles/_mixins.scss" 
+  },
   "peerDependencies": {
     "@angular/common": "^21.1.1",
     "@angular/core": "^21.1.1"
