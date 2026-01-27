@@ -1,6 +1,6 @@
 import { Component, inject, Renderer2, signal, ViewContainerRef } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GenericModalService } from 'modal';
+import { GenericModalService } from '../../../modal/src/lib/services/generic-modal.service';
 
 @Component({
   selector: 'app-root',

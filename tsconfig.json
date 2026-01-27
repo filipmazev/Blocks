@@ -11,8 +11,8 @@
       "modal": [
         "./dist/modal"
       ],
-      "common-parts": [
-        "./dist/common-parts"
+      "blocks-core": [
+        "./dist/blocks-core"
       ]
     },
     "noImplicitReturns": true,

@@ -36,23 +36,23 @@
         }
       }
     },
-    "common-parts": {
+    "blocks-core": {
       "projectType": "library",
-      "root": "projects/common-parts",
-      "sourceRoot": "projects/common-parts/src",
+      "root": "projects/blocks-core",
+      "sourceRoot": "projects/blocks-core/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/common-parts/ng-package.json"
+            "project": "projects/blocks-core/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/common-parts/tsconfig.lib.prod.json"
+              "tsConfig": "projects/blocks-core/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/common-parts/tsconfig.lib.json"
+              "tsConfig": "projects/blocks-core/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -60,7 +60,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/common-parts/tsconfig.spec.json",
+            "tsConfig": "projects/blocks-core/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
@@ -88,6 +88,12 @@
             "browser": "projects/playground/src/main.ts",
             "tsConfig": "projects/playground/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/blocks-core/src/lib/styles",
+                "node_modules"
+              ]
+            },
             "polyfills": [
               "zone.js"
             ],
@@ -135,7 +141,10 @@
               "buildTarget": "playground:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 8080
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

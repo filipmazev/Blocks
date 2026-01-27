@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CenteredModal } from './components/centered-modal/centered-modal';
-import { GenericModalService } from 'modal';
+import { GenericModalService } from '../../../../../modal/src/lib/services/generic-modal.service';
 
 @Component({
   selector: 'app-modal',
@@ -22,9 +22,10 @@ export class Modal {
   private openCenteredModal(): void {
     this.modals.open<string, undefined>(CenteredModal, {
       data: "Hello from Modal!",
+      bannerText: 'Centered Modal',
       style: {
-        position: 'left',
-      }
+        position: 'center',
+      },
     });
   }
 }

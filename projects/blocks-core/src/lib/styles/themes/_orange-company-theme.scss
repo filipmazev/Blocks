@@ -1,0 +1,112 @@
+@use '../variables' as *;
+
+$orange-company-light-theme-config: (
+    // General
+    'primary': #FFF7ED,
+    'secondary': #f7f7f7,
+    'alt': #0c0c0c,
+    'accent': #FFB86A,
+    'accent-alt': #FF6900,
+    'accent-tertiary': #CA3500,
+
+    // Text
+    'text-primary': #484848,
+    'text-secondary': #9F2D00,
+    'text-tertiary': #CA3500,
+    'text-accent': #FF8904,
+    'text-accent-alt': #f3f3f3,
+    'text-grayscale': #111111,
+    'menu-item-text': #151515,
+    'text-warn': #FB2C36,
+    'text-confirm': #00C950,
+
+    // UI Elements
+    'bg-menu-item-hover': #FFD6A7,
+    'border': #d5d5d5,
+    'border-grayscale-light': #e1e1e1,
+    'warn': #ffcc54,
+    'error': #FF4C4F,
+    'info': #4da6ff,
+
+    // Buttons
+    'button-primary': #FFA56699,
+    'button-confirm': #00C95070,
+    'button-warn': #FB2C3660,
+    'button-grayscale': #d0d0d0b3,
+
+    // Feedback
+    'snackbar-error': #ffa9aa,
+    'snackbar-success': #a2ff99,
+    'snackbar-warn': #ffdc9b,
+
+    // Scrollbar & Sliders
+    'scroll-bg': #FFEDD4,
+    'scroll-thumb': linear-gradient(278deg, #FFB86A -10.44%, #FF8904 100%),
+    'scroll-thumb-highlighted': linear-gradient(278deg, #FF8904 -10.44%, #CA3500 100%),
+    'slider-track': #f4f4f4,
+    'slider-thumb': #FF6900,
+    'slider-thumb-hover': #FF8900,
+
+    'canvas': #ffffff,
+    'surface': #ffffff,
+    'element': #f7f7f7,
+    'text': #484848,
+    'status-warn': map-get($warning-palette, 500),
+    'status-error': map-get($error-palette, 500),
+    'error-subtle': map-get($error-palette, 50)
+) !default;
+
+$orange-company-dark-theme-config: (
+    // General
+    'primary': #231812,
+    'secondary': #1a1a1a,
+    'alt': #FFF7ED,
+    'accent': #CA3500,
+    'accent-alt': #FF6900,
+    'accent-tertiary': #FF8904,
+
+    // Text
+    'text-primary': #ffffff,
+    'text-secondary': #FFD6A7,
+    'text-tertiary': #FFB86A,
+    'text-accent': #FF8904,
+    'text-accent-alt': #131313,
+    'text-grayscale': #e1e1e1,
+    'menu-item-text': #e7e7e7,
+    'text-warn': #FB2C36,
+    'text-confirm': #00C950,
+
+    // UI Elements
+    'bg-menu-item-hover': #CA3500,
+    'border': #282828,
+    'border-grayscale-light': #3b3b3b39,
+    'warn': #ffcc54,
+    'error': #FF4C4F,
+    'info': #4da6ff,
+
+    // Buttons
+    'button-primary': #FF690099,
+    'button-confirm': #00C95070,
+    'button-warn': #FB2C3660,
+    'button-grayscale': #2e2e2eb1,
+
+    // Feedback
+    'snackbar-error': #8e1416,
+    'snackbar-success': #2e7d32,
+    'snackbar-warn': #b27a1c,
+
+    // Scroll & Sliders
+    'scroll-bg': #712000,
+    'scroll-thumb': linear-gradient(278deg, #CA3500 -10.44%, #FF6900 100%),
+    'scroll-thumb-highlighted': linear-gradient(278deg, #FF6900 -10.44%, #FF8904 100%),
+    'slider-track': #333333,
+    'slider-thumb': #FF8904,
+    'slider-thumb-hover': #FF6900,
+
+    'canvas': #000000,
+    'surface': #0d0d0d,
+    'text': #ffffff,
+    'status-warn': map-get($warning-palette, 400),
+    'status-error': map-get($error-palette, 400),
+    'error-subtle': rgba(239, 68, 68, 0.15)
+) !default;

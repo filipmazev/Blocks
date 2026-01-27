@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { GENERIC_MODAL_DATA, GenericModal } from 'modal';
+import { GenericModal } from '../../../../../../../modal/src/lib/classes/generic-modal';
+import { GENERIC_MODAL_DATA } from '../../../../../../../modal/src/lib/tokens/generic-modal-data.token';
 
 @Component({
   selector: 'app-centered-modal',

@@ -1,6 +1,15 @@
+@use '../../blocks-core' as fm;
+@use '../../modal' as modal;
+@use "./themes/custom-brand-theme.scss" as *;
 
 :root {
-    --modal_bg: #ffffff;
-    --modal_text_primary: #000000;
-    --swipe_line_color: #444444;
+  @include fm.core-theme($custom-brand-theme-light);
+  @include modal.modal-theme((
+    'modal-bg': #f4fff7,
+  ));
+}
+
+[data-theme="dark"] {
+  @include fm.core-theme($custom-brand-theme-dark);
+  @include modal.modal-theme(());
 }

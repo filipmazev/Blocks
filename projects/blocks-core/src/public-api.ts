@@ -1,5 +1,5 @@
 /*
- * Public API Surface of common-parts
+ * Public API Surface of blocks-core
  */
 
 export * from './lib/services/device-type.service';
@@ -7,6 +7,7 @@ export * from './lib/services/scroll-lock.service';
 export * from './lib/services/text-formatting.service';
 export * from './lib/services/ui-actions.service';
 export * from './lib/services/window-dimension.service';
+export * from './lib/services/theming.service';
 
 export * from './lib/constants/ui-services-common.consants';
 

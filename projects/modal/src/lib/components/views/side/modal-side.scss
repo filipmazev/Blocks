@@ -1,4 +1,4 @@
-@use 'mixins' as *;
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 
 .side-modal-content-wrapper {
 position: fixed;
@@ -62,7 +62,7 @@ position: fixed;
 }
 
 .side-modal-default-style {
-    background: var(--modal_bg, #ffffff);
+    background: var(--modal-bg, #ffffff);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     max-width: 85vw;
     max-width: 85dvw;

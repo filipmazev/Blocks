@@ -4,10 +4,14 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "styleIncludePaths": [
-      "../common-parts/src/lib/styles"
+      "../../node_modules"
     ]
   },
   "assets": [
-    "src/assets"
+    {
+      "input": "src/lib/styles",
+      "glob": "**/*.scss",
+      "output": "lib/styles"
+    }
   ]
 }

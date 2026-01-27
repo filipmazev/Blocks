@@ -1,63 +1,25 @@
-# Modal
+# @filip.mazev/modal
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+A robust, programmatic, and highly customizable **Angular modal system** designed for enterprise-grade applications. It offers a unified API for centered dialogs, side-panels (drawers), and mobile-first swipeable bottom sheets, all while maintaining strict type safety, modular architecture, and accessible design patterns.
 
-## Code scaffolding
+Unlike traditional template-driven modal libraries that require placing component selectors in your HTML, this library utilizes a **service-based approach**. This decouples your business logic from your view layer, allowing you to trigger complex UI flows from Services, Route Guards, or Global Error Handlers without polluting the DOM with dormant markup.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🚀 Key Features
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+* **Programmatic Control:** Instantly open and manage modals from any class. This Service-First architecture simplifies state management and dynamic component injection.
+* **Intelligent Adaptive Layout:** Automatically detects device type. On desktop, modals render as dialogs or drawers; on mobile, they morph into native-feeling, physics-based swipeable bottom sheets.
+* **Functional Design Tokens:** A comprehensive theming system based on CSS variables for instant runtime theme switching (e.g., Dark Mode) and easy white-labeling.
+* **Strongly Typed Generics:** Full support for TypeScript Generics allows you to define exactly what data goes in and what result comes out, eliminating `any` casting.
+* **Extensible Base Architecture:** All modal components extend a `GenericModal` abstract class, providing consistent lifecycle hooks (`afterModalGet`, `onDestroy`).
+* **Smart Scroll Handling:** Optimized layout logic ensures sticky footers and headers remain visible while the main content area remains independently scrollable.
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## 🛠 Installation
 
-To build the library, run:
-
-```bash
-ng build modal
-```
-
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/modal
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Install the package via npm:
 
 ```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+npm install @filip.mazev/modal

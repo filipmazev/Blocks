@@ -1,0 +1,18 @@
+@use 'sass:map';
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+@mixin modal-theme($overrides: null) {
+  $fallback-bg: map.get($default-light-theme-config, 'surface');
+  $fallback-text: map.get($default-light-theme-config, 'text');
+  $fallback-border: map.get($default-light-theme-config, 'border');
+
+  --modal-bg: var(--fm-bg-surface, #{$fallback-bg});
+  --modal-text: var(--fm-text-main, #{$fallback-text});
+  --modal-mobile-swipe-line-color: var(--fm-border, #{$fallback-border});
+    
+  @if $overrides {
+     @each $key, $val in $overrides {
+       --#{$key}: #{$val};
+     }
+  }
+}

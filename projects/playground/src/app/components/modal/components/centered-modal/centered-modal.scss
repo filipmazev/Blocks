@@ -1,4 +1,20 @@
-.test {
-    width: 300px;
-    height: 200px;
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+.centered-modal-content-class {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    max-height: 80vh;
+    max-height: 80dvh;
+
+    max-width: 60vw;
+}
+
+@include respond-down(md) {
+    .centered-modal-content-class {
+        max-width: 90vw;
+        max-width: 95dvw;
+    }
 }

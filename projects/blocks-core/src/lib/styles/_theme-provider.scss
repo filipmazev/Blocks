@@ -1,0 +1,23 @@
+@use 'sass:map';
+
+@mixin core-theme($config) {
+  @each $key, $value in $config {
+    --fm-#{$key}: #{$value};
+  }
+
+  @if map.has-key($config, 'canvas') {
+    --fm-bg-canvas: #{map.get($config, 'canvas')};
+  }
+  @if map.has-key($config, 'surface') {
+    --fm-bg-surface: #{map.get($config, 'surface')};
+  }
+  @if map.has-key($config, 'element') {
+    --fm-bg-element: #{map.get($config, 'element')};
+  }
+  @if map.has-key($config, 'text') {
+    --fm-text-main: #{map.get($config, 'text')};
+  }
+  
+  $surface: map.get($config, 'surface');
+  --fm-contrast-main: #{if($surface == #ffffff or $surface == #f9fafb, #000, #fff)};
+}

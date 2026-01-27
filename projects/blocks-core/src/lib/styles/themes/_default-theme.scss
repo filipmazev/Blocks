@@ -1,0 +1,113 @@
+@use '../variables' as *;
+
+$default-light-theme-config: (
+    // General
+    'primary': map-get($gray-palette, 800),
+    'secondary': map-get($gray-palette, 100),
+    'alt': map-get($gray-palette, 900),
+    'accent': map-get($warning-palette, 500),
+    'accent-alt': map-get($warning-palette, 900),
+    'accent-tertiary': map-get($warning-palette, A400),
+
+    // Text
+    'text-primary': map-get($gray-palette, 900),
+    'text-secondary': map-get($gray-palette, 600),
+    'text-tertiary': map-get($gray-palette, 500),
+    'text-accent': map-get($warning-palette, 900),
+    'text-accent-alt': map-get($gray-palette, 50),
+    'text-grayscale': map-get($gray-palette, 900),
+    'menu-item-text': map-get($gray-palette, 800),
+    'text-warn': map-get($warning-palette, 900),
+    'text-confirm': #084720, 
+
+    // UI Elements
+    'bg-menu-item-hover': map-get($gray-palette, 200),
+    'border': map-get($gray-palette, 200),
+    'border-grayscale-light': map-get($gray-palette, 100),
+    'warn': map-get($warning-palette, 500),
+    'error': map-get($error-palette, 500),
+    'info': #3b82f6,
+
+    // Buttons
+    'button-primary': map-get($gray-palette, 50),
+    'button-confirm': #40ca73,
+    'button-warn': map-get($warning-palette, 500),
+    'button-grayscale': map-get($gray-palette, 200),
+
+    // Feedback
+    'snackbar-error': map-get($error-palette, 50),
+    'snackbar-success': #f0fdf4,
+    'snackbar-warn': map-get($warning-palette, 50),
+
+    // Scrollbar & Sliders
+    'scroll-bg': map-get($gray-palette, 100),
+    'scroll-thumb': map-get($gray-palette, 400),
+    'scroll-thumb-highlighted': map-get($gray-palette, 600),
+    'slider-track': map-get($gray-palette, 200),
+    'slider-thumb': map-get($gray-palette, 800),
+    'slider-thumb-hover': map-get($gray-palette, 900),
+
+    'canvas': map-get($gray-palette, 50),
+    'surface': #ffffff,
+    'element': map-get($gray-palette, 100),
+    'text': map-get($gray-palette, 900),
+    'status-warn': map-get($warning-palette, 500),
+    'status-error': map-get($error-palette, 500),
+    'error-subtle': map-get($error-palette, 50)
+) !default;
+
+$default-dark-theme-config: (
+    // General
+    'primary': map-get($gray-palette, 50),
+    'secondary': map-get($gray-palette, 800),
+    'alt': map-get($gray-palette, 50),
+    'accent': map-get($warning-palette, 500),
+    'accent-alt': map-get($warning-palette, A400),
+    'accent-tertiary': map-get($warning-palette, 50),
+
+    // Text
+    'text-primary': map-get($gray-palette, 50),
+    'text-secondary': map-get($gray-palette, 400),
+    'text-tertiary': map-get($gray-palette, 500),
+    'text-accent': map-get($warning-palette, 500),
+    'text-accent-alt': map-get($gray-palette, 900),
+    'text-grayscale': map-get($gray-palette, 50),
+    'menu-item-text': map-get($gray-palette, 200),
+    'text-warn': map-get($warning-palette, 500),
+    'text-confirm': #4eee89,
+
+    // UI Elements
+    'bg-menu-item-hover': map-get($gray-palette, 700),
+    'border': map-get($gray-palette, 700),
+    'border-grayscale-light': map-get($gray-palette, 800),
+    'warn': map-get($warning-palette, 500),
+    'error': map-get($error-palette, 400),
+    'info': #60a5fa,
+
+    // Buttons
+    'button-primary': map-get($gray-palette, 800),
+    'button-confirm': #0f7033,
+    'button-warn': map-get($warning-palette, 900),
+    'button-grayscale': map-get($gray-palette, 700),
+
+    // Feedback
+    'snackbar-error': #450a0a,
+    'snackbar-success': #052e16,
+    'snackbar-warn': #451a03,
+
+    // Scrollbar & Sliders
+    'scroll-bg': map-get($gray-palette, 800),
+    'scroll-thumb': map-get($gray-palette, 600),
+    'scroll-thumb-highlighted': map-get($gray-palette, 400),
+    'slider-track': map-get($gray-palette, 700),
+    'slider-thumb': map-get($gray-palette, 50),
+    'slider-thumb-hover': #ffffff,
+
+    'canvas': map-get($gray-palette, 900),
+    'surface': #1e1e1e,
+    'element': map-get($gray-palette, 800),
+    'text': map-get($gray-palette, 50),
+    'status-warn': map-get($warning-palette, 400),
+    'status-error': map-get($error-palette, 400),
+    'error-subtle': rgba(239, 68, 68, 0.15)
+) !default;

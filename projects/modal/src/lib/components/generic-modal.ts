@@ -13,7 +13,7 @@ import { ModalSide } from "./views/side/modal-side";
 import { ModalSwipeable } from "./views/swipeable/modal-swipeable";
 import { ModalCloseMode } from "../types/modal.types";
 import { IGenericCloseResult } from "../interfaces/igeneric-close-result.interface";
-import { DeviceTypeService, ScrollLockService, WindowDimensions, WindowDimensionsService } from "@filip.mazev/common-parts";
+import { DeviceTypeService, ScrollLockService, WindowDimensions, WindowDimensionsService } from "@filip.mazev/blocks-core";
 import * as animConst from "../constants/generic-modal-animation.constants";
 
 @Component({

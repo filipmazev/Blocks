@@ -1,6 +1,6 @@
 import { Injectable, inject, Injector, ViewContainerRef, Renderer2 } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
-import { BehaviorSubject, Subject, filter, takeUntil, Observable, map } from "rxjs";
+import { BehaviorSubject, Subject, filter, takeUntil, Observable, map, skip } from "rxjs";
 import { GenericModal } from "../classes/generic-modal";
 import { GenericModalConfig } from "../classes/generic-modal-config";
 import { GenericModalRef } from "../classes/generic-modal-ref";
@@ -43,8 +43,11 @@ export class GenericModalService implements IGenericModalService {
 
     private createSubscriptions(): void {
         this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .pipe(takeUntil(this.unsubscribe$))
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                skip(1), 
+                takeUntil(this.unsubscribe$)
+            )
             .subscribe(() => {
                 if (this.modalsCount() > 0) {
                     this.closeAll(true);
@@ -79,7 +82,7 @@ export class GenericModalService implements IGenericModalService {
             providers: [
                 { provide: GenericModalComponent, useValue: wrapperRef.instance }
             ],
-            parent: wrapperRef.injector, 
+            parent: wrapperRef.injector,
         });
 
         const contentRef = this.viewContainer.createComponent(component, {

@@ -4,7 +4,7 @@ import { IGenericModalConfig } from "../interfaces/igeneric-modal-config.interfa
 import { IGenericModalStyleConfig } from "../interfaces/igeneric-modal-style-config.interface";
 import { GenericModal } from "./generic-modal";
 import { GenericModalStyleConfig } from "./generic-modal-style.config";
-import { uuidv4 } from "@filip.mazev/common-parts";
+import { uuidv4 } from "@filip.mazev/blocks-core";
 
 export class GenericModalConfig<
     D = unknown,
