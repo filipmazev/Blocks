@@ -26,27 +26,6 @@
   width: 100%;
 }
 
-.banner-svg-close-button {
-  user-select: none;
-  background-repeat: no-repeat;
-  display: inline-block;
-  fill: currentColor;
-  height: 1.35rem;
-  width: 1.35rem;
-  overflow: hidden;
-  cursor: pointer;
-  pointer-events: fill;
-
-}
-
-.banner-svg-close-button path {
-  transition: all 0.3s ease-in-out;
-}
-
-.banner-svg-close-button path {
-  fill: var(--modal-text, #000000);
-}
-
 @keyframes banner-display {
   0% {
     opacity: 0;

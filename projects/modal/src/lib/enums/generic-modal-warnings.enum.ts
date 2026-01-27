@@ -12,5 +12,6 @@ export enum GenericModalWarnings {
 
     //#region Directive usage
     FOOTER_DIRECTIVE_OUTSIDE_MODAL = "[ModalFooter] Directive used outside of a GenericModalComponent.",
+    HEADER_DIRECTIVE_OUTSIDE_MODAL = "[ModalHeader] Directive used outside of a GenericModalComponent.",
     //#endregion
 }

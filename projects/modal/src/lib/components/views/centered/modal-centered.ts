@@ -3,8 +3,9 @@ import { Component, input, output, ViewChildren, QueryList, TemplateRef } from "
 import { GenericModalConfig } from "../../../classes/generic-modal-config";
 import { IGenericModalView } from "../../../interfaces/igeneric-modal-view.interface";
 import { ModalCloseMode } from "../../../types/modal.types";
-import { ModalBanner } from "../banner/modal-banner";
+import { ModalBanner } from "../../shared/ui/banner/modal-banner";
 import { ModalSwipeable } from "../swipeable/modal-swipeable";
+import { ModalDefaultCloseButton } from "../../shared/ui/default-close-button/default-close-button";
 
 @Component({
     selector: 'modal-centered',
@@ -13,11 +14,13 @@ import { ModalSwipeable } from "../swipeable/modal-swipeable";
         NgClass,
         ModalSwipeable,
         ModalBanner,
+        ModalDefaultCloseButton
     ],
     templateUrl: './modal-centered.html',
     styleUrl: './modal-centered.scss'
 })
 export class ModalCentered<D = unknown> implements IGenericModalView<D> {
+    readonly headerTemplate = input.required<TemplateRef<any> | null>();
     readonly footerTemplate = input.required<TemplateRef<any> | null>();
     
     readonly config = input.required<GenericModalConfig<D> | undefined>();

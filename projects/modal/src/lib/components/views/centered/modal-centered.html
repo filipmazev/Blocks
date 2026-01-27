@@ -11,6 +11,14 @@
                     @if (hasBanner()) {
                         <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
                     }
+                    @if (headerTemplate()) {
+                    <div class="centered-modal-header">
+                        <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
+                        @if(!hasBanner()) {
+                            <modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></modal-default-close-button>
+                        }
+                    </div>
+                    }
                     <div class="centered-modal-main-content-container">
                         <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
                     </div>
@@ -26,7 +34,7 @@
     </div>
 </div>
 } @else {
-<modal-swipeable [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
+<modal-swipeable [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
     [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
 </modal-swipeable>

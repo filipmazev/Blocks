@@ -7,7 +7,7 @@ import { EMPTY_STRING } from "../constants/generic-modal-common.constants";
 import { GenericModalWarnings } from "../enums/generic-modal-warnings.enum";
 import { IGenericModalComponenet } from "../interfaces/igeneric-modal-component.interface";
 import { GenericModalService } from "../services/generic-modal.service";
-import { ModalBackdrop } from "./views/backdrop/modal-backdrop";
+import { ModalBackdrop } from "./shared/ui/backdrop/modal-backdrop";
 import { ModalCentered } from "./views/centered/modal-centered";
 import { ModalSide } from "./views/side/modal-side";
 import { ModalSwipeable } from "./views/swipeable/modal-swipeable";
@@ -36,7 +36,8 @@ export class GenericModalComponent<
     private windowDimensionService = inject(WindowDimensionsService);
     private scrollLockService = inject(ScrollLockService);
     private deviceTypeService = inject(DeviceTypeService);
-    cdr = inject(ChangeDetectorRef);
+    
+    private cdr = inject(ChangeDetectorRef);
 
     readonly afterClose = output<void>();
 
@@ -66,6 +67,7 @@ export class GenericModalComponent<
     protected hasBanner: boolean = false;
     protected hasDefaultContentWrapperClass: boolean = false;
 
+    protected headerTemplate = signal<TemplateRef<any> | null>(null);
     protected footerTemplate = signal<TemplateRef<any> | null>(null);
 
     private isConfirmCloseModalOpen: boolean = false;
@@ -176,9 +178,7 @@ export class GenericModalComponent<
         this.hasBanner =
             this.config !== undefined &&
             ((this.config.bannerText !== undefined && this.config.bannerText.length > 0) ||
-                (this.config.bannerIcons && this.config.bannerIcons.length > 0) ||
-                this.config.disableClose !== true &&
-                this.config.style.showCloseButton !== false);
+                (this.config.disableClose !== true && this.config.style.showCloseButton !== false && this.headerTemplate() === null));
 
         this.hasDefaultContentWrapperClass = this.config?.style.contentWrapper !== false;
 
@@ -190,6 +190,12 @@ export class GenericModalComponent<
     //#endregion
 
     //#region Public Template Methods
+
+    public setHeaderTemplate(template: TemplateRef<any>) {
+        Promise.resolve().then(() => {
+            this.headerTemplate.set(template);
+        });
+    }
 
     public setFooterTemplate(template: TemplateRef<any>) {
         Promise.resolve().then(() => {
@@ -217,7 +223,6 @@ export class GenericModalComponent<
                         },
                         disableClose: true,
                         bannerText: this.config.confirmCloseConfig.bannerText ?? EMPTY_STRING,
-                        bannerIcons: this.config.confirmCloseConfig.bannerIcons ?? [],
                         data: this.config.confirmCloseConfig.data ?? null,
                     });
 

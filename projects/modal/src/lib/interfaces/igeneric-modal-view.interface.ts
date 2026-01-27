@@ -4,6 +4,7 @@ import { ModalSwipeable } from "../components/views/swipeable/modal-swipeable";
 import { ModalCloseMode } from "../types/modal.types";
 
 export interface IGenericModalView<D = unknown> {
+    headerTemplate: InputSignal<TemplateRef<any> | null>;
     footerTemplate: InputSignal<TemplateRef<any> | null>;
     
     config: InputSignal<GenericModalConfig<D> | undefined>;

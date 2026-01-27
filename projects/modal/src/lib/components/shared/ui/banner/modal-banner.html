@@ -1,0 +1,16 @@
+<div class="modal-top-banner-container">
+    <div class="modal-top-banner-title-container">
+        @if (config() && config()?.bannerText && (config() && config()!.bannerText.length > 0)) {
+        <div class="modal-banner-default-style">
+            <div class="generic-modal-banner-text">
+                <div>
+                    {{ config()?.bannerText }}
+                    <b> {{ config()?.bannerTextAnnotatedString }} </b>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    
+    <modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></modal-default-close-button>
+</div>

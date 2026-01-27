@@ -1,15 +1,33 @@
 @use '../../blocks-core' as fm;
 @use '../../modal' as modal;
-@use "./themes/custom-brand-theme.scss" as *;
 
 :root {
-  @include fm.core-theme($custom-brand-theme-light);
-  @include modal.modal-theme((
-    'modal-bg': #f4fff7,
-  ));
+  @include fm.core-theme(fm.$default-light-theme-config);
+  @include modal.modal-theme(());
 }
 
 [data-theme="dark"] {
-  @include fm.core-theme($custom-brand-theme-dark);
+  @include fm.core-theme(fm.$default-dark-theme-config);
   @include modal.modal-theme(());
 }
+
+//#region Scrollbar Customization Start
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--fm-scroll-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--fm-scroll-thumb);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--fm-scroll-thumb-highlighted);
+}
+
+//#endregion

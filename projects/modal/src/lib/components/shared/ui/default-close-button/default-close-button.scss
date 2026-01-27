@@ -1,0 +1,20 @@
+.default-close-button {
+  user-select: none;
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: 1.35rem;
+  width: 1.35rem;
+  overflow: hidden;
+  cursor: pointer;
+  pointer-events: fill;
+
+}
+
+.default-close-button path {
+  transition: all 0.3s ease-in-out;
+}
+
+.default-close-button path {
+  fill: var(--modal-text, #000000);
+}

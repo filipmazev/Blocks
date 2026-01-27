@@ -15,6 +15,7 @@ import * as swipeConst from '../../../constants/generic-modal-swipe.constants';
   styleUrl: './modal-swipeable.scss',
 })
 export class ModalSwipeable implements OnInit, OnDestroy {
+  readonly headerTemplate = input.required<TemplateRef<any> | null>();
   readonly footerTemplate = input.required<TemplateRef<any> | null>();
   
   readonly config = input.required<GenericModalConfig<any> | undefined>();

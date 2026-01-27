@@ -6,15 +6,15 @@
 <ng-container #modalContainer>
     @switch (true) {
     @case (isSide) {
-    <modal-side [footerTemplate]="footerTemplate()" [config]="config" [isOpen]="isOpen" [isAnimated]="isAnimated"
+    <modal-side [headerTemplate]="headerTemplate()"  [footerTemplate]="footerTemplate()" [config]="config" [isOpen]="isOpen" [isAnimated]="isAnimated"
         [isSwipeableModalActive]="isSwipeableModalActive" [animationDuration]="animationDuration"
         [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)">
         <ng-container [ngTemplateOutlet]="contentTemplate">
         </ng-container>
     </modal-side>
-    }
+    } 
     @case (isCentered) {
-    <modal-centered [footerTemplate]="footerTemplate()" [config]="config" [isOpen]="isOpen" [isAnimated]="isAnimated"
+    <modal-centered [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config" [isOpen]="isOpen" [isAnimated]="isAnimated"
         [isSwipeableModalActive]="isSwipeableModalActive" [animationDuration]="animationDuration"
         [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)"
         (onBackdropClick)="onBackdropClick($event)">

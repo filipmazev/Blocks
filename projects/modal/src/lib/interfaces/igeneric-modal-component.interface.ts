@@ -15,6 +15,7 @@ import { ModalCloseMode } from "../types/modal.types";
  * @param {Observable<MouseEvent>} backdropClick (required) The observable for the backdrop click event, will be used to listen for backdrop clicks (subscribed to the backdropClickSubject)
  * @param {Function} closeFunction (optional) The outside function to run when the modal closes (received from the config)
  * @param {Function} close (required) The function to run when the modal closes, will return the result of the modal
+ * @param {Function} setHeaderTemplate (required) The function to set the header template of the modal
  * @param {Function} setFooterTemplate (required) The function to set the footer template of the modal
  */
 export interface IGenericModalComponenet<
@@ -36,5 +37,6 @@ export interface IGenericModalComponenet<
     closeFunction?: Function;
     close: (state: ModalCloseMode, result: R | undefined, fromInsideInteraction: boolean, forceClose: boolean) => void;
 
+    setHeaderTemplate: (template: TemplateRef<any>) => void;
     setFooterTemplate: (template: TemplateRef<any>) => void;
 }

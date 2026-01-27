@@ -6,8 +6,8 @@ export * from './lib/components/generic-modal';
 export * from './lib/components/views/swipeable/modal-swipeable';
 export * from './lib/components/views/side/modal-side';
 export * from './lib/components/views/centered/modal-centered';
-export * from './lib/components/views/backdrop/modal-backdrop';
-export * from './lib/components/views/banner/modal-banner';
+export * from './lib/components/shared/ui/backdrop/modal-backdrop';
+export * from './lib/components/shared/ui/banner/modal-banner';
 
 export * from './lib/services/generic-modal.service';
 

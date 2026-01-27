@@ -10,7 +10,6 @@ import { GenericModal } from "../classes/generic-modal";
  * @param {IGenericModalStyleConfig} style (optional) The style configuration for the modal
  * @param {D | null} data (optional) The data to pass to the component of the modal, the component needs to have the @Inject(GENERIC_MODAL_DATA) data: any; decorator to receive this data
  * @param {string} bannerText (optional) The text to display in the banner of the modal
- * @param {string[]} bannerIcons (optional) The icons to display in the banner of the modal
  * @param {boolean} bypassSelfCheck (optional) Whether the modal should bypass the self check or not, will default to false (if true, will not check if the modal is the same as the one that opened it)
  */
 export interface IGenericConfirmCloseConfig<
@@ -25,7 +24,6 @@ export interface IGenericConfirmCloseConfig<
     data?: ConfirmComponentData | null;
 
     bannerText?: string;
-    bannerIcons?: string[];
 
     bypassSelfCheck?: boolean;
 }

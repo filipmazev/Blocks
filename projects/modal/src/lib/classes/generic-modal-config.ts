@@ -22,15 +22,12 @@ export class GenericModalConfig<
     public enableExtremeOverflowHandling?: boolean;
     public webkitOnlyOverflowMobileHandling?: boolean;
 
-    public closeOnSwipeBack: boolean;
-
     public data: D | null;
 
     public style: IGenericModalStyleConfig;
 
     public bannerText: string;
     public bannerTextAnnotatedString: string;
-    public bannerIcons: string[];
 
     public contentClasses: string;
     public contentStyles: string;
@@ -54,14 +51,11 @@ export class GenericModalConfig<
         this.enableExtremeOverflowHandling = config?.enableExtremeOverflowHandling ?? false;
         this.webkitOnlyOverflowMobileHandling = config?.webkitOnlyOverflowMobileHandling ?? true;
 
-        this.closeOnSwipeBack = config?.closeOnSwipeBack ?? false;
-
         this.data = config?.data ?? null;
         this.style = new GenericModalStyleConfig(config?.style);
 
         this.bannerText = config?.bannerText ?? EMPTY_STRING;
         this.bannerTextAnnotatedString = config?.bannerTextAnnotatedString ?? EMPTY_STRING;
-        this.bannerIcons = config?.bannerIcons ?? [];
 
         this.contentClasses = config?.contentClasses ?? EMPTY_STRING;
         this.contentStyles = config?.contentStyles ?? EMPTY_STRING;

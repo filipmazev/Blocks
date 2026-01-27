@@ -82,6 +82,14 @@
     min-height: 0;
 }
 
+.centered-modal-header {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
 .centered-modal-footer {
     flex-shrink: 0;
     width: 100%;
