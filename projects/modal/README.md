@@ -31,7 +31,7 @@ To enable the library's stylization, import the theme provider in your global st
 
 @layer base {
     :root {
-        @include blocks.core-theme($default-light-theme-config);
+        @include blocks.core-theme(blocks.$default-light-theme-config);
 
         @include modal.modal-theme((
             'modal-mobile-swipe-line-color': #cfcfcf,
@@ -39,7 +39,7 @@ To enable the library's stylization, import the theme provider in your global st
     }
 
     [data-theme='dark'] {
-        @include blocks.core-theme($default-dark-theme-config);
+        @include blocks.core-theme(blocks.$default-dark-theme-config);
         @include modal.modal-theme((
             'modal-mobile-swipe-line-color': #444444,
         ));

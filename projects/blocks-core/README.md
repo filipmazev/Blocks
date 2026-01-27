@@ -1,63 +1,140 @@
-# UiServices
+# @filip.mazev/blocks-core
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+## Blocks - Core Library
 
-## Code scaffolding
+**Blocks Core** is the foundational library for the Blocks ecosystem. It provides the essential infrastructure for building responsive, theme-aware Angular applications. It bridges the gap between TypeScript logic and SCSS styling, offering a unified system for breakpoints, device detection, scroll management and theming.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Styles & Theming
 
-```bash
-ng generate component component-name
+Blocks Core utilizes a robust SCSS architecture to manage design tokens and responsiveness.
+
+### 1. Theme Provider
+
+The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the `core-theme` mixin in your global styles.
+
+```scss
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as blocks;
+
+:root {
+  // Initialize default light theme
+  @include blocks.core-theme(blocks.$default-light-theme-config);
+}
+
+// Example: Switch to dark theme based on a class
+body.dark-theme {
+  @include blocks.core-theme(blocks.$default-dark-theme-config);
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+This generates CSS variables with the `--fm-` prefix (e.g.,`--fm-primary`, `--fm-bg-surface`, `--fm-text-main`).
 
-```bash
-ng generate --help
+### 2. Responsive Mixins
+
+The library provides mixins that strictly align with the WindowDimensionsService breakpoints in TypeScript.
+
+Available Breakpoints:
+
+* `xs`: 360px
+* `sm`: 640px
+* `md`: 768px
+* `lg`: 1024px
+* `xl`: 1280px
+* `2xl`: 1536px
+* `3xl`: 1920px
+* `4xl`: 2560px
+
+Usage:
+
+```scss
+@use '@filip.mazev/blocks-core/src/lib/styles/mixins' as *;
+
+.my-element {
+  width: 100%;
+
+  // Applies when width >= 768px
+  @include respond-up(md) {
+    width: 50%;
+  }
+
+  // Applies when width <= 640px
+  @include respond-down(sm) {
+    display: none;
+  }
 ```
 
-## Building
+## Core Services
 
-To build the library, run:
+### `WindowDimensionsService`
 
-```bash
-ng build blocks-core
+Bridges the gap between CSS media queries and TypeScript logic. It provides reactive access to window size and standard breakpoint thresholds.
+
+```typescript
+export class MyComponent {
+  constructor(private windowService: WindowDimensionsService) {
+    // Reactive stream
+    this.windowService.getWindowDimensions$().subscribe(dims => {
+      if (dims.width < dims.threshold_sm) {
+        console.log('Mobile View');
+      }
+    });
+  }
+}
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+### `ThemingService`
 
-### Publishing the Library
+Handles the detection of system preferences (Dark/Light mode) and manages the application-level theme state.
 
-Once the project is built, you can publish your library by following these steps:
+* `getSystemTheme$()`: Observes the OS/Browser prefers-color-scheme.
+* `getApplicationTheme$()`: Observes the manually set application theme.
+* `setApplicationTheme(theme: DeviceTheme)`: Manually overrides the current theme ('light' | 'dark').
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/blocks-core
-   ```
+### `DeviceTypeService`
 
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
+Provides detailed information about the user's device, OS, and orientation. Useful for logic that depends on specific hardware capabilities (e.g., touch handling on Windows tablets vs Android).
 
-## Running unit tests
+`getDeviceState()` returns:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+* isMobile / isTablet / isDesktop
+* desktopOS (Windows, Mac, Linux, Unix)
+* mobileOS (iOS, Android)
+* isAppleDevice (checks both iOS and MacOS)
+* isLandscapeOrientation / isPortraitOrientation
 
-```bash
-ng test
+### `ScrollLockService`
+
+A utility to prevent background scrolling when overlays (like Modals) are active. This service handles complex edge cases, including:
+
+* **Scrollbar Compensation**: Adds padding to the body to prevent layout shifts when the scrollbar disappears.
+
+* **Mobile Touch**: Prevents "scroll chaining" on mobile devices.
+
+* **Extreme Overflow**: Optionally disables wheel and touch events entirely for strict locking.
+
+```typescript
+// Lock scroll
+this.scrollLockService.disableScroll({
+  handleTouchInput: true,
+  handleExtremeOverflow: false
+});
+
+// Unlock
+this.scrollLockService.enableScroll();
 ```
 
-## Running end-to-end tests
+### `UiActionsService`
 
-For end-to-end (e2e) testing, run:
+Common UI utility methods.
 
-```bash
-ng e2e
-```
+### `TextFormattingService`
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Helper methods for string manipulation, such as:
 
-## Additional Resources
+* `generateNameCopy`: Generates unique names for duplicated items (e.g., "Item (Copy)", "Item (Copy 2)").
+* `formattedDateString`: Converts Date objects or strings into a standardized locale date string.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Installation
+
+To use Blocks Core, install the package and ensure the SCSS partials are accessible to your build pipeline.
+
+_(Installation instructions depend on your specific build/publish setup)._
