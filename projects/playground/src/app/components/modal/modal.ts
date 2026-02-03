@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CenteredModal } from './components/centered-modal/centered-modal';
+import { DemoModal } from './components/demo-modal/demo-modal';
 import { ModalService } from '../../../../../modal/src/lib/services/modal.service';
 import { IModalCloseResult } from '../../../../../modal/src/lib/interfaces/imodal-close-result.interface';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
@@ -15,15 +15,10 @@ export class Modal {
   private modals = inject(ModalService);
 
   constructor() {
-    this.startupModals();
   }
 
-  private startupModals(): void {
-    this.openCenteredModal();
-  }
-
-  private openCenteredModal(): void {
-    const modal = this.modals.open<string, undefined>(CenteredModal, {
+  protected openModal(): void {
+    const modal = this.modals.open<string, undefined>(DemoModal, {
       data: "Hello from Modal!",
       style: {
         layout: 'right',
@@ -33,7 +28,11 @@ export class Modal {
         }
       },
       closeGuard: new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
-        data: 'Are you sure you want to close the modal?'
+        data: 'Are you sure you want to close the modal?',
+        bannerText: 'Unsaved Changes',
+        style: {
+          showCloseButton: false
+        }
       })
     });
 

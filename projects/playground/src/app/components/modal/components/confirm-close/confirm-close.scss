@@ -8,3 +8,25 @@
         cursor: pointer;
     }
 }
+
+.confirm-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+
+    background-color: var(--fm-button-confirm);
+    color: var(--fm-text-accent-alt);
+    border: none;
+    border-radius: 4px;
+}
+
+.cancel-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+
+    background-color: var(--fm-error);
+    color: var(--fm-text-accent-alt);
+    border: none;
+    border-radius: 4px;
+}
