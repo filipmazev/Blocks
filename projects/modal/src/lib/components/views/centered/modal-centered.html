@@ -1,4 +1,4 @@
-@if(!isSwipeableModalActive()) {
+@if(!isBottomSheetModalActive()) {
 <div class="modal-overlay" [ngClass]="{'modal-backdrop': config()?.style?.hasBackdrop}" (click)="
     config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null">
     <div class="modal-overlay-wrapper">
@@ -34,10 +34,10 @@
     </div>
 </div>
 } @else {
-<modal-swipeable [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
+<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
     [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
-</modal-swipeable>
+</modal-bottom-sheet>
 }
 
 <ng-template #contentTemplate>

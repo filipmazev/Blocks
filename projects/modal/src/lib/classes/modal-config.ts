@@ -1,19 +1,19 @@
-import { EMPTY_STRING } from "../constants/generic-modal-common.constants";
-import { IGenericConfirmCloseConfig } from "../interfaces/igeneric-confirm-close.interface";
-import { IGenericModalConfig } from "../interfaces/igeneric-modal-config.interface";
-import { IGenericModalStyleConfig } from "../interfaces/igeneric-modal-style-config.interface";
-import { GenericModal } from "./generic-modal";
-import { GenericModalStyleConfig } from "./generic-modal-style.config";
+import { EMPTY_STRING } from "../constants/modal-common.constants";
+import { IModalConfirmCloseConfig } from "../interfaces/imodal-confirm-close.interface";
+import { IModalConfig } from "../interfaces/imodal-config.interface";
+import { IModalStyleConfig } from "../interfaces/imodal-style-config.interface";
+import { Modal } from "./modal";
+import { ModalStyleConfig } from "./modal-style.config";
 import { uuidv4 } from "@filip.mazev/blocks-core";
 
-export class GenericModalConfig<
+export class ModalConfig<
     D = unknown,
-    ConfirmComponentData = any,
-    ConfirmComponent extends GenericModal<ConfirmComponentData, undefined> = GenericModal<ConfirmComponentData, undefined>> {
+    ConfirmModalData = any,
+    ConfirmModal extends Modal<ConfirmModalData, undefined> = Modal<ConfirmModalData, undefined>> {
     public open: boolean;
 
     public afterClose?: Function;
-    public confirmCloseConfig?: IGenericConfirmCloseConfig<ConfirmComponentData, ConfirmComponent>;
+    public confirmCloseConfig?: IModalConfirmCloseConfig<ConfirmModalData, ConfirmModal>;
 
     public disableClose: boolean;
     public disableCloseOnBackdropClick: boolean;
@@ -24,7 +24,7 @@ export class GenericModalConfig<
 
     public data: D | null;
 
-    public style: IGenericModalStyleConfig;
+    public style: ModalStyleConfig;
 
     public bannerText: string;
 
@@ -36,7 +36,7 @@ export class GenericModalConfig<
 
     public id: string;
 
-    constructor(config?: IGenericModalConfig<D, ConfirmComponentData, ConfirmComponent>) {
+    constructor(config?: IModalConfig<D, ConfirmModalData, ConfirmModal>) {
         this.open = config?.open ?? true;
 
         this.afterClose = config?.afterClose;
@@ -51,7 +51,7 @@ export class GenericModalConfig<
         this.webkitOnlyOverflowMobileHandling = config?.webkitOnlyOverflowMobileHandling ?? true;
 
         this.data = config?.data ?? null;
-        this.style = new GenericModalStyleConfig(config?.style);
+        this.style = new ModalStyleConfig(config?.style);
 
         this.bannerText = config?.bannerText ?? EMPTY_STRING;
 

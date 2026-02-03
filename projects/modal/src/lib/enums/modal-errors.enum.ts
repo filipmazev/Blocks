@@ -1,7 +1,6 @@
-export enum GenericModalErrors {
+export enum ModalErrors {
     //#region General
     MODAL_DOESNT_MATCH_THE_REQUESTED_TYPES = "The modal doesn't match the requested types.",
-    GENERIC_MODAL_SERVICE_RENDERER_NOT_SET = "ViewContainer and Renderer not set, please set the view container in the constructor of app.module.ts / app.ts (by calling register), before opening a modal",
     //#endregion
 
     //#region Multi-level modals

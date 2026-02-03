@@ -1,6 +1,6 @@
 import { Directive, TemplateRef, inject } from '@angular/core';
 import { ModalCore } from '../components/modal-core';
-import { GenericModalWarnings } from '../enums/generic-modal-warnings.enum';
+import { ModalWarnings } from '../enums/modal-warnings.enum';
 
 @Directive({
   selector: '[modalHeader]', 
@@ -14,7 +14,7 @@ export class ModalHeaderDirective {
     if (this.modal) {
       this.modal.setHeaderTemplate(this.templateRef);
     } else {
-      console.warn(GenericModalWarnings.HEADER_DIRECTIVE_OUTSIDE_MODAL);
+      console.warn(ModalWarnings.HEADER_DIRECTIVE_OUTSIDE_MODAL);
     }
   }
 }

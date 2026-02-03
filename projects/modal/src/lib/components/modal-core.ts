@@ -1,21 +1,21 @@
 import { NgTemplateOutlet } from "@angular/common";
 import { Component, inject, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal, effect } from "@angular/core";
 import { Subject, Observable, fromEvent, filter, take } from "rxjs";
-import { GenericModal } from "../classes/generic-modal";
-import { GenericModalConfig } from "../classes/generic-modal-config";
-import { EMPTY_STRING } from "../constants/generic-modal-common.constants";
-import { GenericModalWarnings } from "../enums/generic-modal-warnings.enum";
-import { IGenericModalComponenet } from "../interfaces/igeneric-modal-component.interface";
-import { GenericModalService } from "../services/generic-modal.service";
+import { Modal } from "../classes/modal";
+import { ModalConfig } from "../classes/modal-config";
+import { EMPTY_STRING } from "../constants/modal-common.constants";
+import { ModalWarnings } from "../enums/modal-warnings.enum";
+import { IModalComponenet } from "../interfaces/imodal-component.interface";
+import { ModalService } from "../services/modal.service";
 import { ModalBackdrop } from "./shared/ui/backdrop/modal-backdrop";
 import { ModalCentered } from "./views/centered/modal-centered";
 import { ModalSide } from "./views/side/modal-side";
-import { ModalSwipeable } from "./views/swipeable/modal-swipeable";
-import { ModalCloseMode } from "../types/modal.types";
-import { IGenericCloseResult } from "../interfaces/igeneric-close-result.interface";
+import { ModalBottomSheet } from "./views/bottom-sheet/modal-bottom-sheet";
+import { BreakpointKey, ModalCloseMode, ModalLayout } from "../types/modal.types";
+import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
 import { DeviceTypeService, ScrollLockService, WindowDimensionsService } from "@filip.mazev/blocks-core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import * as animConst from "../constants/generic-modal-animation.constants";
+import * as animConst from "../constants/modal-animation.constants";
 
 @Component({
     selector: 'modal-core',
@@ -31,34 +31,36 @@ import * as animConst from "../constants/generic-modal-animation.constants";
 export class ModalCore<
     D = unknown,
     R = any,
-    C extends GenericModal<D, R> = GenericModal<D, R>>
-    implements IGenericModalComponenet<D, R, C> {
+    C extends Modal<D, R> = Modal<D, R>>
+    implements IModalComponenet<D, R, C> {
 
-    private modalService = inject(GenericModalService);
+    private modalService = inject(ModalService);
     private windowDimensionsService = inject(WindowDimensionsService);
     private scrollLockService = inject(ScrollLockService);
     private deviceTypeService = inject(DeviceTypeService);
 
     readonly afterClose = output<void>();
 
-    readonly animationDuration: number = animConst.GENERIC_MODAL_DEFAULT_ANIM_DURATION;
+    readonly animationDuration: number = animConst.MODAL_DEFAULT_ANIM_DURATION;
 
     public componentRef: ComponentRef<C> = {} as ComponentRef<C>;
-    public config?: GenericModalConfig<D>;
+    public config?: ModalConfig<D>;
     public closeFunction?: Function;
 
     public backdropClickSubject = new Subject<MouseEvent>();
     public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
 
     public isOpen = signal<boolean>(true);
-    public isSwipeableModalActive = signal<boolean>(false);
+    public isBottomSheetModalActive = signal<boolean>(false);
+
+    public effectiveLayout = signal<ModalLayout>('center');
+    public isCentered = signal<boolean>(false);
+    public isSide = signal<boolean>(false);
 
     protected headerTemplate = signal<TemplateRef<any> | null>(null);
     protected footerTemplate = signal<TemplateRef<any> | null>(null);
 
     public isAnimated: boolean = false;
-    public isCentered: boolean = false;
-    public isSide: boolean = false;
     protected hasBanner: boolean = false;
     protected hasDefaultContentWrapperClass: boolean = false;
 
@@ -66,33 +68,41 @@ export class ModalCore<
     private isSpecialMobileOverflowHandlingEnabled: boolean = false;
     private isScrollDisabled: boolean = false;
 
+    private _sortedBreakpoints: Array<{ width: number, layout: ModalLayout }> = [];
+
     protected windowDimensions = this.windowDimensionsService.dimensions;
 
-    @ViewChild("modalContainer", { static: true }) modalContainer?: ElementRef;
+    private _currentVcr: ViewContainerRef | null = null;
+
+    @ViewChild("dynamicContainer", { read: ViewContainerRef })
+    set dynamicContainer(vcr: ViewContainerRef | undefined) {
+        if (vcr && this.componentRef) {
+            this._currentVcr = vcr;
+            vcr.insert(this.componentRef.hostView);
+        }
+    }
+
+    @ViewChild("modalContainer", { static: false }) modalContainer?: ElementRef;
+    @ViewChild("contentTemplate") contentTemplate?: TemplateRef<HTMLElement>;
 
     @ViewChildren(ModalSide) sideModalComponents?: QueryList<ModalSide>;
     @ViewChildren(ModalCentered) centeredModalComponents?: QueryList<ModalCentered>;
-
-    @ViewChild("contentTemplate") contentTemplate?: TemplateRef<HTMLElement>;
-    @ViewChild("dynamicContainer", { read: ViewContainerRef }) dynamicContainer?: ViewContainerRef;
 
     constructor() {
         this.initKeyboardSubscription();
 
         effect(() => {
             const width = this.windowDimensions().width;
-            this.handleWindowDimensionChange(width);
+            this.handleLayout(width);
         });
     }
 
     public ngOnInit() {
         this.initParamsFromConfig();
+        this.initBreakpointCache();
 
-        if (this.config?.style.handleMobile !== false && this.windowDimensionsService.isMobile()) {
-            this.handleSwipeableModalOpened();
-        } else {
-            this.isSwipeableModalActive.set(false);
-        }
+        const width = this.windowDimensionsService.dimensions().width;
+        this.handleLayout(width);
     }
 
     public ngAfterViewInit(): void {
@@ -133,10 +143,22 @@ export class ModalCore<
                 (this.config.disableClose !== true && this.config.style.showCloseButton !== false && this.headerTemplate() === null));
 
         this.hasDefaultContentWrapperClass = this.config?.style.contentWrapper !== false;
-
         this.isAnimated = this.config?.style.animate === true;
-        this.isCentered = this.config?.style.position === "center";
-        this.isSide = this.config?.style.position === "left" || this.config?.style.position === "right";
+    }
+
+    private initBreakpointCache(): void {
+        const definedBreakpoints = this.config?.style?.breakpoints;
+        
+        if (definedBreakpoints && Object.keys(definedBreakpoints).length > 0) {
+            const serviceBreakpoints = this.windowDimensionsService.breakpoints;
+            
+            this._sortedBreakpoints = (Object.keys(definedBreakpoints) as BreakpointKey[])
+                .map(key => ({
+                    width: serviceBreakpoints[key],
+                    layout: definedBreakpoints[key]!
+                }))
+                .sort((a, b) => a.width - b.width);
+        }
     }
 
     //#endregion
@@ -165,9 +187,10 @@ export class ModalCore<
         if ((this.config && this.config?.disableClose !== true) || !fromInsideInteraction || forceClose) {
             if (this.config?.confirmCloseConfig && this.shouldOpenConfirmCloseModal(forceClose, state)) {
                 if (this.shouldOpenConfirmCloseModalSelfCheck()) {
-                    const modal = this.modalService.open<IGenericCloseResult, any>(this.config.confirmCloseConfig.confirmModalComponent, {
+
+                    const modal = this.modalService.open<IModalCloseResult, any>(this.config.confirmCloseConfig.confirmModalComponent, {
                         style: this.config.confirmCloseConfig.style ?? {
-                            handleMobile: false,
+                            breakpoints: undefined,
                         },
                         disableClose: true,
                         bannerText: this.config.confirmCloseConfig.bannerText ?? EMPTY_STRING,
@@ -176,13 +199,13 @@ export class ModalCore<
 
                     this.isConfirmCloseModalOpen = true;
 
-                    if (this.isSwipeableModalActive()) {
-                        this.resetSwipeableModalPosition();
+                    if (this.isBottomSheetModalActive()) {
+                        this.resetBottomSheetModalLayout();
                     }
 
                     modal.afterClosed()
                         .pipe(take(1))
-                        .subscribe((_result: IGenericCloseResult) => {
+                        .subscribe((_result: IModalCloseResult) => {
                             this.isConfirmCloseModalOpen = false;
                             if (_result.state === 'confirm') {
                                 this.handleClose(state, result);
@@ -190,7 +213,7 @@ export class ModalCore<
                         });
                 } else {
                     if (this.config?.disableConsoleWarnings !== true) {
-                        console.warn(GenericModalWarnings.CONFIRM_MODAL_NESTING_NOT_SUPPORTED);
+                        console.warn(ModalWarnings.CONFIRM_MODAL_NESTING_NOT_SUPPORTED);
                     }
 
                     this.handleClose(state, result);
@@ -198,19 +221,19 @@ export class ModalCore<
             } else {
                 this.handleClose(state, result);
             }
-        } else if (this.isSwipeableModalActive()) {
-            this.resetSwipeableModalPosition();
+        } else if (this.isBottomSheetModalActive()) {
+            this.resetBottomSheetModalLayout();
         }
     }
 
     private async handleClose(state: ModalCloseMode, result: R | undefined): Promise<void> {
         this.isOpen.set(false);
-        this.setSwipeableModalFinishedState(true);
+        this.setBottomSheetModalFinishedState(true);
 
         const returnResult = {
             data: result,
             state: state,
-        } as IGenericCloseResult<R | undefined>;
+        } as IModalCloseResult<R | undefined>;
 
         if (this.closeFunction) {
             this.closeFunction(returnResult);
@@ -257,25 +280,47 @@ export class ModalCore<
 
     //#endregion
 
-    //#region Swipable Modal Methods
+    //#region Layout Methods
 
-    private handleWindowDimensionChange(width: number): void {
-        if (this.config?.style.handleMobile === false) return;
+    private handleLayout(width: number): void {
+        if (!this.config) return;
 
-        const smBreakpoint = this.windowDimensionsService.breakpoints.sm;
-        const currentSwipeState = this.isSwipeableModalActive();
+        let resolvedLayout: ModalLayout = this.config.style.layout;
 
-        if (width < smBreakpoint && !currentSwipeState) {
-            this.handleSwipeableModalOpened();
-        } 
+        for (const bp of this._sortedBreakpoints) {
+            if (width <= bp.width) {
+                resolvedLayout = bp.layout;
+                break;
+            }
+        }
         
-        if (width >= smBreakpoint && currentSwipeState) {
-            this.handleSwipeableModalClosed();
+        const prevIsSide = this.isSide();
+        const nextIsSide = resolvedLayout === 'left' || resolvedLayout === 'right';
+        const layoutTypeChanged = prevIsSide !== nextIsSide;
+
+        if (layoutTypeChanged && this._currentVcr && this.componentRef) {
+            const index = this._currentVcr.indexOf(this.componentRef.hostView);
+            if (index !== -1) {
+                this._currentVcr.detach(index);
+            }
+        }
+
+        this.effectiveLayout.set(resolvedLayout);
+        this.isSide.set(nextIsSide);
+        this.isCentered.set(resolvedLayout === 'center' || resolvedLayout === 'bottom-sheet');
+
+        const shouldBeBottomSheet = resolvedLayout === 'bottom-sheet';
+        const currentSwipeState = this.isBottomSheetModalActive();
+
+        if (shouldBeBottomSheet && !currentSwipeState) {
+            this.handleBottomSheetModalOpened();
+        } else if (!shouldBeBottomSheet && currentSwipeState) {
+            this.handleBottomSheetModalClosed();
         }
     }
 
-    private handleSwipeableModalOpened(): void {
-        this.isSwipeableModalActive.set(true);
+    private handleBottomSheetModalOpened(): void {
+        this.isBottomSheetModalActive.set(true);
 
         this.scrollLockService.disableScroll({
             mainContainer: this.modalContainer?.nativeElement,
@@ -288,9 +333,8 @@ export class ModalCore<
         this.isScrollDisabled = true;
     }
 
-    private handleSwipeableModalClosed(): void {
-        this.isSwipeableModalActive.set(false);
-
+    private handleBottomSheetModalClosed(): void {
+        this.isBottomSheetModalActive.set(false);
         if (this.isOpen() && this.isSpecialMobileOverflowHandlingEnabled) {
             this.scrollLockService.enableScroll(this.config?.enableExtremeOverflowHandling ?? false);
             this.isScrollDisabled = false;
@@ -301,22 +345,22 @@ export class ModalCore<
 
     //#region Helper Methods
 
-    private getSwipeableModal(): ModalSwipeable | undefined {
-        return this.sideModalComponents?.first?.swipeableComponents?.first
-            ?? this.centeredModalComponents?.first?.swipeableComponents?.first
+    private getBottomSheetModal(): ModalBottomSheet | undefined {
+        return this.sideModalComponents?.first?.bottomSheet?.first
+            ?? this.centeredModalComponents?.first?.bottomSheet?.first
     }
 
-    private resetSwipeableModalPosition(): void {
-        const swipeableModal = this.getSwipeableModal();
-        if (swipeableModal) {
-            swipeableModal.currentTranslateY.set(0);
+    private resetBottomSheetModalLayout(): void {
+        const bottomSheet = this.getBottomSheetModal();
+        if (bottomSheet) {
+            bottomSheet.currentTranslateY.set(0);
         }
     }
 
-    private setSwipeableModalFinishedState(isFinished: boolean): void {
-        const swipeableModal = this.getSwipeableModal();
-        if (swipeableModal) {
-            swipeableModal.isSwipingVerticallyFinished.set(isFinished);
+    private setBottomSheetModalFinishedState(isFinished: boolean): void {
+        const bottomSheet = this.getBottomSheetModal();
+        if (bottomSheet) {
+            bottomSheet.isSwipingVerticallyFinished.set(isFinished);
         }
     }
 

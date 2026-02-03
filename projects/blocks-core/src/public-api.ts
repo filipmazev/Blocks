@@ -14,6 +14,9 @@ export * from './lib/interfaces/device-state.interface';
 export * from './lib/interfaces/scroll-lock-config.interface';
 export * from './lib/interfaces/window-dimensions.interface';
 
+export * from './lib/constants/window-dimension.constants';
+export * from './lib/constants/scroll-lock.constants';
+
 export * from './lib/types/device.types';
 
 export * from './lib/helpers/uui4';

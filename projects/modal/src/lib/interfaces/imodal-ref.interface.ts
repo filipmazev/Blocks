@@ -1,15 +1,15 @@
 import { Observable } from "rxjs";
 import { ComponentRef, Type } from "@angular/core";
-import { GenericModal } from "../classes/generic-modal";
-import { GenericModalConfig } from "../classes/generic-modal-config";
+import { Modal } from "../classes/modal";
+import { ModalConfig } from "../classes/modal-config";
 import { ModalCore } from "../components/modal-core";
-import { GenericModalState } from "../enums/generic-modal-state.enum";
-import { IGenericCloseResult } from "./igeneric-close-result.interface";
+import { ModalState } from "../enums/modal-state.enum";
+import { IModalCloseResult } from "./imodal-close-result.interface";
 
-export interface IGenericModalRef<
+export interface IModalRef<
     D = any,
     R = any,
-    C extends GenericModal<D, R> = GenericModal<D, R>> {
+    C extends Modal<D, R> = Modal<D, R>> {
     modalContainer: Type<ModalCore<D, R, C>>;
     modalContainerRef: ComponentRef<ModalCore<D, R, C>>;
     modalContainerElement: HTMLElement;
@@ -17,12 +17,12 @@ export interface IGenericModalRef<
 
     componentRef: ComponentRef<C>;
 
-    modalState$(): Observable<GenericModalState>;
+    modalState$(): Observable<ModalState>;
 
     selfIdentifier: { constructor: Function };
-    modalConfig?: GenericModalConfig<D>;
+    modalConfig?: ModalConfig<D>;
 
-    afterClosed(): Observable<IGenericCloseResult<R>>;
+    afterClosed(): Observable<IModalCloseResult<R>>;
     backdropClick(): Observable<MouseEvent>;
 
     open(): void;

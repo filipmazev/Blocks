@@ -1,5 +1,5 @@
 import { Component, input, output } from "@angular/core";
-import { GenericModalConfig } from "../../../../classes/generic-modal-config";
+import { ModalConfig } from "../../../../classes/modal-config";
 import { ModalCloseMode } from "../../../../types/modal.types";
 import { ModalDefaultCloseButton } from "../default-close-button/default-close-button";
 
@@ -12,7 +12,7 @@ import { ModalDefaultCloseButton } from "../default-close-button/default-close-b
   styleUrl: './modal-banner.scss',
 })
 export class ModalBanner<D = unknown> {
-  readonly config = input.required<GenericModalConfig<D> | undefined>();
+  readonly config = input.required<ModalConfig<D> | undefined>();
 
   readonly close = output<ModalCloseMode | undefined>();
 }

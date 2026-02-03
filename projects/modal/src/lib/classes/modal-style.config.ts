@@ -1,18 +1,18 @@
-import { EMPTY_STRING } from "../constants/generic-modal-common.constants";
-import { IGenericModalStyleConfig } from "../interfaces/igeneric-modal-style-config.interface";
-import { IGenericSwipeableModalConfig } from "../interfaces/igeneric-swipeable-modal-config";
-import { ModalPoistion } from "../types/modal.types";
+import { EMPTY_STRING } from "../constants/modal-common.constants";
+import { IModalStyleConfig } from "../interfaces/imodal-style-config.interface";
+import { IBottomSheetModalConfig } from "../interfaces/ibottom-sheet-modal-config";
+import { BreakpointKey, ModalLayout } from "../types/modal.types";
 
-export class GenericModalStyleConfig implements IGenericModalStyleConfig {
-    position: ModalPoistion;
-    handleMobile: boolean;
+export class ModalStyleConfig implements IModalStyleConfig {
+    layout: ModalLayout;
+    breakpoints?: Partial<Record<BreakpointKey, ModalLayout>>;
 
     animate: boolean;
     hasBackdrop: boolean;
     closeDelay?: number;
     showCloseButton?: boolean;
 
-    mobileConfig: IGenericSwipeableModalConfig;
+    mobileConfig: IBottomSheetModalConfig;
 
     contentWrapper: boolean;
 
@@ -21,9 +21,9 @@ export class GenericModalStyleConfig implements IGenericModalStyleConfig {
 
     overrideFullHeight: boolean;
 
-    constructor(config?: IGenericModalStyleConfig) {
-        this.position = config?.position ?? "center";
-        this.handleMobile = config?.handleMobile ?? true;
+    constructor(config?: IModalStyleConfig) {
+        this.layout = config?.layout ?? "center";
+        this.breakpoints = config?.breakpoints;
 
         this.animate = config?.animate ?? true;
         this.hasBackdrop = config?.hasBackdrop ?? true;

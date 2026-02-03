@@ -1,22 +1,22 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output, signal, computed } from '@angular/core';
-import { GenericModalConfig } from '../../../classes/generic-modal-config';
+import { ModalConfig } from '../../../classes/modal-config';
 import { ModalCloseMode } from '../../../types/modal.types';
-import * as swipeConst from '../../../constants/generic-modal-swipe.constants';
+import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constants';
 
 @Component({
-  selector: 'modal-swipeable',
+  selector: 'modal-bottom-sheet',
   imports: [
     NgClass,
     NgTemplateOutlet
   ],
-  templateUrl: './modal-swipeable.html',
-  styleUrl: './modal-swipeable.scss',
+  templateUrl: './modal-bottom-sheet.html',
+  styleUrl: './modal-bottom-sheet.scss',
 })
-export class ModalSwipeable implements OnInit, OnDestroy {
+export class ModalBottomSheet implements OnInit, OnDestroy {
   readonly headerTemplate = input.required<TemplateRef<any> | null>();
   readonly footerTemplate = input.required<TemplateRef<any> | null>();
-  readonly config = input.required<GenericModalConfig<any> | undefined>();
+  readonly config = input.required<ModalConfig<any> | undefined>();
   readonly isOpen = input.required<boolean>();
   readonly isAnimated = input.required<boolean>();
   readonly animationDuration = input.required<number>();
@@ -41,7 +41,7 @@ export class ModalSwipeable implements OnInit, OnDestroy {
   protected isTrackingSwipe: boolean = false;
 
   private isTouchActive = false;
-  private swipeableModalInitiated: boolean = false;
+  private bottomSheetInitiated: boolean = false;
   
   private cleanupListeners: (() => void) | null = null;
   private globalResizeCleanup: (() => void) | null = null;
@@ -66,7 +66,7 @@ export class ModalSwipeable implements OnInit, OnDestroy {
     const hasTouch = typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0);
     if (!hasTouch) return;
 
-    this.initSwipeableModalParams();
+    this.initBottomSheetModalParams();
     this.isTrackingSwipe = true;
 
     const target = this.verticalSwipeTarget?.nativeElement;
@@ -111,7 +111,7 @@ export class ModalSwipeable implements OnInit, OnDestroy {
       const duration = event.timeStamp - startTime || 1;
       const velocityY = deltaY / duration;
 
-      if (deltaY > limit || (velocityY > swipeConst.GENERIC_MODAL_SWIPE_VELOCITY_THRESHOLD && deltaY > 0)) {
+      if (deltaY > limit || (velocityY > bottomSheetConst.MODAL_SWIPE_VELOCITY_THRESHOLD && deltaY > 0)) {
         this.close.emit('cancel');
       } else {
         this.currentTranslateY.set(0);
@@ -142,16 +142,16 @@ export class ModalSwipeable implements OnInit, OnDestroy {
     }
   }
 
-  private initSwipeableModalParams(): void {
-    if (this.swipeableModalInitiated) return;
-    this.swipeableModalInitiated = true;
+  private initBottomSheetModalParams(): void {
+    if (this.bottomSheetInitiated) return;
+    this.bottomSheetInitiated = true;
 
     const config = this.config();
     const style = config?.style?.mobileConfig;
 
     this.downSwipeLimit = style?.downSwipeLimit && style.downSwipeLimit > 0
         ? style.downSwipeLimit
-        : swipeConst.GENERIC_MODAL_DOWN_SWIPE_LIMIT;
+        : bottomSheetConst.MODAL_DOWN_SWIPE_LIMIT;
   }
 
   private monitorInputType(): void {

@@ -1,4 +1,4 @@
-export interface IGenericSwipeableModalConfig {
+export interface IBottomSheetModalConfig {
     downSwipeLimit?: number;
     customHeight?: number;
 }

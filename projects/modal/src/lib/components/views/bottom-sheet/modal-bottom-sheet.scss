@@ -1,6 +1,6 @@
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 
-.swipeable-modal-style {
+.bottom-sheet-modal-style {
     position: fixed;
     z-index: 3;
     min-height: 60vh;
@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 
-.swipeable-modal-inner-content-container {
+.bottom-sheet-modal-inner-content-container {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -53,7 +53,7 @@
     overflow: hidden; 
 }
 
-.swipeable-modal-top-group {
+.bottom-sheet-modal-top-group {
     display: flex;
     flex-direction: column;
     gap: 1rem; 
@@ -61,7 +61,7 @@
     min-height: 0; 
 }
 
-.swipeable-modal-main-content-container {
+.bottom-sheet-modal-main-content-container {
     flex-grow: 1;
     overflow-y: auto;
     min-height: 0;
@@ -70,16 +70,16 @@
     padding: 0; 
 }
 
-.opened-swipeable-modal {
-    animation: opened-swipeable-modal-anim 0.35s;
+.opened-bottom-sheet-modal {
+    animation: opened-bottom-sheet-modal-anim 0.35s;
 }
 
-.swipeable-modal-top-bar {
+.bottom-sheet-modal-top-bar {
     display: flex;
     justify-content: center;
 }
 
-.swipeable-modal-header {
+.bottom-sheet-modal-header {
     flex-shrink: 0;
     width: 100%;
     display: flex;
@@ -88,7 +88,7 @@
     gap: 0.5rem;
 }
 
-.swipeable-modal-footer {
+.bottom-sheet-modal-footer {
     flex-shrink: 0;
     width: 100%;
     display: flex;
@@ -96,7 +96,7 @@
     gap: 0.5rem;
 }
 
-@-moz-keyframes opened-swipeable-modal-anim {
+@-moz-keyframes opened-bottom-sheet-modal-anim {
     0% {
         transform: translateY(100%);
     }
@@ -106,7 +106,7 @@
     }
 }
 
-@-webkit-keyframes opened-swipeable-modal-anim {
+@-webkit-keyframes opened-bottom-sheet-modal-anim {
     0% {
         transform: translateY(100%);
     }
@@ -116,7 +116,7 @@
     }
 }
 
-@keyframes opened-swipeable-modal-anim {
+@keyframes opened-bottom-sheet-modal-anim {
     0% {
         transform: translateY(100%);
     }

@@ -6,33 +6,33 @@
     [style.transform]="modalTransform()"
     [style.transition]="isAnimated() && !isSwipingVertically() ? 'transform 300ms ease-in-out' : ''" 
     [ngClass]="{
-        'opened-swipeable-modal': isAnimated()
+        'opened-bottom-sheet-modal': isAnimated()
     }" 
-    data-horizontal-swipe-target="swipeable-modal" 
-    class="swipeable-modal-style">
+    data-horizontal-swipe-target="bottom-sheet-modal" 
+    class="bottom-sheet-modal-style">
     
     <div #verticalSwipeTarget 
-         class="touch-hitbox swipeable-modal-top-bar"
+         class="touch-hitbox bottom-sheet-modal-top-bar"
          (click)="isTrackingSwipe ? null : close.emit('cancel')">
         <div class="swipe-line"></div>
     </div>
 
-    <div class="swipeable-modal-inner-content-container">
-        <div class="swipeable-modal-top-group">
+    <div class="bottom-sheet-modal-inner-content-container">
+        <div class="bottom-sheet-modal-top-group">
             @if (headerTemplate()) {
-                <div class="swipeable-modal-header">
+                <div class="bottom-sheet-modal-header">
                     <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
                 </div>
             }
 
-            <div class="swipeable-modal-main-content-container"
+            <div class="bottom-sheet-modal-main-content-container"
                 [style.animationDuration]="isAnimated() ? animationDuration() + 'ms' : '0ms'">
                 <ng-content></ng-content>
             </div>
         </div>
 
         @if (footerTemplate()) {
-            <div class="swipeable-modal-footer">
+            <div class="bottom-sheet-modal-footer">
                 <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
             </div>
         }

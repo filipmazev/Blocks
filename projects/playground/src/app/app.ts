@@ -1,6 +1,5 @@
-import { Component, inject, Renderer2, signal, ViewContainerRef } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GenericModalService } from '../../../modal/src/lib/services/generic-modal.service';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +9,4 @@ import { GenericModalService } from '../../../modal/src/lib/services/generic-mod
 })
 export class App {
   protected readonly title = signal('playground');
-  
-  private viewContainerRef = inject(ViewContainerRef);
-  private renderer2 = inject(Renderer2);
-
-  private modals = inject(GenericModalService);
-  
-  constructor() {
-    this.modals.register(this.viewContainerRef, this.renderer2);
-  }
 }

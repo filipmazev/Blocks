@@ -8,8 +8,6 @@
     overflow-y: auto;
     max-height: 80vh;
     max-height: 80dvh;
-
-    max-width: 60vw;
 }
 
 @include respond-down(md) {

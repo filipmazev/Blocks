@@ -1,0 +1,2 @@
+export const MODAL_DOWN_SWIPE_LIMIT = 2;
+export const MODAL_SWIPE_VELOCITY_THRESHOLD = 80; 

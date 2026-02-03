@@ -1,4 +1,4 @@
-@if(!isSwipeableModalActive()) {
+@if(!isBottomSheetModalActive()) {
 <div [ngClass]="modalClasses()" (click)="$event.stopPropagation()"
     [style.--anim-duration.ms]="animationDuration()">
     <div class="side-modal-inner-content-container"
@@ -27,10 +27,10 @@
     }
 </div>
 } @else {
-<modal-swipeable [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
+<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
     [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
-</modal-swipeable>
+</modal-bottom-sheet>
 }
 
 <ng-template #contentTemplate>

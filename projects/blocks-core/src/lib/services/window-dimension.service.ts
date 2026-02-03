@@ -2,7 +2,7 @@ import { Injectable, inject, NgZone, PLATFORM_ID, signal, computed } from '@angu
 import { isPlatformBrowser } from '@angular/common';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { BREAKPOINTS } from '../constants/window-dimension-constants';
+import { BREAKPOINTS } from '../constants/window-dimension.constants';
 import { WindowDimensions } from '../interfaces/window-dimensions.interface';
 
 @Injectable({

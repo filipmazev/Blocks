@@ -1,4 +1,4 @@
-export enum GenericModalState {
+export enum ModalState {
     OPEN = "open",
     OPENING = "opening",
     CLOSED = "closed",

@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy, inject } from "@angular/core";
-import { GenericModalRef } from "./generic-modal-ref";
+import { ModalRef } from "./modal-ref";
 import { Subject, takeUntil } from "rxjs";
-import { GenericModalService } from "../services/generic-modal.service";
+import { ModalService } from "../services/modal.service";
 
 @Injectable()
-export abstract class GenericModal<D, R> implements OnDestroy {
-    protected genericModalService = inject(GenericModalService);
+export abstract class Modal<D, R> implements OnDestroy {
+    protected ModalService = inject(ModalService);
 
-    modal?: GenericModalRef<D, R>;
+    modal?: ModalRef<D, R>;
 
     protected modalGetSubscription$ = new Subject<void>();
 
@@ -23,11 +23,11 @@ export abstract class GenericModal<D, R> implements OnDestroy {
     protected createModalSubscription() {
         this.modalGetSubscription$ = new Subject<void>();
 
-        this.genericModalService
+        this.ModalService
             .getSubscribe<D, R>(this.constructor)
             .pipe(takeUntil(this.modalGetSubscription$))
             .subscribe((modal) => {
-                if (modal instanceof GenericModalRef) {
+                if (modal instanceof ModalRef) {
                     this.modal = modal;
                     this.afterModalGet();
                     this.modalGetSubscription$.next();

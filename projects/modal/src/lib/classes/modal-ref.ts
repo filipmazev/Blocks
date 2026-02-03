@@ -1,18 +1,18 @@
 import { ComponentRef, Type } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { GenericModalConfig } from "./generic-modal-config";
+import { ModalConfig } from "./modal-config";
 import { ModalCore } from "../components/modal-core";
-import { GenericModalState } from "../enums/generic-modal-state.enum";
-import { IGenericCloseResult } from "../interfaces/igeneric-close-result.interface";
-import { IGenericModalRef } from "../interfaces/igeneric-modal-ref.interface";
-import { GenericModalService } from "../services/generic-modal.service";
+import { ModalState } from "../enums/modal-state.enum";
+import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
+import { IModalRef } from "../interfaces/imodal-ref.interface";
+import { ModalService } from "../services/modal.service";
 import { ModalCloseMode } from "../types/modal.types";
-import { GenericModal } from "./generic-modal";
+import { Modal } from "./modal";
 
-export class GenericModalRef<
+export class ModalRef<
     D = unknown,
     R = any,
-    C extends GenericModal<D, R> = GenericModal<D, R>> implements IGenericModalRef<D, R, C> {
+    C extends Modal<D, R> = Modal<D, R>> implements IModalRef<D, R, C> {
 
     //#region Modal Container
 
@@ -74,15 +74,15 @@ export class GenericModalRef<
 
     //#region Self
 
-    private _modalState: GenericModalState = GenericModalState.CLOSED;
+    private _modalState: ModalState = ModalState.CLOSED;
 
-    private modalState = new BehaviorSubject<GenericModalState>(this.getStatus());
+    private modalState = new BehaviorSubject<ModalState>(this.getStatus());
 
-    public modalState$(): Observable<GenericModalState> {
+    public modalState$(): Observable<ModalState> {
         return this.modalState.asObservable();
     }
 
-    private getStatus(): GenericModalState {
+    private getStatus(): ModalState {
         return this._modalState;
     }
 
@@ -98,13 +98,13 @@ export class GenericModalRef<
         return this._selfIdentifier;
     }
 
-    private _modalConfig?: GenericModalConfig<D> = undefined;
+    private _modalConfig?: ModalConfig<D> = undefined;
 
-    private set modalConfig(modalConfig: GenericModalConfig<D> | undefined) {
+    private set modalConfig(modalConfig: ModalConfig<D> | undefined) {
         this._modalConfig = modalConfig;
     }
 
-    public get modalConfig(): GenericModalConfig<D> | undefined {
+    public get modalConfig(): ModalConfig<D> | undefined {
         return this._modalConfig;
     }
     //#endregion
@@ -121,13 +121,13 @@ export class GenericModalRef<
         this.backdropClickSubject.next(event);
     }
 
-    private afterCloseSubject: Subject<IGenericCloseResult<R>> = new Subject<IGenericCloseResult<R>>();
+    private afterCloseSubject: Subject<IModalCloseResult<R>> = new Subject<IModalCloseResult<R>>();
 
-    public afterClosed(): Observable<IGenericCloseResult<R>> {
+    public afterClosed(): Observable<IModalCloseResult<R>> {
         return this.afterCloseSubject.asObservable();
     }
 
-    private afterClose(result: IGenericCloseResult<R>) {
+    private afterClose(result: IModalCloseResult<R>) {
         this.afterCloseSubject.next(result);
     }
 
@@ -137,8 +137,8 @@ export class GenericModalRef<
         componentRef: ComponentRef<C>,
         selfIdentifier: { constructor: Function },
         modalContainerRef: ComponentRef<ModalCore<D, R, C>>,
-        private modalService: GenericModalService,
-        modalConfig?: GenericModalConfig<D>,
+        private modalService: ModalService,
+        modalConfig?: ModalConfig<D>,
     ) {
         this.modalConfig = modalConfig;
         this.modalContainerRef = modalContainerRef;
@@ -151,12 +151,12 @@ export class GenericModalRef<
     //#region Public Methods
 
     public async open(): Promise<void> {
-        this._modalState = GenericModalState.OPENING;
-        this.modalState.next(GenericModalState.OPENING);
+        this._modalState = ModalState.OPENING;
+        this.modalState.next(ModalState.OPENING);
 
         this.modalContainerRef.instance.componentRef = this._componentRef;
 
-        const config = new GenericModalConfig(this.modalConfig);
+        const config = new ModalConfig(this.modalConfig);
 
         this.modalContainerRef.instance.config = config;
 
@@ -168,8 +168,8 @@ export class GenericModalRef<
             this.backdropClicked(event);
         });
 
-        this._modalState = GenericModalState.OPEN;
-        this.modalState.next(GenericModalState.OPEN);
+        this._modalState = ModalState.OPEN;
+        this.modalState.next(ModalState.OPEN);
     }
 
     public close(state: ModalCloseMode = "cancel", result: R | undefined = undefined, forceClose: boolean = false): void {
@@ -180,9 +180,9 @@ export class GenericModalRef<
 
     //#region Private Methods
 
-    private handleClose(result: IGenericCloseResult<R>): void {
-        this._modalState = GenericModalState.CLOSING;
-        this.modalState.next(GenericModalState.CLOSING);
+    private handleClose(result: IModalCloseResult<R>): void {
+        this._modalState = ModalState.CLOSING;
+        this.modalState.next(ModalState.CLOSING);
 
         setTimeout(
             () => {
@@ -192,8 +192,8 @@ export class GenericModalRef<
 
                 this.modalContainerRef.destroy();
 
-                this._modalState = GenericModalState.CLOSED;
-                this.modalState.next(GenericModalState.CLOSED);
+                this._modalState = ModalState.CLOSED;
+                this.modalState.next(ModalState.CLOSED);
 
                 this.afterClose(result);
                 this.modalService?.close(this.selfIdentifier, true);

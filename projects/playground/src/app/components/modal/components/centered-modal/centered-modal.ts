@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { GenericModal } from '../../../../../../../modal/src/lib/classes/generic-modal';
-import { GENERIC_MODAL_DATA } from '../../../../../../../modal/src/lib/tokens/generic-modal-data.token';
+import { Modal } from '../../../../../../../modal/src/lib/classes/modal';
+import { MODAL_DATA } from '../../../../../../../modal/src/lib/tokens/modal-data.token';
 import { ModalHeaderDirective } from '../../../../../../../modal/src/lib/directives/modal-header.directive';
 import { ModalFooterDirective } from '../../../../../../../modal/src/public-api';
 
@@ -13,8 +13,8 @@ import { ModalFooterDirective } from '../../../../../../../modal/src/public-api'
   templateUrl: './centered-modal.html',
   styleUrl: './centered-modal.scss',
 })
-export class CenteredModal extends GenericModal<string, undefined>  {
-  protected data = inject<string>(GENERIC_MODAL_DATA);
+export class CenteredModal extends Modal<string, undefined>  {
+  protected data = inject<string>(MODAL_DATA);
 
   constructor() {
     super();

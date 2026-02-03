@@ -1,27 +1,42 @@
-@if (config?.style?.hasBackdrop && (isSide || isSwipeableModalActive())) {
+@if (config?.style?.hasBackdrop && (isSide() || isBottomSheetModalActive())) {
 <modal-backdrop [isAnimated]="isAnimated" [isOpen]="isOpen()" (click)="onBackdropClick($event)">
 </modal-backdrop>
 }
 
 <ng-container #modalContainer>
     @switch (true) {
-    @case (isSide) {
-    <modal-side [headerTemplate]="headerTemplate()"  [footerTemplate]="footerTemplate()" [config]="config" [isOpen]="isOpen()" [isAnimated]="isAnimated"
-        [isSwipeableModalActive]="isSwipeableModalActive()" [animationDuration]="animationDuration"
-        [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)">
-        <ng-container [ngTemplateOutlet]="contentTemplate">
-        </ng-container>
-    </modal-side>
-    } 
-    @case (isCentered) {
-    <modal-centered [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config" [isOpen]="isOpen()" [isAnimated]="isAnimated"
-        [isSwipeableModalActive]="isSwipeableModalActive()" [animationDuration]="animationDuration"
-        [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)"
-        (onBackdropClick)="onBackdropClick($event)">
-        <ng-container [ngTemplateOutlet]="contentTemplate">
-        </ng-container>
-    </modal-centered>
-    }
+        @case (isSide()) {
+            <modal-side 
+                [layout]="effectiveLayout()"
+                [headerTemplate]="headerTemplate()"  
+                [footerTemplate]="footerTemplate()" 
+                [config]="config" 
+                [isOpen]="isOpen()" 
+                [isAnimated]="isAnimated"
+                [isBottomSheetModalActive]="isBottomSheetModalActive()" 
+                [animationDuration]="animationDuration"
+                [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" 
+                [hasBanner]="hasBanner" 
+                (close)="close($event)">
+                <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
+            </modal-side>
+        } 
+        @case (isCentered()) {
+            <modal-centered 
+                [headerTemplate]="headerTemplate()" 
+                [footerTemplate]="footerTemplate()" 
+                [config]="config" 
+                [isOpen]="isOpen()" 
+                [isAnimated]="isAnimated"
+                [isBottomSheetModalActive]="isBottomSheetModalActive()" 
+                [animationDuration]="animationDuration"
+                [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" 
+                [hasBanner]="hasBanner" 
+                (close)="close($event)"
+                (onBackdropClick)="onBackdropClick($event)">
+                <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
+            </modal-centered>
+        }
     }
 </ng-container>
 
