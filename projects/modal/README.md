@@ -58,12 +58,12 @@ Other themes are also available such as:
 
 ### Create a Modal Component
 
-Your modal content components must extend `Modal<TData, TResult>`:
+Your modal content components must extend `IModal<TData, TResult>`:
 
 Typescript:
 
 ```typescript
-import { Modal, MODAL_DATA, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/modal';
+import { Modal, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/modal';
 
 @Component({
   selector: 'app-my-modal-component',
@@ -75,19 +75,7 @@ import { Modal, MODAL_DATA, ModalHeaderDirective, ModalFooterDirective } from '@
   styleUrl: './my-modal-component.scss',
 })
 export class MyModalComponent extends Modal<MyData, MyResult> {
-  protected data = inject<MyData>(MODAL_DATA);
 
-  constructor() {
-    super();
-  }
-
-  override afterModalGet(): void {
-    // This is called after the modal service has returned the instance of the generated modal to this component. You can access this.modal only after this 
-  }
-
-  override onDestroy(): void {
-    // Perform onDestroy logic here as this method is called on ngOnDestroy on Modal
-  }
 }
 ```
 
@@ -98,9 +86,13 @@ HTML (Template):
     Example Header
 </div>
 
-<div>
-   Lorem ipsum dolor sit, amet consectetur adipisicing elit. A, iste voluptatum accusamus facere explicabo impedit exercitationem dolore...
-</div>
+<h1>
+ {{ data.Title }}
+</h1>
+
+<p>
+ {{ data.Body }}
+</p>
 
 <div *modalFooter>
     Example Footer
@@ -127,7 +119,6 @@ Accessible via this.modal inside any component that extends Modal. This referenc
 * `componentRef: (ComponentRef<C>)` The Angular ComponentRef of the content component (your component) inside the modal.
 * `modalContainerRef: (ComponentRef<ModalComponent>)` The Angular ComponentRef of the wrapper container (the shell responsible for the backdrop, animations, and layout).
 * `modalContainerElement: (HTMLElement)` The native HTML element of the modal container.
-* `selfIdentifier: ({ constructor: Function })` An object identifying the constructor of the component, used internally for instance tracking.
 
 #### `IModalCloseResult`
 
@@ -207,12 +198,9 @@ Controls the visual appearance:
 
 Configuration for the confirmation modal triggered when a user attempts to close the parent modal (e.g., "Unsaved Changes"):
 
-* `confirmModalComponent` |`ComponentType<ConfirmModal>`|: (required) The component class to use for the confirmation modal.
-* `confirmClose` |`boolean`|: (required) Whether the confirmation flow should be active. If false, the modal closes immediately without confirmation.
+* `component` |`ComponentType<ConfirmModal>`|: (required) The component class to use for the confirmation modal.
+* `config` |`IModalConfig<ConfirmModalData>`|: (optional) The configuration for the confirm modal.
 * `confirmOnSubmit` |`boolean`|: (optional) Whether the confirmation should also trigger when the modal is closed via a "submit" (success) action. Defaults to false (meaning confirmation is only required for 'cancel' or backdrop closure).
-* `style` |`IModalStyleConfig`|: (optional) The visual style configuration for the confirmation modal instance.
-* `data` |`ConfirmModalData`|: (optional) The data to pass to the confirmation component. The component needs to use the @Inject(MODAL_DATA) decorator to receive this.
-* `bannerText` |`string`|: (optional) The text to display in the header banner of the confirmation modal.
 * `bypassSelfCheck` |`boolean`|: (optional) Whether the modal should bypass the internal check that ensures the confirmation is attached to the specific closing modal. Defaults to false.
 
 ### `IBottomSheetModalConfig`

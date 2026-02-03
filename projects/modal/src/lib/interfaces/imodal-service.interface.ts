@@ -1,17 +1,26 @@
+import { Type } from "@angular/core";
 import { ComponentType } from "@angular/cdk/portal";
 import { IModalConfig } from "./imodal-config.interface";
-import { Observable } from "rxjs";
 import { ModalRef } from "../classes/modal-ref";
-import { ModalCore } from "../components/modal-core";
+import { IModal } from "./imodal";
 
+/**
+ * Interface for Modal Service
+ * @param D The type of data passed to the modal, will default to any
+ * @param R The type of result returned from the modal, will default to unknown
+ * @param C The type of the modal component, will default to IModal<D, R>
+ * @param {Function} open Function to open a modal with specified component and configuration
+ * @param {Function} close Function to close a specific modal
+ * @param {Function} unregister  Function to unregister a specific modal
+ * @param {Function} closeAll Function to close all open modals
+ * @param {Function} modalsCount Function to get the count of currently open modals
+ * @param {Function} find Function to check if a modal with a specific component type is open
+ */
 export interface IModalService {
-    open: (component: ComponentType<any>, config?: IModalConfig<any>) => ModalRef<any, any, any>;
-
-    close: (self: { constructor: Function }, fromCloseFunction: boolean | undefined) => void;
-    closeAll: () => void;
-
-    get: (self: { constructor: Function }) => ModalRef<any, any, any> | ModalCore<any, any, any> | undefined;
-    getSubscribe(self: { constructor: Function }): Observable<ModalRef<any, any, any> | ModalCore<any, any, any> | undefined>;
-
-    modalsCount: () => number;
+    open<D, R, C extends IModal<D, R> = IModal<D, R>, ConfirmModalData = unknown, ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>>(component: ComponentType<C>, config?: IModalConfig<D, ConfirmModalData, ConfirmModal>): ModalRef<D, R, C>;
+    close<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void;
+    unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void;
+    closeAll(): void;
+    modalsCount(): number;
+    find<D, R>(componentType: Type<IModal<D, R>>): boolean;
 }

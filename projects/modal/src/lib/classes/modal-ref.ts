@@ -7,12 +7,10 @@ import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
 import { IModalRef } from "../interfaces/imodal-ref.interface";
 import { ModalService } from "../services/modal.service";
 import { ModalCloseMode } from "../types/modal.types";
-import { Modal } from "./modal";
+import { IModal } from "../interfaces/imodal";
+import { ComponentType } from "@angular/cdk/portal";
 
-export class ModalRef<
-    D = unknown,
-    R = any,
-    C extends Modal<D, R> = Modal<D, R>> implements IModalRef<D, R, C> {
+export class ModalRef<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
 
     //#region Modal Container
 
@@ -86,18 +84,6 @@ export class ModalRef<
         return this._modalState;
     }
 
-    private _selfIdentifier: { constructor: Function } = {} as {
-        constructor: Function;
-    };
-
-    private set selfIdentifier(selfIdentifier: { constructor: Function }) {
-        this._selfIdentifier = selfIdentifier;
-    }
-
-    public get selfIdentifier(): { constructor: Function } {
-        return this._selfIdentifier;
-    }
-
     private _modalConfig?: ModalConfig<D> = undefined;
 
     private set modalConfig(modalConfig: ModalConfig<D> | undefined) {
@@ -123,6 +109,10 @@ export class ModalRef<
 
     private afterCloseSubject: Subject<IModalCloseResult<R>> = new Subject<IModalCloseResult<R>>();
 
+    /**
+     * Observable that emits when the modal has been closed.
+     * @returns An Observable that emits an IModalCloseResult<R> when the modal is closed.
+     */
     public afterClosed(): Observable<IModalCloseResult<R>> {
         return this.afterCloseSubject.asObservable();
     }
@@ -135,7 +125,7 @@ export class ModalRef<
 
     constructor(
         componentRef: ComponentRef<C>,
-        selfIdentifier: { constructor: Function },
+        public componentType: ComponentType<C>,
         modalContainerRef: ComponentRef<ModalCore<D, R, C>>,
         private modalService: ModalService,
         modalConfig?: ModalConfig<D>,
@@ -145,7 +135,6 @@ export class ModalRef<
         this.modalContainerElement = modalContainerRef.location.nativeElement;
 
         this.componentRef = componentRef;
-        this.selfIdentifier = selfIdentifier;
     }
 
     //#region Public Methods
@@ -196,7 +185,9 @@ export class ModalRef<
                 this.modalState.next(ModalState.CLOSED);
 
                 this.afterClose(result);
-                this.modalService?.close(this.selfIdentifier, true);
+
+                this.modalService?.unregister(this);
+
             }, this.modalContainerRef.instance.animationDuration);
     }
     //#endregion

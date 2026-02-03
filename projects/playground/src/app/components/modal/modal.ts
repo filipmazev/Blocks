@@ -31,15 +31,23 @@ export class Modal {
           'xl': 'center'
         }
       },
-      confirmCloseConfig: {
-        confirmModalComponent: ConfirmClose,
-        data: "Are you sure you want to close the modal?",
-        confirmClose: true,
+      confirmOnCloseModal: {
+        component: ConfirmClose,
+        config: { 
+          data: "Are you sure you want to close the modal?",
+          confirmOnCloseModal: {
+            component: ConfirmClose,
+            confirmOnSubmit: true,
+            config: {
+              data: "Are you really really sure you want to close the modal?",
+            }
+          }
+        }
       }
     });
 
     modal.afterClosed().subscribe((result: IModalCloseResult<string | undefined>) => {
       console.log('Centered Modal closed', result.state);
-    }); 
+    });
   }
 }

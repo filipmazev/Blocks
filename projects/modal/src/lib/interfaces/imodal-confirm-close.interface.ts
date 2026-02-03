@@ -1,29 +1,23 @@
 import { ComponentType } from "@angular/cdk/portal";
-import { IModalStyleConfig } from "./imodal-style-config.interface";
-import { Modal } from "../classes/modal";
+import { IModalConfig } from "./imodal-config.interface";
+import { IModal } from "./imodal";
 
 /**
  * Interface for the Confirm Close Modal
- * @param {ComponentType<any>} confirmModalComponent The component to use for the confirm modal
- * @param {boolean} confirmClose (required) Whether the modal should confirm close or not
+ * @param {ConfirmModalData} The type of data passed to the confirm modal
+ * @param {ConfirmModal} The type of the confirm modal component, will default to IModal<ConfirmModalData, undefined>
+ * @param {ComponentType<ConfirmModal>} component The component to use for the confirm modal
+ * @param {IModalConfig<ConfirmModalData>} config (optional) The configuration for the confirm modal
  * @param {boolean} confirmOnSubmit (optional) Whether the modal should confirm on submit or not, will default to false (if false, will only need to confirm when close state is 'cancel')
- * @param {IModalStyleConfig} style (optional) The style configuration for the modal
- * @param {D | null} data (optional) The data to pass to the component of the modal, the component needs to have the @Inject(MODAL_DATA) data: any; decorator to receive this data
- * @param {string} bannerText (optional) The text to display in the banner of the modal
  * @param {boolean} bypassSelfCheck (optional) Whether the modal should bypass the self check or not, will default to false (if true, will not check if the modal is the same as the one that opened it)
  */
 export interface IModalConfirmCloseConfig<
-    ConfirmModalData = any,
-    ConfirmModal extends Modal<ConfirmModalData, undefined> = Modal<ConfirmModalData, undefined>> {
-    confirmModalComponent: ComponentType<ConfirmModal>;
+    ConfirmModalData,
+    ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>> {
+        
+    component: ComponentType<ConfirmModal>;
+    config?: IModalConfig<ConfirmModalData, any>;
 
-    confirmClose: boolean;
     confirmOnSubmit?: boolean;
-
-    style?: IModalStyleConfig;
-    data?: ConfirmModalData | null;
-
-    bannerText?: string;
-
     bypassSelfCheck?: boolean;
 }

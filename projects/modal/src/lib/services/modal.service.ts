@@ -1,26 +1,16 @@
-import { 
-    Injectable, 
-    inject, 
-    Injector, 
-    ApplicationRef, 
-    EnvironmentInjector, 
-    createComponent, 
-    RendererFactory2, 
-    Renderer2 
-} from "@angular/core";
+import { Injectable, inject, Injector, ApplicationRef, EnvironmentInjector, createComponent, RendererFactory2, Renderer2, Type } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { Router, NavigationEnd } from "@angular/router";
-import { BehaviorSubject, filter, Observable, map, skip } from "rxjs";
-import { Modal } from "../classes/modal";
+import { BehaviorSubject, filter, skip } from "rxjs";
 import { ModalConfig } from "../classes/modal-config";
 import { ModalRef } from "../classes/modal-ref";
 import { ModalCore } from "../components/modal-core";
-import { ModalErrors } from "../enums/modal-errors.enum";
 import { IModalConfig } from "../interfaces/imodal-config.interface";
 import { IModalService } from "../interfaces/imodal-service.interface";
 import { MODAL_DATA } from "../tokens/modal-data.token";
 import { ComponentType } from "@angular/cdk/portal";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { IModal } from "../interfaces/imodal";
 
 @Injectable({
     providedIn: "root",
@@ -29,20 +19,17 @@ export class ModalService implements IModalService {
 
     private router = inject(Router);
     private injector = inject(Injector);
-    
     private appRef = inject(ApplicationRef);
     private environmentInjector = inject(EnvironmentInjector);
-    
     private rendererFactory = inject(RendererFactory2);
     private renderer: Renderer2;
-    
     private document = inject(DOCUMENT);
 
     //#region Properties
 
-    private modals: Map<{ constructor: Function }, ModalRef | ModalCore> = new Map();
-    private modalsSubject = new BehaviorSubject<Map<{ constructor: Function }, ModalRef | ModalCore>>(this.modals);
-   
+    private modals: Set<ModalRef<any, any, any>> = new Set();
+    private modalsSubject = new BehaviorSubject<Set<ModalRef<any, any, any>>>(this.modals);
+
     //#endregion
 
     constructor() {
@@ -50,13 +37,13 @@ export class ModalService implements IModalService {
         this.createSubscriptions();
     }
 
-    //#region Private Methods
+    //#region Subscription Methods
 
     private createSubscriptions(): void {
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                skip(1), 
+                skip(1),
                 takeUntilDestroyed()
             )
             .subscribe(() => {
@@ -70,7 +57,13 @@ export class ModalService implements IModalService {
 
     //#region Public Methods
 
-    public open<D, R, C extends Modal<D, R> = Modal<D, R>>(component: ComponentType<C>, config?: IModalConfig<D>): ModalRef<D, R, C> {
+    /**
+     * Opens a modal with the specified component and configuration.
+     * @param component The component to be displayed in the modal.
+     * @param config Optional configuration for the modal.
+     * @returns A ModalRef instance representing the opened modal.
+     */
+    public open<D, R, C extends IModal<D, R> = IModal<D, R>, ConfirmModalData = unknown, ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>>(component: ComponentType<C>, config?: IModalConfig<D, ConfirmModalData, ConfirmModal>): ModalRef<D, R, C> {
         const dataInjector = Injector.create({
             providers: [{ provide: MODAL_DATA, useValue: config?.data }],
             parent: this.injector,
@@ -94,7 +87,7 @@ export class ModalService implements IModalService {
         });
 
         wrapperRef.instance.componentRef = contentRef;
-        wrapperRef.instance.config = new ModalConfig(config); 
+        wrapperRef.instance.config = new ModalConfig(config);
 
         this.appRef.attachView(wrapperRef.hostView);
         this.document.body.appendChild(wrapperRef.location.nativeElement);
@@ -107,18 +100,23 @@ export class ModalService implements IModalService {
             new ModalConfig(config),
         );
 
+        if (this.isIModal<D, R>(contentRef.instance)) {
+            contentRef.instance.modal = modal;
+            contentRef.instance.onModalInit();
+        }
+
         wrapperRef.onDestroy(() => {
             this.appRef.detachView(wrapperRef.hostView);
             wrapperRef.location.nativeElement.remove();
         });
-        
+
         const modalElement = modal.componentRef.location.nativeElement;
         this.renderer.setStyle(modalElement, 'height', '97%');
         this.renderer.setStyle(modalElement, 'width', '100%');
         this.renderer.setStyle(modalElement, 'display', 'flex');
         this.renderer.setStyle(modalElement, 'flex-grow', '1');
 
-        this.modals.set(modal.selfIdentifier, modal);
+        this.modals.add(modal);
         this.modalsSubject.next(this.modals);
 
         modal.open();
@@ -126,69 +124,69 @@ export class ModalService implements IModalService {
         return modal;
     }
 
-    public close(self: { constructor: Function }, fromCloseFunction: boolean | undefined = false): void {
-        if (this.modals.has(self)) {
-            if (fromCloseFunction !== true) {
-                const modal = this.modals.get(self);
-                if (modal && modal instanceof ModalRef) {
-                    modal.close();
-                }
-            }
-            this.modals.delete(self);
-            this.modalsSubject.next(this.modals);
-        }
+    /**
+     * Closes the specified modal.
+     * @param modal The ModalRef instance representing the modal to be closed.
+     */
+    public close<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
+        modal.close();
     }
 
-    public closeAll(onNavigate: boolean = false): void {
-        this.modals.forEach((modal) => {
-            if (modal instanceof ModalRef) {
-                if (modal.modalConfig?.disableCloseOnNavigation !== true || !onNavigate) {
-                    modal.close("cancel", undefined, true);
-                }
-            }
-        });
-
-        this.modals.clear();
+    /**
+     * Unregisters the specified modal from the service.
+     * @param modal The ModalRef instance representing the modal to be unregistered.
+     */
+    public unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
+        this.modals.delete(modal);
         this.modalsSubject.next(this.modals);
     }
 
-    public get<D, R, C extends Modal<D, R> = Modal<D, R>>(self: { constructor: Function }): ModalRef<D, R, C> | ModalCore<D, R, C> | undefined {
-        const modal = this.modals.get(self);
-        this.modalRequestedTypeCheck(modal);
-        return modal as ModalRef<D, R, C> | ModalCore<D, R, C> | undefined;
+    /** 
+     * Closes all open modals.
+     * @param onNavigate Indicates if the closeAll is triggered by navigation event.
+    */
+    public closeAll(onNavigate: boolean = false): void {
+        this.modals.forEach((modal) => {
+            if (modal.modalConfig?.disableCloseOnNavigation !== true || !onNavigate) {
+                modal.close("cancel", undefined, true);
+            }
+        });
     }
 
-    public getSubscribe<D, R, C extends Modal<D, R> = Modal<D, R>>(self: { constructor: Function }): Observable<ModalRef<D, R, C> | ModalCore<D, R, C> | undefined> {
-        return this.modalsSubject.asObservable().pipe(map((modals) => {
-            const modal = modals.get(self);
-            this.modalRequestedTypeCheck(modal);
-            return modal as ModalRef<D, R, C> | ModalCore<D, R, C> | undefined;
-        }));
+    /**
+     * Finds if a modal with the specified component type is currently open.
+     * @param componentType The component type to search for.
+     * @returns True if a modal with the specified component type is open, false otherwise.
+     */
+    public find<D, R>(componentType: Type<IModal<D, R>>): boolean {
+        for (const modal of this.modals) {
+            if (modal.componentRef.componentType === componentType) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    /** 
+     * Gets the count of currently open modals.
+     * @returns The number of open modals.
+    */
     public modalsCount(): number {
         return this.modals.size;
-    }
-
-    public find(self: { constructor: Function }): boolean {
-        return this.modals.has(self);
     }
 
     //#endregion
 
     //#region Helper Methods
 
-    public modalRequestedTypeCheck(modal: ModalRef | ModalCore | undefined): boolean {
-        if (modal) {
-            if (modal instanceof ModalRef) {
-                if (!(modal.componentRef.instance instanceof Modal)) {
-                    throw new Error(ModalErrors.MODAL_DOESNT_MATCH_THE_REQUESTED_TYPES);
-                }
-            } else if (!(modal instanceof ModalCore)) {
-                throw new Error(ModalErrors.MODAL_DOESNT_MATCH_THE_REQUESTED_TYPES);
-            }
-        }
-        return true;
+    private isIModal<D, R>(component: unknown): component is IModal<D, R> {
+        return (
+            typeof component === 'object' &&
+            component !== null &&
+            'onModalInit' in component &&
+            typeof (component as IModal<D, R>).onModalInit === 'function'
+        );
     }
+
     //#endregion
 }

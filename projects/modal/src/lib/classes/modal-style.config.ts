@@ -1,26 +1,25 @@
-import { EMPTY_STRING } from "../constants/modal-common.constants";
 import { IModalStyleConfig } from "../interfaces/imodal-style-config.interface";
 import { IBottomSheetModalConfig } from "../interfaces/ibottom-sheet-modal-config";
 import { BreakpointKey, ModalLayout } from "../types/modal.types";
 
 export class ModalStyleConfig implements IModalStyleConfig {
-    layout: ModalLayout;
-    breakpoints?: Partial<Record<BreakpointKey, ModalLayout>>;
+    public layout: ModalLayout;
+    public breakpoints?: Partial<Record<BreakpointKey, ModalLayout>>;
 
-    animate: boolean;
-    hasBackdrop: boolean;
-    closeDelay?: number;
-    showCloseButton?: boolean;
+    public animate: boolean;
+    public hasBackdrop: boolean;
+    public closeDelay?: number;
+    public showCloseButton?: boolean;
 
-    mobileConfig: IBottomSheetModalConfig;
+    public mobileConfig: IBottomSheetModalConfig;
 
-    contentWrapper: boolean;
+    public contentWrapper: boolean;
 
-    wrapperClasses: string;
-    wrapperStyles: string;
+    public wrapperClasses: string;
+    public wrapperStyles: string;
 
-    overrideFullHeight: boolean;
-
+    public overrideFullHeight: boolean;
+    
     constructor(config?: IModalStyleConfig) {
         this.layout = config?.layout ?? "center";
         this.breakpoints = config?.breakpoints;
@@ -34,8 +33,8 @@ export class ModalStyleConfig implements IModalStyleConfig {
 
         this.contentWrapper = config?.contentWrapper ?? true;
 
-        this.wrapperClasses = config?.wrapperClasses ?? EMPTY_STRING;
-        this.wrapperStyles = config?.wrapperStyles ?? EMPTY_STRING;
+        this.wrapperClasses = config?.wrapperClasses ?? "";
+        this.wrapperStyles = config?.wrapperStyles ?? "";
 
         this.overrideFullHeight = config?.overrideFullHeight ?? false;
     }

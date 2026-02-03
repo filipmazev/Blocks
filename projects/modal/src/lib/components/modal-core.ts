@@ -1,10 +1,7 @@
-import { NgTemplateOutlet } from "@angular/common";
 import { Component, inject, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal, effect } from "@angular/core";
 import { Subject, Observable, fromEvent, filter, take } from "rxjs";
-import { Modal } from "../classes/modal";
+import { NgTemplateOutlet } from "@angular/common";
 import { ModalConfig } from "../classes/modal-config";
-import { EMPTY_STRING } from "../constants/modal-common.constants";
-import { ModalWarnings } from "../enums/modal-warnings.enum";
 import { IModalComponenet } from "../interfaces/imodal-component.interface";
 import { ModalService } from "../services/modal.service";
 import { ModalBackdrop } from "./shared/ui/backdrop/modal-backdrop";
@@ -15,6 +12,7 @@ import { BreakpointKey, ModalCloseMode, ModalLayout } from "../types/modal.types
 import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
 import { DeviceTypeService, ScrollLockService, WindowDimensionsService } from "@filip.mazev/blocks-core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { IModal } from "../interfaces/imodal";
 import * as animConst from "../constants/modal-animation.constants";
 
 @Component({
@@ -31,7 +29,7 @@ import * as animConst from "../constants/modal-animation.constants";
 export class ModalCore<
     D = unknown,
     R = any,
-    C extends Modal<D, R> = Modal<D, R>>
+    C extends IModal<D, R> = IModal<D, R>>
     implements IModalComponenet<D, R, C> {
 
     private modalService = inject(ModalService);
@@ -43,27 +41,35 @@ export class ModalCore<
 
     readonly animationDuration: number = animConst.MODAL_DEFAULT_ANIM_DURATION;
 
+    /** The component reference (the component that is being displayed in the modal) */
     public componentRef: ComponentRef<C> = {} as ComponentRef<C>;
+
+    /** The configuration for the modal */
     public config?: ModalConfig<D>;
+
     public closeFunction?: Function;
 
-    public backdropClickSubject = new Subject<MouseEvent>();
+    private backdropClickSubject = new Subject<MouseEvent>();
+
+    /* Observable for backdrop clicks */
     public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
 
+    /* Whether the modal is open or not */
     public isOpen = signal<boolean>(true);
-    public isBottomSheetModalActive = signal<boolean>(false);
 
     public effectiveLayout = signal<ModalLayout>('center');
     public isCentered = signal<boolean>(false);
     public isSide = signal<boolean>(false);
-
+    
     protected headerTemplate = signal<TemplateRef<any> | null>(null);
     protected footerTemplate = signal<TemplateRef<any> | null>(null);
+    
+    protected isBottomSheetModalActive = signal<boolean>(false);
 
     public isAnimated: boolean = false;
     protected hasBanner: boolean = false;
     protected hasDefaultContentWrapperClass: boolean = false;
-
+    
     private isConfirmCloseModalOpen: boolean = false;
     private isSpecialMobileOverflowHandlingEnabled: boolean = false;
     private isScrollDisabled: boolean = false;
@@ -177,6 +183,13 @@ export class ModalCore<
 
     //#region Closing Methods
 
+    /** 
+     * Closes the modal with the specified state and result.
+     * @param {ModalCloseMode} state The state of the modal close (e.g., 'confirm', 'cancel').
+     * @param {R | undefined} result The result to be returned when the modal closes.
+     * @param {boolean} fromInsideInteraction Whether the close was triggered from inside the modal interaction.
+     * @param {boolean} forceClose Whether to force close the modal, bypassing any confirmation modals.
+    */
     public close(state: ModalCloseMode = "cancel", result: R | undefined = undefined, fromInsideInteraction: boolean = false, forceClose: boolean = false): void {
         if (this.isConfirmCloseModalOpen) return;
 
@@ -185,39 +198,23 @@ export class ModalCore<
         }
 
         if ((this.config && this.config?.disableClose !== true) || !fromInsideInteraction || forceClose) {
-            if (this.config?.confirmCloseConfig && this.shouldOpenConfirmCloseModal(forceClose, state)) {
-                if (this.shouldOpenConfirmCloseModalSelfCheck()) {
+            if (this.config?.confirmOnCloseModal && this.shouldOpenConfirmCloseModal(forceClose, state)) {
+                const modal = this.modalService.open<IModalCloseResult, any>(this.config.confirmOnCloseModal.component, this.config.confirmOnCloseModal.config);
 
-                    const modal = this.modalService.open<IModalCloseResult, any>(this.config.confirmCloseConfig.confirmModalComponent, {
-                        style: this.config.confirmCloseConfig.style ?? {
-                            breakpoints: undefined,
-                        },
-                        disableClose: true,
-                        bannerText: this.config.confirmCloseConfig.bannerText ?? EMPTY_STRING,
-                        data: this.config.confirmCloseConfig.data ?? null,
-                    });
+                this.isConfirmCloseModalOpen = true;
 
-                    this.isConfirmCloseModalOpen = true;
-
-                    if (this.isBottomSheetModalActive()) {
-                        this.resetBottomSheetModalLayout();
-                    }
-
-                    modal.afterClosed()
-                        .pipe(take(1))
-                        .subscribe((_result: IModalCloseResult) => {
-                            this.isConfirmCloseModalOpen = false;
-                            if (_result.state === 'confirm') {
-                                this.handleClose(state, result);
-                            }
-                        });
-                } else {
-                    if (this.config?.disableConsoleWarnings !== true) {
-                        console.warn(ModalWarnings.CONFIRM_MODAL_NESTING_NOT_SUPPORTED);
-                    }
-
-                    this.handleClose(state, result);
+                if (this.isBottomSheetModalActive()) {
+                    this.resetBottomSheetModalLayout();
                 }
+
+                modal.afterClosed()
+                    .pipe(take(1))
+                    .subscribe((_result: IModalCloseResult) => {
+                        this.isConfirmCloseModalOpen = false;
+                        if (_result.state === 'confirm') {
+                            this.handleClose(state, result);
+                        }
+                    });
             } else {
                 this.handleClose(state, result);
             }
@@ -252,27 +249,16 @@ export class ModalCore<
     //#region Logical Assertions
 
     private shouldOpenConfirmCloseModal(forceClose: boolean, state: ModalCloseMode): boolean {
-        if (this.config?.confirmCloseConfig) {
+        if (this.config?.confirmOnCloseModal) {
             const closeNotCalledWithForceClose = !forceClose;
 
             if (closeNotCalledWithForceClose) {
-                const configuredForConfirmClose = this.config.confirmCloseConfig.confirmClose === true;
+                const configuredForConfirmClose = this.config.confirmOnCloseModal !== undefined;
                 const closeCalledWithCancelState = state === "cancel";
-                const configuredForConfirmCloseOnSubmit = this.config.confirmCloseConfig.confirmOnSubmit === true;
+                const configuredForConfirmCloseOnSubmit = this.config.confirmOnCloseModal.confirmOnSubmit === true;
 
                 return configuredForConfirmClose && (closeCalledWithCancelState || configuredForConfirmCloseOnSubmit);
             }
-        }
-
-        return false;
-    }
-
-    private shouldOpenConfirmCloseModalSelfCheck(): boolean {
-        if (this.config?.confirmCloseConfig) {
-            const hasSelfIdentifier = this.componentRef && this.componentRef.instance && this.componentRef.instance.modal && this.componentRef.instance.modal.selfIdentifier !== EMPTY_STRING;
-            const bypassSelfCheck = this.config.confirmCloseConfig.bypassSelfCheck === true;
-
-            return hasSelfIdentifier || bypassSelfCheck;
         }
 
         return false;

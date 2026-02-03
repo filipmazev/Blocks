@@ -1,19 +1,17 @@
-import { EMPTY_STRING } from "../constants/modal-common.constants";
 import { IModalConfirmCloseConfig } from "../interfaces/imodal-confirm-close.interface";
 import { IModalConfig } from "../interfaces/imodal-config.interface";
-import { IModalStyleConfig } from "../interfaces/imodal-style-config.interface";
-import { Modal } from "./modal";
 import { ModalStyleConfig } from "./modal-style.config";
 import { uuidv4 } from "@filip.mazev/blocks-core";
+import { IModal } from "../interfaces/imodal";
 
 export class ModalConfig<
     D = unknown,
     ConfirmModalData = any,
-    ConfirmModal extends Modal<ConfirmModalData, undefined> = Modal<ConfirmModalData, undefined>> {
+    ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>> {
     public open: boolean;
 
     public afterClose?: Function;
-    public confirmCloseConfig?: IModalConfirmCloseConfig<ConfirmModalData, ConfirmModal>;
+    public confirmOnCloseModal?: IModalConfirmCloseConfig<ConfirmModalData, ConfirmModal>;
 
     public disableClose: boolean;
     public disableCloseOnBackdropClick: boolean;
@@ -41,7 +39,7 @@ export class ModalConfig<
 
         this.afterClose = config?.afterClose;
 
-        this.confirmCloseConfig = config?.confirmCloseConfig;
+        this.confirmOnCloseModal = config?.confirmOnCloseModal;
 
         this.disableClose = config?.disableClose ?? false;
         this.disableCloseOnBackdropClick = config?.disableCloseOnBackdropClick ?? false;
@@ -53,10 +51,10 @@ export class ModalConfig<
         this.data = config?.data ?? null;
         this.style = new ModalStyleConfig(config?.style);
 
-        this.bannerText = config?.bannerText ?? EMPTY_STRING;
+        this.bannerText = config?.bannerText ?? "";
 
-        this.contentClasses = config?.contentClasses ?? EMPTY_STRING;
-        this.contentStyles = config?.contentStyles ?? EMPTY_STRING;
+        this.contentClasses = config?.contentClasses ?? "";
+        this.contentStyles = config?.contentStyles ?? "";
 
         this.disableConsoleWarnings = config?.disableConsoleWarnings ?? false;
         this.disableConsoleInfo = config?.disableConsoleInfo ?? false;

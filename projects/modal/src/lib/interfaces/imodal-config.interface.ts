@@ -1,12 +1,15 @@
-import { Modal } from "../classes/modal";
+import { IModal } from "./imodal";
 import { IModalConfirmCloseConfig } from "./imodal-confirm-close.interface";
 import { IModalStyleConfig } from "./imodal-style-config.interface";
 
 /**
  * IModalConfig<D>, the configuration for the modal
+ * @param D The type of data passed to the modal
+ * @param {ConfirmModalData} The type of data passed to the confirm modal, will default to undefined
+ * @param {ConfirmModal} The type of the confirm modal component, will default to IModal<ConfirmModalData, undefined>
  * @param {boolean} open (optional) Whether the modal should be open or not, will default to true
  * @param {Function} afterClose (optional) The function to run after the modal closes
- * @param {IModalConfirmCloseConfig<ConfirmModal, ConfirmModalData>} confirmCloseConfig (optional) The configuration for the confirm close modal, will default to { confirmClose: false }
+ * @param {IModalConfirmCloseConfig<ConfirmModal, ConfirmModalData>} confirmOnCloseModal (optional) The configuration for the confirm close modal, will default to { confirmClose: false }
  * @param {boolean} disableClose (optional) Whether the modal should be closable or not, will default to false (this applies to the close button and backdrop)
  * @param {boolean} disableCloseOnBackdropClick (optional) Whether the modal shouldn't be closable when the user clicks on the backdrop, will default to false
  * @param {boolean} disableCloseOnNavigation (optional) Whether the modal should be closable or not when the user navigates away from the page, will default to false
@@ -21,13 +24,13 @@ import { IModalStyleConfig } from "./imodal-style-config.interface";
  * @param {string} id (optional) The id of the modal (set at the top level of the modal), will default to a random string
  */
 export interface IModalConfig<
-    D = undefined,
-    ConfirmModalData = any,
-    ConfirmModal extends Modal<ConfirmModalData, undefined> = Modal<ConfirmModalData, undefined>> {
+    D,
+    ConfirmModalData,
+    ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>> {
     open?: boolean;
 
     afterClose?: Function;
-    confirmCloseConfig?: IModalConfirmCloseConfig<ConfirmModalData, ConfirmModal>;
+    confirmOnCloseModal?: IModalConfirmCloseConfig<ConfirmModalData, ConfirmModal>;
 
     disableClose?: boolean;
     disableCloseOnBackdropClick?: boolean;

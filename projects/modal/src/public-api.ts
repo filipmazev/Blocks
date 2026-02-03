@@ -27,11 +27,8 @@ export * from './lib/interfaces/imodal-view.interface';
 export * from './lib/interfaces/ibottom-sheet-modal-config';
 
 export * from './lib/constants/modal-animation.constants';
-export * from './lib/constants/modal-common.constants';
 export * from './lib/constants/modal-bottom-sheet.constants';
-export * from './lib/constants/modal-text.constants';
 
-export * from './lib/enums/modal-errors.enum';
 export * from './lib/enums/modal-warnings.enum';
 export * from './lib/enums/modal-state.enum';
 

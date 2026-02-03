@@ -16,7 +16,7 @@ import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constan
 export class ModalBottomSheet implements OnInit, OnDestroy {
   readonly headerTemplate = input.required<TemplateRef<any> | null>();
   readonly footerTemplate = input.required<TemplateRef<any> | null>();
-  readonly config = input.required<ModalConfig<any> | undefined>();
+  readonly config = input.required<ModalConfig | undefined>();
   readonly isOpen = input.required<boolean>();
   readonly isAnimated = input.required<boolean>();
   readonly animationDuration = input.required<number>();
