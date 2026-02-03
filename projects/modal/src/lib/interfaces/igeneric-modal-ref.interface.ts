@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { ComponentRef, Type } from "@angular/core";
 import { GenericModal } from "../classes/generic-modal";
 import { GenericModalConfig } from "../classes/generic-modal-config";
-import { GenericModalComponent } from "../components/generic-modal";
+import { ModalCore } from "../components/modal-core";
 import { GenericModalState } from "../enums/generic-modal-state.enum";
 import { IGenericCloseResult } from "./igeneric-close-result.interface";
 
@@ -10,8 +10,8 @@ export interface IGenericModalRef<
     D = any,
     R = any,
     C extends GenericModal<D, R> = GenericModal<D, R>> {
-    modalContainer: Type<GenericModalComponent<D, R, C>>;
-    modalContainerRef: ComponentRef<GenericModalComponent<D, R, C>>;
+    modalContainer: Type<ModalCore<D, R, C>>;
+    modalContainerRef: ComponentRef<ModalCore<D, R, C>>;
     modalContainerElement: HTMLElement;
     parentElement?: HTMLElement;
 

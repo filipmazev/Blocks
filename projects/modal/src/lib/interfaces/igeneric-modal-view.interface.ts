@@ -1,4 +1,4 @@
-import { InputSignal, OutputEmitterRef, QueryList, TemplateRef } from "@angular/core";
+import { InputSignal, OutputEmitterRef, QueryList, Signal, TemplateRef } from "@angular/core";
 import { GenericModalConfig } from "../classes/generic-modal-config";
 import { ModalSwipeable } from "../components/views/swipeable/modal-swipeable";
 import { ModalCloseMode } from "../types/modal.types";
@@ -19,5 +19,5 @@ export interface IGenericModalView<D = unknown> {
 
     swipeableComponents: QueryList<ModalSwipeable>;
 
-    get modalClasses(): { [key: string]: boolean };
+    modalClasses: Signal<{ [key: string]: boolean }>;
 }

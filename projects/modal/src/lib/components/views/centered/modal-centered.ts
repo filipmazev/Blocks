@@ -1,5 +1,5 @@
 import { NgTemplateOutlet, NgClass } from "@angular/common";
-import { Component, input, output, ViewChildren, QueryList, TemplateRef } from "@angular/core";
+import { Component, input, output, ViewChildren, QueryList, TemplateRef, computed } from "@angular/core";
 import { GenericModalConfig } from "../../../classes/generic-modal-config";
 import { IGenericModalView } from "../../../interfaces/igeneric-modal-view.interface";
 import { ModalCloseMode } from "../../../types/modal.types";
@@ -22,7 +22,7 @@ import { ModalDefaultCloseButton } from "../../shared/ui/default-close-button/de
 export class ModalCentered<D = unknown> implements IGenericModalView<D> {
     readonly headerTemplate = input.required<TemplateRef<any> | null>();
     readonly footerTemplate = input.required<TemplateRef<any> | null>();
-    
+
     readonly config = input.required<GenericModalConfig<D> | undefined>();
     readonly isOpen = input.required<boolean>();
     readonly isAnimated = input.required<boolean>();
@@ -36,7 +36,7 @@ export class ModalCentered<D = unknown> implements IGenericModalView<D> {
 
     @ViewChildren(ModalSwipeable) swipeableComponents!: QueryList<ModalSwipeable>;
 
-    public get modalClasses(): { [key: string]: boolean } {
+    public modalClasses = computed(() => {
         return {
             'centered-modal-content-wrapper': true,
             'centered-modal-default-style': this.hasDefaultContentWrapperClass() || this.hasBanner(),
@@ -44,5 +44,5 @@ export class ModalCentered<D = unknown> implements IGenericModalView<D> {
             'centered-modal-animate-in': this.isAnimated() && this.isOpen(),
             'centered-modal-animate-out': this.isAnimated() && !this.isOpen(),
         };
-    }
+    });
 }

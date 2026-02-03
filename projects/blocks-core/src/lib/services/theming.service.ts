@@ -1,58 +1,63 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { Injectable, OnDestroy, inject, signal, PLATFORM_ID, computed } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DeviceTheme } from '../types/device.types';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemingService implements OnDestroy {
-  private readonly mediaQueryList: MediaQueryList;
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
+  private readonly _systemTheme = signal<DeviceTheme>(this.detectInitialSystemTheme());
+  
+  private readonly _applicationTheme = signal<DeviceTheme | null>(null);
+
+  public readonly systemTheme = this._systemTheme.asReadonly();
+  public readonly applicationTheme = this._applicationTheme.asReadonly();
+  
+  public readonly activeTheme = computed(() => this.applicationTheme() ?? this.systemTheme());
+
+  private mediaQueryList?: MediaQueryList;
   private mediaQueryListener?: (event: MediaQueryListEvent) => void;
 
-  private applicationThemeSubject = new ReplaySubject<DeviceTheme>(1);
-  private systemThemeSubject = new BehaviorSubject<DeviceTheme>(this.detectSystemTheme());
- 
   constructor() {
-    this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-    this.createSubscription();
+    if (this.isBrowser) {
+      this.initSystemThemeListener();
+    }
   }
 
   public ngOnDestroy(): void {
-    if (this.mediaQueryListener) {
+    if (this.mediaQueryList && this.mediaQueryListener) {
       this.mediaQueryList.removeEventListener('change', this.mediaQueryListener);
     }
   }
 
-  private createSubscription(): void {
-    this.handleSystemThemeChange(this.mediaQueryList);
-    this.mediaQueryListener = (event: MediaQueryListEvent) => this.handleSystemThemeChange(event);
-    this.mediaQueryList.addEventListener('change', this.mediaQueryListener);
-  }
-
-  private handleSystemThemeChange(eventOrList: MediaQueryList | MediaQueryListEvent) {
-    const isDark = eventOrList.matches;
-    const theme: DeviceTheme = isDark ? 'dark' : 'light';
-    this.systemThemeSubject.next(theme);
-  }
-
-  private detectSystemTheme(): DeviceTheme {
-    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return isDarkMode ? 'dark' : 'light';
-  }
-
-  public getApplicationTheme$(): Observable<DeviceTheme> {
-    return this.applicationThemeSubject.asObservable();
-  }
-
-  public getSystemTheme$(): Observable<DeviceTheme> {
-    return this.systemThemeSubject.asObservable();
-  }
-
-  public getSystemTheme(): DeviceTheme {
-    return this.systemThemeSubject.value;
-  }
-
   public setApplicationTheme(theme: DeviceTheme): void {
-    this.applicationThemeSubject.next(theme);
+    this._applicationTheme.set(theme);
+  }
+
+  public getSystemTheme$() {
+    return toObservable(this._systemTheme);
+  }
+
+  public getApplicationTheme$() {
+    return toObservable(this._applicationTheme);
+  }
+
+  private detectInitialSystemTheme(): DeviceTheme {
+    if (!this.isBrowser) return 'light'; 
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  private initSystemThemeListener(): void {
+    this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    this.mediaQueryListener = (event: MediaQueryListEvent) => {
+      this._systemTheme.set(event.matches ? 'dark' : 'light');
+    };
+
+    this.mediaQueryList.addEventListener('change', this.mediaQueryListener);
   }
 }

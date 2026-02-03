@@ -1,7 +1,7 @@
 import { ComponentRef, Type } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { GenericModalConfig } from "./generic-modal-config";
-import { GenericModalComponent } from "../components/generic-modal";
+import { ModalCore } from "../components/modal-core";
 import { GenericModalState } from "../enums/generic-modal-state.enum";
 import { IGenericCloseResult } from "../interfaces/igeneric-close-result.interface";
 import { IGenericModalRef } from "../interfaces/igeneric-modal-ref.interface";
@@ -16,23 +16,23 @@ export class GenericModalRef<
 
     //#region Modal Container
 
-    private _modalContainer: Type<GenericModalComponent<D, R, C>> = {} as Type<GenericModalComponent<D, R, C>>;
+    private _modalContainer: Type<ModalCore<D, R, C>> = {} as Type<ModalCore<D, R, C>>;
 
-    private set modalContainer(modalContainer: Type<GenericModalComponent<D, R, C>>) {
+    private set modalContainer(modalContainer: Type<ModalCore<D, R, C>>) {
         this._modalContainer = modalContainer;
     }
 
-    public get modalContainer(): Type<GenericModalComponent<D, R, C>> {
+    public get modalContainer(): Type<ModalCore<D, R, C>> {
         return this._modalContainer;
     }
 
-    private _modalContainerRef: ComponentRef<GenericModalComponent<D, R, C>> = {} as ComponentRef<GenericModalComponent<D, R, C>>;
+    private _modalContainerRef: ComponentRef<ModalCore<D, R, C>> = {} as ComponentRef<ModalCore<D, R, C>>;
 
-    private set modalContainerRef(modalContainerRef: ComponentRef<GenericModalComponent<D, R, C>>) {
+    private set modalContainerRef(modalContainerRef: ComponentRef<ModalCore<D, R, C>>) {
         this._modalContainerRef = modalContainerRef;
     }
 
-    public get modalContainerRef(): ComponentRef<GenericModalComponent<D, R, C>> {
+    public get modalContainerRef(): ComponentRef<ModalCore<D, R, C>> {
         return this._modalContainerRef;
     }
 
@@ -136,7 +136,7 @@ export class GenericModalRef<
     constructor(
         componentRef: ComponentRef<C>,
         selfIdentifier: { constructor: Function },
-        modalContainerRef: ComponentRef<GenericModalComponent<D, R, C>>,
+        modalContainerRef: ComponentRef<ModalCore<D, R, C>>,
         private modalService: GenericModalService,
         modalConfig?: GenericModalConfig<D>,
     ) {

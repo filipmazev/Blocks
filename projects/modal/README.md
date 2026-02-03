@@ -213,7 +213,6 @@ Controls the behavior and content of the modal container:
 * `data` |`TData`|: (optional) The data to pass to the component of the modal. The component needs to use the @Inject(GENERIC_MODAL_DATA) or `data = inject<string>(GENERIC_MODAL_DATA);` (modern syntax) decorator to receive this.
 * `style` |`IGenericModalStyleConfig`|: (optional) The visual style configuration for the modal (position, backdrop, etc.), will default to an empty object.
 * `bannerText` |`string`|: (optional) The text to display in the header banner of the modal.
-* `bannerTextAnnotatedString` |`string`|: (optional) An annotated string (supporting bold styles) to display in the banner, will default to an empty string.
 * `contentClasses` |`string`|: (optional) Custom CSS classes to apply directly to the content container of the modal.
 * `contentStyles` |`string`|: (optional) Inline CSS styles to apply directly to the content container of the modal.
 * `disableConsoleWarnings` |`boolean`|: (optional) Whether to suppress library warnings in the console, will default to false.
@@ -252,6 +251,5 @@ Configuration for the confirmation modal triggered when a user attempts to close
 
 Configuration for the mobile-optimized swipeable modal (bottom sheet):
 
-* `upSwipeLimit` |`number`|: (optional) The resistance factor for swiping upwards beyond the fully open state. Determines the maximum distance the modal can be over-scrolled upwards. A higher number results in a smaller allowed distance (calculated as windowHeight / upSwipeLimit).
 * `downSwipeLimit` |`number`|: (optional) The threshold factor for swiping downwards to close the modal. Determines how far the user must swipe down before the modal closes automatically. (calculated as windowHeight / downSwipeLimit).
 * `customHeight` |`number`|: (optional) A specific maximum height (in pixels) for the swipeable modal. If provided, this overrides the default dynamic height behavior.

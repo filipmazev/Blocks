@@ -1,5 +1,5 @@
 import { Directive, TemplateRef, inject } from '@angular/core';
-import { GenericModalComponent } from '../components/generic-modal';
+import { ModalCore } from '../components/modal-core';
 import { GenericModalWarnings } from '../enums/generic-modal-warnings.enum';
 
 @Directive({
@@ -8,7 +8,7 @@ import { GenericModalWarnings } from '../enums/generic-modal-warnings.enum';
 })
 export class ModalHeaderDirective {
   private templateRef = inject(TemplateRef);
-  private modal = inject(GenericModalComponent, { optional: true });
+  private modal = inject(ModalCore, { optional: true });
 
   constructor() {
     if (this.modal) {

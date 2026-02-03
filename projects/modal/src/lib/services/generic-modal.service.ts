@@ -4,12 +4,13 @@ import { BehaviorSubject, Subject, filter, takeUntil, Observable, map, skip } fr
 import { GenericModal } from "../classes/generic-modal";
 import { GenericModalConfig } from "../classes/generic-modal-config";
 import { GenericModalRef } from "../classes/generic-modal-ref";
-import { GenericModalComponent } from "../components/generic-modal";
+import { ModalCore } from "../components/modal-core";
 import { GenericModalErrors } from "../enums/generic-modal-errors.enum";
 import { IGenericModalConfig } from "../interfaces/igeneric-modal-config.interface";
 import { IGenericModalService } from "../interfaces/igeneric-modal-service.interface";
 import { GENERIC_MODAL_DATA } from "../tokens/generic-modal-data.token";
 import { ComponentType } from "@angular/cdk/portal";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Injectable({
     providedIn: "root",
@@ -20,23 +21,16 @@ export class GenericModalService implements IGenericModalService {
 
     //#region Properties
 
-    private modals: Map<{ constructor: Function }, GenericModalRef | GenericModalComponent> = new Map();
-    private modalsSubject = new BehaviorSubject<Map<{ constructor: Function }, GenericModalRef | GenericModalComponent>>(this.modals);
+    private modals: Map<{ constructor: Function }, GenericModalRef | ModalCore> = new Map();
+    private modalsSubject = new BehaviorSubject<Map<{ constructor: Function }, GenericModalRef | ModalCore>>(this.modals);
 
     public viewContainer?: ViewContainerRef;
     public renderer?: Renderer2;
-
-    private unsubscribe$ = new Subject<void>();
 
     //#endregion
 
     constructor() {
         this.createSubscriptions();
-    }
-
-    ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     //#region Private Methods
@@ -46,7 +40,7 @@ export class GenericModalService implements IGenericModalService {
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
                 skip(1), 
-                takeUntil(this.unsubscribe$)
+                takeUntilDestroyed()
             )
             .subscribe(() => {
                 if (this.modalsCount() > 0) {
@@ -74,13 +68,13 @@ export class GenericModalService implements IGenericModalService {
             parent: this.injector,
         });
 
-        const wrapperRef = this.viewContainer.createComponent(GenericModalComponent<D, R, C>, {
+        const wrapperRef = this.viewContainer.createComponent(ModalCore<D, R, C>, {
             injector: dataInjector,
         });
 
         const contentInjector = Injector.create({
             providers: [
-                { provide: GenericModalComponent, useValue: wrapperRef.instance }
+                { provide: ModalCore, useValue: wrapperRef.instance }
             ],
             parent: wrapperRef.injector,
         });
@@ -138,17 +132,17 @@ export class GenericModalService implements IGenericModalService {
         this.modalsSubject.next(this.modals);
     }
 
-    public get<D, R, C extends GenericModal<D, R> = GenericModal<D, R>>(self: { constructor: Function }): GenericModalRef<D, R, C> | GenericModalComponent<D, R, C> | undefined {
+    public get<D, R, C extends GenericModal<D, R> = GenericModal<D, R>>(self: { constructor: Function }): GenericModalRef<D, R, C> | ModalCore<D, R, C> | undefined {
         const modal = this.modals.get(self);
         this.modalRequestedTypeCheck(modal);
-        return modal as GenericModalRef<D, R, C> | GenericModalComponent<D, R, C> | undefined;
+        return modal as GenericModalRef<D, R, C> | ModalCore<D, R, C> | undefined;
     }
 
-    public getSubscribe<D, R, C extends GenericModal<D, R> = GenericModal<D, R>>(self: { constructor: Function }): Observable<GenericModalRef<D, R, C> | GenericModalComponent<D, R, C> | undefined> {
+    public getSubscribe<D, R, C extends GenericModal<D, R> = GenericModal<D, R>>(self: { constructor: Function }): Observable<GenericModalRef<D, R, C> | ModalCore<D, R, C> | undefined> {
         return this.modalsSubject.asObservable().pipe(map((modals) => {
             const modal = modals.get(self);
             this.modalRequestedTypeCheck(modal);
-            return modal as GenericModalRef<D, R, C> | GenericModalComponent<D, R, C> | undefined;
+            return modal as GenericModalRef<D, R, C> | ModalCore<D, R, C> | undefined;
         }));
     }
 
@@ -164,13 +158,13 @@ export class GenericModalService implements IGenericModalService {
 
     //#region Helper Methods
 
-    public modalRequestedTypeCheck(modal: GenericModalRef | GenericModalComponent | undefined): boolean {
+    public modalRequestedTypeCheck(modal: GenericModalRef | ModalCore | undefined): boolean {
         if (modal) {
             if (modal instanceof GenericModalRef) {
                 if (!(modal.componentRef.instance instanceof GenericModal)) {
                     throw new Error(GenericModalErrors.MODAL_DOESNT_MATCH_THE_REQUESTED_TYPES);
                 }
-            } else if (!(modal instanceof GenericModalComponent)) {
+            } else if (!(modal instanceof ModalCore)) {
                 throw new Error(GenericModalErrors.MODAL_DOESNT_MATCH_THE_REQUESTED_TYPES);
             }
         }

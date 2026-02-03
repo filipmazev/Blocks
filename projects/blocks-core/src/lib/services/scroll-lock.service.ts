@@ -1,27 +1,24 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { DeviceTypeService } from './device-type.service';
 import { WindowDimensionsService } from './window-dimension.service';
 import { IScrollLockConfig } from '../interfaces/scroll-lock-config.interface';
-import { WindowDimensions } from '../interfaces/window-dimensions.interface';
 import { SCROLL_LOCK_INSTANCE_IDENTIFIER } from '../constants/scroll-lock.constants';
+import { uuidv4 } from '../../public-api';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ScrollLockService {
+export class ScrollLockService implements OnDestroy {
   private deviceTypeService = inject(DeviceTypeService);
-  private windowDimensionSerivce = inject(WindowDimensionsService);
+  private windowDimensionsService = inject(WindowDimensionsService);
 
   private instanceId: string;
 
   private configurationInstances: Map<string, IScrollLockConfig> = new Map<string, IScrollLockConfig>();
-  private windowDimensions: WindowDimensions = {} as WindowDimensions;
+  private windowDimensions = this.windowDimensionsService.dimensions;
 
   constructor() {
-    this.instanceId = SCROLL_LOCK_INSTANCE_IDENTIFIER + Math.random().toString(36).substring(2, 9);
-    this.windowDimensionSerivce.getWindowDimensions$().subscribe((dimensions) => {
-      this.windowDimensions = dimensions;
-    });
+    this.instanceId = SCROLL_LOCK_INSTANCE_IDENTIFIER + uuidv4();
   }
 
   public ngOnDestroy(): void {
@@ -34,6 +31,7 @@ export class ScrollLockService {
     const documentWidth = document.documentElement.clientWidth;
     const windowWidth = window.innerWidth;
     const scrollBarWidth = windowWidth - documentWidth;
+    
     document.body.style.paddingRight = scrollBarWidth + 'px';
     document.body.style.setProperty('padding-right', scrollBarWidth + 'px', 'important');
 
@@ -113,7 +111,7 @@ export class ScrollLockService {
     if (!this.isAllowedToScroll(targetNode) && (currentConfiguration === null || currentConfiguration?.handleTouchInput !== false)) {
       if (currentConfiguration === null || currentConfiguration?.mobileOnlyTouchPrevention !== true ||
         (currentConfiguration?.mobileOnlyTouchPrevention === true && ((!this.deviceTypeService.getDeviceState().isMobile || !this.deviceTypeService.getDeviceState().isTablet)
-          && (this.windowDimensions.width < this.windowDimensions.threshold_sm)))) {
+          && (this.windowDimensions().width < this.windowDimensionsService.breakpoints.sm)))) {
         event.preventDefault();
         event.stopPropagation();
       }

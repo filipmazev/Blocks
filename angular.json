@@ -27,11 +27,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/modal/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "tsConfig": "projects/modal/tsconfig.spec.json"
           }
         }
       }
@@ -60,11 +56,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/blocks-core/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "tsConfig": "projects/blocks-core/tsconfig.spec.json"
           }
         }
       }
@@ -94,9 +86,6 @@
                 "node_modules"
               ]
             },
-            "polyfills": [
-              "zone.js"
-            ],
             "assets": [
               {
                 "glob": "**/*",

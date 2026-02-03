@@ -60,6 +60,7 @@ Usage:
   @include respond-down(sm) {
     display: none;
   }
+}
 ```
 
 ## Core Services
@@ -70,12 +71,16 @@ Bridges the gap between CSS media queries and TypeScript logic. It provides reac
 
 ```typescript
 export class MyComponent {
-  constructor(private windowService: WindowDimensionsService) {
-    // Reactive stream
-    this.windowService.getWindowDimensions$().subscribe(dims => {
-      if (dims.width < dims.threshold_sm) {
-        console.log('Mobile View');
-      }
+  protected windowDimensionsService = inject(WindowDimensionsService);
+  
+  protected windowDimensions = this.windowDimensionsService.dimensions;
+  protected breakpoints = this.windowDimensionsService.breakpoints;
+
+  constructor() {
+    effect(() => {
+      const width = this.windowDimensions().width;
+      const isOnSmallScreen = width < this.breakpoints.sm;
+      // handle logic for small screen for example
     });
   }
 }
@@ -121,17 +126,6 @@ this.scrollLockService.disableScroll({
 // Unlock
 this.scrollLockService.enableScroll();
 ```
-
-### `UiActionsService`
-
-Common UI utility methods.
-
-### `TextFormattingService`
-
-Helper methods for string manipulation, such as:
-
-* `generateNameCopy`: Generates unique names for duplicated items (e.g., "Item (Copy)", "Item (Copy 2)").
-* `formattedDateString`: Converts Date objects or strings into a standardized locale date string.
 
 ## Installation
 

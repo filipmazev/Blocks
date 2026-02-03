@@ -2,7 +2,7 @@
 <div class="modal-overlay" [ngClass]="{'modal-backdrop': config()?.style?.hasBackdrop}" (click)="
     config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null">
     <div class="modal-overlay-wrapper">
-        <div [ngClass]="modalClasses" (click)="$event.stopPropagation()">
+        <div [ngClass]="modalClasses()" (click)="$event.stopPropagation()">
             <div class="centered-modal-inner-content-container"
                 [class]="config()?.style?.wrapperClasses ?? ''"
                 [style]="config()?.style?.wrapperStyles ?? ''">

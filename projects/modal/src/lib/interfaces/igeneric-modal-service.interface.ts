@@ -1,11 +1,11 @@
-import { OnDestroy, Renderer2, ViewContainerRef } from "@angular/core";
+import { Renderer2, ViewContainerRef } from "@angular/core";
 import { ComponentType } from "@angular/cdk/portal";
 import { IGenericModalConfig } from "./igeneric-modal-config.interface";
 import { Observable } from "rxjs";
 import { GenericModalRef } from "../classes/generic-modal-ref";
-import { GenericModalComponent } from "../components/generic-modal";
+import { ModalCore } from "../components/modal-core";
 
-export interface IGenericModalService extends OnDestroy {
+export interface IGenericModalService {
     viewContainer?: ViewContainerRef;
     register: (viewContainer: ViewContainerRef, renderer: Renderer2) => void;
 
@@ -14,8 +14,8 @@ export interface IGenericModalService extends OnDestroy {
     close: (self: { constructor: Function }, fromCloseFunction: boolean | undefined) => void;
     closeAll: () => void;
 
-    get: (self: { constructor: Function }) => GenericModalRef<any, any, any> | GenericModalComponent<any, any, any> | undefined;
-    getSubscribe(self: { constructor: Function }): Observable<GenericModalRef<any, any, any> | GenericModalComponent<any, any, any> | undefined>;
+    get: (self: { constructor: Function }) => GenericModalRef<any, any, any> | ModalCore<any, any, any> | undefined;
+    getSubscribe(self: { constructor: Function }): Observable<GenericModalRef<any, any, any> | ModalCore<any, any, any> | undefined>;
 
     modalsCount: () => number;
 }

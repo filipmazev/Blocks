@@ -1,39 +1,59 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, inject, NgZone, PLATFORM_ID, signal, computed } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { BREAKPOINTS } from '../constants/window-dimension-constants';
 import { WindowDimensions } from '../interfaces/window-dimensions.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WindowDimensionsService {
-  private windowDimensionsSubject = new BehaviorSubject<WindowDimensions>(
-    this.getWindowDimensions()
-  );
+  private readonly ngZone = inject(NgZone);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
+  private readonly _dimensions = signal<WindowDimensions>(this.getCurrentDimensions());
+
+  public readonly dimensions = this._dimensions.asReadonly();
+
+  public readonly isMobile = computed(() => this.dimensions().width < BREAKPOINTS.md);
+  public readonly isTablet = computed(() => this.dimensions().width >= BREAKPOINTS.md && this.dimensions().width < BREAKPOINTS.lg);
+  public readonly isDesktop = computed(() => this.dimensions().width >= BREAKPOINTS.lg);
+
+  public readonly breakpoints = BREAKPOINTS;
+
   constructor() {
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize.bind(this));
+    this.initResizeListener();
   }
 
-  public getWindowDimensions(): WindowDimensions {
+  private getCurrentDimensions(): WindowDimensions {
+    if (!this.isBrowser) {
+      return { width: 0, height: 0 };
+    }
     return {
       width: window.innerWidth,
       height: window.innerHeight,
-      threshold_xs: 360,
-      threshold_sm: 640,
-      threshold_md: 768,
-      threshold_lg: 1024,
-      threshold_xl: 1280,
-      threshold_2xl: 1536,
-      threshold_3xl: 1920,
-      threshold_4xl: 2560,
     };
   }
 
-  private handleResize(): void {
-    this.windowDimensionsSubject.next(this.getWindowDimensions());
-  }
+  private initResizeListener(): void {
+    if (!this.isBrowser) return;
 
-  public getWindowDimensions$(): Observable<WindowDimensions> {
-    return this.windowDimensionsSubject.asObservable();
+    this.ngZone.runOutsideAngular(() => {
+      fromEvent(window, 'resize')
+        .pipe(
+          debounceTime(150),
+          map(() => this.getCurrentDimensions()),
+          distinctUntilChanged((prev, curr) => 
+            prev.width === curr.width && prev.height === curr.height
+          )
+        )
+        .subscribe((dims) => {
+          this.ngZone.run(() => {
+            this._dimensions.set(dims);
+          });
+        });
+    });
   }
 }

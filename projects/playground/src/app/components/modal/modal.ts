@@ -24,7 +24,7 @@ export class Modal {
     const modal = this.modals.open<string, undefined>(CenteredModal, {
       data: "Hello from Modal!",
       style: {
-        position: 'right',
+        position: 'right'
       },
     });
 

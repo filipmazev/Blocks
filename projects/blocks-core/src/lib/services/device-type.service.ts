@@ -11,6 +11,20 @@ export class DeviceTypeService {
   private userAgent: string = navigator.userAgent || navigator.vendor || (window as any).opera || undefined;
   private isDesktopDevice: boolean = !this.isMobileDevice() && !this.isTabletDevice();
 
+  private supportedScreenOrientation = (screen?.orientation || {}).type ?? (screen as any).mozOrientation ?? (screen as any).msOrientation;
+  private safariScreenOrientation: DeviceOrientationType = !screen?.orientation && matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary';
+  private initialScreenOrientation: DeviceOrientationType = this.supportedScreenOrientation ?? this.safariScreenOrientation ?? 'portrait-primary';
+  private screenOrientation: DeviceOrientationType = this.initialScreenOrientation;
+  
+  constructor() {
+    if (screen.orientation) {
+      screen.orientation.addEventListener(
+        'change',
+        (ev: Event) => (this.screenOrientation = (ev.target ?? ({} as any)).type as OrientationType)
+      );
+    }
+  }
+
   private isMobileDevice(): boolean {
     const regexs = [/(Android)(.+)(Mobile)/i, /BlackBerry/i, /iPhone|iPod/i, /Opera Mini/i, /IEMobile/i];
     return regexs.some(b => this.userAgent.match(b) !== null);
@@ -19,6 +33,14 @@ export class DeviceTypeService {
   private isTabletDevice(): boolean {
     const regex = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/;
     return regex.test(this.userAgent.toLowerCase());
+  }
+
+  public isLandscapeOrientation(): boolean {
+    return ['landscape-primary', 'landscape-secondary'].includes(this.screenOrientation);
+  }
+
+  public isPortraitOrientation(): boolean {
+    return ['portrait-primary', 'portrait-secondary'].includes(this.screenOrientation);
   }
 
   private getMobileOS(): MobileOS | undefined {
@@ -44,27 +66,6 @@ export class DeviceTypeService {
 
   private getDeviceOS(): DeviceOS | undefined {
     return this.getMobileOS() ?? this.getDesktopOS();
-  }
-
-  private supportedScreenOrientation = (screen?.orientation || {}).type ?? (screen as any).mozOrientation ?? (screen as any).msOrientation;
-  private safariScreenOrientation: DeviceOrientationType = !screen?.orientation && matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary';
-  private initialScreenOrientation: DeviceOrientationType = this.supportedScreenOrientation ?? this.safariScreenOrientation ?? 'portrait-primary';
-  private screenOrientation: DeviceOrientationType = this.initialScreenOrientation;
-  constructor() {
-    if (screen.orientation) {
-      screen.orientation.addEventListener(
-        'change',
-        (ev: Event) => (this.screenOrientation = (ev.target ?? ({} as any)).type as OrientationType)
-      );
-    }
-  }
-
-  public isLandscapeOrientation(): boolean {
-    return ['landscape-primary', 'landscape-secondary'].includes(this.screenOrientation);
-  }
-
-  public isPortraitOrientation(): boolean {
-    return ['portrait-primary', 'portrait-secondary'].includes(this.screenOrientation);
   }
 
   public getDeviceState(): DeviceState {

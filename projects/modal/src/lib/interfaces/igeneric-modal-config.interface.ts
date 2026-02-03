@@ -16,7 +16,6 @@ import { IGenericModalStyleConfig } from "./igeneric-modal-style-config.interfac
  * @param {IGenericModalStyleConfig} style (optional) The style configuration for the modal, will default to an empty object
  * @param {boolean} showCloseButton (optional) Whether the modal should show a close button or not, will default to true
  * @param {string} bannerText (optional) The text to display in the banner of the modal
- * @param {string} bannerTextAnnotatedString (optional) The annotated string (in bold style, in addition to some text) to display in the banner of the modal, will default to an empty string
  * @param {string} contentClasses (optional) The classes to apply to the content of the modal
  * @param {string} contentStyles (optional) The styles to apply to the content of the modal
  * @param {string} id (optional) The id of the modal (set at the top level of the modal), will default to a random string
@@ -42,7 +41,6 @@ export interface IGenericModalConfig<
     style?: IGenericModalStyleConfig;
 
     bannerText?: string;
-    bannerTextAnnotatedString?: string;
 
     contentClasses?: string;
     contentStyles?: string;

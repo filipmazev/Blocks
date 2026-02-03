@@ -1,1 +1,0 @@
-export const ITEM_COPY_DEFAULT_SUFFIX = "Copy";

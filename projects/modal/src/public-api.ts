@@ -2,7 +2,7 @@
  * Public API Surface of modal
  */
 
-export * from './lib/components/generic-modal';
+export * from './lib/components/modal-core';
 export * from './lib/components/views/swipeable/modal-swipeable';
 export * from './lib/components/views/side/modal-side';
 export * from './lib/components/views/centered/modal-centered';

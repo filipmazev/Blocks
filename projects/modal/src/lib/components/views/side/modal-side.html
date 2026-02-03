@@ -1,5 +1,6 @@
 @if(!isSwipeableModalActive()) {
-<div [ngClass]="modalClasses" (click)="$event.stopPropagation()">
+<div [ngClass]="modalClasses()" (click)="$event.stopPropagation()"
+    [style.--anim-duration.ms]="animationDuration()">
     <div class="side-modal-inner-content-container"
         [class]="config() && config()?.style?.wrapperClasses ? config()?.style?.wrapperClasses : ''"
         [style]="config() && config()?.style?.wrapperStyles ? config()?.style?.wrapperStyles : ''">
@@ -26,7 +27,7 @@
     }
 </div>
 } @else {
-<modal-swipeable [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="innerIsOpen" [isAnimated]="isAnimated()"
+<modal-swipeable [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
     [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
 </modal-swipeable>

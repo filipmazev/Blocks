@@ -1,16 +1,19 @@
-<div (click)="$event.stopPropagation()" [id]="config()?.id ?? ''"
-    [class]="config()?.style?.wrapperClasses !== undefined ? config()!.style.wrapperClasses! : ''"
-    [style]="config()?.style?.wrapperStyles !== undefined ? config()!.style.wrapperStyles! : ''"
-    [style.max-height]="config() && config()?.style?.mobileConfig && config()?.style?.mobileConfig?.customHeight ? config()?.style?.mobileConfig?.customHeight : ''"
-    [style.transform]="!isSwipingVerticallyFinished
-                        ? 'translateY(' + (currentTranslateY * -1 > windowInnerHeight / upSwipeLimit ? (windowInnerHeight / upSwipeLimit) * -1 : currentTranslateY) + 'px)'
-                        : 'translateY(100%)'"
-    [style.transition]="isAnimated() && !isSwipingVertically ? '300ms ease-in-out' : ''" [ngClass]="{
-                'opened-swipeable-modal': isAnimated()
-            }" data-horizontal-swipe-target="swipeable-modal" class="swipeable-modal-style">
+<div (click)="$event.stopPropagation()" 
+    [id]="config()?.id ?? ''"
+    [class]="config()?.style?.wrapperClasses ?? ''"
+    [style]="config()?.style?.wrapperStyles ?? ''"
+    [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"
+    [style.transform]="modalTransform()"
+    [style.transition]="isAnimated() && !isSwipingVertically() ? 'transform 300ms ease-in-out' : ''" 
+    [ngClass]="{
+        'opened-swipeable-modal': isAnimated()
+    }" 
+    data-horizontal-swipe-target="swipeable-modal" 
+    class="swipeable-modal-style">
     
-    <div #verticalSwipeTarget class="touch-hitbox" class="swipeable-modal-top-bar"
-        (click)="isTrackingSwipe ? null : close.emit('cancel')">
+    <div #verticalSwipeTarget 
+         class="touch-hitbox swipeable-modal-top-bar"
+         (click)="isTrackingSwipe ? null : close.emit('cancel')">
         <div class="swipe-line"></div>
     </div>
 
@@ -23,7 +26,7 @@
             }
 
             <div class="swipeable-modal-main-content-container"
-                [style.animationDuration]="isAnimated() ? animationDuration().toString() + 'ms' : '0ms'">
+                [style.animationDuration]="isAnimated() ? animationDuration() + 'ms' : '0ms'">
                 <ng-content></ng-content>
             </div>
         </div>

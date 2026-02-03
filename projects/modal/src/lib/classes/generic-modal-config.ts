@@ -27,7 +27,6 @@ export class GenericModalConfig<
     public style: IGenericModalStyleConfig;
 
     public bannerText: string;
-    public bannerTextAnnotatedString: string;
 
     public contentClasses: string;
     public contentStyles: string;
@@ -55,7 +54,6 @@ export class GenericModalConfig<
         this.style = new GenericModalStyleConfig(config?.style);
 
         this.bannerText = config?.bannerText ?? EMPTY_STRING;
-        this.bannerTextAnnotatedString = config?.bannerTextAnnotatedString ?? EMPTY_STRING;
 
         this.contentClasses = config?.contentClasses ?? EMPTY_STRING;
         this.contentStyles = config?.contentStyles ?? EMPTY_STRING;

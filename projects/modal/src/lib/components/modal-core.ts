@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component, inject, ChangeDetectorRef, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal } from "@angular/core";
-import { Subject, Observable, takeUntil, fromEvent, filter, take } from "rxjs";
+import { Component, inject, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal, effect } from "@angular/core";
+import { Subject, Observable, fromEvent, filter, take } from "rxjs";
 import { GenericModal } from "../classes/generic-modal";
 import { GenericModalConfig } from "../classes/generic-modal-config";
 import { EMPTY_STRING } from "../constants/generic-modal-common.constants";
@@ -13,31 +13,31 @@ import { ModalSide } from "./views/side/modal-side";
 import { ModalSwipeable } from "./views/swipeable/modal-swipeable";
 import { ModalCloseMode } from "../types/modal.types";
 import { IGenericCloseResult } from "../interfaces/igeneric-close-result.interface";
-import { DeviceTypeService, ScrollLockService, WindowDimensions, WindowDimensionsService } from "@filip.mazev/blocks-core";
+import { DeviceTypeService, ScrollLockService, WindowDimensionsService } from "@filip.mazev/blocks-core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import * as animConst from "../constants/generic-modal-animation.constants";
 
 @Component({
-    selector: "generic-modal",
+    selector: 'modal-core',
     imports: [
         NgTemplateOutlet,
         ModalCentered,
         ModalSide,
         ModalBackdrop
     ],
-    templateUrl: "./generic-modal.html",
-    styleUrl: "./generic-modal.scss",
+    templateUrl: './modal-core.html',
+    styleUrl: './modal-core.scss',
 })
-export class GenericModalComponent<
+export class ModalCore<
     D = unknown,
     R = any,
     C extends GenericModal<D, R> = GenericModal<D, R>>
     implements IGenericModalComponenet<D, R, C> {
+
     private modalService = inject(GenericModalService);
-    private windowDimensionService = inject(WindowDimensionsService);
+    private windowDimensionsService = inject(WindowDimensionsService);
     private scrollLockService = inject(ScrollLockService);
     private deviceTypeService = inject(DeviceTypeService);
-    
-    private cdr = inject(ChangeDetectorRef);
 
     readonly afterClose = output<void>();
 
@@ -45,38 +45,28 @@ export class GenericModalComponent<
 
     public componentRef: ComponentRef<C> = {} as ComponentRef<C>;
     public config?: GenericModalConfig<D>;
-
     public closeFunction?: Function;
+
     public backdropClickSubject = new Subject<MouseEvent>();
     public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
 
-    private _isOpen: boolean = true;
-    public get isOpen(): boolean {
-        return this._isOpen;
-    }
-    private set isOpen(value: boolean) {
-        this._isOpen = value;
-        this.cdr.detectChanges();
-    }
-
-    public isSwipeableModalActive: boolean = false;
-    public isAnimated: boolean = false;
-    public isCentered: boolean = false;
-    public isSide: boolean = false;
-
-    protected hasBanner: boolean = false;
-    protected hasDefaultContentWrapperClass: boolean = false;
+    public isOpen = signal<boolean>(true);
+    public isSwipeableModalActive = signal<boolean>(false);
 
     protected headerTemplate = signal<TemplateRef<any> | null>(null);
     protected footerTemplate = signal<TemplateRef<any> | null>(null);
+
+    public isAnimated: boolean = false;
+    public isCentered: boolean = false;
+    public isSide: boolean = false;
+    protected hasBanner: boolean = false;
+    protected hasDefaultContentWrapperClass: boolean = false;
 
     private isConfirmCloseModalOpen: boolean = false;
     private isSpecialMobileOverflowHandlingEnabled: boolean = false;
     private isScrollDisabled: boolean = false;
 
-    protected windowDimensions: WindowDimensions;
-
-    private unsubscribe$ = new Subject<void>();
+    protected windowDimensions = this.windowDimensionsService.dimensions;
 
     @ViewChild("modalContainer", { static: true }) modalContainer?: ElementRef;
 
@@ -87,17 +77,21 @@ export class GenericModalComponent<
     @ViewChild("dynamicContainer", { read: ViewContainerRef }) dynamicContainer?: ViewContainerRef;
 
     constructor() {
-        this.windowDimensions = this.windowDimensionService.getWindowDimensions();
+        this.initKeyboardSubscription();
+
+        effect(() => {
+            const width = this.windowDimensions().width;
+            this.handleWindowDimensionChange(width);
+        });
     }
 
     public ngOnInit() {
         this.initParamsFromConfig();
-        this.createSubscriptions();
 
-        if (this.config?.style.handleMobile !== false && this.windowDimensions.width < this.windowDimensions.threshold_sm) {
-            this.isSwipeableModalActive = true;
+        if (this.config?.style.handleMobile !== false && this.windowDimensionsService.isMobile()) {
+            this.handleSwipeableModalOpened();
         } else {
-            this.isSwipeableModalActive = false;
+            this.isSwipeableModalActive.set(false);
         }
     }
 
@@ -109,63 +103,21 @@ export class GenericModalComponent<
     public ngOnDestroy(): void {
         this.componentRef?.destroy();
         this.dynamicContainer?.clear();
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
     }
 
     //#region Subscription Methods
 
-    private createSubscriptions(): void {
-        this.windowDimensionService
-            .getWindowDimensions$()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((dimensions) => {
-                this.windowDimensions = dimensions;
-                this.handleWindowDimensionChange();
-            });
-
+    private initKeyboardSubscription(): void {
         fromEvent<KeyboardEvent>(document, "keydown")
             .pipe(
                 filter((event: KeyboardEvent) => event.key === "Escape"),
-                takeUntil(this.unsubscribe$),
+                takeUntilDestroyed(),
             )
             .subscribe(() => {
                 if (!this.isConfirmCloseModalOpen) {
                     this.close("cancel", undefined, true);
                 }
             });
-    }
-
-    private handleWindowDimensionChange(): void {
-        if (this.config?.style.handleMobile !== false) {
-            if (this.windowDimensions.width < this.windowDimensions.threshold_sm && !this.isSwipeableModalActive) {
-                this.isSwipeableModalActive = true;
-
-                if (this.isOpen) {
-                    if (this.isSpecialMobileOverflowHandlingEnabled) {
-                        this.scrollLockService.disableScroll({
-                            mainContainer: this.modalContainer?.nativeElement,
-                            handleExtremeOverflow: this.config?.enableExtremeOverflowHandling ?? false,
-                            animationDuration: this.animationDuration,
-                            handleTouchInput: true,
-                            mobileOnlyTouchPrevention: true,
-                        });
-
-                        this.isScrollDisabled = true;
-                    }
-                }
-            }
-
-            if (this.windowDimensions.width >= this.windowDimensions.threshold_sm && this.isSwipeableModalActive) {
-                this.isSwipeableModalActive = false;
-                if (this.isOpen) {
-                    if (this.isSpecialMobileOverflowHandlingEnabled) {
-                        this.scrollLockService.enableScroll(this.config?.enableExtremeOverflowHandling ?? false);
-                        this.isScrollDisabled = false;
-                    }
-                }
-            }
-        }
     }
 
     //#endregion
@@ -182,7 +134,7 @@ export class GenericModalComponent<
 
         this.hasDefaultContentWrapperClass = this.config?.style.contentWrapper !== false;
 
-        this.isAnimated = this.config?.style.animate === true && (this.config?.style.contentWrapper !== false || this.hasBanner);
+        this.isAnimated = this.config?.style.animate === true;
         this.isCentered = this.config?.style.position === "center";
         this.isSide = this.config?.style.position === "left" || this.config?.style.position === "right";
     }
@@ -192,17 +144,13 @@ export class GenericModalComponent<
     //#region Public Template Methods
 
     public setHeaderTemplate(template: TemplateRef<any>) {
-        Promise.resolve().then(() => {
-            this.headerTemplate.set(template);
-        });
+        this.headerTemplate.set(template);
     }
 
     public setFooterTemplate(template: TemplateRef<any>) {
-        Promise.resolve().then(() => {
-            this.footerTemplate.set(template);
-        });
+        this.footerTemplate.set(template);
     }
-    
+
     //#endregion
 
     //#region Closing Methods
@@ -228,7 +176,7 @@ export class GenericModalComponent<
 
                     this.isConfirmCloseModalOpen = true;
 
-                    if (this.isSwipeableModalActive) {
+                    if (this.isSwipeableModalActive()) {
                         this.resetSwipeableModalPosition();
                     }
 
@@ -250,13 +198,13 @@ export class GenericModalComponent<
             } else {
                 this.handleClose(state, result);
             }
-        } else if (this.isSwipeableModalActive) {
+        } else if (this.isSwipeableModalActive()) {
             this.resetSwipeableModalPosition();
         }
     }
 
     private async handleClose(state: ModalCloseMode, result: R | undefined): Promise<void> {
-        this.isOpen = false;
+        this.isOpen.set(false);
         this.setSwipeableModalFinishedState(true);
 
         const returnResult = {
@@ -309,6 +257,48 @@ export class GenericModalComponent<
 
     //#endregion
 
+    //#region Swipable Modal Methods
+
+    private handleWindowDimensionChange(width: number): void {
+        if (this.config?.style.handleMobile === false) return;
+
+        const smBreakpoint = this.windowDimensionsService.breakpoints.sm;
+        const currentSwipeState = this.isSwipeableModalActive();
+
+        if (width < smBreakpoint && !currentSwipeState) {
+            this.handleSwipeableModalOpened();
+        } 
+        
+        if (width >= smBreakpoint && currentSwipeState) {
+            this.handleSwipeableModalClosed();
+        }
+    }
+
+    private handleSwipeableModalOpened(): void {
+        this.isSwipeableModalActive.set(true);
+
+        this.scrollLockService.disableScroll({
+            mainContainer: this.modalContainer?.nativeElement,
+            handleExtremeOverflow: this.config?.enableExtremeOverflowHandling ?? false,
+            animationDuration: this.animationDuration,
+            handleTouchInput: true,
+            mobileOnlyTouchPrevention: true,
+        });
+
+        this.isScrollDisabled = true;
+    }
+
+    private handleSwipeableModalClosed(): void {
+        this.isSwipeableModalActive.set(false);
+
+        if (this.isOpen() && this.isSpecialMobileOverflowHandlingEnabled) {
+            this.scrollLockService.enableScroll(this.config?.enableExtremeOverflowHandling ?? false);
+            this.isScrollDisabled = false;
+        }
+    }
+
+    //#endregion
+
     //#region Helper Methods
 
     private getSwipeableModal(): ModalSwipeable | undefined {
@@ -319,14 +309,14 @@ export class GenericModalComponent<
     private resetSwipeableModalPosition(): void {
         const swipeableModal = this.getSwipeableModal();
         if (swipeableModal) {
-            swipeableModal.currentTranslateY = 0;
+            swipeableModal.currentTranslateY.set(0);
         }
     }
 
     private setSwipeableModalFinishedState(isFinished: boolean): void {
         const swipeableModal = this.getSwipeableModal();
         if (swipeableModal) {
-            swipeableModal.isSwipingVerticallyFinished = isFinished;
+            swipeableModal.isSwipingVerticallyFinished.set(isFinished);
         }
     }
 
