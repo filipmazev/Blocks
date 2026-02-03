@@ -199,13 +199,13 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>>
                 guardResult instanceof Promise ? from(guardResult) :
                     of(guardResult);
 
+            if (this.isBottomSheetModalActive()) {
+                this.resetBottomSheetModalLayout();
+            }
+
             canClose$.pipe(take(1)).subscribe((canClose) => {
                 if (canClose) {
                     this.handleClose(state, result);
-                } else {
-                    if (this.isBottomSheetModalActive()) {
-                        this.resetBottomSheetModalLayout();
-                    }
                 }
             });
             return;
@@ -229,7 +229,15 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>>
     }
 
     protected onBackdropClick(event: MouseEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!this.isOpen()) {
+            return;
+        }
+
         this.backdropClickSubject.next(event);
+
         if (this.config?.style?.hasBackdrop && this.config?.disableCloseOnBackdropClick !== true) {
             this.close("cancel", undefined, true);
         }

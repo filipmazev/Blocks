@@ -73,7 +73,7 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
     const target = this.verticalSwipeTarget?.nativeElement;
     if (!target) return;
 
-    const limit = document.body.offsetHeight / this.downSwipeLimit;
+    const limit = window.innerHeight / this.downSwipeLimit;
 
     let startY = 0;
     let startTime = 0;

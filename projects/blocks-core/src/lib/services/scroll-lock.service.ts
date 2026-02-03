@@ -68,11 +68,11 @@ export class ScrollLockService implements OnDestroy {
     setTimeout(() => {
       if (!this._isScrollDisabled()) return;
 
-      if (config.handleTouchInput !== false) {
+      if (config.handleTouchInput === true) {
         document.body.addEventListener('touchmove', this.boundHandleTouchMove, { passive: false });
       }
 
-      if (config.handleExtremeOverflow !== false) {
+      if (config.handleExtremeOverflow === true) {
         const options = { passive: false };
         window.addEventListener('wheel', this.boundPreventDefault, options);
         window.addEventListener('mousewheel', this.boundPreventDefault, options);

@@ -1,6 +1,6 @@
 {
   "name": "@filip.mazev/modal",
-  "version": "0.1.31",
+  "version": "0.1.33",
   "exports": {
     "./_modal-theme": "./lib/styles/_modal-theme.scss",
     "./index": "./lib/styles/_index.scss"
