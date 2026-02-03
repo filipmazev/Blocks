@@ -25,9 +25,10 @@ export class Modal {
     const modal = this.modals.open<string, undefined>(CenteredModal, {
       data: "Hello from Modal!",
       style: {
-        layout: 'center',
+        layout: 'right',
         breakpoints: {
-          'sm': 'bottom-sheet'
+          'sm': 'bottom-sheet',
+          'xl': 'center'
         }
       },
       confirmCloseConfig: {
