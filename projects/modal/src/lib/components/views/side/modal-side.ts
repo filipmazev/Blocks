@@ -24,6 +24,7 @@ export class ModalSide<D = unknown> implements IModalView<D> {
   readonly headerTemplate = input.required<TemplateRef<any> | null>();
   readonly footerTemplate = input.required<TemplateRef<any> | null>();
   readonly config = input.required<ModalConfig<D> | undefined>();
+  readonly id = input.required<string | null>();
   readonly isOpen = input.required<boolean>();
   readonly isAnimated = input.required<boolean>();
   readonly isBottomSheetModalActive = input.required<boolean>();
@@ -51,21 +52,21 @@ export class ModalSide<D = unknown> implements IModalView<D> {
       'left': positionLeft,
       'right': positionRight,
 
-      'side-modal-animate-in': shouldAnimate ? isRenderedOpen : true, 
+      'side-modal-animate-in': shouldAnimate ? isRenderedOpen : true,
       'side-modal-animate-out': shouldAnimate ? !isRenderedOpen : false,
     };
   });
- 
+
   constructor() {
     effect(() => {
       const isOpen = this.isOpen();
-      
+
       if (isOpen) {
         this.renderOpenClass.set(false);
 
         setTimeout(() => {
-          this.renderOpenClass.set(true); 
-        }, 50); 
+          this.renderOpenClass.set(true);
+        }, 50);
 
       } else {
         this.renderOpenClass.set(false);

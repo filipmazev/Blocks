@@ -1,21 +1,21 @@
 @if(!isBottomSheetModalActive()) {
-<div class="modal-overlay" [ngClass]="{'modal-backdrop': config()?.style?.hasBackdrop}" (click)="
-    config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null">
+<div class="modal-overlay" [ngClass]="{'modal-backdrop': config()?.style?.hasBackdrop}" [id]="id() ?? ''"
+    (click)="config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null">
     <div class="modal-overlay-wrapper">
         <div [ngClass]="modalClasses()" (click)="$event.stopPropagation()">
-            <div class="centered-modal-inner-content-container"
-                [class]="config()?.style?.wrapperClasses ?? ''"
+            <div class="centered-modal-inner-content-container" [class]="config()?.style?.wrapperClasses ?? ''"
                 [style]="config()?.style?.wrapperStyles ?? ''">
-                
+
                 <div class="centered-modal-top-group">
                     @if (hasBanner()) {
-                        <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
+                    <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
                     }
                     @if (headerTemplate()) {
                     <div class="centered-modal-header">
                         <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
                         @if(!hasBanner()) {
-                            <modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></modal-default-close-button>
+                        <modal-default-close-button [config]="config()"
+                            (close)="close.emit('cancel')"></modal-default-close-button>
                         }
                     </div>
                     }
@@ -34,8 +34,9 @@
     </div>
 </div>
 } @else {
-<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
-    [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
+<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()"
+    [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated()" [animationDuration]="animationDuration()"
+    (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
 </modal-bottom-sheet>
 }

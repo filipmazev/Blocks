@@ -24,6 +24,7 @@ export class ModalCentered<D = unknown> implements IModalView<D> {
     readonly footerTemplate = input.required<TemplateRef<any> | null>();
 
     readonly config = input.required<ModalConfig<D> | undefined>();
+    readonly id = input.required<string | null>();
     readonly isOpen = input.required<boolean>();
     readonly isAnimated = input.required<boolean>();
     readonly isBottomSheetModalActive = input.required<boolean>();

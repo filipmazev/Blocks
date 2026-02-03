@@ -27,8 +27,8 @@ export class ModalService implements IModalService {
 
     //#region Properties
 
-    private modals: Set<ModalRef<any, any, any>> = new Set();
-    private modalsSubject = new BehaviorSubject<Set<ModalRef<any, any, any>>>(this.modals);
+    private modals: Set<ModalRef> = new Set();
+    private modalsSubject = new BehaviorSubject<Set<ModalRef>>(this.modals);
 
     //#endregion
 
@@ -63,7 +63,7 @@ export class ModalService implements IModalService {
      * @param config Optional configuration for the modal.
      * @returns A ModalRef instance representing the opened modal.
      */
-    public open<D, R, C extends IModal<D, R> = IModal<D, R>, ConfirmModalData = unknown, ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>>(component: ComponentType<C>, config?: IModalConfig<D, ConfirmModalData, ConfirmModal>): ModalRef<D, R, C> {
+    public open<D, R, C extends IModal<D, R> = IModal<D, R>>(component: ComponentType<C>, config?: IModalConfig<D>): ModalRef<D, R, C> {
         const dataInjector = Injector.create({
             providers: [{ provide: MODAL_DATA, useValue: config?.data }],
             parent: this.injector,

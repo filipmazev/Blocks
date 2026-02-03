@@ -10,7 +10,10 @@ import { ModalCloseMode } from "../types/modal.types";
 import { IModal } from "../interfaces/imodal";
 import { ComponentType } from "@angular/cdk/portal";
 
-export class ModalRef<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
+export class ModalRef<
+    D = unknown,
+    R = any,
+    C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
 
     //#region Modal Container
 

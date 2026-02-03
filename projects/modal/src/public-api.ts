@@ -17,7 +17,6 @@ export * from './lib/classes/modal-ref';
 export * from './lib/classes/modal-style.config';
 
 export * from './lib/interfaces/imodal-close-result.interface';
-export * from './lib/interfaces/imodal-confirm-close.interface';
 export * from './lib/interfaces/imodal-component.interface';
 export * from './lib/interfaces/imodal-config.interface';
 export * from './lib/interfaces/imodal-ref.interface';
@@ -37,3 +36,6 @@ export * from './lib/directives/modal-footer.directive';
 export * from './lib/tokens/modal-data.token';
 
 export * from './lib/types/modal.types';
+
+export * from './lib/classes/modal-close-guard';
+export * from './lib/classes/guards/modal-confirm-close-guard';

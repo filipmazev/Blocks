@@ -1,5 +1,5 @@
 <div (click)="$event.stopPropagation()" 
-    [id]="config()?.id ?? ''"
+    [id]="id() ?? ''"
     [class]="config()?.style?.wrapperClasses ?? ''"
     [style]="config()?.style?.wrapperStyles ?? ''"
     [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"

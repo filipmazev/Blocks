@@ -22,8 +22,9 @@ import { ModalCloseMode } from "../types/modal.types";
 export interface IModalView<D> {
     headerTemplate: InputSignal<TemplateRef<any> | null>;
     footerTemplate: InputSignal<TemplateRef<any> | null>;
-    
+
     config: InputSignal<ModalConfig<D> | undefined>;
+    id: InputSignal<string | null>;
     isOpen: InputSignal<boolean>;
     isAnimated: InputSignal<boolean>;
     isBottomSheetModalActive: InputSignal<boolean>;

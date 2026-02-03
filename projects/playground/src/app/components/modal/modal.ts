@@ -3,6 +3,7 @@ import { CenteredModal } from './components/centered-modal/centered-modal';
 import { ModalService } from '../../../../../modal/src/lib/services/modal.service';
 import { IModalCloseResult } from '../../../../../modal/src/lib/interfaces/imodal-close-result.interface';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
+import { ModalConfirmCloseGuard } from '../../../../../modal/src/lib/classes/guards/modal-confirm-close-guard';
 
 @Component({
   selector: 'app-modal',
@@ -31,19 +32,9 @@ export class Modal {
           'xl': 'center'
         }
       },
-      confirmOnCloseModal: {
-        component: ConfirmClose,
-        config: { 
-          data: "Are you sure you want to close the modal?",
-          confirmOnCloseModal: {
-            component: ConfirmClose,
-            confirmOnSubmit: true,
-            config: {
-              data: "Are you really really sure you want to close the modal?",
-            }
-          }
-        }
-      }
+      closeGuard: new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
+        data: 'Are you sure you want to close the modal?'
+      })
     });
 
     modal.afterClosed().subscribe((result: IModalCloseResult<string | undefined>) => {

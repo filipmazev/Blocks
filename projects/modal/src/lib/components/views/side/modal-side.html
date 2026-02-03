@@ -1,5 +1,5 @@
 @if(!isBottomSheetModalActive()) {
-<div [ngClass]="modalClasses()" (click)="$event.stopPropagation()"
+<div [ngClass]="modalClasses()" (click)="$event.stopPropagation()" [id]="id() ?? ''"
     [style.--anim-duration.ms]="animationDuration()">
     <div class="side-modal-inner-content-container"
         [class]="config() && config()?.style?.wrapperClasses ? config()?.style?.wrapperClasses : ''"
@@ -11,7 +11,7 @@
         <div class="side-modal-header">
             <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
             @if(!hasBanner()) {
-                <modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></modal-default-close-button>
+            <modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></modal-default-close-button>
             }
         </div>
         }
@@ -19,7 +19,7 @@
             <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
         </div>
     </div>
-    
+
     @if (footerTemplate()) {
     <div class="side-modal-footer">
         <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
@@ -27,8 +27,9 @@
     }
 </div>
 } @else {
-<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
-    [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
+<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()"
+    [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated()" [animationDuration]="animationDuration()"
+    (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
 </modal-bottom-sheet>
 }

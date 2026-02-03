@@ -14,6 +14,7 @@ import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constan
   styleUrl: './modal-bottom-sheet.scss',
 })
 export class ModalBottomSheet implements OnInit, OnDestroy {
+  readonly id = input.required<string | null>();
   readonly headerTemplate = input.required<TemplateRef<any> | null>();
   readonly footerTemplate = input.required<TemplateRef<any> | null>();
   readonly config = input.required<ModalConfig | undefined>();
@@ -33,7 +34,7 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
     }
 
     const calculatedY = Math.max(0, this.currentTranslateY());
-    
+
     return `translateY(${calculatedY}px)`;
   });
 
@@ -42,12 +43,12 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
 
   private isTouchActive = false;
   private bottomSheetInitiated: boolean = false;
-  
+
   private cleanupListeners: (() => void) | null = null;
   private globalResizeCleanup: (() => void) | null = null;
 
   @ViewChild("verticalSwipeTarget", { static: true }) verticalSwipeTarget?: ElementRef;
-  
+
   public ngOnInit(): void {
     this.startVerticalSwipeDetection();
     this.monitorInputType();
@@ -80,29 +81,29 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
 
     const pointerDown = (event: PointerEvent) => {
       if (event.button !== 0 && event.pointerType === 'mouse') return;
-      
+
       isPointerDown = true;
       startY = event.clientY;
       startTime = event.timeStamp;
-      
+
       this.isSwipingVertically.set(true);
-      
+
       target.setPointerCapture(event.pointerId);
     };
 
     const pointerMove = (event: PointerEvent) => {
       if (!isPointerDown) return;
-      
+
       const currentY = event.clientY - startY;
 
       if (event.cancelable) event.preventDefault();
-      
+
       this.currentTranslateY.set(currentY);
     };
 
     const pointerUp = (event: PointerEvent) => {
       if (!isPointerDown) return;
-      
+
       isPointerDown = false;
       this.isSwipingVertically.set(false);
       target.releasePointerCapture(event.pointerId);
@@ -135,10 +136,10 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
     if (!this.isTrackingSwipe) return;
 
     this.isTrackingSwipe = false;
-    
+
     if (this.cleanupListeners) {
-        this.cleanupListeners();
-        this.cleanupListeners = null;
+      this.cleanupListeners();
+      this.cleanupListeners = null;
     }
   }
 
@@ -150,8 +151,8 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
     const style = config?.style?.mobileConfig;
 
     this.downSwipeLimit = style?.downSwipeLimit && style.downSwipeLimit > 0
-        ? style.downSwipeLimit
-        : bottomSheetConst.MODAL_DOWN_SWIPE_LIMIT;
+      ? style.downSwipeLimit
+      : bottomSheetConst.MODAL_DOWN_SWIPE_LIMIT;
   }
 
   private monitorInputType(): void {

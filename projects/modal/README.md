@@ -162,13 +162,12 @@ modalRef.afterClosed().subscribe(result: IModalCloseResult<MyData> => {
 Controls the behavior and content of the modal container:
 
 * `open` |`boolean`|: (optional) Whether the modal should be open or not, will default to true.
-* `afterClose` |``Function``|: (optional) The function to run after the modal closes.
-* `confirmCloseConfig` |``IModalConfirmCloseConfig<ConfirmModalData, ConfirmModal>``|: (optional) The configuration for the confirm close modal (e.g., a "Discard changes?" prompt), will default to `{ confirmClose: false }`. `ConfirmModalData and ConfirmModal` need to be specified.
+* `afterClose` |`Function`|: (optional) The function to run after the modal closes.
+* `closeGuard` |`ModalCloseGuard`| (optional) The guard that will determine whether the modal can be closed or not
+* `closeGuardOnlyOnCancel` |`boolean`| (optional) Whether the close guard should only be checked on cancel actions, will default to true
 * `disableClose` |`boolean`|: (optional) Whether the modal should be closable or not, will default to false. This applies to the close button, escape key, and backdrop.
 * `disableCloseOnBackdropClick` |`boolean`|: (optional) Whether the modal shouldn't be closable specifically when the user clicks on the backdrop, will default to false.
 * `disableCloseOnNavigation` |`boolean`|: (optional) Whether the modal should remain open when the user navigates away from the current page, will default to false.
-* `enableExtremeOverflowHandling` |`boolean`|: (optional) Whether the modal should enable extreme overflow handling for complex scrolling scenarios (may cause issues with keypress registration), will default to false.
-* `webkitOnlyOverflowMobileHandling` |`boolean`|: (optional) Whether the modal should only handle overflow for webkit browsers on mobile or for all browsers, will default to true. Webkite sometimes handles `overflow: hidden` poorly, this will ensure that scrolling is disabled totally for everything that is not within the modal while it is open.
 * `data` |`TData`|: (optional) The data to pass to the component of the modal. The component needs to use the @Inject(MODAL_DATA) or `data = inject<string>(MODAL_DATA);` (modern syntax) decorator to receive this.
 * `style` |`IModalStyleConfig`|: (optional) The visual style configuration for the modal (layout, backdrop, etc.), will default to an empty object.
 * `bannerText` |`string`|: (optional) The text to display in the header banner of the modal.
@@ -194,18 +193,74 @@ Controls the visual appearance:
 * `wrapperStyles` |`string`|: (optional) Inline CSS styles to apply to the wrapper of the modal.
 * `overrideFullHeight` |`boolean`|: (optional) Whether the modal should override the default full-height restriction or not, will default to false.
 
-### `IModalConfirmCloseConfig`
-
-Configuration for the confirmation modal triggered when a user attempts to close the parent modal (e.g., "Unsaved Changes"):
-
-* `component` |`ComponentType<ConfirmModal>`|: (required) The component class to use for the confirmation modal.
-* `config` |`IModalConfig<ConfirmModalData>`|: (optional) The configuration for the confirm modal.
-* `confirmOnSubmit` |`boolean`|: (optional) Whether the confirmation should also trigger when the modal is closed via a "submit" (success) action. Defaults to false (meaning confirmation is only required for 'cancel' or backdrop closure).
-* `bypassSelfCheck` |`boolean`|: (optional) Whether the modal should bypass the internal check that ensures the confirmation is attached to the specific closing modal. Defaults to false.
-
 ### `IBottomSheetModalConfig`
 
 Configuration for the mobile-optimized bottom sheet modal (bottom sheet):
 
 * `downSwipeLimit` |`number`|: (optional) The threshold factor for swiping downwards to close the modal. Determines how far the user must swipe down before the modal closes automatically. (calculated as windowHeight / downSwipeLimit).
 * `customHeight` |`number`|: (optional) A specific maximum height (in pixels) for the bottom sheet modal. If provided, this overrides the default dynamic height behavior.
+
+## Close Guards
+
+Close Guards provide a powerful mechanism to intercept and control the modal closing process. Similar to Angular Route Guards, they allow you to run logic, validate state, or prompt the user before a modal is actually dismissed.
+
+### `ModalCloseGuard` (Abstract Base Class)
+
+To implement custom logic, extend the abstract ModalCloseGuard class. Your guard must implement the canClose method, which returns a boolean (or an Observable/Promise of a boolean).
+
+1. Return true: The modal closes normally.
+2. Return false: The closing action is aborted, and the modal remains open.
+
+```typescript
+import { ModalCloseGuard, ModalService } from '@filip.mazev/modal';
+import { Observable, of } from 'rxjs';
+
+export class UnsavedChangesGuard extends ModalCloseGuard {
+  constructor(private hasUnsavedChanges: boolean) {
+    super();
+  }
+
+  canClose(modalService: ModalService): boolean {
+    if (this.hasUnsavedChanges) {
+      return confirm('You have unsaved changes. Discard?'); // Simple browser confirm
+    }
+    return true;
+  }
+}
+```
+
+### `ModalConfirmCloseGuard`
+
+The library provides a built-in ModalConfirmCloseGuard implementation designed to make "Confirm Close" workflows (e.g., "Are you sure you want to discard unsaved changes?") completely type-safe and effortless.
+
+Instead of using a browser alert, this guard automatically opens another modal (your specified confirm component) and waits for its result.
+
+Parameters:
+
+1. `component`: The component class to use for the confirmation dialog.
+2. `config`: The configuration object for that confirmation component (passed as IModalConfig).
+
+### Usage Example
+
+This example demonstrates a deeply nested, type-safe confirmation flow.
+
+```typescript
+import { ModalConfirmCloseGuard } from '@filip.mazev/modal';
+
+// Open the main modal
+const modal = this.modals.open<string, undefined>(CenteredModal, {
+  data: "Hello from Modal!",
+  
+  // Attach the guard to the configuration
+  closeGuard: new ModalConfirmCloseGuard<ConfirmData, undefined>(ConfirmCloseComponent, {
+    // This configuration is strictly typed to ConfirmCloseComponent's data requirements
+    data: {
+      title: 'Unsaved Changes',
+      message: 'Are you sure you want to close this modal?'
+    },
+    style: {
+      layout: 'center'
+    }
+  })
+});
+```

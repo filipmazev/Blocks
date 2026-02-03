@@ -1,5 +1,5 @@
-import { Component, inject, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal, effect } from "@angular/core";
-import { Subject, Observable, fromEvent, filter, take } from "rxjs";
+import { Component, inject, output, ComponentRef, ViewChild, ElementRef, ViewChildren, QueryList, TemplateRef, ViewContainerRef, signal, effect, OnInit, AfterViewInit } from "@angular/core";
+import { Subject, Observable, fromEvent, filter, take, from, of } from "rxjs";
 import { NgTemplateOutlet } from "@angular/common";
 import { ModalConfig } from "../classes/modal-config";
 import { IModalComponenet } from "../interfaces/imodal-component.interface";
@@ -10,13 +10,13 @@ import { ModalSide } from "./views/side/modal-side";
 import { ModalBottomSheet } from "./views/bottom-sheet/modal-bottom-sheet";
 import { BreakpointKey, ModalCloseMode, ModalLayout } from "../types/modal.types";
 import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
-import { DeviceTypeService, ScrollLockService, WindowDimensionsService } from "@filip.mazev/blocks-core";
+import { ScrollLockService, uuidv4, WindowDimensionsService } from "@filip.mazev/blocks-core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { IModal } from "../interfaces/imodal";
 import * as animConst from "../constants/modal-animation.constants";
 
 @Component({
-    selector: 'modal-core',
+    selector: 'modal',
     imports: [
         NgTemplateOutlet,
         ModalCentered,
@@ -26,53 +26,43 @@ import * as animConst from "../constants/modal-animation.constants";
     templateUrl: './modal-core.html',
     styleUrl: './modal-core.scss',
 })
-export class ModalCore<
-    D = unknown,
-    R = any,
-    C extends IModal<D, R> = IModal<D, R>>
-    implements IModalComponenet<D, R, C> {
+export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>>
+    implements IModalComponenet<D, R, C>, OnInit, AfterViewInit {
 
     private modalService = inject(ModalService);
     private windowDimensionsService = inject(WindowDimensionsService);
     private scrollLockService = inject(ScrollLockService);
-    private deviceTypeService = inject(DeviceTypeService);
 
     readonly afterClose = output<void>();
 
     readonly animationDuration: number = animConst.MODAL_DEFAULT_ANIM_DURATION;
 
-    /** The component reference (the component that is being displayed in the modal) */
     public componentRef: ComponentRef<C> = {} as ComponentRef<C>;
-
-    /** The configuration for the modal */
     public config?: ModalConfig<D>;
-
     public closeFunction?: Function;
 
     private backdropClickSubject = new Subject<MouseEvent>();
-
-    /* Observable for backdrop clicks */
     public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
 
-    /* Whether the modal is open or not */
     public isOpen = signal<boolean>(true);
 
     public effectiveLayout = signal<ModalLayout>('center');
     public isCentered = signal<boolean>(false);
     public isSide = signal<boolean>(false);
-    
+
     protected headerTemplate = signal<TemplateRef<any> | null>(null);
     protected footerTemplate = signal<TemplateRef<any> | null>(null);
-    
+
+    protected id = signal<string | null>(null);
+
     protected isBottomSheetModalActive = signal<boolean>(false);
 
     public isAnimated: boolean = false;
     protected hasBanner: boolean = false;
     protected hasDefaultContentWrapperClass: boolean = false;
-    
+
     private isConfirmCloseModalOpen: boolean = false;
-    private isSpecialMobileOverflowHandlingEnabled: boolean = false;
-    private isScrollDisabled: boolean = false;
+    private scrollLockId: string = uuidv4();
 
     private _sortedBreakpoints: Array<{ width: number, layout: ModalLayout }> = [];
 
@@ -107,18 +97,25 @@ export class ModalCore<
         this.initParamsFromConfig();
         this.initBreakpointCache();
 
-        const width = this.windowDimensionsService.dimensions().width;
-        this.handleLayout(width);
+        this.scrollLockService.disableScroll(this.scrollLockId, {
+            animationDuration: this.animationDuration,
+            handleTouchInput: true,
+            mobileOnlyTouchPrevention: true,
+        });
     }
 
     public ngAfterViewInit(): void {
         if (!this.componentRef) return;
         this.dynamicContainer?.insert(this.componentRef.hostView);
+
+        const width = this.windowDimensionsService.dimensions().width;
+        this.handleLayout(width);
     }
 
     public ngOnDestroy(): void {
         this.componentRef?.destroy();
         this.dynamicContainer?.clear();
+        this.scrollLockService.enableScroll(this.scrollLockId);
     }
 
     //#region Subscription Methods
@@ -141,7 +138,7 @@ export class ModalCore<
     //#region Initialization Methods
 
     private initParamsFromConfig() {
-        this.isSpecialMobileOverflowHandlingEnabled = (this.deviceTypeService.getDeviceState().isAppleDevice || this.config?.webkitOnlyOverflowMobileHandling === false);
+        this.id.set(this.config?.id ?? this.scrollLockId);
 
         this.hasBanner =
             this.config !== undefined &&
@@ -154,10 +151,10 @@ export class ModalCore<
 
     private initBreakpointCache(): void {
         const definedBreakpoints = this.config?.style?.breakpoints;
-        
+
         if (definedBreakpoints && Object.keys(definedBreakpoints).length > 0) {
             const serviceBreakpoints = this.windowDimensionsService.breakpoints;
-            
+
             this._sortedBreakpoints = (Object.keys(definedBreakpoints) as BreakpointKey[])
                 .map(key => ({
                     width: serviceBreakpoints[key],
@@ -183,44 +180,38 @@ export class ModalCore<
 
     //#region Closing Methods
 
-    /** 
-     * Closes the modal with the specified state and result.
-     * @param {ModalCloseMode} state The state of the modal close (e.g., 'confirm', 'cancel').
-     * @param {R | undefined} result The result to be returned when the modal closes.
-     * @param {boolean} fromInsideInteraction Whether the close was triggered from inside the modal interaction.
-     * @param {boolean} forceClose Whether to force close the modal, bypassing any confirmation modals.
-    */
     public close(state: ModalCloseMode = "cancel", result: R | undefined = undefined, fromInsideInteraction: boolean = false, forceClose: boolean = false): void {
-        if (this.isConfirmCloseModalOpen) return;
-
-        if (this.isScrollDisabled) {
-            this.scrollLockService.enableScroll(this.config?.enableExtremeOverflowHandling ?? false);
+        if (forceClose) {
+            this.handleClose(state, result);
+            return;
         }
 
-        if ((this.config && this.config?.disableClose !== true) || !fromInsideInteraction || forceClose) {
-            if (this.config?.confirmOnCloseModal && this.shouldOpenConfirmCloseModal(forceClose, state)) {
-                const modal = this.modalService.open<IModalCloseResult, any>(this.config.confirmOnCloseModal.component, this.config.confirmOnCloseModal.config);
+        if ((this.config?.disableClose === true) && fromInsideInteraction) {
+            return;
+        }
 
-                this.isConfirmCloseModalOpen = true;
+        const shouldCheckCloseGuard = this.config?.closeGuardOnlyOnCancel !== true || state !== "confirm";
 
-                if (this.isBottomSheetModalActive()) {
-                    this.resetBottomSheetModalLayout();
+        if (shouldCheckCloseGuard && this.config?.closeGuard) {
+            const guardResult = this.config.closeGuard.canClose(this.modalService);
+
+            const canClose$ = guardResult instanceof Observable ? guardResult :
+                guardResult instanceof Promise ? from(guardResult) :
+                    of(guardResult);
+
+            canClose$.pipe(take(1)).subscribe((canClose) => {
+                if (canClose) {
+                    this.handleClose(state, result);
+                } else {
+                    if (this.isBottomSheetModalActive()) {
+                        this.resetBottomSheetModalLayout();
+                    }
                 }
-
-                modal.afterClosed()
-                    .pipe(take(1))
-                    .subscribe((_result: IModalCloseResult) => {
-                        this.isConfirmCloseModalOpen = false;
-                        if (_result.state === 'confirm') {
-                            this.handleClose(state, result);
-                        }
-                    });
-            } else {
-                this.handleClose(state, result);
-            }
-        } else if (this.isBottomSheetModalActive()) {
-            this.resetBottomSheetModalLayout();
+            });
+            return;
         }
+
+        this.handleClose(state, result);
     }
 
     private async handleClose(state: ModalCloseMode, result: R | undefined): Promise<void> {
@@ -246,27 +237,7 @@ export class ModalCore<
 
     //#endregion
 
-    //#region Logical Assertions
-
-    private shouldOpenConfirmCloseModal(forceClose: boolean, state: ModalCloseMode): boolean {
-        if (this.config?.confirmOnCloseModal) {
-            const closeNotCalledWithForceClose = !forceClose;
-
-            if (closeNotCalledWithForceClose) {
-                const configuredForConfirmClose = this.config.confirmOnCloseModal !== undefined;
-                const closeCalledWithCancelState = state === "cancel";
-                const configuredForConfirmCloseOnSubmit = this.config.confirmOnCloseModal.confirmOnSubmit === true;
-
-                return configuredForConfirmClose && (closeCalledWithCancelState || configuredForConfirmCloseOnSubmit);
-            }
-        }
-
-        return false;
-    }
-
-    //#endregion
-
-    //#region Layout Methods
+    //#region Helper Methods
 
     private handleLayout(width: number): void {
         if (!this.config) return;
@@ -279,7 +250,7 @@ export class ModalCore<
                 break;
             }
         }
-        
+
         const prevIsSide = this.isSide();
         const nextIsSide = resolvedLayout === 'left' || resolvedLayout === 'right';
         const layoutTypeChanged = prevIsSide !== nextIsSide;
@@ -299,37 +270,11 @@ export class ModalCore<
         const currentSwipeState = this.isBottomSheetModalActive();
 
         if (shouldBeBottomSheet && !currentSwipeState) {
-            this.handleBottomSheetModalOpened();
+            this.isBottomSheetModalActive.set(true);
         } else if (!shouldBeBottomSheet && currentSwipeState) {
-            this.handleBottomSheetModalClosed();
+            this.isBottomSheetModalActive.set(false);
         }
     }
-
-    private handleBottomSheetModalOpened(): void {
-        this.isBottomSheetModalActive.set(true);
-
-        this.scrollLockService.disableScroll({
-            mainContainer: this.modalContainer?.nativeElement,
-            handleExtremeOverflow: this.config?.enableExtremeOverflowHandling ?? false,
-            animationDuration: this.animationDuration,
-            handleTouchInput: true,
-            mobileOnlyTouchPrevention: true,
-        });
-
-        this.isScrollDisabled = true;
-    }
-
-    private handleBottomSheetModalClosed(): void {
-        this.isBottomSheetModalActive.set(false);
-        if (this.isOpen() && this.isSpecialMobileOverflowHandlingEnabled) {
-            this.scrollLockService.enableScroll(this.config?.enableExtremeOverflowHandling ?? false);
-            this.isScrollDisabled = false;
-        }
-    }
-
-    //#endregion
-
-    //#region Helper Methods
 
     private getBottomSheetModal(): ModalBottomSheet | undefined {
         return this.sideModalComponents?.first?.bottomSheet?.first
@@ -348,6 +293,7 @@ export class ModalCore<
         if (bottomSheet) {
             bottomSheet.isSwipingVerticallyFinished.set(isFinished);
         }
+        this.isBottomSheetModalActive.set(false);
     }
 
     //#endregion

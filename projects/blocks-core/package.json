@@ -1,6 +1,6 @@
 {
   "name": "@filip.mazev/blocks-core",
-  "version": "0.0.7",
+  "version": "0.0.11",
   "exports": {
     "./mixins": "./lib/styles/_mixins.scss",
     "./variables": "./lib/styles/_variables.scss",
@@ -9,7 +9,7 @@
     "./orange-company-theme": "./lib/styles/themes/_orange-company-theme.scss",
     "./index": "./lib/styles/_index.scss"
   },
-  "style": "src/lib/styles/_index.scss", 
+  "style": "src/lib/styles/_index.scss",
   "sass": "src/lib/styles/_index.scss",
   "peerDependencies": {
     "@angular/common": "^21.1.1",

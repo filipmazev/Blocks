@@ -6,9 +6,6 @@ import { IModal } from "./imodal";
 
 /**
  * Interface for Modal Service
- * @param D The type of data passed to the modal, will default to any
- * @param R The type of result returned from the modal, will default to unknown
- * @param C The type of the modal component, will default to IModal<D, R>
  * @param {Function} open Function to open a modal with specified component and configuration
  * @param {Function} close Function to close a specific modal
  * @param {Function} unregister  Function to unregister a specific modal
@@ -17,7 +14,7 @@ import { IModal } from "./imodal";
  * @param {Function} find Function to check if a modal with a specific component type is open
  */
 export interface IModalService {
-    open<D, R, C extends IModal<D, R> = IModal<D, R>, ConfirmModalData = unknown, ConfirmModal extends IModal<ConfirmModalData, undefined> = IModal<ConfirmModalData, undefined>>(component: ComponentType<C>, config?: IModalConfig<D, ConfirmModalData, ConfirmModal>): ModalRef<D, R, C>;
+    open<D, R, C extends IModal<D, R> = IModal<D, R>>(component: ComponentType<C>, config?: IModalConfig<D>): ModalRef<D, R, C>;
     close<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void;
     unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void;
     closeAll(): void;

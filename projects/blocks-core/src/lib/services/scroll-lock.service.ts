@@ -1,9 +1,7 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Injectable, OnDestroy, inject, signal, computed } from '@angular/core';
 import { DeviceTypeService } from './device-type.service';
 import { WindowDimensionsService } from './window-dimension.service';
 import { IScrollLockConfig } from '../interfaces/scroll-lock-config.interface';
-import { SCROLL_LOCK_INSTANCE_IDENTIFIER } from '../constants/scroll-lock.constants';
-import { uuidv4 } from '../../public-api';
 
 @Injectable({
   providedIn: 'root'
@@ -12,101 +10,120 @@ export class ScrollLockService implements OnDestroy {
   private deviceTypeService = inject(DeviceTypeService);
   private windowDimensionsService = inject(WindowDimensionsService);
 
-  private instanceId: string;
+  private activeLocks = new Map<string, IScrollLockConfig>();
 
-  private configurationInstances: Map<string, IScrollLockConfig> = new Map<string, IScrollLockConfig>();
+  private _isScrollDisabled = signal<boolean>(false);
+  public readonly isScrollDisabled = this._isScrollDisabled.asReadonly();
+
+  private previousBodyPadding: string | null = null;
+
+  private activeConfig = computed(() => {
+    if (this.activeLocks.size === 0) return null;
+    const keys = Array.from(this.activeLocks.keys());
+    const lastKey = keys[keys.length - 1];
+    return this.activeLocks.get(lastKey) ?? null;
+  });
+
   private windowDimensions = this.windowDimensionsService.dimensions;
 
-  constructor() {
-    this.instanceId = SCROLL_LOCK_INSTANCE_IDENTIFIER + uuidv4();
-  }
+  private boundHandleTouchMove = this.handleTouchMove.bind(this);
+  private boundPreventDefault = this.preventDefault.bind(this);
+
+  constructor() { }
 
   public ngOnDestroy(): void {
-    this.enableScroll();
+    this.activeLocks.clear();
+    this.updateStateAndCleanup();
   }
 
-  public disableScroll(config: IScrollLockConfig): void {
-    document.body.style.setProperty('overflow', 'hidden', 'important');
+  public disableScroll(usageId: string, config: IScrollLockConfig): void {
+    const wasAlreadyDisabled = this._isScrollDisabled();
+
+    this.activeLocks.set(usageId, config);
+    this._isScrollDisabled.set(true);
+
+    if (wasAlreadyDisabled) {
+      return;
+    }
 
     const documentWidth = document.documentElement.clientWidth;
     const windowWidth = window.innerWidth;
     const scrollBarWidth = windowWidth - documentWidth;
-    
-    document.body.style.paddingRight = scrollBarWidth + 'px';
-    document.body.style.setProperty('padding-right', scrollBarWidth + 'px', 'important');
 
-    if (config.handleTouchInput !== false) { document.body.style.setProperty('touch-action', 'none', 'important'); }
+    if (scrollBarWidth > 0) {
+      this.previousBodyPadding = document.body.style.paddingRight;
 
-    this.configurationInstances.set(this.instanceId, config);
+      const computedBodyPadding = parseInt(window.getComputedStyle(document.body).paddingRight, 10) || 0;
+      const newPadding = computedBodyPadding + scrollBarWidth;
 
-    if (config.mainContainer !== undefined && config.mainContainer.parentElement !== null) {
-      let currentNode = config.mainContainer.parentElement as HTMLElement | null;
-      while (currentNode !== null) {
-        currentNode.style.setProperty('overflow', 'hidden', 'important');
+      document.body.style.setProperty('padding-right', `${newPadding}px`, 'important');
+    }
 
-        if (config.handleTouchInput !== false) {
-          currentNode.addEventListener('touchmove', (event) => this.handleTouchMove(event), { passive: false });
-          currentNode.style.setProperty('touch-action', 'none', 'important');
-        }
+    document.body.style.setProperty('overflow', 'hidden', 'important');
 
-        currentNode = currentNode.parentElement;
-      }
+    if (config.handleTouchInput !== false) {
+      document.body.style.setProperty('touch-action', 'none', 'important');
     }
 
     setTimeout(() => {
+      if (!this._isScrollDisabled()) return;
+
       if (config.handleTouchInput !== false) {
-        document.body.addEventListener('touchmove', (event) => this.handleTouchMove(event), { passive: false });
+        document.body.addEventListener('touchmove', this.boundHandleTouchMove, { passive: false });
       }
 
       if (config.handleExtremeOverflow !== false) {
         const options = { passive: false };
-
-        window.addEventListener('wheel', this.preventDefault, options);
-        window.addEventListener('mousewheel', this.preventDefault, options);
-        window.addEventListener('scroll', this.preventDefault, options);
-        window.addEventListener('DOMMouseScroll', this.preventDefault, options);
+        window.addEventListener('wheel', this.boundPreventDefault, options);
+        window.addEventListener('mousewheel', this.boundPreventDefault, options);
+        window.addEventListener('scroll', this.boundPreventDefault, options);
+        window.addEventListener('DOMMouseScroll', this.boundPreventDefault, options);
       }
     }, (config.animationDuration ?? 0) + 10);
   }
 
-  public enableScroll(extreme_overflow?: boolean): void {
+  public enableScroll(usageId: string, extreme_overflow?: boolean): void {
+    if (!this.activeLocks.has(usageId)) {
+      return;
+    }
+
+    this.activeLocks.delete(usageId);
+
+    if (this.activeLocks.size > 0) {
+      return;
+    }
+
+    this.updateStateAndCleanup(extreme_overflow);
+  }
+
+  private updateStateAndCleanup(extreme_overflow?: boolean): void {
+    this._isScrollDisabled.set(false);
+
     document.body.style.removeProperty('overflow');
-    document.body.style.removeProperty('padding-right');
 
-    let currentConfiguration = this.configurationInstances.get(this.instanceId);
-
-    if (currentConfiguration && currentConfiguration.handleTouchInput !== false) {
-      document.body.removeEventListener('touchmove', this.handleTouchMove);
-      document.body.style.removeProperty('touch-action');
-    }
-
-    if (currentConfiguration !== undefined && currentConfiguration.mainContainer !== undefined && currentConfiguration.mainContainer.parentElement !== null) {
-      let currentNode = currentConfiguration.mainContainer.parentElement as HTMLElement | null;
-      while (currentNode !== null) {
-        currentNode.style.removeProperty('overflow');
-
-        if (currentConfiguration.handleTouchInput !== false) {
-          currentNode.removeEventListener('touchmove', this.preventDefault);
-          currentNode.style.removeProperty('touch-action');
-        }
-
-        currentNode = currentNode.parentElement;
+    if (this.previousBodyPadding !== null) {
+      if (this.previousBodyPadding) {
+        document.body.style.setProperty('padding-right', this.previousBodyPadding);
+      } else {
+        document.body.style.removeProperty('padding-right');
       }
+      this.previousBodyPadding = null;
     }
 
-    this.configurationInstances.delete(this.instanceId);
+    document.body.removeEventListener('touchmove', this.boundHandleTouchMove);
+    document.body.style.removeProperty('touch-action');
 
     if (extreme_overflow !== false) {
-      window.removeEventListener('wheel', this.preventDefault);
-      window.removeEventListener('mousewheel', this.preventDefault);
-      window.removeEventListener('scroll', this.preventDefault);
-      window.removeEventListener('DOMMouseScroll', this.preventDefault);
+      window.removeEventListener('wheel', this.boundPreventDefault);
+      window.removeEventListener('mousewheel', this.boundPreventDefault);
+      window.removeEventListener('scroll', this.boundPreventDefault);
+      window.removeEventListener('DOMMouseScroll', this.boundPreventDefault);
     }
   }
 
   private handleTouchMove(event: Event): void {
     const targetNode = event.target as Node;
-    const currentConfiguration = this.configurationInstances.get(this.instanceId);
+    const currentConfiguration = this.activeConfig();
 
     if (!this.isAllowedToScroll(targetNode) && (currentConfiguration === null || currentConfiguration?.handleTouchInput !== false)) {
       if (currentConfiguration === null || currentConfiguration?.mobileOnlyTouchPrevention !== true ||
@@ -119,7 +136,7 @@ export class ScrollLockService implements OnDestroy {
   }
 
   private isAllowedToScroll(targetNode: Node): boolean {
-    const currentConfiguration = this.configurationInstances.get(this.instanceId);
+    const currentConfiguration = this.activeConfig();
 
     if (!currentConfiguration?.allowTouchInputOn || currentConfiguration.allowTouchInputOn.length === 0) { return true; }
 
