@@ -31,6 +31,7 @@ export * from './lib/constants/modal-bottom-sheet.constants';
 export * from './lib/enums/modal-warnings.enum';
 export * from './lib/enums/modal-state.enum';
 
+export * from './lib/directives/modal-header.directive';
 export * from './lib/directives/modal-footer.directive';
 
 export * from './lib/tokens/modal-data.token';
