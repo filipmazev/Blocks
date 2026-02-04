@@ -116,15 +116,21 @@ A utility to prevent background scrolling when overlays (like Modals) are active
 
 * **Extreme Overflow**: Optionally disables wheel and touch events entirely for strict locking.
 
+To use the scroll locking service within a component, in order to prevent enabling the scroll from one instance when another is disabling it, a `scrollLockId` must be generated and passed to the `disableScroll` and `enableScroll` methods, the provided `uuidv4` method from this library is recommended to be used for this.
+
+```typescript
+private scrollLockId: string = uuidv4();
+```
+
 ```typescript
 // Lock scroll
-this.scrollLockService.disableScroll({
+this.scrollLockService.disableScroll(this.scrollLockId, {
   handleTouchInput: true,
   handleExtremeOverflow: false
 });
 
 // Unlock
-this.scrollLockService.enableScroll();
+this.scrollLockService.enableScroll(this.scrollLockId);
 ```
 
 ## Installation

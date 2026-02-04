@@ -1,6 +1,6 @@
 {
   "name": "@filip.mazev/blocks-core",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "exports": {
     "./mixins": "./lib/styles/_mixins.scss",
     "./variables": "./lib/styles/_variables.scss",
