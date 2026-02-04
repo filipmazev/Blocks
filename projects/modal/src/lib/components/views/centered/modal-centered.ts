@@ -20,20 +20,19 @@ import { ModalDefaultCloseButton } from "../../shared/ui/default-close-button/de
     styleUrl: './modal-centered.scss'
 })
 export class ModalCentered<D = unknown> implements IModalView<D> {
-    readonly headerTemplate = input.required<TemplateRef<any> | null>();
-    readonly footerTemplate = input.required<TemplateRef<any> | null>();
+    public readonly headerTemplate = input.required<TemplateRef<any> | null>();
+    public readonly footerTemplate = input.required<TemplateRef<any> | null>();
 
-    readonly config = input.required<ModalConfig<D> | undefined>();
-    readonly id = input.required<string | null>();
-    readonly isOpen = input.required<boolean>();
-    readonly isAnimated = input.required<boolean>();
-    readonly isBottomSheetModalActive = input.required<boolean>();
-    readonly animationDuration = input.required<number>();
-    readonly hasDefaultContentWrapperClass = input.required<boolean>();
-    readonly hasBanner = input.required<boolean>();
-
-    readonly close = output<ModalCloseMode | undefined>();
-    readonly onBackdropClick = output<MouseEvent>();
+    public readonly config = input.required<ModalConfig<D> | undefined>();
+    public readonly id = input.required<string | null>();
+    public readonly isOpen = input.required<boolean>();
+    public readonly isAnimated = input.required<boolean>();
+    public readonly isBottomSheetModalActive = input.required<boolean>();
+    public readonly animationDuration = input.required<number>();
+    public readonly hasDefaultContentWrapperClass = input.required<boolean>();
+    public readonly hasBanner = input.required<boolean>();
+    public readonly close = output<ModalCloseMode | undefined>();
+    public readonly onBackdropClick = output<MouseEvent>();
 
     @ViewChildren(ModalBottomSheet) bottomSheet!: QueryList<ModalBottomSheet>;
 

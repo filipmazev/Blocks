@@ -222,7 +222,7 @@ style: {
 
 Configuration for the mobile-optimized bottom sheet modal (bottom sheet):
 
-* `downSwipeLimit` |`number`|: (optional) The threshold factor for swiping downwards to close the modal. Determines how far the user must swipe down before the modal closes automatically. (calculated as windowHeight / downSwipeLimit).
+* `downSwipeLimit` |`number`|: (optional) The limit for down swipe to close the modal (1/N of modal height needs to be reached to trigger close), will default to MODAL_DOWN_SWIPE_LIMIT = 3
 * `customHeight` |`number`|: (optional) A specific maximum height (in pixels) for the bottom sheet modal. If provided, this overrides the default dynamic height behavior.
 
 ## Close Guards

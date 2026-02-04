@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output, signal, computed } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output, signal, computed, inject } from '@angular/core';
 import { ModalConfig } from '../../../classes/modal-config';
 import { ModalCloseMode } from '../../../types/modal.types';
 import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constants';
@@ -14,15 +14,15 @@ import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constan
   styleUrl: './modal-bottom-sheet.scss',
 })
 export class ModalBottomSheet implements OnInit, OnDestroy {
-  readonly id = input.required<string | null>();
-  readonly headerTemplate = input.required<TemplateRef<any> | null>();
-  readonly footerTemplate = input.required<TemplateRef<any> | null>();
-  readonly config = input.required<ModalConfig | undefined>();
-  readonly isOpen = input.required<boolean>();
-  readonly isAnimated = input.required<boolean>();
-  readonly animationDuration = input.required<number>();
+  public readonly id = input.required<string | null>();
+  public readonly headerTemplate = input.required<TemplateRef<any> | null>();
+  public readonly footerTemplate = input.required<TemplateRef<any> | null>();
+  public readonly config = input.required<ModalConfig | undefined>();
+  public readonly isOpen = input.required<boolean>();
+  public readonly isAnimated = input.required<boolean>();
+  public readonly animationDuration = input.required<number>();
 
-  readonly close = output<ModalCloseMode | undefined>();
+  public readonly close = output<ModalCloseMode | undefined>();
 
   public currentTranslateY = signal(0);
   public isSwipingVerticallyFinished = signal(false);
@@ -48,6 +48,7 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
   private globalResizeCleanup: (() => void) | null = null;
 
   @ViewChild("verticalSwipeTarget", { static: true }) verticalSwipeTarget?: ElementRef;
+  @ViewChild("elementRef", { static: true }) elementRef?: ElementRef;
 
   public ngOnInit(): void {
     this.startVerticalSwipeDetection();
@@ -73,7 +74,7 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
     const target = this.verticalSwipeTarget?.nativeElement;
     if (!target) return;
 
-    const limit = window.innerHeight / this.downSwipeLimit;
+    let limit = 0;
 
     let startY = 0;
     let startTime = 0;
@@ -81,6 +82,9 @@ export class ModalBottomSheet implements OnInit, OnDestroy {
 
     const pointerDown = (event: PointerEvent) => {
       if (event.button !== 0 && event.pointerType === 'mouse') return;
+
+      const modalHeight = this.elementRef?.nativeElement.offsetHeight || 0;
+      limit = modalHeight / this.downSwipeLimit;
 
       isPointerDown = true;
       startY = event.clientY;
