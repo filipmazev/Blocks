@@ -182,7 +182,7 @@ Controls the behavior and content of the modal container:
 Controls the visual appearance:
 
 * `layout` |`ModalLayout`|: (optional) The layout of the modal (can be 'center', 'left', 'right' or 'bottom-sheet'), will default to 'center'.
-* `breakpoints` |`Partial<Record<BreakpointKey, ModalLayout>>`|: (optional) The breakpoints for responsive layouts, will default to undefined.
+* `breakpoints` |`Partial<Record<BreakpointKey, ModalLayout>>`|: (optional) A map of responsive overrides. It defines specific layouts for screen widths less than or equal to specific breakpoints. Defaults to undefined.
 * `animate` |`boolean`|: (optional) Whether the modal should have open/close animations or not, will default to true.
 * `hasBackdrop` |`boolean`|: (optional) Whether the modal should have a dimmed backdrop or not, will default to true.
 * `closeDelay` |`number`|: (optional) The delay in milliseconds before the modal actually closes after the close action is triggered, will default to `MODAL_DEFAULT_ANIM_DURATION` = 175.
@@ -192,6 +192,31 @@ Controls the visual appearance:
 * `wrapperClasses` |`string`|: (optional) Custom CSS classes to apply to the wrapper of the modal.
 * `wrapperStyles` |`string`|: (optional) Inline CSS styles to apply to the wrapper of the modal.
 * `overrideFullHeight` |`boolean`|: (optional) Whether the modal should override the default full-height restriction or not, will default to false.
+
+### The Breakpoints
+
+Logic: The system uses a "Max-Width" matching strategy.
+
+1. The library sorts your defined breakpoints by size (smallest to largest).
+2. It checks the current window width against these breakpoints.
+3. The first breakpoint that satisfies windowWidth <= breakpointWidth is applied.
+4. If the window width is larger than all defined breakpoints, the default layout property is used.
+
+Available Keys: xs (360px), sm (640px), md (768px), lg (1024px), xl (1280px), 2xl (1536px), 3xl (1920px), 4xl (2560px).
+
+_Note: Reference the documentation for @filip.mazev/blocks-core for up-to-date values for these breakpoints_  
+
+* Example:
+
+```typescript
+style: {
+  layout: 'right', // Applied when width > 1280px (Desktop)
+  breakpoints: {
+    'sm': 'bottom-sheet', // Applied when width <= 640px (Mobile)
+    'xl': 'center'        // Applied when width <= 1280px AND > 640px (Tablet/Laptop)
+  }
+}
+```
 
 ### `IBottomSheetModalConfig`
 

@@ -4,7 +4,7 @@ import { IBottomSheetModalConfig } from "./ibottom-sheet-modal-config";
 /**
  * IModalStyleConfig
  * @param {center' | 'left' | 'right'} layout (optional) The layout of the modal (can be center, left, or right), will default to center
- * @param {Partial<Record<BreakpointKey, ModalLayout>>} breakpoints (optional) The breakpoints for responsive layouts, will default to undefined
+ * @param {Partial<Record<BreakpointKey, ModalLayout>>} breakpoints (optional) (optional) A map of responsive overrides. It defines specific layouts for screen widths less than or equal to specific breakpoints. Defaults to undefined.
  * @param {boolean} animate (optional) Whether the modal should have animations or not, will default to true
  * @param {boolean} hasBackdrop (optional) Whether the modal should have a backdrop or not, will default to true
  * @param {number} closeDelay (optional) The delay in milliseconds before the modal closes, will default to MODAL_DEFAULT_ANIM_DURATION (175)
