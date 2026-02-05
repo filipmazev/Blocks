@@ -9,10 +9,6 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
-
-    @include respond-down(lg) {
-        margin-top: 3.25rem;
-    }
 }
 
 .hero {
@@ -172,6 +168,11 @@
 
     &.two-col {
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    @include respond-down(md) {
+        display: flex;
+        flex-direction: column;
     }
 }
 

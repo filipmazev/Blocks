@@ -90,6 +90,7 @@ a {
 
     @include respond-down(lg) {
         height: auto;
+        margin-top: 7vh;
     }
 }
 
