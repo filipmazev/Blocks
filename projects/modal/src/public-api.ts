@@ -23,7 +23,7 @@ export * from './lib/interfaces/imodal-ref.interface';
 export * from './lib/interfaces/imodal-service.interface';
 export * from './lib/interfaces/imodal-style-config.interface';
 export * from './lib/interfaces/imodal-view.interface';
-export * from './lib/interfaces/ibottom-sheet-modal-config';
+export * from './lib/interfaces/ibottom-sheet-modal-config.interface';
 
 export * from './lib/constants/modal-animation.constants';
 export * from './lib/constants/modal-bottom-sheet.constants';

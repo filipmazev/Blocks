@@ -2,12 +2,12 @@
 @use '../../modal' as modal;
 
 :root {
-  @include fm.core-theme(fm.$default-light-theme-config);
+  @include fm.core-theme(fm.$orange-company-light-theme-config);
   @include modal.modal-theme(());
 }
 
 [data-theme="dark"] {
-  @include fm.core-theme(fm.$default-dark-theme-config);
+  @include fm.core-theme(fm.$orange-company-dark-theme-config);
   @include modal.modal-theme(());
 }
 
@@ -20,9 +20,26 @@ body {
     line-height: 1.5;
     margin: 0;
     color: var(--fm-text-primary);
+    background: var(--fm-bg-canvas);
     height: 100%;
 }
 
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    background-color: var(--fm-bg-canvas);
+    color: var(--fm-text-alt);
+    border: 1px solid var(--fm-border, #ccc);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--fm-button-primary); 
+    
+    cursor: pointer;
+    width: 1.2em;  
+    height: 1.2em;
+}
 * {
     font-family: custom_regular;
     color: var(--fm-text-primary);
@@ -45,6 +62,8 @@ button {
 a {
     text-decoration: none;
 }
+
+
 
 //#endregion
 

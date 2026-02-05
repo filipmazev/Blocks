@@ -2,7 +2,7 @@ import { ComponentRef, OnDestroy, OnInit, Signal } from "@angular/core";
 import { Observable } from "rxjs";
 import { ModalConfig } from "../classes/modal-config";
 import { ModalCloseMode } from "../types/modal.types";
-import { IModal } from "./imodal";
+import { IModal } from "./imodal.interface";
 
 /**
  * Interface for the Modal Component

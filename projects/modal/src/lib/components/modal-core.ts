@@ -12,7 +12,7 @@ import { BreakpointKey, ModalCloseMode, ModalLayout } from "../types/modal.types
 import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
 import { ScrollLockService, uuidv4, WindowDimensionsService } from "@filip.mazev/blocks-core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { IModal } from "../interfaces/imodal";
+import { IModal } from "../interfaces/imodal.interface";
 import * as animConst from "../constants/modal-animation.constants";
 
 @Component({

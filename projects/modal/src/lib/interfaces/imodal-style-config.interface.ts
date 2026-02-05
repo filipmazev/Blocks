@@ -1,5 +1,5 @@
 import { BreakpointKey, ModalLayout } from "../types/modal.types";
-import { IBottomSheetModalConfig } from "./ibottom-sheet-modal-config";
+import { IBottomSheetModalConfig } from "./ibottom-sheet-modal-config.interface";
 
 /**
  * IModalStyleConfig

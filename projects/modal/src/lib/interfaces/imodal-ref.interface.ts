@@ -4,7 +4,7 @@ import { ModalConfig } from "../classes/modal-config";
 import { ModalCore } from "../components/modal-core";
 import { ModalState } from "../enums/modal-state.enum";
 import { IModalCloseResult } from "./imodal-close-result.interface";
-import { IModal } from "./imodal";
+import { IModal } from "./imodal.interface";
 
 /** 
  * Interface for the Modal Reference

@@ -10,7 +10,7 @@ import { IModalService } from "../interfaces/imodal-service.interface";
 import { MODAL_DATA } from "../tokens/modal-data.token";
 import { ComponentType } from "@angular/cdk/portal";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { IModal } from "../interfaces/imodal";
+import { IModal } from "../interfaces/imodal.interface";
 
 @Injectable({
     providedIn: "root",

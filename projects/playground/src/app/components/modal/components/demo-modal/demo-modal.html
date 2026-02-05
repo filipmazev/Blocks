@@ -1,18 +1,19 @@
 <div *modalHeader>
-    Test Header
+    {{ data.title }}
 </div>
 
-<div class="centered-modal-content-class">
+<div class="demo-modal-content-class">
     <div>
-        {{ data }}
-    </div>
-
-    <div>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. A, iste voluptatum accusamus facere explicabo impedit
-        exercitationem dolore, vitae eveniet, quasi vero! Placeat eos cumque illum a voluptate dolor rerum odio.
+        {{ data.body }}
     </div>
 </div>
 
-<div *modalFooter>
-    Test Footer
+<div class="button-container" *modalFooter>
+    <button (click)="confirm()" class="confirm-button">
+        Confirm
+    </button>
+
+    <button (click)="close()" class="cancel-button">
+        Cancel
+    </button>
 </div>

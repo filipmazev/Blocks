@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { ComponentType } from "@angular/cdk/portal";
 import { IModalConfig } from "./imodal-config.interface";
 import { ModalRef } from "../classes/modal-ref";
-import { IModal } from "./imodal";
+import { IModal } from "./imodal.interface";
 
 /**
  * Interface for Modal Service

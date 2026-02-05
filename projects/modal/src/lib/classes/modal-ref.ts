@@ -7,7 +7,7 @@ import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
 import { IModalRef } from "../interfaces/imodal-ref.interface";
 import { ModalService } from "../services/modal.service";
 import { ModalCloseMode } from "../types/modal.types";
-import { IModal } from "../interfaces/imodal";
+import { IModal } from "../interfaces/imodal.interface";
 import { ComponentType } from "@angular/cdk/portal";
 
 export class ModalRef<

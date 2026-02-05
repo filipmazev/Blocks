@@ -1,5 +1,5 @@
 import { IModalStyleConfig } from "../interfaces/imodal-style-config.interface";
-import { IBottomSheetModalConfig } from "../interfaces/ibottom-sheet-modal-config";
+import { IBottomSheetModalConfig } from "../interfaces/ibottom-sheet-modal-config.interface";
 import { BreakpointKey, ModalLayout } from "../types/modal.types";
 
 export class ModalStyleConfig implements IModalStyleConfig {
@@ -19,7 +19,7 @@ export class ModalStyleConfig implements IModalStyleConfig {
     public wrapperStyles: string;
 
     public overrideFullHeight: boolean;
-    
+
     constructor(config?: IModalStyleConfig) {
         this.layout = config?.layout ?? "center";
         this.breakpoints = config?.breakpoints;

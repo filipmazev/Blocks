@@ -1,18 +1,47 @@
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 
-.centered-modal-content-class {
+.demo-modal-content-class {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     overflow-y: auto;
-    max-height: 80vh;
-    max-height: 80dvh;
+    
+    @include respond-up(xl) {
+        max-width: 30vw;
+        max-width: 30dvw;
+    }
 }
 
-@include respond-down(md) {
-    .centered-modal-content-class {
-        max-width: 90vw;
-        max-width: 95dvw;
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    & button {
+        cursor: pointer;
     }
+}
+
+.confirm-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+
+    background-color: var(--fm-button-confirm);
+    color: var(--fm-text-confirm);
+    border: none;
+    border-radius: 4px;
+}
+
+.cancel-button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+
+    background-color: var(--fm-button-warn);
+    color: var(--fm-text-warn);
+    border: none;
+    border-radius: 4px;
 }

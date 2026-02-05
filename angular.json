@@ -87,9 +87,16 @@
               ]
             },
             "assets": [
+              "projects/playground/src/favicon.ico",
+              "projects/playground/src/assets",
               {
                 "glob": "**/*",
                 "input": "projects/playground/public"
+              },
+              {
+                "glob": "README.md",
+                "input": "projects/modal",
+                "output": "/assets"
               }
             ],
             "styles": [

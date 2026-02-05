@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { ModalRef } from "./modal-ref";
 import { MODAL_DATA } from "../tokens/modal-data.token";
-import { IModal } from "../interfaces/imodal";
+import { IModal } from "../interfaces/imodal.interface";
 
 @Injectable()
 export class Modal<D, R> implements IModal<D, R> {
