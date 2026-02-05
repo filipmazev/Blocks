@@ -1,0 +1,33 @@
+import { Component, signal } from '@angular/core';
+import { IDemoModalData } from '../interfaces/modals/data/idemo-modal-data.interface';
+import { IDemoModalResult } from '../interfaces/modals/result/idemo-modal-result.interface';
+import { NgClass } from '@angular/common';
+import { Modal, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/modal';
+
+@Component({
+  selector: 'app-modal',
+  imports: [
+    ModalHeaderDirective,
+    ModalFooterDirective,
+    NgClass
+  ],
+  templateUrl: './modal.html',
+  styleUrl: './modal.scss',
+})
+export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
+
+  protected isSideModal = signal(false);
+  protected isCenteredModal = signal(false);
+
+  public override onModalInit(): void {
+    const layout = this.modal?.modalConfig?.style.layout;
+    this.isSideModal.set(layout === 'right' || layout === 'left');
+    this.isCenteredModal.set(layout === 'center');
+  }
+
+  protected confirm(): void {
+    this.modal?.close('confirm', {
+      openedCount: this.data.openedCount + 1
+    });
+  }
+}

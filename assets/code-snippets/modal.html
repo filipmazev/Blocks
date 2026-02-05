@@ -1,0 +1,84 @@
+<div class="demo-container">
+    <app-component-info [codeFiles]="codeFiles" [readmePath]="modalReadmePath()"></app-component-info>
+
+    <div class="config-container">
+        <div class="config-header">Demo</div>
+
+        <form [formGroup]="form" class="config-form">
+
+            <div class="form-section">
+                <h3>General Style</h3>
+
+                <div class="form-control">
+                    <label>Default Layout</label>
+                    <select formControlName="layout">
+                        <option *ngFor="let l of layoutOptions" [value]="l">{{ l }}</option>
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label>Banner Text</label>
+                    <input type="text" formControlName="bannerText">
+                </div>
+
+                <div class="form-control">
+                    <label>Title</label>
+                    <input type="text" formControlName="title">
+                </div>
+
+            </div>
+
+            <div class="form-section">
+                <h3>Behavior & Toggles</h3>
+
+                <div class="form-checkboxes">
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="animate"> Animate
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="hasBackdrop"> Has Backdrop
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="showCloseButton"> Show Close Button
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="disableClose"> Disable Close (Global)
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="disableCloseOnBackdropClick"> Disable Backdrop Click
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="hasConfirmCloseGuard"> Use Confirm Close Guard
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Responsive Breakpoints</h3>
+                <p class="hint">Select 'none' to ignore that breakpoint.</p>
+
+                <div class="breakpoints-grid">
+                    <div class="form-control" *ngFor="let bp of breakpointKeys">
+                        <label>{{ bp }}</label>
+                        <select [formControlName]="bp">
+                            <option value="none">None</option>
+                            <option *ngFor="let l of layoutOptions" [value]="l">{{ l }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="actions">
+            <button (click)="openModal()" [disabled]="form.invalid" class="open-modal-button">
+                Open Modal
+            </button>
+        </div>
+    </div>
+</div>

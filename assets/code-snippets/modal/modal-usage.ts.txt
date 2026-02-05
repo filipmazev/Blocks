@@ -1,0 +1,66 @@
+import { Component, inject } from '@angular/core';
+import { DemoModal } from './components/demo-modal/demo-modal';
+import { ConfirmClose } from './components/confirm-close/confirm-close';
+import { IDemoModalData } from '../interfaces/modals/data/idemo-modal-data.interface';
+import { IDemoModalResult } from '../interfaces/modals/result/idemo-modal-result.interface';
+import { 
+    ModalService,
+    ModalConfirmCloseGuard,
+    IModalCloseResult,
+    MODAL_DEFAULT_ANIM_DURATION 
+} from '@filip.mazev/modal';
+
+@Component({
+  selector: 'app-modal-usage',
+  imports: [],
+  templateUrl: './modal-usage.html',
+  styleUrl: './modal-usage.scss',
+})
+export class Modal {
+  private modals = inject(ModalService);
+  private openedCount = 0;
+
+  constructor() {
+  }
+
+  protected openModal(): void {
+    const modal = this.modals.open<IDemoModalData, IDemoModalResult>(DemoModal, {
+      data: {
+        title: "The Lorem Ipsum Modal",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        openedCount: this.openedCount
+      },
+      style: {
+        layout: 'right',
+        breakpoints: {
+          'sm': 'bottom-sheet',
+          'xl': 'center'
+        }
+      },
+
+      closeGuard: new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
+        data: 'Are you sure you want to close the modal?',
+        bannerText: 'Unsaved Changes',
+        style: {
+          showCloseButton: false
+        }
+      })
+    });
+
+    modal.afterClosed().subscribe((result: IModalCloseResult<IDemoModalResult | undefined>) => {
+      if (result.state === 'confirm' && result.data) {
+        this.openedCount = result.data.openedCount;
+        setTimeout(() => {
+          alert(`Confirmed for the ${this.getOrdinal(this.openedCount)} time`);
+        }, MODAL_DEFAULT_ANIM_DURATION);
+      }
+    });
+
+  }
+
+  private getOrdinal(n: number): string {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+}
