@@ -1,0 +1,22 @@
+<div class="info-container">
+
+    <div class="info-header">
+        <div class="toggle-group">
+            <button class="toggle-btn" [class.active]="viewMode() === 'documentation'"
+                (click)="viewMode.set('documentation')">
+                Documentation
+            </button>
+            <button class="toggle-btn" [class.active]="viewMode() === 'code'" (click)="viewMode.set('code')">
+                Code Examples
+            </button>
+        </div>
+    </div>
+
+    <div class="info-content">
+        @if (viewMode() === 'documentation') {
+        <app-readme [path]="readmePath()"></app-readme>
+        } @else if (viewMode() === 'code') {
+        <app-code [files]="codeFiles()"></app-code>
+        }
+    </div>
+</div>

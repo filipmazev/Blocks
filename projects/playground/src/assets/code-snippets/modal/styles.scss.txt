@@ -1,0 +1,16 @@
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as fm;
+@use '@filip.mazev/modal/lib/styles/index' as modal;
+
+:root {
+  @include fm.core-theme(fm.$orange-company-light-theme-config);
+  @include modal.modal-theme((
+    'modal-bg': #ffffff,
+    'modal-text': #000000,
+    'modal-mobile-swipe-line-color': #f3f3f3
+  ));
+} 
+
+[data-theme="dark"] {
+  @include fm.core-theme(fm.$orange-company-dark-theme-config);
+  @include modal.modal-theme(());
+}

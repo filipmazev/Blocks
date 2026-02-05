@@ -1,0 +1,51 @@
+<nav class="sidenav-container">
+    @if (!isHamburgerMenu()) {
+    <aside class="desktop-sidebar">
+
+        <div class="sidebar-header">
+            <div class="logo-area">
+                <span class="logo-icon"></span>
+                <span class="logo-text fade-in">
+                    {{ title() }}
+                </span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            @for (link of links(); track link.route) {
+            <a [routerLink]="link.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                class="nav-item" [title]="link.name">
+
+                <span class="nav-text fade-in">
+                    {{ link.name }}
+                </span>
+            </a>
+            }
+        </div>
+    </aside>
+    }
+
+    @if (isHamburgerMenu()) {
+    <div class="mobile-header">
+        <div class="mobile-logo"></div>
+
+        <button type="button" (click)="toggleMobileMenu()" id="hamburger-menu" aria-label="Toggle Menu"
+            class="hamburger-menu" [ngClass]="{'is-open': isHamburgerMenuOpen()}">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </button>
+    </div>
+
+    <div class="mobile-menu" [class.open]="isHamburgerMenuOpen()">
+        <div class="mobile-nav-links">
+            @for (link of links(); track link.route) {
+            <a [routerLink]="link.route" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-item">
+                {{ link.name }}
+            </a>
+            }
+        </div>
+    </div>
+    }
+
+</nav>

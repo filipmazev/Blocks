@@ -1,1 +1,61 @@
-<app-modal>
+<div class="home-container">
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Build <span class="highlight">Better</span> Angular Apps.
+            </h1>
+            <p class="hero-subtitle">
+                The comprehensive, modular UI ecosystem. Bridging the gap between TypeScript logic and SCSS styling.
+            </p>
+            <div class="hero-actions">
+                <a routerLink="/modal" class="btn primary">View Flagship Component</a>
+                <a href="https://www.npmjs.com/package/@filip.mazev/blocks-core" target="_blank"
+                    class="btn secondary">Get Started</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="block block-1"></div>
+            <div class="block block-2"></div>
+            <div class="block block-3"></div>
+        </div>
+    </header>
+
+    <section class="section features">
+        <h2 class="section-title">Core Philosophy</h2>
+        <div class="grid">
+            @for (feat of features; track feat.title) {
+            <div class="card feature-card">
+                <div class="card-icon">
+                    <span class="material-icons">{{ feat.icon }}</span>
+                </div>
+                <h3>{{ feat.title }}</h3>
+                <p>{{ feat.desc }}</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="section packages">
+        <h2 class="section-title">The Ecosystem</h2>
+        <div class="grid two-col">
+            @for (pkg of packages; track pkg.name) {
+            <a [href]="pkg.link" target="_blank" class="card package-card">
+                <div class="pkg-header">
+                    <span class="material-icons">{{ pkg.icon }}</span>
+                    <span class="pkg-name">{{ pkg.name }}</span>
+                    <span class="material-icons arrow">arrow_forward</span>
+                </div>
+                <p class="pkg-desc">{{ pkg.description }}</p>
+            </a>
+            }
+        </div>
+    </section>
+
+    <footer class="home-footer">
+        <p>Designed & Developed by Filip Mazev</p>
+        <div class="version">v1.0.0</div>
+    </footer>
+
+</div>

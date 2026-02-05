@@ -106,7 +106,7 @@ $orange-company-dark-theme-config: (
     'canvas': #000000,
     'surface': #0d0d0d,
     'text': #ffffff,
-    'status-warn': map-get($warning-palette, 400),
+    'status-warn': map-get($warning-palette, 500),
     'status-error': map-get($error-palette, 400),
     'error-subtle': rgba(239, 68, 68, 0.15)
 ) !default;

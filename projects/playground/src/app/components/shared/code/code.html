@@ -1,0 +1,15 @@
+<div class="code-viewer">
+    <div class="tabs">
+        @for(file of files(); track file) {
+        <button (click)="selectFile(file)" [class.active]="activeFile() === file" class="tab">
+
+            <span class="lang-dot" [class]="file.language"></span>
+            {{ file.title }}
+        </button>
+        }
+    </div>
+
+    <div class="content">
+        <pre><code [highlight]="codeContent()" [language]="activeFile() ? activeFile()!.language : ''"></code></pre>
+    </div>
+</div>

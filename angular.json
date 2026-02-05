@@ -96,7 +96,27 @@
               {
                 "glob": "README.md",
                 "input": "projects/modal",
-                "output": "/assets"
+                "output": "/assets/modal-readme"
+              },
+              {
+                "glob": "README.md",
+                "input": "projects/blocks-core",
+                "output": "/assets/blocks-core-readme"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/playground/src/app/components/modal",
+                "output": "/assets/code-snippets"
+              },
+              {
+                "glob": "github.css",
+                "input": "./node_modules/highlight.js/styles",
+                "output": "/assets/styles"
+              },
+              {
+                "glob": "vs2015.css",
+                "input": "./node_modules/highlight.js/styles",
+                "output": "/assets/styles"
               }
             ],
             "styles": [

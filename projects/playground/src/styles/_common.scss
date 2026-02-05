@@ -1,0 +1,48 @@
+@use '../../../blocks-core/' as *;
+
+@mixin card-base {
+    background: var(--fm-surface);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid var(--fm-border, #e0e0e0);
+    flex-grow: 1;
+    padding: 1rem;
+    margin: 2rem 0rem 2rem 0rem;
+
+    height: 90vh;
+    height: 90dvh;
+
+    @include respond-down(lg) {
+        height: fit-content;
+        margin: 0rem;
+    }
+}
+
+@mixin header-base {
+    font-weight: 600;
+    font-size: 1.35rem;
+    color: var(--fm-text-primary, #333);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.demo-container {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
+    padding: 0rem 2rem 0rem 2rem;
+
+    @include respond-down(lg) {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+    }
+}
+
+:host {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: hidden;
+}

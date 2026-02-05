@@ -1,6 +1,8 @@
-<div class="modal-demo-container">
+<div class="demo-container">
+    <app-component-info [codeFiles]="codeFiles" [readmePath]="modalReadmePath()"></app-component-info>
+
     <div class="config-container">
-        <div class="config-header">Modal Configuration</div>
+        <div class="config-header">Demo</div>
 
         <form [formGroup]="form" class="config-form">
 
@@ -77,16 +79,6 @@
             <button (click)="openModal()" [disabled]="form.invalid" class="open-modal-button">
                 Open Modal
             </button>
-        </div>
-    </div>
-
-    <div class="readme-container">
-        <div class="readme-header">
-            <span>README.md</span>
-            <span class="badge">Read Only</span>
-        </div>
-        <div class="readme-content">
-            <markdown class="readme-content" [data]="readmeContent()"></markdown>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { DemoModal } from './components/demo-modal/demo-modal';
 import { ModalService } from '../../../../../modal/src/lib/services/modal.service';
 import { IModalCloseResult } from '../../../../../modal/src/lib/interfaces/imodal-close-result.interface';
@@ -12,8 +12,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ModalConfigFormControls } from '../../shared/types/form.types';
 import { BREAKPOINTS } from '../../../../../blocks-core/src/public-api';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { MarkdownModule } from 'ngx-markdown';
+import { ICodeFile } from '../../shared/interfaces/icode-file.interface';
+import { ComponentInfo } from '../shared/component-info/component-info';
 
 @Component({
   selector: 'app-modal',
@@ -21,14 +22,14 @@ import { MarkdownModule } from 'ngx-markdown';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MarkdownModule
+    MarkdownModule,
+    ComponentInfo,
   ],
   templateUrl: './modal.html',
   styleUrl: './modal.scss',
 })
-export class Modal implements OnInit {
+export class Modal {
   private modals = inject(ModalService);
-  private http = inject(HttpClient);
 
   private openedCount = 0;
 
@@ -37,7 +38,18 @@ export class Modal implements OnInit {
 
   readonly form: FormGroup<ModalConfigFormControls>;
 
-  protected readmeContent = signal<string>('');
+  protected modalReadmePath = signal<string>('assets/modal-readme/README.md');
+
+  protected codeFiles: ICodeFile[] = [
+    { title: 'modal-usage.ts', path: 'assets/code-snippets/modal/modal-usage.ts.txt', language: 'typescript' },
+    { title: 'modal.ts', path: 'assets/code-snippets/modal/modal.ts.txt', language: 'typescript' },
+    { title: 'modal.html', path: 'assets/code-snippets/modal/modal.html.txt', language: 'html' },
+    { title: 'modal.scss', path: 'assets/code-snippets/modal/modal.scss.txt', language: 'scss' },
+    { title: 'confirm-close.ts', path: 'assets/code-snippets/modal/confirm-close-modal.ts.txt', language: 'typescript' },
+    { title: 'confirm-close.html', path: 'assets/code-snippets/modal/confirm-close-modal.html.txt', language: 'html' },
+    { title: 'confirm-close.scss', path: 'assets/code-snippets/modal/confirm-close-modal.scss.txt', language: 'scss' },
+    { title: 'styles.scss', path: 'assets/code-snippets/modal/styles.scss.txt', language: 'scss' }
+  ];
 
   constructor() {
     const controls = {
@@ -61,23 +73,6 @@ export class Modal implements OnInit {
     });
 
     this.form = new FormGroup<ModalConfigFormControls>(controls);
-  }
-
-  public ngOnInit() {
-    this.loadReadme();
-  }
-
-  private loadReadme() {
-    this.http.get('assets/README.md', { responseType: 'text' })
-      .subscribe({
-        next: (content) => {
-          this.readmeContent.set(content);
-        },
-        error: (err) => {
-          this.readmeContent.set('Failed to load README.md content.');
-          console.error(err);
-        }
-      });
   }
 
   protected openModal(): void {

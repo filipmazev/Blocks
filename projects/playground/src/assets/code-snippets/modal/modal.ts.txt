@@ -1,20 +1,18 @@
 import { Component, signal } from '@angular/core';
-import { Modal } from '../../../../../../../modal/src/lib/classes/modal';
-import { ModalHeaderDirective } from '../../../../../../../modal/src/lib/directives/modal-header.directive';
-import { ModalFooterDirective } from '../../../../../../../modal/src/public-api';
-import { IDemoModalData } from '../../../../shared/interfaces/modals/data/idemo-modal-data.interface';
-import { IDemoModalResult } from '../../../../shared/interfaces/modals/result/idemo-modal-result.interface';
+import { IDemoModalData } from '../interfaces/modals/data/idemo-modal-data.interface';
+import { IDemoModalResult } from '../interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
+import { Modal, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/modal';
 
 @Component({
-  selector: 'app-demo-modal',
+  selector: 'app-modal',
   imports: [
     ModalHeaderDirective,
     ModalFooterDirective,
     NgClass
   ],
-  templateUrl: './demo-modal.html',
-  styleUrl: './demo-modal.scss',
+  templateUrl: './modal.html',
+  styleUrl: './modal.scss',
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
 
