@@ -85,7 +85,7 @@ export class Modal {
       bannerText: bannerText || undefined,
       data: {
         title: request.title,
-        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet neque sed enim aliquam ullamcorper. Donec tempus convallis dolor vitae faucibus. Vivamus sodales pulvinar porttitor. Donec hendrerit et ligula vitae iaculis. Ut quis nulla maximus eros sagittis pretium in vitae nunc. Duis dictum hendrerit porttitor. Aliquam erat volutpat. Nullam sollicitudin felis tellus, eu vestibulum ligula blandit a. Curabitur sit amet magna in dui rutrum feugiat dictum vel felis. Donec id euismod tortor. Fusce nisi risus, tristique a elit interdum, condimentum tempor ex. Suspendisse nec velit eget neque interdum suscipit. Nullam iaculis luctus dignissim. Lorem ipsum dolor sit amet, consectetur adipiscing elit.In vitae dignissim mauris.Pellentesque malesuada nunc ut tortor vehicula aliquam.Phasellus volutpat purus sed neque sagittis venenatis.In lacinia dolor sit amet tortor tristique fringilla.Morbi vitae nulla non libero consequat facilisis id ac ligula.Maecenas augue est, fringilla at ante ut, commodo facilisis leo.Nullam vulputate aliquam pharetra.",
+        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet neque sed enim aliquam ullamcorper.",
         openedCount: this.openedCount
       },
       style: {
