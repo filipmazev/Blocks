@@ -4,6 +4,8 @@
 :root {
   @include core-theme($default-light-theme-config);
   @include modal.modal-theme(());
+
+  --mobile-header-height: 60px;
 }
 
 [data-theme="dark"] {
@@ -22,7 +24,6 @@
 }
 
 $sidebar-width: 220px;
-$mobile-header-height: 60px;
 $anim-speed: 0.3s;
 
 //#region General Global Styles
@@ -87,11 +88,6 @@ a {
     height: 100vh;
     width: 100%;
     overflow-y: auto;
-
-    @include respond-down(lg) {
-        height: auto;
-        margin-top: 7vh;
-    }
 }
 
 //#endregion
@@ -618,6 +614,14 @@ a {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+
+    width: fit-content;
+
+    @include respond-down(lg) {
+        top: calc((var(--mobile-header-height) - .75rem) * -1);
+        left: 1rem;
+        flex-direction: row-reverse;
+    }
 }
 
 .theme-select {
@@ -637,7 +641,7 @@ a {
     }
 
     @include respond-down(lg) {
-        margin-top: $mobile-header-height;
+        margin-top: var(--mobile-header-height);
     }
 }
 
@@ -673,7 +677,7 @@ a {
     }
 
     @include respond-down(lg) {
-        margin-top: $mobile-header-height;
+        margin-top: var(--mobile-header-height);
     }
 }
 
@@ -794,14 +798,14 @@ a {
     top: 0;
     left: 0;
     right: 0;
-    height: $mobile-header-height;
+    height: var(--mobile-header-height);
     background: var(--fm-surface, #fff);
     border-bottom: 1px solid var(--fm-border, #ddd);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 1.5rem;
-    z-index: 3;
+    z-index: 2;
 }
 
 .mobile-logo {
@@ -867,10 +871,10 @@ a {
 
 .mobile-menu {
     position: fixed;
-    top: $mobile-header-height;
+    top: var(--mobile-header-height);
     left: 0;
     width: 100%;
-    height: calc(100vh - #{$mobile-header-height});
+    height: calc(100vh - #{var(--mobile-header-height)});
     background: var(--fm-bg-canvas, #fafafa);
     z-index: 3;
     transform: translateX(-100%);
