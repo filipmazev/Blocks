@@ -11,9 +11,13 @@
 
                 <div class="form-control">
                     <label>Default Layout</label>
-                    <select formControlName="layout">
-                        <option *ngFor="let l of layoutOptions" [value]="l">{{ l }}</option>
-                    </select>
+                    <div class="select-wrapper">
+                        <select formControlName="layout">
+                            @for(layout of layoutOptions; track layout) {
+                            <option [value]="layout">{{ layout }}</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-control">
@@ -63,13 +67,19 @@
                 <p class="hint">Select 'none' to ignore that breakpoint.</p>
 
                 <div class="breakpoints-grid">
-                    <div class="form-control" *ngFor="let bp of breakpointKeys">
-                        <label>{{ bp }}</label>
-                        <select [formControlName]="bp">
-                            <option value="none">None</option>
-                            <option *ngFor="let l of layoutOptions" [value]="l">{{ l }}</option>
-                        </select>
+                    @for(breakpoint of breakpointKeys; track breakpoint) {
+                    <div class="form-control">
+                        <label>{{ breakpoint }}</label>
+                        <div class="select-wrapper">
+                            <select [formControlName]="breakpoint">
+                                <option value="none">None</option>
+                                @for(layout of layoutOptions; track layout) {
+                                <option [value]="layout">{{ layout }}</option>
+                                }
+                            </select>
+                        </div>
                     </div>
+                    }
                 </div>
             </div>
 

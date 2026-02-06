@@ -36,7 +36,7 @@
 
     @include respond-down(lg) {
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         padding: 2rem;
         margin-top: var(--mobile-header-height);
     }
