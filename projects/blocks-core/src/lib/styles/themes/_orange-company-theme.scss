@@ -49,7 +49,7 @@ $orange-company-light-theme-config: (
 
     'canvas': #ffffff,
     'surface': #ffffff,
-    'element': #f7f7f7,
+    'element': #f4f4f4,
     'text': #484848,
     'status-warn': map-get($warning-palette, 500),
     'status-error': map-get($error-palette, 500),
@@ -105,6 +105,7 @@ $orange-company-dark-theme-config: (
 
     'canvas': #000000,
     'surface': #0d0d0d,
+    'element': #171717,
     'text': #ffffff,
     'status-warn': map-get($warning-palette, 500),
     'status-error': map-get($error-palette, 400),

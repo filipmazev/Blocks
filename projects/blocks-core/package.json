@@ -1,6 +1,6 @@
 {
   "name": "@filip.mazev/blocks-core",
-  "version": "0.0.15",
+  "version": "0.0.17",
   "license": "MIT",
   "exports": {
     "./mixins": "./lib/styles/_mixins.scss",

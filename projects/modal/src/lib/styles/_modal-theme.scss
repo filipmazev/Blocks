@@ -3,11 +3,11 @@
 
 @mixin modal-theme($overrides: null) {
   $fallback-bg: map.get($default-light-theme-config, 'surface');
-  $fallback-text: map.get($default-light-theme-config, 'text');
+  $fallback-text: map.get($default-light-theme-config, 'text-primary');
   $fallback-border: map.get($default-light-theme-config, 'border');
 
-  --modal-bg: var(--fm-bg-surface, #{$fallback-bg});
-  --modal-text: var(--fm-text-main, #{$fallback-text});
+  --modal-bg: var(--fm-surface, #{$fallback-bg});
+  --modal-text: var(--fm-text-primary, #{$fallback-text});
   --modal-mobile-swipe-line-color: var(--fm-border, #{$fallback-border});
     
   @if $overrides {
