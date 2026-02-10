@@ -13,7 +13,7 @@ Blocks Core utilizes a robust SCSS architecture to manage design tokens and resp
 The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the `core-theme` mixin in your global styles.
 
 ```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as blocks;
+@use "@filip.mazev/blocks-core/src/lib/styles/index" as blocks;
 
 :root {
   // Initialize default light theme
@@ -26,7 +26,7 @@ body.dark-theme {
 }
 ```
 
-This generates CSS variables with the `--fm-` prefix (e.g.,`--fm-primary`, `--fm-bg-surface`, `--fm-text-main`).
+This generates CSS variables with the `--fm-` prefix (e.g.,`--fm-primary`, `--fm-surface`, `--fm-element`).
 
 ### 2. Responsive Mixins
 
@@ -34,19 +34,19 @@ The library provides mixins that strictly align with the WindowDimensionsService
 
 Available Breakpoints:
 
-* `xs`: 360px
-* `sm`: 640px
-* `md`: 768px
-* `lg`: 1024px
-* `xl`: 1280px
-* `2xl`: 1536px
-* `3xl`: 1920px
-* `4xl`: 2560px
+- `xs`: 360px
+- `sm`: 640px
+- `md`: 768px
+- `lg`: 1024px
+- `xl`: 1280px
+- `2xl`: 1536px
+- `3xl`: 1920px
+- `4xl`: 2560px
 
 Usage:
 
 ```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/mixins' as *;
+@use "@filip.mazev/blocks-core/src/lib/styles/mixins" as *;
 
 .my-element {
   width: 100%;
@@ -72,7 +72,7 @@ Bridges the gap between CSS media queries and TypeScript logic. It provides reac
 ```typescript
 export class MyComponent {
   protected windowDimensionsService = inject(WindowDimensionsService);
-  
+
   protected windowDimensions = this.windowDimensionsService.dimensions;
   protected breakpoints = this.windowDimensionsService.breakpoints;
 
@@ -90,9 +90,9 @@ export class MyComponent {
 
 Handles the detection of system preferences (Dark/Light mode) and manages the application-level theme state.
 
-* `getSystemTheme$()`: Observes the OS/Browser prefers-color-scheme.
-* `getApplicationTheme$()`: Observes the manually set application theme.
-* `setApplicationTheme(theme: DeviceTheme)`: Manually overrides the current theme ('light' | 'dark').
+- `getSystemTheme$()`: Observes the OS/Browser prefers-color-scheme.
+- `getApplicationTheme$()`: Observes the manually set application theme.
+- `setApplicationTheme(theme: DeviceTheme)`: Manually overrides the current theme ('light' | 'dark').
 
 ### `DeviceTypeService`
 
@@ -100,21 +100,21 @@ Provides detailed information about the user's device, OS, and orientation. Usef
 
 `getDeviceState()` returns:
 
-* isMobile / isTablet / isDesktop
-* desktopOS (Windows, Mac, Linux, Unix)
-* mobileOS (iOS, Android)
-* isAppleDevice (checks both iOS and MacOS)
-* isLandscapeOrientation / isPortraitOrientation
+- isMobile / isTablet / isDesktop
+- desktopOS (Windows, Mac, Linux, Unix)
+- mobileOS (iOS, Android)
+- isAppleDevice (checks both iOS and MacOS)
+- isLandscapeOrientation / isPortraitOrientation
 
 ### `ScrollLockService`
 
 A utility to prevent background scrolling when overlays (like Modals) are active. This service handles complex edge cases, including:
 
-* **Scrollbar Compensation**: Adds padding to the body to prevent layout shifts when the scrollbar disappears.
+- **Scrollbar Compensation**: Adds padding to the body to prevent layout shifts when the scrollbar disappears.
 
-* **Mobile Touch**: Prevents "scroll chaining" on mobile devices.
+- **Mobile Touch**: Prevents "scroll chaining" on mobile devices.
 
-* **Extreme Overflow**: Optionally disables wheel and touch events entirely for strict locking.
+- **Extreme Overflow**: Optionally disables wheel and touch events entirely for strict locking.
 
 To use the scroll locking service within a component, in order to prevent enabling the scroll from one instance when another is disabling it, a `scrollLockId` must be generated and passed to the `disableScroll` and `enableScroll` methods, the provided `uuidv4` method from this library is recommended to be used for this.
 
@@ -126,7 +126,7 @@ private scrollLockId: string = uuidv4();
 // Lock scroll
 this.scrollLockService.disableScroll(this.scrollLockId, {
   handleTouchInput: true,
-  handleExtremeOverflow: false
+  handleExtremeOverflow: false,
 });
 
 // Unlock
