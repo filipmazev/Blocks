@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, effect, inject, input, OnInit, signal } from '@angular/core';
-import { ICodeFile } from '../../../shared/interfaces/icode-file.interface';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { Highlight } from 'ngx-highlightjs';
 
 @Component({

@@ -1,4 +1,4 @@
-import { ModalConfigRequest } from "../classes/requests/ModalConfigRequest";
+import { ModalConfigRequest } from '../classes/requests/ModalConfigRequest';
 import { FormControl } from '@angular/forms';
 
 export type ModalConfigFormControls = {

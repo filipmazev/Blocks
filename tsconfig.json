@@ -12,8 +12,35 @@
         "./dist/modal"
       ],
       "blocks-core": [
-        "./dist/blocks-core"
-      ]
+        "./dist/blocks-core",
+      ],
+
+      /** Path aliases for blocks-core library */
+      "@core/constants/*": ["./projects/blocks-core/src/lib/constants/*"],
+      "@core/enums/*": ["./projects/blocks-core/src/lib/enums/*"],
+      "@core/interfaces/*": ["./projects/blocks-core/src/lib/interfaces/*"],
+      "@core/services/*": ["./projects/blocks-core/src/lib/services/*"],
+      "@core/utils/*": ["./projects/blocks-core/src/lib/utils/*"],
+      "@core/types/*": ["./projects/blocks-core/src/lib/types/*"],
+
+      /** Path aliases for modal library */
+      "@modal/classes/*": ["./projects/modal/src/lib/classes/*"],
+      "@modal/components/*": ["./projects/modal/src/lib/components/*"],
+      "@modal/constants/*": ["./projects/modal/src/lib/constants/*"],
+      "@modal/directives/*": ["./projects/modal/src/lib/directives/*"],
+      "@modal/enums/*": ["./projects/modal/src/lib/enums/*"],
+      "@modal/interfaces/*": ["./projects/modal/src/lib/interfaces/*"],
+      "@modal/services/*": ["./projects/modal/src/lib/services/*"],
+      "@modal/tokens/*": ["./projects/modal/src/lib/tokens/*"],
+      "@modal/types/*": ["./projects/modal/src/lib/types/*"],
+      "@modal/*": ["./projects/modal/src/*"],
+
+      /** Path aliases for playground app */
+      "@playground/interfaces/*": ["./projects/playground/src/app/shared/interfaces/*"],
+      "@playground/classes/*": ["./projects/playground/src/app/shared/classes/*"],
+      "@playground/types/*": ["./projects/playground/src/app/shared/types/*"],
+      "@playground/components/*": ["./projects/playground/src/app/components/*"],
+      "@playground/*": ["./projects/playground/src/app/*"],
     },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -23,8 +50,8 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022"
+    "target": "esnext",
+    "module": "esnext"
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

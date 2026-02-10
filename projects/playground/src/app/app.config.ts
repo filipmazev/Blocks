@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withViewTransitions } from '@angular/router';
-import { routes } from './app.routes';
+import { routes } from '@playground/app.routes';
 import { provideMarkdown } from 'ngx-markdown';
 import { provideHighlightOptions } from 'ngx-highlightjs';
 

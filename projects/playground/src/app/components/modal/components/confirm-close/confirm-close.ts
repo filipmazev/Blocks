@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Modal } from '../../../../../../../modal/src/lib/classes/modal';
-import { ModalFooterDirective } from '../../../../../../../modal/src/public-api';
+import { Modal } from '@modal/classes/modal';
+import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
 
 @Component({
   selector: 'app-confirm-close',
@@ -11,7 +11,7 @@ import { ModalFooterDirective } from '../../../../../../../modal/src/public-api'
   styleUrl: './confirm-close.scss',
 })
 export class ConfirmClose extends Modal<string, undefined> {
-  
+
   protected confirm(): void {
     this.modal?.close('confirm');
   }

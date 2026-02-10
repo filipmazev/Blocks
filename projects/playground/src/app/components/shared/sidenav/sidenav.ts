@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, HostListener, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ISidenavLink } from '../../../shared/interfaces/isidenav-link.interface';
-import { WindowDimensionsService } from '../../../../../../blocks-core/src/public-api';
+import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
+import { WindowDimensionsService } from '@core/services/window-dimension.service';
 
 @Component({
   selector: 'app-sidenav',

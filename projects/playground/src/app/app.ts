@@ -1,13 +1,13 @@
 import { Component, DOCUMENT, inject, Renderer2, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HighlightLoader } from 'ngx-highlightjs';
-import { ThemingService } from '../../../blocks-core/src/lib/services/theming.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Sidenav } from './components/shared/sidenav/sidenav';
-import { ISidenavLink } from './shared/interfaces/isidenav-link.interface';
-import { IThemePalette } from './shared/interfaces/itheme-palette.interface';
+import { ThemingService } from '@core/services/theming.service';
+import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
+import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
+import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
-import { ThemeId } from './shared/types/common.types';
+import { ThemeId } from '@playground/types/common.types';
 
 @Component({
   selector: 'app-root',

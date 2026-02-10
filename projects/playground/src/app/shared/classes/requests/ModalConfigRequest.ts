@@ -1,4 +1,4 @@
-import { ModalLayout } from "../../../../../../modal/src/lib/types/modal.types";
+import { ModalLayout } from '../../../../../../modal/src/lib/types/modal.types';
 
 export class ModalConfigRequest {
     layout: ModalLayout = 'right';

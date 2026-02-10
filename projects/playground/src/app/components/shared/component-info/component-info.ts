@@ -1,8 +1,8 @@
 import { Component, input, signal } from '@angular/core';
-import { ICodeFile } from '../../../shared/interfaces/icode-file.interface';
-import { Readme } from '../readme/readme';
-import { Code } from '../code/code';
-import { ViewMode } from '../../../shared/types/common.types';
+import { ICodeFile } from '@playground/interfaces/icode-file.interface';
+import { Readme } from '@playground/components/shared/readme/readme';
+import { Code } from '@playground/components/shared/code/code';
+import { ViewMode } from '@playground/types/common.types';
 
 @Component({
   selector: 'app-component-info',
