@@ -11,13 +11,14 @@ export class ThemingService implements OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   private readonly _systemTheme = signal<DeviceTheme>(this.detectInitialSystemTheme());
-  
   private readonly _applicationTheme = signal<DeviceTheme | null>(null);
 
   public readonly systemTheme = this._systemTheme.asReadonly();
   public readonly applicationTheme = this._applicationTheme.asReadonly();
-  
   public readonly activeTheme = computed(() => this.applicationTheme() ?? this.systemTheme());
+
+  private readonly systemTheme$ = toObservable(this._systemTheme);
+  private readonly applicationTheme$ = toObservable(this._applicationTheme);
 
   private mediaQueryList?: MediaQueryList;
   private mediaQueryListener?: (event: MediaQueryListEvent) => void;
@@ -38,22 +39,29 @@ export class ThemingService implements OnDestroy {
     this._applicationTheme.set(theme);
   }
 
+  /**
+   * Returns an observable of the system theme. 
+   * Safe to call anywhere because the observable is pre-created in the constructor context.
+   */
   public getSystemTheme$() {
-    return toObservable(this._systemTheme);
+    return this.systemTheme$;
   }
 
+  /**
+   * Returns an observable of the application theme.
+   */
   public getApplicationTheme$() {
-    return toObservable(this._applicationTheme);
+    return this.applicationTheme$;
   }
 
   private detectInitialSystemTheme(): DeviceTheme {
-    if (!this.isBrowser) return 'light'; 
+    if (!this.isBrowser) return 'light';
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
   private initSystemThemeListener(): void {
     this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     this.mediaQueryListener = (event: MediaQueryListEvent) => {
       this._systemTheme.set(event.matches ? 'dark' : 'light');
     };
