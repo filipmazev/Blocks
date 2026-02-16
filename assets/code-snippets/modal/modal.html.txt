@@ -1,4 +1,4 @@
-<div *modalHeader>
+<div *appModalHeader>
     {{ data.title }}
 </div>
 
@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="button-container" *modalFooter>
+<div class="button-container" *appModalFooter>
     <button (click)="confirm()" class="confirm-button">
         Confirm
     </button>

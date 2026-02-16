@@ -20,25 +20,11 @@ import { ComponentInfo } from '@playground/components/shared/component-info/comp
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MarkdownModule,
-    ComponentInfo,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo],
   templateUrl: './modal.html',
-  styleUrl: './modal.scss',
+  styleUrl: './modal.scss'
 })
 export class Modal {
-  private modals = inject(ModalService);
-
-  private openedCount = 0;
-
-  readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
-  readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
-
-  readonly form: FormGroup<ModalConfigFormControls>;
-
   protected modalReadmePath = signal<string>('assets/modal-readme/README.md');
 
   protected codeFiles: ICodeFile[] = [
@@ -52,6 +38,15 @@ export class Modal {
     { title: 'styles.scss', path: 'assets/code-snippets/modal/styles.scss.txt', language: 'scss' }
   ];
 
+  protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
+
+  protected readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
+  protected readonly form: FormGroup<ModalConfigFormControls>;
+
+  private modals = inject(ModalService);
+
+  private openedCount = 0;
+
   constructor() {
     const controls = {
       layout: new FormControl<ModalLayout>('right', [Validators.required]),
@@ -62,10 +57,10 @@ export class Modal {
       bannerText: new FormControl<string | null>('The Lorem Ipsum Modal'),
       disableClose: new FormControl<boolean>(false),
       disableCloseOnBackdropClick: new FormControl<boolean>(false),
-      hasConfirmCloseGuard: new FormControl<boolean>(true),
-    } as ModalConfigFormControls;;
+      hasConfirmCloseGuard: new FormControl<boolean>(true)
+    } as ModalConfigFormControls;
 
-    this.breakpointKeys.forEach(bp => {
+    this.breakpointKeys.forEach((bp) => {
       let defaultVal = 'none';
       if (bp === 'sm') defaultVal = 'bottom-sheet';
       if (bp === 'xl') defaultVal = 'center';
@@ -86,7 +81,7 @@ export class Modal {
       bannerText: bannerText || undefined,
       data: {
         title: request.title,
-        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet neque sed enim aliquam ullamcorper.",
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet neque sed enim aliquam ullamcorper.',
         openedCount: this.openedCount
       },
       style: {
@@ -98,13 +93,15 @@ export class Modal {
       },
       disableClose: request.disableClose,
       disableCloseOnBackdropClick: request.disableCloseOnBackdropClick,
-      closeGuard: request.hasConfirmCloseGuard ? new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
-        data: 'Are you sure you want to close the modal?',
-        bannerText: 'Unsaved Changes',
-        style: {
-          showCloseButton: false
-        }
-      }) : undefined
+      closeGuard: request.hasConfirmCloseGuard
+        ? new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
+            data: 'Are you sure you want to close the modal?',
+            bannerText: 'Unsaved Changes',
+            style: {
+              showCloseButton: false
+            }
+          })
+        : undefined
     });
 
     modal.afterClosed().subscribe((result: IModalCloseResult<IDemoModalResult | undefined>) => {
@@ -122,9 +119,7 @@ export class Modal {
 
     const rawValue = this.form.getRawValue();
 
-    const cleanValues = Object.fromEntries(
-      Object.entries(rawValue).map(([key, value]) => [key, value === null ? undefined : value])
-    );
+    const cleanValues = Object.fromEntries(Object.entries(rawValue).map(([key, value]) => [key, value === null ? undefined : value]));
 
     return new ModalConfigRequest(cleanValues);
   }
@@ -132,7 +127,7 @@ export class Modal {
   private getBreakpointsFromRequest(request: ModalConfigRequest): Record<string, ModalLayout> {
     const breakpoints: Record<string, ModalLayout> = {};
 
-    this.breakpointKeys.forEach(key => {
+    this.breakpointKeys.forEach((key) => {
       const val = request[key];
       if (val && val !== 'none') {
         breakpoints[key] = val as ModalLayout;
@@ -143,7 +138,7 @@ export class Modal {
   }
 
   private getOrdinal(n: number): string {
-    const s = ["th", "st", "nd", "rd"];
+    const s = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }

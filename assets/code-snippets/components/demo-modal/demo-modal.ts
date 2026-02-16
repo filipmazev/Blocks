@@ -8,16 +8,11 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-demo-modal',
-  imports: [
-    ModalHeaderDirective,
-    ModalFooterDirective,
-    NgClass
-  ],
+  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass],
   templateUrl: './demo-modal.html',
-  styleUrl: './demo-modal.scss',
+  styleUrl: './demo-modal.scss'
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
-
   protected isSideModal = signal(false);
   protected isCenteredModal = signal(false);
 
