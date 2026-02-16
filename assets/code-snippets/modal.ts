@@ -25,6 +25,12 @@ import { ComponentInfo } from '@playground/components/shared/component-info/comp
   styleUrl: './modal.scss'
 })
 export class Modal {
+  private readonly modals = inject(ModalService);
+
+  protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
+  protected readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
+  protected readonly form: FormGroup<ModalConfigFormControls>;
+
   protected modalReadmePath = signal<string>('assets/modal-readme/README.md');
 
   protected codeFiles: ICodeFile[] = [
@@ -37,13 +43,6 @@ export class Modal {
     { title: 'confirm-close.scss', path: 'assets/code-snippets/modal/confirm-close-modal.scss.txt', language: 'scss' },
     { title: 'styles.scss', path: 'assets/code-snippets/modal/styles.scss.txt', language: 'scss' }
   ];
-
-  protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
-
-  protected readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
-  protected readonly form: FormGroup<ModalConfigFormControls>;
-
-  private modals = inject(ModalService);
 
   private openedCount = 0;
 

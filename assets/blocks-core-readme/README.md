@@ -71,7 +71,7 @@ Bridges the gap between CSS media queries and TypeScript logic. It provides reac
 
 ```typescript
 export class MyComponent {
-  protected windowDimensionsService = inject(WindowDimensionsService);
+  protected readonly windowDimensionsService = inject(WindowDimensionsService);
 
   protected windowDimensions = this.windowDimensionsService.dimensions;
   protected breakpoints = this.windowDimensionsService.breakpoints;
