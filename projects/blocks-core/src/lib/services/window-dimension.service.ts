@@ -11,6 +11,7 @@ import { WindowDimensions } from '../interfaces/window-dimensions.interface';
 export class WindowDimensionsService {
   public readonly ngZone = inject(NgZone);
   public readonly platformId = inject(PLATFORM_ID);
+
   public readonly isBrowser = isPlatformBrowser(this.platformId);
 
   public readonly _dimensions = signal<WindowDimensions>(this.getCurrentDimensions());

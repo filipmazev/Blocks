@@ -17,7 +17,7 @@ import {
   styleUrl: './modal-usage.scss',
 })
 export class Modal {
-  private modals = inject(ModalService);
+  private readonly modals = inject(ModalService);
   private openedCount = 0;
 
   constructor() {

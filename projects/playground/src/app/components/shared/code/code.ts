@@ -10,10 +10,12 @@ import { Highlight } from 'ngx-highlightjs';
   styleUrl: './code.scss'
 })
 export class Code implements OnInit {
+  private readonly http = inject(HttpClient);
+
   public files = input.required<ICodeFile[]>();
+
   protected activeFile = signal<ICodeFile | null>(null);
   protected codeContent = signal<string>('');
-  private http = inject(HttpClient);
 
   public ngOnInit(): void {
     if (this.files().length > 0 && !this.activeFile()) {

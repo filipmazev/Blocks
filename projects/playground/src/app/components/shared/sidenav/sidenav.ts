@@ -12,11 +12,14 @@ import { WindowDimensionsService } from '@core/services/window-dimension.service
   styleUrl: './sidenav.scss'
 })
 export class Sidenav {
+  private readonly windowDimensionsService = inject(WindowDimensionsService);
+
   public links = input.required<ISidenavLink[]>();
   public title = input.required<string>();
+
   protected isHamburgerMenuOpen = signal(false);
   protected isHamburgerMenu = signal(false);
-  protected readonly windowDimensionsService = inject(WindowDimensionsService);
+
   protected dimensions = this.windowDimensionsService.dimensions;
 
   constructor() {

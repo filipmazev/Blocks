@@ -93,7 +93,11 @@ export default [
                 {
                     accessorPairPositioning: "getThenSet",
                     order: [
+                        "[private-readonly-properties]",
+                        "[protected-readonly-properties]",
+                        "[public-readonly-properties]",
                         "[static-properties]",
+                        "[private-readonly-properties]",
                         "[public-properties]",
                         "[protected-properties]",
                         "[private-properties]",
@@ -106,6 +110,9 @@ export default [
                         "[private-methods]"
                     ],
                     groups: {
+                        "private-readonly-properties": [{ type: "property", accessibility: "private", readonly: true }],
+                        "protected-readonly-properties": [{ type: "property", accessibility: "protected", readonly: true }],
+                        "public-readonly-properties": [{ type: "property", accessibility: "public", readonly: true }],
                         "static-properties": [{ type: "property", static: true }],
                         "public-properties": [{ type: "property", accessibility: "public" }],
                         "protected-properties": [{ type: "property", accessibility: "protected" }],

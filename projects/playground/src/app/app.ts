@@ -16,23 +16,24 @@ import { ThemeId } from '@playground/types/common.types';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('playground');
+  private readonly renderer = inject(Renderer2);
+  private readonly document = inject(DOCUMENT);
 
-  protected isDarkMode = signal(false);
-  protected navLinks = signal<ISidenavLink[]>([
-    { name: 'Home', route: '/' },
-    { name: 'Modal', route: '/modal' }
-  ]);
+  protected readonly title = signal('playground');
 
   protected readonly availableThemes: IThemePalette[] = [
     { id: 'default', label: 'Default', className: '' },
     { id: 'orange', label: 'Orange', className: 'theme-orange-company' }
   ];
 
-  protected selectedThemeId = signal<ThemeId>('orange');
-  private renderer = inject(Renderer2);
+  protected isDarkMode = signal(false);
 
-  private document = inject(DOCUMENT);
+  protected navLinks = signal<ISidenavLink[]>([
+    { name: 'Home', route: '/' },
+    { name: 'Modal', route: '/modal' }
+  ]);
+
+  protected selectedThemeId = signal<ThemeId>('orange');
 
   private hljsLoader: HighlightLoader = inject(HighlightLoader);
 

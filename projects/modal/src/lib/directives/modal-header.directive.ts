@@ -7,8 +7,8 @@ import { ModalWarnings } from '../enums/modal-warnings.enum';
   standalone: true
 })
 export class ModalHeaderDirective {
-  private templateRef = inject(TemplateRef);
-  private modal = inject(ModalCore, { optional: true });
+  private readonly templateRef = inject(TemplateRef);
+  private readonly modal = inject(ModalCore, { optional: true });
 
   constructor() {
     if (this.modal) {

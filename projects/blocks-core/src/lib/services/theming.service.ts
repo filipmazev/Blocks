@@ -1,25 +1,23 @@
 import { Injectable, OnDestroy, inject, signal, PLATFORM_ID, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { DeviceTheme } from '../types/core.types';
+import { DeviceTheme } from '@core/types/core.types';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemingService implements OnDestroy {
-  public readonly _systemTheme = signal<DeviceTheme>(this.detectInitialSystemTheme());
-  public readonly _applicationTheme = signal<DeviceTheme | null>(null);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
+  private readonly _systemTheme = signal<DeviceTheme>(this.detectInitialSystemTheme());
+
+  private readonly _applicationTheme = signal<DeviceTheme | null>(null);
 
   public readonly systemTheme = this._systemTheme.asReadonly();
   public readonly applicationTheme = this._applicationTheme.asReadonly();
 
   public readonly activeTheme = computed(() => this.applicationTheme() ?? this.systemTheme());
-  private readonly platformId = inject(PLATFORM_ID);
-
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
-
-  private readonly systemTheme$ = toObservable(this._systemTheme);
-  private readonly applicationTheme$ = toObservable(this._applicationTheme);
 
   private mediaQueryList?: MediaQueryList;
   private mediaQueryListener?: (event: MediaQueryListEvent) => void;
@@ -40,19 +38,12 @@ export class ThemingService implements OnDestroy {
     this._applicationTheme.set(theme);
   }
 
-  /**
-   * Returns an observable of the system theme.
-   * Safe to call anywhere because the observable is pre-created in the constructor context.
-   */
   public getSystemTheme$() {
-    return this.systemTheme$;
+    return toObservable(this._systemTheme);
   }
 
-  /**
-   * Returns an observable of the application theme.
-   */
   public getApplicationTheme$() {
-    return this.applicationTheme$;
+    return toObservable(this._applicationTheme);
   }
 
   private detectInitialSystemTheme(): DeviceTheme {

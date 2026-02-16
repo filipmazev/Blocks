@@ -8,8 +8,8 @@ import { DeviceOS, DeviceOrientationType, LegacyScreenOrientation, MSStreamWindo
   providedIn: 'root'
 })
 export class DeviceTypeService {
-  private userAgent?: string = navigator.userAgent || navigator.vendor || (window as OperaCapableWindow)?.opera || undefined;
   private readonly isDesktopDevice = !this.isMobileDevice() && !this.isTabletDevice();
+  private userAgent?: string = navigator.userAgent || navigator.vendor || (window as OperaCapableWindow)?.opera || undefined;
 
   private supportedScreenOrientation =
     (screen?.orientation || {}).type ?? (screen as LegacyScreenOrientation).mozOrientation ?? (screen as LegacyScreenOrientation).msOrientation;

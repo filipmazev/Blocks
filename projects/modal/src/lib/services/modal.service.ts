@@ -16,13 +16,14 @@ import { IModal } from '../interfaces/imodal.interface';
   providedIn: 'root'
 })
 export class ModalService implements IModalService {
-  private router = inject(Router);
-  private injector = inject(Injector);
-  private appRef = inject(ApplicationRef);
-  private environmentInjector = inject(EnvironmentInjector);
-  private rendererFactory = inject(RendererFactory2);
-  private renderer: Renderer2;
-  private document = inject(DOCUMENT);
+  private readonly router = inject(Router);
+  private readonly injector = inject(Injector);
+  private readonly appRef = inject(ApplicationRef);
+  private readonly environmentInjector = inject(EnvironmentInjector);
+  private readonly rendererFactory = inject(RendererFactory2);
+  private readonly document = inject(DOCUMENT);
+
+  private readonly renderer: Renderer2;
 
   //#region Properties
 

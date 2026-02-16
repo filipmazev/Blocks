@@ -1,6 +1,6 @@
 {
   "name": "@filip.mazev/modal",
-  "version": "0.1.51",
+  "version": "0.1.52",
   "license": "MIT",
   "exports": {
     "./_modal-theme": "./lib/styles/_modal-theme.scss",

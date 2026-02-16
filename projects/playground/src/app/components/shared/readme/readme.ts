@@ -9,9 +9,11 @@ import { MarkdownModule } from 'ngx-markdown';
   styleUrl: './readme.scss'
 })
 export class Readme {
+  private readonly http = inject(HttpClient);
+
   public path = input.required<string>();
+
   protected readmeContent = signal<string>('');
-  private http = inject(HttpClient);
 
   public ngOnInit() {
     this.loadReadme();

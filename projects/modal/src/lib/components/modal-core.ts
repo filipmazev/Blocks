@@ -36,6 +36,12 @@ import * as animConst from '../constants/modal-animation.constants';
   styleUrl: './modal-core.scss'
 })
 export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit {
+  private readonly modalService = inject(ModalService);
+  private readonly scrollLockService = inject(ScrollLockService);
+  private readonly windowDimensionsService = inject(WindowDimensionsService);
+
+  public readonly animationDuration: number = animConst.MODAL_DEFAULT_ANIM_DURATION;
+
   public componentRef: ComponentRef<C> = {} as ComponentRef<C>;
   public config?: ModalConfig<D, R>;
   public closeFunction?: (data: IModalCloseResult<R | undefined>) => void;
@@ -47,8 +53,6 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   public isSide = signal<boolean>(false);
   public isAnimated: boolean = false;
 
-  public readonly animationDuration: number = animConst.MODAL_DEFAULT_ANIM_DURATION;
-
   protected headerTemplate = signal<TemplateRef<void> | null>(null);
   protected footerTemplate = signal<TemplateRef<void> | null>(null);
   protected id = signal<string | null>(null);
@@ -56,10 +60,6 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   protected hasBanner: boolean = false;
 
   protected hasDefaultContentWrapperClass: boolean = false;
-
-  protected modalService = inject(ModalService);
-  protected scrollLockService = inject(ScrollLockService);
-  protected windowDimensionsService = inject(WindowDimensionsService);
 
   protected windowDimensions = this.windowDimensionsService.dimensions;
 
@@ -209,9 +209,6 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   }
 
   private initBreakpointCache(): void {
-    // eslint-disable-next-line no-debugger
-    debugger;
-
     const definedBreakpoints = this.config?.style?.breakpoints;
 
     if (definedBreakpoints && Object.keys(definedBreakpoints).length > 0) {

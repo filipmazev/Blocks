@@ -132,7 +132,7 @@ The structure of the object returned when a modal closes, accessible via the obs
 Use the ModalService to launch your component:
 
 ```typescript
-private modals = inject(ModalService);
+private readonly modals = inject(ModalService);
 
 ...
 
