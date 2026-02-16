@@ -11,13 +11,14 @@ export class ThemingService implements OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   private readonly _systemTheme = signal<DeviceTheme>(this.detectInitialSystemTheme());
-
   private readonly _applicationTheme = signal<DeviceTheme | null>(null);
 
   public readonly systemTheme = this._systemTheme.asReadonly();
   public readonly applicationTheme = this._applicationTheme.asReadonly();
-
   public readonly activeTheme = computed(() => this.applicationTheme() ?? this.systemTheme());
+
+  private readonly systemTheme$ = toObservable(this._systemTheme);
+  private readonly applicationTheme$ = toObservable(this._applicationTheme);
 
   private mediaQueryList?: MediaQueryList;
   private mediaQueryListener?: (event: MediaQueryListEvent) => void;
@@ -39,11 +40,11 @@ export class ThemingService implements OnDestroy {
   }
 
   public getSystemTheme$() {
-    return toObservable(this._systemTheme);
+    return this.systemTheme$;
   }
 
   public getApplicationTheme$() {
-    return toObservable(this._applicationTheme);
+    return this.applicationTheme$;
   }
 
   private detectInitialSystemTheme(): DeviceTheme {

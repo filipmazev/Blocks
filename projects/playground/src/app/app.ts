@@ -59,6 +59,8 @@ export class App {
       .getSystemTheme$()
       .pipe(takeUntilDestroyed())
       .subscribe((theme) => {
+        // eslint-disable-next-line no-debugger
+        debugger;
         const savedTheme = localStorage.getItem('theme');
         if (!savedTheme) {
           if (theme === 'dark') {
