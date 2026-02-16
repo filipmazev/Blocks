@@ -11,27 +11,17 @@ import { ThemeId } from '@playground/types/common.types';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    Sidenav,
-    FormsModule
-  ],
+  imports: [RouterOutlet, Sidenav, FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('playground');
 
-  private renderer = inject(Renderer2);
-  private document = inject(DOCUMENT);
-  private hljsLoader: HighlightLoader = inject(HighlightLoader);
-  private themingService = inject(ThemingService);
-
   protected isDarkMode = signal(false);
-
   protected navLinks = signal<ISidenavLink[]>([
     { name: 'Home', route: '/' },
-    { name: 'Modal', route: '/modal' },
+    { name: 'Modal', route: '/modal' }
   ]);
 
   protected readonly availableThemes: IThemePalette[] = [
@@ -40,6 +30,13 @@ export class App {
   ];
 
   protected selectedThemeId = signal<ThemeId>('orange');
+  private renderer = inject(Renderer2);
+
+  private document = inject(DOCUMENT);
+
+  private hljsLoader: HighlightLoader = inject(HighlightLoader);
+
+  private themingService = inject(ThemingService);
 
   constructor() {
     this.initThemeSubscription();
@@ -49,7 +46,7 @@ export class App {
   private initPalette() {
     const savedPalette = localStorage.getItem('theme-palette');
 
-    if (savedPalette && this.availableThemes.some(t => t.id === savedPalette)) {
+    if (savedPalette && this.availableThemes.some((t) => t.id === savedPalette)) {
       this.setPalette(savedPalette as ThemeId);
     } else {
       this.setPalette('orange');
@@ -57,22 +54,25 @@ export class App {
   }
 
   protected initThemeSubscription() {
-    this.themingService.getSystemTheme$().pipe(takeUntilDestroyed()).subscribe(theme => {
-      const savedTheme = localStorage.getItem('theme');
-      if (!savedTheme) {
-        if (theme === 'dark') {
-          this.enableDarkMode();
+    this.themingService
+      .getSystemTheme$()
+      .pipe(takeUntilDestroyed())
+      .subscribe((theme) => {
+        const savedTheme = localStorage.getItem('theme');
+        if (!savedTheme) {
+          if (theme === 'dark') {
+            this.enableDarkMode();
+          } else {
+            this.disableDarkMode();
+          }
         } else {
-          this.disableDarkMode();
+          if (savedTheme === 'dark') {
+            this.enableDarkMode();
+          }
         }
-      } else {
-        if (savedTheme === 'dark') {
-          this.enableDarkMode();
-        }
-      }
 
-      this.setCodeTheme();
-    });
+        this.setCodeTheme();
+      });
   }
 
   protected onThemeChange(themeId: ThemeId) {
@@ -106,7 +106,7 @@ export class App {
   }
 
   private setPalette(themeId: ThemeId) {
-    const theme = this.availableThemes.find(t => t.id === themeId);
+    const theme = this.availableThemes.find((t) => t.id === themeId);
     if (!theme) return;
 
     this.selectedThemeId.set(themeId);
@@ -114,7 +114,7 @@ export class App {
 
     const root = this.document.documentElement;
 
-    this.availableThemes.forEach(t => {
+    this.availableThemes.forEach((t) => {
       if (t.className) {
         this.renderer.removeClass(root, t.className);
       }

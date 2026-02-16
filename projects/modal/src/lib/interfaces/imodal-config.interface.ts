@@ -1,9 +1,12 @@
-import { ModalCloseGuard } from "../classes/modal-close-guard";
-import { IModalStyleConfig } from "./imodal-style-config.interface";
+import { Observable } from 'rxjs';
+import { ModalCloseGuard } from '../classes/modal-close-guard';
+import { IModalCloseResult } from './imodal-close-result.interface';
+import { IModalStyleConfig } from './imodal-style-config.interface';
 
 /**
  * IModalConfig<D>, the configuration for the modal
  * @param D The type of data passed to the modal
+ * @param R The type of result returned from the modal
  * @param {boolean} open (optional) Whether the modal should be open or not, will default to true
  * @param {Function} afterClose (optional) The function to run after the modal closes
  * @param {ModalCloseGuard} closeGuard (optional) The guard that will determine whether the modal can be closed or not
@@ -19,29 +22,29 @@ import { IModalStyleConfig } from "./imodal-style-config.interface";
  * @param {string} contentStyles (optional) The styles to apply to the content of the modal
  * @param {string} id (optional) The id of the modal (set at the top level of the modal), will default to a random string
  */
-export interface IModalConfig<D> {
-    open?: boolean;
+export interface IModalConfig<D, R> {
+  open?: boolean;
 
-    afterClose?: Function;
+  afterClose?: () => Observable<IModalCloseResult<R | undefined>>;
 
-    closeGuard?: ModalCloseGuard;
-    closeGuardOnlyOnCancel?: boolean;
+  closeGuard?: ModalCloseGuard;
+  closeGuardOnlyOnCancel?: boolean;
 
-    disableClose?: boolean;
-    disableCloseOnBackdropClick?: boolean;
-    disableCloseOnNavigation?: boolean;
+  disableClose?: boolean;
+  disableCloseOnBackdropClick?: boolean;
+  disableCloseOnNavigation?: boolean;
 
-    data?: D | null;
+  data?: D | null;
 
-    style?: IModalStyleConfig;
+  style?: IModalStyleConfig;
 
-    bannerText?: string;
+  bannerText?: string;
 
-    contentClasses?: string;
-    contentStyles?: string;
+  contentClasses?: string;
+  contentStyles?: string;
 
-    disableConsoleWarnings?: boolean;
-    disableConsoleInfo?: boolean;
+  disableConsoleWarnings?: boolean;
+  disableConsoleInfo?: boolean;
 
-    id?: string;
+  id?: string;
 }

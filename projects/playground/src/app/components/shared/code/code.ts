@@ -5,22 +5,15 @@ import { Highlight } from 'ngx-highlightjs';
 
 @Component({
   selector: 'app-code',
-  imports: [
-    Highlight
-  ],
+  imports: [Highlight],
   templateUrl: './code.html',
-  styleUrl: './code.scss',
+  styleUrl: './code.scss'
 })
 export class Code implements OnInit {
-  private http = inject(HttpClient);
-
   public files = input.required<ICodeFile[]>();
-
   protected activeFile = signal<ICodeFile | null>(null);
   protected codeContent = signal<string>('');
-
-  constructor() {
-  }
+  private http = inject(HttpClient);
 
   public ngOnInit(): void {
     if (this.files().length > 0 && !this.activeFile()) {

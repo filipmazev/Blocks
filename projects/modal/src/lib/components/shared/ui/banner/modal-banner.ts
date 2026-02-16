@@ -1,18 +1,16 @@
-import { Component, input, output } from "@angular/core";
-import { ModalConfig } from "../../../../classes/modal-config";
-import { ModalCloseMode } from "../../../../types/modal.types";
-import { ModalDefaultCloseButton } from "../default-close-button/default-close-button";
+import { Component, input, output } from '@angular/core';
+import { ModalConfig } from '../../../../classes/modal-config';
+import { ModalCloseMode } from '../../../../types/modal.types';
+import { ModalDefaultCloseButton } from '../default-close-button/default-close-button';
 
 @Component({
-  selector: 'modal-banner',
-  imports: [
-    ModalDefaultCloseButton
-  ],
+  selector: 'app-modal-banner',
+  imports: [ModalDefaultCloseButton],
   templateUrl: './modal-banner.html',
-  styleUrl: './modal-banner.scss',
+  styleUrl: './modal-banner.scss'
 })
-export class ModalBanner<D = unknown> {
-  readonly config = input.required<ModalConfig<D> | undefined>();
+export class ModalBanner<D = unknown, R = unknown> {
+  public readonly config = input.required<ModalConfig<D, R> | undefined>();
 
-  readonly close = output<ModalCloseMode | undefined>();
+  public readonly close = output<ModalCloseMode | undefined>();
 }

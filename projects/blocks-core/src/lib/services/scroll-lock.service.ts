@@ -7,13 +7,13 @@ import { IScrollLockConfig } from '../interfaces/scroll-lock-config.interface';
   providedIn: 'root'
 })
 export class ScrollLockService implements OnDestroy {
+  public _isScrollDisabled = signal<boolean>(false);
+  public readonly isScrollDisabled = this._isScrollDisabled.asReadonly();
+
   private deviceTypeService = inject(DeviceTypeService);
   private windowDimensionsService = inject(WindowDimensionsService);
 
   private activeLocks = new Map<string, IScrollLockConfig>();
-
-  private _isScrollDisabled = signal<boolean>(false);
-  public readonly isScrollDisabled = this._isScrollDisabled.asReadonly();
 
   private previousBodyPadding: string | null = null;
 
@@ -28,8 +28,6 @@ export class ScrollLockService implements OnDestroy {
 
   private boundHandleTouchMove = this.handleTouchMove.bind(this);
   private boundPreventDefault = this.preventDefault.bind(this);
-
-  constructor() { }
 
   public ngOnDestroy(): void {
     this.activeLocks.clear();
@@ -65,21 +63,24 @@ export class ScrollLockService implements OnDestroy {
       document.body.style.setProperty('touch-action', 'none', 'important');
     }
 
-    setTimeout(() => {
-      if (!this._isScrollDisabled()) return;
+    setTimeout(
+      () => {
+        if (!this._isScrollDisabled()) return;
 
-      if (config.handleTouchInput === true) {
-        document.body.addEventListener('touchmove', this.boundHandleTouchMove, { passive: false });
-      }
+        if (config.handleTouchInput === true) {
+          document.body.addEventListener('touchmove', this.boundHandleTouchMove, { passive: false });
+        }
 
-      if (config.handleExtremeOverflow === true) {
-        const options = { passive: false };
-        window.addEventListener('wheel', this.boundPreventDefault, options);
-        window.addEventListener('mousewheel', this.boundPreventDefault, options);
-        window.addEventListener('scroll', this.boundPreventDefault, options);
-        window.addEventListener('DOMMouseScroll', this.boundPreventDefault, options);
-      }
-    }, (config.animationDuration ?? 0) + 10);
+        if (config.handleExtremeOverflow === true) {
+          const options = { passive: false };
+          window.addEventListener('wheel', this.boundPreventDefault, options);
+          window.addEventListener('mousewheel', this.boundPreventDefault, options);
+          window.addEventListener('scroll', this.boundPreventDefault, options);
+          window.addEventListener('DOMMouseScroll', this.boundPreventDefault, options);
+        }
+      },
+      (config.animationDuration ?? 0) + 10
+    );
   }
 
   public enableScroll(usageId: string, extreme_overflow?: boolean): void {
@@ -126,9 +127,13 @@ export class ScrollLockService implements OnDestroy {
     const currentConfiguration = this.activeConfig();
 
     if (!this.isAllowedToScroll(targetNode) && (currentConfiguration === null || currentConfiguration?.handleTouchInput !== false)) {
-      if (currentConfiguration === null || currentConfiguration?.mobileOnlyTouchPrevention !== true ||
-        (currentConfiguration?.mobileOnlyTouchPrevention === true && ((!this.deviceTypeService.getDeviceState().isMobile || !this.deviceTypeService.getDeviceState().isTablet)
-          && (this.windowDimensions().width < this.windowDimensionsService.breakpoints.sm)))) {
+      if (
+        currentConfiguration === null ||
+        currentConfiguration?.mobileOnlyTouchPrevention !== true ||
+        (currentConfiguration?.mobileOnlyTouchPrevention === true &&
+          (!this.deviceTypeService.getDeviceState().isMobile || !this.deviceTypeService.getDeviceState().isTablet) &&
+          this.windowDimensions().width < this.windowDimensionsService.breakpoints.sm)
+      ) {
         event.preventDefault();
         event.stopPropagation();
       }
@@ -138,7 +143,9 @@ export class ScrollLockService implements OnDestroy {
   private isAllowedToScroll(targetNode: Node): boolean {
     const currentConfiguration = this.activeConfig();
 
-    if (!currentConfiguration?.allowTouchInputOn || currentConfiguration.allowTouchInputOn.length === 0) { return true; }
+    if (!currentConfiguration?.allowTouchInputOn || currentConfiguration.allowTouchInputOn.length === 0) {
+      return true;
+    }
 
     if (currentConfiguration.allowTouchInputOn.length === undefined) {
       return (currentConfiguration.allowTouchInputOn as unknown as Element).contains(targetNode);

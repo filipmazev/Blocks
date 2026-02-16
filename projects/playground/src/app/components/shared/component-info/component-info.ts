@@ -6,12 +6,9 @@ import { ViewMode } from '@playground/types/common.types';
 
 @Component({
   selector: 'app-component-info',
-  imports: [
-    Readme,
-    Code
-  ],
+  imports: [Readme, Code],
   templateUrl: './component-info.html',
-  styleUrl: './component-info.scss',
+  styleUrl: './component-info.scss'
 })
 export class ComponentInfo {
   public codeFiles = input.required<ICodeFile[]>();

@@ -1,4 +1,4 @@
-import { ModalRef } from "../classes/modal-ref";
+import { ModalRef } from '../classes/modal-ref';
 
 /**
  * Interface for Modal
@@ -6,10 +6,10 @@ import { ModalRef } from "../classes/modal-ref";
  * @param R The type of result returned from the modal
  */
 export interface IModal<D, R> {
-    data: D;
-    
-    modal: ModalRef<D, R>;
+  data: D;
 
-    onModalInit(): void;
-    close(result?: R): void;
+  modal: ModalRef<D, R>;
+
+  onModalInit(): void;
+  close(result?: R): void;
 }

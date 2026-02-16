@@ -1,5 +1,5 @@
-import { BreakpointKey, ModalLayout } from "../types/modal.types";
-import { IBottomSheetModalConfig } from "./ibottom-sheet-modal-config.interface";
+import { BreakpointKey, ModalLayout } from '../types/modal.types';
+import { IBottomSheetModalConfig } from './ibottom-sheet-modal-config.interface';
 
 /**
  * IModalStyleConfig
@@ -16,20 +16,20 @@ import { IBottomSheetModalConfig } from "./ibottom-sheet-modal-config.interface"
  * @param {boolean} overrideFullHeight (optional) Whether the modal should override the full height of the modal or not, will default to false
  */
 export interface IModalStyleConfig {
-    layout?: ModalLayout;
-    breakpoints?: Partial<Record<BreakpointKey, ModalLayout>>;
+  layout?: ModalLayout;
+  breakpoints?: Partial<Record<BreakpointKey, ModalLayout>>;
 
-    animate?: boolean;
-    hasBackdrop?: boolean;
-    closeDelay?: number;
-    showCloseButton?: boolean;
+  animate?: boolean;
+  hasBackdrop?: boolean;
+  closeDelay?: number;
+  showCloseButton?: boolean;
 
-    mobileConfig?: IBottomSheetModalConfig;
+  mobileConfig?: IBottomSheetModalConfig;
 
-    contentWrapper?: boolean;
+  contentWrapper?: boolean;
 
-    wrapperClasses?: string;
-    wrapperStyles?: string;
+  wrapperClasses?: string;
+  wrapperStyles?: string;
 
-    overrideFullHeight?: boolean;
+  overrideFullHeight?: boolean;
 }

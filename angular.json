@@ -1,174 +1,206 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "modal": {
-      "projectType": "library",
-      "root": "projects/modal",
-      "sourceRoot": "projects/modal/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "options": {
-            "project": "projects/modal/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/modal/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/modal/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "tsConfig": "projects/modal/tsconfig.spec.json"
-          }
-        }
-      }
-    },
-    "blocks-core": {
-      "projectType": "library",
-      "root": "projects/blocks-core",
-      "sourceRoot": "projects/blocks-core/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "options": {
-            "project": "projects/blocks-core/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/blocks-core/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/blocks-core/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "tsConfig": "projects/blocks-core/tsconfig.spec.json"
-          }
-        }
-      }
-    },
-    "playground": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
-      "root": "projects/playground",
-      "sourceRoot": "projects/playground/src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:application",
-          "options": {
-            "outputPath": "dist/playground",
-            "index": "projects/playground/src/index.html",
-            "browser": "projects/playground/src/main.ts",
-            "tsConfig": "projects/playground/tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "projects/blocks-core/src/lib/styles",
-                "node_modules"
-              ]
-            },
-            "assets": [
-              "projects/playground/src/favicon.ico",
-              "projects/playground/src/assets",
-              {
-                "glob": "**/*",
-                "input": "projects/playground/public"
-              },
-              {
-                "glob": "README.md",
-                "input": "projects/modal",
-                "output": "/assets/modal-readme"
-              },
-              {
-                "glob": "README.md",
-                "input": "projects/blocks-core",
-                "output": "/assets/blocks-core-readme"
-              },
-              {
-                "glob": "**/*",
-                "input": "projects/playground/src/app/components/modal",
-                "output": "/assets/code-snippets"
-              },
-              {
-                "glob": "github.css",
-                "input": "./node_modules/highlight.js/styles",
-                "output": "/assets/styles"
-              },
-              {
-                "glob": "vs2015.css",
-                "input": "./node_modules/highlight.js/styles",
-                "output": "/assets/styles"
-              }
-            ],
-            "styles": [
-              "projects/playground/src/styles.scss"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "modal": {
+            "projectType": "library",
+            "root": "projects/modal",
+            "sourceRoot": "projects/modal/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "options": {
+                        "project": "projects/modal/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/modal/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/modal/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
                 },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                "test": {
+                    "builder": "@angular/build:karma",
+                    "options": {
+                        "tsConfig": "projects/modal/tsconfig.spec.json"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/modal/src/**/*.ts",
+                            "projects/modal/src/**/*.html"
+                        ]
+                    }
                 }
-              ],
-              "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
             }
-          },
-          "defaultConfiguration": "production"
         },
-        "serve": {
-          "builder": "@angular/build:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "playground:build:production"
-            },
-            "development": {
-              "buildTarget": "playground:build:development"
+        "blocks-core": {
+            "projectType": "library",
+            "root": "projects/blocks-core",
+            "sourceRoot": "projects/blocks-core/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "options": {
+                        "project": "projects/blocks-core/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/blocks-core/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/blocks-core/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular/build:karma",
+                    "options": {
+                        "tsConfig": "projects/blocks-core/tsconfig.spec.json"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/blocks-core/src/**/*.ts",
+                            "projects/blocks-core/src/**/*.html"
+                        ]
+                    }
+                }
             }
-          },
-          "defaultConfiguration": "development",
-          "options": {
-            "port": 8080
-          }
         },
-        "test": {
-          "builder": "@angular/build:unit-test"
-        },
-        "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
+        "playground": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "projects/playground",
+            "sourceRoot": "projects/playground/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "outputPath": "dist/playground",
+                        "index": "projects/playground/src/index.html",
+                        "browser": "projects/playground/src/main.ts",
+                        "tsConfig": "projects/playground/tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "projects/blocks-core/src/lib/styles",
+                                "node_modules"
+                            ]
+                        },
+                        "assets": [
+                            "projects/playground/src/favicon.ico",
+                            "projects/playground/src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "projects/playground/public"
+                            },
+                            {
+                                "glob": "README.md",
+                                "input": "projects/modal",
+                                "output": "/assets/modal-readme"
+                            },
+                            {
+                                "glob": "README.md",
+                                "input": "projects/blocks-core",
+                                "output": "/assets/blocks-core-readme"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "projects/playground/src/app/components/modal",
+                                "output": "/assets/code-snippets"
+                            },
+                            {
+                                "glob": "github.css",
+                                "input": "./node_modules/highlight.js/styles",
+                                "output": "/assets/styles"
+                            },
+                            {
+                                "glob": "vs2015.css",
+                                "input": "./node_modules/highlight.js/styles",
+                                "output": "/assets/styles"
+                            }
+                        ],
+                        "styles": [
+                            "projects/playground/src/styles.scss"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "500kB",
+                                    "maximumError": "1MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "4kB",
+                                    "maximumError": "8kB"
+                                }
+                            ],
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "playground:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "playground:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development",
+                    "options": {
+                        "port": 8080
+                    }
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test"
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/playground/src/**/*.ts",
+                            "projects/playground/src/**/*.html"
+                        ]
+                    }
+                },
+                "deploy": {
+                    "builder": "angular-cli-ghpages:deploy"
+                }
+            }
         }
-      }
+    },
+    "cli": {
+        "schematicCollections": [
+            "angular-eslint"
+        ]
     }
-  }
 }

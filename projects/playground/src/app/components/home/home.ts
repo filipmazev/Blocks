@@ -7,10 +7,10 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './home.html',
-  styleUrl: './home.scss',
+  styleUrl: './home.scss'
 })
 export class Home {
-  packages = [
+  protected packages = [
     {
       name: '@filip.mazev/blocks-core',
       description: 'The infrastructure layer. Handles responsive breakpoints, deep theming, scroll locking, device detection and more.',
@@ -25,7 +25,7 @@ export class Home {
     }
   ];
 
-  features = [
+  protected features = [
     {
       title: 'Unified Responsiveness',
       desc: 'Responsiveness as a shared contract. TypeScript streams and SCSS mixins stay perfectly in sync, ensuring logic never desyncs from layout.',

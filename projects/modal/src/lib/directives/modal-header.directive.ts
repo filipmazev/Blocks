@@ -3,7 +3,7 @@ import { ModalCore } from '../components/modal-core';
 import { ModalWarnings } from '../enums/modal-warnings.enum';
 
 @Directive({
-  selector: '[modalHeader]', 
+  selector: '[appModalHeader]',
   standalone: true
 })
 export class ModalHeaderDirective {

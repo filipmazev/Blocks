@@ -1,13 +1,13 @@
-import { InputSignal, OutputEmitterRef, QueryList, Signal, TemplateRef } from "@angular/core";
-import { ModalConfig } from "../classes/modal-config";
-import { ModalBottomSheet } from "../components/views/bottom-sheet/modal-bottom-sheet";
-import { ModalCloseMode } from "../types/modal.types";
+import { InputSignal, OutputEmitterRef, QueryList, Signal, TemplateRef } from '@angular/core';
+import { ModalConfig } from '../classes/modal-config';
+import { ModalBottomSheet } from '../components/views/bottom-sheet/modal-bottom-sheet';
+import { ModalCloseMode } from '../types/modal.types';
 
 /**
  * Interface for the Modal View
  * @param D The type of data passed to the modal
- * @param {InputSignal<TemplateRef<any> | null>} headerTemplate The input signal for the header template of the modal
- * @param {InputSignal<TemplateRef<any> | null>} footerTemplate The input signal for the footer template of the modal
+ * @param {InputSignal<TemplateRef<void> | null>} headerTemplate The input signal for the header template of the modal
+ * @param {InputSignal<TemplateRef<void> | null>} footerTemplate The input signal for the footer template of the modal
  * @param {InputSignal<ModalConfig<D> | undefined>} config The input signal for the modal configuration
  * @param {InputSignal<boolean>} isOpen The input signal indicating whether the modal is open
  * @param {InputSignal<boolean>} isAnimated The input signal indicating whether the modal has animations enabled
@@ -19,22 +19,22 @@ import { ModalCloseMode } from "../types/modal.types";
  * @param {QueryList<ModalBottomSheet>} bottomSheet The query list of bottom sheet modals
  * @param {Signal<{ [key: string]: boolean }>} modalClasses The signal for the modal CSS classes
  */
-export interface IModalView<D> {
-    headerTemplate: InputSignal<TemplateRef<any> | null>;
-    footerTemplate: InputSignal<TemplateRef<any> | null>;
+export interface IModalView<D, R> {
+  headerTemplate: InputSignal<TemplateRef<void> | null>;
+  footerTemplate: InputSignal<TemplateRef<void> | null>;
 
-    config: InputSignal<ModalConfig<D> | undefined>;
-    id: InputSignal<string | null>;
-    isOpen: InputSignal<boolean>;
-    isAnimated: InputSignal<boolean>;
-    isBottomSheetModalActive: InputSignal<boolean>;
-    animationDuration: InputSignal<number>;
-    hasDefaultContentWrapperClass: InputSignal<boolean>;
-    hasBanner: InputSignal<boolean>;
+  config: InputSignal<ModalConfig<D, R> | undefined>;
+  id: InputSignal<string | null>;
+  isOpen: InputSignal<boolean>;
+  isAnimated: InputSignal<boolean>;
+  isBottomSheetModalActive: InputSignal<boolean>;
+  animationDuration: InputSignal<number>;
+  hasDefaultContentWrapperClass: InputSignal<boolean>;
+  hasBanner: InputSignal<boolean>;
 
-    close: OutputEmitterRef<ModalCloseMode | undefined>;
+  close: OutputEmitterRef<ModalCloseMode | undefined>;
 
-    bottomSheet: QueryList<ModalBottomSheet>;
+  bottomSheet: QueryList<ModalBottomSheet>;
 
-    modalClasses: Signal<{ [key: string]: boolean }>;
+  modalClasses: Signal<{ [key: string]: boolean }>;
 }

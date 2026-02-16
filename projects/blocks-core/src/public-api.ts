@@ -17,6 +17,6 @@ export * from './lib/interfaces/window-dimensions.interface';
 export * from './lib/constants/window-dimension.constants';
 export * from './lib/constants/scroll-lock.constants';
 
-export * from './lib/types/device.types';
+export * from './lib/types/core.types';
 
 export * from './lib/helpers/uui4';

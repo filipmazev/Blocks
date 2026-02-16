@@ -1,4 +1,4 @@
 export interface ISidenavLink {
-    name: string;
-    route: string;
+  name: string;
+  route: string;
 }

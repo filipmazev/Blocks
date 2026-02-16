@@ -1,23 +1,23 @@
 {
-  "name": "@filip.mazev/blocks-core",
-  "version": "0.0.21",
-  "license": "MIT",
-  "exports": {
-    "./mixins": "./lib/styles/_mixins.scss",
-    "./variables": "./lib/styles/_variables.scss",
-    "./theme-provider": "./lib/styles/_theme-provider.scss",
-    "./default-theme": "./lib/styles/themes/_default-theme.scss",
-    "./orange-company-theme": "./lib/styles/themes/_orange-company-theme.scss",
-    "./index": "./lib/styles/_index.scss"
-  },
-  "style": "src/lib/styles/_index.scss",
-  "sass": "src/lib/styles/_index.scss",
-  "peerDependencies": {
-    "@angular/common": "^21.1.1",
-    "@angular/core": "^21.1.1"
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  },
-  "sideEffects": false
+    "name": "@filip.mazev/blocks-core",
+    "version": "0.0.23",
+    "license": "MIT",
+    "exports": {
+        "./mixins": "./lib/styles/_mixins.scss",
+        "./variables": "./lib/styles/_variables.scss",
+        "./theme-provider": "./lib/styles/_theme-provider.scss",
+        "./default-theme": "./lib/styles/themes/_default-theme.scss",
+        "./orange-company-theme": "./lib/styles/themes/_orange-company-theme.scss",
+        "./index": "./lib/styles/_index.scss"
+    },
+    "style": "src/lib/styles/_index.scss",
+    "sass": "src/lib/styles/_index.scss",
+    "peerDependencies": {
+        "@angular/common": "^21.1.1",
+        "@angular/core": "^21.1.1"
+    },
+    "dependencies": {
+        "tslib": "^2.3.0"
+    },
+    "sideEffects": false
 }

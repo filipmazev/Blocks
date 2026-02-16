@@ -1,3 +1,4 @@
-import { InjectionToken } from "@angular/core";
+import { InjectionToken } from '@angular/core';
 
-export const MODAL_DATA: InjectionToken<any> = new InjectionToken<any>("MODAL_DATA");
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const MODAL_DATA: InjectionToken<any> = new InjectionToken<any>('MODAL_DATA');

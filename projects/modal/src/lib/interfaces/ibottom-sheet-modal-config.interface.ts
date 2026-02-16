@@ -4,6 +4,6 @@
  * @param {number} customHeight (optional) Custom height for the bottom sheet modal
  */
 export interface IBottomSheetModalConfig {
-    downSwipeLimit?: number;
-    customHeight?: number;
+  downSwipeLimit?: number;
+  customHeight?: number;
 }

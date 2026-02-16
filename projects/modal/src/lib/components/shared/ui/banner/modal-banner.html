@@ -1,9 +1,9 @@
 <div class="modal-top-banner-container">
     <div class="modal-top-banner-title-container">
         @if (config() && config()?.bannerText && (config() && config()!.bannerText.length > 0)) {
-            {{ config()?.bannerText }}
+        {{ config()?.bannerText }}
         }
     </div>
-    
-    <modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></modal-default-close-button>
+
+    <app-modal-default-close-button [config]="config()" (close)="close.emit('cancel')"></app-modal-default-close-button>
 </div>

@@ -8,22 +8,18 @@ import { ModalBottomSheet } from '../bottom-sheet/modal-bottom-sheet';
 import { ModalDefaultCloseButton } from '../../shared/ui/default-close-button/default-close-button';
 
 @Component({
-  selector: 'modal-side',
-  imports: [
-    NgTemplateOutlet,
-    ModalBottomSheet,
-    NgClass,
-    ModalBanner,
-    ModalDefaultCloseButton
-  ],
+  selector: 'app-modal-side',
+  imports: [NgTemplateOutlet, ModalBottomSheet, NgClass, ModalBanner, ModalDefaultCloseButton],
   templateUrl: './modal-side.html',
-  styleUrl: './modal-side.scss',
+  styleUrl: './modal-side.scss'
 })
-export class ModalSide<D = unknown> implements IModalView<D> {
+export class ModalSide<D = unknown, R = unknown> implements IModalView<D, R> {
   public readonly layout = input.required<ModalLayout>();
-  public readonly headerTemplate = input.required<TemplateRef<any> | null>();
-  public readonly footerTemplate = input.required<TemplateRef<any> | null>();
-  public readonly config = input.required<ModalConfig<D> | undefined>();
+
+  public readonly headerTemplate = input.required<TemplateRef<void> | null>();
+  public readonly footerTemplate = input.required<TemplateRef<void> | null>();
+
+  public readonly config = input.required<ModalConfig<D, R> | undefined>();
   public readonly id = input.required<string | null>();
   public readonly isOpen = input.required<boolean>();
   public readonly isAnimated = input.required<boolean>();
@@ -34,9 +30,7 @@ export class ModalSide<D = unknown> implements IModalView<D> {
 
   public readonly close = output<ModalCloseMode | undefined>();
 
-  @ViewChildren(ModalBottomSheet) bottomSheet!: QueryList<ModalBottomSheet>;
-
-  protected renderOpenClass = signal(false);
+  @ViewChildren(ModalBottomSheet) public bottomSheet!: QueryList<ModalBottomSheet>;
 
   public modalClasses = computed(() => {
     const positionLeft = this.layout() === 'left';
@@ -49,13 +43,15 @@ export class ModalSide<D = unknown> implements IModalView<D> {
       'side-modal-content-wrapper': true,
       'side-modal-default-style': this.hasDefaultContentWrapperClass() || this.hasBanner(),
       'with-footer': this.footerTemplate() !== null,
-      'left': positionLeft,
-      'right': positionRight,
+      left: positionLeft,
+      right: positionRight,
 
       'side-modal-animate-in': shouldAnimate ? isRenderedOpen : true,
-      'side-modal-animate-out': shouldAnimate ? !isRenderedOpen : false,
+      'side-modal-animate-out': shouldAnimate ? !isRenderedOpen : false
     };
   });
+
+  protected renderOpenClass = signal(false);
 
   constructor() {
     effect(() => {
@@ -67,7 +63,6 @@ export class ModalSide<D = unknown> implements IModalView<D> {
         setTimeout(() => {
           this.renderOpenClass.set(true);
         }, 50);
-
       } else {
         this.renderOpenClass.set(false);
       }

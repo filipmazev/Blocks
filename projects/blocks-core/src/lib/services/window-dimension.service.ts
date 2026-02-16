@@ -6,14 +6,14 @@ import { BREAKPOINTS } from '../constants/window-dimension.constants';
 import { WindowDimensions } from '../interfaces/window-dimensions.interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class WindowDimensionsService {
-  private readonly ngZone = inject(NgZone);
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  public readonly ngZone = inject(NgZone);
+  public readonly platformId = inject(PLATFORM_ID);
+  public readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private readonly _dimensions = signal<WindowDimensions>(this.getCurrentDimensions());
+  public readonly _dimensions = signal<WindowDimensions>(this.getCurrentDimensions());
 
   public readonly dimensions = this._dimensions.asReadonly();
 
@@ -33,7 +33,7 @@ export class WindowDimensionsService {
     }
     return {
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: window.innerHeight
     };
   }
 
@@ -45,9 +45,7 @@ export class WindowDimensionsService {
         .pipe(
           debounceTime(150),
           map(() => this.getCurrentDimensions()),
-          distinctUntilChanged((prev, curr) => 
-            prev.width === curr.width && prev.height === curr.height
-          )
+          distinctUntilChanged((prev, curr) => prev.width === curr.width && prev.height === curr.height)
         )
         .subscribe((dims) => {
           this.ngZone.run(() => {

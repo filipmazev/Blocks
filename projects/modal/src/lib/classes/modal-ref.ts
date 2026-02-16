@@ -1,197 +1,178 @@
-import { ComponentRef, Type } from "@angular/core";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { ModalConfig } from "./modal-config";
-import { ModalCore } from "../components/modal-core";
-import { ModalState } from "../enums/modal-state.enum";
-import { IModalCloseResult } from "../interfaces/imodal-close-result.interface";
-import { IModalRef } from "../interfaces/imodal-ref.interface";
-import { ModalService } from "../services/modal.service";
-import { ModalCloseMode } from "../types/modal.types";
-import { IModal } from "../interfaces/imodal.interface";
-import { ComponentType } from "@angular/cdk/portal";
+import { ComponentRef, Type } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { ModalConfig } from './modal-config';
+import { ModalCore } from '../components/modal-core';
+import { ModalState } from '../enums/modal-state.enum';
+import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
+import { IModalRef } from '../interfaces/imodal-ref.interface';
+import { ModalService } from '../services/modal.service';
+import { ModalCloseMode } from '../types/modal.types';
+import { IModal } from '../interfaces/imodal.interface';
+import { ComponentType } from '@angular/cdk/portal';
 
-export class ModalRef<
-    D = unknown,
-    R = any,
-    C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
+  //#region Modal Container
 
-    //#region Modal Container
+  private _modalContainer: Type<ModalCore<D, R, C>> = {} as Type<ModalCore<D, R, C>>;
 
-    private _modalContainer: Type<ModalCore<D, R, C>> = {} as Type<ModalCore<D, R, C>>;
+  private _modalContainerRef: ComponentRef<ModalCore<D, R, C>> = {} as ComponentRef<ModalCore<D, R, C>>;
+  private _modalContainerElement: HTMLElement = {} as HTMLElement;
+  private _parentElement: HTMLElement | undefined = undefined;
+  //#region Component
+  private _componentRef: ComponentRef<C> = {} as ComponentRef<C>;
+  //#region Self
+  private _modalState: ModalState = ModalState.CLOSED;
+  //#endregion
+  private modalState = new BehaviorSubject<ModalState>(this.getStatus());
+  private _modalConfig?: ModalConfig<D, R> = undefined;
+  //#region Observables
+  private backdropClickSubject: Subject<MouseEvent> = new Subject<MouseEvent>();
+  //#endregion
+  private afterCloseSubject: Subject<IModalCloseResult<R | undefined>> = new Subject<IModalCloseResult<R | undefined>>();
+  //#endregion
+  constructor(
+    componentRef: ComponentRef<C>,
+    public componentType: ComponentType<C>,
+    modalContainerRef: ComponentRef<ModalCore<D, R, C>>,
+    private modalService: ModalService,
+    modalConfig?: ModalConfig<D, R>
+  ) {
+    this.modalConfig = modalConfig;
+    this.modalContainerRef = modalContainerRef;
+    this.modalContainerElement = modalContainerRef.location.nativeElement;
 
-    private set modalContainer(modalContainer: Type<ModalCore<D, R, C>>) {
-        this._modalContainer = modalContainer;
-    }
+    this.componentRef = componentRef;
+  }
 
-    public get modalContainer(): Type<ModalCore<D, R, C>> {
-        return this._modalContainer;
-    }
+  public get modalContainer(): Type<ModalCore<D, R, C>> {
+    return this._modalContainer;
+  }
 
-    private _modalContainerRef: ComponentRef<ModalCore<D, R, C>> = {} as ComponentRef<ModalCore<D, R, C>>;
+  private set modalContainer(modalContainer: Type<ModalCore<D, R, C>>) {
+    this._modalContainer = modalContainer;
+  }
 
-    private set modalContainerRef(modalContainerRef: ComponentRef<ModalCore<D, R, C>>) {
-        this._modalContainerRef = modalContainerRef;
-    }
+  public get modalContainerRef(): ComponentRef<ModalCore<D, R, C>> {
+    return this._modalContainerRef;
+  }
 
-    public get modalContainerRef(): ComponentRef<ModalCore<D, R, C>> {
-        return this._modalContainerRef;
-    }
+  private set modalContainerRef(modalContainerRef: ComponentRef<ModalCore<D, R, C>>) {
+    this._modalContainerRef = modalContainerRef;
+  }
 
-    private _modalContainerElement: HTMLElement = {} as HTMLElement;
+  public get modalContainerElement(): HTMLElement {
+    return this._modalContainerElement;
+  }
 
-    private set modalContainerElement(modalContainerElement: HTMLElement) {
-        this._modalContainerElement = modalContainerElement;
-    }
+  private set modalContainerElement(modalContainerElement: HTMLElement) {
+    this._modalContainerElement = modalContainerElement;
+  }
 
-    public get modalContainerElement(): HTMLElement {
-        return this._modalContainerElement;
-    }
+  public get parentElement(): HTMLElement | undefined {
+    return this._parentElement;
+  }
 
-    private _parentElement: HTMLElement | undefined = undefined;
+  private set parentElement(parentElement: HTMLElement | undefined) {
+    this._parentElement = parentElement;
+  }
 
-    private set parentElement(parentElement: HTMLElement | undefined) {
-        this._parentElement = parentElement;
-    }
+  //#endregion
 
-    public get parentElement(): HTMLElement | undefined {
-        return this._parentElement;
-    }
+  public get componentRef(): ComponentRef<C> {
+    return this._componentRef;
+  }
 
-    //#endregion
+  private set componentRef(componentRef: ComponentRef<C>) {
+    this._componentRef = componentRef;
+  }
 
-    //#region Component
+  public get modalConfig(): ModalConfig<D, R> | undefined {
+    return this._modalConfig;
+  }
 
-    private _componentRef: ComponentRef<C> = {} as ComponentRef<C>;
+  private set modalConfig(modalConfig: ModalConfig<D, R> | undefined) {
+    this._modalConfig = modalConfig;
+  }
 
-    private set componentRef(componentRef: ComponentRef<C>) {
-        this._componentRef = componentRef;
-    }
+  public backdropClick(): Observable<MouseEvent> {
+    return this.backdropClickSubject.asObservable();
+  }
 
-    public get componentRef(): ComponentRef<C> {
-        return this._componentRef;
-    }
+  public modalState$(): Observable<ModalState> {
+    return this.modalState.asObservable();
+  }
 
-    //#endregion
+  /**
+   * Observable that emits when the modal has been closed.
+   * @returns An Observable that emits an IModalCloseResult<R | undefined> when the modal is closed.
+   */
+  public afterClosed(): Observable<IModalCloseResult<R | undefined>> {
+    return this.afterCloseSubject.asObservable();
+  }
 
-    //#region Self
+  //#region Public Methods
 
-    private _modalState: ModalState = ModalState.CLOSED;
+  public async open(): Promise<void> {
+    this._modalState = ModalState.OPENING;
+    this.modalState.next(ModalState.OPENING);
 
-    private modalState = new BehaviorSubject<ModalState>(this.getStatus());
+    this.modalContainerRef.instance.componentRef = this._componentRef;
 
-    public modalState$(): Observable<ModalState> {
-        return this.modalState.asObservable();
-    }
+    const config = new ModalConfig(this.modalConfig);
 
-    private getStatus(): ModalState {
-        return this._modalState;
-    }
+    this.modalContainerRef.instance.config = config;
 
-    private _modalConfig?: ModalConfig<D> = undefined;
+    this.modalContainerRef.instance.closeFunction = this.handleClose.bind(this);
 
-    private set modalConfig(modalConfig: ModalConfig<D> | undefined) {
-        this._modalConfig = modalConfig;
-    }
+    this.parentElement?.appendChild(this.modalContainerElement);
 
-    public get modalConfig(): ModalConfig<D> | undefined {
-        return this._modalConfig;
-    }
-    //#endregion
+    this.modalContainerRef.instance.backdropClick.subscribe((event) => {
+      this.backdropClicked(event);
+    });
 
-    //#region Observables
+    this._modalState = ModalState.OPEN;
+    this.modalState.next(ModalState.OPEN);
+  }
 
-    private backdropClickSubject: Subject<MouseEvent> = new Subject<MouseEvent>();
+  public close(state: ModalCloseMode = 'cancel', result: R | undefined = undefined, forceClose: boolean = false): void {
+    this.modalContainerRef.instance.close(state, result, false, forceClose);
+  }
 
-    public backdropClick(): Observable<MouseEvent> {
-        return this.backdropClickSubject.asObservable();
-    }
+  private getStatus(): ModalState {
+    return this._modalState;
+  }
 
-    private backdropClicked(event: MouseEvent) {
-        this.backdropClickSubject.next(event);
-    }
+  private backdropClicked(event: MouseEvent) {
+    this.backdropClickSubject.next(event);
+  }
 
-    private afterCloseSubject: Subject<IModalCloseResult<R>> = new Subject<IModalCloseResult<R>>();
+  private afterClose(result: IModalCloseResult<R | undefined>) {
+    this.afterCloseSubject.next(result);
+  }
 
-    /**
-     * Observable that emits when the modal has been closed.
-     * @returns An Observable that emits an IModalCloseResult<R> when the modal is closed.
-     */
-    public afterClosed(): Observable<IModalCloseResult<R>> {
-        return this.afterCloseSubject.asObservable();
-    }
+  //#endregion
 
-    private afterClose(result: IModalCloseResult<R>) {
-        this.afterCloseSubject.next(result);
-    }
+  //#region Private Methods
 
-    //#endregion
+  private handleClose(result: IModalCloseResult<R | undefined>): void {
+    this._modalState = ModalState.CLOSING;
+    this.modalState.next(ModalState.CLOSING);
 
-    constructor(
-        componentRef: ComponentRef<C>,
-        public componentType: ComponentType<C>,
-        modalContainerRef: ComponentRef<ModalCore<D, R, C>>,
-        private modalService: ModalService,
-        modalConfig?: ModalConfig<D>,
-    ) {
-        this.modalConfig = modalConfig;
-        this.modalContainerRef = modalContainerRef;
-        this.modalContainerElement = modalContainerRef.location.nativeElement;
+    setTimeout(() => {
+      if (this.modalConfig?.afterClose) {
+        this.modalConfig.afterClose();
+      }
 
-        this.componentRef = componentRef;
-    }
+      this.modalContainerRef.destroy();
 
-    //#region Public Methods
+      this._modalState = ModalState.CLOSED;
+      this.modalState.next(ModalState.CLOSED);
 
-    public async open(): Promise<void> {
-        this._modalState = ModalState.OPENING;
-        this.modalState.next(ModalState.OPENING);
+      this.afterClose(result);
 
-        this.modalContainerRef.instance.componentRef = this._componentRef;
-
-        const config = new ModalConfig(this.modalConfig);
-
-        this.modalContainerRef.instance.config = config;
-
-        this.modalContainerRef.instance.closeFunction = this.handleClose.bind(this);
-
-        this.parentElement?.appendChild(this.modalContainerElement);
-
-        this.modalContainerRef.instance.backdropClick.subscribe((event) => {
-            this.backdropClicked(event);
-        });
-
-        this._modalState = ModalState.OPEN;
-        this.modalState.next(ModalState.OPEN);
-    }
-
-    public close(state: ModalCloseMode = "cancel", result: R | undefined = undefined, forceClose: boolean = false): void {
-        this.modalContainerRef.instance.close(state, result, false, forceClose);
-    }
-
-    //#endregion
-
-    //#region Private Methods
-
-    private handleClose(result: IModalCloseResult<R>): void {
-        this._modalState = ModalState.CLOSING;
-        this.modalState.next(ModalState.CLOSING);
-
-        setTimeout(
-            () => {
-                if (this.modalConfig?.afterClose) {
-                    this.modalConfig.afterClose();
-                }
-
-                this.modalContainerRef.destroy();
-
-                this._modalState = ModalState.CLOSED;
-                this.modalState.next(ModalState.CLOSED);
-
-                this.afterClose(result);
-
-                this.modalService?.unregister(this);
-
-            }, this.modalContainerRef.instance.animationDuration);
-    }
-    //#endregion
+      this.modalService?.unregister(this);
+    }, this.modalContainerRef.instance.animationDuration);
+  }
+  //#endregion
 }

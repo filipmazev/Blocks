@@ -82,7 +82,7 @@ export class MyModalComponent extends Modal<MyData, MyResult> {
 HTML (Template):
 
 ```HTML
-<div *modalHeader>
+<div *appModalHeader>
     Example Header
 </div>
 
@@ -94,7 +94,7 @@ HTML (Template):
  {{ data.Body }}
 </p>
 
-<div *modalFooter>
+<div *appModalFooter>
     Example Footer
 </div>
 ```
@@ -111,7 +111,7 @@ Accessible via this.modal inside any component that extends Modal. This referenc
 * `forceClose` (boolean): If true, bypasses any confirmCloseConfig checks or guards. Defaults to false.
 * `modalState$()`: Returns an `Observable<ModalState>`. Emits the current lifecycle state of the modal (OPENING, OPEN, CLOSING, CLOSED).
 * `backdropClick()`: Returns an `Observable<MouseEvent>`. Emits an event whenever the user clicks on the modal's backdrop.
-* `afterClosed()`: Returns an `Observable<IModalCloseResult<R>>`. Emits the final result object (containing the state and data) once the modal has fully closed and animations have finished.
+* `afterClosed()`: Returns an `Observable<IModalCloseResult<R | undefined>>`. Emits the final result object (containing the state and data) once the modal has fully closed and animations have finished.
 
 #### Properties
 
@@ -162,7 +162,7 @@ modalRef.afterClosed().subscribe(result: IModalCloseResult<MyData> => {
 Controls the behavior and content of the modal container:
 
 * `open` |`boolean`|: (optional) Whether the modal should be open or not, will default to true.
-* `afterClose` |`Function`|: (optional) The function to run after the modal closes.
+* `afterClose` |`() => Observable<IModalCloseResult<R | undefined>>`|: (optional) The function to run after the modal closes.
 * `closeGuard` |`ModalCloseGuard`| (optional) The guard that will determine whether the modal can be closed or not
 * `closeGuardOnlyOnCancel` |`boolean`| (optional) Whether the close guard should only be checked on cancel actions, will default to true
 * `disableClose` |`boolean`|: (optional) Whether the modal should be closable or not, will default to false. This applies to the close button, escape key, and backdrop.

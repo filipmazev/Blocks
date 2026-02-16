@@ -2,13 +2,13 @@ import { Component, input, output } from '@angular/core';
 import { ModalConfig, ModalCloseMode } from '../../../../../public-api';
 
 @Component({
-  selector: 'modal-default-close-button',
+  selector: 'app-modal-default-close-button',
   imports: [],
   templateUrl: './default-close-button.html',
-  styleUrl: './default-close-button.scss',
+  styleUrl: './default-close-button.scss'
 })
-export class ModalDefaultCloseButton<D = unknown> {
-  readonly config = input.required<ModalConfig<D> | undefined>();
+export class ModalDefaultCloseButton<D = unknown, R = unknown> {
+  public readonly config = input.required<ModalConfig<D, R> | undefined>();
 
-  readonly close = output<ModalCloseMode | undefined>();
+  public readonly close = output<ModalCloseMode | undefined>();
 }

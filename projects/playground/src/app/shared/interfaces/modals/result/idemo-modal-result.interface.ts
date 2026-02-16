@@ -1,3 +1,3 @@
 export interface IDemoModalResult {
-    openedCount: number;
+  openedCount: number;
 }

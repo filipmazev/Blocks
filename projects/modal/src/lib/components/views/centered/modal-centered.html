@@ -8,14 +8,14 @@
 
                 <div class="centered-modal-top-group">
                     @if (hasBanner()) {
-                    <modal-banner [config]="config()" (close)="close.emit('cancel')"></modal-banner>
+                    <app-modal-banner [config]="config()" (close)="close.emit('cancel')"></app-modal-banner>
                     }
                     @if (headerTemplate()) {
                     <div class="centered-modal-header">
                         <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
                         @if(!hasBanner()) {
-                        <modal-default-close-button [config]="config()"
-                            (close)="close.emit('cancel')"></modal-default-close-button>
+                        <app-modal-default-close-button [config]="config()"
+                            (close)="close.emit('cancel')"></app-modal-default-close-button>
                         }
                     </div>
                     }
@@ -34,11 +34,11 @@
     </div>
 </div>
 } @else {
-<modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()"
+<app-modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()"
     [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated()" [animationDuration]="animationDuration()"
     (close)="close.emit('cancel')">
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
-</modal-bottom-sheet>
+</app-modal-bottom-sheet>
 }
 
 <ng-template #contentTemplate>
