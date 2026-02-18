@@ -85,7 +85,7 @@ export class Modal {
       },
       style: {
         layout: request.layout,
-        animate: request.animate,
+        // animate: request.animate,
         hasBackdrop: request.hasBackdrop,
         showCloseButton: request.showCloseButton,
         breakpoints: this.getBreakpointsFromRequest(request)

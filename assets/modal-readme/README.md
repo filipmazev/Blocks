@@ -289,3 +289,31 @@ const modal = this.modals.open<string, undefined>(CenteredModal, {
   })
 });
 ```
+
+## Global Modal Settings
+
+The library provides a global settings service (`ModalGlobalSettingsService`) that allows you to update default behaviors and styles for all modals in your application. These defaults are applied unless overridden by the `IModalConfig` you provide when opening a modal.
+
+### Example Usage
+
+```typescript
+import { ModalGlobalSettingsService } from '@filip.mazev/modal';
+
+constructor(private readonly globalSettings: ModalGlobalSettingsService) {}
+
+// Update global defaults at runtime
+this.globalSettings.update({
+  animate: false,               // Disable animations globally
+  hasBackdrop: true,            // Ensure all modals have a backdrop
+  disableCloseOnBackdropClick: true // Prevent closing on backdrop click
+});
+
+```
+
+### How It Works
+
+* Each setting in ModalGlobalSettingsService is a reactive signal (`signal<boolean>` or `signal<ModalLayout>`).
+* When a modal is opened, the service automatically resolves effective defaults from these signals.
+* Individual modal configurations (IModalConfig) can still override the global defaults on a per-modal basis.
+
+This enables dynamic control of modal behavior, such as temporarily disabling animations, forcing bottom-sheet layouts on mobile, or preventing accidental dismissals, without modifying individual modal calls.
