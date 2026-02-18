@@ -1,29 +1,33 @@
 $gray-palette: (
-  50:  #fafafa, 
-  100: #f5f5f5, 
-  200: #e5e5e5, 
-  300: #d4d4d4, 
-  400: #a3a3a3,
-  500: #737373, 
-  600: #525252, 
-  700: #404040, 
-  800: #262626, 
-  900: #171717
-) !default;
+    50: #fafafa,
+    100: #f5f5f5,
+    200: #e5e5e5,
+    300: #d4d4d4,
+    400: #a3a3a3,
+    500: #737373,
+    600: #525252,
+    700: #404040,
+    800: #262626,
+    900: #171717) !default;
 
 $warning-palette: (
-  50: #fffbeb, 
-  500: #f59e0b, 
-  900: #78350f, 
-  A400: #ffc400
-) !default;
+    50: #fffbeb,
+    500: #f59e0b,
+    900: #78350f,
+    A400: #ffc400) !default;
 
 $error-palette: (
-  50: #fef2f2, 
-  400: #f87171, 
-  500: #ef4444, 
-  900: #7f1d1d
-) !default;
+    50: #fef2f2,
+    400: #f87171,
+    500: #ef4444,
+    900: #7f1d1d) !default;
+
+$hc-black: #000000;
+$hc-white: #ffffff;
+$hc-yellow: #ffff00;
+$hc-cyan: #00ffff;
+$hc-red: #ff0000;
+$hc-green: #00ff00;
 
 $breakpoints: (
     xs: 360px,
@@ -36,5 +40,4 @@ $breakpoints: (
 
     2xl: 1536px,
     3xl: 1920px,
-    4xl: 2560px
-) !default;
+    4xl: 2560px) !default;

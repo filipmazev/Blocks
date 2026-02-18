@@ -11,10 +11,10 @@ $orange-company-light-theme-config: (
 
     // Text
     'text-primary': #484848,
-    'text-secondary': #9F2D00,
+    'text-secondary': #FF8904,
     'text-tertiary': #CA3500,
-    'text-accent': #FF8904,
-    'text-accent-alt': #f3f3f3,
+    'text-accent': #f3f3f3,
+    'text-accent-alt': #9F2D00,
     'text-grayscale': #111111,
     'menu-item-text': #151515,
     'text-warn': #FB2C36,
@@ -53,8 +53,7 @@ $orange-company-light-theme-config: (
     'text': #484848,
     'status-warn': map-get($warning-palette, 500),
     'status-error': map-get($error-palette, 500),
-    'error-subtle': map-get($error-palette, 50)
-) !default;
+    'error-subtle': map-get($error-palette, 50)) !default;
 
 $orange-company-dark-theme-config: (
     // General
@@ -67,10 +66,10 @@ $orange-company-dark-theme-config: (
 
     // Text
     'text-primary': #ffffff,
-    'text-secondary': #FFD6A7,
+    'text-secondary': #FF8904,
     'text-tertiary': #FFB86A,
-    'text-accent': #FF8904,
-    'text-accent-alt': #131313,
+    'text-accent': #131313,
+    'text-accent-alt': #FFD6A7,
     'text-grayscale': #e1e1e1,
     'menu-item-text': #e7e7e7,
     'text-warn': #FB2C36,
@@ -109,5 +108,4 @@ $orange-company-dark-theme-config: (
     'text': #ffffff,
     'status-warn': map-get($warning-palette, 500),
     'status-error': map-get($error-palette, 400),
-    'error-subtle': rgba(239, 68, 68, 0.15)
-) !default;
+    'error-subtle': rgba(239, 68, 68, 0.15)) !default;

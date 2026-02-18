@@ -1,5 +1,5 @@
 @if (config?.style?.hasBackdrop && (isSide() || isBottomSheetModalActive())) {
-<app-modal-backdrop [isAnimated]="isAnimated" [isOpen]="isOpen()" (click)="onBackdropClick($event)">
+<app-modal-backdrop [isAnimated]="isAnimated()" [isOpen]="isOpen()" (click)="onBackdropClick($event)">
 </app-modal-backdrop>
 }
 
@@ -7,7 +7,7 @@
     @switch (true) {
     @case (isSide()) {
     <app-modal-side [layout]="effectiveLayout()" [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()"
-        [config]="config" [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated"
+        [config]="config" [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
         [isBottomSheetModalActive]="isBottomSheetModalActive()" [animationDuration]="animationDuration"
         [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)">
         <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
@@ -15,7 +15,7 @@
     }
     @case (isCentered()) {
     <app-modal-centered [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config"
-        [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated"
+        [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated()"
         [isBottomSheetModalActive]="isBottomSheetModalActive()" [animationDuration]="animationDuration"
         [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass" [hasBanner]="hasBanner" (close)="close($event)"
         (onBackdropClick)="onBackdropClick($event)">

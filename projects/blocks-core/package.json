@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/blocks-core",
-    "version": "0.0.25",
+    "version": "0.0.28",
     "license": "MIT",
     "exports": {
         "./mixins": "./lib/styles/_mixins.scss",
@@ -8,6 +8,7 @@
         "./theme-provider": "./lib/styles/_theme-provider.scss",
         "./default-theme": "./lib/styles/themes/_default-theme.scss",
         "./orange-company-theme": "./lib/styles/themes/_orange-company-theme.scss",
+        "./high-contrast-theme": "./lib/styles/themes/_high-contrast-theme.scss",
         "./index": "./lib/styles/_index.scss"
     },
     "style": "src/lib/styles/_index.scss",

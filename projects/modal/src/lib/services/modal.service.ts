@@ -11,6 +11,7 @@ import { MODAL_DATA } from '../tokens/modal-data.token';
 import { ComponentType } from '@angular/cdk/portal';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IModal } from '../interfaces/imodal.interface';
+import { ModalGlobalSettingsService } from './modal-global-settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,8 @@ export class ModalService implements IModalService {
   private readonly document = inject(DOCUMENT);
 
   private readonly renderer: Renderer2;
+
+  private readonly globalSettings = inject(ModalGlobalSettingsService);
 
   //#region Properties
 
@@ -84,13 +87,15 @@ export class ModalService implements IModalService {
       elementInjector: contentInjector
     });
 
+    const resolvedConfig = this.resolveConfig(config);
+
     wrapperRef.instance.componentRef = contentRef;
-    wrapperRef.instance.config = new ModalConfig(config);
+    wrapperRef.instance.config = new ModalConfig(resolvedConfig);
 
     this.appRef.attachView(wrapperRef.hostView);
     this.document.body.appendChild(wrapperRef.location.nativeElement);
 
-    const modal = new ModalRef<D, R, C>(contentRef, component, wrapperRef, this, new ModalConfig(config));
+    const modal = new ModalRef<D, R, C>(contentRef, component, wrapperRef, this, new ModalConfig(resolvedConfig));
 
     if (this.isIModal<D, R>(contentRef.instance)) {
       contentRef.instance.modal = modal;
@@ -174,6 +179,34 @@ export class ModalService implements IModalService {
   private isIModal<D, R>(component: unknown): component is IModal<D, R> {
     return typeof component === 'object' && component !== null && 'onModalInit' in component && typeof (component as IModal<D, R>).onModalInit === 'function';
   }
+
+  private resolveConfig<D, R>(config: IModalConfig<D, R> | undefined): IModalConfig<D, R> {
+    const resolvedStyle = {
+      layout: config?.style?.layout ?? this.globalSettings.layout(),
+      animate: config?.style?.animate ?? this.globalSettings.animate(),
+      hasBackdrop: config?.style?.hasBackdrop ?? this.globalSettings.hasBackdrop(),
+      showCloseButton: config?.style?.showCloseButton ?? this.globalSettings.showCloseButton(),
+      contentWrapper: config?.style?.contentWrapper ?? this.globalSettings.contentWrapper(),
+      overrideFullHeight: config?.style?.overrideFullHeight ?? this.globalSettings.overrideFullHeight(),
+      breakpoints: config?.style?.breakpoints,
+      mobileConfig: config?.style?.mobileConfig,
+      wrapperClasses: config?.style?.wrapperClasses,
+      wrapperStyles: config?.style?.wrapperStyles,
+      closeDelay: config?.style?.closeDelay,
+    };
+
+    return {
+      ...config,
+      disableClose: config?.disableClose ?? this.globalSettings.disableClose(),
+      disableCloseOnBackdropClick: config?.disableCloseOnBackdropClick ?? this.globalSettings.disableCloseOnBackdropClick(),
+      disableCloseOnNavigation: config?.disableCloseOnNavigation ?? this.globalSettings.disableCloseOnNavigation(),
+      closeGuardOnlyOnCancel: config?.closeGuardOnlyOnCancel ?? this.globalSettings.closeGuardOnlyOnCancel(),
+      disableConsoleWarnings: config?.disableConsoleWarnings ?? this.globalSettings.disableConsoleWarnings(),
+      disableConsoleInfo: config?.disableConsoleInfo ?? this.globalSettings.disableConsoleInfo(),
+      style: resolvedStyle,
+    };
+}
+
 
   //#endregion
 }

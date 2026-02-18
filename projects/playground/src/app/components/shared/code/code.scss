@@ -38,7 +38,7 @@
 
     &.active {
         background-color: var(--fm-panel);
-        color: var(--fm-text-accent, #000);
+        color: var(--fm-text-secondary, #000);
         box-shadow: inset 0 -2px 0 var(--fm-button-primary, #000);
     }
 }

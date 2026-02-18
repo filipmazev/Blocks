@@ -23,7 +23,8 @@ export class App {
 
   protected readonly availableThemes: IThemePalette[] = [
     { id: 'default', label: 'Default', className: '' },
-    { id: 'orange', label: 'Orange', className: 'theme-orange-company' }
+    { id: 'orange', label: 'Orange', className: 'theme-orange-company' },
+    { id: 'high-contrast', label: 'High Contrast', className: 'high-contrast' }
   ];
 
   protected isDarkMode = signal(false);
@@ -59,8 +60,6 @@ export class App {
       .getSystemTheme$()
       .pipe(takeUntilDestroyed())
       .subscribe((theme) => {
-        // eslint-disable-next-line no-debugger
-        debugger;
         const savedTheme = localStorage.getItem('theme');
         if (!savedTheme) {
           if (theme === 'dark') {

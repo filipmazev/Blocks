@@ -23,6 +23,16 @@
     }
 }
 
+.high-contrast {
+    @include core-theme($high-contrast-light-config);
+    @include modal.modal-theme(());
+
+    &[data-theme="dark"] {
+        @include core-theme($high-contrast-dark-config);
+        @include modal.modal-theme(());
+    }
+}
+
 $sidebar-width: 220px;
 $anim-speed: 0.3s;
 
@@ -809,8 +819,8 @@ a {
 
     &.active {
         background-color: rgba(0, 0, 0, 0.05);
-        color: var(--fm-text-accent, #000);
-        border-right: 3px solid var(--fm-text-accent, #000);
+        color: var(--fm-text-secondary, #000);
+        border-right: 3px solid var(--fm-border, #000);
     }
 
     .nav-icon {

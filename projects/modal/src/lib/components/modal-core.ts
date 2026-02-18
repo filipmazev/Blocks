@@ -11,7 +11,8 @@ import {
   signal,
   effect,
   OnInit,
-  AfterViewInit
+  AfterViewInit,
+  computed
 } from '@angular/core';
 import { Subject, Observable, fromEvent, filter, take, from, of } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
@@ -26,6 +27,7 @@ import { BreakpointKey, ModalCloseMode, ModalLayout } from '../types/modal.types
 import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
 import { ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks-core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ModalGlobalSettingsService } from '../services/modal-global-settings.service';
 import { IModal } from '../interfaces/imodal.interface';
 import * as animConst from '../constants/modal-animation.constants';
 
@@ -37,6 +39,7 @@ import * as animConst from '../constants/modal-animation.constants';
 })
 export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit {
   private readonly modalService = inject(ModalService);
+  private readonly globalSettings = inject(ModalGlobalSettingsService);
   private readonly scrollLockService = inject(ScrollLockService);
   private readonly windowDimensionsService = inject(WindowDimensionsService);
 
@@ -51,7 +54,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   public effectiveLayout = signal<ModalLayout>('center');
   public isCentered = signal<boolean>(false);
   public isSide = signal<boolean>(false);
-  public isAnimated: boolean = false;
+  public isAnimated = computed(() => this.config?.style.animate ?? this.globalSettings.animate());
 
   protected headerTemplate = signal<TemplateRef<void> | null>(null);
   protected footerTemplate = signal<TemplateRef<void> | null>(null);
@@ -205,7 +208,6 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
         (this.config.disableClose !== true && this.config.style.showCloseButton !== false && this.headerTemplate() === null));
 
     this.hasDefaultContentWrapperClass = this.config?.style.contentWrapper !== false;
-    this.isAnimated = this.config?.style.animate === true;
   }
 
   private initBreakpointCache(): void {

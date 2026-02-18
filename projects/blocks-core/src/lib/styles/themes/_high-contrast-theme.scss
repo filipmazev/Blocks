@@ -1,0 +1,97 @@
+@use '../variables' as *;
+
+$high-contrast-light-config: (
+    'primary': $hc-black,
+    'secondary': $hc-white,
+    'alt': $hc-black,
+    'accent': $hc-yellow,
+    'accent-alt': $hc-yellow,
+    'accent-tertiary': $hc-yellow,
+
+    'text-primary': $hc-black,
+    'text-secondary': $hc-black,
+    'text-tertiary': $hc-black,
+    'text-accent': $hc-black,
+    'text-accent-alt': $hc-black,
+    'text-grayscale': $hc-black,
+    'menu-item-text': $hc-black,
+    'text-warn': $hc-white,
+    'text-confirm': $hc-black,
+
+    'bg-menu-item-hover': $hc-yellow,
+    'border': $hc-black,
+    'border-grayscale-light': $hc-black,
+    'warn': $hc-red,
+    'error': $hc-red,
+    'info': $hc-cyan,
+
+    'button-primary': $hc-white,
+    'button-confirm': $hc-green,
+    'button-warn': $hc-red,
+    'button-grayscale': $hc-white,
+
+    'snackbar-error': $hc-white,
+    'snackbar-success': $hc-white,
+    'snackbar-warn': $hc-white,
+
+    'scroll-bg': $hc-white,
+    'scroll-thumb': $hc-black,
+    'scroll-thumb-highlighted': $hc-yellow,
+
+    'canvas': $hc-white,
+    'surface': $hc-white,
+    'element': $hc-white,
+    'text': $hc-black,
+
+    'status-warn': $hc-red,
+    'status-error': $hc-red,
+    'error-subtle': rgba(0, 0, 0, 0.15)
+);
+
+$high-contrast-dark-config: (
+    'primary': $hc-white,
+    'secondary': $hc-black,
+    'alt': $hc-white,
+    'accent': $hc-yellow,
+    'accent-alt': $hc-yellow,
+    'accent-tertiary': $hc-yellow,
+
+    'text-primary': $hc-white,
+    'text-secondary': $hc-white,
+    'text-tertiary': $hc-white,
+    'text-accent': $hc-black,
+    'text-accent-alt': $hc-black,
+    'text-grayscale': $hc-white,
+    'menu-item-text': $hc-white,
+    'text-warn': $hc-white,
+    'text-confirm': $hc-black,
+
+    'bg-menu-item-hover': $hc-yellow,
+    'border': $hc-white,
+    'border-grayscale-light': $hc-white,
+    'warn': $hc-red,
+    'error': $hc-red,
+    'info': $hc-cyan,
+
+    'button-primary': $hc-black,
+    'button-confirm': $hc-green,
+    'button-warn': $hc-red,
+    'button-grayscale': $hc-black,
+
+    'snackbar-error': $hc-black,
+    'snackbar-success': $hc-black,
+    'snackbar-warn': $hc-black,
+
+    'scroll-bg': $hc-black,
+    'scroll-thumb': $hc-white,
+    'scroll-thumb-highlighted': $hc-yellow,
+
+    'canvas': $hc-black,
+    'surface': $hc-black,
+    'element': $hc-black,
+    'text': $hc-white,
+
+    'status-warn': $hc-red,
+    'status-error': $hc-red,
+    'error-subtle': rgba(255, 255, 255, 0.2)
+);
