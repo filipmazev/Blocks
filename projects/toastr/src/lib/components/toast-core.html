@@ -1,0 +1,4 @@
+<div #toastSwipeTarget class="toast-wrapper" [ngClass]="wrapperClasses()" [class.show]="isVisible()"
+    [class.no-animate]="!isAnimated()" [style.transform]="modalTransform()">
+    <ng-container #dynamicContainer></ng-container>
+</div>

@@ -1,9 +1,11 @@
 @use '../../blocks-core' as *;
 @use '../../modal' as modal;
+@use '../../toastr' as toastr;
 
 :root {
     @include core-theme($default-light-theme-config);
     @include modal.modal-theme(());
+    @include toastr.toastr-theme(());
 
     --mobile-header-height: 60px;
 }
@@ -11,6 +13,7 @@
 [data-theme="dark"] {
     @include core-theme($default-dark-theme-config);
     @include modal.modal-theme(());
+    @include toastr.toastr-theme(());
 }
 
 .theme-orange-company {

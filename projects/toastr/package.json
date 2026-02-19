@@ -1,10 +1,10 @@
 {
-    "name": "@filip.mazev/modal",
-    "version": "0.1.60",
+    "name": "@filip.mazev/toastr",
+    "version": "0.0.6",
     "license": "MIT",
     "exports": {
-        "./_modal-theme": "./lib/styles/_modal-theme.scss",
-        "./index": "./lib/styles/_index.scss"
+        "./_toastr-theme": "./src/lib/styles/_toastr-theme.scss",
+        "./index": "./src/lib/styles/_index.scss"
     },
     "style": "src/lib/styles/_index.scss",
     "sass": "src/lib/styles/_index.scss",

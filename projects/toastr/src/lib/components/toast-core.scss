@@ -1,0 +1,111 @@
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+::ng-deep {
+    .toast-container {
+        position: fixed;
+        z-index: 9999;
+        display: flex;
+        gap: 1rem;
+        pointer-events: none;
+
+        @include respond-down(md) {
+            left: 1rem !important;
+            right: 1rem !important;
+            width: calc(100% - 2rem);
+        }
+    }
+
+    .toast-container-top-right {
+        top: 1rem;
+        right: 1rem;
+        flex-direction: column;
+    }
+
+    .toast-container-top-left {
+        top: 1rem;
+        left: 1rem;
+        flex-direction: column;
+    }
+
+    .toast-container-top-center {
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-direction: column;
+    }
+
+    .toast-container-bottom-right {
+        bottom: 1rem;
+        right: 1rem;
+        flex-direction: column-reverse;
+    }
+
+    .toast-container-bottom-left {
+        bottom: 1rem;
+        left: 1rem;
+        flex-direction: column-reverse;
+    }
+
+    .toast-container-bottom-center {
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-direction: column-reverse;
+    }
+
+    @include respond-down(md) {
+        .toast-container[class*="-top-"] {
+            top: 1rem !important;
+            bottom: auto !important;
+            flex-direction: column !important;
+            transform: none !important;
+        }
+
+        .toast-container[class*="-bottom-"] {
+            bottom: 1rem !important;
+            top: auto !important;
+            flex-direction: column-reverse !important;
+            transform: none !important;
+        }
+    }
+}
+
+.toast-wrapper {
+    position: relative;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: calc(0.4s * (1 - var(--a11y-reduced-motion, 0)));
+
+    &.default-wrapper {
+        background-color: var(--toast-bg, #fff);
+        color: var(--toast-text, #000);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 1rem;
+        width: 24rem;
+        max-width: 100%;
+    }
+
+    &.anim-dir-top {
+        transform: translateY(-30px);
+    }
+
+    &.anim-dir-bottom {
+        transform: translateY(30px);
+    }
+
+    &.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &.no-animate {
+        transition: none !important;
+        transform: none !important;
+    }
+
+    @include respond-down(md) {
+        width: 90vw;
+    }
+}

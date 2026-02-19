@@ -1,62 +1,129 @@
 /* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "paths": {
-      "modal": [
-        "./dist/modal"
-      ],
-      "blocks-core": [
-        "./dist/blocks-core",
-      ],
-
-      /** Path aliases for blocks-core library */
-      "@core/constants/*": ["./projects/blocks-core/src/lib/constants/*"],
-      "@core/enums/*": ["./projects/blocks-core/src/lib/enums/*"],
-      "@core/interfaces/*": ["./projects/blocks-core/src/lib/interfaces/*"],
-      "@core/services/*": ["./projects/blocks-core/src/lib/services/*"],
-      "@core/utils/*": ["./projects/blocks-core/src/lib/utils/*"],
-      "@core/types/*": ["./projects/blocks-core/src/lib/types/*"],
-
-      /** Path aliases for modal library */
-      "@modal/classes/*": ["./projects/modal/src/lib/classes/*"],
-      "@modal/components/*": ["./projects/modal/src/lib/components/*"],
-      "@modal/constants/*": ["./projects/modal/src/lib/constants/*"],
-      "@modal/directives/*": ["./projects/modal/src/lib/directives/*"],
-      "@modal/enums/*": ["./projects/modal/src/lib/enums/*"],
-      "@modal/interfaces/*": ["./projects/modal/src/lib/interfaces/*"],
-      "@modal/services/*": ["./projects/modal/src/lib/services/*"],
-      "@modal/tokens/*": ["./projects/modal/src/lib/tokens/*"],
-      "@modal/types/*": ["./projects/modal/src/lib/types/*"],
-      "@modal/*": ["./projects/modal/src/*"],
-
-      /** Path aliases for playground app */
-      "@playground/interfaces/*": ["./projects/playground/src/app/shared/interfaces/*"],
-      "@playground/classes/*": ["./projects/playground/src/app/shared/classes/*"],
-      "@playground/types/*": ["./projects/playground/src/app/shared/types/*"],
-      "@playground/components/*": ["./projects/playground/src/app/components/*"],
-      "@playground/*": ["./projects/playground/src/app/*"],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "outDir": "./dist/out-tsc",
+        "strict": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "paths": {
+            "modal": [
+                "./dist/modal"
+            ],
+            "blocks-core": [
+                "./dist/blocks-core",
+            ],
+            "toastr": [
+                "./dist/toastr"
+            ],
+            /** Path aliases for blocks-core library */
+            "@core/constants/*": [
+                "./projects/blocks-core/src/lib/constants/*"
+            ],
+            "@core/enums/*": [
+                "./projects/blocks-core/src/lib/enums/*"
+            ],
+            "@core/interfaces/*": [
+                "./projects/blocks-core/src/lib/interfaces/*"
+            ],
+            "@core/services/*": [
+                "./projects/blocks-core/src/lib/services/*"
+            ],
+            "@core/utils/*": [
+                "./projects/blocks-core/src/lib/utils/*"
+            ],
+            "@core/types/*": [
+                "./projects/blocks-core/src/lib/types/*"
+            ],
+            /** Path aliases for modal library */
+            "@modal/classes/*": [
+                "./projects/modal/src/lib/classes/*"
+            ],
+            "@modal/components/*": [
+                "./projects/modal/src/lib/components/*"
+            ],
+            "@modal/constants/*": [
+                "./projects/modal/src/lib/constants/*"
+            ],
+            "@modal/directives/*": [
+                "./projects/modal/src/lib/directives/*"
+            ],
+            "@modal/enums/*": [
+                "./projects/modal/src/lib/enums/*"
+            ],
+            "@modal/interfaces/*": [
+                "./projects/modal/src/lib/interfaces/*"
+            ],
+            "@modal/services/*": [
+                "./projects/modal/src/lib/services/*"
+            ],
+            "@modal/tokens/*": [
+                "./projects/modal/src/lib/tokens/*"
+            ],
+            "@modal/types/*": [
+                "./projects/modal/src/lib/types/*"
+            ],
+            "@modal/*": [
+                "./projects/modal/src/*"
+            ],
+            /** Path aliases for toastr library */
+            "@toastr/classes/*": [
+                "./projects/toastr/src/lib/classes/*"
+            ],
+            "@toastr/components/*": [
+                "./projects/toastr/src/lib/components/*"
+            ],
+            "@toastr/constants/*": [
+                "./projects/toastr/src/lib/constants/*"
+            ],
+            "@toastr/interfaces/*": [
+                "./projects/toastr/src/lib/interfaces/*"
+            ],
+            "@toastr/services/*": [
+                "./projects/toastr/src/lib/services/*"
+            ],
+            "@toastr/tokens/*": [
+                "./projects/toastr/src/lib/tokens/*"
+            ],
+            "@toastr/types/*": [
+                "./projects/toastr/src/lib/types/*"
+            ],
+            "@toastr/*": [
+                "./projects/toastr/src/*"
+            ],
+            /** Path aliases for playground app */
+            "@playground/interfaces/*": [
+                "./projects/playground/src/app/shared/interfaces/*"
+            ],
+            "@playground/classes/*": [
+                "./projects/playground/src/app/shared/classes/*"
+            ],
+            "@playground/types/*": [
+                "./projects/playground/src/app/shared/types/*"
+            ],
+            "@playground/components/*": [
+                "./projects/playground/src/app/components/*"
+            ],
+            "@playground/*": [
+                "./projects/playground/src/app/*"
+            ],
+        },
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "bundler",
+        "importHelpers": true,
+        "target": "esnext",
+        "module": "esnext"
     },
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "bundler",
-    "importHelpers": true,
-    "target": "esnext",
-    "module": "esnext"
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  }
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
+    }
 }

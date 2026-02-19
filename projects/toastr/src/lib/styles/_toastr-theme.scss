@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+@mixin toastr-theme($overrides: null) {
+    $fallback-bg: map.get($default-light-theme-config, 'surface');
+    $fallback-text: map.get($default-light-theme-config, 'text-primary');
+
+    --toast-bg: var(--fm-surface, #{$fallback-bg});
+    --toast-text: var(--fm-text-primary, #{$fallback-text});
+
+    @if $overrides {
+        @each $key, $val in $overrides {
+            --#{$key}: #{$val};
+        }
+    }
+}

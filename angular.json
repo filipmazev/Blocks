@@ -196,6 +196,41 @@
                     "builder": "angular-cli-ghpages:deploy"
                 }
             }
+        },
+        "toastr": {
+            "projectType": "library",
+            "root": "projects/toastr",
+            "sourceRoot": "projects/toastr/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/toastr/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/toastr/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/toastr/tsconfig.spec.json"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/toastr/src/**/*.ts",
+                            "projects/toastr/src/**/*.html"
+                        ]
+                    }
+                }
+            }
         }
     },
     "cli": {

@@ -205,8 +205,7 @@ export class ModalService implements IModalService {
       disableConsoleInfo: config?.disableConsoleInfo ?? this.globalSettings.disableConsoleInfo(),
       style: resolvedStyle,
     };
-}
-
+  }
 
   //#endregion
 }
