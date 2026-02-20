@@ -8,6 +8,7 @@ import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
 import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
 import { ThemeId } from '@playground/types/common.types';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -56,21 +57,20 @@ export class App {
   }
 
   protected initThemeSubscription() {
-    this.themingService
-      .getSystemTheme$()
+    combineLatest({
+      systemTheme: this.themingService.getSystemTheme$(),
+      appTheme: this.themingService.getApplicationTheme$()
+    })
       .pipe(takeUntilDestroyed())
-      .subscribe((theme) => {
-        const savedTheme = localStorage.getItem('theme');
-        if (!savedTheme) {
-          if (theme === 'dark') {
-            this.enableDarkMode();
-          } else {
-            this.disableDarkMode();
-          }
+      .subscribe(({ systemTheme, appTheme }) => {
+        const savedPreference = appTheme ?? localStorage.getItem('theme') ?? 'auto';
+
+        const themeToApply = savedPreference === 'auto' ? systemTheme : savedPreference;
+
+        if (themeToApply === 'dark') {
+          this.enableDarkMode();
         } else {
-          if (savedTheme === 'dark') {
-            this.enableDarkMode();
-          }
+          this.disableDarkMode();
         }
 
         this.setCodeTheme();

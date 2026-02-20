@@ -10,8 +10,8 @@ export class ThemingService implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private readonly _systemTheme = signal<DeviceTheme>(this.detectInitialSystemTheme());
-  private readonly _applicationTheme = signal<DeviceTheme | null>(null);
+  private _systemTheme = signal<DeviceTheme>('light');
+  private _applicationTheme = signal<DeviceTheme | null>(null);
 
   public readonly systemTheme = this._systemTheme.asReadonly();
   public readonly applicationTheme = this._applicationTheme.asReadonly();
@@ -25,6 +25,13 @@ export class ThemingService implements OnDestroy {
 
   constructor() {
     if (this.isBrowser) {
+      this._systemTheme.set(this.detectInitialSystemTheme());
+
+      const storedTheme = localStorage.getItem('theme') as DeviceTheme | null;
+      if (storedTheme === 'dark' || storedTheme === 'light') {
+        this._applicationTheme.set(storedTheme);
+      }
+
       this.initSystemThemeListener();
     }
   }
@@ -37,6 +44,9 @@ export class ThemingService implements OnDestroy {
 
   public setApplicationTheme(theme: DeviceTheme): void {
     this._applicationTheme.set(theme);
+    if (this.isBrowser) {
+      localStorage.setItem('theme', theme);
+    }
   }
 
   public getSystemTheme$() {
@@ -54,11 +64,9 @@ export class ThemingService implements OnDestroy {
 
   private initSystemThemeListener(): void {
     this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
-
     this.mediaQueryListener = (event: MediaQueryListEvent) => {
       this._systemTheme.set(event.matches ? 'dark' : 'light');
     };
-
     this.mediaQueryList.addEventListener('change', this.mediaQueryListener);
   }
 }

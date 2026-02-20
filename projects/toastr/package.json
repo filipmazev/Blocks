@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/toastr",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "license": "MIT",
     "exports": {
         "./_toastr-theme": "./src/lib/styles/_toastr-theme.scss",
