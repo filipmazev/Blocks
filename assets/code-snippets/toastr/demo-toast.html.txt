@@ -1,5 +1,5 @@
 <div class="notification" [ngClass]="data.type">
-    <button class="notification-close-button" (click)="dismiss()" aria-label="Close toast">
+    <button class="notification-close-button" (click)="dismiss()" aria-label="Close toast" [ngClass]="data.type">
         ✕
     </button>
 

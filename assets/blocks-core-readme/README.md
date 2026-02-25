@@ -144,9 +144,3 @@ this.scrollLockService.disableScroll(this.scrollLockId, {
 // Unlock
 this.scrollLockService.enableScroll(this.scrollLockId);
 ```
-
-## Installation
-
-To use Blocks Core, install the package and ensure the SCSS partials are accessible to your build pipeline.
-
-_(Installation instructions depend on your specific build/publish setup)._

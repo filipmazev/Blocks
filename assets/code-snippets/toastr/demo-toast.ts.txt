@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Toast } from '@filip.mazev/toastr';
 
 export interface IDemoToastData {
@@ -10,8 +9,7 @@ export interface IDemoToastData {
 
 @Component({
   selector: 'app-demo-toast',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass],
   templateUrl: './demo-toast.html',
   styleUrl: './demo-toast.scss'
 })
