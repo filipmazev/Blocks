@@ -31,7 +31,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     return `${animClass} ${wrapperClass}`;
   });
 
-  protected modalTransform = computed(() => {
+  protected toastrTransform = computed(() => {
     if (!this.isAnimated()) return null;
 
     const isTop = (this.config?.position ?? 'top-right').includes('top');
@@ -48,9 +48,13 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   });
 
   private isTrackingSwipe = false;
+  private isTouchActive = false;
   private autoCloseTimeout?: ReturnType<typeof setTimeout>;
   private hasEmittedClose = false;
+
   private cleanupListeners: Array<() => void> = [];
+  private swipeCleanupListeners: (() => void) | null = null;
+  private globalResizeCleanup: (() => void) | null = null;
 
   public ngOnInit(): void {
     this.dynamicContainer.insert(this.componentRef.hostView);
@@ -59,6 +63,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     if (this.config?.swipeToDismiss !== false) {
       this.startVerticalSwipeDetection();
+      this.monitorInputType();
     }
 
     if (this.config?.durationInMs) {
@@ -81,7 +86,10 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
   public ngOnDestroy(): void {
     clearTimeout(this.autoCloseTimeout);
-    this.isTrackingSwipe = false;
+
+    this.stopVerticalSwipeDetection();
+    this.globalResizeCleanup?.();
+
     this.cleanupListeners.forEach((fn) => fn());
     this.cleanupListeners = [];
   }
@@ -158,12 +166,42 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     target.addEventListener('pointerup', pointerUp);
     target.addEventListener('pointercancel', pointerUp);
 
-    this.cleanupListeners.push(() => {
+    this.swipeCleanupListeners = () => {
       target.removeEventListener('pointerdown', pointerDown);
       target.removeEventListener('pointermove', pointerMove);
       target.removeEventListener('pointerup', pointerUp);
       target.removeEventListener('pointercancel', pointerUp);
-    });
+    };
+  }
+
+  private stopVerticalSwipeDetection(): void {
+    if (!this.isTrackingSwipe) return;
+
+    this.isTrackingSwipe = false;
+
+    if (this.swipeCleanupListeners) {
+      this.swipeCleanupListeners();
+      this.swipeCleanupListeners = null;
+    }
+  }
+
+  private monitorInputType(): void {
+    if (this.globalResizeCleanup) return;
+
+    const handler = (event: PointerEvent) => {
+      const isTouch = event.pointerType === 'touch';
+
+      if (isTouch && !this.isTouchActive) {
+        this.isTouchActive = true;
+        this.startVerticalSwipeDetection();
+      } else if (!isTouch && this.isTouchActive) {
+        this.isTouchActive = false;
+        this.stopVerticalSwipeDetection();
+      }
+    };
+
+    window.addEventListener('pointerdown', handler);
+    this.globalResizeCleanup = () => window.removeEventListener('pointerdown', handler);
   }
 
   //#endregion
