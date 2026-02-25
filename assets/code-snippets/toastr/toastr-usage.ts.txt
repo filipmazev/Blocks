@@ -1,0 +1,31 @@
+import { Component, inject } from '@angular/core';
+import { ToastrService } from '@filip.mazev/toastr';
+import { DemoToast } from './demo-toast';
+import { IDemoToastData } from './idemo-toast-data.interface';
+
+@Component({
+  selector: 'app-my-feature',
+  template: `<button (click)="showToast()">Queue Toast</button>`
+})
+export class MyFeatureComponent {
+  private readonly toastr = inject(ToastrService);
+
+  public showToast(): void {
+    const toastRef = this.toastr.queueToast<IDemoToastData, undefined, DemoToast>(DemoToast, {
+      position: 'top-right',
+      durationInMs: 5000,
+      animate: true,
+      swipeToDismiss: true,
+      maxOpened: 4,
+      data: {
+        title: 'Action Successful',
+        message: 'Your item has been saved.',
+        type: 'success'
+      }
+    });
+
+    toastRef.afterClosed$.subscribe(() => {
+      console.log('Toast finished and removed from screen.');
+    });
+  }
+}

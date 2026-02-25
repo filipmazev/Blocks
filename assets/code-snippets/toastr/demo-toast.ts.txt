@@ -1,0 +1,25 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Toast } from '@filip.mazev/toastr';
+
+export interface IDemoToastData {
+  title: string;
+  message: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+}
+
+@Component({
+  selector: 'app-demo-toast',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './demo-toast.html',
+  styleUrl: './demo-toast.scss'
+})
+export class DemoToast extends Toast<IDemoToastData, undefined> {
+  
+  protected dismiss(): void {
+    // Access the base class 'toast' reference to trigger the close animation
+    this.toast?.close();
+  }
+  
+}
