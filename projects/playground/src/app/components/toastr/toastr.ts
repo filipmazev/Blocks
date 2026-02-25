@@ -64,7 +64,7 @@ export class Toastr {
       durationInMs: request.durationInMs ?? undefined,
       animate: request.animate ?? undefined,
       swipeToDismiss: request.swipeToDismiss ?? undefined,
-      wrapperClass: 'notification-toast-wrapper',
+      hasDefaultBackground: false,
       data: {
         title: `${request.title} #${this.toastCount}`,
         message: request.message ?? '',
