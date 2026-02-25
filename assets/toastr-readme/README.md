@@ -141,6 +141,7 @@ Controls the behavior, data, and placement of an individual toast:
 * `swipeToDismiss` |`boolean`|: (optional) Whether the user can swipe vertically to dismiss the toast. Defaults to true.
 * `animate` |`boolean`|: (optional) Whether the toast should animate in and out. Defaults to true.
 * `wrapperClass` |`string`|: (optional) A custom CSS class to apply to the toast's outer wrapper container. If omitted, it uses 'default-wrapper'.
+* `hasDefaultBackground` |`boolean`|: (optional) If set to false, the default background color will be removed from the default wrapper
 
 ## Global Toastr Settings
 
