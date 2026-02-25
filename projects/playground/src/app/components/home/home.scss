@@ -169,10 +169,6 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 
-    &.two-col {
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    }
-
     @include respond-down(md) {
         display: flex;
         flex-direction: column;

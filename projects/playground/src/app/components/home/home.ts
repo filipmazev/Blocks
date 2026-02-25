@@ -22,6 +22,12 @@ export class Home {
       description: 'A service-driven modal system supporting center/side layouts, mobile swipe gestures, dynamic content and much more.',
       link: 'https://www.npmjs.com/package/@filip.mazev/modal',
       icon: 'web_asset'
+    },
+    {
+      name: '@filip.mazev/toastr',
+      description: 'A powerful toast service with built-in support for custom components, multiple placements, auto-dismissal and more.',
+      link: 'https://www.npmjs.com/package/@filip.mazev/toastr',
+      icon: 'notifications'
     }
   ];
 

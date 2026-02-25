@@ -35,9 +35,10 @@ $orange-company-light-theme-config: (
     'button-grayscale': #d0d0d0b3,
 
     // Feedback
-    'snackbar-error': #ffa9aa,
-    'snackbar-success': #a2ff99,
-    'snackbar-warn': #ffdc9b,
+    'toast-info': #a7cef6,
+    'toast-error': #fbbdbe,
+    'toast-success': #bdf7ae,
+    'toast-warn': #ffdc9b,
 
     // Scrollbar & Sliders
     'scroll-bg': #FFEDD4,
@@ -90,9 +91,10 @@ $orange-company-dark-theme-config: (
     'button-grayscale': #2e2e2eb1,
 
     // Feedback
-    'snackbar-error': #8e1416,
-    'snackbar-success': #2e7d32,
-    'snackbar-warn': #b27a1c,
+    'toast-info': #44719d,
+    'toast-error': #8e1416,
+    'toast-success': #2e7d32,
+    'toast-warn': #b27a1c,
 
     // Scroll & Sliders
     'scroll-bg': #712000,

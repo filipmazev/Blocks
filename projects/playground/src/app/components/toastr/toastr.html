@@ -1,0 +1,78 @@
+<div class="demo-container">
+    <app-component-info [codeFiles]="codeFiles" [readmePath]="toastrReadmePath()"></app-component-info>
+
+    <div class="config-container">
+        <div class="config-header">Demo</div>
+
+        <form [formGroup]="form" class="config-form">
+
+            <div class="form-section">
+                <h3>General Style & Data</h3>
+
+                <div class="form-control">
+                    <label>Position</label>
+                    <div class="select-wrapper">
+                        <select formControlName="position">
+                            @for(position of positionOptions; track position) {
+                            <option [value]="position">{{ position }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Toast Type (Visual)</label>
+                    <div class="select-wrapper">
+                        <select formControlName="type">
+                            @for(type of typeOptions; track type) {
+                            <option [value]="type">{{ type | titlecase }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Title</label>
+                    <input type="text" formControlName="title">
+                </div>
+
+                <div class="form-control">
+                    <label>Message</label>
+                    <input type="text" formControlName="message">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Behavior & Toggles</h3>
+
+                <div class="form-control">
+                    <label>Duration (ms)</label>
+                    <p class="hint">Set to 0 to disable auto-close</p>
+                    <input type="number" formControlName="durationInMs">
+                </div>
+
+                <div class="form-control">
+                    <label>Max Opened (Queue Limit)</label>
+                    <input type="number" formControlName="maxOpened">
+                </div>
+
+                <div class="form-checkboxes">
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="animate"> Animate
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="swipeToDismiss"> Swipe to Dismiss
+                    </label>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="actions">
+            <button (click)="queueToast()" [disabled]="form.invalid" class="open-modal-button">
+                Queue Toast
+            </button>
+        </div>
+    </div>
+</div>

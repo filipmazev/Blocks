@@ -1,7 +1,17 @@
 {
-  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/toastr",
-  "lib": {
-    "entryFile": "src/public-api.ts"
-  }
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/toastr",
+    "lib": {
+        "entryFile": "src/public-api.ts",
+        "styleIncludePaths": [
+            "../../node_modules"
+        ]
+    },
+    "assets": [
+        {
+            "input": "src/lib/styles",
+            "glob": "**/*.scss",
+            "output": "lib/styles"
+        }
+    ]
 }

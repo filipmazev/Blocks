@@ -1,0 +1,64 @@
+.notification {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 1rem;
+    border-radius: 10px;
+    color: var(--fm-text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--fm-border, #ccc);
+
+    &.info {
+        background-color: var(--fm-toast-info);
+    }
+
+    &.success {
+        background-color: var(--fm-toast-success);
+    }
+
+    &.warning {
+        background-color: var(--fm-toast-warn);
+    }
+
+    &.error {
+        background-color: var(--fm-toast-error);
+    }
+}
+
+.notification-content {
+    font-family: inherit;
+    padding-right: 1.5rem;
+}
+
+.notification-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notification-message {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.notification-close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--fm-text-primary, #888);
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+
+    &:hover {
+        color: var(--fm-text-warn, #d32f2f);
+    }
+}

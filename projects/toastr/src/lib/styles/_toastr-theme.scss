@@ -4,9 +4,19 @@
 @mixin toastr-theme($overrides: null) {
     $fallback-bg: map.get($default-light-theme-config, 'surface');
     $fallback-text: map.get($default-light-theme-config, 'text-primary');
+    $fallback-text-warn: map.get($default-light-theme-config, 'text-warn');
+    $fallback-toast-info: map.get($default-light-theme-config, 'toast-info');
+    $fallback-toast-success: map.get($default-light-theme-config, 'toast-success');
+    $fallback-toast-warn: map.get($default-light-theme-config, 'toast-warn');
+    $fallback-toast-error: map.get($default-light-theme-config, 'toast-error');
 
     --toast-bg: var(--fm-surface, #{$fallback-bg});
     --toast-text: var(--fm-text-primary, #{$fallback-text});
+    --toast-text-warn: var(--fm-text-warn, #{$fallback-text-warn});
+    --simple-toast-info: var(--fm-toast-info, #{$fallback-toast-info});
+    --simple-toast-success: var(--fm-toast-success, #{$fallback-toast-success});
+    --simple-toast-warn: var(--fm-toast-warn, #{$fallback-toast-warn});
+    --simple-toast-error: var(--fm-toast-error, #{$fallback-toast-error});
 
     @if $overrides {
         @each $key, $val in $overrides {

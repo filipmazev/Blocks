@@ -18,7 +18,7 @@ $default-light-theme-config: (
     'text-grayscale': map-get($gray-palette, 900),
     'menu-item-text': map-get($gray-palette, 800),
     'text-warn': map-get($warning-palette, 900),
-    'text-confirm': #084720, 
+    'text-confirm': #084720,
 
     // UI Elements
     'bg-menu-item-hover': map-get($gray-palette, 200),
@@ -35,9 +35,10 @@ $default-light-theme-config: (
     'button-grayscale': map-get($gray-palette, 200),
 
     // Feedback
-    'snackbar-error': map-get($error-palette, 50),
-    'snackbar-success': #f0fdf4,
-    'snackbar-warn': map-get($warning-palette, 50),
+    'toast-info': #66a5e4,
+    'toast-error': map-get($error-palette, 50),
+    'toast-success': #f0fdf4,
+    'toast-warn': map-get($warning-palette, 50),
 
     // Scrollbar & Sliders
     'scroll-bg': map-get($gray-palette, 100),
@@ -53,8 +54,7 @@ $default-light-theme-config: (
     'text': map-get($gray-palette, 900),
     'status-warn': map-get($warning-palette, 500),
     'status-error': map-get($error-palette, 500),
-    'error-subtle': map-get($error-palette, 50)
-) !default;
+    'error-subtle': map-get($error-palette, 50)) !default;
 
 $default-dark-theme-config: (
     // General
@@ -91,9 +91,10 @@ $default-dark-theme-config: (
     'button-grayscale': map-get($gray-palette, 700),
 
     // Feedback
-    'snackbar-error': #450a0a,
-    'snackbar-success': #052e16,
-    'snackbar-warn': #451a03,
+    'toast-info': #1a6cbd,
+    'toast-error': #450a0a,
+    'toast-success': #052e16,
+    'toast-warn': #451a03,
 
     // Scrollbar & Sliders
     'scroll-bg': map-get($gray-palette, 800),
@@ -109,5 +110,4 @@ $default-dark-theme-config: (
     'text': map-get($gray-palette, 50),
     'status-warn': map-get($warning-palette, 400),
     'status-error': map-get($error-palette, 400),
-    'error-subtle': rgba(239, 68, 68, 0.15)
-) !default;
+    'error-subtle': rgba(239, 68, 68, 0.15)) !default;

@@ -9,6 +9,9 @@ import { ToastPosition } from '../types/toastr.types';
 import { ComponentType } from '@angular/cdk/portal';
 import { ToastCore } from '../components/toast-core';
 import { take } from 'rxjs';
+import { SimpleToast } from '../components/views/simple-toast/simple-toast';
+import { ISimpleToastData } from '../interfaces/isimple-toast.interface';
+import { IQueueSimpleToastRequest } from '../interfaces/iqueue-simple-toast-request.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +43,84 @@ export class ToastrService {
 
     return toastRef;
   }
+
+  /**
+   * Queues a simple success toast notification with the specified message and optional title, position, and duration.
+   * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
+   * @returns A ToastRef instance representing the queued toast.
+   */
+  public queueSuccess(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+    return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
+      position: request.position ?? this.globalSettings.position(),
+      data: {
+        title: request.title,
+        message: request.message,
+        type: 'success'
+      },
+      hasDefaultBackground: false,
+      durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
+      animate: this.globalSettings.animate()
+    });
+  }
+
+  /**
+   * Queues a simple info toast notification with the specified message and optional title, position, and duration.
+   * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
+   * @returns A ToastRef instance representing the queued toast.
+   */
+  public queueInfo(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+    return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
+      position: request.position ?? this.globalSettings.position(),
+      data: {
+        title: request.title,
+        message: request.message,
+        type: 'info'
+      },
+      hasDefaultBackground: false,
+      durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
+      animate: this.globalSettings.animate()
+    });
+  }
+
+  /**
+   * Queues a simple warning toast notification with the specified message and optional title, position, and duration.
+   * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
+   * @returns A ToastRef instance representing the queued toast.
+   */
+  public queueWarning(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+    return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
+      position: request.position ?? this.globalSettings.position(),
+      data: {
+        title: request.title,
+        message: request.message,
+        type: 'warn'
+      },
+      hasDefaultBackground: false,
+      durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
+      animate: this.globalSettings.animate()
+    });
+  }
+
+  /**
+   * Queues a simple error toast notification with the specified message and optional title, position, and duration.
+   * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
+   * @returns A ToastRef instance representing the queued toast.
+   */
+  public queueError(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+    return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
+      position: request.position ?? this.globalSettings.position(),
+      data: {
+        title: request.title,
+        message: request.message,
+        type: 'error'
+      },
+      hasDefaultBackground: false,
+      durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
+      animate: this.globalSettings.animate()
+    });
+  }
+
+  //#region Helper Methods
 
   private processQueue(): void {
     const max = this.globalSettings.maxOpened();
@@ -134,4 +215,6 @@ export class ToastrService {
   private isIToast<D, R, C extends IToast<D, R>>(component: unknown): component is C {
     return typeof component === 'object' && component !== null && 'toast' in component;
   }
+
+  //#endregion
 }

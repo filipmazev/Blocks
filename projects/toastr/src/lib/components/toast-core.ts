@@ -27,7 +27,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   protected wrapperClasses = computed(() => {
     const isTop = (this.config?.position ?? 'top-right').includes('top');
     const animClass = isTop ? 'anim-dir-top' : 'anim-dir-bottom';
-    const wrapperClass = this.config?.wrapperClass ?? 'default-wrapper';
+    const wrapperClass = this.config?.wrapperClass ?? 'default-wrapper' + (this.config?.hasDefaultBackground === false ? ' no-bg' : '');
     return `${animClass} ${wrapperClass}`;
   });
 

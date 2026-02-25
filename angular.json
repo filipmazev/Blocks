@@ -122,6 +122,11 @@
                                 "output": "/assets/blocks-core-readme"
                             },
                             {
+                                "glob": "README.md",
+                                "input": "projects/toastr",
+                                "output": "/assets/toastr-readme"
+                            },
+                            {
                                 "glob": "**/*",
                                 "input": "projects/playground/src/app/components/modal",
                                 "output": "/assets/code-snippets"

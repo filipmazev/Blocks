@@ -30,9 +30,10 @@ $high-contrast-light-config: (
     'button-warn': $hc-red,
     'button-grayscale': $hc-white,
 
-    'snackbar-error': $hc-white,
-    'snackbar-success': $hc-white,
-    'snackbar-warn': $hc-white,
+    'toast-info': $hc-white,
+    'toast-error': #ff5151,
+    'toast-success': #54ff99,
+    'toast-warn': $hc-yellow,
 
     'scroll-bg': $hc-white,
     'scroll-thumb': $hc-black,
@@ -78,9 +79,10 @@ $high-contrast-dark-config: (
     'button-warn': $hc-red,
     'button-grayscale': $hc-black,
 
-    'snackbar-error': $hc-black,
-    'snackbar-success': $hc-black,
-    'snackbar-warn': $hc-black,
+    'toast-info': $hc-black,
+    'toast-error': $hc-red,
+    'toast-success': #22c733,
+    'toast-warn': #c7c722,
 
     'scroll-bg': $hc-black,
     'scroll-thumb': $hc-white,

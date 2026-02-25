@@ -85,6 +85,10 @@
         padding: 1rem;
         width: 24rem;
         max-width: 100%;
+
+        &.no-bg {
+            background-color: transparent;
+        }
     }
 
     &.anim-dir-top {
@@ -106,6 +110,6 @@
     }
 
     @include respond-down(md) {
-        width: 90vw;
+        width: unset;
     }
 }

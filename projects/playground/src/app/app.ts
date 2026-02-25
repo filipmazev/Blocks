@@ -32,7 +32,8 @@ export class App {
 
   protected navLinks = signal<ISidenavLink[]>([
     { name: 'Home', route: '/' },
-    { name: 'Modal', route: '/modal' }
+    { name: 'Modal', route: '/modal' },
+    { name: 'Toastr', route: '/toastr' }
   ]);
 
   protected selectedThemeId = signal<ThemeId>('orange');

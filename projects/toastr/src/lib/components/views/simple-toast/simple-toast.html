@@ -1,0 +1,14 @@
+<div class="simple-toast" [ngClass]="data.type">
+    <button class="simple-toast-close-button" (click)="dismiss()" aria-label="Close toast">
+        ✕
+    </button>
+
+    <div class="simple-toast-content">
+        @if(data.title ) {
+        <h4 class="simple-toast-title">{{ data.title }}</h4>
+        <p class="simple-toast-message">{{ data.message }}</p>
+        } @else {
+        <p class="simple-toast-message large-message">{{ data.message }}</p>
+        }
+    </div>
+</div>
