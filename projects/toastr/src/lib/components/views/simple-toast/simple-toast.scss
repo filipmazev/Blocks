@@ -5,25 +5,32 @@
     position: relative;
     padding: 1rem;
     border-radius: 10px;
-    color: var(--toast-text);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     border: 1px solid var(--fm-border, #ccc);
     min-height: 40px;
 
     &.info {
-        background-color: var(--simple-toast-info);
+        color: var(--simple-toast-info-accent);
+        background-color: var(--simple-toast-info-bg);
+        border: 1px solid var(--simple-toast-info-accent);
     }
 
     &.success {
-        background-color: var(--simple-toast-success);
+        color: var(--simple-toast-success-accent);
+        background-color: var(--simple-toast-success-bg);
+        border: 1px solid var(--simple-toast-success-accent);
     }
 
-    &.warning {
-        background-color: var(--simple-toast-warn);
+    &.warn {
+        color: var(--simple-toast-warn-accent);
+        background-color: var(--simple-toast-warn-bg);
+        border: 1px solid var(--simple-toast-warn-accent);
     }
 
     &.error {
-        background-color: var(--simple-toast-error);
+        color: var(--simple-toast-error-accent);
+        background-color: var(--simple-toast-error-bg);
+        border: 1px solid var(--simple-toast-error-accent);
     }
 }
 
@@ -60,7 +67,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--toast-text, #888);
     width: 1.5rem;
     height: 1.5rem;
     font-size: 1rem;
@@ -69,7 +75,19 @@
     justify-content: center;
     transition: color 0.2s;
 
-    &:hover {
-        color: var(--toast-text-warn, #d32f2f);
+    &.info {
+        color: var(--simple-toast-info-accent);
+    }
+
+    &.success {
+        color: var(--simple-toast-success-accent);
+    }
+
+    &.warn {
+        color: var(--simple-toast-warn-accent);
+    }
+
+    &.error {
+        color: var(--simple-toast-error-accent);
     }
 }

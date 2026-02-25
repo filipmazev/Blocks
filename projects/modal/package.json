@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/modal",
-    "version": "0.1.63",
+    "version": "1.0.6",
     "license": "MIT",
     "exports": {
         "./_modal-theme": "./lib/styles/_modal-theme.scss",
@@ -10,7 +10,8 @@
     "sass": "src/lib/styles/_index.scss",
     "peerDependencies": {
         "@angular/common": "^21.1.1",
-        "@angular/core": "^21.1.1"
+        "@angular/core": "^21.1.1",
+        "@filip.mazev/blocks-core": "^1.0.0"
     },
     "dependencies": {
         "tslib": "^2.3.0"

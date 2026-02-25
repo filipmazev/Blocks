@@ -109,6 +109,8 @@
     }
 
     @include respond-down(md) {
-        width: unset;
+        &.default-wrapper {
+            width: unset;
+        }
     }
 }

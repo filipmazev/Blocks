@@ -15,10 +15,14 @@
 
 ## Installation
 
-Please install both @filip.mazev/blocks-core and @filip.mazev/modal for propert functionality and full customization.
+```bash
+npm i @filip.mazev/modal@latest
+```
+
+Or with the global blocks `ng` command which adds all blocks packages and sets up your styles.scss
 
 ```bash
-npm i @filip.mazev/blocks-core@latest @filip.mazev/modal@latest
+ng add @filip.mazev/blocks@latest
 ```
 
 ### Theme Configuration
@@ -33,7 +37,11 @@ To enable the library's stylization, import the theme provider in your global st
     :root {
         @include blocks.core-theme(blocks.$default-light-theme-config);
 
+        // if you dont want to override themes, just use: 
+        // @include modal.modal-theme(());
+
         @include modal.modal-theme((
+            /* Optional: Override default Modal style variables */
             'modal-mobile-swipe-line-color': #cfcfcf,
         ));
     }

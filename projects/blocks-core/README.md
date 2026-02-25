@@ -4,6 +4,18 @@
 
 **Blocks Core** is the foundational library for the Blocks ecosystem. It provides the essential infrastructure for building responsive, theme-aware Angular applications. It bridges the gap between TypeScript logic and SCSS styling, offering a unified system for breakpoints, device detection, scroll management and theming.
 
+## Installation
+
+```bash
+npm i @filip.mazev/blocks-core@latest
+```
+
+Or with the global blocks `ng` command which adds all blocks packages and sets up your styles.scss
+
+```bash
+ng add @filip.mazev/blocks@latest
+```
+
 ## Styles & Theming
 
 Blocks Core utilizes a robust SCSS architecture to manage design tokens and responsiveness.
@@ -132,9 +144,3 @@ this.scrollLockService.disableScroll(this.scrollLockId, {
 // Unlock
 this.scrollLockService.enableScroll(this.scrollLockId);
 ```
-
-## Installation
-
-To use Blocks Core, install the package and ensure the SCSS partials are accessible to your build pipeline.
-
-_(Installation instructions depend on your specific build/publish setup)._

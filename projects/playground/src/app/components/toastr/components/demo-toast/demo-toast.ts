@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Toast } from '@toastr/classes/toast';
 import { IDemoToastData } from '@playground/interfaces/toasts/idemo-toast-data.interface';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-demo-toast',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass],
   templateUrl: './demo-toast.html',
   styleUrl: './demo-toast.scss'
 })

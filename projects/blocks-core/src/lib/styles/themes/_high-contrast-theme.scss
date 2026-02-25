@@ -1,6 +1,7 @@
 @use '../variables' as *;
 
 $high-contrast-light-config: (
+    // General
     'primary': $hc-black,
     'secondary': $hc-white,
     'alt': $hc-black,
@@ -8,6 +9,7 @@ $high-contrast-light-config: (
     'accent-alt': $hc-yellow,
     'accent-tertiary': $hc-yellow,
 
+    // Text
     'text-primary': $hc-black,
     'text-secondary': $hc-black,
     'text-tertiary': $hc-black,
@@ -18,6 +20,7 @@ $high-contrast-light-config: (
     'text-warn': $hc-white,
     'text-confirm': $hc-black,
 
+    // UI Elements
     'bg-menu-item-hover': $hc-yellow,
     'border': $hc-black,
     'border-grayscale-light': $hc-black,
@@ -25,16 +28,23 @@ $high-contrast-light-config: (
     'error': $hc-red,
     'info': $hc-cyan,
 
+    // Buttons
     'button-primary': $hc-white,
     'button-confirm': $hc-green,
     'button-warn': $hc-red,
     'button-grayscale': $hc-white,
 
-    'toast-info': $hc-white,
-    'toast-error': #ff5151,
-    'toast-success': #54ff99,
-    'toast-warn': $hc-yellow,
+    // Feedback
+    'toast-info-bg': $hc-white,
+    'toast-info-accent': $hc-cyan,
+    'toast-error-bg': $hc-white,
+    'toast-error-accent': #ff5151,
+    'toast-success-bg': $hc-white,
+    'toast-success-accent': #008800,
+    'toast-warn-bg': $hc-white,
+    'toast-warn-accent': #ffae0c,
 
+    // Scrollbar & Sliders
     'scroll-bg': $hc-white,
     'scroll-thumb': $hc-black,
     'scroll-thumb-highlighted': $hc-yellow,
@@ -43,13 +53,13 @@ $high-contrast-light-config: (
     'surface': $hc-white,
     'element': $hc-white,
     'text': $hc-black,
-
     'status-warn': $hc-red,
     'status-error': $hc-red,
     'error-subtle': rgba(0, 0, 0, 0.15)
 );
 
 $high-contrast-dark-config: (
+    // General
     'primary': $hc-white,
     'secondary': $hc-black,
     'alt': $hc-white,
@@ -57,6 +67,7 @@ $high-contrast-dark-config: (
     'accent-alt': $hc-yellow,
     'accent-tertiary': $hc-yellow,
 
+    // Text
     'text-primary': $hc-white,
     'text-secondary': $hc-white,
     'text-tertiary': $hc-white,
@@ -67,6 +78,7 @@ $high-contrast-dark-config: (
     'text-warn': $hc-white,
     'text-confirm': $hc-black,
 
+    // UI Elements
     'bg-menu-item-hover': $hc-yellow,
     'border': $hc-white,
     'border-grayscale-light': $hc-white,
@@ -74,16 +86,23 @@ $high-contrast-dark-config: (
     'error': $hc-red,
     'info': $hc-cyan,
 
+    // Buttons
     'button-primary': $hc-black,
     'button-confirm': $hc-green,
     'button-warn': $hc-red,
     'button-grayscale': $hc-black,
 
-    'toast-info': $hc-black,
-    'toast-error': $hc-red,
-    'toast-success': #22c733,
-    'toast-warn': #c7c722,
+    // Feedback
+    'toast-info-bg': $hc-black,
+    'toast-info-accent': $hc-cyan,
+    'toast-error-bg': $hc-black,
+    'toast-error-accent': $hc-red,
+    'toast-success-bg': $hc-black,
+    'toast-success-accent': #54ff99,
+    'toast-warn-bg': $hc-black,
+    'toast-warn-accent': $hc-yellow,
 
+    // Scrollbar & Sliders
     'scroll-bg': $hc-black,
     'scroll-thumb': $hc-white,
     'scroll-thumb-highlighted': $hc-yellow,
@@ -92,7 +111,6 @@ $high-contrast-dark-config: (
     'surface': $hc-black,
     'element': $hc-black,
     'text': $hc-white,
-
     'status-warn': $hc-red,
     'status-error': $hc-red,
     'error-subtle': rgba(255, 255, 255, 0.2)

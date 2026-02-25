@@ -1,20 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
 import { ToastrService } from '@toastr/services/toastr.service';
-import { ToastPosition } from '@toastr/types/toastr.types';
+import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { IDemoToastData } from '@playground/interfaces/toasts/idemo-toast-data.interface';
 import { DemoToast } from './components/demo-toast/demo-toast';
 import { ToastrConfigFormControls } from '@playground/types/form.types';
 import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-toastr-demo',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo],
+  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, TitleCasePipe],
   templateUrl: './toastr.html',
   styleUrl: './toastr.scss'
 })
@@ -24,7 +23,7 @@ export class Toastr {
 
   protected readonly positionOptions: ToastPosition[] = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
 
-  protected readonly typeOptions = ['info', 'success', 'warning', 'error'];
+  protected readonly typeOptions = ['info', 'success', 'warn', 'error'];
 
   protected readonly form: FormGroup<ToastrConfigFormControls>;
   protected toastrReadmePath = signal<string>('assets/toastr-readme/README.md');
@@ -41,7 +40,7 @@ export class Toastr {
   constructor() {
     this.form = new FormGroup<ToastrConfigFormControls>({
       position: new FormControl<ToastPosition>('top-right', [Validators.required]),
-      type: new FormControl<'info'>('info', [Validators.required]),
+      type: new FormControl<SimpleToastType>('success', [Validators.required]),
       title: new FormControl<string>('System Update'),
       message: new FormControl<string>('Your preferences have been saved successfully.'),
       durationInMs: new FormControl<number>(5000, [Validators.min(0)]),

@@ -15,10 +15,14 @@
 
 ## Installation
 
-Please install both @filip.mazev/blocks-core and @filip.mazev/toastr for propert functionality and full customization.
+```bash
+npm i @filip.mazev/toastr@latest
+```
+
+Or with the global blocks `ng` command which adds all blocks packages and sets up your styles.scss
 
 ```bash
-npm i @filip.mazev/blocks-core@latest @filip.mazev/toastr@latest
+ng add @filip.mazev/blocks@latest
 ```
 
 ### Theme Configuration
@@ -33,8 +37,11 @@ To ensure the library's stylization works correctly, import the core theme provi
     :root {
         @include blocks.core-theme(blocks.$default-light-theme-config);
 
+        // if you dont want to override themes, just use: 
+        // @include toastr.toastr-theme(());
+
         @include toastr.toastr-theme((
-            /* Optional: Override default Toast wrapper variables */
+            /* Optional: Override default Toast style variables */
           '--toast-bg': #ffffff,
           '--toast-text': #000000
         ));

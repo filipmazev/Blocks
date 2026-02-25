@@ -236,6 +236,41 @@
                     }
                 }
             }
+        },
+        "blocks": {
+            "projectType": "library",
+            "root": "projects/blocks",
+            "sourceRoot": "projects/blocks/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/blocks/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/blocks/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/blocks/tsconfig.spec.json"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/blocks/src/**/*.ts",
+                            "projects/blocks/src/**/*.html"
+                        ]
+                    }
+                }
+            }
         }
     },
     "cli": {

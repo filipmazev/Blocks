@@ -35,10 +35,14 @@ $default-light-theme-config: (
     'button-grayscale': map-get($gray-palette, 200),
 
     // Feedback
-    'toast-info': #66a5e4,
-    'toast-error': map-get($error-palette, 50),
-    'toast-success': #f0fdf4,
-    'toast-warn': map-get($warning-palette, 50),
+    'toast-info-bg': #ebf5ff,
+    'toast-info-accent': #3b82f6,
+    'toast-error-bg': map-get($error-palette, 50),
+    'toast-error-accent': map-get($error-palette, 500),
+    'toast-success-bg': #f0fdf4,
+    'toast-success-accent': #40ca73,
+    'toast-warn-bg': map-get($warning-palette, 50),
+    'toast-warn-accent': map-get($warning-palette, 500),
 
     // Scrollbar & Sliders
     'scroll-bg': map-get($gray-palette, 100),
@@ -91,10 +95,14 @@ $default-dark-theme-config: (
     'button-grayscale': map-get($gray-palette, 700),
 
     // Feedback
-    'toast-info': #1a6cbd,
-    'toast-error': #450a0a,
-    'toast-success': #052e16,
-    'toast-warn': #451a03,
+    'toast-info-bg': #073460,
+    'toast-info-accent': #7cb7ff,
+    'toast-error-bg': #450a0a,
+    'toast-error-accent': map-get($error-palette, 400),
+    'toast-success-bg': #052e16,
+    'toast-success-accent': #4eee89,
+    'toast-warn-bg': #451a03,
+    'toast-warn-accent': map-get($warning-palette, 500),
 
     // Scrollbar & Sliders
     'scroll-bg': map-get($gray-palette, 800),

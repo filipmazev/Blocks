@@ -99,6 +99,9 @@
             "@playground/classes/*": [
                 "./projects/playground/src/app/shared/classes/*"
             ],
+            "blocks": [
+              "./dist/blocks"
+            ],
             "@playground/types/*": [
                 "./projects/playground/src/app/shared/types/*"
             ],

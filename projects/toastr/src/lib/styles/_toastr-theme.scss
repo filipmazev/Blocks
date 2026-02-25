@@ -2,21 +2,34 @@
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 
 @mixin toastr-theme($overrides: null) {
+    // Base Fallbacks
     $fallback-bg: map.get($default-light-theme-config, 'surface');
     $fallback-text: map.get($default-light-theme-config, 'text-primary');
     $fallback-text-warn: map.get($default-light-theme-config, 'text-warn');
-    $fallback-toast-info: map.get($default-light-theme-config, 'toast-info');
-    $fallback-toast-success: map.get($default-light-theme-config, 'toast-success');
-    $fallback-toast-warn: map.get($default-light-theme-config, 'toast-warn');
-    $fallback-toast-error: map.get($default-light-theme-config, 'toast-error');
+
+    $fallback-toast-info-bg: map.get($default-light-theme-config, 'toast-info-bg');
+    $fallback-toast-success-bg: map.get($default-light-theme-config, 'toast-success-bg');
+    $fallback-toast-warn-bg: map.get($default-light-theme-config, 'toast-warn-bg');
+    $fallback-toast-error-bg: map.get($default-light-theme-config, 'toast-error-bg');
+
+    $fallback-toast-info-accent: map.get($default-light-theme-config, 'toast-info-accent');
+    $fallback-toast-success-accent: map.get($default-light-theme-config, 'toast-success-accent');
+    $fallback-toast-warn-accent: map.get($default-light-theme-config, 'toast-warn-accent');
+    $fallback-toast-error-accent: map.get($default-light-theme-config, 'toast-error-accent');
 
     --toast-bg: var(--fm-surface, #{$fallback-bg});
     --toast-text: var(--fm-text-primary, #{$fallback-text});
     --toast-text-warn: var(--fm-text-warn, #{$fallback-text-warn});
-    --simple-toast-info: var(--fm-toast-info, #{$fallback-toast-info});
-    --simple-toast-success: var(--fm-toast-success, #{$fallback-toast-success});
-    --simple-toast-warn: var(--fm-toast-warn, #{$fallback-toast-warn});
-    --simple-toast-error: var(--fm-toast-error, #{$fallback-toast-error});
+
+    --simple-toast-info-bg: var(--fm-toast-info-bg, #{$fallback-toast-info-bg});
+    --simple-toast-success-bg: var(--fm-toast-success-bg, #{$fallback-toast-success-bg});
+    --simple-toast-warn-bg: var(--fm-toast-warn-bg, #{$fallback-toast-warn-bg});
+    --simple-toast-error-bg: var(--fm-toast-error-bg, #{$fallback-toast-error-bg});
+
+    --simple-toast-info-accent: var(--fm-toast-info-accent, #{$fallback-toast-info-accent});
+    --simple-toast-success-accent: var(--fm-toast-success-accent, #{$fallback-toast-success-accent});
+    --simple-toast-warn-accent: var(--fm-toast-warn-accent, #{$fallback-toast-warn-accent});
+    --simple-toast-error-accent: var(--fm-toast-error-accent, #{$fallback-toast-error-accent});
 
     @if $overrides {
         @each $key, $val in $overrides {
