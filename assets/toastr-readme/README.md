@@ -33,8 +33,8 @@ To ensure the library's stylization works correctly, import the core theme provi
     :root {
         @include blocks.core-theme(blocks.$default-light-theme-config);
 
-        /* Optional: Override default Toast wrapper variables */
         @include toastr.toastr-theme((
+            /* Optional: Override default Toast wrapper variables */
           '--toast-bg': #ffffff,
           '--toast-text': #000000
         ));
@@ -43,8 +43,8 @@ To ensure the library's stylization works correctly, import the core theme provi
     [data-theme='dark'] {
         @include blocks.core-theme(blocks.$default-dark-theme-config);
 
-        /* Optional: Override default Toast wrapper variables */
         @include toastr.toastr-theme((
+          /* Optional: Override default Toast wrapper variables */
           '--toast-bg': #000000,
           '--toast-text': #ffffff
         ));
@@ -182,7 +182,7 @@ The `ToastrService` exposes four convenience methods: `queueSuccess`, `queueInfo
 
 ### SimpleToast Usage
 
-These methods accept an `IQueueSimpleToastRequest` object. They automatically apply a default wrapperClass ('simple-toast-wrapper') and inherit your global settings unless overridden.
+These methods accept an `IQueueSimpleToastRequest` object. They automatically inherit your global settings unless overridden.
 
 ```typescript
 import { Component, inject } from '@angular/core';
@@ -234,8 +234,8 @@ The `SimpleToast` component uses specific CSS variables for its status colors. T
     :root {
         @include blocks.core-theme(blocks.$default-light-theme-config);
 
-        /* Optional: Override default Toast wrapper variables */
         @include toastr.toastr-theme((
+          /* Optional: Override default Toast wrapper variables */
           '--simple-toast-info': #e3f2fd,
           '--simple-toast-success': #e8f5e9,
           '--simple-toast-warn': #fff3cd,
