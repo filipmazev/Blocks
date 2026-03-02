@@ -19,10 +19,14 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   public currentTranslateY = signal(0);
   public isSwipingFinished = signal(false);
 
+  public isCollapsing = signal(false);
+
   protected isAnimated = computed(() => this.config?.animate !== false);
+  protected isBottom = computed(() => (this.config?.position ?? 'top-right').includes('bottom'));
 
   @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true }) protected dynamicContainer!: ViewContainerRef;
   @ViewChild('toastSwipeTarget', { static: true }) protected toastSwipeTarget!: ElementRef;
+  @ViewChild('animatorWrapper', { static: true }) protected animatorWrapper!: ElementRef;
 
   protected wrapperClasses = computed(() => {
     const isTop = (this.config?.position ?? 'top-right').includes('top');
@@ -37,7 +41,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     const isTop = (this.config?.position ?? 'top-right').includes('top');
 
     if (this.isSwipingFinished()) {
-      return isTop ? 'translateY(-120%)' : 'translateY(120%)';
+      return isTop ? 'translateY(-150px)' : 'translateY(150px)';
     }
 
     if (this.currentTranslateY() !== 0) {
@@ -46,6 +50,9 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     return null;
   });
+
+  private originalCloseFn!: (result?: R) => void;
+  private closeResult?: R;
 
   private isTrackingSwipe = false;
   private isTouchActive = false;
@@ -59,6 +66,11 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   public ngOnInit(): void {
     this.dynamicContainer.insert(this.componentRef.hostView);
 
+    this.originalCloseFn = this.toastRef.close.bind(this.toastRef);
+    this.toastRef.close = (result?: R) => {
+      this.closeToast(result);
+    };
+
     setTimeout(() => this.isVisible.set(true), 10);
 
     if (this.config?.swipeToDismiss !== false) {
@@ -70,18 +82,18 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       this.autoCloseTimeout = setTimeout(() => this.closeToast(), this.config.durationInMs);
     }
 
-    const target = this.toastSwipeTarget.nativeElement;
+    const animatorTarget = this.animatorWrapper.nativeElement;
 
-    const onTransitionEnd = (event: TransitionEvent) => {
-      if (event.propertyName !== 'transform') return;
-      if (!this.isVisible() && !this.hasEmittedClose) {
+    const onAnimatorTransitionEnd = (event: TransitionEvent) => {
+      if (event.target !== animatorTarget || event.propertyName !== 'grid-template-rows') return;
+      if (this.isCollapsing() && !this.hasEmittedClose) {
         this.hasEmittedClose = true;
-        this.toastRef.close();
+        this.originalCloseFn(this.closeResult);
       }
     };
 
-    target.addEventListener('transitionend', onTransitionEnd);
-    this.cleanupListeners.push(() => target.removeEventListener('transitionend', onTransitionEnd));
+    animatorTarget.addEventListener('transitionend', onAnimatorTransitionEnd);
+    this.cleanupListeners.push(() => animatorTarget.removeEventListener('transitionend', onAnimatorTransitionEnd));
   }
 
   public ngOnDestroy(): void {
@@ -94,9 +106,23 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.cleanupListeners = [];
   }
 
-  public closeToast(): void {
+  public closeToast(result?: R, fromSwipe = false): void {
+    this.closeResult = result !== undefined ? result : this.closeResult;
+
+    if (!this.isAnimated()) {
+      if (!this.hasEmittedClose) {
+        this.hasEmittedClose = true;
+        this.originalCloseFn(this.closeResult);
+      }
+      return;
+    }
+
     this.isVisible.set(false);
-    this.isSwipingFinished.set(true);
+    this.isCollapsing.set(true);
+
+    if (fromSwipe) {
+      this.isSwipingFinished.set(true);
+    }
   }
 
   //#region Swipe Logic
@@ -152,7 +178,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       const crossedLimit = isTop ? deltaY < -limit : deltaY > limit;
 
       if (crossedLimit || velocityY > 0.3) {
-        this.closeToast();
+        this.closeToast(undefined, true);
       } else {
         this.currentTranslateY.set(0);
         if (this.config?.durationInMs) {

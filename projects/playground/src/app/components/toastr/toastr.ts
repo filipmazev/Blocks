@@ -5,11 +5,12 @@ import { ToastrService } from '@toastr/services/toastr.service';
 import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
-import { IDemoToastData } from '@playground/interfaces/toasts/idemo-toast-data.interface';
+import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { DemoToast } from './components/demo-toast/demo-toast';
 import { ToastrConfigFormControls } from '@playground/types/form.types';
 import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 import { TitleCasePipe } from '@angular/common';
+import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 
 @Component({
   selector: 'app-toastr-demo',
@@ -36,6 +37,7 @@ export class Toastr {
   ];
 
   private toastCount = 0;
+  private openedCount = 0;
 
   constructor() {
     this.form = new FormGroup<ToastrConfigFormControls>({
@@ -58,7 +60,7 @@ export class Toastr {
 
     this.toastrGlobalSettings.maxOpened.set(request.maxOpened ?? 4);
 
-    const toastRef = this.toastr.queueToast<IDemoToastData, undefined, DemoToast>(DemoToast, {
+    const toastRef = this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
       position: request.position ?? undefined,
       durationInMs: request.durationInMs ?? undefined,
       animate: request.animate ?? undefined,
@@ -67,12 +69,14 @@ export class Toastr {
       data: {
         title: `${request.title} #${this.toastCount}`,
         message: request.message ?? '',
-        type: request.type ?? 'info'
+        type: request.type ?? 'info',
+        openedCount: this.openedCount
       }
     });
 
-    toastRef.afterClosed$.subscribe(() => {
-      console.log(`Toast #${this.toastCount} closed.`);
+    toastRef.afterClosed$.subscribe((result: IDemoToastResult | undefined) => {
+      console.log(`Toast #${this.openedCount} closed with result:`, result ?? 'No result');
+      this.openedCount = result?.openedCount ?? this.openedCount;
     });
   }
 }
