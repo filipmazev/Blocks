@@ -5,12 +5,9 @@ import { ToastrService } from '@toastr/services/toastr.service';
 import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
-import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
-import { DemoToast } from './components/demo-toast/demo-toast';
 import { ToastrConfigFormControls } from '@playground/types/form.types';
 import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 import { TitleCasePipe } from '@angular/common';
-import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 
 @Component({
   selector: 'app-toastr-demo',
@@ -60,23 +57,49 @@ export class Toastr {
 
     this.toastrGlobalSettings.maxOpened.set(request.maxOpened ?? 4);
 
-    const toastRef = this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
-      position: request.position ?? undefined,
-      durationInMs: request.durationInMs ?? undefined,
-      animate: request.animate ?? undefined,
-      swipeToDismiss: request.swipeToDismiss ?? undefined,
-      hasDefaultBackground: false,
-      data: {
-        title: `${request.title} #${this.toastCount}`,
-        message: request.message ?? '',
-        type: request.type ?? 'info',
-        openedCount: this.openedCount
-      }
+    this.toastr.queueInfo({
+      message: request.message ?? '',
+      title: request.title ?? undefined
     });
 
-    toastRef.afterClosed$.subscribe((result: IDemoToastResult | undefined) => {
-      console.log(`Toast #${this.openedCount} closed with result:`, result ?? 'No result');
-      this.openedCount = result?.openedCount ?? this.openedCount;
-    });
+    setTimeout(() => {
+      this.toastr.queueSuccess({
+        message: request.message ?? '',
+        title: request.title ?? undefined
+      });
+
+      setTimeout(() => {
+        this.toastr.queueError({
+          message: request.message ?? '',
+          title: request.title ?? undefined
+        });
+      }, 100);
+
+      setTimeout(() => {
+        this.toastr.queueWarning({
+          message: request.message ?? '',
+          title: request.title ?? undefined
+        });
+      }, 100);
+    }, 100);
+
+    // const toastRef = this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
+    //   position: request.position ?? undefined,
+    //   durationInMs: request.durationInMs ?? undefined,
+    //   animate: request.animate ?? undefined,
+    //   swipeToDismiss: request.swipeToDismiss ?? undefined,
+    //   hasDefaultBackground: false,
+    //   data: {
+    //     title: `${request.title} #${this.toastCount}`,
+    //     message: request.message ?? '',
+    //     type: request.type ?? 'info',
+    //     openedCount: this.openedCount
+    //   }
+    // });
+
+    // toastRef.afterClosed$.subscribe((result: IDemoToastResult | undefined) => {
+    //   console.log(`Toast #${this.openedCount} closed with result:`, result ?? 'No result');
+    //   this.openedCount = result?.openedCount ?? this.openedCount;
+    // });
   }
 }

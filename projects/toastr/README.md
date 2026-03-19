@@ -100,14 +100,19 @@ HTML (Template):
 </div>
 ```
 
-### About `ToastRef<R>`
+### About `ToastRef<D, R>`
 
 Accessible via `this.toast` inside any component that extends `Toast`. This reference provides programmatic control over the active toast instance.
 
 #### Methods & Observables
 
 * `close()`: Triggers the exit animation and safely removes the toast from the DOM, allowing the next queued toast to appear.
+* `pause()`: Pauses the auto-dismiss timer, preventing the toast from closing until resumed.
+* `resume()`: Resumes the auto-dismiss timer if it was previously paused.
+* `config`: The resolved `IToastConfig<D>` for this toast instance, combining global defaults and any overrides provided during queuing.
 * `afterClosed$`: An `Observable<void>` that emits once the toast has fully closed and animations have finished.
+* `onPause$`: An `Observable<void>` that emits when the toast's auto-dismiss timer is paused (e.g., on mouse hover).
+* `onResume$`: An `Observable<void>` that emits when the toast's auto-dismiss timer is resumed (e.g., on mouse leave).
 
 ### 2. Opening the Toast
 

@@ -1,4 +1,16 @@
-import { Component, ViewChild, ViewContainerRef, ComponentRef, ElementRef, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ViewContainerRef,
+  ComponentRef,
+  ElementRef,
+  OnInit,
+  OnDestroy,
+  signal,
+  computed,
+  AfterViewInit,
+  HostListener
+} from '@angular/core';
 import { NgClass } from '@angular/common';
 import { IToastConfig } from '../interfaces/itoast-config.interface';
 import { ToastRef } from '../classes/toast-ref';
@@ -10,10 +22,10 @@ import { IToast } from '../interfaces/itoast.interface';
   templateUrl: './toast-core.html',
   styleUrl: './toast-core.scss'
 })
-export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements OnInit, OnDestroy {
+export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements OnInit, AfterViewInit, OnDestroy {
   public componentRef!: ComponentRef<C>;
   public config?: IToastConfig<D>;
-  public toastRef!: ToastRef<R>;
+  public toastRef!: ToastRef<D, R>;
 
   public isVisible = signal(false);
   public currentTranslateY = signal(0);
@@ -27,7 +39,6 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true }) protected dynamicContainer!: ViewContainerRef;
   @ViewChild('toastSwipeTarget', { static: true }) protected toastSwipeTarget!: ElementRef;
   @ViewChild('animatorWrapper', { static: true }) protected animatorWrapper!: ElementRef;
-
   protected wrapperClasses = computed(() => {
     const isTop = (this.config?.position ?? 'top-right').includes('top');
     const animClass = isTop ? 'anim-dir-top' : 'anim-dir-bottom';
@@ -50,6 +61,12 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     return null;
   });
+
+  private progressAnimation?: Animation;
+
+  private remainingMs = 0;
+
+  private timerStartTime = 0;
 
   private originalCloseFn!: (result?: R) => void;
   private closeResult?: R;
@@ -78,10 +95,6 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       this.monitorInputType();
     }
 
-    if (this.config?.durationInMs) {
-      this.autoCloseTimeout = setTimeout(() => this.closeToast(), this.config.durationInMs);
-    }
-
     const animatorTarget = this.animatorWrapper.nativeElement;
 
     const onAnimatorTransitionEnd = (event: TransitionEvent) => {
@@ -96,6 +109,13 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.cleanupListeners.push(() => animatorTarget.removeEventListener('transitionend', onAnimatorTransitionEnd));
   }
 
+  public ngAfterViewInit(): void {
+    if (this.config?.durationInMs) {
+      this.remainingMs = this.config.durationInMs;
+      this.startTimer();
+    }
+  }
+
   public ngOnDestroy(): void {
     clearTimeout(this.autoCloseTimeout);
 
@@ -104,6 +124,8 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     this.cleanupListeners.forEach((fn) => fn());
     this.cleanupListeners = [];
+
+    this.progressAnimation?.cancel();
   }
 
   public closeToast(result?: R, fromSwipe = false): void {
@@ -125,6 +147,20 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     }
   }
 
+  @HostListener('mouseenter')
+  protected onMouseEnter(): void {
+    if (!this.isTouchActive && this.config?.durationInMs && !this.isCollapsing()) {
+      this.pauseTimer();
+    }
+  }
+
+  @HostListener('mouseleave')
+  protected onMouseLeave(): void {
+    if (!this.isTouchActive && this.config?.durationInMs && !this.isCollapsing()) {
+      this.startTimer();
+      this.toastRef.resume();
+    }
+  }
   //#region Swipe Logic
 
   private startVerticalSwipeDetection(): void {
@@ -228,6 +264,29 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     window.addEventListener('pointerdown', handler);
     this.globalResizeCleanup = () => window.removeEventListener('pointerdown', handler);
+  }
+
+  //#endregion
+
+  //#region Timer Logic
+
+  private startTimer(): void {
+    if (this.remainingMs <= 0) return;
+
+    this.timerStartTime = Date.now();
+    this.autoCloseTimeout = setTimeout(() => this.closeToast(), this.remainingMs);
+  }
+
+  private pauseTimer(): void {
+    if (!this.autoCloseTimeout) return;
+
+    clearTimeout(this.autoCloseTimeout);
+    this.autoCloseTimeout = undefined;
+
+    const elapsed = Date.now() - this.timerStartTime;
+    this.remainingMs -= elapsed;
+
+    this.toastRef.pause();
   }
 
   //#endregion

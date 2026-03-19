@@ -52,6 +52,30 @@ body {
     height: 100%;
 }
 
+
+html {
+
+    b,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span,
+    a,
+    div,
+    section,
+    li,
+    button,
+    input,
+    label {
+        color: var(--fm-text-primary);
+    }
+}
+
+
 input:not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {

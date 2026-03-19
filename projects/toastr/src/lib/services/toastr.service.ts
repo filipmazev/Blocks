@@ -27,15 +27,17 @@ export class ToastrService {
   private readonly activeToasts: Array<ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>> = [];
   private readonly containers = new Map<ToastPosition, HTMLElement>();
 
+  private activePauses = 0;
+
   /**
    * Displays a toast notification with the specified component and configuration.
    * @param componentType
    * @param config
    * @returns
    */
-  public queueToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config?: IToastConfig<D>): ToastRef<R> {
+  public queueToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config?: IToastConfig<D>): ToastRef<D, R> {
     const resolvedConfig = this.resolveConfig(config);
-    const toastRef = new ToastRef<R>();
+    const toastRef = new ToastRef<D, R>();
 
     this.toastQueue.push(() => this.buildAndAttachToast(componentType, resolvedConfig, toastRef));
 
@@ -49,7 +51,7 @@ export class ToastrService {
    * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
    * @returns A ToastRef instance representing the queued toast.
    */
-  public queueSuccess(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+  public queueSuccess(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.globalSettings.position(),
       data: {
@@ -68,7 +70,7 @@ export class ToastrService {
    * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
    * @returns A ToastRef instance representing the queued toast.
    */
-  public queueInfo(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+  public queueInfo(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.globalSettings.position(),
       data: {
@@ -87,7 +89,7 @@ export class ToastrService {
    * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
    * @returns A ToastRef instance representing the queued toast.
    */
-  public queueWarning(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+  public queueWarning(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.globalSettings.position(),
       data: {
@@ -106,7 +108,7 @@ export class ToastrService {
    * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
    * @returns A ToastRef instance representing the queued toast.
    */
-  public queueError(request: IQueueSimpleToastRequest): ToastRef<undefined> {
+  public queueError(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.globalSettings.position(),
       data: {
@@ -123,6 +125,10 @@ export class ToastrService {
   //#region Helper Methods
 
   private processQueue(): void {
+    if (this.activePauses > 0) {
+      return;
+    }
+
     const max = this.globalSettings.maxOpened();
 
     while (this.activeToasts.length < max && this.toastQueue.length > 0) {
@@ -133,7 +139,7 @@ export class ToastrService {
     }
   }
 
-  private buildAndAttachToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config: IToastConfig<D>, toastRef: ToastRef<R>): void {
+  private buildAndAttachToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config: IToastConfig<D>, toastRef: ToastRef<D, R>): void {
     const dataInjector = Injector.create({
       providers: [{ provide: TOAST_DATA, useValue: config.data }],
       parent: this.injector
@@ -170,7 +176,36 @@ export class ToastrService {
 
     this.activeToasts.push(wrapperRef as ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>);
 
-    toastRef.afterClosed$.pipe(take(1)).subscribe(() => this.finalizeToast(wrapperRef));
+    let isThisToastPausing = false;
+
+    toastRef.config = config;
+
+    toastRef.onPause$.subscribe(() => {
+      if (!isThisToastPausing) {
+        isThisToastPausing = true;
+        this.activePauses++;
+      }
+    });
+
+    toastRef.onResume$.subscribe(() => {
+      if (isThisToastPausing) {
+        isThisToastPausing = false;
+        this.activePauses = Math.max(0, this.activePauses - 1);
+
+        if (this.activePauses === 0) {
+          this.processQueue();
+        }
+      }
+    });
+
+    toastRef.afterClosed$.pipe(take(1)).subscribe(() => {
+      if (isThisToastPausing) {
+        isThisToastPausing = false;
+        this.activePauses = Math.max(0, this.activePauses - 1);
+      }
+
+      this.finalizeToast(wrapperRef);
+    });
   }
 
   private finalizeToast<D, R, C extends IToast<D, R>>(wrapperRef: ComponentRef<ToastCore<D, R, C>>): void {

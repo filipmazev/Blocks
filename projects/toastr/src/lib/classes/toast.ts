@@ -13,7 +13,7 @@ export abstract class Toast<D = unknown, R = unknown> implements IToast<D, R> {
   /**
    * Reference to the ToastRef instance associated with this toast.
    */
-  public toast!: ToastRef<R>;
+  public toast!: ToastRef<D, R>;
 
   /**
    * Called when the toast is initialized.

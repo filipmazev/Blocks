@@ -36,12 +36,16 @@ $high-contrast-light-config: (
 
     // Feedback
     'toast-info-bg': $hc-white,
+    'toast-info-border': $hc-black,
     'toast-info-accent': $hc-cyan,
     'toast-error-bg': $hc-white,
+    'toast-error-border': $hc-black,
     'toast-error-accent': #ff5151,
     'toast-success-bg': $hc-white,
+    'toast-success-border': $hc-black,
     'toast-success-accent': #008800,
     'toast-warn-bg': $hc-white,
+    'toast-warn-border': $hc-black,
     'toast-warn-accent': #ffae0c,
 
     // Scrollbar & Sliders
@@ -94,12 +98,16 @@ $high-contrast-dark-config: (
 
     // Feedback
     'toast-info-bg': $hc-black,
+    'toast-info-border': $hc-white,
     'toast-info-accent': $hc-cyan,
     'toast-error-bg': $hc-black,
+    'toast-error-border': $hc-white,
     'toast-error-accent': $hc-red,
     'toast-success-bg': $hc-black,
+    'toast-success-border': $hc-white,
     'toast-success-accent': #54ff99,
     'toast-warn-bg': $hc-black,
+    'toast-warn-border': $hc-white,
     'toast-warn-accent': $hc-yellow,
 
     // Scrollbar & Sliders

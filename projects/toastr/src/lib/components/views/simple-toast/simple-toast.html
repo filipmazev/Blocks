@@ -11,4 +11,10 @@
         <p class="simple-toast-message large-message">{{ data.message }}</p>
         }
     </div>
+
+    @if (toast.config.durationInMs) {
+    <div class="toast-progress-container" [ngClass]="data.type">
+        <div class="toast-progress-bar" [ngClass]="data.type" #progressBar></div>
+    </div>
+    }
 </div>

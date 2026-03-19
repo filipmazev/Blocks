@@ -35,14 +35,18 @@ $orange-company-light-theme-config: (
     'button-grayscale': #d0d0d0b3,
 
     // Feedback
-    'toast-info-bg': #eaf4fff8,
-    'toast-info-accent': #4da6ff,
-    'toast-error-bg': #fbbdbef8,
-    'toast-error-accent': #FF4C4F,
-    'toast-success-bg': #bdf7aef8,
-    'toast-success-accent': #04ab47,
-    'toast-warn-bg': #ffdc9bf9,
-    'toast-warn-accent': #b0841f,
+    'toast-info-bg': #ecf4fbf8,
+    'toast-info-border': #c8dcf2f8,
+    'toast-info-accent': #2d82d7,
+    'toast-error-bg': #fadfdff8,
+    'toast-error-border': #f1b5b6f8,
+    'toast-error-accent': #d1282b,
+    'toast-success-bg': #e1fddaf8,
+    'toast-success-border': #b2f1acf8,
+    'toast-success-accent': #077f37,
+    'toast-warn-bg': #f6e7cbf9,
+    'toast-warn-border': #f0c7a8f8,
+    'toast-warn-accent': #8d660b,
 
     // Scrollbar & Sliders
     'scroll-bg': #FFEDD4,
@@ -95,14 +99,18 @@ $orange-company-dark-theme-config: (
     'button-grayscale': #2e2e2eb1,
 
     // Feedback
-    'toast-info-bg': #2c4063f5,
-    'toast-info-accent': #7caeffcd,
-    'toast-error-bg': #4d1718f9,
-    'toast-error-accent': #f25b5b,
-    'toast-success-bg': #145017f8,
-    'toast-success-accent': #45bc5b,
-    'toast-warn-bg': #87551cf5,
-    'toast-warn-accent': #ffb554,
+    'toast-info-bg': #080c11f5,
+    'toast-info-border': #112338f5,
+    'toast-info-accent': #80c6ffcd,
+    'toast-error-bg': #190b0bf9,
+    'toast-error-border': #391111f9,
+    'toast-error-accent': #dd6363,
+    'toast-success-bg': #0c130df8,
+    'toast-success-border': #183519f8,
+    'toast-success-accent': #52bc67,
+    'toast-warn-bg': #18130df5,
+    'toast-warn-border': #3a2211f5,
+    'toast-warn-accent': #e7a34b,
 
     // Scroll & Sliders
     'scroll-bg': #712000,

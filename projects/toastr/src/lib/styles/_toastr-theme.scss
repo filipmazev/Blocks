@@ -12,19 +12,35 @@
     $fallback-toast-warn-bg: map.get($default-light-theme-config, 'toast-warn-bg');
     $fallback-toast-error-bg: map.get($default-light-theme-config, 'toast-error-bg');
 
+    $fallback-toast-info-border: map.get($default-light-theme-config, 'toast-info-border');
+    $fallback-toast-success-border: map.get($default-light-theme-config, 'toast-success-border');
+    $fallback-toast-warn-border: map.get($default-light-theme-config, 'toast-warn-border');
+    $fallback-toast-error-border: map.get($default-light-theme-config, 'toast-error-border');
+
     $fallback-toast-info-accent: map.get($default-light-theme-config, 'toast-info-accent');
     $fallback-toast-success-accent: map.get($default-light-theme-config, 'toast-success-accent');
     $fallback-toast-warn-accent: map.get($default-light-theme-config, 'toast-warn-accent');
     $fallback-toast-error-accent: map.get($default-light-theme-config, 'toast-error-accent');
 
+    $fallback-border: map.get($default-light-theme-config, 'border');
+    $fallback-element: map.get($default-light-theme-config, 'element');
+
     --toast-bg: var(--fm-surface, #{$fallback-bg});
     --toast-text: var(--fm-text-primary, #{$fallback-text});
     --toast-text-warn: var(--fm-text-warn, #{$fallback-text-warn});
+
+    --simple-toast-bg: var(--fm-element, #{$fallback-element});
+    --simple-toast-border: var(--fm-border, #{$fallback-border});
 
     --simple-toast-info-bg: var(--fm-toast-info-bg, #{$fallback-toast-info-bg});
     --simple-toast-success-bg: var(--fm-toast-success-bg, #{$fallback-toast-success-bg});
     --simple-toast-warn-bg: var(--fm-toast-warn-bg, #{$fallback-toast-warn-bg});
     --simple-toast-error-bg: var(--fm-toast-error-bg, #{$fallback-toast-error-bg});
+
+    --simple-toast-info-border: var(--fm-toast-info-border, #{$fallback-toast-info-border});
+    --simple-toast-success-border: var(--fm-toast-success-border, #{$fallback-toast-success-border});
+    --simple-toast-warn-border: var(--fm-toast-warn-border, #{$fallback-toast-warn-border});
+    --simple-toast-error-border: var(--fm-toast-error-border, #{$fallback-toast-error-border});
 
     --simple-toast-info-accent: var(--fm-toast-info-accent, #{$fallback-toast-info-accent});
     --simple-toast-success-accent: var(--fm-toast-success-accent, #{$fallback-toast-success-accent});

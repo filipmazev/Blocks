@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/blocks",
-    "version": "1.0.10",
+    "version": "1.0.15",
     "schematics": "./schematics/collection.json",
     "peerDependencies": {
         "@angular/core": "^21.1.1",
