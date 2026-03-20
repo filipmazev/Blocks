@@ -106,7 +106,7 @@
 
     background-color: var(--fm-button-grayscale, #333);
     color: var(--fm-text-primary, #fff);
-    border: none;
+    border: 1px solid var(--fm-border, #ccc);
     border-radius: 4px;
     transition: opacity 0.2s;
 
