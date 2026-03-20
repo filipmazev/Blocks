@@ -188,7 +188,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       startY = event.clientY;
       startTime = event.timeStamp;
 
-      clearTimeout(this.autoCloseTimeout);
+      this.pauseTimer();
       target.setPointerCapture(event.pointerId);
     };
 
@@ -217,9 +217,8 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
         this.closeToast(undefined, true);
       } else {
         this.currentTranslateY.set(0);
-        if (this.config?.durationInMs) {
-          this.autoCloseTimeout = setTimeout(() => this.closeToast(), this.config.durationInMs);
-        }
+        this.startTimer();
+        this.toastRef.resume();
       }
     };
 

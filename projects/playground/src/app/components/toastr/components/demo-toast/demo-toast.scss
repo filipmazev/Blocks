@@ -1,13 +1,23 @@
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
 .notification {
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
     padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: radius(md);
+    box-shadow: shadow(toast);
     border: 1px solid var(--fm-border, #ccc);
     min-height: 40px;
+
+    p,
+    h4,
+    button,
+    span,
+    div {
+        color: inherit;
+    }
 
     &.info {
         color: var(--simple-toast-info-accent);

@@ -694,7 +694,7 @@ a {
     position: fixed;
     top: 1.5rem;
     right: 1.5rem;
-    z-index: 3;
+    z-index: z(modal);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -740,7 +740,7 @@ a {
     position: static;
     top: 1rem;
     right: 1rem;
-    z-index: 3;
+    z-index: z(modal);
 
     background-color: var(--fm-surface, #fff);
     border: 1px solid var(--fm-border, #ccc);
@@ -787,7 +787,7 @@ a {
     display: flex;
     flex-direction: column;
     transition: width $anim-speed ease;
-    z-index: 3;
+    z-index: z(sticky);
     height: 100vh;
 }
 
@@ -899,7 +899,7 @@ a {
     align-items: center;
     justify-content: space-between;
     padding: 0 1.5rem;
-    z-index: 2;
+    z-index: z(fixed);
 }
 
 .mobile-logo {
@@ -922,7 +922,7 @@ a {
     margin-right: 1.25rem;
 
     cursor: pointer;
-    z-index: 3;
+    z-index: z(fixed);
 
     @include respond-up(lg) {
         display: none;
@@ -970,7 +970,7 @@ a {
     width: 100%;
     height: calc(100vh - #{var(--mobile-header-height)});
     background: var(--fm-canvas, #fafafa);
-    z-index: 3;
+    z-index: z(fixed);
     transform: translateX(-100%);
     transition: transform $anim-speed cubic-bezier(0.4, 0.0, 0.2, 1);
 

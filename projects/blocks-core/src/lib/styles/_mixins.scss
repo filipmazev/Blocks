@@ -14,7 +14,23 @@
 }
 
 @mixin respond-between($min, $max) {
-    @media (min-width: map.get($breakpoints, $min)) and (max-width: map.get($breakpoints, $max)) {   
+    @media (min-width: map.get($breakpoints, $min)) and (max-width: map.get($breakpoints, $max)) {
         @content;
     }
+}
+
+@function spacing($key) {
+    @return map-get($spacing, $key);
+}
+
+@function radius($key) {
+    @return map-get($radiuses, $key);
+}
+
+@function shadow($key) {
+    @return map-get($shadows, $key);
+}
+
+@function z($key) {
+    @return map-get($z-index, $key);
 }

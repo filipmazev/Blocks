@@ -29,6 +29,50 @@ $hc-cyan: #00ffff;
 $hc-red: #ff0000;
 $hc-green: #00ff00;
 
+$spacing: (
+    0: 0,
+    1: 0.25rem,
+    2: 0.5rem,
+    3: 0.75rem,
+    4: 1rem,
+    5: 1.25rem,
+    6: 1.5rem,
+    8: 2rem,
+    10: 2.5rem,
+    12: 3rem,
+    ) !default;
+
+$radiuses: (
+    none: 0,
+    sm: 0.25rem,
+    md: 0.5rem,
+    lg: 0.75rem,
+    xl: 1rem,
+    2xl: 1.5rem,
+    3xl: 1.875rem,
+    pill: 9999px,
+    ) !default;
+
+$shadows: (
+    sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    modal: "0 8px 20px rgba(0, 0, 0, 0.12)",
+    toast: "0 4px 12px rgba(0, 0, 0, 0.15)",
+    ) !default;
+
+$z-index: (
+    base: 1,
+    dropdown: 100,
+    sticky: 200,
+    fixed: 300,
+    modal: 400,
+    popover: 500,
+    tooltip: 600,
+    toast: 9999,
+    ) !default;
+
 $breakpoints: (
     xs: 360px,
 

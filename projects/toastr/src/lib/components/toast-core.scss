@@ -8,7 +8,7 @@
 ::ng-deep {
     .toast-container {
         position: fixed;
-        z-index: 9999;
+        z-index: z(toast);
         display: flex;
         pointer-events: none;
 
@@ -20,21 +20,21 @@
     }
 
     .toast-container-top-right {
-        top: 1rem;
-        right: 1rem;
+        top: spacing(4);
+        right: spacing(4);
         flex-direction: column;
         align-items: flex-end;
     }
 
     .toast-container-top-left {
-        top: 1rem;
-        left: 1rem;
+        top: spacing(4);
+        left: spacing(4);
         flex-direction: column;
         align-items: flex-start;
     }
 
     .toast-container-top-center {
-        top: 1rem;
+        top: spacing(4);
         left: 50%;
         transform: translateX(-50%);
         flex-direction: column;
@@ -42,21 +42,21 @@
     }
 
     .toast-container-bottom-right {
-        bottom: 1rem;
-        right: 1rem;
+        bottom: spacing(4);
+        right: spacing(4);
         flex-direction: column-reverse;
         align-items: flex-end;
     }
 
     .toast-container-bottom-left {
-        bottom: 1rem;
-        left: 1rem;
+        bottom: spacing(4);
+        left: spacing(4);
         flex-direction: column-reverse;
         align-items: flex-start;
     }
 
     .toast-container-bottom-center {
-        bottom: 1rem;
+        bottom: spacing(4);
         left: 50%;
         transform: translateX(-50%);
         flex-direction: column-reverse;
@@ -65,7 +65,7 @@
 
     @include respond-down(md) {
         .toast-container[class*="-top-"] {
-            top: 1rem !important;
+            top: spacing(4) !important;
             bottom: auto !important;
             flex-direction: column !important;
             transform: none !important;
@@ -73,7 +73,7 @@
         }
 
         .toast-container[class*="-bottom-"] {
-            bottom: 1rem !important;
+            bottom: spacing(4) !important;
             top: auto !important;
             flex-direction: column-reverse !important;
             transform: none !important;
@@ -87,11 +87,11 @@
     grid-template-rows: 1fr;
     transition: grid-template-rows 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), margin 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-    margin-bottom: 1rem;
+    margin-bottom: spacing(4);
 
     &.is-bottom {
         margin-bottom: 0;
-        margin-top: 1rem;
+        margin-top: spacing(4);
     }
 
     &.collapsing {
@@ -115,8 +115,8 @@
     &.default-wrapper {
         background-color: var(--toast-bg, #fff);
         color: var(--toast-text, #000);
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: radius(md);
+        box-shadow: shadow(toast);
         width: 24rem;
         max-width: 100%;
 
