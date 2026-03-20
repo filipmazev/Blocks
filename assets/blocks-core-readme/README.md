@@ -75,6 +75,65 @@ Usage:
 }
 ```
 
+### 3. Design Tokens & Utilities
+
+Blocks Core includes a strictly defined design system for spacing, border-radiuses, shadows, and z-indexes. This ensures visual consistency across all components and applications.
+
+The library exposes these tokens in three different ways so you can use them wherever they fit best: **SCSS Functions, HTML Utility Classes**, and **CSS Variables**.
+
+#### Using SCSS Functions (Recommended for Component Styles)
+
+When writing custom component styles, use the provided SCSS functions to access the design tokens. This replaces hardcoded "magic numbers" (like `16px` or `1rem`) with standardized scale values.
+
+```scss
+@use "@filip.mazev/blocks-core/src/lib/styles/index" as blocks;
+
+.my-card-element {
+    // Spacing
+    padding: blocks.spacing(4) blocks.spacing(6); 
+    margin-bottom: blocks.spacing(2);
+
+    // Styling
+    border-radius: blocks.radius(lg);
+    box-shadow: blocks.shadow(md);
+
+    // Z-Index
+    z-index: blocks.z(dropdown);
+}
+```
+
+#### Using Utility Classes (Tailwind-Style)
+
+For rapid UI development directly in your templates, Blocks Core automatically generates utility classes prefixed with `.fm-`.
+
+```html
+<div class="fm-p-4 fm-my-2 fm-px-6">...</div>
+
+<div class="fm-rounded-md fm-rounded-t-lg">...</div>
+
+<div class="fm-shadow-modal fm-z-fixed">...</div>
+```
+
+#### Using CSS Variables
+
+If you need to access tokens inline or outside of SCSS compilation, they are exposed globally on the `:root` element.
+
+```scss
+.dynamic-element {
+    padding: var(--fm-space-4);
+    border-radius: var(--fm-rounded-pill);
+    box-shadow: var(--fm-shadow-toast);
+    z-index: var(--fm-z-modal);
+}
+```
+
+#### Available Scales Reference
+
+- Spacing Scale: `0`, `1` (0.25rem), `2` (0.5rem), `3` (0.75rem), `4` (1rem), `5` (1.25rem), `6` (1.5rem), `8` (2rem), `10` (2.5rem), `12` (3rem)
+- Radius Scale: `none`, `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `pill`
+- Shadow Scale: `sm`, `md`, `lg`, `xl`, `modal`, `toast`
+- Z-Index Scale: `base` (1), `dropdown` (100), `sticky` (200), `fixed` (300), `modal` (400), `popover` (500), `tooltip` (600), `toast` (9999)
+
 ## Core Services
 
 ### `WindowDimensionsService`
