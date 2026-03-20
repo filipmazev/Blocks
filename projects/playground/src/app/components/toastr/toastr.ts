@@ -79,4 +79,28 @@ export class Toastr {
       this.openedCount = result?.openedCount ?? this.openedCount;
     });
   }
+
+  protected queueSimpleToast(type: SimpleToastType): void {
+    if (type === 'info') {
+      this.toastr.queueInfo({
+        title: 'Information',
+        message: 'This is an informational toast message.'
+      });
+    } else if (type === 'success') {
+      this.toastr.queueSuccess({
+        title: 'Success',
+        message: 'Your operation was successful!'
+      });
+    } else if (type === 'warn') {
+      this.toastr.queueWarning({
+        title: 'Warning',
+        message: 'This is a warning toast message.'
+      });
+    } else if (type === 'error') {
+      this.toastr.queueError({
+        title: 'Error',
+        message: 'An error occurred while processing your request.'
+      });
+    }
+  }
 }

@@ -70,8 +70,27 @@
         </form>
 
         <div class="actions">
-            <button (click)="queueToast()" [disabled]="form.invalid" class="open-modal-button">
+            <button (click)="queueToast()" [disabled]="form.invalid" class="action-button">
                 Queue Toast
+            </button>
+
+        </div>
+
+        <div class="buttons-container">
+            <button (click)="queueSimpleToast('info')" class="action-button info">
+                Queue Info
+            </button>
+
+            <button (click)="queueSimpleToast('success')" class="action-button success">
+                Queue Success
+            </button>
+
+            <button (click)="queueSimpleToast('warn')" class="action-button warn">
+                Queue Warning
+            </button>
+
+            <button (click)="queueSimpleToast('error')" class="action-button error">
+                Queue Error
             </button>
         </div>
     </div>

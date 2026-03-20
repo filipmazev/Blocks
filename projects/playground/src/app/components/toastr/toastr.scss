@@ -87,11 +87,21 @@
     border-top: 1px solid var(--fm-border, #eee);
 }
 
-.open-modal-button {
+.buttons-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.action-button {
     position: relative;
     top: auto;
     left: auto;
     transform: none;
+    width: 48%;
 
     padding: 12px 48px;
     font-size: 16px;
@@ -111,5 +121,37 @@
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+
+    p,
+    h4,
+    button,
+    span,
+    div {
+        color: inherit;
+    }
+
+    &.info {
+        color: var(--simple-toast-info-accent);
+        background-color: var(--simple-toast-info-bg);
+        border: 1px solid var(--simple-toast-info-accent);
+    }
+
+    &.success {
+        color: var(--simple-toast-success-accent);
+        background-color: var(--simple-toast-success-bg);
+        border: 1px solid var(--simple-toast-success-accent);
+    }
+
+    &.warn {
+        color: var(--simple-toast-warn-accent);
+        background-color: var(--simple-toast-warn-bg);
+        border: 1px solid var(--simple-toast-warn-accent);
+    }
+
+    &.error {
+        color: var(--simple-toast-error-accent);
+        background-color: var(--simple-toast-error-bg);
+        border: 1px solid var(--simple-toast-error-accent);
     }
 }
