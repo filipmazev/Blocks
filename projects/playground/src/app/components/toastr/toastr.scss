@@ -88,12 +88,10 @@
 }
 
 .buttons-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 1rem;
-    flex-wrap: wrap;
     margin-top: 1rem;
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 .action-button {
@@ -101,7 +99,6 @@
     top: auto;
     left: auto;
     transform: none;
-    width: 48%;
 
     padding: 12px 48px;
     font-size: 16px;
@@ -110,7 +107,7 @@
 
     background-color: var(--fm-button-grayscale, #333);
     color: var(--fm-text-primary, #fff);
-    border: none;
+    border: 1px solid var(--fm-border, #ccc);
     border-radius: 4px;
     transition: opacity 0.2s;
 

@@ -21,23 +21,12 @@
                 </div>
 
                 <div class="form-control">
-                    <label>Toast Type (Visual)</label>
-                    <div class="select-wrapper">
-                        <select formControlName="type">
-                            @for(type of typeOptions; track type) {
-                            <option [value]="type">{{ type | titlecase }}</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-control">
-                    <label>Title</label>
+                    <label>Title for demo toast</label>
                     <input type="text" formControlName="title">
                 </div>
 
                 <div class="form-control">
-                    <label>Message</label>
+                    <label>Message for demo toast</label>
                     <input type="text" formControlName="message">
                 </div>
             </div>
@@ -71,26 +60,26 @@
 
         <div class="actions">
             <button (click)="queueToast()" [disabled]="form.invalid" class="action-button">
-                Queue Toast
+                Demo Toast
             </button>
 
         </div>
 
         <div class="buttons-container">
             <button (click)="queueSimpleToast('info')" class="action-button info">
-                Queue Info
+                Info
             </button>
 
             <button (click)="queueSimpleToast('success')" class="action-button success">
-                Queue Success
+                Success
             </button>
 
             <button (click)="queueSimpleToast('warn')" class="action-button warn">
-                Queue Warning
+                Warning
             </button>
 
             <button (click)="queueSimpleToast('error')" class="action-button error">
-                Queue Error
+                Error
             </button>
         </div>
     </div>

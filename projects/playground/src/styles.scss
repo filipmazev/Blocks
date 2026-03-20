@@ -8,12 +8,15 @@
     @include toastr.toastr-theme(());
 
     --mobile-header-height: 60px;
+    --bg-translucent-contrast: rgba(255, 255, 255, 0.85);
 }
 
 [data-theme="dark"] {
     @include core-theme($default-dark-theme-config);
     @include modal.modal-theme(());
     @include toastr.toastr-theme(());
+
+    --bg-translucent-contrast: rgba(12, 12, 12, 0.85);
 }
 
 .theme-orange-company {

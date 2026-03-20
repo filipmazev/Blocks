@@ -16,32 +16,11 @@
     button,
     span,
     div {
-        color: inherit;
+        color: var(--fm-text-primary, #333);
     }
 
-    &.info {
-        color: var(--simple-toast-info-accent);
-        background-color: var(--simple-toast-info-bg);
-        border: 1px solid var(--simple-toast-info-accent);
-    }
-
-    &.success {
-        color: var(--simple-toast-success-accent);
-        background-color: var(--simple-toast-success-bg);
-        border: 1px solid var(--simple-toast-success-accent);
-    }
-
-    &.warn {
-        color: var(--simple-toast-warn-accent);
-        background-color: var(--simple-toast-warn-bg);
-        border: 1px solid var(--simple-toast-warn-accent);
-    }
-
-    &.error {
-        color: var(--simple-toast-error-accent);
-        background-color: var(--simple-toast-error-bg);
-        border: 1px solid var(--simple-toast-error-accent);
-    }
+    background-color: var(--bg-translucent-contrast, rgba(255, 255, 255, 0.85));
+    border: 1px solid var(--fm-border);
 }
 
 .notification-content {
@@ -80,20 +59,4 @@
     align-items: center;
     justify-content: center;
     transition: color 0.2s;
-
-    &.info {
-        color: var(--simple-toast-info-accent);
-    }
-
-    &.success {
-        color: var(--simple-toast-success-accent);
-    }
-
-    &.warn {
-        color: var(--simple-toast-warn-accent);
-    }
-
-    &.error {
-        color: var(--simple-toast-error-accent);
-    }
 }

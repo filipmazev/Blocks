@@ -1,8 +1,7 @@
-import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
+import { ToastPosition } from '@toastr/types/toastr.types';
 
 export class ToastConfigRequest {
   public position: ToastPosition | null;
-  public type: SimpleToastType | null;
   public title: string | null;
   public message: string | null;
   public durationInMs: number | null;
@@ -12,7 +11,6 @@ export class ToastConfigRequest {
 
   constructor(
     position: ToastPosition | null,
-    type: SimpleToastType | null,
     title: string | null,
     message: string | null,
     durationInMs: number | null,
@@ -21,7 +19,6 @@ export class ToastConfigRequest {
     maxOpened: number | null
   ) {
     this.position = position;
-    this.type = type;
     this.title = title;
     this.message = message;
     this.durationInMs = durationInMs;
