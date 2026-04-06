@@ -10,6 +10,7 @@ The library consists of a foundational Core package that handles the "physics" o
 |---|---|---|
 |@filip.mazev/blocks-core|The infrastructure layer. Handles responsive breakpoints, deep theming, scroll locking, and device detection.|<https://www.npmjs.com/package/@filip.mazev/blocks-core>|
 |@filip.mazev/modal|A service-driven modal system supporting center/side layouts, mobile swipe gestures, and dynamic content.|<https://www.npmjs.com/package/@filip.mazev/modal>|
+|@filip.mazev/toastr|A powerful toast service with built-in support for custom components, multiple placements, auto-dismissal and more.|<https://www.npmjs.com/package/@filip.mazev/toastr>|
 
 ## Key Philosophy
 
