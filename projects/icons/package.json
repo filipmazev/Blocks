@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/icons",
-    "version": "1.0.28",
+    "version": "1.0.29",
     "license": "MIT",
     "peerDependencies": {
         "@angular/common": "^21.1.1",

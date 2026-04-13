@@ -59,28 +59,14 @@
         </form>
 
         <div class="actions">
-            <button (click)="queueToast()" [disabled]="form.invalid" class="action-button">
-                Demo Toast
-            </button>
-
+            <bx-button (click)="queueToast()" variant="grayscale" [text]="'Demo Toast'" [disabled]="form.invalid" />
         </div>
 
         <div class="buttons-container">
-            <button (click)="queueSimpleToast('info')" class="action-button info">
-                Info
-            </button>
-
-            <button (click)="queueSimpleToast('success')" class="action-button success">
-                Success
-            </button>
-
-            <button (click)="queueSimpleToast('warn')" class="action-button warn">
-                Warning
-            </button>
-
-            <button (click)="queueSimpleToast('error')" class="action-button error">
-                Error
-            </button>
+            <bx-button (click)="queueSimpleToast('info')" variant="info" [text]="'Info'" />
+            <bx-button (click)="queueSimpleToast('success')" variant="success" [text]="'Success'" />
+            <bx-button (click)="queueSimpleToast('warn')" variant="warn" [text]="'Warn'" />
+            <bx-button (click)="queueSimpleToast('danger')" variant="danger" [text]="'Error'" />
         </div>
     </div>
 </div>

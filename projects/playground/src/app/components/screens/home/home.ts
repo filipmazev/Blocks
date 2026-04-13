@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { IconComponent } from '@icons/components/icon.component';
 import { IconName } from '@icons/types/icon.types';
+import { ButtonComponent } from '../../../../../../button/src/lib/components/button.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, IconComponent],
+  imports: [CommonModule, RouterLink, IconComponent, ButtonComponent],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })

@@ -1,6 +1,6 @@
-import { SemanticColorToken } from '../../public-api';
+import { SemanticColorToken } from '../types/theme.types';
 
-export const PALETTE_NAMES = ['orange', 'purple', 'red', 'green', 'error', 'success', 'information', 'neutral'] as const;
+export const PALETTE_NAMES = ['orange', 'purple', 'red', 'green', 'danger', 'success', 'information', 'neutral'] as const;
 export const SHADE_NUMBERS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000] as const;
 
 export const TOKEN_PREFIX = 'bx';
@@ -32,25 +32,37 @@ export const SEMANTIC_PAIRS: Partial<Record<SemanticColorToken, SemanticColorTok
   'border-strong': 'bg-surface',
   'border-brand': 'bg-surface',
 
-  'info-bg': 'info-text',
-  'info-bg-subtle': 'info-border',
-  'info-border': 'info-bg',
-  'info-text': 'info-bg',
+  'bg-info': 'text-info',
+  'bg-info-active': 'text-info',
+  'bg-info-hover': 'text-info',
+  'bg-info-disabled': 'border-info',
+  'bg-info-subtle': 'border-info',
+  'border-info': 'bg-info',
+  'text-info': 'bg-info',
 
-  'success-bg': 'success-text',
-  'success-bg-subtle': 'success-border',
-  'success-border': 'success-bg',
-  'success-text': 'success-bg',
+  'bg-success': 'text-success',
+  'bg-success-active': 'text-success',
+  'bg-success-hover': 'text-success',
+  'bg-success-disabled': 'border-success',
+  'bg-success-subtle': 'border-success',
+  'border-success': 'bg-success',
+  'text-success': 'bg-success',
 
-  'warn-bg': 'warn-text',
-  'warn-bg-subtle': 'warn-border',
-  'warn-border': 'warn-bg',
-  'warn-text': 'warn-bg',
+  'bg-warn': 'text-warn',
+  'bg-warn-active': 'text-warn',
+  'bg-warn-hover': 'text-warn',
+  'bg-warn-disabled': 'border-warn',
+  'bg-warn-subtle': 'border-warn',
+  'border-warn': 'bg-warn',
+  'text-warn': 'bg-warn',
 
-  'error-bg': 'error-text',
-  'error-bg-subtle': 'error-border',
-  'error-border': 'error-bg',
-  'error-text': 'error-bg',
+  'bg-danger': 'text-danger',
+  'bg-danger-active': 'text-danger',
+  'bg-danger-hover': 'text-danger',
+  'bg-danger-disabled': 'border-danger',
+  'bg-danger-subtle': 'border-danger',
+  'border-danger': 'bg-danger',
+  'text-danger': 'bg-danger',
 
   'scroll-bg': 'bg-surface',
   'scroll-thumb': 'scroll-bg',

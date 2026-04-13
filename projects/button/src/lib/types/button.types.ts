@@ -1,0 +1,1 @@
+export type ButtonType = 'primary' | 'success' | 'danger' | 'info' | 'warn' | 'grayscale' | 'transparent';

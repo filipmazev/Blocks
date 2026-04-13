@@ -20,6 +20,7 @@ export * from './lib/constants/scroll-lock.constants';
 
 export * from './lib/types/core.types';
 export * from './lib/types/tokens.types';
+export * from './lib/types/theme.types';
 
 export * from './lib/helpers/token-functions';
 export * from './lib/helpers/uui4';

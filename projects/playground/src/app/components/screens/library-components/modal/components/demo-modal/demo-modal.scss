@@ -30,25 +30,3 @@
         cursor: pointer;
     }
 }
-
-.confirm-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    cursor: pointer;
-
-    background-color: var(--bx-success-bg);
-    color: var(--bx-success-text);
-    border: none;
-    border-radius: 4px;
-}
-
-.cancel-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    cursor: pointer;
-
-    background-color: var(--bx-error-bg);
-    color: var(--bx-error-text);
-    border: none;
-    border-radius: 4px;
-}

@@ -46,6 +46,9 @@
       "@icons/types/*": ["./projects/icons/src/lib/types/*"],
       "@icons/helpers/*": ["./projects/icons/src/lib/helpers/*"],
       "@icons/*": ["./projects/icons/src/*"],
+      /** Path aliases for button library */
+      "@button/components/*": ["./projects/button/src/lib/components/*"],
+      "@button/types/*": ["./projects/button/src/lib/types/*"],
       /** Path aliases for playground app */
       "@playground/interfaces/*": ["./projects/playground/src/app/shared/interfaces/*"],
       "@playground/classes/*": ["./projects/playground/src/app/shared/classes/*"],
@@ -72,13 +75,5 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  },
-  "references": [
-    {
-      "path": "./projects/button/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/button/tsconfig.spec.json"
-    }
-  ]
+  }
 }

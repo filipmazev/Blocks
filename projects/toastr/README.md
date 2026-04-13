@@ -189,9 +189,9 @@ export class AppComponent {
 
 ## Quick Status Toasts (SimpleToast)
 
-While toastr excels at rendering highly customized components, it also provides a built-in `SimpleToast` component for standard status notifications. You don't need to create your own components to display basic success, info, warning, or error messages.
+While toastr excels at rendering highly customized components, it also provides a built-in `SimpleToast` component for standard status notifications. You don't need to create your own components to display basic success, info, warning, or danger messages.
 
-The `ToastrService` exposes four convenience methods: `queueSuccess`, `queueInfo`, `queueWarning`, and `queueError`.
+The `ToastrService` exposes four convenience methods: `queueSuccess`, `queueInfo`, `queueWarning`, and `queueDanger`.
 
 ### SimpleToast Usage
 
@@ -216,8 +216,8 @@ export class MyFeatureComponent {
     }
 
     public reportIssue() {
-        // Fire a quick error toast with an overridden position
-        this.toastr.queueError({
+        // Fire a quick danger toast with an overridden position
+        this.toastr.queueDanger({
             message: 'Failed to connect to the server. Please try again later.',
             position: 'bottom-center', // Optional override
             durationInMs: 10000 // Optional override
@@ -234,26 +234,3 @@ When using the quick status methods, the configuration is streamlined to focus o
 * `title` |`string`|: (optional) A bolded header for the toast.
 * `position` |`ToastPosition`|: (optional) Overrides the globally configured screen position.
 * `durationInMs` |`number`|: (optional) Overrides the globally configured auto-close timeout.
-
-### Styling the Simple Toasts
-
-The `SimpleToast` component uses specific CSS variables for its status colors. To ensure they look correct in your application, define these variables in your global styles.scss theme configuration:
-
-```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as blocks;
-@use '@filip.mazev/toastr/lib/styles/index' as toastr;
-
-@layer base {
-    :root {
-        @include blocks.core-theme(blocks.$purple-light-theme);
-
-        @include toastr.toastr-theme((
-          /* Optional: Override default Toast wrapper variables */
-          '--bx-simple-toast-info': #e3f2fd,
-          '--bx-simple-toast-success': #e8f5e9,
-          '--bx-simple-toast-warn': #fff3cd,
-          '--bx-simple-toast-error': #fdecea
-        ));
-    }
-}
-```

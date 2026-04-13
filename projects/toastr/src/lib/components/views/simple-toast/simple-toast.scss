@@ -20,27 +20,27 @@
     }
 
     &.info {
-        color: var(--bx-simple-toast-info-accent);
-        background-color: var(--bx-simple-toast-info-bg);
-        border: 1px solid var(--bx-simple-toast-info-border);
+        color: var(--bx-text-info);
+        background-color: var(--bx-bg-info-subtle);
+        border: 1px solid var(--bx-border-info);
     }
 
     &.success {
-        color: var(--bx-simple-toast-success-accent);
-        background-color: var(--bx-simple-toast-success-bg);
-        border: 1px solid var(--bx-simple-toast-success-border);
+        color: var(--bx-text-success);
+        background-color: var(--bx-bg-success-subtle);
+        border: 1px solid var(--bx-border-success);
     }
 
     &.warn {
-        color: var(--bx-simple-toast-warn-accent);
-        background-color: var(--bx-simple-toast-warn-bg);
-        border: 1px solid var(--bx-simple-toast-warn-border);
+        color: var(--bx-text-warn);
+        background-color: var(--bx-bg-warn-subtle);
+        border: 1px solid var(--bx-border-warn);
     }
 
-    &.error {
-        color: var(--bx-simple-toast-error-accent);
-        background-color: var(--bx-simple-toast-error-bg);
-        border: 1px solid var(--bx-simple-toast-error-border);
+    &.danger {
+        color: var(--bx-text-danger);
+        background-color: var(--bx-bg-danger-subtle);
+        border: 1px solid var(--bx-border-danger);
     }
 }
 
@@ -86,19 +86,19 @@
     transition: color 0.2s;
 
     &.info {
-        color: var(--bx-simple-toast-info-accent);
+        color: var(--bx-text-info);
     }
 
     &.success {
-        color: var(--bx-simple-toast-success-accent);
+        color: var(--bx-text-success);
     }
 
     &.warn {
-        color: var(--bx-simple-toast-warn-accent);
+        color: var(--bx-text-warn);
     }
 
-    &.error {
-        color: var(--bx-simple-toast-error-accent);
+    &.danger {
+        color: var(--bx-text-danger);
     }
 }
 
@@ -111,19 +111,19 @@
     pointer-events: none;
 
     &.info {
-        background-color: var(--bx-simple-toast-info-border);
+        background-color: var(--bx-bg-info);
     }
 
     &.success {
-        background-color: var(--bx-simple-toast-success-border);
+        background-color: var(--bx-bg-success);
     }
 
     &.warn {
-        background-color: var(--bx-simple-toast-warn-border);
+        background-color: var(--bx-bg-warn);
     }
 
-    &.error {
-        background-color: var(--bx-simple-toast-error-border);
+    &.danger {
+        background-color: var(--bx-bg-danger);
     }
 }
 
@@ -134,18 +134,18 @@
     transform-origin: left;
 
     &.info {
-        background-color: var(--bx-simple-toast-info-accent);
+        background-color: var(--bx-border-info);
     }
 
     &.success {
-        background-color: var(--bx-simple-toast-success-accent);
+        background-color: var(--bx-border-success);
     }
 
     &.warn {
-        background-color: var(--bx-simple-toast-warn-accent);
+        background-color: var(--bx-border-warn);
     }
 
-    &.error {
-        background-color: var(--bx-simple-toast-error-accent);
+    &.danger {
+        background-color: var(--bx-border-danger);
     }
 }

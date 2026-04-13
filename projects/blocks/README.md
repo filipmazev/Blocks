@@ -30,6 +30,8 @@ Running the schematic will automatically install the following libraries:
 
 * @filip.mazev/toastr: A component-driven toast notification system featuring smart queue management, auto-dismissal, and built-in status views.
 
+* @filip.mazev/icons: The icon package used across the blocks components
+
 ## Manual Setup (Without Angular CLI)
 
 If you prefer not to use `ng add` or are in an environment that doesn't support Angular Schematics, you can install the packages manually:
@@ -43,13 +45,11 @@ Then, manually configure your styles.scss:
 ```scss
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 @use '@filip.mazev/modal/lib/styles/index' as modal;
-@use '@filip.mazev/toastr/lib/styles/index' as toastr;
 
 @layer base {
     :root {
         @include core-theme($purple-light-theme);
         @include modal.modal-theme();
-        @include toastr.toastr-theme(());
     }
 
     [data-theme='dark'] {

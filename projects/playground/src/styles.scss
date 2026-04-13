@@ -1,12 +1,10 @@
 @use '../../blocks-core' as *;
 @use '../../modal' as modal;
-@use '../../toastr' as toastr;
 @use './styles/common' as *;
 
 :root {
     @include core-theme($purple-light-theme);
     @include modal.modal-theme(());
-    @include toastr.toastr-theme(());
 
     --mobile-header-height: 60px;
     --bg-translucent-contrast: rgba(255, 255, 255, 0.85);
@@ -15,7 +13,6 @@
 [data-theme="dark"] {
     @include core-theme($purple-dark-theme);
     @include modal.modal-theme(());
-    @include toastr.toastr-theme(());
 
     --bg-translucent-contrast: rgba(12, 12, 12, 0.85);
 }
@@ -768,31 +765,6 @@ a {
     right: 1rem;
     z-index: z(modal);
 
-    background-color: var(--bx-bg-surface, #fff);
-    border: 1px solid var(--bx-border-default, #ccc);
-    color: var(--bx-text-primary, #333);
-
-    width: 40px;
-    height: 40px;
-    border-radius: 9999px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-
-    &:hover {
-        transform: scale(1.1);
-        background-color: var(--bx-bg-canvas, #f5f5f5);
-    }
-
-    svg {
-        width: 20px;
-        height: 20px;
-    }
-
     @include respond-down(lg) {
         margin-top: var(--mobile-header-height);
     }
@@ -1104,65 +1076,6 @@ a {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 1rem;
     margin-top: 1rem;
-}
-
-.action-button {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-
-    padding: 12px 48px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-
-    background-color: var(--bx-bg-element, #333);
-    color: var(--bx-text-primary, #fff);
-    border: 1px solid var(--bx-border-default, #ccc);
-    border-radius: var(--bx-rounded-sm);
-    transition: opacity 0.2s;
-
-    &:hover {
-        opacity: 0.9;
-    }
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    p,
-    h4,
-    button,
-    span,
-    div {
-        color: inherit;
-    }
-
-    &.info {
-        color: var(--bx-simple-toast-info-accent);
-        background-color: var(--bx-simple-toast-info-bg);
-        border: 1px solid var(--bx-simple-toast-info-accent);
-    }
-
-    &.success {
-        color: var(--bx-simple-toast-success-accent);
-        background-color: var(--bx-simple-toast-success-bg);
-        border: 1px solid var(--bx-simple-toast-success-accent);
-    }
-
-    &.warn {
-        color: var(--bx-simple-toast-warn-accent);
-        background-color: var(--bx-simple-toast-warn-bg);
-        border: 1px solid var(--bx-simple-toast-warn-accent);
-    }
-
-    &.error {
-        color: var(--bx-simple-toast-error-accent);
-        background-color: var(--bx-simple-toast-error-bg);
-        border: 1px solid var(--bx-simple-toast-error-accent);
-    }
 }
 
 .form-section {

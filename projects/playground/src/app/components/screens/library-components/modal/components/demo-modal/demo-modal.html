@@ -11,11 +11,6 @@
 </div>
 
 <div class="button-container" *appModalFooter>
-    <button (click)="confirm()" class="confirm-button">
-        Confirm
-    </button>
-
-    <button (click)="close()" class="cancel-button">
-        Cancel
-    </button>
+    <bx-button (click)="confirm()" variant="success" [text]="'Confirm'" />
+    <bx-button (click)="close()" variant="danger" [text]="'Cancel'" />
 </div>

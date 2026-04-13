@@ -70,43 +70,6 @@
     }
 }
 
-.btn {
-    padding: 12px 32px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: transform 0.2s, opacity 0.2s, background-color 0.2s;
-    cursor: pointer;
-
-    &:hover {
-        transform: translateY(-2px);
-    }
-
-    &.primary {
-        background-color: var(--bx-primary, #333);
-        color: var(--bx-text-inverse, #fff);
-    }
-
-    &.primary:hover {
-        background-color: var(--bx-primary-hover, #333);
-    }
-
-    &.primary:active {
-        background-color: var(--bx-primary-active, #333);
-    }
-
-    &.secondary {
-        background-color: transparent;
-        color: var(--bx-text-primary, #333);
-        border: 1px solid var(--bx-border-default, #ccc);
-
-        &:hover {
-            background-color: var(--bx-bg-surface, #fff);
-        }
-    }
-}
-
 .hero-visual {
     position: relative;
     width: 400px;

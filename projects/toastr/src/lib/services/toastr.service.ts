@@ -108,13 +108,13 @@ export class ToastrService {
    * @param request An object containing the message, optional title, optional position, and duration for the toast notification.
    * @returns A ToastRef instance representing the queued toast.
    */
-  public queueError(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
+  public queueDanger(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.globalSettings.position(),
       data: {
         title: request.title,
         message: request.message,
-        type: 'error'
+        type: 'danger'
       },
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),

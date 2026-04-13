@@ -9,11 +9,11 @@ import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
 import { ThemeId } from '@playground/types/common.types';
 import { combineLatest } from 'rxjs';
-import { IconComponent } from '@icons/components/icon.component';
+import { ButtonComponent } from '../../../button/src/lib/components/button.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, FormsModule, IconComponent],
+  imports: [RouterOutlet, Sidenav, FormsModule, ButtonComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

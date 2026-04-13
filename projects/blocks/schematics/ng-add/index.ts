@@ -29,7 +29,8 @@ function addDependencies(tree: Tree, context: SchematicContext): void {
   const packages = [
     '@filip.mazev/blocks-core',
     '@filip.mazev/modal',
-    '@filip.mazev/toastr'
+    '@filip.mazev/toastr',
+    '@filip.mazev/icons'
   ];
   
   let dependenciesAdded = false;
@@ -96,13 +97,11 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
   const blocksThemeSnippet = `
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 @use '@filip.mazev/modal/lib/styles/index' as modal;
-@use '@filip.mazev/toastr/lib/styles/index' as toastr;
 
 @layer base {
     :root {
         @include core-theme(${lightThemeVar});
         @include modal.modal-theme();
-        @include toastr.toastr-theme(());
     }
 
     [data-theme='dark'] {

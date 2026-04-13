@@ -1,7 +1,12 @@
 <div class="catalog-container">
     <header class="filter-bar">
-        <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
-            placeholder="Search icons..." class="search-input" />
+
+        <div class="form-control">
+            <label>Search</label>
+            <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+                placeholder="Search icons..." class="search-input" />
+        </div>
+
 
         <div class="dropdown-group">
 

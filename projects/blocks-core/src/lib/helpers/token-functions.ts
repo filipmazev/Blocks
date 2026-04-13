@@ -1,4 +1,5 @@
-import { Color, SemanticColorToken, ThemeColorToken, ThemedColor } from '../types/tokens.types';
+import { Color, ThemeColorToken, ThemedColor } from '../types/tokens.types';
+import { SemanticColorToken } from '../types/theme.types';
 import * as tokenConsts from '../constants/tokens.constants';
 
 /**

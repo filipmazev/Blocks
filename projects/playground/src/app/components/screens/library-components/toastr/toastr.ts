@@ -11,10 +11,11 @@ import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-sett
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 import { DemoToast } from './components/demo-toast/demo-toast';
+import { ButtonComponent } from '../../../../../../../button/src/lib/components/button.component';
 
 @Component({
   selector: 'app-toastr-demo',
-  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo],
+  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, ButtonComponent],
   templateUrl: './toastr.html',
   styleUrl: './toastr.scss'
 })
@@ -24,7 +25,7 @@ export class Toastr {
 
   protected readonly positionOptions: ToastPosition[] = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
 
-  protected readonly typeOptions = ['info', 'success', 'warn', 'error'];
+  protected readonly typeOptions = ['info', 'success', 'warn', 'danger'];
 
   protected readonly form: FormGroup<ToastrConfigFormControls>;
   protected toastrReadmePath = signal<string>('assets/toastr-readme/README.md');
@@ -100,8 +101,8 @@ export class Toastr {
         title: 'Warning',
         message: 'This is a warning toast message.'
       });
-    } else if (type === 'error') {
-      this.toastr.queueError({
+    } else if (type === 'danger') {
+      this.toastr.queueDanger({
         title: 'Error',
         message: 'An error occurred while processing your request.'
       });

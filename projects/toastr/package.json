@@ -2,12 +2,6 @@
     "name": "@filip.mazev/toastr",
     "version": "1.0.18",
     "license": "MIT",
-    "exports": {
-        "./_toastr-theme": "./lib/styles/_toastr-theme.scss",
-        "./index": "./lib/styles/_index.scss"
-    },
-    "style": "src/lib/styles/_index.scss",
-    "sass": "src/lib/styles/_index.scss",
     "peerDependencies": {
         "@angular/common": "^21.2.0",
         "@angular/core": "^21.2.0",

@@ -5,10 +5,11 @@ import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
+import { ButtonComponent } from '../../../../../../../../../button/src/lib/components/button.component';
 
 @Component({
   selector: 'app-demo-modal',
-  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass],
+  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass, ButtonComponent],
   templateUrl: './demo-modal.html',
   styleUrl: './demo-modal.scss'
 })

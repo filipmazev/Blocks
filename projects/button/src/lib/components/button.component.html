@@ -1,0 +1,15 @@
+@if (leftIcon(); as icon) {
+<bx-icon [name]="icon" [size]="iconSize()" [color]="resolvedColor().token" />
+}
+
+@if (text()) {
+<span class="bx-btn-text" [style.color]="resolvedColor().css">{{ text() }}</span>
+}
+
+<span [class.bx-visually-hidden]="!hasProjectedContent()" #contentWrapper [style.color]="resolvedColor().css">
+    <ng-content></ng-content>
+</span>
+
+@if (rightIcon(); as icon) {
+<bx-icon [name]="icon" [size]="iconSize()" [color]="resolvedColor().token" />
+}

@@ -50,7 +50,7 @@ $green-palette: (
     900: #3C4E08,
     1000: #212C03) !default;
 
-$error-palette: (
+$danger-palette: (
     50: #FFFCFC,
     100: #F4E5E5,
     200: #EAD0D0,
@@ -127,7 +127,7 @@ $all-palettes: (
     'purple': $purple-palette,
     'red': $red-palette,
     'green': $green-palette,
-    'error': $error-palette,
+    'danger': $danger-palette,
     'warn': $warn-palette,
     'success': $success-palette,
     'information': $information-palette,

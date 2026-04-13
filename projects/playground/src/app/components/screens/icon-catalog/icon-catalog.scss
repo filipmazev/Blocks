@@ -1,7 +1,7 @@
 @use '../../../../../../blocks-core' as *;
 
 .catalog-container {
-    padding: 0 2rem 2rem 2rem;
+    padding: 1rem 2rem 2rem 2rem;
 
     .filter-bar {
         position: sticky;
@@ -16,8 +16,7 @@
         background-color: var(--bx-bg-canvas);
         border-bottom: 1px solid var(--bx-border-default);
         width: 100%;
-        height: 5rem;
-        margin-top: 1rem;
+        min-height: 5rem;
 
         .search-input {
             flex: 1;
@@ -45,6 +44,9 @@
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 1rem;
         margin-top: 1rem;
+        max-height: 75dvh;
+        max-height: 75vh;
+        overflow-y: auto;
     }
 
     .icon-card {
@@ -79,6 +81,20 @@
 
         &:hover {
             background-color: var(--bx-secondary);
+        }
+    }
+
+    @include respond-down(md) {
+        .icon-grid {
+            max-height: 63dvh;
+            max-height: 63vh;
+        }
+    }
+
+    @include respond-down(sm) {
+        .icon-grid {
+            max-height: 60dvh;
+            max-height: 60vh;
         }
     }
 }

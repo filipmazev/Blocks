@@ -86,9 +86,7 @@
         </form>
 
         <div class="actions">
-            <button (click)="openModal()" [disabled]="form.invalid" class="action-button">
-                Open Modal
-            </button>
+            <bx-button (click)="openModal()" [disabled]="form.invalid" variant="grayscale" [text]="'Open Modal'" />
         </div>
     </div>
 </div>
