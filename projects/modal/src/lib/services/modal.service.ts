@@ -4,7 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject, filter, skip } from 'rxjs';
 import { ModalConfig } from '../classes/modal-config';
 import { ModalRef } from '../classes/modal-ref';
-import { ModalCore } from '../components/modal-core';
+import { ModalCore } from '../components/modal-core.component';
 import { IModalConfig } from '../interfaces/imodal-config.interface';
 import { IModalService } from '../interfaces/imodal-service.interface';
 import { MODAL_DATA } from '../tokens/modal-data.token';
@@ -192,7 +192,7 @@ export class ModalService implements IModalService {
       mobileConfig: config?.style?.mobileConfig,
       wrapperClasses: config?.style?.wrapperClasses,
       wrapperStyles: config?.style?.wrapperStyles,
-      closeDelay: config?.style?.closeDelay,
+      closeDelay: config?.style?.closeDelay
     };
 
     return {
@@ -203,7 +203,7 @@ export class ModalService implements IModalService {
       closeGuardOnlyOnCancel: config?.closeGuardOnlyOnCancel ?? this.globalSettings.closeGuardOnlyOnCancel(),
       disableConsoleWarnings: config?.disableConsoleWarnings ?? this.globalSettings.disableConsoleWarnings(),
       disableConsoleInfo: config?.disableConsoleInfo ?? this.globalSettings.disableConsoleInfo(),
-      style: resolvedStyle,
+      style: resolvedStyle
     };
   }
 

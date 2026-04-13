@@ -1,0 +1,16 @@
+@use '../../../../blocks-core' as *;
+
+:host {
+    display: inline-flex;
+}
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.has-bg {
+        border-radius: var(--bx-rounded-sm);
+        padding: spacing(1);
+    }
+}

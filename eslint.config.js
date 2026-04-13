@@ -29,11 +29,7 @@ export default [
         languageOptions: {
             parser: _parser,
             parserOptions: {
-                project: [
-                    "./tsconfig.json",
-                    "./tsconfig.app.json",
-                    "./tsconfig.spec.json"
-                ],
+                project: ['./tsconfig.eslint.json'],
                 tsconfigRootDir: __dirname,
                 createDefaultProgram: true,
             },
@@ -80,7 +76,7 @@ export default [
                 {
                     selector: "variable",
                     modifiers: ["const", "global"],
-                    format: ["UPPER_CASE"]
+                    format: ["camelCase", "UPPER_CASE"]
                 },
                 {
                     selector: "variable",
@@ -175,12 +171,12 @@ export default [
             ],
             "@angular-eslint/directive-selector": [
                 "error",
-                { type: "attribute", prefix: "app", style: "camelCase" }
+                { type: "attribute", prefix: ["app", "bx"], style: "camelCase" }
             ],
             "@angular-eslint/component-selector": [
                 "error",
-                { type: "element", prefix: "app", style: "kebab-case" }
-            ]
+                { type: "element", prefix: ["app", "bx"], style: "kebab-case" }
+            ],
         }
     }
 ];

@@ -16,7 +16,7 @@ ng add @filip.mazev/blocks
 
 When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:
 
-* Interactive Theme Selection: You will be prompted to choose your preferred global theme (Default or Orange Company).
+* Interactive Theme Selection: You will be prompted to choose your preferred global theme (Purple or Orange Company).
 * Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
 * SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.
 
@@ -47,13 +47,13 @@ Then, manually configure your styles.scss:
 
 @layer base {
     :root {
-        @include core-theme($default-light-theme-config);
+        @include core-theme($purple-light-theme);
         @include modal.modal-theme();
         @include toastr.toastr-theme(());
     }
 
     [data-theme='dark'] {
-        @include core-theme($default-dark-theme-config);
+        @include core-theme($purple-dark-theme);
     }
 }
 ```

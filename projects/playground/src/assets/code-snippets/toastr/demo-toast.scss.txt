@@ -6,31 +6,31 @@
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--fm-border, #ccc);
+    border: 1px solid var(--bx-border-default, #ccc);
     min-height: 40px;
 
     &.info {
-        color: var(--simple-toast-info-accent);
-        background-color: var(--simple-toast-info-bg);
-        border: 1px solid var(--simple-toast-info-accent);
+        color: var(--bx-simple-toast-info-accent);
+        background-color: var(--bx-simple-toast-info-bg);
+        border: 1px solid var(--bx-simple-toast-info-accent);
     }
 
     &.success {
-        color: var(--simple-toast-success-accent);
-        background-color: var(--simple-toast-success-bg);
-        border: 1px solid var(--simple-toast-success-accent);
+        color: var(--bx-simple-toast-success-accent);
+        background-color: var(--bx-simple-toast-success-bg);
+        border: 1px solid var(--bx-simple-toast-success-accent);
     }
 
     &.warn {
-        color: var(--simple-toast-warn-accent);
-        background-color: var(--simple-toast-warn-bg);
-        border: 1px solid var(--simple-toast-warn-accent);
+        color: var(--bx-simple-toast-warn-accent);
+        background-color: var(--bx-simple-toast-warn-bg);
+        border: 1px solid var(--bx-simple-toast-warn-accent);
     }
 
     &.error {
-        color: var(--simple-toast-error-accent);
-        background-color: var(--simple-toast-error-bg);
-        border: 1px solid var(--simple-toast-error-accent);
+        color: var(--bx-simple-toast-error-accent);
+        background-color: var(--bx-simple-toast-error-bg);
+        border: 1px solid var(--bx-simple-toast-error-accent);
     }
 }
 
@@ -72,18 +72,18 @@
     transition: color 0.2s;
 
     &.info {
-        color: var(--simple-toast-info-accent);
+        color: var(--bx-simple-toast-info-accent);
     }
 
     &.success {
-        color: var(--simple-toast-success-accent);
+        color: var(--bx-simple-toast-success-accent);
     }
 
     &.warn {
-        color: var(--simple-toast-warn-accent);
+        color: var(--bx-simple-toast-warn-accent);
     }
 
     &.error {
-        color: var(--simple-toast-error-accent);
+        color: var(--bx-simple-toast-error-accent);
     }
 }

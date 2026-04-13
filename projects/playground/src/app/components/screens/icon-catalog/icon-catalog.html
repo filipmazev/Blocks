@@ -1,0 +1,46 @@
+<div class="catalog-container">
+    <header class="filter-bar">
+        <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+            placeholder="Search icons..." class="search-input" />
+
+        <div class="dropdown-group">
+
+            <div class="form-control">
+                <label>Size</label>
+                <div class="select-wrapper">
+                    <select [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)">
+                        @for (s of sizes; track s) {
+                        <option [value]="s">{{ s }}px</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label>Stroke</label>
+                <div class="select-wrapper">
+                    <select [ngModel]="selectedStrokeWidth()" (ngModelChange)="selectedStrokeWidth.set($event)">
+                        @for (sw of strokeWidths; track sw) {
+                        <option [value]="sw">{{ sw }}px</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="icon-grid">
+        @for (name of filteredIcons(); track name) {
+        <div class="icon-card">
+            <div class="icon-wrapper">
+                <bx-icon [name]="name" [size]="selectedSize()" [strokeWidth]="selectedStrokeWidth()" [color]="'primary'"
+                    [bgColor]="'auto'" />
+            </div>
+            <span class="icon-name">{{ name }}</span>
+        </div>
+        } @empty {
+        <div class="no-results">No icons found.</div>
+        }
+    </div>
+</div>

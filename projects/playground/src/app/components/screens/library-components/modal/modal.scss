@@ -1,0 +1,12 @@
+@use '../../../../../../../blocks-core' as *;
+@use '../../../../../styles/common' as *;
+
+:host {
+    width: 100%;
+}
+
+.breakpoints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}

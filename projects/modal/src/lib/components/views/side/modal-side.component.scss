@@ -1,0 +1,89 @@
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+.side-modal-content-wrapper {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    z-index: z(modal);
+    display: flex;
+    flex-direction: column;
+    padding: spacing(4);
+    gap: spacing(4);
+    box-sizing: border-box;
+    overflow: hidden;
+
+    transition: transform var(--anim-duration, 175ms) ease-in-out;
+
+    &.left {
+        left: 0;
+    }
+
+    &.right {
+        right: 0;
+    }
+
+    &.side-modal-animate-in {
+        transform: translateX(0) !important;
+    }
+
+    &.side-modal-animate-out {
+        &.left {
+            transform: translateX(-100%);
+        }
+
+        &.right {
+            transform: translateX(100%);
+        }
+    }
+
+    &.with-footer {
+        justify-content: space-between;
+    }
+
+    .side-modal-inner-content-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: spacing(4);
+        min-height: 0;
+    }
+
+    @include respond-down(md) {
+        max-width: 90vw;
+        max-width: 95dvw;
+    }
+}
+
+.side-modal-default-style {
+    background: var(--bx-modal-bg, #ffffff);
+    color: var(--bx-modal-text, #000000);
+    box-shadow: shadow(modal);
+    max-width: 85vw;
+    max-width: 85dvw;
+}
+
+.side-modal-main-content-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+    max-height: none;
+}
+
+.side-modal-header {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: spacing(2);
+    padding-top: spacing(3);
+}
+
+.side-modal-footer {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: spacing(2);
+    padding-bottom: spacing(3);
+}

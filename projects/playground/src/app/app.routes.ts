@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { Modal } from '@playground/components/modal/modal';
-import { Home } from '@playground/components/home/home';
-import { Toastr } from './components/toastr/toastr';
+import { Modal } from '@playground/components/screens/library-components/modal/modal';
+import { Home } from '@playground/components/screens/home/home';
+import { Toastr } from './components/screens/library-components/toastr/toastr';
+import { IconCatalog } from './components/screens/icon-catalog/icon-catalog';
 
 export const ROUTES: Routes = [
   {
@@ -16,6 +17,10 @@ export const ROUTES: Routes = [
   {
     path: 'toastr',
     component: Toastr
+  },
+  {
+    path: 'icon-catalog',
+    component: IconCatalog
   }
 ];
 

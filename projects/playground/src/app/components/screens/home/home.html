@@ -1,0 +1,59 @@
+<div class="home-container">
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Build <span class="highlight">Better</span> Angular Apps.
+            </h1>
+            <p class="hero-subtitle">
+                The comprehensive, modular UI ecosystem. Bridging the gap between TypeScript logic and SCSS styling.
+            </p>
+            <div class="hero-actions">
+                <a routerLink="/modal" class="btn primary">View Flagship Component</a>
+                <a href="https://www.npmjs.com/package/@filip.mazev/blocks-core" target="_blank"
+                    class="btn secondary">Get Started</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="block block-1"></div>
+            <div class="block block-2"></div>
+            <div class="block block-3"></div>
+        </div>
+    </header>
+
+    <section class="section features">
+        <h2 class="section-title">Core Philosophy</h2>
+        <div class="grid">
+            @for (feature of features; track feature.title) {
+            <div class="card card-item-card">
+                <div class="card-item-header">
+                    <bx-icon [name]="feature.icon" />
+                    <span class="card-item-name">{{ feature.title }}</span>
+                </div>
+                <p class="card-item-desc">{{ feature.description }}</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="section packages">
+        <h2 class="section-title">The Ecosystem</h2>
+        <div class="grid">
+            @for (package of packages; track package.name) {
+            <a [href]="package.link" target="_blank" class="card card-item-card">
+                <div class="card-item-header">
+                    <bx-icon [name]="package.icon" />
+                    <span class="card-item-name">{{ package.name }}</span>
+                </div>
+                <p class="card-item-desc">{{ package.description }}</p>
+            </a>
+            }
+        </div>
+    </section>
+
+    <footer class="home-footer">
+        <p>Designed & Developed by Filip Mazev</p>
+        <div class="version">v1.0.0</div>
+    </footer>
+
+</div>

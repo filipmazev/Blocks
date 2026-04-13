@@ -9,10 +9,11 @@ import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
 import { ThemeId } from '@playground/types/common.types';
 import { combineLatest } from 'rxjs';
+import { IconComponent } from '@icons/components/icon.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, FormsModule],
+  imports: [RouterOutlet, Sidenav, FormsModule, IconComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -23,8 +24,10 @@ export class App {
   protected readonly title = signal('playground');
 
   protected readonly availableThemes: IThemePalette[] = [
-    { id: 'default', label: 'Default', className: '' },
-    { id: 'orange', label: 'Orange', className: 'theme-orange-company' },
+    { id: 'purple', label: 'Purple', className: '' },
+    { id: 'orange', label: 'Orange', className: 'theme-orange' },
+    { id: 'red', label: 'Red', className: 'theme-red' },
+    { id: 'green', label: 'Green', className: 'theme-green' },
     { id: 'high-contrast', label: 'High Contrast', className: 'high-contrast' }
   ];
 
@@ -32,6 +35,7 @@ export class App {
 
   protected navLinks = signal<ISidenavLink[]>([
     { name: 'Home', route: '/' },
+    { name: 'Icons', route: '/icon-catalog' },
     { name: 'Modal', route: '/modal' },
     { name: 'Toastr', route: '/toastr' }
   ]);
@@ -65,7 +69,6 @@ export class App {
       .pipe(takeUntilDestroyed())
       .subscribe(({ systemTheme, appTheme }) => {
         const savedPreference = appTheme ?? localStorage.getItem('theme') ?? 'auto';
-
         const themeToApply = savedPreference === 'auto' ? systemTheme : savedPreference;
 
         if (themeToApply === 'dark') {
@@ -94,13 +97,13 @@ export class App {
   private enableDarkMode() {
     this.isDarkMode.set(true);
     this.renderer.setAttribute(this.document.documentElement, 'data-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
+    this.themingService.setApplicationTheme('dark');
   }
 
   private disableDarkMode() {
     this.isDarkMode.set(false);
     this.renderer.removeAttribute(this.document.documentElement, 'data-theme');
-    localStorage.setItem('theme', 'light');
+    this.themingService.setApplicationTheme('light');
   }
 
   private setCodeTheme() {

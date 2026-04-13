@@ -10,8 +10,8 @@ export class ThemingService implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  private _systemTheme = signal<DeviceTheme>('light');
-  private _applicationTheme = signal<DeviceTheme | null>(null);
+  private readonly _systemTheme = signal<DeviceTheme>('light');
+  private readonly _applicationTheme = signal<DeviceTheme | null>(null);
 
   public readonly systemTheme = this._systemTheme.asReadonly();
   public readonly applicationTheme = this._applicationTheme.asReadonly();

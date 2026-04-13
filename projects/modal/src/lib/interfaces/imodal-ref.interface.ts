@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ComponentRef, Type } from '@angular/core';
 import { ModalConfig } from '../classes/modal-config';
-import { ModalCore } from '../components/modal-core';
+import { ModalCore } from '../components/modal-core.component';
 import { ModalState } from '../enums/modal-state.enum';
 import { IModalCloseResult } from './imodal-close-result.interface';
 import { IModal } from './imodal.interface';

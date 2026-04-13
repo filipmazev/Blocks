@@ -17,7 +17,8 @@ import { ToastRef } from '../classes/toast-ref';
 import { IToast } from '../interfaces/itoast.interface';
 
 @Component({
-  selector: 'app-toast-core',
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'bx-toast-core',
   imports: [NgClass],
   templateUrl: './toast-core.html',
   styleUrl: './toast-core.scss'

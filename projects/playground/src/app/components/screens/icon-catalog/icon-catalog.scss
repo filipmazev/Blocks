@@ -1,0 +1,88 @@
+@use '../../../../../../blocks-core' as *;
+
+.catalog-container {
+    padding: 0 2rem 2rem 2rem;
+
+    .filter-bar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding: 4rem 0 1.5rem 0;
+
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: center;
+        background-color: var(--bx-bg-canvas);
+        border-bottom: 1px solid var(--bx-border-default);
+        width: 100%;
+        height: 5rem;
+        margin-top: 1rem;
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: .5rem;
+            border: 1px solid var(--bx-border-default);
+            border-radius: var(--bx-rounded-md);
+            font-size: 1rem;
+
+            &:focus {
+                outline: 2px solid var(--bx-border-brand);
+                border-color: transparent;
+            }
+        }
+
+        .dropdown-group {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+    }
+
+    .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .icon-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        border: 1px solid var(--bx-border-default);
+        border-radius: var(--bx-rounded-md);
+
+        transition: all .15s ease-in-out;
+
+        .icon-wrapper {
+            color: var(--bx-text-primary);
+            margin-bottom: 0.75rem;
+            height: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            vertical-align: middle;
+        }
+
+        .icon-name {
+            font-size: 0.75rem;
+            color: var(--bx-text-alt);
+            text-align: center;
+            height: 1.5rem;
+            text-overflow: ellipsis;
+        }
+
+        &:hover {
+            background-color: var(--bx-secondary);
+        }
+    }
+}
+
+.no-results {
+    width: 100%;
+}

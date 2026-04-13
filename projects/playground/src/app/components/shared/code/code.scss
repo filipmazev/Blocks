@@ -2,29 +2,31 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: var(--fm-panel);
+    background-color: var(--bx-panel);
     border-radius: 12px;
-    border: 1px solid var(--fm-border, #e0e0e0);
+    border: 1px solid var(--bx-border-default, #e0e0e0);
     overflow: hidden;
 }
 
 .tabs {
     display: flex;
-    background-color: var(--fm-canvas); 
-    border-bottom: 1px solid var(--fm-border, #e0e0e0);
+    background-color: var(--bx-bg-canvas);
+    border-bottom: 1px solid var(--bx-border-default, #e0e0e0);
     overflow-x: auto;
-    
-    &::-webkit-scrollbar { height: 0; }
+
+    &::-webkit-scrollbar {
+        height: 0;
+    }
 }
 
 .tab {
     padding: 12px 20px;
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--fm-text-primary, #666);
+    color: var(--bx-text-primary, #666);
     background: transparent;
     cursor: pointer;
-    border-right: 1px solid var(--fm-border, #e0e0e0);
+    border-right: 1px solid var(--bx-border-default, #e0e0e0);
     transition: all 0.2s;
     white-space: nowrap;
     display: flex;
@@ -32,14 +34,14 @@
     gap: 8px;
 
     &:hover {
-        background-color: rgba(0,0,0,0.02);
-        color: var(--fm-text-primary);
+        background-color: rgba(0, 0, 0, 0.02);
+        color: var(--bx-text-primary);
     }
 
     &.active {
-        background-color: var(--fm-panel);
-        color: var(--fm-text-secondary, #000);
-        box-shadow: inset 0 -2px 0 var(--fm-button-primary, #000);
+        background-color: var(--bx-bg-surface-alt);
+        color: var(--bx-text-secondary, #000);
+        box-shadow: inset 0 -2px 0 var(--bx-primary, #000);
     }
 }
 
@@ -49,17 +51,28 @@
     border-radius: 50%;
     background-color: #ccc;
 
-    &.typescript { background-color: #3178c6; }
-    &.html { background-color: #e34c26; }
-    &.scss { background-color: #c6538c; }
-    &.json { background-color: #f1e05a; }
+    &.typescript {
+        background-color: #3178c6;
+    }
+
+    &.html {
+        background-color: #e34c26;
+    }
+
+    &.scss {
+        background-color: #c6538c;
+    }
+
+    &.json {
+        background-color: #f1e05a;
+    }
 }
 
 .content {
     flex: 1;
     overflow: auto;
-    padding: 0; 
-    
+    padding: 0;
+
     ::ng-deep pre {
         margin: 0;
         border-radius: 0;

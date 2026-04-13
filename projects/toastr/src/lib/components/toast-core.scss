@@ -113,8 +113,8 @@
     transition-duration: calc(0.4s * (1 - var(--a11y-reduced-motion, 0)));
 
     &.default-wrapper {
-        background-color: var(--toast-bg, #fff);
-        color: var(--toast-text, #000);
+        background-color: var(--bx-toast-bg, #fff);
+        color: var(--bx-toast-text, #000);
         border-radius: radius(md);
         box-shadow: shadow(toast);
         width: 24rem;

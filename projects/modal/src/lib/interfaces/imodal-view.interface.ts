@@ -1,6 +1,6 @@
 import { InputSignal, OutputEmitterRef, QueryList, Signal, TemplateRef } from '@angular/core';
 import { ModalConfig } from '../classes/modal-config';
-import { ModalBottomSheet } from '../components/views/bottom-sheet/modal-bottom-sheet';
+import { ModalBottomSheet } from '../components/views/bottom-sheet/modal-bottom-sheet.component';
 import { ModalCloseMode } from '../types/modal.types';
 
 /**

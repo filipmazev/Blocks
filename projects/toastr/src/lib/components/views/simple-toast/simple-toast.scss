@@ -8,7 +8,7 @@
     padding: spacing(4);
     border-radius: radius(md);
     box-shadow: shadow(toast);
-    border: 1px solid var(--fm-border, #ccc);
+    border: 1px solid var(--bx-border-default, #ccc);
     overflow: hidden;
 
     p,
@@ -20,27 +20,27 @@
     }
 
     &.info {
-        color: var(--simple-toast-info-accent);
-        background-color: var(--simple-toast-info-bg);
-        border: 1px solid var(--simple-toast-info-border);
+        color: var(--bx-simple-toast-info-accent);
+        background-color: var(--bx-simple-toast-info-bg);
+        border: 1px solid var(--bx-simple-toast-info-border);
     }
 
     &.success {
-        color: var(--simple-toast-success-accent);
-        background-color: var(--simple-toast-success-bg);
-        border: 1px solid var(--simple-toast-success-border);
+        color: var(--bx-simple-toast-success-accent);
+        background-color: var(--bx-simple-toast-success-bg);
+        border: 1px solid var(--bx-simple-toast-success-border);
     }
 
     &.warn {
-        color: var(--simple-toast-warn-accent);
-        background-color: var(--simple-toast-warn-bg);
-        border: 1px solid var(--simple-toast-warn-border);
+        color: var(--bx-simple-toast-warn-accent);
+        background-color: var(--bx-simple-toast-warn-bg);
+        border: 1px solid var(--bx-simple-toast-warn-border);
     }
 
     &.error {
-        color: var(--simple-toast-error-accent);
-        background-color: var(--simple-toast-error-bg);
-        border: 1px solid var(--simple-toast-error-border);
+        color: var(--bx-simple-toast-error-accent);
+        background-color: var(--bx-simple-toast-error-bg);
+        border: 1px solid var(--bx-simple-toast-error-border);
     }
 }
 
@@ -86,19 +86,19 @@
     transition: color 0.2s;
 
     &.info {
-        color: var(--simple-toast-info-accent);
+        color: var(--bx-simple-toast-info-accent);
     }
 
     &.success {
-        color: var(--simple-toast-success-accent);
+        color: var(--bx-simple-toast-success-accent);
     }
 
     &.warn {
-        color: var(--simple-toast-warn-accent);
+        color: var(--bx-simple-toast-warn-accent);
     }
 
     &.error {
-        color: var(--simple-toast-error-accent);
+        color: var(--bx-simple-toast-error-accent);
     }
 }
 
@@ -111,19 +111,19 @@
     pointer-events: none;
 
     &.info {
-        background-color: var(--simple-toast-info-border);
+        background-color: var(--bx-simple-toast-info-border);
     }
 
     &.success {
-        background-color: var(--simple-toast-success-border);
+        background-color: var(--bx-simple-toast-success-border);
     }
 
     &.warn {
-        background-color: var(--simple-toast-warn-border);
+        background-color: var(--bx-simple-toast-warn-border);
     }
 
     &.error {
-        background-color: var(--simple-toast-error-border);
+        background-color: var(--bx-simple-toast-error-border);
     }
 }
 
@@ -134,18 +134,18 @@
     transform-origin: left;
 
     &.info {
-        background-color: var(--simple-toast-info-accent);
+        background-color: var(--bx-simple-toast-info-accent);
     }
 
     &.success {
-        background-color: var(--simple-toast-success-accent);
+        background-color: var(--bx-simple-toast-success-accent);
     }
 
     &.warn {
-        background-color: var(--simple-toast-warn-accent);
+        background-color: var(--bx-simple-toast-warn-accent);
     }
 
     &.error {
-        background-color: var(--simple-toast-error-accent);
+        background-color: var(--bx-simple-toast-error-accent);
     }
 }

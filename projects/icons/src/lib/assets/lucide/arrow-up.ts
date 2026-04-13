@@ -1,0 +1,7 @@
+import { defineIcon } from '../../helpers/define-icon';
+
+export const lucideArrowUp = defineIcon({
+  name: 'arrow-up',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="m5 12 7-7 7 7" /><path d="M12 19V5" />`
+} as const);

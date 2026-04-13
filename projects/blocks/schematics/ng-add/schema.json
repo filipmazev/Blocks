@@ -6,26 +6,26 @@
     "properties": {
         "theme": {
             "type": "string",
-            "description": "Select the default theme for your UI blocks.",
+            "description": "Select the theme for your UI.",
             "enum": [
-                "default",
-                "orange-company"
+                "purple",
+                "orange"
             ],
             "x-prompt": {
                 "message": "Which theme would you like to use?",
                 "type": "list",
                 "items": [
                     {
-                        "value": "default",
-                        "label": "Default Theme"
+                        "value": "purple",
+                        "label": "Purple Theme"
                     },
                     {
-                        "value": "orange-company",
-                        "label": "Orange Company Theme"
+                        "value": "orange",
+                        "label": "Orange Theme"
                     }
                 ]
             },
-            "default": "default"
+            "default": "purple"
         }
     },
     "required": [

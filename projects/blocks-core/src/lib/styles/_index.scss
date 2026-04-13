@@ -1,7 +1,11 @@
 @forward 'mixins';
 @forward 'variables';
 @forward 'utilities';
+@forward 'palettes';
 @forward 'theme-provider';
-@forward 'themes/default-theme';
-@forward 'themes/orange-company-theme';
+
+@forward 'themes/purple-theme';
+@forward 'themes/orange-theme';
+@forward 'themes/red-theme';
+@forward 'themes/green-theme';
 @forward 'themes/high-contrast-theme';

@@ -1,0 +1,62 @@
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+.notification {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding: 1rem;
+    border-radius: radius(md);
+    box-shadow: shadow(toast);
+    border: 1px solid var(--bx-border-default, #ccc);
+    min-height: 40px;
+
+    p,
+    h4,
+    button,
+    span,
+    div {
+        color: var(--bx-text-primary, #333);
+    }
+
+    background-color: var(--bx-bg-canvas, rgba(255, 255, 255, 0.85));
+    border: 1px solid var(--bx-border-default);
+}
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+    padding-right: 1.5rem;
+    font-family: inherit;
+}
+
+.notification-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notification-message {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.notification-close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}

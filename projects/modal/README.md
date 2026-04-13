@@ -35,32 +35,44 @@ To enable the library's stylization, import the theme provider in your global st
 
 @layer base {
     :root {
-        @include blocks.core-theme(blocks.$default-light-theme-config);
+        @include blocks.core-theme(blocks.$purple-light-theme);
 
         // if you dont want to override themes, just use: 
         // @include modal.modal-theme(());
 
         @include modal.modal-theme((
             /* Optional: Override default Modal style variables */
-            'modal-mobile-swipe-line-color': #cfcfcf,
+            'bx-modal-mobile-swipe-line-color': #cfcfcf,
         ));
     }
 
     [data-theme='dark'] {
-        @include blocks.core-theme(blocks.$default-dark-theme-config);
+        @include blocks.core-theme(blocks.$purple-dark-theme);
         @include modal.modal-theme((
-            'modal-mobile-swipe-line-color': #444444,
+            'bx-modal-mobile-swipe-line-color': #444444,
         ));
     }
 }
 ```
 
-You can also provide your own theme, please make sure that you follow the naming convention of the existing themes such as `default-light-theme-config` (found in `@filip.mazev/blocks-core/src/lib/styles/themes/default-theme`) for proper functionality.
+You can also provide your own theme, please make sure that you follow the naming convention of the existing themes such as `purple-light-theme` (found in `@filip.mazev/blocks-core/src/lib/styles/themes/purple-theme`) for proper functionality.
 
-Other themes are also available such as:
+Available themes:
 
-* `$orange-company-light-theme-config`
-* `$orange-company-dark-theme-config`
+* `$purple-light-theme`
+* `$purple-dark-theme`
+
+* `$orange-light-theme`
+* `$orange-dark-theme`
+
+* `$red-light-theme`
+* `$red-dark-theme`
+
+* `$green-light-theme`
+* `$green-dark-theme`
+
+* `$high-contrast-light-theme`
+* `$high-contrast-dark-theme`
 
 ## Usage
 

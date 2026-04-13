@@ -1,119 +1,148 @@
+@use 'sass:map';
 @use 'variables' as *;
+@use 'palettes' as *;
+
 
 @each $key, $val in $spacing {
-    .fm-p-#{$key} {
+    .bx-p-#{$key} {
         padding: #{$val};
     }
 
-    .fm-pt-#{$key} {
+    .bx-pt-#{$key} {
         padding-top: #{$val};
     }
 
-    .fm-pr-#{$key} {
+    .bx-pr-#{$key} {
         padding-right: #{$val};
     }
 
-    .fm-pb-#{$key} {
+    .bx-pb-#{$key} {
         padding-bottom: #{$val};
     }
 
-    .fm-pl-#{$key} {
+    .bx-pl-#{$key} {
         padding-left: #{$val};
     }
 
-    .fm-px-#{$key} {
+    .bx-px-#{$key} {
         padding-left: #{$val};
         padding-right: #{$val};
     }
 
-    .fm-py-#{$key} {
+    .bx-py-#{$key} {
         padding-top: #{$val};
         padding-bottom: #{$val};
     }
 
-    .fm-m-#{$key} {
+    .bx-m-#{$key} {
         margin: #{$val};
     }
 
-    .fm-mt-#{$key} {
+    .bx-mt-#{$key} {
         margin-top: #{$val};
     }
 
-    .fm-mr-#{$key} {
+    .bx-mr-#{$key} {
         margin-right: #{$val};
     }
 
-    .fm-mb-#{$key} {
+    .bx-mb-#{$key} {
         margin-bottom: #{$val};
     }
 
-    .fm-ml-#{$key} {
+    .bx-ml-#{$key} {
         margin-left: #{$val};
     }
 
-    .fm-mx-#{$key} {
+    .bx-mx-#{$key} {
         margin-left: #{$val};
         margin-right: #{$val};
     }
 
-    .fm-my-#{$key} {
+    .bx-my-#{$key} {
         margin-top: #{$val};
         margin-bottom: #{$val};
     }
 }
 
 @each $key, $val in $radiuses {
-    .fm-rounded-#{$key} {
+    .bx-rounded-#{$key} {
         border-radius: #{$val};
     }
 
-    .fm-rounded-t-#{$key} {
+    .bx-rounded-t-#{$key} {
         border-top-left-radius: #{$val};
         border-top-right-radius: #{$val};
     }
 
-    .fm-rounded-b-#{$key} {
+    .bx-rounded-b-#{$key} {
         border-bottom-left-radius: #{$val};
         border-bottom-right-radius: #{$val};
     }
 
-    .fm-rounded-l-#{$key} {
+    .bx-rounded-l-#{$key} {
         border-top-left-radius: #{$val};
         border-bottom-left-radius: #{$val};
     }
 
-    .fm-rounded-r-#{$key} {
+    .bx-rounded-r-#{$key} {
         border-top-right-radius: #{$val};
         border-bottom-right-radius: #{$val};
     }
 }
 
 @each $key, $val in $shadows {
-    .fm-shadow-#{$key} {
+    .bx-shadow-#{$key} {
         box-shadow: #{$val};
     }
 }
 
 @each $key, $val in $z-index {
-    .fm-z-#{$key} {
+    .bx-z-#{$key} {
         z-index: #{$val};
+    }
+}
+
+@each $palette-name, $shades in $all-palettes {
+    @if type-of($shades)=='map' {
+        @each $shade, $color in $shades {
+            .bx-bg-#{$palette-name}-#{$shade} {
+                background-color: var(--bx-color-#{$palette-name}-#{$shade});
+            }
+
+            .bx-text-#{$palette-name}-#{$shade} {
+                color: var(--bx-color-#{$palette-name}-#{$shade});
+            }
+
+            .bx-border-#{$palette-name}-#{$shade} {
+                border-color: var(--bx-color-#{$palette-name}-#{$shade});
+            }
+        }
     }
 }
 
 :root {
     @each $key, $val in $spacing {
-        --fm-space-#{$key}: #{$val};
+        --bx-space-#{$key}: #{$val};
     }
 
     @each $key, $val in $radiuses {
-        --fm-rounded-#{$key}: #{$val};
+        --bx-rounded-#{$key}: #{$val};
     }
 
     @each $key, $val in $shadows {
-        --fm-shadow-#{$key}: #{$val};
+        --bx-shadow-#{$key}: #{$val};
     }
 
     @each $key, $val in $z-index {
-        --fm-z-#{$key}: #{$val};
+        --bx-z-#{$key}: #{$val};
+    }
+
+    @each $palette-name, $shades in $all-palettes {
+        @if type-of($shades)=='map' {
+            @each $shade, $color in $shades {
+                --bx-color-#{$palette-name}-#{$shade}: #{$color};
+            }
+        }
     }
 }

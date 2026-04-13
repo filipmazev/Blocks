@@ -1,0 +1,14 @@
+{
+    "name": "@filip.mazev/button",
+    "version": "1.0.27",
+    "license": "MIT",
+    "peerDependencies": {
+        "@angular/common": "^21.1.1",
+        "@angular/core": "^21.1.1",
+        "@filip.mazev/blocks-core": "latest"
+    },
+    "dependencies": {
+        "tslib": "^2.3.0"
+    },
+    "sideEffects": false
+}

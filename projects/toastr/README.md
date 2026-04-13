@@ -35,25 +35,25 @@ To ensure the library's stylization works correctly, import the core theme provi
 
 @layer base {
     :root {
-        @include blocks.core-theme(blocks.$default-light-theme-config);
+        @include blocks.core-theme(blocks.$purple-light-theme);
 
         // if you dont want to override themes, just use: 
         // @include toastr.toastr-theme(());
 
         @include toastr.toastr-theme((
             /* Optional: Override default Toast style variables */
-          '--toast-bg': #ffffff,
-          '--toast-text': #000000
+          '--bx-toast-bg': #ffffff,
+          '--bx-toast-text': #000000
         ));
     }
 
     [data-theme='dark'] {
-        @include blocks.core-theme(blocks.$default-dark-theme-config);
+        @include blocks.core-theme(blocks.$purple-dark-theme);
 
         @include toastr.toastr-theme((
           /* Optional: Override default Toast wrapper variables */
-          '--toast-bg': #000000,
-          '--toast-text': #ffffff
+          '--bx-toast-bg': #000000,
+          '--bx-toast-text': #ffffff
         ));
     }
 }
@@ -245,15 +245,14 @@ The `SimpleToast` component uses specific CSS variables for its status colors. T
 
 @layer base {
     :root {
-        @include blocks.core-theme(blocks.$default-light-theme-config);
+        @include blocks.core-theme(blocks.$purple-light-theme);
 
         @include toastr.toastr-theme((
           /* Optional: Override default Toast wrapper variables */
-          '--simple-toast-info': #e3f2fd,
-          '--simple-toast-success': #e8f5e9,
-          '--simple-toast-warn': #fff3cd,
-          '--simple-toast-error': #fdecea,
-          'toast-text-warn': #d32f2f
+          '--bx-simple-toast-info': #e3f2fd,
+          '--bx-simple-toast-success': #e8f5e9,
+          '--bx-simple-toast-warn': #fff3cd,
+          '--bx-simple-toast-error': #fdecea
         ));
     }
 }

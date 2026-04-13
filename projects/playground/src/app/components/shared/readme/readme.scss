@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    min-width: 0; 
+    min-width: 0;
 }
 
 .readme-header {
@@ -13,10 +13,10 @@
 
     .badge {
         font-size: 0.75rem;
-        background: var(--fm-button-primary);
+        background: var(--bx-bg-element);
         padding: 4px 8px;
         border-radius: 4px;
-        color: var(--fm-text-primary, #fff);
+        color: var(--bx-text-primary, #fff);
         text-transform: uppercase;
         font-weight: 700;
         letter-spacing: 0.5px;
@@ -27,13 +27,13 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
 
-    background-color: var(--fm-panel);
+    background-color: var(--bx-bg-surface);
     flex: 1;
     width: 100%;
 
     max-height: 79vh;
     max-height: 79dvh;
-    
+
     overflow-y: auto;
     overflow-x: auto;
 
@@ -41,15 +41,20 @@
     overflow-wrap: break-word;
 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--fm-text-primary);
+    color: var(--bx-text-primary);
     line-height: 1.6;
 
     ::ng-deep {
 
-        h1, h2, h3, h4, h5, h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             overflow-wrap: break-word;
             word-wrap: break-word;
-            word-break: break-word; 
+            word-break: break-word;
             max-width: 100%;
         }
 
@@ -63,13 +68,13 @@
 
         h1 {
             font-size: 2em;
-            border-bottom: 1px solid var(--fm-border, #eaeaea);
+            border-bottom: 1px solid var(--bx-border-default, #eaeaea);
             padding-bottom: 0.3em;
         }
 
         h2 {
             font-size: 1.5em;
-            border-bottom: 1px solid var(--fm-border, #eaeaea);
+            border-bottom: 1px solid var(--bx-border-default, #eaeaea);
             padding-bottom: 0.3em;
         }
 
@@ -102,14 +107,14 @@
             border-radius: 3px;
             font-family: 'Courier New', Courier, monospace;
             font-size: 85%;
-            color: var(--text-primary);
+            color: var(--bx-text-primary);
         }
 
         pre {
-            background: var(--fm-button-grayscale);
+            background: var(--bx-bg-element);
             padding: 1rem;
             border-radius: 6px;
-            overflow-x: auto; 
+            overflow-x: auto;
             max-width: 100%;
 
             code {

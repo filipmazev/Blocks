@@ -5,7 +5,8 @@ import { Toast } from '../../../classes/toast';
 import { ISimpleToastData } from '../../../interfaces/isimple-toast.interface';
 
 @Component({
-  selector: 'app-simple-toast',
+    // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'bx-simple-toast',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './simple-toast.html',

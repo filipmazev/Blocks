@@ -1,0 +1,57 @@
+.modal-top-banner-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--bx-modal-text, #000000);
+    top: 0;
+    min-height: 2rem;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+}
+
+.modal-top-banner-title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    align-items: center;
+    width: 100%;
+}
+
+@keyframes banner-display {
+    0% {
+        opacity: 0;
+        height: 0;
+    }
+
+    100% {
+        opacity: 1;
+        height: auto;
+    }
+}
+
+@-webkit-keyframes banner-display {
+    0% {
+        opacity: 0;
+        height: 0;
+    }
+
+    100% {
+        opacity: 1;
+        height: auto;
+    }
+}
+
+@-moz-keyframes banner-display {
+    0% {
+        opacity: 0;
+        height: 0;
+    }
+
+    100% {
+        opacity: 1;
+        height: auto;
+    }
+}

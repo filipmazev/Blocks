@@ -1,7 +1,7 @@
 import { ComponentRef, Type } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ModalConfig } from './modal-config';
-import { ModalCore } from '../components/modal-core';
+import { ModalCore } from '../components/modal-core.component';
 import { ModalState } from '../enums/modal-state.enum';
 import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
 import { IModalRef } from '../interfaces/imodal-ref.interface';

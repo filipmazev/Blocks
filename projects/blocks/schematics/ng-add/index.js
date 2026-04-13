@@ -77,8 +77,8 @@ function injectStyles(tree, context, options) {
         context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
         return;
     }
-    const lightThemeVar = options.theme === 'orange-company' ? '$orange-company-light-theme-config' : '$default-light-theme-config';
-    const darkThemeVar = options.theme === 'orange-company' ? '$orange-company-dark-theme-config' : '$default-dark-theme-config';
+    const lightThemeVar = `$${options.theme}-light-theme`;
+    const darkThemeVar = `$${options.theme}-dark-theme`;
     const blocksThemeSnippet = `
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
 @use '@filip.mazev/modal/lib/styles/index' as modal;

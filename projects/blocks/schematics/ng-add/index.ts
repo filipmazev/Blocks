@@ -2,7 +2,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export interface NgAddOptions {
-  theme: 'default' | 'orange-company';
+  theme: 'purple' | 'orange' | 'red' | 'green';
 }
 
 export function ngAdd(options: NgAddOptions): Rule {
@@ -90,8 +90,8 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
     return;
   }
 
-  const lightThemeVar = options.theme === 'orange-company' ? '$orange-company-light-theme-config' : '$default-light-theme-config';
-  const darkThemeVar = options.theme === 'orange-company' ? '$orange-company-dark-theme-config' : '$default-dark-theme-config';
+  const lightThemeVar = `$${options.theme}-light-theme`;
+  const darkThemeVar = `$${options.theme}-dark-theme`;
 
   const blocksThemeSnippet = `
 @use '@filip.mazev/blocks-core/src/lib/styles/index' as *;

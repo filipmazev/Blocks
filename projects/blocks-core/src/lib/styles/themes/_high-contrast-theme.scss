@@ -1,125 +1,97 @@
-@use '../variables' as *;
+@use '../palettes' as *;
 
-$high-contrast-light-config: (
-    // General
+$high-contrast-light-theme: (
+    'bg-canvas': $hc-white,
+    'bg-surface': $hc-white,
+    'bg-surface-alt': $hc-white,
+    'bg-element': $hc-white,
+    'bg-element-hover': $hc-yellow,
+
     'primary': $hc-black,
-    'secondary': $hc-white,
-    'alt': $hc-black,
-    'accent': $hc-yellow,
-    'accent-alt': $hc-yellow,
-    'accent-tertiary': $hc-yellow,
+    'primary-hover': $hc-black,
+    'primary-active': $hc-black,
+    'primary-subtle': $hc-white,
+    'on-primary': $hc-white,
 
-    // Text
+    'text-heading': $hc-black,
     'text-primary': $hc-black,
     'text-secondary': $hc-black,
-    'text-tertiary': $hc-black,
-    'text-accent': $hc-black,
-    'text-accent-alt': $hc-black,
-    'text-grayscale': $hc-black,
-    'menu-item-text': $hc-black,
-    'text-warn': $hc-white,
-    'text-confirm': $hc-black,
+    'text-brand': $hc-black,
+    'text-inverse': $hc-white,
 
-    // UI Elements
-    'bg-menu-item-hover': $hc-yellow,
-    'border': $hc-black,
-    'border-grayscale-light': $hc-black,
-    'warn': $hc-red,
-    'error': $hc-red,
-    'info': $hc-cyan,
+    'border-subtle': $hc-black,
+    'border-default': $hc-black,
+    'border-strong': $hc-black,
+    'border-brand': $hc-black,
 
-    // Buttons
-    'button-primary': $hc-white,
-    'button-confirm': $hc-green,
-    'button-warn': $hc-red,
-    'button-grayscale': $hc-white,
+    'info-bg': $hc-white,
+    'info-bg-subtle': $hc-white,
+    'info-border': $hc-black,
+    'info-text': $hc-cyan,
 
-    // Feedback
-    'toast-info-bg': $hc-white,
-    'toast-info-border': $hc-black,
-    'toast-info-accent': $hc-cyan,
-    'toast-error-bg': $hc-white,
-    'toast-error-border': $hc-black,
-    'toast-error-accent': #ff5151,
-    'toast-success-bg': $hc-white,
-    'toast-success-border': $hc-black,
-    'toast-success-accent': #008800,
-    'toast-warn-bg': $hc-white,
-    'toast-warn-border': $hc-black,
-    'toast-warn-accent': #ffae0c,
+    'success-bg': $hc-white,
+    'success-bg-subtle': $hc-white,
+    'success-border': $hc-black,
+    'success-text': $hc-green,
 
-    // Scrollbar & Sliders
+    'warn-bg': $hc-white,
+    'warn-bg-subtle': $hc-white,
+    'warn-border': $hc-black,
+    'warn-text': $hc-yellow,
+
+    'error-bg': $hc-white,
+    'error-bg-subtle': $hc-white,
+    'error-border': $hc-black,
+    'error-text': $hc-red,
+
     'scroll-bg': $hc-white,
     'scroll-thumb': $hc-black,
-    'scroll-thumb-highlighted': $hc-yellow,
+    'scroll-thumb-hover': $hc-yellow) !default;
 
-    'canvas': $hc-white,
-    'surface': $hc-white,
-    'element': $hc-white,
-    'text': $hc-black,
-    'status-warn': $hc-red,
-    'status-error': $hc-red,
-    'error-subtle': rgba(0, 0, 0, 0.15)
-);
+$high-contrast-dark-theme: (
+    'bg-canvas': $hc-black,
+    'bg-surface': $hc-black,
+    'bg-surface-alt': $hc-black,
+    'bg-element': $hc-black,
+    'bg-element-hover': $hc-yellow,
 
-$high-contrast-dark-config: (
-    // General
     'primary': $hc-white,
-    'secondary': $hc-black,
-    'alt': $hc-white,
-    'accent': $hc-yellow,
-    'accent-alt': $hc-yellow,
-    'accent-tertiary': $hc-yellow,
+    'primary-hover': $hc-white,
+    'primary-active': $hc-white,
+    'primary-subtle': $hc-black,
+    'on-primary': $hc-black,
 
-    // Text
+    'text-heading': $hc-white,
     'text-primary': $hc-white,
     'text-secondary': $hc-white,
-    'text-tertiary': $hc-white,
-    'text-accent': $hc-black,
-    'text-accent-alt': $hc-black,
-    'text-grayscale': $hc-white,
-    'menu-item-text': $hc-white,
-    'text-warn': $hc-white,
-    'text-confirm': $hc-black,
+    'text-brand': $hc-white,
+    'text-inverse': $hc-black,
 
-    // UI Elements
-    'bg-menu-item-hover': $hc-yellow,
-    'border': $hc-white,
-    'border-grayscale-light': $hc-white,
-    'warn': $hc-red,
-    'error': $hc-red,
-    'info': $hc-cyan,
+    'border-subtle': $hc-white,
+    'border-default': $hc-white,
+    'border-strong': $hc-white,
+    'border-brand': $hc-white,
 
-    // Buttons
-    'button-primary': $hc-black,
-    'button-confirm': $hc-green,
-    'button-warn': $hc-red,
-    'button-grayscale': $hc-black,
+    'info-bg': $hc-black,
+    'info-bg-subtle': $hc-black,
+    'info-border': $hc-white,
+    'info-text': $hc-cyan,
 
-    // Feedback
-    'toast-info-bg': $hc-black,
-    'toast-info-border': $hc-white,
-    'toast-info-accent': $hc-cyan,
-    'toast-error-bg': $hc-black,
-    'toast-error-border': $hc-white,
-    'toast-error-accent': $hc-red,
-    'toast-success-bg': $hc-black,
-    'toast-success-border': $hc-white,
-    'toast-success-accent': #54ff99,
-    'toast-warn-bg': $hc-black,
-    'toast-warn-border': $hc-white,
-    'toast-warn-accent': $hc-yellow,
+    'success-bg': $hc-black,
+    'success-bg-subtle': $hc-black,
+    'success-border': $hc-white,
+    'success-text': $hc-green,
 
-    // Scrollbar & Sliders
+    'warn-bg': $hc-black,
+    'warn-bg-subtle': $hc-black,
+    'warn-border': $hc-white,
+    'warn-text': $hc-yellow,
+
+    'error-bg': $hc-black,
+    'error-bg-subtle': $hc-black,
+    'error-border': $hc-white,
+    'error-text': $hc-red,
+
     'scroll-bg': $hc-black,
     'scroll-thumb': $hc-white,
-    'scroll-thumb-highlighted': $hc-yellow,
-
-    'canvas': $hc-black,
-    'surface': $hc-black,
-    'element': $hc-black,
-    'text': $hc-white,
-    'status-warn': $hc-red,
-    'status-error': $hc-red,
-    'error-subtle': rgba(255, 255, 255, 0.2)
-);
+    'scroll-thumb-hover': $hc-yellow) !default;
