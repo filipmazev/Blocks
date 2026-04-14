@@ -1,13 +1,13 @@
 import { Component, input, output } from '@angular/core';
 import { ModalConfig } from '../../../../classes/modal-config';
 import { ModalCloseMode } from '../../../../types/modal.types';
-import { IconComponent } from '@filip.mazev/icons';
+import { Icon } from '@filip.mazev/icons';
 
 @Component({
   selector: 'bx-modal-banner',
-  imports: [IconComponent],
-  templateUrl: './modal-banner.component.html',
-  styleUrl: './modal-banner.component.scss'
+  imports: [Icon],
+  templateUrl: './modal-banner.html',
+  styleUrl: './modal-banner.scss'
 })
 export class ModalBanner<D = unknown, R = unknown> {
   public readonly config = input.required<ModalConfig<D, R> | undefined>();

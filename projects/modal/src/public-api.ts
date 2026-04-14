@@ -2,12 +2,12 @@
  * Public API Surface of modal
  */
 
-export * from './lib/components/modal-core.component';
-export * from './lib/components/views/bottom-sheet/modal-bottom-sheet.component';
-export * from './lib/components/views/side/modal-side.component';
-export * from './lib/components/views/centered/modal-centered.component';
-export * from './lib/components/shared/ui/backdrop/modal-backdrop.component';
-export * from './lib/components/shared/ui/banner/modal-banner.component';
+export * from './lib/components/modal-core';
+export * from './lib/components/views/bottom-sheet/modal-bottom-sheet';
+export * from './lib/components/views/side/modal-side';
+export * from './lib/components/views/centered/modal-centered';
+export * from './lib/components/shared/ui/backdrop/modal-backdrop';
+export * from './lib/components/shared/ui/banner/modal-banner';
 
 export * from './lib/services/modal-global-settings.service';
 export * from './lib/services/modal.service';

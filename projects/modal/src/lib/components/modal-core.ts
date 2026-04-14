@@ -19,10 +19,10 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ModalConfig } from '../classes/modal-config';
 import { IModalComponent } from '../interfaces/imodal-component.interface';
 import { ModalService } from '../services/modal.service';
-import { ModalBackdrop } from './shared/ui/backdrop/modal-backdrop.component';
-import { ModalCentered } from './views/centered/modal-centered.component';
-import { ModalSide } from './views/side/modal-side.component';
-import { ModalBottomSheet } from './views/bottom-sheet/modal-bottom-sheet.component';
+import { ModalBackdrop } from './shared/ui/backdrop/modal-backdrop';
+import { ModalCentered } from './views/centered/modal-centered';
+import { ModalSide } from './views/side/modal-side';
+import { ModalBottomSheet } from './views/bottom-sheet/modal-bottom-sheet';
 import { BreakpointKey, ModalCloseMode, ModalLayout } from '../types/modal.types';
 import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
 import { ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks-core';
@@ -34,8 +34,8 @@ import * as animConst from '../constants/modal-animation.constants';
 @Component({
   selector: 'bx-modal',
   imports: [NgTemplateOutlet, ModalCentered, ModalSide, ModalBackdrop],
-  templateUrl: './modal-core.component.html',
-  styleUrl: './modal-core.component.scss'
+  templateUrl: './modal-core.html',
+  styleUrl: './modal-core.scss'
 })
 export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit {
   private readonly modalService = inject(ModalService);

@@ -8,7 +8,8 @@ import { IconCatalog } from './components/screens/icon-catalog/icon-catalog';
 export const ROUTES: Routes = [
   {
     path: '',
-    component: Home
+    component: Home,
+    pathMatch: 'full'
   },
   {
     path: 'modal',
@@ -21,6 +22,10 @@ export const ROUTES: Routes = [
   {
     path: 'icon-catalog',
     component: IconCatalog
+  },
+  {
+    path: '**',
+    component: Home
   }
 ];
 

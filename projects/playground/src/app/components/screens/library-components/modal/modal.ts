@@ -16,12 +16,12 @@ import { MarkdownModule } from 'ngx-markdown';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
-import { ButtonComponent } from '../../../../../../../button/src/lib/components/button.component';
+import { Button } from '../../../../../../../button/src/lib/components/button';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo, ButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo, Button],
   templateUrl: './modal.html',
   styleUrl: './modal.scss'
 })

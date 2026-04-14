@@ -3,15 +3,15 @@ import { Component, QueryList, TemplateRef, ViewChildren, effect, input, output,
 import { ModalConfig } from '../../../classes/modal-config';
 import { IModalView } from '../../../interfaces/imodal-view.interface';
 import { ModalCloseMode, ModalLayout } from '../../../types/modal.types';
-import { ModalBanner } from '../../shared/ui/banner/modal-banner.component';
-import { ModalBottomSheet } from '../bottom-sheet/modal-bottom-sheet.component';
-import { IconComponent } from '@filip.mazev/icons';
+import { ModalBanner } from '../../shared/ui/banner/modal-banner';
+import { ModalBottomSheet } from '../bottom-sheet/modal-bottom-sheet';
+import { Icon } from '@filip.mazev/icons';
 
 @Component({
   selector: 'bx-modal-side',
-  imports: [NgTemplateOutlet, ModalBottomSheet, NgClass, ModalBanner, IconComponent],
-  templateUrl: './modal-side.component.html',
-  styleUrl: './modal-side.component.scss'
+  imports: [NgTemplateOutlet, ModalBottomSheet, NgClass, ModalBanner, Icon],
+  templateUrl: './modal-side.html',
+  styleUrl: './modal-side.scss'
 })
 export class ModalSide<D = unknown, R = unknown> implements IModalView<D, R> {
   public readonly layout = input.required<ModalLayout>();

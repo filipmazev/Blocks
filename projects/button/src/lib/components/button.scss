@@ -1,0 +1,184 @@
+@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+
+:host {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    outline: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+
+    &[disabled],
+    &[aria-disabled="true"] {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+        box-shadow: none !important;
+    }
+
+    &.bx-btn-color-primary {
+        --btn-theme-base: var(--bx-primary);
+        --btn-theme-hover: var(--bx-primary-hover);
+        --btn-theme-active: var(--bx-primary-active);
+        --btn-theme-text: var(--bx-on-primary);
+        --btn-theme-tonal-bg: var(--bx-primary-subtle);
+        --btn-theme-tonal-text: var(--bx-text-brand);
+        --btn-theme-border: var(--bx-border-brand);
+    }
+
+    &.bx-btn-color-danger {
+        --btn-theme-base: var(--bx-bg-danger);
+        --btn-theme-hover: var(--bx-bg-danger-hover);
+        --btn-theme-active: var(--bx-bg-danger-active);
+        --btn-theme-text: var(--bx-text-danger);
+        --btn-theme-tonal-bg: var(--bx-bg-danger-subtle);
+        --btn-theme-tonal-text: var(--bx-text-danger);
+        --btn-theme-border: var(--bx-border-danger);
+    }
+
+    &.bx-btn-color-success {
+        --btn-theme-base: var(--bx-bg-success);
+        --btn-theme-hover: var(--bx-bg-success-hover);
+        --btn-theme-active: var(--bx-bg-success-active);
+        --btn-theme-text: var(--bx-text-success);
+        --btn-theme-tonal-bg: var(--bx-bg-success-subtle);
+        --btn-theme-tonal-text: var(--bx-text-success);
+        --btn-theme-border: var(--bx-border-success);
+    }
+
+    &.bx-btn-color-info {
+        --btn-theme-base: var(--bx-bg-info);
+        --btn-theme-hover: var(--bx-bg-info-hover);
+        --btn-theme-active: var(--bx-bg-info-active);
+        --btn-theme-text: var(--bx-text-info);
+        --btn-theme-tonal-bg: var(--bx-bg-info-subtle);
+        --btn-theme-tonal-text: var(--bx-text-info);
+        --btn-theme-border: var(--bx-border-info);
+    }
+
+    &.bx-btn-color-warn {
+        --btn-theme-base: var(--bx-bg-warn);
+        --btn-theme-hover: var(--bx-bg-warn-hover);
+        --btn-theme-active: var(--bx-bg-warn-active);
+        --btn-theme-text: var(--bx-text-warn);
+        --btn-theme-tonal-bg: var(--bx-bg-warn-subtle);
+        --btn-theme-tonal-text: var(--bx-text-warn);
+        --btn-theme-border: var(--bx-border-warn);
+    }
+
+    &.bx-btn-color-grayscale {
+        --btn-theme-base: var(--bx-bg-element);
+        --btn-theme-hover: var(--bx-bg-element-hover);
+        --btn-theme-active: var(--bx-bg-element-active);
+        --btn-theme-text: var(--bx-text-primary);
+        --btn-theme-tonal-bg: var(--bx-bg-surface-alt);
+        --btn-theme-tonal-text: var(--bx-text-primary);
+        --btn-theme-border: var(--bx-border-strong);
+    }
+
+    &.bx-btn-text,
+    &.bx-btn-filled,
+    &.bx-btn-tonal {
+        padding: spacing(2) spacing(4);
+        border-radius: radius(sm);
+    }
+
+    &.bx-btn-icon,
+    &.bx-btn-fab,
+    &.bx-btn-mini-fab {
+        padding: 0;
+        border-radius: 50%;
+
+        .bx-btn-content-wrapper {
+            gap: 0;
+        }
+    }
+
+    &.bx-btn-filled,
+    &.bx-btn-fab,
+    &.bx-btn-mini-fab,
+    &.bx-btn-extended-fab {
+        background: var(--btn-theme-base);
+        color: var(--btn-theme-text);
+
+        &:hover {
+            background: var(--btn-theme-hover);
+        }
+
+        &:active {
+            background: var(--btn-theme-active);
+        }
+    }
+
+    &.bx-btn-text,
+    &.bx-btn-icon {
+        background: transparent;
+        color: var(--btn-theme-text);
+
+        &:hover {
+            background: var(--btn-theme-tonal-bg);
+        }
+
+        &:active {
+            background: var(--btn-theme-active);
+        }
+    }
+
+    &.bx-btn-tonal {
+        background: var(--btn-theme-tonal-bg);
+        color: var(--btn-theme-tonal-text);
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+        &:active {
+            opacity: 0.9;
+        }
+    }
+
+    &.bx-btn-icon,
+    &.bx-btn-mini-fab {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    &.bx-btn-fab {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    &.bx-btn-extended-fab {
+        padding: 0 1.5rem;
+        height: 3.5rem;
+        border-radius: 9999px;
+    }
+
+    &.bx-btn-is-outlined {
+        border-color: var(--btn-theme-border);
+    }
+
+    &.bx-btn-is-elevated {
+        box-shadow: shadow(md);
+
+        &:active {
+            box-shadow: shadow(sm);
+        }
+    }
+}
+
+.bx-btn-content-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+}

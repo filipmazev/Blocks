@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { IconComponent } from '@icons/components/icon.component';
+import { Icon } from '@icons/components/icon';
 import { IconName } from '@icons/types/icon.types';
-import { ButtonComponent } from '../../../../../../button/src/lib/components/button.component';
+import { Button } from '../../../../../../button/src/lib/components/button';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, IconComponent, ButtonComponent],
+  imports: [CommonModule, RouterLink, Icon, Button],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })

@@ -1,5 +1,5 @@
 import { Directive, TemplateRef, inject } from '@angular/core';
-import { ModalCore } from '../components/modal-core.component';
+import { ModalCore } from '../components/modal-core';
 import { ModalWarnings } from '../enums/modal-warnings.enum';
 
 @Directive({

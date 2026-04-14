@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { ButtonComponent } from '../../../../../../../../../button/src/lib/components/button.component';
+import { Button } from '../../../../../../../../../button/src/lib/components/button';
 import { Modal } from '@modal/classes/modal';
 import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
 
 @Component({
   selector: 'app-confirm-close',
-  imports: [ModalFooterDirective, ButtonComponent],
+  imports: [ModalFooterDirective, Button],
   templateUrl: './confirm-close.html',
   styleUrl: './confirm-close.scss'
 })

@@ -17,10 +17,10 @@ import { loadIcon } from '../helpers/icon.resolve';
 @Component({
   selector: 'bx-icon',
   standalone: true,
-  templateUrl: './icon.component.html',
-  styleUrl: './icon.component.scss'
+  templateUrl: './icon.html',
+  styleUrl: './icon.scss'
 })
-export class IconComponent {
+export class Icon {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly themingService = inject(ThemingService);
 
@@ -51,7 +51,7 @@ export class IconComponent {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="${icon.viewBox ?? '0 0 24 24'}"
-      fill="none"
+      width="100%"    height="100%"   fill="none"
       stroke="currentColor"
       stroke-width="${strokeWidth}"
       stroke-linecap="round"

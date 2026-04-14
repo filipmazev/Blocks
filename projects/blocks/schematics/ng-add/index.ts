@@ -30,7 +30,8 @@ function addDependencies(tree: Tree, context: SchematicContext): void {
     '@filip.mazev/blocks-core',
     '@filip.mazev/modal',
     '@filip.mazev/toastr',
-    '@filip.mazev/icons'
+    '@filip.mazev/icons',
+    '@filip.mazev/button'
   ];
   
   let dependenciesAdded = false;

@@ -7,8 +7,8 @@ import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constan
 @Component({
   selector: 'bx-modal-bottom-sheet',
   imports: [NgClass, NgTemplateOutlet],
-  templateUrl: './modal-bottom-sheet.component.html',
-  styleUrl: './modal-bottom-sheet.component.scss'
+  templateUrl: './modal-bottom-sheet.html',
+  styleUrl: './modal-bottom-sheet.scss'
 })
 export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDestroy {
   public readonly id = input.required<string | null>();

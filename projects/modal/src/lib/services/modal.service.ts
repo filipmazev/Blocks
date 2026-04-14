@@ -4,7 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { BehaviorSubject, filter, skip } from 'rxjs';
 import { ModalConfig } from '../classes/modal-config';
 import { ModalRef } from '../classes/modal-ref';
-import { ModalCore } from '../components/modal-core.component';
+import { ModalCore } from '../components/modal-core';
 import { IModalConfig } from '../interfaces/imodal-config.interface';
 import { IModalService } from '../interfaces/imodal-service.interface';
 import { MODAL_DATA } from '../tokens/modal-data.token';

@@ -7,8 +7,10 @@
         </select>
     </div>
 
-    <bx-button (click)="toggleTheme()" [attr.aria-label]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-        [variant]="'grayscale'" [leftIcon]="isDarkMode() ? 'sun' : 'moon'" class="theme-toggle"/>
+    <button bx-button (click)="toggleTheme()" variant="mini-fab" color="grayscale" [outlined]="true"
+        [attr.aria-label]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'" class="theme-toggle">
+        <bx-icon [name]="isDarkMode() ? 'sun' : 'moon'" />
+    </button>
 </div>
 
 

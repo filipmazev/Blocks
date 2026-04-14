@@ -3,15 +3,15 @@ import { Component, input, output, ViewChildren, QueryList, TemplateRef, compute
 import { ModalConfig } from '../../../classes/modal-config';
 import { IModalView } from '../../../interfaces/imodal-view.interface';
 import { ModalCloseMode } from '../../../types/modal.types';
-import { ModalBanner } from '../../shared/ui/banner/modal-banner.component';
-import { ModalBottomSheet } from '../bottom-sheet/modal-bottom-sheet.component';
-import { IconComponent } from '@filip.mazev/icons';
+import { ModalBanner } from '../../shared/ui/banner/modal-banner';
+import { ModalBottomSheet } from '../bottom-sheet/modal-bottom-sheet';
+import { Icon } from '@filip.mazev/icons';
 
 @Component({
   selector: 'bx-modal-centered',
-  imports: [NgTemplateOutlet, NgClass, ModalBottomSheet, ModalBanner, IconComponent],
-  templateUrl: './modal-centered.component.html',
-  styleUrl: './modal-centered.component.scss'
+  imports: [NgTemplateOutlet, NgClass, ModalBottomSheet, ModalBanner, Icon],
+  templateUrl: './modal-centered.html',
+  styleUrl: './modal-centered.scss'
 })
 export class ModalCentered<D = unknown, R = unknown> implements IModalView<D, R> {
   public readonly headerTemplate = input.required<TemplateRef<void> | null>();

@@ -11,11 +11,11 @@ import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-sett
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 import { DemoToast } from './components/demo-toast/demo-toast';
-import { ButtonComponent } from '../../../../../../../button/src/lib/components/button.component';
+import { Button } from '../../../../../../../button/src/lib/components/button';
 
 @Component({
   selector: 'app-toastr-demo',
-  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, ButtonComponent],
+  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, Button],
   templateUrl: './toastr.html',
   styleUrl: './toastr.scss'
 })

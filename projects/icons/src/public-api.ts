@@ -2,7 +2,7 @@
  * Public API Surface of icons
  */
 
-export * from './lib/components/icon.component';
+export * from './lib/components/icon';
 export * from './lib/types/icon.types';
 export * from './lib/constants/icon.constants';
 export * from './lib/interfaces/icon-definition.interface';

@@ -26,7 +26,8 @@ function addDependencies(tree, context) {
         '@filip.mazev/blocks-core',
         '@filip.mazev/modal',
         '@filip.mazev/toastr',
-        '@filip.mazev/icons'
+        '@filip.mazev/icons',
+        '@filip.mazev/button'
     ];
     let dependenciesAdded = false;
     packages.forEach(pkg => {

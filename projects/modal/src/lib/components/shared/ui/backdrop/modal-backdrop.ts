@@ -3,8 +3,8 @@ import { Component, input, output } from '@angular/core';
 @Component({
   selector: 'bx-modal-backdrop',
   imports: [],
-  templateUrl: './modal-backdrop.component.html',
-  styleUrls: ['./modal-backdrop.component.scss']
+  templateUrl: './modal-backdrop.html',
+  styleUrls: ['./modal-backdrop.scss']
 })
 export class ModalBackdrop {
   public readonly isAnimated = input(false);
