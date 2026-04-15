@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Toast } from '@toastr/classes/toast';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
+import { Toast } from '@toastr/classes/toast';
 
 @Component({
   selector: 'app-demo-toast',

@@ -1,9 +1,10 @@
 {
-    "name": "blocks",
+    "name": "blocks-monorepo",
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
+        "prebuild": "node tools/version-sync.mjs",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "tools:generate:icons:lucide": "node tools/icons/generate-lucide-icons.mjs",
@@ -23,6 +24,10 @@
         ]
     },
     "private": true,
+    "workspaces": [
+        "projects/blocks",
+        "projects/playground"
+    ],
     "dependencies": {
         "@angular/animations": "^21.1.1",
         "@angular/cdk": "^21.1.1",
@@ -35,11 +40,6 @@
         "@angular/platform-server": "^21.1.1",
         "@angular/router": "^21.1.1",
         "@angular/ssr": "^21.1.1",
-        "@filip.mazev/blocks-core": "^1.0.34",
-        "@filip.mazev/icons": "^1.0.35",
-        "@filip.mazev/modal": "^1.0.34",
-        "@filip.mazev/toastr": "^1.0.34",
-        "@filip.mazev/button": "^1.0.35",
         "@modelcontextprotocol/sdk": "^1.26.0",
         "express": "^5.1.0",
         "mermaid": "^10.9.5",

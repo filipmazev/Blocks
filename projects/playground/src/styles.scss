@@ -1,59 +1,48 @@
-@use '../../blocks-core' as *;
-@use '../../modal' as modal;
+@use 'core/styles/index' as *;
 @use './styles/common' as *;
 
 :root {
-    @include core-theme($purple-light-theme);
-    @include modal.modal-theme(());
+    @include bx-theme($purple-light-theme);
 
     --mobile-header-height: 60px;
     --bg-translucent-contrast: rgba(255, 255, 255, 0.85);
 }
 
 [data-theme="dark"] {
-    @include core-theme($purple-dark-theme);
-    @include modal.modal-theme(());
+    @include bx-theme($purple-dark-theme);
 
     --bg-translucent-contrast: rgba(12, 12, 12, 0.85);
 }
 
 .theme-orange {
-    @include core-theme($orange-light-theme);
-    @include modal.modal-theme(());
+    @include bx-theme($orange-light-theme);
 
     &[data-theme="dark"] {
-        @include core-theme($orange-dark-theme);
-        @include modal.modal-theme(());
+        @include bx-theme($orange-dark-theme);
     }
 }
 
 .theme-red {
-    @include core-theme($red-light-theme);
-    @include modal.modal-theme(());
+    @include bx-theme($red-light-theme);
 
     &[data-theme="dark"] {
-        @include core-theme($red-dark-theme);
-        @include modal.modal-theme(());
+        @include bx-theme($red-dark-theme);
     }
 }
 
 .theme-green {
-    @include core-theme($green-light-theme);
-    @include modal.modal-theme(());
+    @include bx-theme($green-light-theme);
 
     &[data-theme="dark"] {
-        @include core-theme($green-dark-theme);
-        @include modal.modal-theme(());
+        @include bx-theme($green-dark-theme);
     }
 }
 
 .high-contrast {
-    @include core-theme($high-contrast-light-theme);
-    @include modal.modal-theme(());
+    @include bx-theme($high-contrast-light-theme);
 
     &[data-theme="dark"] {
-        @include core-theme($high-contrast-dark-theme);
-        @include modal.modal-theme(());
+        @include bx-theme($high-contrast-dark-theme);
     }
 }
 

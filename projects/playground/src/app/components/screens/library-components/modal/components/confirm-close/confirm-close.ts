@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Button } from '../../../../../../../../../button/src/lib/components/button';
+import { Button } from '@button/components/button';
 import { Modal } from '@modal/classes/modal';
 import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
 

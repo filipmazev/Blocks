@@ -1,11 +1,11 @@
 import { Component, signal } from '@angular/core';
-import { Modal } from '@modal/classes/modal';
-import { ModalHeaderDirective } from '@modal/directives/modal-header.directive';
-import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
 import { Button } from '@button/components/button';
+import { ModalHeaderDirective } from '@modal/directives/modal-header.directive';
+import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
+import { Modal } from '@modal/classes/modal';
 
 @Component({
   selector: 'app-demo-modal',

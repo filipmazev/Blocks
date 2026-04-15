@@ -4,42 +4,10 @@ exports.ngAdd = ngAdd;
 const tasks_1 = require("@angular-devkit/schematics/tasks");
 function ngAdd(options) {
     return (tree, context) => {
-        addDependencies(tree, context);
         injectStyles(tree, context, options);
         context.addTask(new tasks_1.NodePackageInstallTask());
         return tree;
     };
-}
-function addDependencies(tree, context) {
-    const packageJsonPath = '/package.json';
-    if (!tree.exists(packageJsonPath)) {
-        context.logger.warn('Could not find package.json. Skipping dependency injection.');
-        return;
-    }
-    const packageJsonBuffer = tree.read(packageJsonPath);
-    if (!packageJsonBuffer)
-        return;
-    const packageJson = JSON.parse(packageJsonBuffer.toString('utf-8'));
-    if (!packageJson.dependencies)
-        packageJson.dependencies = {};
-    const packages = [
-        '@filip.mazev/blocks-core',
-        '@filip.mazev/modal',
-        '@filip.mazev/toastr',
-        '@filip.mazev/icons',
-        '@filip.mazev/button'
-    ];
-    let dependenciesAdded = false;
-    packages.forEach(pkg => {
-        if (!packageJson.dependencies[pkg]) {
-            packageJson.dependencies[pkg] = 'latest';
-            context.logger.info(`Added ${pkg} to dependencies.`);
-            dependenciesAdded = true;
-        }
-    });
-    if (dependenciesAdded) {
-        tree.overwrite(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    }
 }
 function injectStyles(tree, context, options) {
     const workspaceConfigPath = '/angular.json';
@@ -82,17 +50,15 @@ function injectStyles(tree, context, options) {
     const lightThemeVar = `$${options.theme}-light-theme`;
     const darkThemeVar = `$${options.theme}-dark-theme`;
     const blocksThemeSnippet = `
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
-@use '@filip.mazev/modal/lib/styles/index' as modal;
+@use '@filip.mazev/blocks/core/styles/index' as *;
 
 @layer base {
     :root {
-        @include core-theme(${lightThemeVar});
-        @include modal.modal-theme();
+        @include bx-theme(${lightThemeVar});
     }
 
     [data-theme='dark'] {
-        @include core-theme(${darkThemeVar});
+        @include bx-theme(${darkThemeVar});
     }
 }
 `;

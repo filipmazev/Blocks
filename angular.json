@@ -3,82 +3,6 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "modal": {
-            "projectType": "library",
-            "root": "projects/modal",
-            "sourceRoot": "projects/modal/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular/build:ng-packagr",
-                    "options": {
-                        "project": "projects/modal/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/modal/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "projects/modal/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular/build:karma",
-                    "options": {
-                        "tsConfig": "projects/modal/tsconfig.spec.json"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/modal/src/**/*.ts",
-                            "projects/modal/src/**/*.html"
-                        ]
-                    }
-                }
-            }
-        },
-        "blocks-core": {
-            "projectType": "library",
-            "root": "projects/blocks-core",
-            "sourceRoot": "projects/blocks-core/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular/build:ng-packagr",
-                    "options": {
-                        "project": "projects/blocks-core/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/blocks-core/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "projects/blocks-core/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular/build:karma",
-                    "options": {
-                        "tsConfig": "projects/blocks-core/tsconfig.spec.json"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/blocks-core/src/**/*.ts",
-                            "projects/blocks-core/src/**/*.html"
-                        ]
-                    }
-                }
-            }
-        },
         "playground": {
             "projectType": "application",
             "schematics": {
@@ -100,7 +24,7 @@
                         "inlineStyleLanguage": "scss",
                         "stylePreprocessorOptions": {
                             "includePaths": [
-                                "projects/blocks-core/src/lib/styles",
+                                "projects/blocks",
                                 "node_modules"
                             ]
                         },
@@ -113,17 +37,17 @@
                             },
                             {
                                 "glob": "README.md",
-                                "input": "projects/modal",
+                                "input": "documentation/modal",
                                 "output": "/assets/modal-readme"
                             },
                             {
                                 "glob": "README.md",
-                                "input": "projects/blocks-core",
+                                "input": "documentation/core",
                                 "output": "/assets/blocks-core-readme"
                             },
                             {
                                 "glob": "README.md",
-                                "input": "projects/toastr",
+                                "input": "documentation/toastr",
                                 "output": "/assets/toastr-readme"
                             },
                             {
@@ -202,41 +126,6 @@
                 }
             }
         },
-        "toastr": {
-            "projectType": "library",
-            "root": "projects/toastr",
-            "sourceRoot": "projects/toastr/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular/build:ng-packagr",
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/toastr/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "projects/toastr/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular/build:unit-test",
-                    "options": {
-                        "tsConfig": "projects/toastr/tsconfig.spec.json"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/toastr/src/**/*.ts",
-                            "projects/toastr/src/**/*.html"
-                        ]
-                    }
-                }
-            }
-        },
         "blocks": {
             "projectType": "library",
             "root": "projects/blocks",
@@ -267,76 +156,6 @@
                         "lintFilePatterns": [
                             "projects/blocks/src/**/*.ts",
                             "projects/blocks/src/**/*.html"
-                        ]
-                    }
-                }
-            }
-        },
-        "icons": {
-            "projectType": "library",
-            "root": "projects/icons",
-            "sourceRoot": "projects/icons/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular/build:ng-packagr",
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/icons/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "projects/icons/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular/build:unit-test",
-                    "options": {
-                        "tsConfig": "projects/icons/tsconfig.spec.json"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/icons/src/**/*.ts",
-                            "projects/icons/src/**/*.html"
-                        ]
-                    }
-                }
-            }
-        },
-        "button": {
-            "projectType": "library",
-            "root": "projects/button",
-            "sourceRoot": "projects/button/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular/build:ng-packagr",
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/button/tsconfig.lib.prod.json"
-                        },
-                        "development": {
-                            "tsConfig": "projects/button/tsconfig.lib.json"
-                        }
-                    },
-                    "defaultConfiguration": "production"
-                },
-                "test": {
-                    "builder": "@angular/build:unit-test",
-                    "options": {
-                        "tsConfig": "projects/button/tsconfig.spec.json"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "projects/modal/src/**/*.ts",
-                            "projects/modal/src/**/*.html"
                         ]
                     }
                 }

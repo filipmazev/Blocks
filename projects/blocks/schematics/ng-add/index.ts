@@ -1,5 +1,4 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export interface NgAddOptions {
   theme: 'purple' | 'orange' | 'red' | 'green';
@@ -7,45 +6,9 @@ export interface NgAddOptions {
 
 export function ngAdd(options: NgAddOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    addDependencies(tree, context);
     injectStyles(tree, context, options);
-    context.addTask(new NodePackageInstallTask());
     return tree;
   };
-}
-
-function addDependencies(tree: Tree, context: SchematicContext): void {
-  const packageJsonPath = '/package.json';
-  if (!tree.exists(packageJsonPath)) {
-    context.logger.warn('Could not find package.json. Skipping dependency injection.');
-    return;
-  }
-  const packageJsonBuffer = tree.read(packageJsonPath);
-  if (!packageJsonBuffer) return;
-  const packageJson = JSON.parse(packageJsonBuffer.toString('utf-8'));
-  
-  if (!packageJson.dependencies) packageJson.dependencies = {};
-  
-  const packages = [
-    '@filip.mazev/blocks-core',
-    '@filip.mazev/modal',
-    '@filip.mazev/toastr',
-    '@filip.mazev/icons',
-    '@filip.mazev/button'
-  ];
-  
-  let dependenciesAdded = false;
-  packages.forEach(pkg => {
-    if (!packageJson.dependencies[pkg]) {
-      packageJson.dependencies[pkg] = 'latest';
-      context.logger.info(`Added ${pkg} to dependencies.`);
-      dependenciesAdded = true;
-    }
-  });
-  
-  if (dependenciesAdded) {
-    tree.overwrite(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  }
 }
 
 function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptions): void {
@@ -54,6 +17,7 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
     context.logger.warn('Could not find angular.json. Please configure the Blocks theme manually.');
     return;
   }
+  
   const workspaceConfigBuffer = tree.read(workspaceConfigPath);
   if (!workspaceConfigBuffer) return;
   
@@ -87,7 +51,9 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
   }
   
   const content = tree.read(targetStylePath)!.toString('utf-8');
-  if (content.includes('@filip.mazev/blocks-core')) {
+  
+  // Update the check to look for the new package namespace
+  if (content.includes('@filip.mazev/blocks/core')) {
     context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
     return;
   }
@@ -96,8 +62,8 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
   const darkThemeVar = `$${options.theme}-dark-theme`;
 
   const blocksThemeSnippet = `
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
-@use '@filip.mazev/modal/lib/styles/index' as modal;
+@use '@filip.mazev/blocks/core/styles/index' as *;
+@use '@filip.mazev/blocks/modal/styles/index' as modal;
 
 @layer base {
     :root {

@@ -9,7 +9,9 @@
             "description": "Select the theme for your UI.",
             "enum": [
                 "purple",
-                "orange"
+                "orange",
+                "red",
+                "green"
             ],
             "x-prompt": {
                 "message": "Which theme would you like to use?",
@@ -22,6 +24,14 @@
                     {
                         "value": "orange",
                         "label": "Orange Theme"
+                    },
+                    {
+                        "value": "red",
+                        "label": "Red Theme"
+                    },
+                    {
+                        "value": "green",
+                        "label": "Green Theme"
                     }
                 ]
             },

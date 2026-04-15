@@ -16,46 +16,30 @@ ng add @filip.mazev/blocks
 
 When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:
 
-* Interactive Theme Selection: You will be prompted to choose your preferred global theme (Purple or Orange Company).
+* Interactive Theme Selection: You will be prompted to choose your preferred global theme.
 * Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
 * SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.
-
-## Included Packages
-
-Running the schematic will automatically install the following libraries:
-
-* @filip.mazev/blocks-core: The foundational package containing the styling engine, SCSS variables, scroll-lock services, and window dimension utilities.
-
-* @filip.mazev/modal: A highly customizable, service-driven modal system with swipe-to-close gestures, custom guards, and responsive layouts.
-
-* @filip.mazev/toastr: A component-driven toast notification system featuring smart queue management, auto-dismissal, and built-in status views.
-
-* @filip.mazev/icons: The icon package used across the blocks components
 
 ## Manual Setup (Without Angular CLI)
 
 If you prefer not to use `ng add` or are in an environment that doesn't support Angular Schematics, you can install the packages manually:
 
 ```bash
-npm install @filip.mazev/blocks-core @filip.mazev/modal @filip.mazev/toastr
+npm install @filip.mazev/blocks@latest
 ```
 
 Then, manually configure your styles.scss:
 
 ```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
-@use '@filip.mazev/modal/lib/styles/index' as modal;
+@use '@filip.mazev/blocks/core/styles/index' as *;
 
 @layer base {
     :root {
-        @include core-theme($purple-light-theme);
-        @include modal.modal-theme();
+        @include bx-theme($purple-light-theme);
     }
 
     [data-theme='dark'] {
-        @include core-theme($purple-dark-theme);
+        @include bx-theme($purple-dark-theme);
     }
 }
 ```
-
-_For detailed usage instructions, API references, and component configurations, please refer to the READMEs of the individual packages._

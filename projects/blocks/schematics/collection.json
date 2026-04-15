@@ -2,7 +2,7 @@
     "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
     "schematics": {
         "ng-add": {
-            "description": "Installs blocks-core, modal, and toastr, and configures the SCSS theme.",
+            "description": "Installs blocks UI components and configures the SCSS theme.",
             "factory": "./ng-add/index#ngAdd",
             "schema": "./ng-add/schema.json"
         }

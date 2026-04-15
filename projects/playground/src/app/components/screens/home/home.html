@@ -11,7 +11,7 @@
                 <a bx-button variant="filled" [outlined]="true" color="primary" routerLink="/modal">View Flagship
                     Component</a>
                 <a bx-button variant="filled" [outlined]="true" color="grayscale"
-                    href="https://www.npmjs.com/package/@filip.mazev/blocks-core" target="_blank">
+                    href="https://www.npmjs.com/package/@filip.mazev/blocks" target="_blank">
                     Get Started
                     <bx-icon name="arrow-right" />
                 </a>
@@ -36,21 +36,6 @@
                 </div>
                 <p class="card-item-desc">{{ feature.description }}</p>
             </div>
-            }
-        </div>
-    </section>
-
-    <section class="section packages">
-        <h2 class="section-title">The Ecosystem</h2>
-        <div class="grid">
-            @for (package of packages; track package.name) {
-            <a [href]="package.link" target="_blank" class="card card-item-card">
-                <div class="card-item-header">
-                    <bx-icon [name]="package.icon" />
-                    <span class="card-item-name">{{ package.name }}</span>
-                </div>
-                <p class="card-item-desc">{{ package.description }}</p>
-            </a>
             }
         </div>
     </section>

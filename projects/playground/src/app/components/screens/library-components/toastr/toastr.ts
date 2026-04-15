@@ -2,16 +2,16 @@ import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'; // <-- Added import
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
-import { ToastrService } from '@toastr/services/toastr.service';
-import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ToastrConfigFormControls } from '@playground/types/form.types';
-import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 import { DemoToast } from './components/demo-toast/demo-toast';
-import { Button } from '../../../../../../../button/src/lib/components/button';
+import { Button } from '@button/components/button';
+import { ToastrService } from '@toastr/services/toastr.service';
+import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
+import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 
 @Component({
   selector: 'app-toastr-demo',

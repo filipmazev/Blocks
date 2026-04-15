@@ -1,7 +1,5 @@
-/*
- * Public API Surface of blocks
+/* * Public API Surface of blocks
+ * This file is auto-generated. Do not edit directly.
  */
 
-export * from '@filip.mazev/blocks-core';
-export * from '@filip.mazev/modal';
-export * from '@filip.mazev/toastr';
+export const BLOCKS_VERSION = '1.2.5';

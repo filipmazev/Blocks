@@ -1,0 +1,1 @@
+export const ICON_BRAND = Symbol('ICON_BRAND');

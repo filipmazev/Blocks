@@ -11,9 +11,8 @@ const repoRoot = path.resolve(__dirname, '../..');
 const baseFilesPath = path.join(
     repoRoot,
     'projects',
-    'blocks-core',
-    'src',
-    'lib'
+    'blocks',
+    'core'
 );
 
 const scssPath = path.join(

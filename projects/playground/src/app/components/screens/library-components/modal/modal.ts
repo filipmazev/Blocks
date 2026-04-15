@@ -1,22 +1,22 @@
 import { Component, inject, signal } from '@angular/core';
 import { DemoModal } from '@playground/components/screens/library-components/modal/components/demo-modal/demo-modal';
-import { ModalService } from '@modal/services/modal.service';
-import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
-import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
-import { MODAL_DEFAULT_ANIM_DURATION } from '@modal/constants/modal-animation.constants';
-import { ModalLayout } from '@modal/types/modal.types';
+import { MODAL_DEFAULT_ANIM_DURATION } from '../../../../../../../blocks/modal/constants/modal-animation.constants';
 import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalConfigFormControls } from '@playground/types/form.types';
-import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
 import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
-import { Button } from '../../../../../../../button/src/lib/components/button';
+import { Button } from '@button/components/button';
+import { ModalService } from '@modal/services/modal.service';
+import { ModalLayout } from '@modal/types/modal.types';
+import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
+import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
+import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 
 @Component({
   selector: 'app-modal',

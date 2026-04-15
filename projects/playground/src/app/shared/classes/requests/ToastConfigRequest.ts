@@ -1,4 +1,4 @@
-import { ToastPosition } from '@toastr/types/toastr.types';
+import { ToastPosition } from '../../../../../../blocks/toastr/types/toastr.types';
 
 export class ToastConfigRequest {
   public position: ToastPosition | null;

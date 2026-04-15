@@ -4,14 +4,6 @@
 
 The library consists of a foundational Core package that handles the "physics" of the application (dimensions, scrolling, theming) and a suite of feature-rich Components (like Modals) built on top of that foundation.
 
-## Packages
-
-|Package|Description|Link|
-|---|---|---|
-|@filip.mazev/blocks-core|The infrastructure layer. Handles responsive breakpoints, deep theming, scroll locking, and device detection.|<https://www.npmjs.com/package/@filip.mazev/blocks-core>|
-|@filip.mazev/modal|A service-driven modal system supporting center/side layouts, mobile swipe gestures, and dynamic content.|<https://www.npmjs.com/package/@filip.mazev/modal>|
-|@filip.mazev/toastr|A powerful toast service with built-in support for custom components, multiple placements, auto-dismissal and more.|<https://www.npmjs.com/package/@filip.mazev/toastr>|
-
 ## Key Philosophy
 
 ### 1. Unified Responsiveness
@@ -27,7 +19,7 @@ Blocks treats responsiveness as a shared contract between TypeScript and CSS.
 Theming is not an afterthought; it is built into the core.
 
 * Uses a CSS Variable system generated via SCSS maps.
-* Supports distinct palettes for "Canvas", "Surface", and "Element" layers.
+* Supports distinct palettes through a robust token system.
 * Easily switch between light, dark, or high-contrast brand themes at runtime.
 
 ### 3. Mobile-First Interaction
@@ -36,9 +28,3 @@ Components are designed with mobile fidelity in mind.
 
 * Scroll Locking: The ScrollLockService handles complex edge cases (iOS touch chaining, scrollbar layout shifts) automatically when overlays are open.
 * Gestures: Modals transform into bottom-sheets on mobile with native-feeling swipe-to-close physics.
-
-## Requirements
-
-**Angular**: ^21.1.1
-
-**TypeScript**: Compatible with the Angular version provided.

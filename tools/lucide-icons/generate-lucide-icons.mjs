@@ -12,9 +12,8 @@ const lucideRoot = path.join(repoRoot, 'node_modules', 'lucide-static', 'icons')
 const outRoot = path.join(
     repoRoot,
     'projects',
+    'blocks',
     'icons',
-    'src',
-    'lib',
     'assets',
     'lucide'
 );

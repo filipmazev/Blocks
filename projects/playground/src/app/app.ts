@@ -2,15 +2,15 @@ import { Component, DOCUMENT, inject, Renderer2, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HighlightLoader } from 'ngx-highlightjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ThemingService } from '@core/services/theming.service';
 import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
 import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
 import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
 import { ThemeId } from '@playground/types/common.types';
 import { combineLatest } from 'rxjs';
-import { Button } from '../../../button/src/lib/components/button';
+import { Button } from '@button/components/button';
 import { Icon } from '@icons/components/icon';
+import { ThemingService } from '@core/services/theming.service';
 
 @Component({
   selector: 'app-root',
