@@ -31,7 +31,7 @@ npm install @filip.mazev/blocks@latest
 Then, manually configure your styles.scss:
 
 ```scss
-@use '@filip.mazev/blocks/core/styles/index' as *;
+@use '@filip.mazev/blocks' as *;
 
 @layer base {
     :root {

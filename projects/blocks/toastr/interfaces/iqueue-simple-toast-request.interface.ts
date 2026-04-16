@@ -5,4 +5,6 @@ export interface IQueueSimpleToastRequest {
   title?: string;
   position?: ToastPosition;
   durationInMs?: number;
+  showCloseButton?: boolean;
+  showProgessBar?: boolean;
 }

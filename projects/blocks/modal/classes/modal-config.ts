@@ -3,6 +3,7 @@ import { ModalStyleConfig } from './modal-style.config';
 import { ModalCloseGuard } from './modal-close-guard';
 import { IModalCloseResult } from '../public-api';
 import { Observable } from 'rxjs';
+import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
 
 export class ModalConfig<D, R> {
   public open: boolean;
@@ -20,13 +21,10 @@ export class ModalConfig<D, R> {
 
   public style: ModalStyleConfig;
 
-  public bannerText: string;
+  public header?: IModalHeaderConfig;
 
   public contentClasses: string;
   public contentStyles: string;
-
-  public disableConsoleWarnings: boolean;
-  public disableConsoleInfo: boolean;
 
   public id?: string;
 
@@ -43,15 +41,12 @@ export class ModalConfig<D, R> {
     this.disableCloseOnNavigation = config?.disableCloseOnNavigation ?? false;
 
     this.data = config?.data ?? null;
-    this.style = new ModalStyleConfig(config?.style);
 
-    this.bannerText = config?.bannerText ?? '';
+    this.style = new ModalStyleConfig(config?.style);
+    this.header = config?.header;
 
     this.contentClasses = config?.contentClasses ?? '';
     this.contentStyles = config?.contentStyles ?? '';
-
-    this.disableConsoleWarnings = config?.disableConsoleWarnings ?? false;
-    this.disableConsoleInfo = config?.disableConsoleInfo ?? false;
 
     this.id = config?.id;
   }

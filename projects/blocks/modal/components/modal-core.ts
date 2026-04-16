@@ -206,7 +206,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
 
     this.hasBanner =
       this.config !== undefined &&
-      ((this.config.bannerText !== undefined && this.config.bannerText.length > 0) ||
+      ((this.config.header !== undefined && (this.config.header.text.length > 0 || this.config.header?.icon !== undefined)) ||
         (this.config.disableClose !== true && this.config.style.showCloseButton !== false && this.headerTemplate() === null));
 
     this.hasDefaultContentWrapperClass = this.config?.style.contentWrapper !== false;

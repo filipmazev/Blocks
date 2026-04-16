@@ -2,11 +2,12 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output, signal, computed } from '@angular/core';
 import { ModalConfig } from '../../../classes/modal-config';
 import { ModalCloseMode } from '../../../types/modal.types';
+import { ModalBanner } from '../../shared/ui/banner/modal-banner';
 import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constants';
 
 @Component({
   selector: 'bx-modal-bottom-sheet',
-  imports: [NgClass, NgTemplateOutlet],
+  imports: [NgClass, NgTemplateOutlet, ModalBanner],
   templateUrl: './modal-bottom-sheet.html',
   styleUrl: './modal-bottom-sheet.scss'
 })
@@ -19,6 +20,7 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   public readonly config = input.required<ModalConfig<D, R> | undefined>();
   public readonly isOpen = input.required<boolean>();
   public readonly isAnimated = input.required<boolean>();
+  public readonly hasBanner = input.required<boolean>();
   public readonly animationDuration = input.required<number>();
 
   public readonly close = output<ModalCloseMode | undefined>();

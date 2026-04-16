@@ -3,7 +3,7 @@ import { IconName, IconSize, IconStrokeWidth } from '../types/icon.types';
 
 export interface IconData {
   name: IconName;
-  size: IconSize;
+  size?: IconSize;
   strokeWidth?: IconStrokeWidth;
 
   color?: ThemedColor;

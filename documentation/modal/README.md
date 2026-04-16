@@ -112,7 +112,16 @@ const modalRef = this.modals.open<MyData, MyResult>(MyModalComponent, {
   style: {
     layout: 'right', // Slide in from the right (left and center are also available options)
   },
-  bannerText: 'Modal Title Here'
+  header: {
+    title: 'Modal Title Here',
+    icon: { // (optional) undefined or IconData
+        name: 'chevron-right', // any IconName
+        color: 'text-danger', // (optional) any ThemedColor, will default to currentColor
+        bgColor: 'auto', // (optional) undefined, auto or ThemedColor, will default to no background
+        size: '24', // (optional) undefined or any IconSize, will default to '24'
+        strokeWidth: '1.5' // (optional) undefined or any IconStrokeWidth, will default to '1.5'
+    }
+  }
 });
 
 modalRef.afterClosed().subscribe(result: IModalCloseResult<MyData> => {
@@ -141,11 +150,9 @@ Controls the behavior and content of the modal container:
 * `disableCloseOnNavigation` |`boolean`|: (optional) Whether the modal should remain open when the user navigates away from the current page, will default to false.
 * `data` |`TData`|: (optional) The data to pass to the component of the modal. The component needs to use the @Inject(MODAL_DATA) or `data = inject<string>(MODAL_DATA);` (modern syntax) decorator to receive this.
 * `style` |`IModalStyleConfig`|: (optional) The visual style configuration for the modal (layout, backdrop, etc.), will default to an empty object.
-* `bannerText` |`string`|: (optional) The text to display in the header banner of the modal.
+* `heaeder` |`IModalHeaderConfig`|: (optional) Header to be shown
 * `contentClasses` |`string`|: (optional) Custom CSS classes to apply directly to the content container of the modal.
 * `contentStyles` |`string`|: (optional) Inline CSS styles to apply directly to the content container of the modal.
-* `disableConsoleWarnings` |`boolean`|: (optional) Whether to suppress library warnings in the console, will default to false.
-* `disableConsoleInfo` |`boolean`|: (optional) Whether to suppress library info logs in the console, will default to false.
 * `id` |`string`|: (optional) The unique identifier of the modal, will default to a random string if not provided.
 
 ### `IModalStyleConfig`
@@ -163,6 +170,13 @@ Controls the visual appearance:
 * `wrapperClasses` |`string`|: (optional) Custom CSS classes to apply to the wrapper of the modal.
 * `wrapperStyles` |`string`|: (optional) Inline CSS styles to apply to the wrapper of the modal.
 * `overrideFullHeight` |`boolean`|: (optional) Whether the modal should override the default full-height restriction or not, will default to false.
+
+### `IModalHeaderConfig`
+
+Controls the header appearance;
+
+* `text` |`string`|: The text to be shown in the header
+* `icon` |`IconData`|: (optional) An icon to display to the left of the text, will default to undefined
 
 ### The Breakpoints
 

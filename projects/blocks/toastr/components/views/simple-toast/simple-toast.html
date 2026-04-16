@@ -1,8 +1,4 @@
 <div class="simple-toast" [ngClass]="data.type">
-    <button class="simple-toast-close-button" (click)="dismiss()" aria-label="Close toast" [ngClass]="data.type">
-        ✕
-    </button>
-
     <div class="simple-toast-content">
         @if(data.title ) {
         <h4 class="simple-toast-title">{{ data.title }}</h4>
@@ -11,10 +7,4 @@
         <p class="simple-toast-message large-message">{{ data.message }}</p>
         }
     </div>
-
-    @if (toast.config.durationInMs) {
-    <div class="toast-progress-container" [ngClass]="data.type">
-        <div class="toast-progress-bar" [ngClass]="data.type" #progressBar></div>
-    </div>
-    }
 </div>

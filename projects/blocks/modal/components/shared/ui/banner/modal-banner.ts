@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
-import { ModalConfig } from '../../../../classes/modal-config';
 import { ModalCloseMode } from '../../../../types/modal.types';
 import { Icon } from '@filip.mazev/blocks/icons';
+import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
 
 @Component({
   selector: 'bx-modal-banner',
@@ -10,7 +10,7 @@ import { Icon } from '@filip.mazev/blocks/icons';
   styleUrl: './modal-banner.scss'
 })
 export class ModalBanner<D = unknown, R = unknown> {
-  public readonly config = input.required<ModalConfig<D, R> | undefined>();
-
+  public readonly header = input.required<IModalHeaderConfig | undefined>();
+  public readonly showCloseButton = input.required<boolean>();
   public readonly close = output<ModalCloseMode | undefined>();
 }

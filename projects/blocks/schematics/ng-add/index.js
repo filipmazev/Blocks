@@ -43,14 +43,14 @@ function injectStyles(tree, context, options) {
         return;
     }
     const content = tree.read(targetStylePath).toString('utf-8');
-    if (content.includes('@filip.mazev/blocks-core')) {
+    if (content.includes('@filip.mazev/blocks')) {
         context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
         return;
     }
     const lightThemeVar = `$${options.theme}-light-theme`;
     const darkThemeVar = `$${options.theme}-dark-theme`;
     const blocksThemeSnippet = `
-@use '@filip.mazev/blocks/core/styles/index' as *;
+@use '@filip.mazev/blocks' as *;
 
 @layer base {
     :root {

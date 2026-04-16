@@ -40,7 +40,9 @@ export class Modal {
 
       closeGuard: new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
         data: 'Are you sure you want to close the modal?',
-        bannerText: 'Unsaved Changes',
+        header: {
+            text: 'Unsaved Changes'
+        },
         style: {
           showCloseButton: false
         }

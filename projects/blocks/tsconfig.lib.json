@@ -10,9 +10,9 @@
     "types": []
   },
   "include": [
-    "src/**/*.ts"
+    "schematics/**/*.ts"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "schematics/**/*.spec.ts"
   ]
 }

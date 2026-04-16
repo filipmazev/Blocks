@@ -1,6 +1,17 @@
 <div #animatorWrapper class="toast-animator" [class.collapsing]="isCollapsing()" [class.is-bottom]="isBottom()">
     <div #toastSwipeTarget class="toast-wrapper" [ngClass]="wrapperClasses()" [class.show]="isVisible()"
         [class.no-animate]="!isAnimated()" [style.transform]="toastrTransform()">
+        @if(showCloseButton()) {
+        <bx-icon name="x" size="20" [color]="closeButtonColor()" class="toast-close-button" (click)="closeToast()"
+            aria-label="Close toast" />
+        }
+
         <ng-container #dynamicContainer></ng-container>
+
+        @if (config?.durationInMs && showProgressBar() && progressBarCssVar() && progressBarBgCssVar()) {
+        <div class="toast-progress-container" [style.background]="progressBarBgCssVar()">
+            <div class="toast-progress-bar" [style.background]="progressBarCssVar()" #progressBar></div>
+        </div>
+        }
     </div>
 </div>

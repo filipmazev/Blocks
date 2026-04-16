@@ -3,21 +3,23 @@
     flex-direction: row;
     gap: 2rem;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     color: var(--bx-modal-text, var(--bx-text-primary));
     top: 0;
     min-height: 2rem;
-    border-top-left-radius: 0.75rem;
-    border-top-right-radius: 0.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--bx-border-default);
 }
 
 .modal-top-banner-title-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
     width: 100%;
+    font-weight: bold;
+    font-size: 1.25rem;
 }
 
 @keyframes banner-display {

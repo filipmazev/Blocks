@@ -15,9 +15,9 @@ export const SEMANTIC_PAIRS: Partial<Record<SemanticColorToken, SemanticColorTok
   'bg-element': 'text-primary',
   'bg-element-hover': 'text-primary',
 
-  'text-heading': 'bg-surface',
-  'text-primary': 'bg-surface',
-  'text-secondary': 'bg-surface',
+  'text-heading': 'bg-element',
+  'text-primary': 'bg-element',
+  'text-secondary': 'bg-element',
   'text-brand': 'bg-surface',
   'text-inverse': 'primary',
   'on-primary': 'primary',

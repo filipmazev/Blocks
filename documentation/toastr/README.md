@@ -11,6 +11,7 @@
 * Flexible Positioning: Supports top/bottom and left/right/center placements, adjusting automatically for mobile viewports.
 * Mobile Optimized: Native-feeling vertical swipe-to-dismiss gestures built-in.
 * Auto-Dismiss: Configurable timeouts to automatically close notifications.
+* Built-in UI Controls: Out-of-the-box support for customizable close buttons directly on the toast wrapper.
 * Dynamic Data: Pass strictly typed data to your toast components and return results.
 
 ## Installation
@@ -118,10 +119,16 @@ Controls the behavior, data, and placement of an individual toast:
 * `animate` |`boolean`|: (optional) Whether the toast should animate in and out. Defaults to true.
 * `wrapperClass` |`string`|: (optional) A custom CSS class to apply to the toast's outer wrapper container. If omitted, it uses 'default-wrapper'.
 * `hasDefaultBackground` |`boolean`|: (optional) If set to false, the default background color will be removed from the default wrapper
+* `showCloseButton` |`boolean`|: (optional) Displays a built-in close icon in the top right corner of the wrapper. Defaults to true.
+* `closeButtonColor` |`ThemedColor`|: (optional) Applies a specific theme color to the close button. Defaults to 'text-primary'.
+* `showProgressBar` |`boolean`|: (optional) Displays an animated progress bar at the bottom of the wrapper indicating remaining duration. Defaults to true.
+* `progressBarColor` |`ThemedColor`|: (optional) Applies a specific theme color to the progress bar. Defaults to 'text-primary'.
 
 ## Global Toastr Settings
 
 Similar to the modal library (`@filip.mazev/modal`), you can manage application-wide defaults using the `ToastrGlobalSettingsService`. These defaults apply automatically unless overridden by the IToastConfig during the queueToast call. It also is the place where `maxOpened` is configured since this is a global configuration.
+
+The toast wrapper natively provides a top-right close button and a bottom animated progress bar (which pauses on hover and resizes dynamically). You can toggle their visibility or change their semantic colors universally across the app or on a per-toast basis.
 
 ### Example Usage
 
@@ -136,13 +143,18 @@ export class AppComponent {
   constructor() {
     // Update global defaults at runtime
     this.toastrGlobalSettings.update({
-      position: 'bottom-right',   // Move all toasts to the bottom right
-      durationInMs: 7500,         // Keep toasts open longer by default
-      maxOpened: 3,               // Only show 3 toasts at a time; queue the rest
-      swipeToDismiss: true
+      position: 'bottom-right',       // Move all toasts to the bottom right
+      durationInMs: 7500,             // Keep toasts open longer by default
+      maxOpened: 3,                   // Only show 3 toasts at a time; queue the rest
+      swipeToDismiss: true,           // Allow swipe gestures globally
+      showCloseButton: false,          // Remove the default close button on all wrappers
+      closeButtonColor: 'text-primary',
+      showProgressBar: true,          // Visually track the 7500ms duration or set to false to disable this
+      progressBarColor: 'text-primary'
     });
   }
 }
+
 ```
 
 ### How It Works

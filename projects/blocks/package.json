@@ -1,14 +1,24 @@
 {
     "name": "@filip.mazev/blocks",
-    "version": "1.2.5",
+    "version": "1.2.10",
     "license": "MIT",
     "schematics": "./schematics/collection.json",
     "exports": {
-        "./core/styles/*": "./core/styles/*"
-    },
-    "peerDependencies": {
-        "@angular/common": "^21.0.0",
-        "@angular/core": "^21.0.0"
+        ".": {
+            "sass": "./core/styles/index.scss"
+        },
+        "./core": {
+            "sass": "./core/styles/index.scss"
+        },
+        "./core/styles/*": {
+            "default": "./core/styles/*"
+        },
+        "./schematics/*": {
+            "default": "./schematics/*"
+        },
+        "./package.json": {
+            "default": "./package.json"
+        }
     },
     "devDependencies": {
         "@angular-devkit/schematics": "^17.0.0"

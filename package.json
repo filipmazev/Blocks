@@ -7,6 +7,9 @@
         "prebuild": "node tools/version-sync.mjs",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
+        "build:blocks:schematics": "tsc -p projects/blocks/tsconfig.lib.json",
+        "build:blocks:lib": "ng build blocks",
+        "build:blocks": "npm run build:blocks:schematics && npm run build:blocks:lib",
         "tools:generate:icons:lucide": "node tools/icons/generate-lucide-icons.mjs",
         "tools:sync-theme-types": "node tools/tokens/sync-theme-types.mjs",
         "test": "ng test"

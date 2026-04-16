@@ -53,7 +53,7 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
   const content = tree.read(targetStylePath)!.toString('utf-8');
   
   // Update the check to look for the new package namespace
-  if (content.includes('@filip.mazev/blocks/core')) {
+  if (content.includes('@filip.mazev/blocks')) {
     context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
     return;
   }
@@ -62,17 +62,15 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
   const darkThemeVar = `$${options.theme}-dark-theme`;
 
   const blocksThemeSnippet = `
-@use '@filip.mazev/blocks/core/styles/index' as *;
-@use '@filip.mazev/blocks/modal/styles/index' as modal;
+@use '@filip.mazev/blocks' as *;
 
 @layer base {
     :root {
-        @include core-theme(${lightThemeVar});
-        @include modal.modal-theme();
+        @include bx-theme(${lightThemeVar});
     }
 
     [data-theme='dark'] {
-        @include core-theme(${darkThemeVar});
+        @include bx-theme(${darkThemeVar});
     }
 }
 `;

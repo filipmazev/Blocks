@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { ModalCloseGuard } from '../classes/modal-close-guard';
 import { IModalCloseResult } from './imodal-close-result.interface';
 import { IModalStyleConfig } from './imodal-style-config.interface';
+import { IModalHeaderConfig } from './imodal-header-config.interface';
 
 /**
  * IModalConfig<D>, the configuration for the modal
@@ -16,8 +17,7 @@ import { IModalStyleConfig } from './imodal-style-config.interface';
  * @param {boolean} disableCloseOnNavigation (optional) Whether the modal should be closable or not when the user navigates away from the page, will default to false
  * @param {D | null} data (optional) The data to pass to the component of the modal. The component needs to use the @Inject(MODAL_DATA) or `data = inject<string>(MODAL_DATA);` (modern syntax) decorator to receive this.
  * @param {IModalStyleConfig} style (optional) The style configuration for the modal, will default to an empty object
- * @param {boolean} showCloseButton (optional) Whether the modal should show a close button or not, will default to true
- * @param {string} bannerText (optional) The text to display in the banner of the modal
+ * @param {IModalHeaderConfig} header (optional) Header to be shown
  * @param {string} contentClasses (optional) The classes to apply to the content of the modal
  * @param {string} contentStyles (optional) The styles to apply to the content of the modal
  * @param {string} id (optional) The id of the modal (set at the top level of the modal), will default to a random string
@@ -37,14 +37,10 @@ export interface IModalConfig<D, R> {
   data?: D | null;
 
   style?: IModalStyleConfig;
-
-  bannerText?: string;
+  header?: IModalHeaderConfig;
 
   contentClasses?: string;
   contentStyles?: string;
-
-  disableConsoleWarnings?: boolean;
-  disableConsoleInfo?: boolean;
 
   id?: string;
 }

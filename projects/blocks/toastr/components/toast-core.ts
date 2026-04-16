@@ -9,20 +9,27 @@ import {
   signal,
   computed,
   AfterViewInit,
-  HostListener
+  HostListener,
+  inject
 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { IToastConfig } from '../interfaces/itoast-config.interface';
 import { ToastRef } from '../classes/toast-ref';
 import { IToast } from '../interfaces/itoast.interface';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { Subscription } from 'rxjs';
+import { Color, getComplementaryToken, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
+import { ToastrGlobalSettingsService } from '../services/toastr-global-settings.service';
 
 @Component({
   selector: 'bx-toast-core',
-  imports: [NgClass],
+  imports: [NgClass, Icon],
   templateUrl: './toast-core.html',
   styleUrl: './toast-core.scss'
 })
 export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements OnInit, AfterViewInit, OnDestroy {
+  private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
+  
   public componentRef!: ComponentRef<C>;
   public config?: IToastConfig<D>;
   public toastRef!: ToastRef<D, R>;
@@ -33,13 +40,40 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
   public isCollapsing = signal(false);
 
+  protected showCloseButton = computed(() => this.config?.showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton());
+  protected closeButtonColor = computed(() => this.config?.closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor());
+  
+  protected showProgressBar = computed(() => {
+    if (this.config?.showProgressBar === false)
+      return false;
+
+    return this.config?.showProgressBar === true || this.config?.progressBarColor !== undefined;
+  });
+
+  protected progressBarColor = computed(() => {
+    return this.showProgressBar() 
+    ? ((this.config?.progressBarColor ?? this.toastrGlobalSettingsService.progressBarColor()) as Color) 
+    : undefined;
+  });
+
+  protected progressBarCssVar = computed(() => {
+    const progressBarColor = this.progressBarColor();
+    return progressBarColor ? resolveTokenToCssVar(progressBarColor) : undefined
+  });
+
+  protected progressBarBgCssVar = computed(() => {
+    const progressBarColor = this.progressBarColor();
+    return progressBarColor ? resolveTokenToCssVar(getComplementaryToken(progressBarColor)) : undefined
+  });
+
   protected isAnimated = computed(() => this.config?.animate !== false);
-  protected isBottom = computed(() => (this.config?.position ?? 'top-right').includes('bottom'));
+  protected isBottom = computed(() => (this.config?.position ?? this.toastrGlobalSettingsService.position()).includes('bottom'));
 
   @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true }) protected dynamicContainer!: ViewContainerRef;
   @ViewChild('toastSwipeTarget', { static: true }) protected toastSwipeTarget!: ElementRef;
   @ViewChild('animatorWrapper', { static: true }) protected animatorWrapper!: ElementRef;
-  
+  @ViewChild('progressBar') protected progressBar?: ElementRef<HTMLElement>;
+
   protected wrapperClasses = computed(() => {
     const isTop = (this.config?.position ?? 'top-right').includes('top');
     const animClass = isTop ? 'anim-dir-top' : 'anim-dir-bottom';
@@ -64,6 +98,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   });
 
   private progressAnimation?: Animation;
+  private subs = new Subscription();
 
   private remainingMs = 0;
 
@@ -111,9 +146,18 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   }
 
   public ngAfterViewInit(): void {
-    if (this.config?.durationInMs) {
-      this.remainingMs = this.config.durationInMs;
+    const duration = this.config?.durationInMs;
+
+    if (duration) {
+      this.remainingMs = duration;
       this.startTimer();
+    }
+
+    if (duration && this.progressBar?.nativeElement) {
+      this.progressAnimation = this.progressBar.nativeElement.animate([{ width: '100%' }, { width: '0%' }], { duration, fill: 'forwards' });
+
+      this.subs.add(this.toastRef.onPause$.subscribe(() => this.progressAnimation?.pause()));
+      this.subs.add(this.toastRef.onResume$.subscribe(() => this.progressAnimation?.play()));
     }
   }
 
@@ -127,6 +171,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.cleanupListeners = [];
 
     this.progressAnimation?.cancel();
+    this.subs.unsubscribe();
   }
 
   public closeToast(result?: R, fromSwipe = false): void {
@@ -162,6 +207,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       this.toastRef.resume();
     }
   }
+  
   //#region Swipe Logic
 
   private startVerticalSwipeDetection(): void {

@@ -17,6 +17,7 @@ import { ModalLayout } from '@modal/types/modal.types';
 import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
 import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
+import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
 
 @Component({
   selector: 'app-modal',
@@ -54,7 +55,7 @@ export class Modal {
       hasBackdrop: new FormControl<boolean>(true, [Validators.required]),
       showCloseButton: new FormControl<boolean>(true, [Validators.required]),
       title: new FormControl<string>('This is the title of the modal in its header'),
-      bannerText: new FormControl<string | null>('The Lorem Ipsum Modal'),
+      headerText: new FormControl<string | null>('The Lorem Ipsum Modal'),
       disableClose: new FormControl<boolean>(false),
       disableCloseOnBackdropClick: new FormControl<boolean>(false),
       hasConfirmCloseGuard: new FormControl<boolean>(true)
@@ -75,10 +76,20 @@ export class Modal {
     const request = this.createRequest();
     if (!request) return;
 
-    const bannerText = request.bannerText === '' ? null : request.bannerText;
+    const headerText = request.headerText === '' ? null : request.headerText;
 
     const modal = this.modals.open<IDemoModalData, IDemoModalResult>(DemoModal, {
-      bannerText: bannerText || undefined,
+      header:
+        headerText === undefined
+          ? undefined
+          : ({
+              text: headerText,
+              icon: {
+                name: 'info',
+                color: 'text-info',
+                bgColor: 'auto'
+              }
+            } as IModalHeaderConfig),
       data: {
         title: request.title,
         body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet neque sed enim aliquam ullamcorper.',
@@ -96,7 +107,9 @@ export class Modal {
       closeGuard: request.hasConfirmCloseGuard
         ? new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
             data: 'Are you sure you want to close the modal?',
-            bannerText: 'Unsaved Changes',
+            header: {
+              text: 'Unsaved Changes'
+            },
             style: {
               showCloseButton: false
             }

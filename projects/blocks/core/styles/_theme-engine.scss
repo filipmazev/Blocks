@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use 'sass:list';
+@use 'sass:string';
 @use 'palettes' as *;
 
 $required-theme-keys: (
@@ -218,24 +219,8 @@ $merged-theme: map.merge($base, $overrides);
 
 @mixin bx-theme($config) {
     @each $key, $value in $config {
-
         @if $key !='meta-brand-palette' {
             --bx-#{$key}: #{$value};
-
-            .bx-bg-#{$key} {
-                background-color: var(--bx-#{$key});
-                transition: background-color 0.2s ease-in-out;
-            }
-
-            .bx-text-#{$key} {
-                color: var(--bx-#{$key});
-                transition: color 0.2s ease-in-out;
-            }
-
-            .bx-border-#{$key} {
-                border-color: var(--bx-#{$key});
-                transition: border-color 0.2s ease-in-out;
-            }
         }
 
         @if $key =='meta-brand-palette' {
@@ -244,6 +229,49 @@ $merged-theme: map.merge($base, $overrides);
             @each $shade, $color in $brand-palette {
                 --bx-color-primary-#{$shade}: #{$color};
             }
+        }
+    }
+}
+
+@each $key in $required-theme-keys {
+
+    @if string.index($key, 'bg-')==1 {
+        .bx-#{$key} {
+            background-color: var(--bx-#{$key});
+            transition: background-color 0.2s ease-in-out;
+        }
+    }
+
+    @else if string.index($key, 'text-')==1 {
+        .bx-#{$key} {
+            color: var(--bx-#{$key});
+            transition: color 0.2s ease-in-out;
+        }
+    }
+
+    @else if string.index($key, 'border-')==1 {
+        .bx-#{$key} {
+            border-color: var(--bx-#{$key});
+            transition: border-color 0.2s ease-in-out;
+        }
+    }
+
+    @else if string.index($key, 'scroll-')==1 {}
+
+    @else {
+        .bx-bg-#{$key} {
+            background-color: var(--bx-#{$key});
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .bx-text-#{$key} {
+            color: var(--bx-#{$key});
+            transition: color 0.2s ease-in-out;
+        }
+
+        .bx-border-#{$key} {
+            border-color: var(--bx-#{$key});
+            transition: border-color 0.2s ease-in-out;
         }
     }
 }

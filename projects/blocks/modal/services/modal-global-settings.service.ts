@@ -17,9 +17,6 @@ export class ModalGlobalSettingsService {
   public readonly disableCloseOnNavigation = signal<boolean>(false);
   public readonly closeGuardOnlyOnCancel = signal<boolean>(true);
 
-  public readonly disableConsoleWarnings = signal<boolean>(false);
-  public readonly disableConsoleInfo = signal<boolean>(false);
-
   /**
    * Updates the global modal settings with the provided values. Only the specified settings will be updated, while others will remain unchanged.
    * @param settings An object containing the settings to be updated. Each property is optional, and only those provided will be updated.
@@ -42,8 +39,6 @@ export class ModalGlobalSettingsService {
       disableCloseOnBackdropClick: boolean;
       disableCloseOnNavigation: boolean;
       closeGuardOnlyOnCancel: boolean;
-      disableConsoleWarnings: boolean;
-      disableConsoleInfo: boolean;
     }>
   ) {
     if (settings.animate !== undefined) this.animate.set(settings.animate);

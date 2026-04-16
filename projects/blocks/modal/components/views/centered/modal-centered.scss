@@ -51,13 +51,6 @@
     background-color: var(--bx-modal-bg, var(--bx-bg-surface));
 }
 
-.centered-modal-default-content-container {
-    padding: spacing(4) spacing(6);
-    max-height: 85vh;
-    max-height: 85dvh;
-    overflow-y: auto;
-}
-
 .centered-modal-inner-content-container {
     display: flex;
     flex-direction: column;

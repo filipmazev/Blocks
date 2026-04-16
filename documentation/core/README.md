@@ -25,7 +25,7 @@ Blocks Core utilizes a robust SCSS architecture to manage design tokens and resp
 The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the `bx-theme` mixin in your global styles.
 
 ```scss
-@use "@filip.mazev/blocks/core/styles/index" as *;
+@use "@filip.mazev/blocks" as *;
 
 :root {
   // Initialize default light theme

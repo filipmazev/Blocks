@@ -59,9 +59,13 @@ export class ToastrService {
         message: request.message,
         type: 'success'
       },
+      closeButtonColor: 'text-success',
+      progressBarColor: 'text-success',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate()
+      animate: this.globalSettings.animate(),
+      showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
+      showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
   }
 
@@ -78,9 +82,13 @@ export class ToastrService {
         message: request.message,
         type: 'info'
       },
+      closeButtonColor: 'text-info',
+      progressBarColor: 'text-info',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate()
+      animate: this.globalSettings.animate(),
+      showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
+      showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
   }
 
@@ -97,9 +105,13 @@ export class ToastrService {
         message: request.message,
         type: 'warn'
       },
+      closeButtonColor: 'text-warn',
+      progressBarColor: 'text-warn',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate()
+      animate: this.globalSettings.animate(),
+      showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
+      showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
   }
 
@@ -116,9 +128,13 @@ export class ToastrService {
         message: request.message,
         type: 'danger'
       },
+      closeButtonColor: 'text-danger',
+      progressBarColor: 'text-danger',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate()
+      animate: this.globalSettings.animate(),
+      showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
+      showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
   }
 
@@ -243,7 +259,11 @@ export class ToastrService {
       animate: config?.animate ?? this.globalSettings.animate(),
       wrapperClass: config?.wrapperClass ?? this.globalSettings.wrapperClass(),
       durationInMs: config?.durationInMs ?? this.globalSettings.durationInMs(),
-      swipeToDismiss: config?.swipeToDismiss ?? this.globalSettings.swipeToDismiss()
+      swipeToDismiss: config?.swipeToDismiss ?? this.globalSettings.swipeToDismiss(),
+      showCloseButton: config?.showCloseButton ?? this.globalSettings.showCloseButton(),
+      closeButtonColor: config?.closeButtonColor ?? this.globalSettings.closeButtonColor(),
+      showProgressBar: config?.showProgressBar ?? this.globalSettings.showProgressBar(),
+      progressBarColor: config?.progressBarColor ?? this.globalSettings?.progressBarColor()
     };
   }
 

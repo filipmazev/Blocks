@@ -1,9 +1,18 @@
 <div class="modal-top-banner-container">
+    @let headerData = header();
+    @if(headerData) {
     <div class="modal-top-banner-title-container">
-        @if (config() && config()?.bannerText && (config() && config()!.bannerText.length > 0)) {
-        {{ config()?.bannerText }}
+        @if(headerData.icon) {
+        <bx-icon [name]="headerData.icon.name" [size]="headerData.icon.size ?? '24'" [color]="headerData.icon.color"
+            [bgColor]="headerData.icon.bgColor" [strokeWidth]="headerData.icon.strokeWidth" />
+        }
+        @if (headerData.text.length > 0) {
+        {{ headerData.text }}
         }
     </div>
+    }
 
+    @if(showCloseButton()) {
     <bx-icon [name]="'x'" (click)="close.emit('cancel')" [ariaLabel]="'Close'" [style.cursor]="'pointer'" />
+    }
 </div>

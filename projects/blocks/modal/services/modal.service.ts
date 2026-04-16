@@ -201,8 +201,6 @@ export class ModalService implements IModalService {
       disableCloseOnBackdropClick: config?.disableCloseOnBackdropClick ?? this.globalSettings.disableCloseOnBackdropClick(),
       disableCloseOnNavigation: config?.disableCloseOnNavigation ?? this.globalSettings.disableCloseOnNavigation(),
       closeGuardOnlyOnCancel: config?.closeGuardOnlyOnCancel ?? this.globalSettings.closeGuardOnlyOnCancel(),
-      disableConsoleWarnings: config?.disableConsoleWarnings ?? this.globalSettings.disableConsoleWarnings(),
-      disableConsoleInfo: config?.disableConsoleInfo ?? this.globalSettings.disableConsoleInfo(),
       style: resolvedStyle
     };
   }

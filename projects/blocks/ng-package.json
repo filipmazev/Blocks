@@ -2,12 +2,13 @@
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../dist/blocks",
     "lib": {
-        "entryFile": "./src/public-api.ts"
+        "entryFile": "src/public-api.ts"
     },
     "assets": [
         "schematics/**/*.json",
         "schematics/**/*.js",
         "schematics/**/*.d.ts",
-        "core/styles/**/*.scss"
+        "core/styles/**/*.scss",
+        "_index.scss"
     ]
 }

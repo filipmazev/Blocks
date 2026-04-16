@@ -6,7 +6,7 @@ export class ModalConfigRequest {
   public hasBackdrop: boolean = true;
   public showCloseButton: boolean = true;
   public title: string = '';
-  public bannerText: string | null = '';
+  public headerText: string | null = '';
   public disableClose: boolean = false;
   public disableCloseOnBackdropClick: boolean = false;
   public hasConfirmCloseGuard: boolean = true;
