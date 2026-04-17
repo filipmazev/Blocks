@@ -1,0 +1,16 @@
+{
+    "compilerOptions": { 
+        "rootDir": "schematics",
+        "outDir": "../../dist/blocks/schematics",
+        "module": "node16",
+        "moduleResolution": "node16",
+        "target": "es2019",
+        "lib": ["ES2019"],
+        "declaration": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "types": ["node"]
+    },
+    "include": ["schematics/**/*"],
+    "exclude": ["schematics/*/files/**/*", "schematics/**/*.spec.tsx"]
+}

@@ -15,7 +15,7 @@ npm version patch --prefix projects/blocks --no-git-tag-version
 # 2. Run the build
 # This triggers: version-sync.mjs -> ng build blocks
 echo "Step 2: Building @filip.mazev/blocks..."
-npm run build blocks
+npm run build:blocks
 
 # 3. Publish the consolidated package
 echo "Step 3: Publishing to NPM..."
