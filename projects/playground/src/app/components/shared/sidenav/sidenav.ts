@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { WindowDimensionsService } from '@core/services/window-dimension.service';
-import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
+import { NavigationService } from '@navigation/services/navigation.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,8 +13,8 @@ import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
 })
 export class Sidenav {
   private readonly windowDimensionsService = inject(WindowDimensionsService);
+  protected readonly navigationService = inject(NavigationService);
 
-  public links = input.required<ISidenavLink[]>();
   public title = input.required<string>();
 
   protected isHamburgerMenuOpen = signal(false);

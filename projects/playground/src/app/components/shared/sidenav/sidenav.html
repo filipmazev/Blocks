@@ -12,12 +12,12 @@
         </div>
 
         <div class="nav-links">
-            @for (link of links(); track link.route) {
-            <a [routerLink]="link.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                class="nav-item" [title]="link.name">
+            @for (item of navigationService.menu(); track item.route) {
+            <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                class="nav-item" [title]="item.label">
 
                 <span class="nav-text fade-in">
-                    {{ link.name }}
+                    {{ item.label }}
                 </span>
             </a>
             }
@@ -39,9 +39,9 @@
 
     <div class="mobile-menu" [class.open]="isHamburgerMenuOpen()">
         <div class="mobile-nav-links">
-            @for (link of links(); track link.route) {
-            <a [routerLink]="link.route" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-item">
-                {{ link.name }}
+            @for (item of navigationService.menu(); track item.route) {
+            <a [routerLink]="item.route" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-item">
+                {{ item.label }}
             </a>
             }
         </div>

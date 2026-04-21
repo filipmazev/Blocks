@@ -4,29 +4,75 @@ import { Modal } from '@playground/components/screens/library-components/modal/m
 import { Home } from '@playground/components/screens/home/home';
 import { Toastr } from './components/screens/library-components/toastr/toastr';
 import { IconCatalog } from './components/screens/icon-catalog/icon-catalog';
+import { withNav } from '@navigation/helpers/navigation-functions';
 
 export const ROUTES: Routes = [
   {
     path: '',
-    component: Home,
-    pathMatch: 'full'
+    pathMatch: 'full',
+    redirectTo: 'home'
   },
-  {
-    path: 'modal',
-    component: Modal
-  },
-  {
-    path: 'toastr',
-    component: Toastr
-  },
-  {
-    path: 'icon-catalog',
-    component: IconCatalog
-  },
-  {
-    path: '**',
-    component: Home
-  }
+
+  withNav(
+    {
+      path: 'home',
+      component: Home,
+      title: 'Home'
+    },
+    {
+      label: 'Home',
+      breadcrumb: 'Home',
+      section: 'base',
+      menu: true,
+      root: true,
+      order: 1
+    }
+  ),
+
+  withNav(
+    {
+      path: 'icon-catalog',
+      component: IconCatalog,
+      title: 'Icon Catalog'
+    },
+    {
+      label: 'Icon Catalog',
+      breadcrumb: 'Icon Catalog',
+      section: 'base',
+      menu: true,
+      order: 2
+    }
+  ),
+
+  withNav(
+    {
+      path: 'modal',
+      component: Modal,
+      title: 'Modal'
+    },
+    {
+      label: 'Modal',
+      breadcrumb: 'Modal',
+      section: 'base',
+      menu: true,
+      order: 3
+    }
+  ),
+
+  withNav(
+    {
+      path: 'toastr',
+      component: Toastr,
+      title: 'Toastr'
+    },
+    {
+      label: 'Toastr',
+      breadcrumb: 'Toastr',
+      section: 'base',
+      menu: true,
+      order: 4
+    }
+  )
 ];
 
 @NgModule({

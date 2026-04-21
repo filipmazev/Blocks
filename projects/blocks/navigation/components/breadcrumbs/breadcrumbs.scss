@@ -1,0 +1,64 @@
+@use '../../../core/styles/index' as *;
+
+.breadcrumbs {
+    color: var(--bx-text-primary);
+    padding: 0rem 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    view-transition-name: breadcrumb-bar;
+
+    @include respond-down(xl) {
+        padding: 0rem 1.5rem;
+        margin-top: 1rem;
+    }
+}
+
+.crumb {
+    font-size: .9rem;
+    cursor: pointer;
+
+    &.last {
+        cursor: default;
+        font-family: custom_semibold;
+    }
+
+    &.animated {
+        animation: breadcrumb-appear-anim 0.3s ease-in-out;
+    }
+}
+
+.crumb:hover {
+    color: var(--bx-text-primary);
+
+    &.last {
+        color: var(--bx-text-primary);
+    }
+}
+
+.breadcrumb-separator {
+    margin: 0 .35rem;
+    opacity: .4;
+}
+
+.crumb.breadcrumb-on-appear {
+    animation-delay: calc(var(--crumb-index) * 0.1s);
+}
+
+.breadcrumb-on-appear:not(.single):not(.alone) {
+    animation: braedcrumb-on-appear-anim 0.5s ease-in-out forwards;
+    animation-duration: calc(0.5s * (1 - var(--a11y-reduced-motion)));
+}
+
+@keyframes braedcrumb-on-appear-anim {
+    0% {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

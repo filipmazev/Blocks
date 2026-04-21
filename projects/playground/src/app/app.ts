@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { HighlightLoader } from 'ngx-highlightjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
-import { ISidenavLink } from '@playground/interfaces/isidenav-link.interface';
 import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
 import { ThemeId } from '@playground/types/common.types';
@@ -33,13 +32,6 @@ export class App {
   ];
 
   protected isDarkMode = signal(false);
-
-  protected navLinks = signal<ISidenavLink[]>([
-    { name: 'Home', route: '/' },
-    { name: 'Icons', route: '/icon-catalog' },
-    { name: 'Modal', route: '/modal' },
-    { name: 'Toastr', route: '/toastr' }
-  ]);
 
   protected selectedThemeId = signal<ThemeId>('orange');
 

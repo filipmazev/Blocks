@@ -1,0 +1,16 @@
+@if(showBreadcumbs()) {
+<nav class="breadcrumbs" [aria-label]="ariaLabel()">
+    @for (crumb of current().breadcrumbs; track crumb.route; let i = $index) {
+    <button class="crumb" (click)="navigateTo(crumb.route)" [ngClass]="{
+                   'last': i === current().breadcrumbs.length - 1,
+                   'breadcrumb-on-appear': i === current().breadcrumbs.length - 1 && current().breadcrumbs.length > 1
+                 }" [style.--crumb-index]="i" [class.animated]="isAnimated()">
+        {{ crumb.label }}
+    </button>
+
+    @if (i !== current().breadcrumbs.length - 1) {
+    <bx-icon [name]="divider()" size="16" class="breadcrumb-separator" />
+    }
+    }
+</nav>
+}
