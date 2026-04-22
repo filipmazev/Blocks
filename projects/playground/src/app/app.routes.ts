@@ -4,7 +4,7 @@ import { Modal } from '@playground/components/screens/library-components/modal/m
 import { Home } from '@playground/components/screens/home/home';
 import { Toastr } from './components/screens/library-components/toastr/toastr';
 import { IconCatalog } from './components/screens/icon-catalog/icon-catalog';
-import { withNav } from '@navigation/helpers/navigation-functions';
+import { withNav } from '../../../blocks/navigation/helpers/navigation-functions';
 
 export const ROUTES: Routes = [
   {

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { WindowDimensionsService } from '@core/services/window-dimension.service';
-import { NavigationService } from '@navigation/services/navigation.service';
+import { NavigationService } from '../../../../../../blocks/navigation/services/navigation.service';
 
 @Component({
   selector: 'app-sidenav',

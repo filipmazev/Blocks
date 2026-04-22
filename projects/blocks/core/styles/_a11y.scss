@@ -1,0 +1,26 @@
+:root {
+    --bx-reduced-motion: 0;
+
+    @media (prefers-reduced-motion: reduce) {
+        --bx-reduced-motion: 1;
+    }
+}
+
+.bx-reduce-motion-forced {
+    --bx-reduced-motion: 1 !important;
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@mixin bx-transition($property, $duration, $easing) {
+    transition-property: #{$property};
+    transition-duration: calc(#{$duration} * (1 - var(--bx-reduced-motion, 0)));
+    transition-timing-function: #{$easing};
+}

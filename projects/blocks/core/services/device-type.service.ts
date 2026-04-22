@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DesktopOS } from '../enums/desktop-os.enum';
 import { MobileOS } from '../enums/mobile-os.enum';
-import { DeviceState } from '../interfaces/device-state.interface';
+import { IDeviceState } from '../interfaces/idevice-state.interface';
 import { DeviceOS, DeviceOrientationType, LegacyScreenOrientation, MSStreamWindow, OperaCapableWindow } from '../types/core.types';
 
 @Injectable({
@@ -39,7 +39,7 @@ export class DeviceTypeService {
     return ['portrait-primary', 'portrait-secondary'].includes(this.screenOrientation);
   }
 
-  public getDeviceState(): DeviceState {
+  public getDeviceState(): IDeviceState {
     const isDesktop = this.isDesktopDevice;
     const isMobile = this.isMobileDevice();
     const isTablet = this.isTabletDevice();

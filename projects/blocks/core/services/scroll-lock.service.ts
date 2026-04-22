@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, inject, signal, PLATFORM_ID } from '@angular/cor
 import { isPlatformBrowser } from '@angular/common';
 import { DeviceTypeService } from './device-type.service';
 import { WindowDimensionsService } from './window-dimension.service';
-import { IScrollLockConfig } from '../interfaces/scroll-lock-config.interface';
+import { IScrollLockConfig } from '../interfaces/iscroll-lock-config.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ScrollLockService implements OnDestroy {

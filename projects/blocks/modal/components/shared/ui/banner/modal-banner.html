@@ -6,8 +6,8 @@
         <bx-icon [name]="headerData.icon.name" [size]="headerData.icon.size ?? '24'" [color]="headerData.icon.color"
             [bgColor]="headerData.icon.bgColor" [strokeWidth]="headerData.icon.strokeWidth" />
         }
-        @if (headerData.text.length > 0) {
-        {{ headerData.text }}
+        @if (resolvedText()) {
+        {{ resolvedText() }}
         }
     </div>
     }

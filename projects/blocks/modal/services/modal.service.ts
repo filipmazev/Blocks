@@ -12,6 +12,7 @@ import { ComponentType } from '@angular/cdk/portal';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IModal } from '../interfaces/imodal.interface';
 import { ModalGlobalSettingsService } from './modal-global-settings.service';
+import { BxA11yService } from '@filip.mazev/blocks/core';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,9 @@ export class ModalService implements IModalService {
   private readonly environmentInjector = inject(EnvironmentInjector);
   private readonly rendererFactory = inject(RendererFactory2);
   private readonly document = inject(DOCUMENT);
-
   private readonly renderer: Renderer2;
-
   private readonly globalSettings = inject(ModalGlobalSettingsService);
+  private readonly a11y = inject(BxA11yService);
 
   //#region Properties
 
@@ -181,9 +181,12 @@ export class ModalService implements IModalService {
   }
 
   private resolveConfig<D, R>(config: IModalConfig<D, R> | undefined): IModalConfig<D, R> {
+    const requestedAnimation = config?.style?.animate ?? this.globalSettings.animate();
+    const finalAnimateState = this.a11y.isReducedMotion() ? false : requestedAnimation;
+
     const resolvedStyle = {
       layout: config?.style?.layout ?? this.globalSettings.layout(),
-      animate: config?.style?.animate ?? this.globalSettings.animate(),
+      animate: finalAnimateState,
       hasBackdrop: config?.style?.hasBackdrop ?? this.globalSettings.hasBackdrop(),
       showCloseButton: config?.style?.showCloseButton ?? this.globalSettings.showCloseButton(),
       contentWrapper: config?.style?.contentWrapper ?? this.globalSettings.contentWrapper(),

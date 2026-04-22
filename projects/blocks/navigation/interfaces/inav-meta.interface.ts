@@ -1,12 +1,9 @@
-import { INavContext } from "./inav-context.interface";
 import { IconData } from "@filip.mazev/blocks/icons";
+import { NavText } from "../types/navigation.types";
 
 export interface INavMeta {
-  label?: string | ((ctx: INavContext) => string);
-  breadcrumb?: string | ((ctx: INavContext) => string);
-
-  labelKey?: string;
-  breadcrumbKey?: string;
+  label?: NavText;
+  breadcrumb?: NavText;
 
   icon?: IconData;
   section?: string;

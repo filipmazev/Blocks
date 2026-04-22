@@ -8,10 +8,10 @@ import { ToastrConfigFormControls } from '@playground/types/form.types';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 import { DemoToast } from './components/demo-toast/demo-toast';
-import { Button } from '@button/components/button';
 import { ToastrService } from '@toastr/services/toastr.service';
 import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
+import { Button } from '@forms/components/button/button';
 
 @Component({
   selector: 'app-toastr-demo',

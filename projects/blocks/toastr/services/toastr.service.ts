@@ -1,17 +1,18 @@
 import { Injectable, inject, Injector, ApplicationRef, EnvironmentInjector, createComponent, ComponentRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { ComponentType } from '@angular/cdk/portal';
+import { take } from 'rxjs';
 import { IToastConfig } from '../interfaces/itoast-config.interface';
 import { ToastRef } from '../classes/toast-ref';
 import { TOAST_DATA } from '../tokens/toast-data.token';
 import { IToast } from '../interfaces/itoast.interface';
 import { ToastrGlobalSettingsService } from './toastr-global-settings.service';
 import { ToastPosition } from '../types/toastr.types';
-import { ComponentType } from '@angular/cdk/portal';
 import { ToastCore } from '../components/toast-core';
-import { take } from 'rxjs';
 import { SimpleToast } from '../components/views/simple-toast/simple-toast';
 import { ISimpleToastData } from '../interfaces/isimple-toast.interface';
 import { IQueueSimpleToastRequest } from '../interfaces/iqueue-simple-toast-request.interface';
+import { BxA11yService } from '@filip.mazev/blocks/core';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class ToastrService {
   private readonly environmentInjector = inject(EnvironmentInjector);
   private readonly document = inject(DOCUMENT);
   private readonly globalSettings = inject(ToastrGlobalSettingsService);
+  private readonly a11y = inject(BxA11yService);
 
   private readonly toastQueue: Array<() => void> = [];
   private readonly activeToasts: Array<ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>> = [];
@@ -63,7 +65,7 @@ export class ToastrService {
       progressBarColor: 'text-success',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate(),
+      animate: request.animate ?? this.globalSettings.animate(),
       showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
       showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
@@ -86,7 +88,7 @@ export class ToastrService {
       progressBarColor: 'text-info',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate(),
+      animate: request.animate ?? this.globalSettings.animate(),
       showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
       showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
@@ -109,7 +111,7 @@ export class ToastrService {
       progressBarColor: 'text-warn',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate(),
+      animate: request.animate ?? this.globalSettings.animate(),
       showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
       showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
@@ -132,7 +134,7 @@ export class ToastrService {
       progressBarColor: 'text-danger',
       hasDefaultBackground: false,
       durationInMs: request.durationInMs ?? this.globalSettings.durationInMs(),
-      animate: this.globalSettings.animate(),
+      animate: request.animate ?? this.globalSettings.animate(),
       showProgressBar: request.showProgessBar ?? this.globalSettings.showProgressBar(),
       showCloseButton: request.showCloseButton ?? this.globalSettings.showCloseButton()
     });
@@ -253,10 +255,13 @@ export class ToastrService {
   }
 
   private resolveConfig<D>(config?: IToastConfig<D>): IToastConfig<D> {
+    const requestedAnimation = config?.animate ?? this.globalSettings.animate();
+    const finalAnimateState = this.a11y.isReducedMotion() ? false : requestedAnimation;
+
     return {
       ...config,
       position: config?.position ?? this.globalSettings.position(),
-      animate: config?.animate ?? this.globalSettings.animate(),
+      animate: finalAnimateState,
       wrapperClass: config?.wrapperClass ?? this.globalSettings.wrapperClass(),
       durationInMs: config?.durationInMs ?? this.globalSettings.durationInMs(),
       swipeToDismiss: config?.swipeToDismiss ?? this.globalSettings.swipeToDismiss(),

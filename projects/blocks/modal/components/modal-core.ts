@@ -29,7 +29,7 @@ import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalGlobalSettingsService } from '../services/modal-global-settings.service';
 import { IModal } from '../interfaces/imodal.interface';
-import { ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
+import { isTextWithKey, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
 import * as animConst from '../constants/modal-animation.constants';
 
 @Component({
@@ -204,9 +204,15 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   private initParamsFromConfig() {
     this.id.set(this.config?.id ?? this.scrollLockId);
 
+    let hasHeaderText = false;
+    if (this.config?.header?.text) {
+      const text = this.config.header.text;
+      hasHeaderText = isTextWithKey(text) ? !!text.key : text.length > 0;
+    }
+
     this.hasBanner =
       this.config !== undefined &&
-      ((this.config.header !== undefined && (this.config.header.text.length > 0 || this.config.header?.icon !== undefined)) ||
+      ((this.config.header !== undefined && (hasHeaderText || this.config.header?.icon !== undefined)) ||
         (this.config.disableClose !== true && this.config.style.showCloseButton !== false && this.headerTemplate() === null));
 
     this.hasDefaultContentWrapperClass = this.config?.style.contentWrapper !== false;

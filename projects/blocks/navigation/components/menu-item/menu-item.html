@@ -1,0 +1,19 @@
+<button class="bx-menu-item-btn" [class.is-disabled]="disabled()" [class.is-danger]="danger()"
+    [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)">
+
+    @if (icon()) {
+    <bx-icon class="bx-icon-pos-start" [name]="icon()!" size="20" />
+    }
+
+    <span class="bx-menu-item-content">
+        @if (resolvedLabel()) {
+        {{ resolvedLabel() }}
+        } @else {
+        <ng-content></ng-content>
+        }
+    </span>
+
+    @if (endIcon()) {
+    <bx-icon class="bx-icon-pos-end" [name]="endIcon()!" size="20" />
+    }
+</button>

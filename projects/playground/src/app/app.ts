@@ -7,9 +7,9 @@ import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
 import { FormsModule } from '@angular/forms';
 import { ThemeId } from '@playground/types/common.types';
 import { combineLatest } from 'rxjs';
-import { Button } from '@button/components/button';
 import { Icon } from '@icons/components/icon';
 import { ThemingService } from '@core/services/theming.service';
+import { Button } from '@forms/components/button/button';
 
 @Component({
   selector: 'app-root',

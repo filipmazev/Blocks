@@ -1,5 +1,6 @@
-import { Component, input, booleanAttribute, HostListener } from '@angular/core';
-import { ButtonVariant, ButtonColor } from '../types/button.types';
+import { Component, input, booleanAttribute, HostListener, inject, computed } from '@angular/core';
+import { BxA11yService } from '@filip.mazev/blocks/core';
+import { ButtonColor, ButtonVariant } from '../../types/form.types';
 
 @Component({
   selector: 'bx-button, button[bx-button], a[bx-button]',
@@ -10,12 +11,19 @@ import { ButtonVariant, ButtonColor } from '../types/button.types';
     '[class]': '"bx-btn bx-btn-" + variant() + " bx-btn-color-" + color()',
     '[class.bx-btn-is-outlined]': 'outlined()',
     '[class.bx-btn-is-elevated]': 'elevated()',
+    '[class.bx-btn-animated]': 'isAnimated()',
     '[attr.disabled]': 'disabled() ? true : null',
     '[attr.aria-disabled]': 'disabled()',
     '[attr.tabindex]': 'disabled() ? "-1" : null'
   }
 })
 export class Button {
+  private readonly a11y = inject(BxA11yService);
+
+  public readonly isAnimated = computed(() => {
+    return !this.a11y.isReducedMotion();
+  });
+
   public readonly variant = input<ButtonVariant>('text');
   public readonly color = input<ButtonColor>('primary');
   public readonly outlined = input<boolean>(false);

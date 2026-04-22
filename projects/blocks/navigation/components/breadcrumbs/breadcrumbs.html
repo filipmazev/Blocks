@@ -4,7 +4,7 @@
     <button class="crumb" (click)="navigateTo(crumb.route)" [ngClass]="{
                    'last': i === current().breadcrumbs.length - 1,
                    'breadcrumb-on-appear': i === current().breadcrumbs.length - 1 && current().breadcrumbs.length > 1
-                 }" [style.--crumb-index]="i" [class.animated]="isAnimated()">
+                 }" [style.--crumb-index]="i" [class.bx-breadcrumb-animated]="isAnimated()">
         {{ crumb.label }}
     </button>
 

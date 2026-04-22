@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Icon } from '@icons/components/icon';
-import { Button } from '@button/components/button';
 import { IconName } from '@icons/types/icon.types';
+import { Button } from '@forms/components/button/button';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +31,10 @@ export class Home {
       icon: 'fingerprint-pattern'
     }
   ];
+
+  protected test(): void {
+    console.log('test');
+  }
 }
 
 interface IFeature {

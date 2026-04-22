@@ -1,8 +1,8 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { lucideNames } from '../../../../../../blocks/icons/assets/lucide/names';
 import { IconName, IconSize, IconStrokeWidth } from '@icons/types/icon.types';
 import { Icon } from '@icons/components/icon';
+import { lucideNames } from '@icons/assets/lucide/names';
 
 @Component({
   selector: 'app-icon-catalog',

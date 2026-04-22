@@ -1,4 +1,4 @@
-export interface WindowDimensions {
+export interface IWindowDimensions {
   width: number;
   height: number;
 }

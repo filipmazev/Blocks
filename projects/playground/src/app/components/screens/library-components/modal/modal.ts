@@ -11,13 +11,13 @@ import { MarkdownModule } from 'ngx-markdown';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
-import { Button } from '@button/components/button';
 import { ModalService } from '@modal/services/modal.service';
 import { ModalLayout } from '@modal/types/modal.types';
 import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
 import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
+import { Button } from '@forms/components/button/button';
 
 @Component({
   selector: 'app-modal',

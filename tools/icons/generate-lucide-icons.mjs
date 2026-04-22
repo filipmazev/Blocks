@@ -84,7 +84,7 @@ function buildIconTs({
 export const ${exportName} = defineIcon({
   name: '${iconName}',
   viewBox: '${viewBox}',
-  svgContent: \`${escapeTemplateLiteral(svgContent)}\`,
+  svgContent: \`${escapeTemplateLiteral(svgContent)}\`
 } as const);
 `;
 }

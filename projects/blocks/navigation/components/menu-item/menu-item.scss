@@ -1,0 +1,60 @@
+@use '../../../core/styles/index' as *;
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.bx-menu-item-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: spacing(2) spacing(3);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.875rem;
+    text-align: left;
+    border-radius: radius(sm);
+
+    color: var(--bx-text-primary);
+
+    &.bx-menu-item-animated {
+        transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    }
+
+    &:hover:not(.is-disabled) {
+        background-color: var(--bx-bg-element-hover);
+    }
+
+    &:active:not(.is-disabled) {
+        background-color: var(--bx-bg-element-active);
+    }
+
+    &.is-danger {
+        color: var(--bx-text-danger);
+
+        &:hover:not(.is-disabled) {
+            background-color: var(--bx-bg-danger-hover);
+            color: var(--bx-text-danger);
+        }
+
+        &:active:not(.is-disabled) {
+            background-color: var(--bx-bg-danger-active);
+        }
+    }
+
+    &.is-disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
+
+.bx-menu-item-content {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -10,11 +10,11 @@
     "paths": {
     "@filip.mazev/blocks": ["./projects/blocks/src/public-api.ts"],
       "@filip.mazev/blocks/core": ["./projects/blocks/core/public-api.ts"],
-      "@filip.mazev/blocks/button": ["./projects/blocks/button/public-api.ts"],
+      "@filip.mazev/blocks/navigation": ["./projects/blocks/navigation/public-api.ts"],
+      "@filip.mazev/blocks/forms": ["./projects/blocks/forms/public-api.ts"],
       "@filip.mazev/blocks/icons": ["./projects/blocks/icons/public-api.ts"],
       "@filip.mazev/blocks/modal": ["./projects/blocks/modal/public-api.ts"],
       "@filip.mazev/blocks/toastr": ["./projects/blocks/toastr/public-api.ts"],
-      "@filip.mazev/blocks/navigation": ["./projects/blocks/navigation/public-api.ts"],
       /** Path aliases for blocks-core library */
       "@core/constants/*": ["././projects/blocks/core/constants/*"],
       "@core/enums/*": ["././projects/blocks/core/enums/*"],
@@ -22,6 +22,9 @@
       "@core/services/*": ["././projects/blocks/core/services/*"],
       "@core/helpers/*": ["././projects/blocks/core/helpers/*"],
       "@core/types/*": ["././projects/blocks/core/types/*"],
+      "@core/tokens/*": ["././projects/blocks/core/tokens/*"],
+      "@core/ui/forms/*": ["././projects/blocks/core/ui/forms/*"],
+      "@core/ui/navigation/*": ["././projects/blocks/core/ui/navigation/*"],
       /** Path aliases for modal library */
       "@modal/classes/*": ["././projects/blocks/modal/classes/*"],
       "@modal/components/*": ["././projects/blocks/modal/components/*"],
@@ -50,18 +53,26 @@
       "@icons/types/*": ["././projects/blocks/icons/types/*"],
       "@icons/helpers/*": ["././projects/blocks/icons/helpers/*"],
       "@icons/*": ["././projects/blocks/icons/*"],
-      /** Path aliases for button library */
-      "@button/components/*": ["././projects/blocks/button/components/*"],
-      "@button/types/*": ["././projects/blocks/button/types/*"],
-      /** Path aliases for navigation library */
+      /** Path alliases for navigation library */
       "@navigation/classes/*": ["././projects/blocks/navigation/classes/*"],
       "@navigation/components/*": ["././projects/blocks/navigation/components/*"],
       "@navigation/constants/*": ["././projects/blocks/navigation/constants/*"],
+      "@navigation/enums/*": ["././projects/blocks/navigation/enums/*"],
+      "@navigation/helpers/*": ["././projects/blocks/navigation/helpers/*"],
       "@navigation/interfaces/*": ["././projects/blocks/navigation/interfaces/*"],
       "@navigation/services/*": ["././projects/blocks/navigation/services/*"],
       "@navigation/tokens/*": ["././projects/blocks/navigation/tokens/*"],
-      "@navigation/helpers/*": ["././projects/blocks/navigation/helpers/*"],
-      "@navigation/*": ["././projects/blocks/navigation/*"],
+      "@navigation/types/*": ["././projects/blocks/navigation/types/*"],
+      /** Path aliases for forms library */
+      "@forms/classes/*": ["././projects/blocks/forms/classes/*"],
+      "@forms/components/*": ["././projects/blocks/forms/components/*"],
+      "@forms/constants/*": ["././projects/blocks/forms/constants/*"],
+      "@forms/enums/*": ["././projects/blocks/forms/enums/*"],
+      "@forms/helpers/*": ["././projects/blocks/forms/helpers/*"],
+      "@forms/interfaces/*": ["././projects/blocks/forms/interfaces/*"],
+      "@forms/services/*": ["././projects/blocks/forms/services/*"],
+      "@forms/tokens/*": ["././projects/blocks/forms/tokens/*"],
+      "@forms/types/*": ["././projects/blocks/forms/types/*"],
       /** Path aliases for playground app */
       "@playground/interfaces/*": ["./././././projects/playground/src/app/shared/interfaces/*"],
       "@playground/classes/*": ["./././././projects/playground/src/app/shared/classes/*"],

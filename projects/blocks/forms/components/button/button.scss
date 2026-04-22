@@ -1,4 +1,4 @@
-@use '../../core/styles/index' as *;
+@use '../../../core/styles/index' as *;
 
 :host {
     display: inline-flex;
@@ -8,11 +8,14 @@
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     outline: none;
     text-decoration: none;
     box-sizing: border-box;
     border: 1px solid transparent;
+
+    &.bx-btn-animated {
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
 
     &[disabled],
     &[aria-disabled="true"] {

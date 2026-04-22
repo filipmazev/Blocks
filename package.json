@@ -7,9 +7,10 @@
         "prebuild": "node tools/version-sync.mjs",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "build:blocks": "ng build blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 1 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
         "tools:generate:icons:lucide": "node tools/icons/generate-lucide-icons.mjs",
         "tools:sync-theme-types": "node tools/tokens/sync-theme-types.mjs",
+        "tools:sync-version": "node tools/version-sync.mjs",
+        "build:blocks": "npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 1 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
         "test": "ng test"
     },
     "prettier": {

@@ -110,7 +110,6 @@
     overflow: hidden;
 
     transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    transition-duration: calc(0.4s * (1 - var(--a11y-reduced-motion, 0)));
 
     &.default-wrapper {
         background-color: var(--bx-toast-bg, #fff);

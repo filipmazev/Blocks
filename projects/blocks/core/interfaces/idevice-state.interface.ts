@@ -1,7 +1,7 @@
 import { DesktopOS } from '../enums/desktop-os.enum';
 import { MobileOS } from '../enums/mobile-os.enum';
 
-export interface DeviceState {
+export interface IDeviceState {
   isDesktop: boolean;
   desktopOS: DesktopOS | undefined;
   isWindowsDesktop: boolean;

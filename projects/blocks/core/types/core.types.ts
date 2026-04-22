@@ -15,3 +15,9 @@ export type LegacyScreenOrientation = Screen & {
 export type MSStreamWindow = Window & {
   MSStream?: unknown;
 };
+
+export type Strict<T, Expected> = T & {
+  [K in keyof T]: K extends keyof Expected ? Expected[K] : never;
+};
+
+export type ResolvableText = string | { key: string };

@@ -24,7 +24,7 @@
         font-family: custom_semibold;
     }
 
-    &.animated {
+    &.bx-breadcrumb-animated {
         animation: breadcrumb-appear-anim 0.3s ease-in-out;
     }
 }
@@ -48,7 +48,7 @@
 
 .breadcrumb-on-appear:not(.single):not(.alone) {
     animation: braedcrumb-on-appear-anim 0.5s ease-in-out forwards;
-    animation-duration: calc(0.5s * (1 - var(--a11y-reduced-motion)));
+    animation-duration: calc(0.5s * (1 - var(--bx-reduced-motion, 0)));
 }
 
 @keyframes braedcrumb-on-appear-anim {

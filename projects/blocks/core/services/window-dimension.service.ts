@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { BREAKPOINTS } from '../constants/window-dimension.constants';
-import { WindowDimensions } from '../interfaces/window-dimensions.interface';
+import { IWindowDimensions } from '../interfaces/iwindow-dimensions.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class WindowDimensionsService {
 
   public readonly isBrowser = isPlatformBrowser(this.platformId);
 
-  public readonly _dimensions = signal<WindowDimensions>(this.getCurrentDimensions());
+  public readonly _dimensions = signal<IWindowDimensions>(this.getCurrentDimensions());
 
   public readonly dimensions = this._dimensions.asReadonly();
 
@@ -28,7 +28,7 @@ export class WindowDimensionsService {
     this.initResizeListener();
   }
 
-  private getCurrentDimensions(): WindowDimensions {
+  private getCurrentDimensions(): IWindowDimensions {
     if (!this.isBrowser) {
       return { width: 0, height: 0 };
     }

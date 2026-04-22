@@ -175,7 +175,7 @@ Controls the visual appearance:
 
 Controls the header appearance;
 
-* `text` |`string`|: The text to be shown in the header
+* `text` |`ResolvableText`|: The text to be shown in the header as `ResolvableText`, this can be a string or an object with a translation key
 * `icon` |`IconData`|: (optional) An icon to display to the left of the text, will default to undefined
 
 ### The Breakpoints

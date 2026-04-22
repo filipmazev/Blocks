@@ -6,11 +6,11 @@ const apiPath = './projects/blocks/src/public-api.ts';
 const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
 const version = pkg.version;
 
-const content = `/* * Public API Surface of blocks
- * This file is auto-generated. Do not edit directly.
- */
+let existingContent = readFileSync(apiPath, 'utf8');
 
-export const BLOCKS_VERSION = '${version}';
-`;
+existingContent = existingContent.replace(
+    /export const BLOCKS_VERSION = '.*';/g,
+    `export const BLOCKS_VERSION = '${version}';`
+);
 
-writeFileSync(apiPath, content);
+writeFileSync(apiPath, existingContent);

@@ -206,7 +206,7 @@ export class MyFeatureComponent {
 
 When using the quick status methods, the configuration is streamlined to focus on the text content:
 
-* `message` |`string`|: The main text body of the toast. If no title is provided, this text is automatically scaled up slightly for better visibility.
-* `title` |`string`|: (optional) A bolded header for the toast.
+* `title` |`ResolvableText`|: (optional) A bolded header for the toast as `ResolvableText`, this can be a string or an object with a translation key
+* `message` |`ResolvableText`|: The main text body of the toast as `ResolvableText`, this can be a string or an object with a translation key. If no title is provided, this text is automatically scaled up slightly for better visibility.
 * `position` |`ToastPosition`|: (optional) Overrides the globally configured screen position.
 * `durationInMs` |`number`|: (optional) Overrides the globally configured auto-close timeout.
