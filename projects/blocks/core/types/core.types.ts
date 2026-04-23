@@ -21,3 +21,5 @@ export type Strict<T, Expected> = T & {
 };
 
 export type ResolvableText = string | { key: string };
+
+export type BxPlacement = 'top' | 'bottom' | 'left' | 'right';

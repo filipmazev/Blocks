@@ -6,7 +6,8 @@ export * from './services/device-type.service';
 export * from './services/scroll-lock.service';
 export * from './services/window-dimension.service';
 export * from './services/theming.service';
-export * from './services/a11y.service';
+export * from './services/bx-a11y.service';
+export * from './services/bx-overlay-position.service';
 
 export * from './enums/desktop-os.enum';
 export * from './enums/mobile-os.enum';

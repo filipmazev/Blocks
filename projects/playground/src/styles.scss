@@ -720,38 +720,18 @@ a {
     }
 }
 
-.theme-select {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    height: 38px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 8px;
-    border: 1px solid var(--bx-border-default, #ccc);
-    background-color: var(--bx-bg-surface, #fff);
-    color: var(--bx-text-primary, #333);
-    font-family: inherit;
-    font-size: 0.9rem;
-    cursor: pointer;
-    outline: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-    &:focus {
-        border-color: var(--bx-primary, #333);
-    }
+.theme-toggle {
+    position: static;
+    top: 1rem;
+    right: 1rem;
+    z-index: z(modal);
 
     @include respond-down(lg) {
         margin-top: var(--mobile-header-height);
     }
 }
 
-.theme-toggle {
-    position: static;
-    top: 1rem;
-    right: 1rem;
+.theme-select-trigger {
     z-index: z(modal);
 
     @include respond-down(lg) {

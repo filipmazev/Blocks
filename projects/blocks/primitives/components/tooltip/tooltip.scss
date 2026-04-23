@@ -1,0 +1,71 @@
+@use '../../../core/styles/index' as *;
+
+:host {
+    display: block;
+    pointer-events: none;
+    z-index: z(tooltip);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.bx-tooltip-surface {
+    position: relative;
+    background-color: var(--bx-bg-element-active);
+    color: var(--bx-text-on-primary);
+
+    padding: spacing(1) spacing(2);
+    border-radius: radius(sm);
+
+    font-size: 0.75rem;
+    font-family: inherit;
+    white-space: nowrap;
+
+    opacity: 0;
+    transform: scale(0.95);
+    animation: bx-tooltip-appear 0.01ms forwards;
+
+    &.bx-tooltip-animated {
+        animation: bx-tooltip-appear 0.15s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: var(--bx-bg-element-active);
+        transform: rotate(45deg);
+        border-radius: 1px;
+        z-index: -1;
+    }
+}
+
+:host-context(.bx-overlay-pos-top) .bx-tooltip-surface::after {
+    bottom: -4px;
+    left: 50%;
+    margin-left: -4px;
+}
+
+:host-context(.bx-overlay-pos-bottom) .bx-tooltip-surface::after {
+    top: -4px;
+    left: 50%;
+    margin-left: -4px;
+}
+
+:host-context(.bx-overlay-pos-left) .bx-tooltip-surface::after {
+    right: -4px;
+    top: 50%;
+    margin-top: -4px;
+}
+
+:host-context(.bx-overlay-pos-right) .bx-tooltip-surface::after {
+    left: -4px;
+    top: 50%;
+    margin-top: -4px;
+}
+
+@keyframes bx-tooltip-appear {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

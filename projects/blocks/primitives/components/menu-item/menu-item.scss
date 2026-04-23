@@ -21,7 +21,7 @@
     color: var(--bx-text-primary);
 
     &.bx-menu-item-animated {
-        transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+        transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
     }
 
     &:hover:not(.is-disabled) {

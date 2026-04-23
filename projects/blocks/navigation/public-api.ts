@@ -3,8 +3,6 @@
  */
 
 export * from './components/breadcrumbs/breadcrumbs';
-export * from './components/menu/menu';
-export * from './components/menu-item/menu-item';
 
 export * from './interfaces/ibreadcrumb-item.interface';
 export * from './interfaces/inav-context.interface';

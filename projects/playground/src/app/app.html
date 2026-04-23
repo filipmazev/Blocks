@@ -1,11 +1,19 @@
 <div class="actions-area">
-    <div class="select-wrapper theme-select">
-        <select [ngModel]="selectedThemeId()" (ngModelChange)="onThemeChange($event)">
+    <button bx-button [bxDropdown]="themeMenu" placement="bottom" variant="filled" color="grayscale" [outlined]="true"
+        class="theme-select-trigger" [bxTooltip]="'Choose a Theme'">
+        {{ selectedThemeLabel() }}
+        <bx-icon name="chevron-down" class="bx-icon-pos-end" size="16" />
+    </button>
+
+    <ng-template #themeMenu>
+        <bx-menu>
             @for(theme of availableThemes; track theme.id) {
-            <option [value]="theme.id">{{ theme.label }}</option>
+            <bx-menu-item [label]="theme.label" [icon]="selectedThemeId() === theme.id ? 'check' : undefined"
+                (action)="onThemeChange(theme.id);">
+            </bx-menu-item>
             }
-        </select>
-    </div>
+        </bx-menu>
+    </ng-template>
 
     <button bx-button (click)="toggleTheme()" variant="mini-fab" color="grayscale" [outlined]="true"
         [attr.aria-label]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'" class="theme-toggle">

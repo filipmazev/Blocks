@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, inject, Renderer2, signal } from '@angular/core';
+import { Component, computed, DOCUMENT, inject, Renderer2, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HighlightLoader } from 'ngx-highlightjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,10 +10,14 @@ import { combineLatest } from 'rxjs';
 import { Icon } from '@icons/components/icon';
 import { ThemingService } from '@core/services/theming.service';
 import { Button } from '@forms/components/button/button';
+import { Menu } from '@primitives/components/menu/menu';
+import { MenuItem } from '@primitives/components/menu-item/menu-item';
+import { DropdownDirective } from '@primitives/directives/dropdown.directive';
+import { TooltipDirective } from '@primitives/directives/tooltip.directive';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, FormsModule, Button, Icon],
+  imports: [RouterOutlet, Sidenav, FormsModule, Button, Icon, Menu, MenuItem, DropdownDirective, TooltipDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -30,6 +34,11 @@ export class App {
     { id: 'green', label: 'Green', className: 'theme-green' },
     { id: 'high-contrast', label: 'High Contrast', className: 'high-contrast' }
   ];
+
+  public readonly selectedThemeLabel = computed(() => {
+    const activeId = this.selectedThemeId();
+    return this.availableThemes.find((t) => t.id === activeId)?.label ?? 'Select Theme';
+  });
 
   protected isDarkMode = signal(false);
 
@@ -86,6 +95,8 @@ export class App {
     }
     this.setCodeTheme();
   }
+
+  protected goToProfile(): void {}
 
   private enableDarkMode() {
     this.isDarkMode.set(true);
