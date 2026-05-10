@@ -1,0 +1,55 @@
+<bx-form-field [label]="label()" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()"
+    [required]="required()" [forId]="inputId()">
+
+    <button type="button" cdkOverlayOrigin #origin="cdkOverlayOrigin" class="bx-select-trigger"
+        [class.is-invalid]="!!errorMessage" [class.is-open]="isOpen()" [attr.id]="inputId()"
+        [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()" [disabled]="isDisabled() || loading()"
+        (click)="toggleOpen()">
+
+        <span class="bx-select-value" [class.is-placeholder]="internalValue() === null">
+            {{ selectedOptionLabel() }}
+        </span>
+
+        <bx-icon class="bx-select-caret" name="chevron-down" size="16"></bx-icon>
+    </button>
+
+    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isOpen()"
+        [cdkConnectedOverlayPositions]="overlayPositions" [cdkConnectedOverlayHasBackdrop]="false"
+        [cdkConnectedOverlayMinWidth]="origin.elementRef.nativeElement.offsetWidth"
+        (overlayOutsideClick)="onOutsideClick($event)">
+
+        <div class="bx-select-panel">
+
+            @if (isSearchable()) {
+            <div class="bx-select-search-container">
+                <bx-search-input #searchInput [placeholder]="resolvedSearchPlaceholder()"
+                    (search)="onSearchChange($event)" (keydown.enter)="$event.preventDefault()">
+                </bx-search-input>
+            </div>
+            }
+
+            <div class="bx-select-menu-container">
+                @for (option of filteredOptions(); track option.value) {
+
+                <bx-menu-item [disabled]="option.disabled ?? false" (action)="selectOption(option)">
+                    <div class="bx-select-item-inner">
+                        <div class="bx-select-check-placeholder">
+                            @if (internalValue() === option.value) {
+                            <bx-icon name="check" size="16"></bx-icon>
+                            }
+                        </div>
+                        <span>{{ option.resolvedStr }}</span>
+                    </div>
+                </bx-menu-item>
+
+                } @empty {
+                <div class="bx-select-empty">
+                    <span class="bx-empty-text">{{ resolvedEmptyMessage() }}</span>
+                </div>
+                }
+            </div>
+
+        </div>
+    </ng-template>
+
+</bx-form-field>

@@ -1,0 +1,30 @@
+<bx-form-field [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
+
+    <label class="bx-inline-wrapper" [class.is-disabled]="isDisabled()">
+        <input type="checkbox" class="bx-visually-hidden" [attr.id]="inputId()" [attr.data-testid]="dataTestId()"
+            [attr.aria-label]="ariaLabel()" [disabled]="isDisabled()" [checked]="internalValue() === true"
+            (change)="onToggle($event)" (blur)="onBlur()">
+
+        <div class="bx-slide-toggle-track" [class.is-checked]="internalValue() === true" [class.is-invalid]="!!errorMessage">
+            <div class="bx-slide-toggle-thumb"></div>
+        </div>
+
+        @if (resolvedLabel()) {
+        <span class="bx-inline-label">
+            {{ resolvedLabel() }}
+            @if (required()) { <span class="bx-inline-required">*</span> }
+        </span>
+        }
+
+        @if (tooltip()) {
+        <div class="bx-inline-tooltip-trigger" (mouseenter)="showTooltip = true" (mouseleave)="showTooltip = false"
+            tabindex="0">
+            <bx-icon name="help-circle" size="16"></bx-icon>
+            @if (showTooltip) {
+            <bx-tooltip class="bx-overlay-pos-top" [text]="tooltip()!"></bx-tooltip>
+            }
+        </div>
+        }
+    </label>
+
+</bx-form-field>

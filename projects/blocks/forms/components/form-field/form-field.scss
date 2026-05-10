@@ -1,0 +1,88 @@
+@use '../../../core/styles/index' as *;
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.bx-field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(1);
+}
+
+.bx-field-header {
+    display: flex;
+    align-items: center;
+    gap: spacing(1);
+    min-height: 1.25rem;
+}
+
+.bx-field-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--bx-text-primary);
+    user-select: none;
+}
+
+.bx-field-required {
+    color: var(--bx-text-danger);
+    margin-left: 0.125rem;
+}
+
+.bx-field-tooltip-trigger {
+    position: relative;
+    display: inline-flex;
+    color: var(--bx-text-secondary);
+    cursor: help;
+    outline: none;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--bx-text-brand);
+    }
+
+    bx-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 8px;
+    }
+}
+
+.bx-spin {
+    animation: bx-spin 1s linear infinite;
+    color: var(--bx-text-secondary);
+}
+
+.bx-field-error {
+    display: flex;
+    align-items: center;
+    gap: spacing(1);
+    font-size: 0.75rem;
+    color: var(--bx-text-danger);
+    margin-top: 0.125rem;
+
+    &.bx-animated {
+        animation: bx-slide-down 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    }
+}
+
+@keyframes bx-spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bx-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

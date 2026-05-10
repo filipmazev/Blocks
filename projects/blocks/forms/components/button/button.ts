@@ -12,6 +12,7 @@ import { ButtonColor, ButtonVariant } from '../../types/form.types';
     '[class.bx-btn-is-outlined]': 'outlined()',
     '[class.bx-btn-is-elevated]': 'elevated()',
     '[class.bx-btn-animated]': 'isAnimated()',
+    '[class.bx-btn-non-interactive]': '!interactive()',
     '[attr.disabled]': 'disabled() ? true : null',
     '[attr.aria-disabled]': 'disabled()',
     '[attr.tabindex]': 'disabled() ? "-1" : null'
@@ -29,6 +30,8 @@ export class Button {
   public readonly outlined = input<boolean>(false);
   public readonly elevated = input<boolean>(false);
   public readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+  
+  public readonly interactive = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   @HostListener('click', ['$event'])
   protected onClick(event: Event) {

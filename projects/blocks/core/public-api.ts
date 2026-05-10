@@ -8,15 +8,20 @@ export * from './services/window-dimension.service';
 export * from './services/theming.service';
 export * from './services/bx-a11y.service';
 export * from './services/bx-overlay-position.service';
+export * from './services/bx-shortcut.service';
+
+export * from './classes/bx-base-control';
 
 export * from './enums/desktop-os.enum';
 export * from './enums/mobile-os.enum';
 
 export * from './interfaces/ibx-i18n-adapter.interface';
+export * from './interfaces/ibx-custom-validators.interface';
 export * from './interfaces/idevice-state.interface';
 export * from './interfaces/iscroll-lock-config.interface';
 export * from './interfaces/iwindow-dimensions.interface';
 
+export * from './constants/numeric.constants';
 export * from './constants/scroll-lock.constants';
 export * from './constants/tokens.constants';
 export * from './constants/window-dimension.constants';

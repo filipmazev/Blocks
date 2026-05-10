@@ -18,18 +18,9 @@
         width: 100%;
         min-height: 5rem;
 
-        .search-input {
+        bx-search-input {
             flex: 1;
             min-width: 250px;
-            padding: .5rem;
-            border: 1px solid var(--bx-border-default);
-            border-radius: var(--bx-rounded-md);
-            font-size: 1rem;
-
-            &:focus {
-                outline: 2px solid var(--bx-border-brand);
-                border-color: transparent;
-            }
         }
 
         .dropdown-group {

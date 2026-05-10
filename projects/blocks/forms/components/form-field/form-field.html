@@ -1,0 +1,40 @@
+<div class="bx-field-wrapper" [class.is-invalid]="!!resolvedError()">
+
+    @if (resolvedLabel()) {
+    <div class="bx-field-header">
+        <label class="bx-field-label" [attr.for]="forId()">
+            {{ resolvedLabel() }}
+            @if (required()) { <span class="bx-field-required">*</span> }
+        </label>
+
+        @if (tooltip()) {
+        <div class="bx-field-tooltip-trigger" (mouseenter)="showTooltip = true" (mouseleave)="showTooltip = false"
+            tabindex="0">
+            <bx-icon name="help-circle" size="16"></bx-icon>
+            @if (showTooltip) {
+            <bx-tooltip class="bx-overlay-pos-top" [text]="tooltip()!"></bx-tooltip>
+            }
+        </div>
+        }
+
+        @if (loading()) {
+        <bx-icon name="loader" class="bx-spin" size="16"></bx-icon>
+        }
+    </div>
+    }
+
+    <div class="bx-field-control">
+        <ng-content></ng-content>
+    </div>
+
+    <div class="bx-field-error-projected">
+        <ng-content select="bx-error"></ng-content>
+    </div>
+
+    @if (resolvedError()) {
+    <div class="bx-field-error" [class.bx-animated]="isAnimated()">
+        <bx-icon name="alert-circle" size="16"></bx-icon>
+        <span>{{ resolvedError() }}</span>
+    </div>
+    }
+</div>

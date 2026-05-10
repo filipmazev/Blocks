@@ -59,7 +59,9 @@ $high-contrast-light-theme: validate-theme(('bg-canvas': $hc-white,
 
             'scroll-bg': $hc-white,
             'scroll-thumb': $hc-black,
-            'scroll-thumb-hover': $hc-yellow), 'high-contrast-light') !default;
+            'scroll-thumb-hover': $hc-yellow,
+
+            'meta-brand-palette': 'neutral'), 'high-contrast-light') !default;
 
 $high-contrast-dark-theme: validate-theme(('bg-canvas': $hc-black,
             'bg-surface': $hc-black,
@@ -119,4 +121,6 @@ $high-contrast-dark-theme: validate-theme(('bg-canvas': $hc-black,
 
             'scroll-bg': $hc-black,
             'scroll-thumb': $hc-white,
-            'scroll-thumb-hover': $hc-yellow), 'high-contrast-dark') !default;
+            'scroll-thumb-hover': $hc-yellow,
+
+            'meta-brand-palette': 'neutral'), 'high-contrast-dark') !default;

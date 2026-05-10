@@ -1,6 +1,6 @@
+import { BX_I18N, BxA11yService, BxShortcutService, isTextWithKey, ResolvableShortcut, ResolvableText } from "@filip.mazev/blocks/core";
 import { Component, computed, inject, input, output } from "@angular/core";
 import { Icon, IconName } from "@filip.mazev/blocks/icons";
-import { BX_I18N, BxA11yService, isTextWithKey, ResolvableText } from "@filip.mazev/blocks/core";
 
 @Component({
   selector: 'bx-menu-item',
@@ -11,17 +11,17 @@ import { BX_I18N, BxA11yService, isTextWithKey, ResolvableText } from "@filip.ma
 export class MenuItem {
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly a11y = inject(BxA11yService);
+  private readonly bxShortcutService = inject(BxShortcutService);
 
-  public readonly isAnimated = computed(() => {
-    return !this.a11y.isReducedMotion();
-  });
+  public readonly isAnimated = computed(() => !this.a11y.isReducedMotion());
 
   public readonly icon = input<IconName | undefined>(undefined);
   public readonly endIcon = input<IconName | undefined>(undefined);
   public readonly label = input<ResolvableText | undefined>(undefined);
   public readonly disabled = input(false);
-  
   public readonly danger = input(false); 
+  
+  public readonly shortcut = input<ResolvableShortcut | undefined>(undefined);
 
   public readonly action = output<MouseEvent>();
 
@@ -34,8 +34,11 @@ export class MenuItem {
     if (isTextWithKey(label)) {
       return this.i18n?.translate(label.key) ?? label.key;
     }
-    
     return label;
+  });
+
+  protected readonly resolvedShortcut = computed(() => {
+    return this.bxShortcutService.resolve(this.shortcut());
   });
 
   protected onClick(event: MouseEvent): void {

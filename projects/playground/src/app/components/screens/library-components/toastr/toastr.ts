@@ -12,10 +12,14 @@ import { ToastrService } from '@toastr/services/toastr.service';
 import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 import { Button } from '@forms/components/button/button';
+import { Select } from '@forms/components/select/select';
+import { Checkbox } from '@forms/components/checkbox/checkbox';
+import { InputField } from '@forms/components/input-field/input-field';
+import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 
 @Component({
   selector: 'app-toastr-demo',
-  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, Button],
+  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './toastr.html',
   styleUrl: './toastr.scss'
 })
@@ -28,6 +32,15 @@ export class Toastr {
   protected readonly typeOptions = ['info', 'success', 'warn', 'danger'];
 
   protected readonly form: FormGroup<ToastrConfigFormControls>;
+
+  protected readonly positionSelectOptions: BxSelectOption<string>[] = this.positionOptions.map((pos) => ({
+    label: pos
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' '),
+    value: pos
+  }));
+
   protected toastrReadmePath = signal<string>('assets/toastr-readme/README.md');
 
   protected codeFiles: ICodeFile[] = [

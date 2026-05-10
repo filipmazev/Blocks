@@ -14,7 +14,11 @@
     border: 1px solid transparent;
 
     &.bx-btn-animated {
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+    }
+
+    &.bx-btn-non-interactive {
+        cursor: default;
     }
 
     &[disabled],
@@ -110,12 +114,14 @@
         background: var(--btn-theme-base);
         color: var(--btn-theme-text);
 
-        &:hover {
-            background: var(--btn-theme-hover);
-        }
+        &:not(.bx-btn-non-interactive) {
+            &:hover {
+                background: var(--btn-theme-hover);
+            }
 
-        &:active {
-            background: var(--btn-theme-active);
+            &:active {
+                background: var(--btn-theme-active);
+            }
         }
     }
 
@@ -124,12 +130,14 @@
         background: transparent;
         color: var(--btn-theme-text);
 
-        &:hover {
-            background: var(--btn-theme-tonal-bg);
-        }
+        &:not(.bx-btn-non-interactive) {
+            &:hover {
+                background: var(--btn-theme-tonal-bg);
+            }
 
-        &:active {
-            background: var(--btn-theme-active);
+            &:active {
+                background: var(--btn-theme-active);
+            }
         }
     }
 
@@ -137,12 +145,14 @@
         background: var(--btn-theme-tonal-bg);
         color: var(--btn-theme-tonal-text);
 
-        &:hover {
-            opacity: 0.8;
-        }
+        &:not(.bx-btn-non-interactive) {
+            &:hover {
+                opacity: 0.8;
+            }
 
-        &:active {
-            opacity: 0.9;
+            &:active {
+                opacity: 0.9;
+            }
         }
     }
 
@@ -170,8 +180,10 @@
     &.bx-btn-is-elevated {
         box-shadow: shadow(md);
 
-        &:active {
-            box-shadow: shadow(sm);
+        &:not(.bx-btn-non-interactive) {
+            &:active {
+                box-shadow: shadow(sm);
+            }
         }
     }
 }

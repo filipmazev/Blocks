@@ -1,0 +1,32 @@
+<bx-form-field [label]="label()" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()"
+    [required]="required()" [forId]="inputId()">
+
+    <div class="bx-input-wrapper" [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()"
+        [class.has-spinners]="type() === 'number'">
+
+        <input class="bx-native-input" [attr.id]="inputId()" [attr.type]="type()"
+            [attr.placeholder]="resolvedPlaceholder()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()"
+            [attr.min]="min()" [attr.max]="max()" [attr.step]="step()" [disabled]="isDisabled()"
+            [value]="internalValue() ?? ''" (input)="onInput($event)" (blur)="onBlur()">
+
+        @if (type() === 'number') {
+        <div class="bx-spinners-group">
+            <button type="button" class="bx-spin-btn" tabindex="-1"
+                [disabled]="isDisabled() || (min() !== undefined && internalValue() <= min()!)"
+                (mousedown)="startSpin(-1, $event)" (touchstart)="startSpin(-1, $event)" (mouseup)="stopSpin()"
+                (mouseleave)="stopSpin()" (touchend)="stopSpin()">
+                <bx-icon name="minus" size="16"></bx-icon>
+            </button>
+
+            <button type="button" class="bx-spin-btn" tabindex="-1"
+                [disabled]="isDisabled() || (max() !== undefined && internalValue() >= max()!)"
+                (mousedown)="startSpin(1, $event)" (touchstart)="startSpin(1, $event)" (mouseup)="stopSpin()"
+                (mouseleave)="stopSpin()" (touchend)="stopSpin()">
+                <bx-icon name="plus" size="16"></bx-icon>
+            </button>
+        </div>
+        }
+
+    </div>
+
+</bx-form-field>

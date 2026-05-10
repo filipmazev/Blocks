@@ -13,6 +13,14 @@
         }
     </span>
 
+    @if (resolvedShortcut()) {
+    <span class="bx-menu-item-shortcut">
+        @for (key of resolvedShortcut(); track $index) {
+        <kbd>{{ key }}</kbd>
+        }
+    </span>
+    }
+
     @if (endIcon()) {
     <bx-icon class="bx-icon-pos-end" [name]="endIcon()!" size="20" />
     }

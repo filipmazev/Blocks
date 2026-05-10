@@ -3,10 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { IconName, IconSize, IconStrokeWidth } from '@icons/types/icon.types';
 import { Icon } from '@icons/components/icon';
 import { lucideNames } from '@icons/assets/lucide/names';
+import { SearchInput } from '@forms/components/search-input/search-input';
+import { Select } from '@forms/components/select/select';
+import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 
 @Component({
   selector: 'app-icon-catalog',
-  imports: [Icon, FormsModule],
+  imports: [Icon, FormsModule, SearchInput, Select],
   templateUrl: './icon-catalog.html',
   styleUrl: './icon-catalog.scss'
 })
@@ -14,12 +17,20 @@ export class IconCatalog {
   protected readonly allIcons: IconName[] = [...lucideNames];
 
   protected readonly sizes: IconSize[] = ['16', '20', '24', '28', '32', '36', '40', '44', '48'];
-
   protected readonly strokeWidths: IconStrokeWidth[] = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3];
+
+  protected readonly sizeSelectOptions: BxSelectOption<IconSize>[] = this.sizes.map((s) => ({
+    label: `${s}px`,
+    value: s
+  }));
+
+  protected readonly strokeSelectOptions: BxSelectOption<IconStrokeWidth>[] = this.strokeWidths.map((sw) => ({
+    label: `${sw}px`,
+    value: sw
+  }));
 
   protected searchTerm = signal('');
   protected selectedSize = signal<IconSize>('24');
-
   protected selectedStrokeWidth = signal<IconStrokeWidth>(1.5);
 
   protected filteredIcons = computed(() => {

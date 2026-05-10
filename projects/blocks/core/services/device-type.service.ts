@@ -1,34 +1,49 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DesktopOS } from '../enums/desktop-os.enum';
 import { MobileOS } from '../enums/mobile-os.enum';
 import { IDeviceState } from '../interfaces/idevice-state.interface';
-import { DeviceOS, DeviceOrientationType, LegacyScreenOrientation, MSStreamWindow, OperaCapableWindow } from '../types/core.types';
+import { DeviceOrientationType } from '../types/core.types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeviceTypeService {
-  private readonly isDesktopDevice = !this.isMobileDevice() && !this.isTabletDevice();
-  private userAgent?: string = navigator.userAgent || navigator.vendor || (window as OperaCapableWindow)?.opera || undefined;
-
-  private supportedScreenOrientation =
-    (screen?.orientation || {}).type ?? (screen as LegacyScreenOrientation).mozOrientation ?? (screen as LegacyScreenOrientation).msOrientation;
-
-  private safariScreenOrientation: DeviceOrientationType =
-    !screen?.orientation && matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary';
-
-  private initialScreenOrientation: DeviceOrientationType = this.supportedScreenOrientation ?? this.safariScreenOrientation ?? 'portrait-primary';
-  private screenOrientation: DeviceOrientationType = this.initialScreenOrientation;
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private screenOrientation: DeviceOrientationType = 'portrait-primary';
 
   constructor() {
-    if (screen.orientation) {
-      screen.orientation.addEventListener('change', (ev: Event) => {
-        const orientation = ev.target as ScreenOrientation | null;
-        if (orientation?.type) {
-          this.screenOrientation = orientation.type;
-        }
-      });
+    if (this.isBrowser) {
+      const win = this.document.defaultView;
+      const screenObj = win?.screen as any;
+      
+      this.screenOrientation = 
+        (screenObj?.orientation || {}).type ?? 
+        screenObj?.mozOrientation ?? 
+        screenObj?.msOrientation ?? 
+        (!screenObj?.orientation && win?.matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary');
+
+      if (screenObj?.orientation) {
+        screenObj.orientation.addEventListener('change', (ev: Event) => {
+          const orientation = ev.target as ScreenOrientation | null;
+          if (orientation?.type) {
+            this.screenOrientation = orientation.type;
+          }
+        });
+      }
     }
+  }
+
+  private get userAgent(): string {
+    if (!this.isBrowser) return '';
+    const win = this.document.defaultView as Window & { opera?: string };
+    return win?.navigator?.userAgent || win?.navigator?.vendor || win?.opera || '';
+  }
+
+  private get isDesktopDevice(): boolean {
+    return !this.isMobileDevice() && !this.isTabletDevice();
   }
 
   public isLandscapeOrientation(): boolean {
@@ -40,27 +55,24 @@ export class DeviceTypeService {
   }
 
   public getDeviceState(): IDeviceState {
-    const isDesktop = this.isDesktopDevice;
     const isMobile = this.isMobileDevice();
     const isTablet = this.isTabletDevice();
-    const mobileOS: MobileOS | undefined = this.getMobileOS();
-    const isAndroidDevice = this.getDeviceOS() === MobileOS.Android;
-    const isAppleDevice = this.getDeviceOS() === MobileOS.iOS || this.getDeviceOS() === DesktopOS.MacOS;
-    const isUnknownMobileDevice = this.getDeviceOS() === MobileOS.Unknown;
-    const desktopOS: DesktopOS | undefined = this.getDesktopOS();
-    const isWindowsDesktop = this.getDeviceOS() === DesktopOS.Windows;
-    const isLinuxOrUnixDesktop = this.getDeviceOS() === DesktopOS.Linux || this.getDeviceOS() === DesktopOS.Unix;
+    const isDesktop = this.isDesktopDevice;
+    
+    const mobileOS = this.getMobileOS();
+    const desktopOS = this.getDesktopOS();
+    const deviceOS = mobileOS ?? desktopOS;
 
     return {
       isDesktop,
       desktopOS,
-      isWindowsDesktop,
-      isLinuxOrUnixDesktop,
+      isWindowsDesktop: deviceOS === DesktopOS.Windows,
+      isLinuxOrUnixDesktop: deviceOS === DesktopOS.Linux || deviceOS === DesktopOS.Unix,
       isMobile,
       mobileOS,
-      isAndroidDevice,
-      isAppleDevice,
-      isUnknownMobileDevice,
+      isAndroidDevice: deviceOS === MobileOS.Android,
+      isAppleDevice: deviceOS === MobileOS.iOS || deviceOS === DesktopOS.MacOS,
+      isUnknownMobileDevice: deviceOS === MobileOS.Unknown,
       isTablet,
       isLandscapeOrientation: () => this.isLandscapeOrientation(),
       isPortraitOrientation: () => this.isPortraitOrientation()
@@ -69,19 +81,20 @@ export class DeviceTypeService {
 
   private isMobileDevice(): boolean {
     const regexs = [/(Android)(.+)(Mobile)/i, /BlackBerry/i, /iPhone|iPod/i, /Opera Mini/i, /IEMobile/i];
-    return regexs.some((b) => this.userAgent?.match(b) !== null);
+    return regexs.some((regex) => regex.test(this.userAgent));
   }
 
   private isTabletDevice(): boolean {
-    const regex = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/;
-    return regex.test(this.userAgent?.toLowerCase() ?? '');
+    const regex = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/i;
+    return regex.test(this.userAgent);
   }
 
   private getMobileOS(): MobileOS | undefined {
-    if (this.isMobileDevice() && this.userAgent) {
-      if (/windows phone/i.test(this.userAgent)) return MobileOS.WindowsPhone;
-      else if (/android/i.test(this.userAgent)) return MobileOS.Android;
-      else if (/iPad|iPhone|iPod/.test(this.userAgent) && !(window as MSStreamWindow).MSStream) return MobileOS.iOS;
+    if (this.isMobileDevice()) {
+      const ua = this.userAgent;
+      if (/windows phone/i.test(ua)) return MobileOS.WindowsPhone;
+      if (/android/i.test(ua)) return MobileOS.Android;
+      if (/iPad|iPhone|iPod/.test(ua) && !(this.document.defaultView as any)?.MSStream) return MobileOS.iOS;
 
       return MobileOS.Unknown;
     }
@@ -89,17 +102,15 @@ export class DeviceTypeService {
   }
 
   private getDesktopOS(): DesktopOS | undefined {
-    if (this.isDesktopDevice && this.userAgent) {
-      if (this.userAgent.indexOf('Win') !== -1) return DesktopOS.Windows;
-      else if (this.userAgent.indexOf('Mac') !== -1) return DesktopOS.MacOS;
-      else if (this.userAgent.indexOf('X11') !== -1) return DesktopOS.Unix;
-      else if (this.userAgent.indexOf('Linux') !== -1) return DesktopOS.Linux;
+    if (this.isDesktopDevice) {
+      const ua = this.userAgent;
+      if (ua.includes('Win')) return DesktopOS.Windows;
+      if (ua.includes('Mac')) return DesktopOS.MacOS;
+      if (ua.includes('X11')) return DesktopOS.Unix;
+      if (ua.includes('Linux')) return DesktopOS.Linux;
 
       return DesktopOS.Unknown;
-    } else return undefined;
-  }
-
-  private getDeviceOS(): DeviceOS | undefined {
-    return this.getMobileOS() ?? this.getDesktopOS();
+    }
+    return undefined;
   }
 }

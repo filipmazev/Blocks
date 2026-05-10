@@ -32,6 +32,7 @@ export class App {
     { id: 'orange', label: 'Orange', className: 'theme-orange' },
     { id: 'red', label: 'Red', className: 'theme-red' },
     { id: 'green', label: 'Green', className: 'theme-green' },
+    { id: 'cyberpunk', label: 'Cyberpunk', className: 'theme-cyberpunk' },
     { id: 'high-contrast', label: 'High Contrast', className: 'high-contrast' }
   ];
 

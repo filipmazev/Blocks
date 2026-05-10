@@ -1,0 +1,16 @@
+<bx-form-field [label]="label()" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()"
+    [required]="required()" [forId]="inputId()">
+
+    <div class="bx-search-input-wrapper" [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()">
+        <bx-icon class="bx-search-icon-left" name="search" size="16"></bx-icon>
+
+        <input #inputElement class="bx-native-search-input" type="text" [attr.id]="inputId()"
+            [attr.placeholder]="resolvedPlaceholder()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()"
+            [disabled]="isDisabled()" [value]="internalValue() || ''" (input)="onInput($event)" (blur)="onBlur()">
+
+        <button bx-button variant="icon" type="button" [interactive]="false" class="bx-search-clear-btn" (click)="clear()" tabindex="-1" [class.hidden]="!internalValue()">
+            <bx-icon name="x" size="16"></bx-icon>
+        </button>
+    </div>
+
+</bx-form-field>

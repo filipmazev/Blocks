@@ -52,4 +52,5 @@ export type SemanticColorToken =
   | 'bg-danger-subtle'
   | 'scroll-bg'
   | 'scroll-thumb'
-  | 'scroll-thumb-hover';
+  | 'scroll-thumb-hover'
+  | 'meta-brand-palette';

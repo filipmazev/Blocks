@@ -9,58 +9,41 @@
             <div class="form-section">
                 <h3>General Style & Data</h3>
 
-                <div class="form-control">
-                    <label>Position</label>
-                    <div class="select-wrapper">
-                        <select formControlName="position">
-                            @for(position of positionOptions; track position) {
-                            <option [value]="position">{{ position }}</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+                <bx-select label="Position" formControlName="position" [options]="positionSelectOptions">
+                </bx-select>
 
-                <div class="form-control">
-                    <label>Title for demo toast</label>
-                    <input type="text" formControlName="title">
-                </div>
+                <bx-input-field label="Title for demo toast" formControlName="title">
+                </bx-input-field>
 
-                <div class="form-control">
-                    <label>Message for demo toast</label>
-                    <input type="text" formControlName="message">
-                </div>
+                <bx-input-field label="Message for demo toast" formControlName="message">
+                </bx-input-field>
             </div>
 
             <div class="form-section">
                 <h3>Behavior & Toggles</h3>
 
-                <div class="form-control">
-                    <label>Duration (ms)</label>
-                    <p class="hint">Set to 0 to disable auto-close</p>
-                    <input type="number" formControlName="durationInMs">
-                </div>
+                <bx-input-field label="Duration (ms)" formControlName="durationInMs" type="number"
+                    tooltip="Set to 0 to disable auto-close">
+                </bx-input-field>
 
-                <div class="form-control">
-                    <label>Max Opened (Queue Limit)</label>
-                    <input type="number" formControlName="maxOpened">
-                </div>
+                <bx-input-field label="Max Opened (Queue Limit)" formControlName="maxOpened" type="number">
+                </bx-input-field>
 
                 <div class="form-checkboxes">
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="animate"> Animate
-                    </label>
+                    <bx-checkbox label="Animate" formControlName="animate">
+                    </bx-checkbox>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="swipeToDismiss"> Swipe to Dismiss
-                    </label>
+                    <bx-checkbox label="Swipe to Dismiss" formControlName="swipeToDismiss">
+                    </bx-checkbox>
                 </div>
             </div>
 
         </form>
 
         <div class="actions">
-            <button bx-button (click)="queueToast()" variant="filled" color="grayscale" [disabled]="form.invalid">Demo
-                Toast</button>
+            <button bx-button (click)="queueToast()" variant="filled" color="grayscale" [disabled]="form.invalid">
+                Demo Toast
+            </button>
         </div>
 
         <div class="buttons-container">

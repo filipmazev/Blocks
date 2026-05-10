@@ -1,36 +1,19 @@
 <div class="catalog-container">
     <header class="filter-bar">
 
-        <div class="form-control">
-            <label>Search</label>
-            <input type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
-                placeholder="Search icons..." class="search-input" />
-        </div>
-
+        <bx-search-input label="Search" placeholder="Search icons..." [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event)">
+        </bx-search-input>
 
         <div class="dropdown-group">
 
-            <div class="form-control">
-                <label>Size</label>
-                <div class="select-wrapper">
-                    <select [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)">
-                        @for (s of sizes; track s) {
-                        <option [value]="s">{{ s }}px</option>
-                        }
-                    </select>
-                </div>
-            </div>
+            <bx-select label="Size" [options]="sizeSelectOptions" [ngModel]="selectedSize()"
+                (ngModelChange)="selectedSize.set($event)">
+            </bx-select>
 
-            <div class="form-control">
-                <label>Stroke</label>
-                <div class="select-wrapper">
-                    <select [ngModel]="selectedStrokeWidth()" (ngModelChange)="selectedStrokeWidth.set($event)">
-                        @for (sw of strokeWidths; track sw) {
-                        <option [value]="sw">{{ sw }}px</option>
-                        }
-                    </select>
-                </div>
-            </div>
+            <bx-select label="Stroke" [options]="strokeSelectOptions" [ngModel]="selectedStrokeWidth()"
+                (ngModelChange)="selectedStrokeWidth.set($event)">
+            </bx-select>
 
         </div>
     </header>

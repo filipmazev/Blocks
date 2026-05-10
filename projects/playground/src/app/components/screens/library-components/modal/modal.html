@@ -9,26 +9,12 @@
             <div class="form-section">
                 <h3>General Style</h3>
 
-                <div class="form-control">
-                    <label>Default Layout</label>
-                    <div class="select-wrapper">
-                        <select formControlName="layout">
-                            @for(layout of layoutOptions; track layout) {
-                            <option [value]="layout">{{ layout }}</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+                <bx-select label="Default Layout" formControlName="layout" [options]="layoutSelectOptions">
+                </bx-select>
 
-                <div class="form-control">
-                    <label>Header Text</label>
-                    <input type="text" formControlName="headerText">
-                </div>
+                <bx-input-field label="Header Text" formControlName="headerText"></bx-input-field>
 
-                <div class="form-control">
-                    <label>Title</label>
-                    <input type="text" formControlName="title">
-                </div>
+                <bx-input-field label="Title" formControlName="title"></bx-input-field>
 
             </div>
 
@@ -36,29 +22,22 @@
                 <h3>Behavior & Toggles</h3>
 
                 <div class="form-checkboxes">
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="animate"> Animate
-                    </label>
+                    <bx-checkbox label="Animate" formControlName="animate"></bx-checkbox>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="hasBackdrop"> Has Backdrop
-                    </label>
+                    <bx-checkbox label="Has Backdrop" formControlName="hasBackdrop"></bx-checkbox>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="showCloseButton"> Show Close Button
-                    </label>
+                    <bx-checkbox label="Show Close Button" formControlName="showCloseButton"></bx-checkbox>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="disableClose"> Disable Close (Global)
-                    </label>
+                    <bx-checkbox label="Disable Close (Global)" formControlName="disableClose"
+                        tooltip="Prevents closing via ESC key or backdrop clicks.">
+                    </bx-checkbox>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="disableCloseOnBackdropClick"> Disable Backdrop Click
-                    </label>
+                    <bx-checkbox label="Disable Backdrop Click"
+                        formControlName="disableCloseOnBackdropClick"></bx-checkbox>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" formControlName="hasConfirmCloseGuard"> Use Confirm Close Guard
-                    </label>
+                    <bx-checkbox label="Use Confirm Close Guard" formControlName="hasConfirmCloseGuard"
+                        tooltip="Intercepts the close event and prompts the user to confirm.">
+                    </bx-checkbox>
                 </div>
             </div>
 
@@ -68,17 +47,8 @@
 
                 <div class="breakpoints-grid">
                     @for(breakpoint of breakpointKeys; track breakpoint) {
-                    <div class="form-control">
-                        <label>{{ breakpoint }}</label>
-                        <div class="select-wrapper">
-                            <select [formControlName]="breakpoint">
-                                <option value="none">None</option>
-                                @for(layout of layoutOptions; track layout) {
-                                <option [value]="layout">{{ layout }}</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
+                    <bx-select [label]="breakpoint" [formControlName]="breakpoint" [options]="breakpointSelectOptions">
+                    </bx-select>
                     }
                 </div>
             </div>
@@ -86,8 +56,9 @@
         </form>
 
         <div class="actions">
-            <button bx-button (click)="openModal()" [disabled]="form.invalid" variant="filled" color="grayscale"> Open
-                Modal </button>
+            <button bx-button (click)="openModal()" [disabled]="form.invalid" variant="filled" color="grayscale">
+                Open Modal
+            </button>
         </div>
     </div>
 </div>

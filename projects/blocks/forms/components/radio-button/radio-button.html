@@ -1,0 +1,15 @@
+<bx-form-field [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
+    <label class="bx-inline-wrapper" [class.is-disabled]="isDisabled()">
+        <input type="radio" class="bx-visually-hidden" [attr.id]="inputId()" [attr.name]="name() || null"
+            [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()" [disabled]="isDisabled()"
+            [checked]="internalValue() === value()" (change)="onSelect()" (blur)="onBlur()">
+
+        <div class="bx-radio-circle" [class.is-checked]="internalValue() === value()"
+            [class.is-invalid]="!!errorMessage">
+            <div class="bx-radio-inner"></div>
+        </div>
+
+        @if (resolvedLabel()) {
+        }
+    </label>
+</bx-form-field>

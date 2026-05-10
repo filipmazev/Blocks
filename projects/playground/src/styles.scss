@@ -38,6 +38,14 @@
     }
 }
 
+.theme-cyberpunk {
+    @include bx-theme($cyberpunk-light-theme);
+
+    &[data-theme="dark"] {
+        @include bx-theme($cyberpunk-dark-theme);
+    }
+}
+
 .high-contrast {
     @include bx-theme($high-contrast-light-theme);
 
@@ -83,15 +91,6 @@ html {
     label {
         color: var(--bx-text-primary);
     }
-}
-
-
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-    background-color: var(--bx-bg-canvas);
-    color: var(--bx-text-primary);
-    border: 1px solid var(--bx-border-default, #ccc);
 }
 
 .select-wrapper {

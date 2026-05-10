@@ -1,0 +1,4 @@
+@use '../theme-engine' as *;
+
+$cyberpunk-light-theme: make-light-theme('cyber-slate', 'cyber-yellow');
+$cyberpunk-dark-theme: make-dark-theme('cyber-slate', 'cyber-yellow');

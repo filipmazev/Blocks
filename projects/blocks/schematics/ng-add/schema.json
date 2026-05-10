@@ -11,7 +11,8 @@
                 "purple",
                 "orange",
                 "red",
-                "green"
+                "green",
+                "cyberpunk"
             ],
             "x-prompt": {
                 "message": "Which theme would you like to use?",
@@ -32,6 +33,10 @@
                     {
                         "value": "green",
                         "label": "Green Theme"
+                    },
+                    {
+                        "value": "cyberpunk",
+                        "label": "Cyberpunk"
                     }
                 ]
             },

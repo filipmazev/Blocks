@@ -1,0 +1,106 @@
+@use '../../../core/styles/index' as *;
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.bx-input-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--bx-bg-surface);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+
+    &:hover:not(.is-disabled) {
+        border-color: var(--bx-border-strong);
+    }
+
+    &:focus-within:not(.is-disabled) {
+        border-color: var(--bx-border-brand);
+        box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+    }
+
+    &.is-invalid {
+        border-color: var(--bx-border-danger);
+
+        &:focus-within {
+            box-shadow: 0 0 0 3px var(--bx-bg-danger-subtle);
+        }
+    }
+
+    &.is-disabled {
+        background-color: var(--bx-bg-element);
+        opacity: 0.7;
+    }
+}
+
+.bx-native-input {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: spacing(2) spacing(3);
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--bx-text-heading);
+
+    &::placeholder {
+        color: var(--bx-text-secondary);
+    }
+
+    &:disabled {
+        color: var(--bx-text-secondary);
+        cursor: not-allowed;
+    }
+
+    appearance: textfield;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.bx-spinners-group {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+}
+
+.bx-spin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    align-self: stretch;
+    background: transparent;
+    border: none;
+    border-left: 1px solid var(--bx-border-subtle);
+    color: var(--bx-text-secondary);
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.1s ease, color 0.1s ease;
+
+    &:hover:not(:disabled) {
+        background-color: var(--bx-bg-element-hover);
+        color: var(--bx-text-primary);
+    }
+
+    &:active:not(:disabled) {
+        background-color: var(--bx-bg-element-active);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.3;
+    }
+}

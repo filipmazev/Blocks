@@ -4,7 +4,7 @@ import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-d
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 import { MODAL_DEFAULT_ANIM_DURATION } from '../../../../../../../blocks/modal/constants/modal-animation.constants';
 import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModalConfigFormControls } from '@playground/types/form.types';
 import { CommonModule } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
@@ -18,11 +18,15 @@ import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-clos
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
 import { Button } from '@forms/components/button/button';
+import { Checkbox } from '@forms/components/checkbox/checkbox';
+import { Select } from '@forms/components/select/select';
+import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import { InputField } from '@forms/components/input-field/input-field';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo, Button],
+  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './modal.html',
   styleUrl: './modal.scss'
 })
@@ -30,6 +34,17 @@ export class Modal {
   private readonly modals = inject(ModalService);
 
   protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
+
+  protected readonly layoutSelectOptions: BxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
+    label: layout
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' '),
+    value: layout
+  }));
+
+  protected readonly breakpointSelectOptions: BxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];
+
   protected readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
   protected readonly form: FormGroup<ModalConfigFormControls>;
 
@@ -50,10 +65,10 @@ export class Modal {
 
   constructor() {
     const controls = {
-      layout: new FormControl<ModalLayout>('right', [Validators.required]),
-      animate: new FormControl<boolean>(true, [Validators.required]),
-      hasBackdrop: new FormControl<boolean>(true, [Validators.required]),
-      showCloseButton: new FormControl<boolean>(true, [Validators.required]),
+      layout: new FormControl<ModalLayout>('right'),
+      animate: new FormControl<boolean>(true),
+      hasBackdrop: new FormControl<boolean>(true),
+      showCloseButton: new FormControl<boolean>(true),
       title: new FormControl<string>('This is the title of the modal in its header'),
       headerText: new FormControl<string | null>('The Lorem Ipsum Modal'),
       disableClose: new FormControl<boolean>(false),

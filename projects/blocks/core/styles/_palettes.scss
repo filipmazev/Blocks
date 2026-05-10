@@ -115,7 +115,33 @@ $neutral-palette: (
     700: #404040,
     800: #262626,
     900: #171717,
-    1000: #0A0A0A) !default;
+    1000: #0b0b0b) !default;
+
+$cyber-yellow-palette: (
+    50: #FFFEF2,
+    100: #FFFDD1,
+    200: #FFF9A3,
+    300: #FFF370,
+    400: #FFEB33,
+    500: #e6da00,
+    600: #CCBD00,
+    700: #998E00,
+    800: #665E00,
+    900: #332F00,
+    1000: #141300) !default;
+
+$cyber-slate-palette: (
+    50: #EBEFF2,
+    100: #CDD6DF,
+    200: #A8B8C6,
+    300: #7E96A9,
+    400: #5D788C,
+    500: #3E5669,
+    600: #283C4C,
+    700: #1B2936,
+    800: #121A21,
+    900: #0B1015,
+    1000: #05080A) !default;
 
 $hc-black: #000000;
 $hc-white: #ffffff;
@@ -133,7 +159,10 @@ $all-palettes: (
     'warn': $warn-palette,
     'success': $success-palette,
     'information': $information-palette,
-    'neutral': $neutral-palette) !default;
+    'neutral': $neutral-palette,
+
+    'cyber-yellow': $cyber-yellow-palette,
+    'cyber-slate': $cyber-slate-palette) !default;
 
 @function get-palette($name) {
     @if map.has-key($all-palettes, $name) {

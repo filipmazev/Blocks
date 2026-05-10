@@ -1,0 +1,103 @@
+@use '../../../core/styles/index' as *;
+
+:host {
+    display: block;
+}
+
+.bx-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.bx-inline-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing(2);
+    cursor: pointer;
+    user-select: none;
+
+    &.is-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.bx-inline-label {
+    font-size: 0.875rem;
+    color: var(--bx-text-primary);
+}
+
+.bx-inline-required {
+    color: var(--bx-text-danger);
+}
+
+.bx-inline-tooltip-trigger {
+    position: relative;
+    display: inline-flex;
+    color: var(--bx-text-secondary);
+    cursor: help;
+    outline: none;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--bx-text-brand);
+    }
+
+    bx-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 8px;
+    }
+}
+
+.bx-slide-toggle-track {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background-color: var(--bx-border-strong);
+    border-radius: 9999px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    border: 2px solid transparent;
+
+    &.is-invalid {
+        background-color: var(--bx-bg-danger-subtle);
+        border-color: var(--bx-border-danger);
+    }
+
+    &.is-checked {
+        background-color: var(--bx-primary);
+
+        &.is-invalid {
+            background-color: var(--bx-bg-danger);
+        }
+
+        .bx-slide-toggle-thumb {
+            transform: translateX(16px);
+        }
+    }
+}
+
+input:focus-visible~.bx-slide-toggle-track {
+    box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+}
+
+.bx-slide-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: var(--bx-shadow-sm);
+}
