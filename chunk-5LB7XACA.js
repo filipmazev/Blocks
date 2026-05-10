@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"align-horizontal-justify-start",viewBox:"0 0 24 24",svgContent:'<rect width="6" height="14" x="6" y="5" rx="2" /><rect width="6" height="10" x="16" y="7" rx="2" /><path d="M2 2v20" />'};export{o as lucideAlignHorizontalJustifyStart};

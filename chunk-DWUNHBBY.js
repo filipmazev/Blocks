@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"chevron-right-square",viewBox:"0 0 24 24",svgContent:'<rect width="18" height="18" x="3" y="3" rx="2" /><path d="m10 8 4 4-4 4" />'};export{o as lucideChevronRightSquare};

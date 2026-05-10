@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"chevrons-left-right",viewBox:"0 0 24 24",svgContent:'<path d="m9 7-5 5 5 5" /><path d="m15 7 5 5-5 5" />'};export{o as lucideChevronsLeftRight};

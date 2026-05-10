@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var t={name:"mouse",viewBox:"0 0 24 24",svgContent:'<rect x="5" y="2" width="14" height="20" rx="7" /><path d="M12 6v4" />'};export{t as lucideMouse};

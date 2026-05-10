@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var t={name:"baseline",viewBox:"0 0 24 24",svgContent:'<path d="M4 20h16" /><path d="m6 16 6-12 6 12" /><path d="M8 12h8" />'};export{t as lucideBaseline};

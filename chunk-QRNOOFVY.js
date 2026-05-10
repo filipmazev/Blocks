@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var n={name:"chevrons-up",viewBox:"0 0 24 24",svgContent:'<path d="m17 11-5-5-5 5" /><path d="m17 18-5-5-5 5" />'};export{n as lucideChevronsUp};

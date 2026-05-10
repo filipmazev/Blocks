@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var e={name:"corner-right-up",viewBox:"0 0 24 24",svgContent:'<path d="m10 9 5-5 5 5" /><path d="M4 20h7a4 4 0 0 0 4-4V4" />'};export{e as lucideCornerRightUp};

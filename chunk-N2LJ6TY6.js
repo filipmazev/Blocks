@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"align-right",viewBox:"0 0 24 24",svgContent:'<path d="M21 5H3" /><path d="M21 12H9" /><path d="M21 19H7" />'};export{i as lucideAlignRight};

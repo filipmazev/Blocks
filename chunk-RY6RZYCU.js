@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var t={name:"heading",viewBox:"0 0 24 24",svgContent:'<path d="M6 12h12" /><path d="M6 20V4" /><path d="M18 20V4" />'};export{t as lucideHeading};

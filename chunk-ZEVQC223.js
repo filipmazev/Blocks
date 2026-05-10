@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"grid-2x2",viewBox:"0 0 24 24",svgContent:'<path d="M12 3v18" /><path d="M3 12h18" /><rect x="3" y="3" width="18" height="18" rx="2" />'};export{i as lucideGrid2x2};

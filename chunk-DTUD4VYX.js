@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"minus-circle",viewBox:"0 0 24 24",svgContent:'<circle cx="12" cy="12" r="10" /><path d="M8 12h8" />'};export{i as lucideMinusCircle};

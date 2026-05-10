@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"handbag",viewBox:"0 0 24 24",svgContent:'<path d="M2.048 18.566A2 2 0 0 0 4 21h16a2 2 0 0 0 1.952-2.434l-2-9A2 2 0 0 0 18 8H6a2 2 0 0 0-1.952 1.566z" /><path d="M8 11V6a4 4 0 0 1 8 0v5" />'};export{o as lucideHandbag};

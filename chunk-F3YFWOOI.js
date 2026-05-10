@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var e={name:"arrow-right-to-line",viewBox:"0 0 24 24",svgContent:'<path d="M17 12H3" /><path d="m11 18 6-6-6-6" /><path d="M21 5v14" />'};export{e as lucideArrowRightToLine};

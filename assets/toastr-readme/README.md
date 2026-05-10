@@ -1,4 +1,4 @@
-# @filip.mazev/toastr
+# @filip.mazev/blocks/toastr
 
 ## Blocks - Toastr Library
 
@@ -11,12 +11,13 @@
 * Flexible Positioning: Supports top/bottom and left/right/center placements, adjusting automatically for mobile viewports.
 * Mobile Optimized: Native-feeling vertical swipe-to-dismiss gestures built-in.
 * Auto-Dismiss: Configurable timeouts to automatically close notifications.
+* Built-in UI Controls: Out-of-the-box support for customizable close buttons directly on the toast wrapper.
 * Dynamic Data: Pass strictly typed data to your toast components and return results.
 
 ## Installation
 
 ```bash
-npm i @filip.mazev/toastr@latest
+npm i @filip.mazev/blocks@latest
 ```
 
 Or with the global blocks `ng` command which adds all blocks packages and sets up your styles.scss
@@ -24,42 +25,6 @@ Or with the global blocks `ng` command which adds all blocks packages and sets u
 ```bash
 ng add @filip.mazev/blocks@latest
 ```
-
-### Theme Configuration
-
-To ensure the library's stylization works correctly, import the core theme provider in your global styles (`styles.scss`). The toast notifications utilize standard CSS variables for styling.
-
-```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as blocks;
-@use '@filip.mazev/toastr/lib/styles/index' as toastr;
-
-@layer base {
-    :root {
-        @include blocks.core-theme(blocks.$default-light-theme-config);
-
-        // if you dont want to override themes, just use: 
-        // @include toastr.toastr-theme(());
-
-        @include toastr.toastr-theme((
-            /* Optional: Override default Toast style variables */
-          '--toast-bg': #ffffff,
-          '--toast-text': #000000
-        ));
-    }
-
-    [data-theme='dark'] {
-        @include blocks.core-theme(blocks.$default-dark-theme-config);
-
-        @include toastr.toastr-theme((
-          /* Optional: Override default Toast wrapper variables */
-          '--toast-bg': #000000,
-          '--toast-text': #ffffff
-        ));
-    }
-}
-```
-
-_Note: If you provide a custom wrapperClass in your toast configuration, you can bypass the default wrapper styling entirely and apply your own custom CSS classes._
 
 ## Usage
 
@@ -154,10 +119,16 @@ Controls the behavior, data, and placement of an individual toast:
 * `animate` |`boolean`|: (optional) Whether the toast should animate in and out. Defaults to true.
 * `wrapperClass` |`string`|: (optional) A custom CSS class to apply to the toast's outer wrapper container. If omitted, it uses 'default-wrapper'.
 * `hasDefaultBackground` |`boolean`|: (optional) If set to false, the default background color will be removed from the default wrapper
+* `showCloseButton` |`boolean`|: (optional) Displays a built-in close icon in the top right corner of the wrapper. Defaults to true.
+* `closeButtonColor` |`ThemedColor`|: (optional) Applies a specific theme color to the close button. Defaults to 'text-primary'.
+* `showProgressBar` |`boolean`|: (optional) Displays an animated progress bar at the bottom of the wrapper indicating remaining duration. Defaults to true.
+* `progressBarColor` |`ThemedColor`|: (optional) Applies a specific theme color to the progress bar. Defaults to 'text-primary'.
 
 ## Global Toastr Settings
 
 Similar to the modal library (`@filip.mazev/modal`), you can manage application-wide defaults using the `ToastrGlobalSettingsService`. These defaults apply automatically unless overridden by the IToastConfig during the queueToast call. It also is the place where `maxOpened` is configured since this is a global configuration.
+
+The toast wrapper natively provides a top-right close button and a bottom animated progress bar (which pauses on hover and resizes dynamically). You can toggle their visibility or change their semantic colors universally across the app or on a per-toast basis.
 
 ### Example Usage
 
@@ -172,13 +143,18 @@ export class AppComponent {
   constructor() {
     // Update global defaults at runtime
     this.toastrGlobalSettings.update({
-      position: 'bottom-right',   // Move all toasts to the bottom right
-      durationInMs: 7500,         // Keep toasts open longer by default
-      maxOpened: 3,               // Only show 3 toasts at a time; queue the rest
-      swipeToDismiss: true
+      position: 'bottom-right',       // Move all toasts to the bottom right
+      durationInMs: 7500,             // Keep toasts open longer by default
+      maxOpened: 3,                   // Only show 3 toasts at a time; queue the rest
+      swipeToDismiss: true,           // Allow swipe gestures globally
+      showCloseButton: false,          // Remove the default close button on all wrappers
+      closeButtonColor: 'text-primary',
+      showProgressBar: true,          // Visually track the 7500ms duration or set to false to disable this
+      progressBarColor: 'text-primary'
     });
   }
 }
+
 ```
 
 ### How It Works
@@ -189,9 +165,9 @@ export class AppComponent {
 
 ## Quick Status Toasts (SimpleToast)
 
-While toastr excels at rendering highly customized components, it also provides a built-in `SimpleToast` component for standard status notifications. You don't need to create your own components to display basic success, info, warning, or error messages.
+While toastr excels at rendering highly customized components, it also provides a built-in `SimpleToast` component for standard status notifications. You don't need to create your own components to display basic success, info, warning, or danger messages.
 
-The `ToastrService` exposes four convenience methods: `queueSuccess`, `queueInfo`, `queueWarning`, and `queueError`.
+The `ToastrService` exposes four convenience methods: `queueSuccess`, `queueInfo`, `queueWarning`, and `queueDanger`.
 
 ### SimpleToast Usage
 
@@ -216,8 +192,8 @@ export class MyFeatureComponent {
     }
 
     public reportIssue() {
-        // Fire a quick error toast with an overridden position
-        this.toastr.queueError({
+        // Fire a quick danger toast with an overridden position
+        this.toastr.queueDanger({
             message: 'Failed to connect to the server. Please try again later.',
             position: 'bottom-center', // Optional override
             durationInMs: 10000 // Optional override
@@ -230,31 +206,7 @@ export class MyFeatureComponent {
 
 When using the quick status methods, the configuration is streamlined to focus on the text content:
 
-* `message` |`string`|: The main text body of the toast. If no title is provided, this text is automatically scaled up slightly for better visibility.
-* `title` |`string`|: (optional) A bolded header for the toast.
+* `title` |`ResolvableText`|: (optional) A bolded header for the toast as `ResolvableText`, this can be a string or an object with a translation key
+* `message` |`ResolvableText`|: The main text body of the toast as `ResolvableText`, this can be a string or an object with a translation key. If no title is provided, this text is automatically scaled up slightly for better visibility.
 * `position` |`ToastPosition`|: (optional) Overrides the globally configured screen position.
 * `durationInMs` |`number`|: (optional) Overrides the globally configured auto-close timeout.
-
-### Styling the Simple Toasts
-
-The `SimpleToast` component uses specific CSS variables for its status colors. To ensure they look correct in your application, define these variables in your global styles.scss theme configuration:
-
-```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as blocks;
-@use '@filip.mazev/toastr/lib/styles/index' as toastr;
-
-@layer base {
-    :root {
-        @include blocks.core-theme(blocks.$default-light-theme-config);
-
-        @include toastr.toastr-theme((
-          /* Optional: Override default Toast wrapper variables */
-          '--simple-toast-info': #e3f2fd,
-          '--simple-toast-success': #e8f5e9,
-          '--simple-toast-warn': #fff3cd,
-          '--simple-toast-error': #fdecea,
-          'toast-text-warn': #d32f2f
-        ));
-    }
-}
-```

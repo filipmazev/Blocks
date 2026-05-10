@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"martini",viewBox:"0 0 24 24",svgContent:'<path d="M8 22h8" /><path d="M12 11v11" /><path d="m19 3-7 8-7-8Z" />'};export{i as lucideMartini};

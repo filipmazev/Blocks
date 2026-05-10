@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var h={name:"chevrons-left-right-ellipsis",viewBox:"0 0 24 24",svgContent:'<path d="M12 12h.01" /><path d="M16 12h.01" /><path d="m17 7 5 5-5 5" /><path d="m7 7-5 5 5 5" /><path d="M8 12h.01" />'};export{h as lucideChevronsLeftRightEllipsis};

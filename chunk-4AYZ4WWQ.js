@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"rectangle-horizontal",viewBox:"0 0 24 24",svgContent:'<rect width="20" height="12" x="2" y="6" rx="2" />'};export{o as lucideRectangleHorizontal};

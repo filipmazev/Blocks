@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var n={name:"arrow-up-from-line",viewBox:"0 0 24 24",svgContent:'<path d="m18 9-6-6-6 6" /><path d="M12 3v14" /><path d="M5 21h14" />'};export{n as lucideArrowUpFromLine};

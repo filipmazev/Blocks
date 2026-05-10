@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"circle-check-big",viewBox:"0 0 24 24",svgContent:'<path d="M21.801 10A10 10 0 1 1 17 3.335" /><path d="m9 11 3 3L22 4" />'};export{i as lucideCircleCheckBig};

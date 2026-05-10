@@ -1,4 +1,4 @@
-# @filip.mazev/modal
+# @filip.mazev/blocks/modal
 
 ## Blocks - Modal Library
 
@@ -16,7 +16,7 @@
 ## Installation
 
 ```bash
-npm i @filip.mazev/modal@latest
+npm i @filip.mazev/blocks@latest
 ```
 
 Or with the global blocks `ng` command which adds all blocks packages and sets up your styles.scss
@@ -24,43 +24,6 @@ Or with the global blocks `ng` command which adds all blocks packages and sets u
 ```bash
 ng add @filip.mazev/blocks@latest
 ```
-
-### Theme Configuration
-
-To enable the library's stylization, import the theme provider in your global styles (styles.scss):
-
-```scss
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as blocks;
-@use '@filip.mazev/modal/lib/styles/index' as modal;
-
-@layer base {
-    :root {
-        @include blocks.core-theme(blocks.$default-light-theme-config);
-
-        // if you dont want to override themes, just use: 
-        // @include modal.modal-theme(());
-
-        @include modal.modal-theme((
-            /* Optional: Override default Modal style variables */
-            'modal-mobile-swipe-line-color': #cfcfcf,
-        ));
-    }
-
-    [data-theme='dark'] {
-        @include blocks.core-theme(blocks.$default-dark-theme-config);
-        @include modal.modal-theme((
-            'modal-mobile-swipe-line-color': #444444,
-        ));
-    }
-}
-```
-
-You can also provide your own theme, please make sure that you follow the naming convention of the existing themes such as `default-light-theme-config` (found in `@filip.mazev/blocks-core/src/lib/styles/themes/default-theme`) for proper functionality.
-
-Other themes are also available such as:
-
-* `$orange-company-light-theme-config`
-* `$orange-company-dark-theme-config`
 
 ## Usage
 
@@ -149,7 +112,16 @@ const modalRef = this.modals.open<MyData, MyResult>(MyModalComponent, {
   style: {
     layout: 'right', // Slide in from the right (left and center are also available options)
   },
-  bannerText: 'Modal Title Here'
+  header: {
+    title: 'Modal Title Here',
+    icon: { // (optional) undefined or IconData
+        name: 'chevron-right', // any IconName
+        color: 'text-danger', // (optional) any ThemedColor, will default to currentColor
+        bgColor: 'auto', // (optional) undefined, auto or ThemedColor, will default to no background
+        size: '24', // (optional) undefined or any IconSize, will default to '24'
+        strokeWidth: '1.5' // (optional) undefined or any IconStrokeWidth, will default to '1.5'
+    }
+  }
 });
 
 modalRef.afterClosed().subscribe(result: IModalCloseResult<MyData> => {
@@ -178,11 +150,9 @@ Controls the behavior and content of the modal container:
 * `disableCloseOnNavigation` |`boolean`|: (optional) Whether the modal should remain open when the user navigates away from the current page, will default to false.
 * `data` |`TData`|: (optional) The data to pass to the component of the modal. The component needs to use the @Inject(MODAL_DATA) or `data = inject<string>(MODAL_DATA);` (modern syntax) decorator to receive this.
 * `style` |`IModalStyleConfig`|: (optional) The visual style configuration for the modal (layout, backdrop, etc.), will default to an empty object.
-* `bannerText` |`string`|: (optional) The text to display in the header banner of the modal.
+* `heaeder` |`IModalHeaderConfig`|: (optional) Header to be shown
 * `contentClasses` |`string`|: (optional) Custom CSS classes to apply directly to the content container of the modal.
 * `contentStyles` |`string`|: (optional) Inline CSS styles to apply directly to the content container of the modal.
-* `disableConsoleWarnings` |`boolean`|: (optional) Whether to suppress library warnings in the console, will default to false.
-* `disableConsoleInfo` |`boolean`|: (optional) Whether to suppress library info logs in the console, will default to false.
 * `id` |`string`|: (optional) The unique identifier of the modal, will default to a random string if not provided.
 
 ### `IModalStyleConfig`
@@ -200,6 +170,13 @@ Controls the visual appearance:
 * `wrapperClasses` |`string`|: (optional) Custom CSS classes to apply to the wrapper of the modal.
 * `wrapperStyles` |`string`|: (optional) Inline CSS styles to apply to the wrapper of the modal.
 * `overrideFullHeight` |`boolean`|: (optional) Whether the modal should override the default full-height restriction or not, will default to false.
+
+### `IModalHeaderConfig`
+
+Controls the header appearance;
+
+* `text` |`ResolvableText`|: The text to be shown in the header as `ResolvableText`, this can be a string or an object with a translation key
+* `icon` |`IconData`|: (optional) An icon to display to the left of the text, will default to undefined
 
 ### The Breakpoints
 

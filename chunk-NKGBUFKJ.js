@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var a={name:"flag-triangle-left",viewBox:"0 0 24 24",svgContent:'<path d="M18 22V2.8a.8.8 0 0 0-1.17-.71L5.45 7.78a.8.8 0 0 0 0 1.44L18 15.5" />'};export{a as lucideFlagTriangleLeft};

@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var e={name:"tv-minimal",viewBox:"0 0 24 24",svgContent:'<path d="M7 21h10" /><rect width="20" height="14" x="2" y="3" rx="2" />'};export{e as lucideTvMinimal};

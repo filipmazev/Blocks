@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var e={name:"unlink-2",viewBox:"0 0 24 24",svgContent:'<path d="M15 7h2a5 5 0 0 1 0 10h-2m-6 0H7A5 5 0 0 1 7 7h2" />'};export{e as lucideUnlink2};

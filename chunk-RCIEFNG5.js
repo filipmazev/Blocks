@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var t={name:"arrow-up-wide-narrow",viewBox:"0 0 24 24",svgContent:'<path d="m3 8 4-4 4 4" /><path d="M7 4v16" /><path d="M11 12h10" /><path d="M11 16h7" /><path d="M11 20h4" />'};export{t as lucideArrowUpWideNarrow};

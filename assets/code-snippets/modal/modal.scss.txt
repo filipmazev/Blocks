@@ -36,8 +36,8 @@
     font-size: 16px;
     cursor: pointer;
 
-    background-color: var(--fm-button-confirm);
-    color: var(--fm-text-confirm);
+    background-color: var(--bx-bg-success);
+    color: var(--bx-text-success);
     border: none;
     border-radius: 4px;
 }
@@ -47,8 +47,8 @@
     font-size: 16px;
     cursor: pointer;
 
-    background-color: var(--fm-button-warn);
-    color: var(--fm-text-warn);
+    background-color: var(--bx-bg-danger);
+    color: var(--bx-text-danger);
     border: none;
     border-radius: 4px;
 }

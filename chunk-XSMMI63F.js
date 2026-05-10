@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var r={name:"circle-arrow-down",viewBox:"0 0 24 24",svgContent:'<circle cx="12" cy="12" r="10" /><path d="M12 8v8" /><path d="m8 12 4 4 4-4" />'};export{r as lucideCircleArrowDown};

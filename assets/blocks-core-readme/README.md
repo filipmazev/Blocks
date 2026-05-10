@@ -22,23 +22,23 @@ Blocks Core utilizes a robust SCSS architecture to manage design tokens and resp
 
 ### 1. Theme Provider
 
-The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the `core-theme` mixin in your global styles.
+The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the `bx-theme` mixin in your global styles.
 
 ```scss
-@use "@filip.mazev/blocks-core/src/lib/styles/index" as blocks;
+@use "@filip.mazev/blocks" as *;
 
 :root {
   // Initialize default light theme
-  @include blocks.core-theme(blocks.$default-light-theme-config);
+  @include bx-theme(blocks.$purple-light-theme);
 }
 
 // Example: Switch to dark theme based on a class
 body.dark-theme {
-  @include blocks.core-theme(blocks.$default-dark-theme-config);
+  @include bx-theme(blocks.$purple-dark-theme);
 }
 ```
 
-This generates CSS variables with the `--fm-` prefix (e.g.,`--fm-primary`, `--fm-surface`, `--fm-element`).
+This generates CSS variables with the `--bx-` prefix (e.g.,`--bx-primary`, `--bx-bg-surface`, `--bx-bg-element`).
 
 ### 2. Responsive Mixins
 
@@ -104,14 +104,14 @@ When writing custom component styles, use the provided SCSS functions to access 
 
 #### Using Utility Classes (Tailwind-Style)
 
-For rapid UI development directly in your templates, Blocks Core automatically generates utility classes prefixed with `.fm-`.
+For rapid UI development directly in your templates, Blocks Core automatically generates utility classes prefixed with `.bx-`.
 
 ```html
-<div class="fm-p-4 fm-my-2 fm-px-6">...</div>
+<div class="bx-p-4 bx-my-2 bx-px-6">...</div>
 
-<div class="fm-rounded-md fm-rounded-t-lg">...</div>
+<div class="bx-rounded-md bx-rounded-t-lg">...</div>
 
-<div class="fm-shadow-modal fm-z-fixed">...</div>
+<div class="bx-shadow-modal bx-z-fixed">...</div>
 ```
 
 #### Using CSS Variables
@@ -120,10 +120,10 @@ If you need to access tokens inline or outside of SCSS compilation, they are exp
 
 ```scss
 .dynamic-element {
-    padding: var(--fm-space-4);
-    border-radius: var(--fm-rounded-pill);
-    box-shadow: var(--fm-shadow-toast);
-    z-index: var(--fm-z-modal);
+    padding: var(--bx-space-4);
+    border-radius: var(--bx-rounded-pill);
+    box-shadow: var(--bx-shadow-toast);
+    z-index: var(--bx-z-modal);
 }
 ```
 

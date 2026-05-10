@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var e={name:"separator-vertical",viewBox:"0 0 24 24",svgContent:'<path d="M12 3v18" /><path d="m16 16 4-4-4-4" /><path d="m8 8-4 4 4 4" />'};export{e as lucideSeparatorVertical};

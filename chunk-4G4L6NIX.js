@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"turkish-lira",viewBox:"0 0 24 24",svgContent:'<path d="M15 4 5 9" /><path d="m15 8.5-10 5" /><path d="M18 12a9 9 0 0 1-9 9V3" />'};export{i as lucideTurkishLira};

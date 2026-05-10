@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var e={name:"trending-down",viewBox:"0 0 24 24",svgContent:'<path d="M16 17h6v-6" /><path d="m22 17-8.5-8.5-5 5L2 7" />'};export{e as lucideTrendingDown};

@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"circle-power",viewBox:"0 0 24 24",svgContent:'<circle cx="12" cy="12" r="10" /><path d="M12 7v4" /><path d="M7.998 9.003a5 5 0 1 0 8-.005" />'};export{o as lucideCirclePower};

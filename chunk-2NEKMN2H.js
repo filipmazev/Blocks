@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var a={name:"antenna",viewBox:"0 0 24 24",svgContent:'<path d="M2 12 7 2" /><path d="m7 12 5-10" /><path d="m12 12 5-10" /><path d="m17 12 5-10" /><path d="M4.5 7h15" /><path d="M12 16v6" />'};export{a as lucideAntenna};

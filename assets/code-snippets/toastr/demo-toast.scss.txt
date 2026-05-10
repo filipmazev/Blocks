@@ -6,31 +6,31 @@
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--fm-border, #ccc);
+    border: 1px solid var(--bx-border-default, #ccc);
     min-height: 40px;
 
     &.info {
-        color: var(--simple-toast-info-accent);
-        background-color: var(--simple-toast-info-bg);
-        border: 1px solid var(--simple-toast-info-accent);
+        color: var(--bx-text-info);
+        background-color: var(--bx-bg-info-subtle);
+        border: 1px solid var(--bx-border-info);
     }
 
     &.success {
-        color: var(--simple-toast-success-accent);
-        background-color: var(--simple-toast-success-bg);
-        border: 1px solid var(--simple-toast-success-accent);
+        color: var(--bx-text-success);
+        background-color: var(--bx-bg-success-subtle);
+        border: 1px solid var(--bx-border-success);
     }
 
     &.warn {
-        color: var(--simple-toast-warn-accent);
-        background-color: var(--simple-toast-warn-bg);
-        border: 1px solid var(--simple-toast-warn-accent);
+        color: var(--bx-text-warn);
+        background-color: var(--bx-bg-warn-subtle);
+        border: 1px solid var(--bx-border-warn);
     }
 
-    &.error {
-        color: var(--simple-toast-error-accent);
-        background-color: var(--simple-toast-error-bg);
-        border: 1px solid var(--simple-toast-error-accent);
+    &.danger {
+        color: var(--bx-text-danger);
+        background-color: var(--bx-bg-danger-subtle);
+        border: 1px solid var(--bx-border-danger);
     }
 }
 
@@ -72,18 +72,18 @@
     transition: color 0.2s;
 
     &.info {
-        color: var(--simple-toast-info-accent);
+        color: var(--bx-text-info);
     }
 
     &.success {
-        color: var(--simple-toast-success-accent);
+        color: var(--bx-text-success);
     }
 
     &.warn {
-        color: var(--simple-toast-warn-accent);
+        color: var(--bx-text-warn);
     }
 
-    &.error {
-        color: var(--simple-toast-error-accent);
+    &.danger {
+        color: var(--bx-text-danger);
     }
 }

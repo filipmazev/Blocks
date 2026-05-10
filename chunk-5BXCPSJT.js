@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var i={name:"line-dot-right-horizontal",viewBox:"0 0 24 24",svgContent:'<path d="M 3 12 L 15 12" /><circle cx="18" cy="12" r="3" />'};export{i as lucideLineDotRightHorizontal};

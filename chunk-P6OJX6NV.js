@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"circle-dot",viewBox:"0 0 24 24",svgContent:'<circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="1" />'};export{o as lucideCircleDot};

@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var o={name:"russian-ruble",viewBox:"0 0 24 24",svgContent:'<path d="M6 11h8a4 4 0 0 0 0-8H9v18" /><path d="M6 15h8" />'};export{o as lucideRussianRuble};

@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var t={name:"arrow-up-square",viewBox:"0 0 24 24",svgContent:'<rect width="18" height="18" x="3" y="3" rx="2" /><path d="m16 12-4-4-4 4" /><path d="M12 16V8" />'};export{t as lucideArrowUpSquare};

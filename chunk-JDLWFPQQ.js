@@ -1,0 +1,1 @@
+import"./chunk-BYXBJQAS.js";import"./chunk-KAT7YFEL.js";var c={name:"copyleft",viewBox:"0 0 24 24",svgContent:'<circle cx="12" cy="12" r="10" /><path d="M9.17 14.83a4 4 0 1 0 0-5.66" />'};export{c as lucideCopyleft};
