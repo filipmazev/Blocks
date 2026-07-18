@@ -1,4 +1,4 @@
-import { Component, computed, DOCUMENT, inject, Renderer2, signal } from '@angular/core';
+import { Component, computed, DOCUMENT, effect, inject, Renderer2, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HighlightLoader } from 'ngx-highlightjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,10 +14,11 @@ import { Menu } from '@primitives/components/menu/menu';
 import { MenuItem } from '@primitives/components/menu-item/menu-item';
 import { DropdownDirective } from '@primitives/directives/dropdown.directive';
 import { TooltipDirective } from '@primitives/directives/tooltip.directive';
+import { IOverprintConfig, OverprintCanvas } from 'overprint-angular';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, FormsModule, Button, Icon, Menu, MenuItem, DropdownDirective, TooltipDirective],
+  imports: [RouterOutlet, Sidenav, FormsModule, Button, Icon, Menu, MenuItem, DropdownDirective, TooltipDirective, OverprintCanvas],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -36,10 +37,101 @@ export class App {
     { id: 'high-contrast', label: 'High Contrast', className: 'high-contrast' }
   ];
 
+  protected readonly look = computed<IOverprintConfig>(() => {
+    const primaryColor = this.currentPrimaryColor();
+    const secondaryColor = this.currentSecondaryColor();
+
+    const colorOne = primaryColor ? primaryColor.replace('#', '') : '2e2e2e';
+    const colorTwo = secondaryColor ? secondaryColor.replace('#', '') : 'd7f8e8';
+
+    return {
+      fxOrder: 'Gmgs',
+      shape: 6,
+      stops: [
+        { color: colorOne, pos: 0 },
+        { color: colorTwo, pos: 20 }
+      ],
+      seed: 50,
+      warp: 1.54,
+      noiseScale: 1.34,
+      detail: 2,
+      contrast: 1.45,
+      angle: 316,
+      centerX: 0.262,
+      centerY: 0.718,
+      patternLayout: 'g',
+      patternCols: 2,
+      patternRows: 2,
+      patternGap: 32,
+      patternSeed: 25,
+      aberration: 0.4,
+      softness: 0.28,
+      lightMode: 3,
+      lightAmount: 0.69,
+      lightSize: 0.28,
+      lightX: 0.529,
+      lightY: 0.246,
+      waveAmount: 0.55,
+      waveFrequency: 4,
+      waveFalloff: 0.72,
+      wavePhase: 0.16,
+      waveX: 0.468,
+      waveY: 0.526,
+      glassMode: 2,
+      glassAmount: 0.56,
+      glassCount: 19,
+      glassShadow: 0.23,
+      glassHighlight: this.isDarkMode() ? 0 : 0.7,
+      pixelate: 129,
+      ditherMatrix: 8,
+      ditherScale: 5,
+      ditherLevels: 5,
+      ditherStrength: 0.99,
+      ditherColorMode: 1,
+      halftoneSize: 82,
+      halftoneStyle: 3,
+      halftoneStagger: true,
+      halftoneDotScale: 0.85,
+      halftonePaper: 0.53,
+      halftoneEmboss: 0.76,
+      halftoneWindAngle: 95,
+      asciiSize: 24,
+      asciiRatio: 1.6,
+      asciiStyle: 3,
+      asciiColor: 0,
+      asciiBackground: 0.11,
+      asciiExposure: 1.12,
+      asciiFill: 0.85,
+      asciiDensity: 16,
+      contourLevels: 13,
+      contourWeight: 2.8,
+      contourDash: 0.35,
+      contourGlow: 0.3,
+      contourColor: 0,
+      contourPaper: 0.27,
+      toneGeoSize: 26,
+      toneGeoLow: 0.41,
+      toneGeoHigh: 0.67,
+      toneGeoWeight: 0.7,
+      toneGeoPaper: 0.29,
+      grain: 0.125,
+      grainSize: 1.67,
+      paperAmount: 0.46,
+      pointerMode: 2,
+      pointerAmount: 0.6,
+      pointerSize: 0.5,
+      animate: true,
+      animSpeed: 0.55
+    };
+  });
+
   public readonly selectedThemeLabel = computed(() => {
     const activeId = this.selectedThemeId();
     return this.availableThemes.find((t) => t.id === activeId)?.label ?? 'Select Theme';
   });
+
+  protected currentPrimaryColor = signal<string | undefined>(undefined);
+  protected currentSecondaryColor = signal<string | undefined>(undefined);
 
   protected isDarkMode = signal(false);
 
@@ -52,6 +144,18 @@ export class App {
   constructor() {
     this.initThemeSubscription();
     this.initPalette();
+
+    effect(() => {
+      this.selectedThemeId();
+      this.isDarkMode();
+
+      const computedStyle = window.getComputedStyle(this.document.body);
+      const primaryColor = computedStyle.getPropertyValue('--bx-primary');
+      const secondaryColor = computedStyle.getPropertyValue('--bx-bg-canvas');
+
+      this.currentPrimaryColor.set(primaryColor);
+      this.currentSecondaryColor.set(secondaryColor);
+    });
   }
 
   private initPalette() {
@@ -124,7 +228,6 @@ export class App {
     localStorage.setItem('theme-palette', themeId);
 
     const root = this.document.documentElement;
-
     this.availableThemes.forEach((t) => {
       if (t.className) {
         this.renderer.removeClass(root, t.className);
