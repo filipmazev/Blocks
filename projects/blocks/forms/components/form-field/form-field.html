@@ -34,7 +34,7 @@
     @if (resolvedError()) {
     <div class="bx-field-error" [class.bx-animated]="isAnimated()">
         <bx-icon name="alert-circle" size="16"></bx-icon>
-        <span>{{ resolvedError() }}</span>
+        <span class="bx-field-error-text">{{ resolvedError() }}</span>
     </div>
     }
 </div>

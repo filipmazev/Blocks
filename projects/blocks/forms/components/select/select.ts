@@ -45,6 +45,26 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
     new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'start', overlayY: 'bottom' }, 0, -4)
   ];
 
+  protected readonly isFloating = computed(() => {
+    const val = this.internalValue();
+    const hasValue = val !== null && val !== undefined && val !== '';
+    return this.isOpen() || hasValue;
+  });
+
+  protected readonly resolvedLabel = computed(() => {
+    this.i18n?.version?.();
+    const l = this.label();
+    if (!l) return '';
+    return isTextWithKey(l) ? (this.i18n?.translate(l.key) ?? l.key) : l;
+  });
+
+  protected readonly resolvedPlaceholder = computed(() => {
+    this.i18n?.version?.();
+    const p = this.placeholder();
+    if (!p) return '';
+    return isTextWithKey(p) ? (this.i18n?.translate(p.key) ?? p.key) : p;
+  });
+
   public override ngOnInit(): void {
     super.ngOnInit();
     
@@ -84,7 +104,7 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
   protected readonly selectedOptionLabel = computed(() => {
     const currentVal = this.internalValue();
     const selected = this.resolvedOptions().find(o => o.value === currentVal);
-    return selected ? selected.resolvedStr : this.resolveText(this.placeholder()) || '';
+    return selected ? selected.resolvedStr : ''; 
   });
 
   protected readonly resolvedSearchPlaceholder = computed(() => this.resolveText(this.searchPlaceholder()));

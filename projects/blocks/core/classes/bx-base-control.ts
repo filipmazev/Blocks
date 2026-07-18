@@ -1,5 +1,5 @@
-import { Directive, inject, input, signal, OnInit, isDevMode } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Directive, inject, input, signal, OnInit, isDevMode, computed } from '@angular/core';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { ResolvableText, ValidatorKey } from '../types/core.types';
 
 @Directive()
@@ -17,6 +17,13 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   public readonly required = input<boolean>(false);
   public readonly loading = input<boolean>(false);
   public readonly disabled = input<boolean>(false);
+
+   protected readonly isFieldRequired = computed(() => {
+    if (this.required && this.required()) return true;
+    
+    const control = this.ngControl?.control;
+    return control?.hasValidator ? control.hasValidator(Validators.required) : false;
+  });
 
   protected readonly internalValue = signal<T | null>(null);
   protected readonly isTouched = signal<boolean>(false);

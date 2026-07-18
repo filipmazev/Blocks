@@ -6,50 +6,78 @@
 }
 
 .bx-input-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(sm);
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    overflow: hidden;
+
+    background-color: var(--bx-bg-neutral);
+
+    border-radius: radius(sm) radius(sm) 0 0;
+
+    border-bottom: 1px solid var(--bx-border-strong);
+    transition: background-color 0.15s ease;
 
     &:hover:not(.is-disabled) {
-        border-color: var(--bx-border-strong);
-    }
-
-    &:focus-within:not(.is-disabled) {
-        border-color: var(--bx-border-brand);
-        box-shadow: 0 0 0 3px var(--bx-primary-subtle);
-    }
-
-    &.is-invalid {
-        border-color: var(--bx-border-danger);
-
-        &:focus-within {
-            box-shadow: 0 0 0 3px var(--bx-bg-danger-subtle);
-        }
+        background-color: var(--bx-bg-neutral-hover);
     }
 
     &.is-disabled {
         background-color: var(--bx-bg-element);
         opacity: 0.7;
+        border-bottom-style: dotted;
     }
 }
 
-.bx-native-input {
+.bx-input-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--bx-primary);
+    transform: scaleX(0);
+    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform-origin: center;
+    z-index: 2;
+}
+
+.bx-input-wrapper:focus-within:not(.is-disabled)::after {
+    transform: scaleX(1);
+}
+
+.bx-input-wrapper.is-invalid {
+    border-bottom-color: var(--bx-border-danger);
+}
+
+.bx-input-wrapper.is-invalid::after {
+    background-color: var(--bx-border-danger);
+    transform: scaleX(1);
+}
+
+.bx-input-container {
     flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.bx-native-input {
     width: 100%;
     box-sizing: border-box;
-    padding: spacing(2) spacing(3);
+
+    padding: spacing(6) spacing(3) spacing(2) spacing(3);
+    height: 3.85rem;
+
     background: transparent;
     border: none;
     outline: none;
     font-family: inherit;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--bx-text-heading);
+    z-index: 1;
 
     &::placeholder {
         color: var(--bx-text-secondary);
@@ -70,10 +98,47 @@
     }
 }
 
+.bx-floating-label {
+    position: absolute;
+    left: spacing(3);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--bx-text-secondary);
+    pointer-events: none;
+    z-index: 2;
+
+    transition: top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+        transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+        font-size 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+        color 0.15s ease;
+}
+
+.bx-input-wrapper.is-floating .bx-floating-label {
+    top: spacing(2);
+    transform: translateY(0);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.bx-input-wrapper.is-floating:focus-within .bx-floating-label {
+    color: var(--bx-primary);
+}
+
+.bx-input-wrapper.is-invalid .bx-floating-label {
+    color: var(--bx-text-danger);
+}
+
+.bx-field-required {
+    color: var(--bx-text-secondary);
+    margin-left: 0.125rem;
+}
+
 .bx-spinners-group {
     display: flex;
     align-items: center;
     align-self: stretch;
+    z-index: 1;
 }
 
 .bx-spin-btn {

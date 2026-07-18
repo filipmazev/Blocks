@@ -1,13 +1,22 @@
-<bx-form-field [label]="label()" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()"
-    [required]="required()" [forId]="inputId()">
+<bx-form-field [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
 
     <div class="bx-input-wrapper" [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()"
-        [class.has-spinners]="type() === 'number'">
+        [class.has-spinners]="type() === 'number'" [class.is-floating]="isFloating()">
 
-        <input class="bx-native-input" [attr.id]="inputId()" [attr.type]="type()"
-            [attr.placeholder]="resolvedPlaceholder()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()"
-            [attr.min]="min()" [attr.max]="max()" [attr.step]="step()" [disabled]="isDisabled()"
-            [value]="internalValue() ?? ''" (input)="onInput($event)" (blur)="onBlur()">
+        <div class="bx-input-container">
+            @if (label()) {
+            <label class="bx-floating-label" [attr.for]="inputId()">
+                {{ resolvedLabel() }}
+                @if (isFieldRequired()) { <span class="bx-field-required">*</span> }
+            </label>
+            }
+
+            <input class="bx-native-input" [attr.id]="inputId()" [attr.type]="type()"
+                [attr.placeholder]="isFloating() ? resolvedPlaceholder() : ''" [attr.data-testid]="dataTestId()"
+                [attr.aria-label]="ariaLabel()" [attr.min]="min()" [attr.max]="max()" [attr.step]="step()"
+                [disabled]="isDisabled()" [value]="internalValue() ?? ''" (input)="onInput($event)" (focus)="onFocus()"
+                (blur)="onBlur()">
+        </div>
 
         @if (type() === 'number') {
         <div class="bx-spinners-group">
@@ -28,5 +37,4 @@
         }
 
     </div>
-
 </bx-form-field>

@@ -9,6 +9,9 @@
     display: flex;
     flex-direction: column;
     gap: spacing(1);
+
+    position: relative;
+    padding-bottom: 1.5rem;
 }
 
 .bx-field-header {
@@ -56,16 +59,25 @@
     color: var(--bx-text-secondary);
 }
 
-.bx-field-error {
+.bx-field-error,
+.bx-field-error-projected {
     display: flex;
     align-items: center;
-    gap: spacing(1);
+    gap: spacing(2);
     font-size: 0.75rem;
     color: var(--bx-text-danger);
-    margin-top: 0.125rem;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
 
     &.bx-animated {
         animation: bx-slide-down 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    }
+
+    .bx-field-error-text {
+        color: var(--bx-text-danger);
     }
 }
 

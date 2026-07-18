@@ -1,9 +1,9 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
-import { Icon } from '@filip.mazev/blocks/icons';
 import { FormField } from '../form-field/form-field';
 import { InputFieldTypes } from '../../types/form.types';
+import { Icon } from '@filip.mazev/blocks/icons';
 
 @Component({
   selector: 'bx-input-field',
@@ -23,6 +23,16 @@ export class InputField extends BxBaseControl<any> {
   public readonly max = input<number | undefined>(undefined);
   public readonly step = input<number>(1);
 
+  protected readonly isFocused = signal<boolean>(false);
+
+  protected readonly isFloating = computed(() => {
+    const val = this.internalValue();
+    const hasValue = val !== null && val !== undefined && val !== '';
+    const isDateType = ['date', 'time', 'datetime-local'].includes(this.type());
+    
+    return this.isFocused() || hasValue || isDateType;
+  });
+
   private spinTimeout?: ReturnType<typeof setTimeout>;
   private spinInterval?: ReturnType<typeof setInterval>;
 
@@ -31,6 +41,13 @@ export class InputField extends BxBaseControl<any> {
     const p = this.placeholder();
     if (!p) return '';
     return isTextWithKey(p) ? (this.i18n?.translate(p.key) ?? p.key) : p;
+  });
+
+  protected readonly resolvedLabel = computed(() => {
+    this.i18n?.version?.();
+    const l = this.label();
+    if (!l) return '';
+    return isTextWithKey(l) ? (this.i18n?.translate(l.key) ?? l.key) : l;
   });
 
   protected onInput(event: Event): void {
@@ -42,8 +59,13 @@ export class InputField extends BxBaseControl<any> {
       
     this.updateValue(value);
   }
+ 
+  protected onFocus(): void {
+    this.isFocused.set(true);
+  }
 
   protected onBlur(): void {
+    this.isFocused.set(false);
     this.markAsTouched();
   }
 

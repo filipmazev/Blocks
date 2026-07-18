@@ -10,6 +10,9 @@ $required-theme-keys: (
     'bg-element',
     'bg-element-hover',
     'bg-element-active',
+    'bg-neutral',
+    'bg-neutral-hover',
+    'bg-neutral-active',
 
     'primary',
     'primary-hover',
@@ -93,6 +96,9 @@ $required-theme-keys: (
         'bg-element': get-color-from-palette('neutral', 100),
         'bg-element-hover': get-color-from-palette($surface-brand, 200),
         'bg-element-active': get-color-from-palette($surface-brand, 300),
+        'bg-neutral': get-color-from-palette('neutral', 100),
+        'bg-neutral-hover': get-color-from-palette('neutral', 50),
+        'bg-neutral-active': get-color-from-palette('neutral', 200),
 
         'primary': get-color-from-palette($accent, 500),
         'primary-hover': get-color-from-palette($accent, 600),
@@ -163,6 +169,9 @@ $merged-theme: map.merge($base, $overrides);
         'bg-element': get-color-from-palette('neutral', 800),
         'bg-element-hover': get-color-from-palette($surface-brand, 700),
         'bg-element-active': get-color-from-palette($surface-brand, 800),
+        'bg-neutral': get-color-from-palette('neutral', 900),
+        'bg-neutral-hover': get-color-from-palette('neutral', 800),
+        'bg-neutral-active': get-color-from-palette('neutral', 600),
 
         'primary': get-color-from-palette($accent, 500),
         'primary-hover': get-color-from-palette($accent, 400),
