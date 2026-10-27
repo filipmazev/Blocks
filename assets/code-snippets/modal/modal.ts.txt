@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { IDemoModalData } from '../interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '../interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
-import { Modal, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/modal';
+import { Modal, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/blocks/modal';
 
 @Component({
   selector: 'app-modal',

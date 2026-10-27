@@ -1,0 +1,1 @@
+var c={name:`check-square-2`,viewBox:`0 0 24 24`,svgContent:`<rect width="18" height="18" x="3" y="3" rx="2" /><path d="m16 9-5.5 5.5L8 12" />`};export{c as lucideCheckSquare2};

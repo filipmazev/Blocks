@@ -1,0 +1,1 @@
+var e={name:`chevrons-down`,viewBox:`0 0 24 24`,svgContent:`<path d="m7 6 5 5 5-5" /><path d="m7 13 5 5 5-5" />`};export{e as lucideChevronsDown};

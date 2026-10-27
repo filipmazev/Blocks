@@ -1,0 +1,1 @@
+var i={name:`align-justify`,viewBox:`0 0 24 24`,svgContent:`<path d="M3 5h18" /><path d="M3 12h18" /><path d="M3 19h18" />`};export{i as lucideAlignJustify};

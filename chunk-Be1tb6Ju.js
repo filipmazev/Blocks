@@ -1,0 +1,1 @@
+var t={name:`half-note`,viewBox:`0 0 24 24`,svgContent:`<circle cx="12" cy="18" r="4" /><path d="M16 18V2" />`};export{t as lucideHalfNote};

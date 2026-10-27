@@ -1,0 +1,1 @@
+var i={name:`wifi-zero`,viewBox:`0 0 24 24`,svgContent:`<path d="M12 20h.01" />`};export{i as lucideWifiZero};

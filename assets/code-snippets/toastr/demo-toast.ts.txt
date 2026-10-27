@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Toast } from '@filip.mazev/toastr';
+import { Toast } from '@filip.mazev/blocks/toastr';
 
 export interface IDemoToastData {
   title: string;

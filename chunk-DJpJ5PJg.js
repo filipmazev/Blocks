@@ -1,0 +1,1 @@
+var e={name:`handle-bottom-right`,viewBox:`0 0 24 24`,svgContent:`<path d="M21 8 8 21" /><path d="m21 15-6 6" />`};export{e as lucideHandleBottomRight};

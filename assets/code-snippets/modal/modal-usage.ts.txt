@@ -1,68 +1,33 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Button } from '@filip.mazev/blocks/forms';
+import { ModalService, ModalConfirmCloseGuard } from '@filip.mazev/blocks/modal';
 import { DemoModal } from './components/demo-modal/demo-modal';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
-import { IDemoModalData } from '../interfaces/modals/data/idemo-modal-data.interface';
-import { IDemoModalResult } from '../interfaces/modals/result/idemo-modal-result.interface';
-import { 
-    ModalService,
-    ModalConfirmCloseGuard,
-    IModalCloseResult,
-    MODAL_DEFAULT_ANIM_DURATION 
-} from '@filip.mazev/modal';
+import { IDemoModalData } from './idemo-modal-data.interface';
+import { IDemoModalResult } from './idemo-modal-result.interface';
 
 @Component({
-  selector: 'app-modal-usage',
-  imports: [],
-  templateUrl: './modal-usage.html',
-  styleUrl: './modal-usage.scss',
+  selector: 'app-modal-example',
+  imports: [Button],
+  template: `<button bx-button (click)="open()">Review changes</button>
+    <p role="status">{{ status() }}</p>`
 })
-export class Modal {
+export class ModalExample {
   private readonly modals = inject(ModalService);
-  private openedCount = 0;
+  protected readonly status = signal('');
 
-  constructor() {
-  }
-
-  protected openModal(): void {
-    const modal = this.modals.open<IDemoModalData, IDemoModalResult>(DemoModal, {
-      data: {
-        title: "The Lorem Ipsum Modal",
-        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        openedCount: this.openedCount
-      },
-      style: {
-        layout: 'right',
-        breakpoints: {
-          'sm': 'bottom-sheet',
-          'xl': 'center'
-        }
-      },
-
+  protected open(): void {
+    const ref = this.modals.open<IDemoModalData, IDemoModalResult>(DemoModal, {
+      header: { text: 'Workspace settings' },
+      data: { title: 'Review your changes', body: 'Confirm to apply the example.', openedCount: 0 },
+      style: { layout: 'center', breakpoints: { sm: 'bottom-sheet' } },
       closeGuard: new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
-        data: 'Are you sure you want to close the modal?',
-        header: {
-            text: 'Unsaved Changes'
-        },
-        style: {
-          showCloseButton: false
-        }
+        data: 'Discard your changes?',
+        header: { text: 'Unsaved changes' }
       })
     });
-
-    modal.afterClosed().subscribe((result: IModalCloseResult<IDemoModalResult | undefined>) => {
-      if (result.state === 'confirm' && result.data) {
-        this.openedCount = result.data.openedCount;
-        setTimeout(() => {
-          alert(`Confirmed for the ${this.getOrdinal(this.openedCount)} time`);
-        }, MODAL_DEFAULT_ANIM_DURATION);
-      }
+    ref.afterClosed().subscribe(result => {
+      this.status.set(result.state === 'confirm' ? 'Changes confirmed.' : 'Modal closed.');
     });
-
-  }
-
-  private getOrdinal(n: number): string {
-    const s = ["th", "st", "nd", "rd"];
-    const v = n % 100;
-    return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 }

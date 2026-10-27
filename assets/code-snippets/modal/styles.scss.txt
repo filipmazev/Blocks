@@ -1,16 +1,13 @@
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as bx;
-@use '@filip.mazev/modal/lib/styles/index' as modal;
+@use '@filip.mazev/blocks/core/styles/index' as bx;
+@import '@filip.mazev/blocks/effects/effects.css';
 
 :root {
-  @include bx.core-theme(bx.$orange-light-theme);
-  @include modal.modal-theme((
-    'bx-modal-bg': #ffffff,
-    'bx-modal-text': #000000,
-    'bx-modal-mobile-swipe-line-color': #f3f3f3
-  ));
-} 
-
-[data-theme="dark"] {
-  @include bx.core-theme(bx.$orange-dark-theme);
-  @include modal.modal-theme(());
+  @include bx.bx-theme(bx.$orange-light-theme);
 }
+
+[data-theme='dark'] {
+  @include bx.bx-theme(bx.$orange-dark-theme);
+}
+
+// Modal and toast surfaces use the shared semantic theme.
+// Configure material through ThemingService.setAppearance(...) application-wide.

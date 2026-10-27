@@ -1,31 +1,27 @@
 import { Component, inject } from '@angular/core';
-import { ToastrService } from '@filip.mazev/toastr';
+import { Button } from '@filip.mazev/blocks/forms';
+import { ToastrService } from '@filip.mazev/blocks/toastr';
 import { DemoToast } from './demo-toast';
 import { IDemoToastData } from './idemo-toast-data.interface';
+import { IDemoToastResult } from './idemo-toast-result.interface';
 
 @Component({
-  selector: 'app-my-feature',
-  template: `<button (click)="showToast()">Queue Toast</button>`
+  selector: 'app-toast-example',
+  imports: [Button],
+  template: `<button bx-button (click)="showToast()">Queue notification</button>`
 })
-export class MyFeatureComponent {
+export class ToastExample {
   private readonly toastr = inject(ToastrService);
 
-  public showToast(): void {
-    const toastRef = this.toastr.queueToast<IDemoToastData, undefined, DemoToast>(DemoToast, {
+  protected showToast(): void {
+    this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
       position: 'top-right',
       durationInMs: 5000,
       animate: true,
-      swipeToDismiss: true,
-      maxOpened: 4,
-      data: {
-        title: 'Action Successful',
-        message: 'Your item has been saved.',
-        type: 'success'
-      }
+      hasDefaultBackground: true,
+      data: { title: 'Saved', message: 'Your preferences have been saved.', openedCount: 0 }
     });
-
-    toastRef.afterClosed$.subscribe(() => {
-      console.log('Toast finished and removed from screen.');
-    });
+    // For an intent-styled notification, use:
+    // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
