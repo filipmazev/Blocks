@@ -13,7 +13,7 @@ npm ci
 npm start
 ```
 
-Open http://localhost:8080. The component catalogue links each component to its own demonstration and README. `/appearance` provides application-wide material controls and spatial-lighting and fade demonstrations. `/icon-catalog` provides searchable, paginated icons.
+Open <http://localhost:8080>. The component catalogue links each component to its own demonstration and README. `/appearance` provides application-wide material controls and spatial-lighting and fade demonstrations. `/icon-catalog` provides searchable, paginated icons.
 
 ```sh
 npm run build:playground
@@ -66,7 +66,6 @@ Blocks components receive glass automatically. The `BxSurfaceDirective` remains 
 </ng-template>
 ```
 
-
 Place custom surfaces on containers with measurable CSS boxes. Native replaced elements such as inputs and images need a wrapper for decoration; use the dedicated `SliderDirective` (`input[type=range][bxSlider]`) for native ranges; Blocks form components already provide appropriate wrappers. Nested surfaces retain tint and reflection while avoiding a second backdrop-filter pass.
 
 ## Overlay fades
@@ -113,7 +112,7 @@ npm run build:blocks
 python3 -m http.server 8081
 ```
 
-Open http://localhost:8081/projects/blocks/effects/examples/.
+Open <http://localhost:8081/projects/blocks/effects/examples/>.
 
 ## Lighting and rendering limits
 
@@ -124,13 +123,3 @@ These are deliberate optical approximations. The engine does not capture arbitra
 Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Solid, unsupported-backdrop, increased-contrast and reduced-transparency modes provide opaque material.
 
 Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing high blur or putting glass over frequently changing content.
-
-## Packaging and review
-
-All runtime and Angular effects code lives under `projects/blocks/effects` and is published in the single `@filip.mazev/blocks` package. Run `bash publish.sh` from the workspace root; it prompts for the npm token, bumps the patch version and builds before publishing. `npm run deploy:playground` builds and deploys to the existing GitHub Pages target.
-
-White is the default palette. The Appearance page also includes color and light/dark mode. In code, use `theme.setPalette('white')` and `theme.setApplicationTheme('dark')`. `ng add @filip.mazev/blocks --theme=white` installs its light and dark Sass theme maps; omitting the theme uses White. White uses a charcoal accent in light mode to retain visible focus indicators and text contrast.
-
-The root Playwright configuration and test-results folder have been removed. The regression scenarios remain under `tools/browser` as reference. See [VALIDATION.md](VALIDATION.md) for the checks and browser limitations.
-
-See [DELIVERY-PLAN.md](DELIVERY-PLAN.md) for epics, stories, tasks and ownership; [ACCEPTANCE.md](ACCEPTANCE.md) for component coverage and review status; and [VALIDATION.md](VALIDATION.md) for executed checks and environment limitations.

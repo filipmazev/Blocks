@@ -1,4 +1,4 @@
-import{$n as sh,Kt as db,Nt as Zn,Rn as p,Xn as re,Zt as ec,c as B,j as Ht,jn as nc,nr as tc,p as CC,tt as Q,x as FA}from"./chunk-DN1QduB0.js";var k={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{$n as sh,A as Ht,B as Kn,Mn as nc,Nt as Zn,Xn as re,Zt as ec,b as FA,f as CC,nr as tc,s as B,tt as Q,un as hs,zn as p}from"./chunk-D1oDGdse.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -85,11 +85,6 @@ python3 -m http.server 8081
 <p>These are deliberate optical approximations. The engine does not capture arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call <code>scene.refresh()</code> when your application changes them; there is no perpetual polling loop.</p>
 <p>Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Solid, unsupported-backdrop, increased-contrast and reduced-transparency modes provide opaque material.</p>
 <p>Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing high blur or putting glass over frequently changing content.</p>
-<h2>Packaging and review</h2>
-<p>All runtime and Angular effects code lives under <code>projects/blocks/effects</code> and is published in the single <code>@filip.mazev/blocks</code> package. Run <code>bash publish.sh</code> from the workspace root; it prompts for the npm token, bumps the patch version and builds before publishing. <code>npm run deploy:playground</code> builds and deploys to the existing GitHub Pages target.</p>
-<p>White is the default palette. The Appearance page also includes color and light/dark mode. In code, use <code>theme.setPalette(&#39;white&#39;)</code> and <code>theme.setApplicationTheme(&#39;dark&#39;)</code>. <code>ng add @filip.mazev/blocks --theme=white</code> installs its light and dark Sass theme maps; omitting the theme uses White. White uses a charcoal accent in light mode to retain visible focus indicators and text contrast.</p>
-<p>The root Playwright configuration and test-results folder have been removed. The regression scenarios remain under <code>tools/browser</code> as reference. See <a href="assets/documentation/appearance/VALIDATION.md">VALIDATION.md</a> for the checks and browser limitations.</p>
-<p>See <a href="assets/documentation/appearance/DELIVERY-PLAN.md">DELIVERY-PLAN.md</a> for epics, stories, tasks and ownership; <a href="assets/documentation/appearance/ACCEPTANCE.md">ACCEPTANCE.md</a> for component coverage and review status; and <a href="assets/documentation/appearance/VALIDATION.md">VALIDATION.md</a> for executed checks and environment limitations.</p>
 `,"documentation/core/README.md":`<h1>@filip.mazev/blocks-core</h1>
 <h2>Blocks - Core Library</h2>
 <p><strong>Blocks Core</strong> is the foundational library for the Blocks ecosystem. It provides the essential infrastructure for building responsive, theme-aware Angular applications. It bridges the gap between TypeScript logic and SCSS styling, offering a unified system for breakpoints, device detection, scroll management and theming.</p>
@@ -1165,7 +1160,7 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>Import</h2>
 <pre><code class="language-ts">import { BxError, FormField } from &#39;@filip.mazev/blocks/forms&#39;;
 </code></pre>
-<p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
+<p>Add the standalone component to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
 <pre><code class="language-html">&lt;bx-form-field label=&quot;Reference&quot; forId=&quot;reference&quot;&gt;
   &lt;input id=&quot;reference&quot; aria-describedby=&quot;reference-error&quot; /&gt;
@@ -1173,7 +1168,7 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 &lt;/bx-form-field&gt;
 </code></pre>
 <h2>API</h2>
-<p><code>BxError</code> is a marker directive with selector <code>bx-error</code>. It has no inputs; the form field projects it into its error region.</p>
+<p><code>BxError</code> is a content projection component with selector <code>bx-error</code>. It has no inputs; the form field projects it into its error region.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1188,7 +1183,7 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
-<p>Render only when validation should be shown. Tie the input to the error ID with <code>aria-describedby</code> and update <code>aria-invalid</code> as needed. This directive does not run validation.</p>
+<p>Render only when validation should be shown. Tie the input to the error ID with <code>aria-describedby</code> and update <code>aria-invalid</code> as needed. This component does not run validation.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/error</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/forms/directives/slider/README.md":`<h1>Slider</h1>
@@ -1303,7 +1298,7 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-modal-banner [header]=&quot;{ text: &#39;Project settings&#39; }&quot; [showCloseButton]=&quot;true&quot; (close)=&quot;dismiss($event)&quot; /&gt;
+<pre><code class="language-html">&lt;bx-modal-banner [header]=&quot;{ text: &#39;Project settings&#39; }&quot; [showCloseButton]=&quot;true&quot; (close)=&quot;handleClose($event)&quot; /&gt;
 </code></pre>
 <h2>API</h2>
 <p>Required inputs: <code>header</code> (header config or undefined), <code>showCloseButton</code> (boolean). <code>close</code> emits a modal close mode or undefined. Header supports text and an optional icon configuration.</p>
@@ -1741,7 +1736,7 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <p>Write a concise message with a clear outcome. Use a modal or an inline message when acknowledgement or a long interaction is required. Simple toast content shares the parent toast glass surface.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/simple-toast</code> for a working example and its current value or action result.</p>
-`};var x={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var A={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
+`};var w={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
 
@@ -1757,7 +1752,8 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
     & button {
         cursor: pointer;
     }
-}`,"assets/code-snippets/modal/confirm-close-modal.ts.txt":`import { Component, ChangeDetectionStrategy } from '@angular/core';
+}
+`,"assets/code-snippets/modal/confirm-close-modal.ts.txt":`import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Modal } from '@filip.mazev/blocks/modal';
 import { ModalFooterDirective } from '@filip.mazev/blocks/modal';
@@ -1853,7 +1849,8 @@ export class ModalExample {
     & button {
         cursor: pointer;
     }
-}`,"assets/code-snippets/modal/modal.ts.txt":`import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+}
+`,"assets/code-snippets/modal/modal.ts.txt":`import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
@@ -1904,11 +1901,36 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
         <p class="notification-message">{{ data.message }}</p>
     </div>
 </div>`,"assets/code-snippets/toastr/demo-toast.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
+
 // The ToastCore owns the material. Keep projected toast content transparent.
-.notification { display: flex; position: relative; padding: spacing(4); min-height: 2.5rem; color: var(--bx-text-primary); }
-.notification-content { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; flex: 1; padding-right: spacing(6); }
-.notification-title { margin: 0 0 spacing(1); font-size: 1rem; font-weight: 600; }
-.notification-message { margin: 0; font-size: .875rem; line-height: 1.5; }
+.notification {
+    display: flex;
+    position: relative;
+    padding: spacing(4);
+    min-height: 2.5rem;
+    color: var(--bx-text-primary);
+}
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    padding-right: spacing(6);
+}
+
+.notification-title {
+    margin: 0 0 spacing(1);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notification-message {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
 `,"assets/code-snippets/toastr/demo-toast.ts.txt":`import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
@@ -1954,4 +1976,4 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var w=class c{document=p(B);router=p(Ht);readmeContent=Q(()=>{let e=this.path().replace(/^\/+/,``);return k[x[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=re.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let d=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(d)&&(e.preventDefault(),this.router.navigateByUrl(`/${d}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||c)};static ɵcmp=Zn({type:c,selectors:[[`app-readme`]],inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`click`,`innerHTML`]],template:function(n,o){n&1&&(ec(0,`div`,0)(1,`div`,1)(2,`span`),FA(3,`Documentation`),tc()(),ec(4,`article`,2),db(`click`,function(a){return o.navigateDocumentation(a)}),tc()()),n&2&&(CC(4),nc(`innerHTML`,o.readmeContent(),sh))},styles:[`[_nghost-%COMP%]{display:block;min-width:0}.readme-container[_ngcontent-%COMP%]{min-width:0}.readme-header[_ngcontent-%COMP%]{font-size:.75rem;color:var(--%NS%bx-text-secondary);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.75rem;border-bottom:1px solid var(--%NS%bx-border-default)}.readme-content[_ngcontent-%COMP%]{min-width:0;color:var(--%NS%bx-text-primary);line-height:1.7;overflow-wrap:anywhere}.readme-content[_ngcontent-%COMP%]     h1{font-size:1.75rem;margin-top:1.5rem}.readme-content[_ngcontent-%COMP%]     h2{font-size:1.375rem;padding-top:1.5rem;border-top:1px solid var(--%NS%bx-border-default)}.readme-content[_ngcontent-%COMP%]     h3{font-size:1.125rem;margin-top:1.5rem}.readme-content[_ngcontent-%COMP%]     p{margin-bottom:1rem}.readme-content[_ngcontent-%COMP%]     ul, .readme-content[_ngcontent-%COMP%]     ol{padding-left:1.5rem}.readme-content[_ngcontent-%COMP%]     li{margin-bottom:.5rem}.readme-content[_ngcontent-%COMP%]     img{max-width:100%;height:auto}.readme-content[_ngcontent-%COMP%]     table{display:block;max-width:100%;width:max-content;overflow-x:auto;border-collapse:collapse;font-size:.875rem;margin-block:1rem}.readme-content[_ngcontent-%COMP%]     th, .readme-content[_ngcontent-%COMP%]     td{padding:.5rem .75rem;border:1px solid var(--%NS%bx-border-default);text-align:left;vertical-align:top}.readme-content[_ngcontent-%COMP%]     th{background:var(--%NS%bx-bg-surface-alt)}.readme-content[_ngcontent-%COMP%]     code{padding:.15em .35em;border-radius:.25rem;background:var(--%NS%bx-bg-surface-alt);font-size:.85em}.readme-content[_ngcontent-%COMP%]     pre{max-width:100%;overflow-x:auto;border:1px solid var(--%NS%bx-border-default);background:var(--%NS%bx-bg-surface);border-radius:.5rem;padding:1rem;line-height:1.6}.readme-content[_ngcontent-%COMP%]     pre code{background:transparent;padding:0;white-space:pre}.readme-content[_ngcontent-%COMP%]     blockquote{margin-inline:0;padding-left:1rem;border-left:3px solid var(--%NS%bx-border-brand);color:var(--%NS%bx-text-secondary)}`]})};export{w as n,A as t};
+`};var A=class r{document=p(B);router=p(Ht);readmeContent=Q(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=re.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=Zn({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Kn(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(ec(0,`div`,0)(1,`div`,1)(2,`span`),FA(3,`Documentation`),tc()(),hs(4,`article`,2),tc()),t&2&&(CC(4),nc(`innerHTML`,o.readmeContent(),sh))},styles:[`[_nghost-%COMP%]{display:block;min-width:0}.readme-container[_ngcontent-%COMP%]{min-width:0}.readme-header[_ngcontent-%COMP%]{font-size:.75rem;color:var(--%NS%bx-text-secondary);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.75rem;border-bottom:1px solid var(--%NS%bx-border-default)}.readme-content[_ngcontent-%COMP%]{min-width:0;color:var(--%NS%bx-text-primary);line-height:1.7;overflow-wrap:anywhere}.readme-content[_ngcontent-%COMP%]     h1{font-size:1.75rem;margin-top:1.5rem}.readme-content[_ngcontent-%COMP%]     h2{font-size:1.375rem;padding-top:1.5rem;border-top:1px solid var(--%NS%bx-border-default)}.readme-content[_ngcontent-%COMP%]     h3{font-size:1.125rem;margin-top:1.5rem}.readme-content[_ngcontent-%COMP%]     p{margin-bottom:1rem}.readme-content[_ngcontent-%COMP%]     ul, .readme-content[_ngcontent-%COMP%]     ol{padding-left:1.5rem}.readme-content[_ngcontent-%COMP%]     li{margin-bottom:.5rem}.readme-content[_ngcontent-%COMP%]     img{max-width:100%;height:auto}.readme-content[_ngcontent-%COMP%]     table{display:block;max-width:100%;width:max-content;overflow-x:auto;border-collapse:collapse;font-size:.875rem;margin-block:1rem}.readme-content[_ngcontent-%COMP%]     th, .readme-content[_ngcontent-%COMP%]     td{padding:.5rem .75rem;border:1px solid var(--%NS%bx-border-default);text-align:left;vertical-align:top}.readme-content[_ngcontent-%COMP%]     th{background:var(--%NS%bx-bg-surface-alt)}.readme-content[_ngcontent-%COMP%]     code{padding:.15em .35em;border-radius:.25rem;background:var(--%NS%bx-bg-surface-alt);font-size:.85em}.readme-content[_ngcontent-%COMP%]     pre{max-width:100%;overflow-x:auto;border:1px solid var(--%NS%bx-border-default);background:var(--%NS%bx-bg-surface);border-radius:.5rem;padding:1rem;line-height:1.6}.readme-content[_ngcontent-%COMP%]     pre code{background:transparent;padding:0;white-space:pre}.readme-content[_ngcontent-%COMP%]     blockquote{margin-inline:0;padding-left:1rem;border-left:3px solid var(--%NS%bx-border-brand);color:var(--%NS%bx-text-secondary)}`]})};export{S as n,A as t};
