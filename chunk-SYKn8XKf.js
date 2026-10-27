@@ -1,4 +1,4 @@
-import{$n as sh,A as Ht,B as Kn,Mn as nc,Nt as Zn,Xn as re,Zt as ec,b as FA,f as CC,nr as tc,s as B,tt as Q,un as hs,zn as p}from"./chunk-D1oDGdse.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{$n as sh,A as Ht,B as Kn,Mn as nc,Nt as Zn,Xn as re,Zt as ec,b as FA,f as CC,nr as tc,s as B,tt as Q,un as hs,zn as p}from"./chunk-BTQvnuSt.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -23,7 +23,7 @@ export class Settings {
     this.theme.setAppearance({
       material: &#39;glass&#39;,
       blur: 10,
-      tint: 0.4,
+      tint: 0.5,
       quality: &#39;auto&#39;,
     });
   }
@@ -58,7 +58,7 @@ export class Settings {
 import &#39;@filip.mazev/blocks/effects/effects.css&#39;;
 
 const configuration = configureAppearance(document.documentElement, {
-  material: &#39;glass&#39;, blur: 10, tint: 0.4, quality: &#39;auto&#39;,
+  material: &#39;glass&#39;, blur: 10, tint: 0.5, quality: &#39;auto&#39;,
 });
 const surface = mountSurface(button);
 const scene = mountGlassScene(container, {
@@ -699,7 +699,7 @@ export class MyFeatureComponent {
 }
 </code></pre>
 <h2>Appearance</h2>
-<p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
+<p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
 <p>Load <code>@filip.mazev/blocks/effects/effects.css</code> once globally alongside the Blocks Sass theme. <code>ng add</code> registers the stylesheet for new installations. <code>BxSurfaceDirective</code> from <code>@filip.mazev/blocks/effects</code> is available for custom containers and local overrides. The framework-independent engine is <code>@filip.mazev/blocks/effects/runtime</code>, included in the same package.</p>
 <p>The source playground provides a dedicated README and working page for every component, with global appearance controls at <code>/appearance</code>.</p>
 `,"projects/blocks/effects/README.md":`<h1>Appearance effects</h1>
@@ -713,7 +713,7 @@ private readonly theme = inject(ThemingService);
 this.theme.setAppearance({
   material: &#39;glass&#39;,  // glass | frosted | solid
   blur: 10,           // 0\u201340 pixels
-  tint: 0.4,         // 0\u20131 opacity
+  tint: 0.5,         // 0\u20131 opacity
   quality: &#39;auto&#39;,    // auto | baseline | enhanced
   reducedTransparency: false
 });
@@ -798,7 +798,7 @@ this.theme.resetAppearance();
 import { configureAppearance, mountSurface, createGlassTransition } from &#39;@filip.mazev/blocks/effects/runtime&#39;;
 
 const config = configureAppearance(document.documentElement, {
-  material: &#39;glass&#39;, blur: 10, tint: .4,
+  material: &#39;glass&#39;, blur: 10, tint: 0.5,
   quality: &#39;auto&#39;,
 });
 const buttonSkin = mountSurface(button);
@@ -935,7 +935,7 @@ scene.destroy();
 <p><code>variant</code>: text, filled, tonal, icon, fab, mini-fab, extended-fab. <code>color</code>: primary, success, danger, info, warn, grayscale. <code>outlined</code>, <code>elevated</code>, <code>disabled</code>, and <code>interactive</code> control presentation and availability.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<p>Buttons automatically illuminate their border and nearby glass on hover, press and keyboard focus. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, <code>aria-expanded=&quot;true&quot;</code>, or a current <code>aria-current</code> value. Primary and grayscale buttons use the application&#39;s accent; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.</p>
+<p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, <code>aria-expanded=&quot;true&quot;</code>, or a current <code>aria-current</code> value. Primary and grayscale buttons use the application&#39;s accent; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.</p>
 <p>Filled buttons retain their semantic background and paired foreground color in glass, frosted and solid materials, including hover and press. Glass and frosted fills keep a minimum tint for readable text while retaining translucency and surface lighting. Text buttons have no background, border, shadow or backdrop blur in any material; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
@@ -943,7 +943,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -971,7 +971,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1001,7 +1001,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1030,7 +1030,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1060,7 +1060,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1089,7 +1089,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1118,7 +1118,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1146,7 +1146,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1177,7 +1177,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1214,7 +1214,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1248,7 +1248,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1282,7 +1282,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1310,7 +1310,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1344,7 +1344,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1378,7 +1378,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1412,7 +1412,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1440,7 +1440,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1468,7 +1468,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1496,7 +1496,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1515,7 +1515,7 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <pre><code class="language-html">&lt;bx-menu-item label=&quot;Delete&quot; icon=&quot;trash-2&quot; [danger]=&quot;true&quot; (action)=&quot;remove()&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, and <code>danger</code>. <code>action</code> emits the mouse event for enabled items.</p>
+<p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, <code>danger</code>, and <code>wrapLabel</code>. Set <code>wrapLabel</code> to <code>true</code> when a menu item should wrap long content instead of truncating it. <code>action</code> emits the mouse event for enabled items.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1524,7 +1524,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1555,7 +1555,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1583,7 +1583,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1612,7 +1612,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1643,7 +1643,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1671,7 +1671,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1699,7 +1699,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1727,7 +1727,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: &#39;solid&#39; });
 </code></pre>
@@ -1976,4 +1976,97 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var A=class r{document=p(B);router=p(Ht);readmeContent=Q(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=re.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=Zn({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Kn(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(ec(0,`div`,0)(1,`div`,1)(2,`span`),FA(3,`Documentation`),tc()(),hs(4,`article`,2),tc()),t&2&&(CC(4),nc(`innerHTML`,o.readmeContent(),sh))},styles:[`[_nghost-%COMP%]{display:block;min-width:0}.readme-container[_ngcontent-%COMP%]{min-width:0}.readme-header[_ngcontent-%COMP%]{font-size:.75rem;color:var(--%NS%bx-text-secondary);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.75rem;border-bottom:1px solid var(--%NS%bx-border-default)}.readme-content[_ngcontent-%COMP%]{min-width:0;color:var(--%NS%bx-text-primary);line-height:1.7;overflow-wrap:anywhere}.readme-content[_ngcontent-%COMP%]     h1{font-size:1.75rem;margin-top:1.5rem}.readme-content[_ngcontent-%COMP%]     h2{font-size:1.375rem;padding-top:1.5rem;border-top:1px solid var(--%NS%bx-border-default)}.readme-content[_ngcontent-%COMP%]     h3{font-size:1.125rem;margin-top:1.5rem}.readme-content[_ngcontent-%COMP%]     p{margin-bottom:1rem}.readme-content[_ngcontent-%COMP%]     ul, .readme-content[_ngcontent-%COMP%]     ol{padding-left:1.5rem}.readme-content[_ngcontent-%COMP%]     li{margin-bottom:.5rem}.readme-content[_ngcontent-%COMP%]     img{max-width:100%;height:auto}.readme-content[_ngcontent-%COMP%]     table{display:block;max-width:100%;width:max-content;overflow-x:auto;border-collapse:collapse;font-size:.875rem;margin-block:1rem}.readme-content[_ngcontent-%COMP%]     th, .readme-content[_ngcontent-%COMP%]     td{padding:.5rem .75rem;border:1px solid var(--%NS%bx-border-default);text-align:left;vertical-align:top}.readme-content[_ngcontent-%COMP%]     th{background:var(--%NS%bx-bg-surface-alt)}.readme-content[_ngcontent-%COMP%]     code{padding:.15em .35em;border-radius:.25rem;background:var(--%NS%bx-bg-surface-alt);font-size:.85em}.readme-content[_ngcontent-%COMP%]     pre{max-width:100%;overflow-x:auto;border:1px solid var(--%NS%bx-border-default);background:var(--%NS%bx-bg-surface);border-radius:.5rem;padding:1rem;line-height:1.6}.readme-content[_ngcontent-%COMP%]     pre code{background:transparent;padding:0;white-space:pre}.readme-content[_ngcontent-%COMP%]     blockquote{margin-inline:0;padding-left:1rem;border-left:3px solid var(--%NS%bx-border-brand);color:var(--%NS%bx-text-secondary)}`]})};export{S as n,A as t};
+`};var A=class s{document=p(B);router=p(Ht);readmeContent=Q(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=re.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||s)};static ɵcmp=Zn({type:s,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Kn(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(ec(0,`div`,0)(1,`div`,1)(2,`span`),FA(3,`Documentation`),tc()(),hs(4,`article`,2),tc()),t&2&&(CC(4),nc(`innerHTML`,o.readmeContent(),sh))},styles:[`
+[_nghost-%COMP%] {
+  display: block;
+  min-width: 0;
+}
+.readme-container[_ngcontent-%COMP%] {
+  min-width: 0;
+}
+.readme-header[_ngcontent-%COMP%] {
+  font-size: 0.75rem;
+  color: var(--%NS%bx-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--%NS%bx-border-default);
+}
+.readme-content[_ngcontent-%COMP%] {
+  min-width: 0;
+  color: var(--%NS%bx-text-primary);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.readme-content[_ngcontent-%COMP%]     h1 {
+  font-size: 1.75rem;
+  margin-top: 1.5rem;
+}
+.readme-content[_ngcontent-%COMP%]     h2 {
+  font-size: 1.375rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--%NS%bx-border-default);
+}
+.readme-content[_ngcontent-%COMP%]     h3 {
+  font-size: 1.125rem;
+  margin-top: 1.5rem;
+}
+.readme-content[_ngcontent-%COMP%]     p {
+  margin-bottom: 1rem;
+}
+.readme-content[_ngcontent-%COMP%]     ul, 
+.readme-content[_ngcontent-%COMP%]     ol {
+  padding-left: 1.5rem;
+}
+.readme-content[_ngcontent-%COMP%]     li {
+  margin-bottom: 0.5rem;
+}
+.readme-content[_ngcontent-%COMP%]     img {
+  max-width: 100%;
+  height: auto;
+}
+.readme-content[_ngcontent-%COMP%]     table {
+  display: block;
+  max-width: 100%;
+  width: max-content;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-block: 1rem;
+}
+.readme-content[_ngcontent-%COMP%]     th, 
+.readme-content[_ngcontent-%COMP%]     td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--%NS%bx-border-default);
+  text-align: left;
+  vertical-align: top;
+}
+.readme-content[_ngcontent-%COMP%]     th {
+  background: var(--%NS%bx-bg-surface-alt);
+}
+.readme-content[_ngcontent-%COMP%]     code {
+  padding: 0.15em 0.35em;
+  border-radius: 0.25rem;
+  background: var(--%NS%bx-bg-surface-alt);
+  font-size: 0.85em;
+}
+.readme-content[_ngcontent-%COMP%]     pre {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--%NS%bx-border-default);
+  background: var(--%NS%bx-bg-surface);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  line-height: 1.6;
+}
+.readme-content[_ngcontent-%COMP%]     pre code {
+  background: transparent;
+  padding: 0;
+  white-space: pre;
+}
+.readme-content[_ngcontent-%COMP%]     blockquote {
+  margin-inline: 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--%NS%bx-border-brand);
+  color: var(--%NS%bx-text-secondary);
+}`]})};export{S as n,A as t};

@@ -1,0 +1,225 @@
+import{$ as Pk,B as Kn,F as Jl,Fn as ob,In as oc,K as Mb,M as In,Mt as Zc,Nt as Zn,Ot as YA,P as JT,Pn as oA,Rt as ab,S as Fl,Sn as lA,Tn as ly,Ut as cy,Wn as qM,Zn as rn,_ as E,b as FA,bt as WT,cr as v8,dn as ic,dr as x8,en as fA,f as CC,ft as Tn,gt as Us,hn as jh,ht as Uh,i as $h,jt as ZT,kt as Ye$1,mt as UM,nt as QA,rt as QT,sn as h8,st as R_,tt as Q,ut as Tb,v as E_,vn as jw,x as Fk,xt as XT,yt as WA,zn as p,zt as bw}from"./chunk-BTQvnuSt.js";import{_ as Se,b as X,c as K,d as Ee,f as J$1,g as Pe$1,h as Oe$1,i as j,l as Z,m as K$1,n as le,o as e,r as L$1,s as J,t as S,u as De$1,v as Z$1,y as ee}from"./main-UZ7SQ7UX.js";import{t as A}from"./chunk-SYKn8XKf.js";import{a as nn,i as fe,n as Ze$1,r as en,t as V}from"./chunk-CsGVw61a.js";import{n as ft}from"./chunk-CLOnW0rI.js";function De(o,c){if(o&1&&(Fl(0,`div`)(1,`strong`),FA(2),jh()()),o&2){let e=lA();CC(2),Mb(e.data.title)}}function Ve(o,c){if(o&1){let e=oA();Fl(0,`div`,4)(1,`button`,5),Kn(`click`,function(){ly(e);let t=lA();return cy(t.close())}),FA(2,`Cancel`),jh(),Fl(3,`button`,6),Kn(`click`,function(){ly(e);let t=lA();return cy(t.confirm())}),FA(4,`Save changes`),jh()()}}var Me=()=>({required:`Enter a project name.`});var Te=()=>({email:`Enter a valid email address.`});var Pe=()=>({name:`settings`});var Oe=o=>({text:`Project settings`,icon:o});function Ne(o,c){if(o&1){let e=oA();Fl(0,`div`,14)(1,`div`,17)(2,`button`,26),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Primary action`))}),FA(3,`Primary action`),jh(),Fl(4,`button`,27),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Tonal action`))}),FA(5,`Tonal`),jh(),Fl(6,`button`,28),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Text action`))}),FA(7,`Text`),jh(),Fl(8,`button`,29),FA(9,`Disabled`),jh()(),Fl(10,`div`,17)(11,`button`,30),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Success`))}),FA(12,`Success`),jh(),Fl(13,`button`,31),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Warning`))}),FA(14,`Warning`),jh(),Fl(15,`button`,32),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Delete`))}),FA(16,`Delete`),jh(),Fl(17,`button`,33),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Add item`))}),Jl(18,`bx-icon`,34),jh()()()}o&2&&(CC(8),ab(`disabled`,!0))}function Ie(o,c){if(o&1&&(Fl(0,`div`,14)(1,`bx-checkbox`,35),UM(),jh(),Fl(2,`bx-checkbox`,36),UM(),jh(),Fl(3,`bx-checkbox`,37),UM(),jh(),Fl(4,`output`),FA(5),jh()()),o&2){let e=lA();CC(),ab(`formControl`,e.checked),qM(),CC(),ab(`formControl`,e.secondChecked),qM(),CC(),ab(`formControl`,e.disabledCheck),qM(),CC(2),Tb(`Updates: `,e.checked.value?`on`:`off`,` · Previews: `,e.secondChecked.value?`on`:`off`)}}function qe(o,c){if(o&1){let e=oA();Fl(0,`div`,15)(1,`bx-form-field`,38)(2,`span`,39)(3,`input`,40),Kn(`input`,function(t){ly(e);let C=lA();return cy(C.updateField(t))})(`blur`,function(){ly(e);let t=lA();return cy(t.showError.set(!0))}),jh()()(),Fl(4,`button`,27),Kn(`click`,function(){ly(e);let t=lA();return cy(t.showError.set(!0))}),FA(5,`Validate name`),jh(),Fl(6,`output`),FA(7),jh()()}if(o&2){let e=lA();CC(),ab(`required`,!0)(`error`,e.fieldError()),CC(2),ab(`value`,e.fieldValue()),Tn(`aria-invalid`,!!e.fieldError()),CC(4),$h(`Value: `,e.fieldValue()||`empty`)}}function Be(o,c){if(o&1&&(Fl(0,`div`,15)(1,`bx-input-field`,41),UM(),jh(),Fl(2,`bx-input-field`,42),UM(),jh(),Fl(3,`bx-input-field`,43),UM(),jh(),Fl(4,`output`),FA(5),jh()()),o&2){let e=lA();CC(),ab(`errorMessages`,WA(9,Me))(`formControl`,e.name),qM(),CC(),ab(`errorMessages`,WA(10,Te))(`formControl`,e.email),qM(),CC(),ab(`min`,1)(`max`,20)(`formControl`,e.quantity),qM(),CC(2),Tb(``,e.name.value,` · `,e.quantity.value,` members`)}}function Fe(o,c){if(o&1){let e=oA();Fl(0,`fieldset`,14)(1,`legend`),FA(2,`Notification frequency`),jh(),Fl(3,`bx-radio`,44),UM(),jh(),Fl(4,`bx-radio`,45),UM(),jh(),Fl(5,`bx-radio`,46),UM(),jh(),Fl(6,`output`),FA(7),jh(),Fl(8,`button`,28),Kn(`click`,function(){ly(e);let t=lA();return cy(t.frequency.reset())}),FA(9,`Reset frequency`),jh()()}if(o&2){let e=lA();CC(3),ab(`formControl`,e.frequency),qM(),CC(),ab(`formControl`,e.frequency),qM(),CC(),ab(`formControl`,e.frequency),qM(),CC(2),$h(`Selected: `,e.frequency.value)}}function je(o,c){if(o&1&&(Fl(0,`li`),FA(1),jh()),o&2){let e=c.$implicit;CC(),Mb(e)}}function Re(o,c){o&1&&(Fl(0,`li`),FA(1,`No components match your search.`),jh())}function ze(o,c){if(o&1){let e=oA();Fl(0,`div`,15)(1,`bx-search-input`,47),UM(),Kn(`search`,function(t){ly(e);let C=lA();return cy(C.searchTerm.set(t))}),jh(),Fl(2,`ul`,48),QT(3,je,2,1,`li`,null,XT,!1,Re,2,0,`li`),jh(),Fl(6,`output`),FA(7),jh()()}if(o&2){let e=lA();CC(),ab(`formControl`,e.query),qM(),CC(2),JT(e.searchResults()),CC(4),$h(``,e.searchResults().length,` results`)}}function Ae(o,c){if(o&1&&(Fl(0,`div`,15)(1,`bx-select`,49),UM(),jh(),Fl(2,`output`),FA(3),jh()()),o&2){let e=lA();CC(),ab(`options`,e.options)(`isSearchable`,!0)(`formControl`,e.destination),qM(),CC(2),$h(`Selected: `,e.destination.value)}}function Le(o,c){if(o&1){let e=oA();Fl(0,`div`,15)(1,`label`,50),FA(2,`Volume`),jh(),Fl(3,`input`,51),UM(),jh(),Fl(4,`output`),FA(5),jh(),Fl(6,`button`,28),Kn(`click`,function(){ly(e);let t=lA();return cy(t.volume.setValue(50))}),FA(7,`Reset volume`),jh(),Fl(8,`label`,52),FA(9,`Unavailable range`),jh(),Jl(10,`input`,53),jh()}if(o&2){let e=lA();CC(3),ab(`formControl`,e.volume),qM(),CC(2),$h(``,e.volume.value,`%`)}}function Ue(o,c){if(o&1&&(Fl(0,`div`,14)(1,`bx-slide-toggle`,54),UM(),jh(),Fl(2,`bx-slide-toggle`,37),UM(),jh(),Fl(3,`output`),FA(4),jh()()),o&2){let e=lA();CC(),ab(`formControl`,e.enabled),qM(),CC(),ab(`formControl`,e.disabledCheck),qM(),CC(2),$h(`Notifications are `,e.enabled.value?`enabled`:`disabled`,`.`)}}function He(o,c){if(o&1&&(Fl(0,`bx-error`,57),FA(1),jh()),o&2){let e=lA(2);CC(),Mb(e.fieldError())}}function We(o,c){if(o&1){let e=oA();Fl(0,`div`,15)(1,`bx-form-field`,55)(2,`span`,39)(3,`input`,56),Kn(`input`,function(t){ly(e);let C=lA();return cy(C.updateField(t))})(`blur`,function(){ly(e);let t=lA();return cy(t.showError.set(!0))}),jh()(),WT(4,He,2,1,`bx-error`,57),jh(),Fl(5,`button`,27),Kn(`click`,function(){ly(e);let t=lA();return cy(t.showError.set(!0))}),FA(6,`Validate reference`),jh()()}if(o&2){let e=lA();CC(3),ab(`value`,e.fieldValue()),Tn(`aria-invalid`,!!e.fieldError())(`aria-describedby`,e.fieldError()?`custom-error`:null),CC(),ZT(e.fieldError()?4:-1)}}function Qe(o,c){if(o&1){let e=oA();Fl(0,`bx-menu`,16)(1,`bx-menu-item`,58),Kn(`action`,function(){ly(e);let t=lA();return cy(t.activate(`Project duplicated`))}),jh(),Fl(2,`bx-menu-item`,59),Kn(`action`,function(){ly(e);let t=lA();return cy(t.activate(`Project archived`))}),jh(),Jl(3,`bx-menu-item`,60),jh()}o&2&&(CC(3),ab(`disabled`,!0))}function $e(o,c){if(o&1){let e=oA();Fl(0,`bx-menu`,16)(1,`bx-menu-item`,61),Kn(`action`,function(){ly(e);let t=lA();return cy(t.activate(`Copy link`))}),jh(),Fl(2,`bx-menu-item`,62),Kn(`action`,function(){ly(e);let t=lA();return cy(t.activate(`Open settings`))}),jh(),Fl(3,`bx-menu-item`,63),Kn(`action`,function(){ly(e);let t=lA();return cy(t.activate(`Delete requested`))}),jh(),Jl(4,`bx-menu-item`,60),jh()}o&2&&(CC(3),ab(`danger`,!0),CC(),ab(`disabled`,!0))}function Xe(o,c){o&1&&(Fl(0,`div`,14),Jl(1,`bx-tooltip`,64),Fl(2,`p`),FA(3,`Standalone tooltip content. Use the trigger directive for positioned help.`),jh(),Fl(4,`a`,65),FA(5,`Try the tooltip trigger`),jh()())}function Ye(o,c){if(o&1){let e=oA();Fl(0,`div`,17)(1,`button`,66),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Saved`))}),FA(2,`Hover or focus for help`),jh(),Fl(3,`button`,67),Jl(4,`bx-icon`,68),jh()()}}function Ke(o,c){if(o&1){let e=oA();Fl(0,`bx-menu`)(1,`bx-menu-item`,71),Kn(`action`,function(){ly(e),lA();let t=fA(2);return lA().activate(`Project duplicated`),cy(t.close())}),jh(),Fl(2,`bx-menu-item`,72),Kn(`action`,function(){ly(e),lA();let t=fA(2);return lA().activate(`Project archived`),cy(t.close())}),jh(),Fl(3,`bx-menu-item`,73),Kn(`action`,function(){ly(e),lA();let t=fA(2);return lA().activate(`Delete requested`),cy(t.close())}),jh()()}o&2&&(CC(3),ab(`danger`,!0))}function Ge(o,c){if(o&1&&(Fl(0,`div`,14)(1,`button`,69,0),FA(3,`Project actions `),Jl(4,`bx-icon`,70),jh(),ob(5,Ke,4,1,`ng-template`,null,1,QA),Fl(7,`output`),FA(8),jh(),Fl(9,`p`),FA(10,`Open, close, or reopen while the menu fades. Its contents keep their full size throughout.`),jh()()),o&2){let e=fA(2),a=fA(6);CC(),ab(`bxDropdown`,a),CC(7),$h(`Transition: `,e.state())}}function Je(o,c){if(o&1){let e=oA();Fl(0,`bx-menu`)(1,`bx-menu-item`,75),Kn(`action`,function(){ly(e);let t=lA(2);return cy(t.activate(`Selection copied`))}),jh(),Fl(2,`bx-menu-item`,76),Kn(`action`,function(){ly(e);let t=lA(2);return cy(t.activate(`Selection archived`))}),jh()()}}function Ze(o,c){if(o&1){let e=oA();Fl(0,`div`,14)(1,`div`,74),FA(2,`Right-click here, or press Shift + F10.`),jh(),Fl(3,`button`,27),Kn(`click`,function(t){ly(e);let C=lA();return cy(C.openContextMenu(t))}),FA(4,`Open actions`),jh(),ob(5,Je,3,0,`ng-template`,null,2,QA),jh()}if(o&2){let e=fA(6);CC(),ab(`bxContextMenu`,e)}}function et(o,c){o&1&&(Fl(0,`div`,14),Jl(1,`bx-breadcrumbs`,77),Fl(2,`p`),FA(3,`This trail comes from the current route metadata. Select Components to navigate back.`),jh(),Fl(4,`a`,78),FA(5,`Navigate to Button`),jh()()),o&2&&(CC(),ab(`minimumBreadcrumbs`,1))}function tt(o,c){o&1&&(Fl(0,`div`,14)(1,`div`,79),Jl(2,`bx-icon`,80)(3,`bx-icon`,81)(4,`bx-icon`,82)(5,`bx-icon`,83)(6,`bx-icon`,84),jh(),Fl(7,`a`,85),FA(8,`Browse the searchable icon catalog`),jh()()),o&2&&(CC(2),ab(`decorative`,!1))}function nt(o,c){if(o&1){let e=oA();Fl(0,`bx-modal-banner`,88),Kn(`close`,function(){ly(e);let t=lA(2);return t.bannerVisible.set(!1),cy(t.activate(`Banner dismissed`))}),jh()}o&2&&ab(`header`,YA(3,Oe,WA(2,Pe)))(`showCloseButton`,!0)}function it(o,c){if(o&1){let e=oA();Fl(0,`button`,27),Kn(`click`,function(){ly(e);let t=lA(2);return cy(t.bannerVisible.set(!0))}),FA(1,`Restore banner`),jh()}}function ot(o,c){if(o&1){let e=oA();Fl(0,`div`,18),WT(1,nt,1,5,`bx-modal-banner`,86)(2,it,2,0,`button`,87),Fl(3,`button`,26),Kn(`click`,function(){ly(e);let t=lA();return cy(t.openModal())}),FA(4,`See banner in a dialog`),jh()()}if(o&2){let e=lA();CC(),ZT(e.bannerVisible()?1:2)}}function rt(o,c){if(o&1){let e=oA();Fl(0,`div`,14)(1,`div`,17)(2,`button`,89),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`success`))}),FA(3,`Success`),jh(),Fl(4,`button`,90),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`info`))}),FA(5,`Information`),jh(),Fl(6,`button`,31),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`warn`))}),FA(7,`Warning`),jh(),Fl(8,`button`,32),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`danger`))}),FA(9,`Error`),jh()(),Fl(10,`p`),FA(11,`The toast host manages the progress indicator, dismiss action, pause and cleanup.`),jh(),Fl(12,`a`,91),FA(13,`Open the full toast configurator`),jh()()}}function at(o,c){if(o&1){let e=oA();Fl(0,`div`,14)(1,`div`,17)(2,`button`,30),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`success`))}),FA(3,`Show success`),jh(),Fl(4,`button`,90),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`info`))}),FA(5,`Show information`),jh(),Fl(6,`button`,31),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`warn`))}),FA(7,`Show warning`),jh(),Fl(8,`button`,32),Kn(`click`,function(){ly(e);let t=lA();return cy(t.notify(`danger`))}),FA(9,`Show error`),jh()(),Fl(10,`p`),FA(11,`Semantic colors remain tied to the active Blocks palette.`),jh()()}}function lt(o,c){if(o&1){let e=oA();Fl(0,`section`,19),Jl(1,`bx-icon`,92),Fl(2,`h3`),FA(3,`A custom Blocks surface`),jh(),Fl(4,`p`),FA(5,`Material, blur, tint, lighting and motion follow the same global configuration as the controls around it.`),jh(),Fl(6,`button`,27),Kn(`click`,function(){ly(e);let t=lA();return cy(t.activate(`Custom surface action`))}),FA(7,`Try an action`),jh()()}}function ct(o,c){if(o&1){let e=oA();Fl(0,`button`,27),Kn(`click`,function(){ly(e);let t=lA(2);return cy(t.openModal(`left`))}),FA(1,`Open on the left`),jh()}}function mt(o,c){if(o&1){let e=oA();Fl(0,`div`,14)(1,`div`,17)(2,`button`,26),Kn(`click`,function(){ly(e);let t=lA();return cy(t.openModal())}),FA(3),jh(),WT(4,ct,2,0,`button`,87),jh(),Fl(5,`p`),FA(6,`Try editing, saving, pressing Escape, and dismissing through the backdrop. This is the actual service-created component.`),jh(),Fl(7,`a`,93),FA(8,`Open the full modal configurator`),jh()()}if(o&2){let e=lA();CC(3),$h(`Open `,e.entry().title.toLowerCase()),CC(),ZT(e.entry().id===`modal-side`?4:-1)}}var L=class o extends Ze$1{name=new jw(`Blocks workspace`,{nonNullable:!0});confirm(){this.modal.close(`confirm`,this.name.value)}static ɵfac=(()=>{let c;return function(a){return(c||(c=In(o)))(a||o)}})();static ɵcmp=Zn({type:o,selectors:[[`app-component-dialog`]],features:[Ye$1],decls:6,vars:2,consts:[[4,`appModalHeader`],[1,`dialog-body`],[`label`,`Project name`,3,`formControl`],[`class`,`dialog-actions`,4,`appModalFooter`],[1,`dialog-actions`],[`bx-button`,``,3,`click`],[`bx-button`,``,`variant`,`filled`,3,`click`]],template:function(e,a){e&1&&(ob(0,De,3,1,`div`,0),Fl(1,`div`,1)(2,`p`),FA(3),jh(),Fl(4,`bx-input-field`,2),UM(),jh()(),ob(5,Ve,5,0,`div`,3)),e&2&&(CC(3),Mb(a.data.description),CC(),ab(`formControl`,a.name),qM())},dependencies:[S,j,v8,h8,Fk,en,nn],styles:[`
+[_nghost-%COMP%] {
+  display: block;
+  min-width: 0;
+}
+.dialog-body[_ngcontent-%COMP%] {
+  width: 28rem;
+  max-width: 100%;
+  min-width: 0;
+}
+p[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-secondary);
+  line-height: 1.6;
+}
+.dialog-actions[_ngcontent-%COMP%] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+}`]})};var ke=class o{route=p(rn);routeData=x8(this.route.data,{initialValue:this.route.snapshot.data});modals=p(fe);toasts=p(ft);entry=Q(()=>e.find(c=>c.id===this.routeData().componentId)??e[0]);count=E(0);status=E(`Ready to try.`);fieldValue=E(``);showError=E(!1);fieldError=Q(()=>this.showError()&&this.fieldValue().trim().length<3?`Enter at least three characters.`:void 0);name=new jw(`Blocks workspace`,{nonNullable:!0,validators:Us.required});email=new jw(``,{nonNullable:!0,validators:Us.email});volume=new jw(50,{nonNullable:!0});quantity=new jw(3,{nonNullable:!0});checked=new jw(!0,{nonNullable:!0});secondChecked=new jw(!1,{nonNullable:!0});disabledCheck=new jw({value:!1,disabled:!0},{nonNullable:!0});frequency=new jw(`weekly`,{nonNullable:!0});query=new jw(``,{nonNullable:!0});destination=new jw(`skopje`,{nonNullable:!0});enabled=new jw(!0,{nonNullable:!0});bannerVisible=E(!0);options=[{label:`Skopje`,value:`skopje`},{label:`Ohrid`,value:`ohrid`},{label:`Bitola`,value:`bitola`},{label:`Unavailable destination`,value:`unavailable`,disabled:!0}];names=[`Button`,`Checkbox`,`Input field`,`Menu`,`Modal`,`Select`,`Toast`];searchTerm=E(``);searchResults=Q(()=>this.names.filter(c=>c.toLowerCase().includes(this.searchTerm().toLowerCase())));contextMenu;activate(c){this.count.update(e=>e+1),this.status.set(`${c} \xB7 action ${this.count()}`)}updateField(c){this.fieldValue.set(c.target.value)}openContextMenu(c){c.preventDefault();let e=c.currentTarget.getBoundingClientRect();this.contextMenu?.open(new MouseEvent(`contextmenu`,{clientX:e.left+16,clientY:e.bottom+4}))}openModal(c){let e=c??(this.entry().id===`modal-side`?`right`:this.entry().id===`modal-bottom-sheet`?`bottom-sheet`:`center`);this.modals.open(L,{data:{title:this.entry().title,description:`Edit the project name. The header, content, footer, backdrop and close behavior use the existing Blocks modal composition.`},header:{text:this.entry().title},style:{layout:e,hasBackdrop:!0,animate:!0,showCloseButton:!0}}).afterClosed().subscribe(t=>this.status.set(t.state===`confirm`?`Saved: ${t.data}`:`Dialog dismissed.`))}notify(c){let e={title:c===`success`?`Settings saved`:c===`warn`?`Review needed`:c===`danger`?`Action failed`:`Workspace update`,message:`This notification follows the application theme and appearance settings.`,durationInMs:4500};switch(c){case`success`:this.toasts.queueSuccess(e);break;case`info`:this.toasts.queueInfo(e);break;case`warn`:this.toasts.queueWarning(e);break;case`danger`:this.toasts.queueDanger(e)}this.status.set(`${c} notification queued.`)}static ɵfac=function(e){return new(e||o)};static ɵcmp=Zn({type:o,selectors:[[`app-component-demo`]],viewQuery:function(e,a){if(e&1&&Uh(Pe$1,5),e&2){let t;ic(t=oc())&&(a.contextMenu=t.first)}},decls:56,vars:9,consts:[[`dropdown`,`bxDropdown`],[`dropdownActions`,``],[`contextActions`,``],[1,`component-page`],[1,`component-header`],[`routerLink`,`/components`,1,`back-link`],[1,`eyebrow`],[1,`description`],[1,`component-meta`],[`routerLink`,`/appearance`],[`aria-labelledby`,`preview-heading`,1,`demo-section`],[1,`section-heading`],[`id`,`preview-heading`],[`bxSurface`,``,1,`demo-stage`],[1,`demo-stack`],[1,`demo-stack`,`control-width`],[1,`menu-preview`],[1,`demo-row`],[1,`demo-stack`,`banner-preview`],[`bxSurface`,``,1,`custom-surface`],[`role`,`status`,`aria-live`,`polite`,1,`action-status`],[`aria-labelledby`,`usage-heading`,1,`usage-section`],[`id`,`usage-heading`],[3,`textContent`],[`aria-label`,`Component documentation`,1,`documentation-section`],[3,`path`],[`bx-button`,``,`variant`,`filled`,3,`click`],[`bx-button`,``,`variant`,`tonal`,3,`click`],[`bx-button`,``,3,`click`],[`bx-button`,``,`variant`,`filled`,3,`disabled`],[`bx-button`,``,`variant`,`filled`,`color`,`success`,3,`click`],[`bx-button`,``,`variant`,`tonal`,`color`,`warn`,3,`click`],[`bx-button`,``,`variant`,`tonal`,`color`,`danger`,3,`click`],[`bx-button`,``,`variant`,`fab`,`aria-label`,`Add item`,3,`click`],[`name`,`plus`],[`label`,`Receive product updates`,3,`formControl`],[`label`,`Include preview features`,3,`formControl`],[`label`,`Unavailable setting`,3,`formControl`],[`label`,`Project name`,`forId`,`field-preview`,3,`required`,`error`],[`bxSurface`,``,1,`native-control-surface`],[`id`,`field-preview`,1,`native-control`,3,`input`,`blur`,`value`],[`label`,`Project name`,3,`errorMessages`,`formControl`],[`label`,`Email address`,`type`,`email`,3,`errorMessages`,`formControl`],[`label`,`Team members`,`type`,`number`,3,`min`,`max`,`formControl`],[`label`,`Daily summary`,`name`,`frequency-demo`,`value`,`daily`,3,`formControl`],[`label`,`Weekly summary`,`name`,`frequency-demo`,`value`,`weekly`,3,`formControl`],[`label`,`Only important updates`,`name`,`frequency-demo`,`value`,`important`,3,`formControl`],[`label`,`Find a component`,`placeholder`,`Try menu`,3,`search`,`formControl`],[1,`search-results`],[`label`,`Destination`,3,`options`,`isSearchable`,`formControl`],[`for`,`volume-demo`],[`bxSlider`,``,`id`,`volume-demo`,`type`,`range`,`min`,`0`,`max`,`100`,3,`formControl`],[`for`,`disabled-volume`],[`bxSlider`,``,`id`,`disabled-volume`,`type`,`range`,`value`,`30`,`disabled`,``],[`label`,`Enable notifications`,3,`formControl`],[`label`,`Reference`,`forId`,`error-preview`],[`id`,`error-preview`,1,`native-control`,3,`input`,`blur`,`value`],[`id`,`custom-error`],[`label`,`Duplicate project`,`icon`,`copy`,3,`action`],[`label`,`Archive project`,`icon`,`archive`,3,`action`],[`label`,`Unavailable action`,3,`disabled`],[`label`,`Copy link`,`icon`,`link`,3,`action`],[`label`,`Open settings`,`icon`,`settings`,`endIcon`,`chevron-right`,3,`action`],[`label`,`Delete project`,`icon`,`trash-2`,3,`action`,`danger`],[`text`,`Your changes are saved automatically.`],[`routerLink`,`/components/tooltip-directive`],[`bx-button`,``,`variant`,`tonal`,`bxTooltip`,`Saves the current project`,`placement`,`top`,3,`click`],[`bx-button`,``,`variant`,`icon`,`aria-label`,`More information`,`bxTooltip`,`Appearance settings apply to all components`,`placement`,`bottom`],[`name`,`info`],[`bx-button`,``,`variant`,`filled`,`bxTransition`,`fade`,3,`bxDropdown`],[`name`,`chevron-down`,`size`,`20`],[`label`,`Duplicate`,`icon`,`copy`,3,`action`],[`label`,`Archive`,`icon`,`archive`,3,`action`],[`label`,`Delete`,`icon`,`trash-2`,3,`action`,`danger`],[`tabindex`,`0`,1,`context-target`,3,`bxContextMenu`],[`label`,`Copy selection`,`icon`,`copy`,3,`action`],[`label`,`Archive selection`,`icon`,`archive`,3,`action`],[3,`minimumBreadcrumbs`],[`routerLink`,`/components/button`],[1,`demo-row`,`icon-row`],[`name`,`sparkles`,`size`,`32`,`color`,`text-primary`,`ariaLabel`,`Highlights`,3,`decorative`],[`name`,`check-circle`,`size`,`32`,`color`,`text-success`],[`name`,`info`,`size`,`32`,`color`,`text-info`,`bgColor`,`auto`],[`name`,`triangle-alert`,`size`,`32`,`color`,`text-warn`],[`name`,`heart`,`size`,`40`,`color`,`text-danger`],[`routerLink`,`/icon-catalog`],[3,`header`,`showCloseButton`],[`bx-button`,``,`variant`,`tonal`],[3,`close`,`header`,`showCloseButton`],[`bx-button`,``,`variant`,`tonal`,`color`,`success`,3,`click`],[`bx-button`,``,`variant`,`tonal`,`color`,`info`,3,`click`],[`routerLink`,`/toastr`],[`name`,`layers`,`size`,`28`],[`routerLink`,`/modal`]],template:function(e,a){if(e&1&&(Fl(0,`article`,3)(1,`header`,4)(2,`a`,5),FA(3,`All components`),jh(),Fl(4,`p`,6),FA(5),jh(),Fl(6,`h1`),FA(7),jh(),Fl(8,`p`,7),FA(9),jh(),Fl(10,`div`,8)(11,`code`),FA(12),jh(),Fl(13,`a`,9),FA(14,`Configure appearance globally`),jh()()(),Fl(15,`section`,10)(16,`div`,11)(17,`h2`,12),FA(18,`Interactive example`),jh(),Fl(19,`span`),FA(20,`Uses your active theme`),jh()(),Fl(21,`div`,13),WT(22,Ne,19,1,`div`,14)(23,Ie,6,5,`div`,14)(24,qe,8,5,`div`,15)(25,Be,6,11,`div`,15)(26,Fe,10,4,`fieldset`,14)(27,ze,8,3,`div`,15)(28,Ae,4,4,`div`,15)(29,Le,11,2,`div`,15)(30,Ue,5,3,`div`,14)(31,We,7,4,`div`,15)(32,Qe,4,1,`bx-menu`,16)(33,$e,5,2,`bx-menu`,16)(34,Xe,6,0,`div`,14)(35,Ye,5,0,`div`,17)(36,Ge,11,2,`div`,14)(37,Ze,7,1,`div`,14)(38,et,6,1,`div`,14)(39,tt,9,1,`div`,14)(40,ot,5,1,`div`,18)(41,rt,14,0,`div`,14)(42,at,12,0,`div`,14)(43,lt,8,0,`section`,19)(44,mt,9,2,`div`,14),jh(),Fl(45,`p`,20),FA(46),jh()(),Fl(47,`section`,21)(48,`h2`,22),FA(49,`Quick usage`),jh(),Fl(50,`pre`),Jl(51,`code`,23),jh(),Fl(52,`pre`),Jl(53,`code`,23),jh()(),Fl(54,`section`,24),Jl(55,`app-readme`,25),jh()()),e&2){let t;CC(5),Mb(a.entry().group),CC(2),Mb(a.entry().title),CC(2),Mb(a.entry().description),CC(3),Mb(a.entry().selector),CC(10),ZT((t=a.entry().id)===`button`?22:t===`checkbox`?23:t===`form-field`?24:t===`input-field`?25:t===`radio`?26:t===`search-input`?27:t===`select`?28:t===`slider`?29:t===`slide-toggle`?30:t===`error`?31:t===`menu`?32:t===`menu-item`?33:t===`tooltip`?34:t===`tooltip-directive`?35:t===`dropdown`?36:t===`context-menu`?37:t===`breadcrumbs`?38:t===`icon`?39:t===`modal-banner`?40:t===`toast-core`?41:t===`simple-toast`?42:t===`surface`?43:44),CC(24),Mb(a.status()),CC(5),ab(`textContent`,`import { `+a.entry().symbol+` } from '`+a.entry().package+`';`),CC(2),ab(`textContent`,a.entry().example),CC(2),ab(`path`,a.entry().readme)}},dependencies:[Zc,v8,bw,Pk,h8,Fk,S,L$1,ee,j,K,De$1,le,J,Z,K$1,Se,Ee,Z$1,Oe$1,Pe$1,J$1,X,R_,E_,V,A],styles:[`
+[_nghost-%COMP%] {
+  display: block;
+}
+.component-page[_ngcontent-%COMP%] {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 2rem;
+  color: var(--%NS%bx-text-primary);
+}
+.component-header[_ngcontent-%COMP%] {
+  margin-bottom: 2rem;
+}
+.back-link[_ngcontent-%COMP%] {
+  display: inline-flex;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+.eyebrow[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-secondary);
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+}
+h1[_ngcontent-%COMP%] {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+h2[_ngcontent-%COMP%] {
+  font-size: 1.125rem;
+  margin: 0;
+}
+h3[_ngcontent-%COMP%] {
+  margin: 0;
+}
+.description[_ngcontent-%COMP%] {
+  max-width: 48rem;
+  color: var(--%NS%bx-text-secondary);
+  line-height: 1.65;
+  margin: 0 0 1rem;
+}
+.component-meta[_ngcontent-%COMP%], 
+.demo-row[_ngcontent-%COMP%], 
+.section-heading[_ngcontent-%COMP%] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.component-meta[_ngcontent-%COMP%] {
+  font-size: 0.875rem;
+}
+code[_ngcontent-%COMP%] {
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    monospace;
+}
+.demo-section[_ngcontent-%COMP%], 
+.usage-section[_ngcontent-%COMP%] {
+  margin-bottom: 2rem;
+}
+.section-heading[_ngcontent-%COMP%] {
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.section-heading[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-secondary);
+  font-size: 0.8125rem;
+}
+.demo-stage[_ngcontent-%COMP%] {
+  padding: 2rem;
+  border: 1px solid var(--%NS%bx-border-default);
+  border-radius: 0.75rem;
+  background:
+    linear-gradient(
+      135deg,
+      var(--%NS%bx-bg-surface),
+      var(--%NS%bx-bg-surface-alt));
+  min-height: 12rem;
+  display: flex;
+  align-items: center;
+}
+.demo-stack[_ngcontent-%COMP%] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 100%;
+}
+.control-width[_ngcontent-%COMP%] {
+  width: min(100%, 26rem);
+}
+.control-width[_ngcontent-%COMP%]    > bx-input-field[_ngcontent-%COMP%], 
+.control-width[_ngcontent-%COMP%]    > bx-select[_ngcontent-%COMP%], 
+.control-width[_ngcontent-%COMP%]    > bx-search-input[_ngcontent-%COMP%], 
+.control-width[_ngcontent-%COMP%]    > bx-form-field[_ngcontent-%COMP%] {
+  width: 100%;
+}
+fieldset[_ngcontent-%COMP%] {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+legend[_ngcontent-%COMP%] {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+output[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-secondary);
+  font-size: 0.875rem;
+}
+.native-control[_ngcontent-%COMP%] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--%NS%bx-border-default);
+  border-radius: 0.5rem;
+  background: var(--%NS%bx-bg-surface);
+  color: var(--%NS%bx-text-primary);
+  padding: 0.75rem;
+  font: inherit;
+}
+.native-control[_ngcontent-%COMP%]:focus-visible {
+  outline: 2px solid var(--%NS%bx-border-brand);
+  outline-offset: 2px;
+}
+.menu-preview[_ngcontent-%COMP%] {
+  min-width: 15rem;
+}
+.context-target[_ngcontent-%COMP%] {
+  padding: 2rem;
+  border: 1px dashed var(--%NS%bx-border-default);
+  border-radius: 0.75rem;
+}
+.banner-preview[_ngcontent-%COMP%] {
+  width: 100%;
+}
+.banner-preview[_ngcontent-%COMP%]    > bx-modal-banner[_ngcontent-%COMP%] {
+  width: 100%;
+}
+.custom-surface[_ngcontent-%COMP%] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  max-width: 28rem;
+}
+.demo-stage[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--%NS%bx-text-secondary);
+}
+.action-status[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-secondary);
+  font-size: 0.875rem;
+  min-height: 1.5em;
+  margin: 0.75rem 0 0;
+}
+.usage-section[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {
+  margin-bottom: 1rem;
+}
+pre[_ngcontent-%COMP%] {
+  padding: 1rem;
+  background: var(--%NS%bx-bg-surface);
+  border: 1px solid var(--%NS%bx-border-default);
+  border-radius: 0.5rem;
+  overflow: auto;
+  white-space: pre;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+.search-results[_ngcontent-%COMP%] {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.8;
+}
+a[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-brand);
+  text-underline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .component-page[_ngcontent-%COMP%] {
+    padding: 1rem;
+  }
+  .demo-stage[_ngcontent-%COMP%] {
+    padding: 1rem;
+  }
+  .component-meta[_ngcontent-%COMP%] {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+.native-control-surface[_ngcontent-%COMP%] {
+  display: block;
+  width: 100%;
+}
+.native-control-surface[_ngcontent-%COMP%]   .native-control[_ngcontent-%COMP%] {
+  background: transparent;
+  border: 0;
+}
+.native-control-surface[_ngcontent-%COMP%]    > .native-control[_ngcontent-%COMP%] {
+  border: 0;
+  outline: none;
+}`]})};export{ke as ComponentDemo};

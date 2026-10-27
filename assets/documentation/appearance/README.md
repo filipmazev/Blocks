@@ -37,7 +37,7 @@ export class Settings {
     this.theme.setAppearance({
       material: 'glass',
       blur: 10,
-      tint: 0.4,
+      tint: 0.5,
       quality: 'auto',
     });
   }
@@ -86,7 +86,7 @@ import {
 import '@filip.mazev/blocks/effects/effects.css';
 
 const configuration = configureAppearance(document.documentElement, {
-  material: 'glass', blur: 10, tint: 0.4, quality: 'auto',
+  material: 'glass', blur: 10, tint: 0.5, quality: 'auto',
 });
 const surface = mountSurface(button);
 const scene = mountGlassScene(container, {
