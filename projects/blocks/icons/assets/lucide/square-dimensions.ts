@@ -1,0 +1,7 @@
+import { defineIcon } from '../../helpers/define-icon';
+
+export const lucideSquareDimensions = defineIcon({
+  name: 'square-dimensions',
+  viewBox: '0 0 24 24',
+  svgContent: `<rect width="18" height="18" x="3" y="3" rx="2" /><path d="M12 7H7v5" /><path d="M12 17h5v-5" />`
+} as const);

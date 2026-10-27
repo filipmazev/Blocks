@@ -130,3 +130,22 @@ $high-contrast-dark-theme: validate-theme(('bg-canvas': $hc-black,
             'scroll-thumb-hover': $hc-yellow,
 
             'meta-brand-palette': 'neutral'), 'high-contrast-dark') !default;
+// The Blocks high-contrast palette is an explicit accessibility choice, independent of OS media queries.
+:where(.high-contrast, .bx-high-contrast-scope) {
+    [data-bx-surface] {
+        --bx-glass-text: var(--bx-text-primary) !important;
+        --bx-glass-edge: var(--bx-border-strong) !important;
+        color: var(--bx-text-primary) !important;
+        border-color: var(--bx-border-strong);
+    }
+    bx-simple-toast .simple-toast { color: var(--bx-text-primary) !important; }
+    [data-bx-surface], .bx-glass-material {
+        background: var(--bx-bg-surface) !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+    }
+    .bx-glass-light, .bx-glass-decoration::before, .bx-glass-decoration::after, .bx-glass-material::before {
+        display: none !important;
+    }
+}

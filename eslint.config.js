@@ -12,8 +12,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default [
-    eslint.configs.recommended,
-    ...tseslint.configs.strict,
+    { ...eslint.configs.recommended, files: ["**/*.ts"] },
+    ...tseslint.configs.strict.map(config => ({ ...config, files: ["**/*.ts"] })),
+    ...angular.configs.tsRecommended.map(config => ({ ...config, files: ["**/*.ts"] })),
     {
         ignores: [
             ".angular/**",
@@ -21,7 +22,7 @@ export default [
             "coverage/**",
             "node_modules/**",
             "scripts/**",
-            "**/*.spec.ts"
+            "out-tsc/**"
         ]
     },
     {
@@ -31,7 +32,6 @@ export default [
             parserOptions: {
                 project: ['./tsconfig.eslint.json'],
                 tsconfigRootDir: __dirname,
-                createDefaultProgram: true,
             },
         },
         plugins: {
@@ -42,6 +42,8 @@ export default [
         },
         processor: angular.processInlineTemplates,
         rules: {
+            // Eager remains valid for components with imperative or mutable update paths.
+            "@angular-eslint/prefer-on-push-component-change-detection": "off",
             "@typescript-eslint/member-ordering": "off",
             "lines-between-class-members": [
                 "error",
@@ -178,5 +180,7 @@ export default [
                 { type: "element", prefix: ["app", "bx"], style: "kebab-case" }
             ],
         }
-    }
+    },
+    ...angular.configs.templateRecommended.map(config => ({ ...config, files: ["**/*.html"] })),
+    ...angular.configs.templateAccessibility.map(config => ({ ...config, files: ["**/*.html"] }))
 ];

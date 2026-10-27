@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ngAdd = ngAdd;
-const tasks_1 = require("@angular-devkit/schematics/tasks");
 function ngAdd(options) {
     return (tree, context) => {
         injectStyles(tree, context, options);
-        context.addTask(new tasks_1.NodePackageInstallTask());
         return tree;
     };
 }
 function injectStyles(tree, context, options) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const workspaceConfigPath = '/angular.json';
     if (!tree.exists(workspaceConfigPath)) {
         context.logger.warn('Could not find angular.json. Please configure the Blocks theme manually.');
@@ -19,17 +18,30 @@ function injectStyles(tree, context, options) {
     if (!workspaceConfigBuffer)
         return;
     const workspaceConfig = JSON.parse(workspaceConfigBuffer.toString('utf-8'));
-    const projectName = workspaceConfig.defaultProject || Object.keys(workspaceConfig.projects)[0];
+    const projectName = workspaceConfig.defaultProject || Object.keys((_a = workspaceConfig.projects) !== null && _a !== void 0 ? _a : {})
+        .find(name => workspaceConfig.projects[name].projectType === 'application');
     const project = workspaceConfig.projects[projectName];
     if (!project) {
         context.logger.warn('Could not find a valid project in angular.json.');
         return;
     }
-    const buildOptions = project.architect?.build?.options;
-    if (!buildOptions || !buildOptions.styles) {
+    const buildOptions = (_d = (_c = ((_b = project.architect) !== null && _b !== void 0 ? _b : project.targets)) === null || _c === void 0 ? void 0 : _c.build) === null || _d === void 0 ? void 0 : _d.options;
+    if (!buildOptions) {
         context.logger.warn(`Could not find styles configuration for project "${projectName}".`);
         return;
     }
+    (_e = buildOptions.styles) !== null && _e !== void 0 ? _e : (buildOptions.styles = []);
+    const effectsStyles = 'node_modules/@filip.mazev/blocks/effects/effects.css';
+    const legacyStyles = new Set([
+        'node_modules/@filip.mazev/blocks/glass/glass.css',
+        'node_modules/@filip.mazev/blocks-glass/glass.css'
+    ]);
+    buildOptions.styles = buildOptions.styles.filter((style) => !legacyStyles.has(typeof style === 'string' ? style : style.input));
+    const hasEffectsStyles = buildOptions.styles.some((style) => (typeof style === 'string' ? style : style.input) === effectsStyles);
+    if (!hasEffectsStyles)
+        buildOptions.styles.unshift(effectsStyles);
+    tree.overwrite(workspaceConfigPath, JSON.stringify(workspaceConfig, null, 2) + '\n');
+    context.logger.info('Configured the shared Blocks effects stylesheet.');
     let targetStylePath = '';
     for (const style of buildOptions.styles) {
         const styleString = typeof style === 'string' ? style : style.input;
@@ -43,12 +55,13 @@ function injectStyles(tree, context, options) {
         return;
     }
     const content = tree.read(targetStylePath).toString('utf-8');
+    // Existing themes still receive the effects stylesheet above.
     if (content.includes('@filip.mazev/blocks')) {
         context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
         return;
     }
-    const lightThemeVar = `$${options.theme}-light-theme`;
-    const darkThemeVar = `$${options.theme}-dark-theme`;
+    const lightThemeVar = `$${(_f = options.theme) !== null && _f !== void 0 ? _f : 'white'}-light-theme`;
+    const darkThemeVar = `$${(_g = options.theme) !== null && _g !== void 0 ? _g : 'white'}-dark-theme`;
     const blocksThemeSnippet = `
 @use '@filip.mazev/blocks' as *;
 
@@ -63,5 +76,5 @@ function injectStyles(tree, context, options) {
 }
 `;
     tree.overwrite(targetStylePath, blocksThemeSnippet + '\n' + content);
-    context.logger.info(`Successfully injected the ${options.theme} Blocks theme configuration into ${targetStylePath}.`);
+    context.logger.info(`Successfully injected the ${(_h = options.theme) !== null && _h !== void 0 ? _h : 'white'} Blocks theme configuration into ${targetStylePath}.`);
 }

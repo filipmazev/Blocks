@@ -9,10 +9,14 @@
     "declarationMap": true,
     "types": []
   },
-  "include": [
-    "schematics/**/*.ts"
-  ],
-  "exclude": [
-    "schematics/**/*.spec.ts"
-  ]
+  "include": ["schematics/**/*.ts"],
+  "exclude": ["schematics/**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

@@ -1,8 +1,7 @@
 <div class="readme-container">
     <div class="readme-header">
-        <span>README.md</span>
-        <span class="badge">Read Only</span>
+        <span>Documentation</span>
     </div>
     
-    <markdown class="readme-content" [data]="readmeContent()"></markdown>
+    <article class="readme-content" [innerHTML]="readmeContent()" (click)="navigateDocumentation($event)"></article>
 </div>

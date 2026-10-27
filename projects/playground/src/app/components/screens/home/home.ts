@@ -1,44 +1,85 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { BLOCKS_VERSION } from '@filip.mazev/blocks';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@icons/components/icon';
 import { IconName } from '@icons/types/icon.types';
 import { Button } from '@forms/components/button/button';
+import { IOddityConfig, OddityCanvas } from 'oddity-angular';
+import { ThemingService } from '@core/services/theming.service';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
-  imports: [CommonModule, RouterLink, Icon, Button],
+  imports: [RouterLink, Icon, Button, BxSurfaceDirective, OddityCanvas],
   templateUrl: './home.html',
-  styleUrl: './home.scss'
+  styleUrl: './home.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Home {
-  protected features: IFeature[] = [
+  protected readonly version = BLOCKS_VERSION;
+
+  private readonly themingService = inject(ThemingService);
+
+  protected readonly features: { title: string; description: string; icon: IconName; route: string }[] = [
     {
-      title: 'Unified Responsiveness',
-      description: 'Responsiveness as a shared contract. TypeScript streams and SCSS mixins stay perfectly in sync, ensuring logic never desyncs from layout.',
-      icon: 'smartphone'
+      title: 'One shared material',
+      description: 'Set appearance once. Buttons, fields, menus, dialogs, and notifications share your application settings.',
+      icon: 'layers',
+      route: '/appearance'
     },
     {
-      title: 'Deep Theming',
-      description:
-        'Built into the core. Supports creating distinct palettes with runtime switching for light and dark with different themes available out of the box.',
-      icon: 'brush'
+      title: 'Your Blocks theme',
+      description: 'Existing semantic colors, spacing, radii, and palettes carry through every surface.',
+      icon: 'palette',
+      route: '/components/button'
     },
     {
-      title: 'Mobile-First Interaction',
-      description: 'Native-feeling physics. Automatic scroll locking and swipe-to-close gestures ensure your web app feels like a native app.',
-      icon: 'fingerprint-pattern'
+      title: 'Familiar interactions',
+      description: 'Keep native controls, keyboard navigation, and reduced motion while adding fluid transitions.',
+      icon: 'accessibility',
+      route: '/modal'
     }
   ];
 
-  protected test(): void {
-    console.log('test');
-  }
-}
+  protected readonly look = computed(() => {
+    this.themingService.palette();
+    this.themingService.activeTheme();
 
-interface IFeature {
-  title: string;
-  description: string;
-  icon: IconName;
+    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-neutral');
+    const primaryColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
+    const surfaceColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-surface');
+
+    return {
+      fxOrder: 'Ggr',
+      stops: [
+        { color: primaryColor.replace('#', ''), pos: 0 },
+        { color: surfaceColor.replace('#', ''), pos: 57 },
+        { color: bgColor.replace('#', ''), pos: 100 }
+      ],
+      seed: 511,
+      warp: 0.35,
+      noiseScale: 1.36,
+      detail: 0,
+      contrast: 0.82,
+      angle: 180,
+      centerX: 0.713,
+      centerY: 0.271,
+      lightMode: 3,
+      lightAmount: 0.11,
+      lightSize: 0.27,
+      lightFollow: 1,
+      glassMode: 1,
+      glassAmount: 0.42,
+      glassCount: 5,
+      glassAngle: 145,
+      glassProfile: 2,
+      glassBevel: 0.01,
+      glassShadow: 0.16,
+      glassHighlight: 0.27,
+      pointerMode: 2,
+      pointerDamping: 1,
+      pointerFlip: true,
+      animate: true
+    };
+  });
 }

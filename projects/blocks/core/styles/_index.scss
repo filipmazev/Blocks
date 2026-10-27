@@ -5,9 +5,12 @@
 @forward 'theme-engine';
 @forward 'a11y';
 
+@forward 'themes/white-theme';
 @forward 'themes/purple-theme';
 @forward 'themes/orange-theme';
 @forward 'themes/red-theme';
 @forward 'themes/green-theme';
 @forward 'themes/cyberpunk-theme';
 @forward 'themes/high-contrast-theme';
+@forward 'slider';
+@forward 'validation';

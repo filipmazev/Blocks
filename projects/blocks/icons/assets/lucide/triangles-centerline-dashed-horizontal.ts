@@ -1,0 +1,7 @@
+import { defineIcon } from '../../helpers/define-icon';
+
+export const lucideTrianglesCenterlineDashedHorizontal = defineIcon({
+  name: 'triangles-centerline-dashed-horizontal',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M10 12H8" /><path d="M16 12h-2" /><path d="M22 12h-2" /><path d="M4 12H2" /><path d="M7.298 20.288A1 1 0 008 22h8a1 1 0 00.703-1.712l-3.991-3.99a1 1 0 00-1.424-.001z" /><path d="M7.298 3.712A1 1 0 018 2h8a1 1 0 01.703 1.712l-3.991 3.99a1 1 0 01-1.424.001z" />`
+} as const);

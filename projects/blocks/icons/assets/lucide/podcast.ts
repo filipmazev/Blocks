@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucidePodcast = defineIcon({
   name: 'podcast',
   viewBox: '0 0 24 24',
-  svgContent: `<path d="M13 17a1 1 0 1 0-2 0l.5 4.5a0.5 0.5 0 0 0 1 0z" fill="currentColor" /><path d="M16.85 18.58a9 9 0 1 0-9.7 0" /><path d="M8 14a5 5 0 1 1 8 0" /><circle cx="12" cy="11" r="1" fill="currentColor" />`
+  svgContent: `<path d="M12 17v4" /><path d="M18 11a6 6 0 00-3-5.197" /><path d="M2 11a10 10 0 015-8.662" /><path d="M22 11a10 10 0 00-5-8.662" /><path d="M6 11a6 6 0 013-5.197" /><path d="M9 21h6" /><rect x="10" y="9" width="4" height="8" rx="2" />`
 } as const);

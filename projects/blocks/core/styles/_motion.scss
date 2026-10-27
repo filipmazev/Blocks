@@ -1,0 +1,6 @@
+// Definitions only: safe to import from component styles.
+@mixin bx-transition($property, $duration, $easing) {
+    transition-property: #{$property};
+    transition-duration: calc(#{$duration} * (1 - var(--bx-reduced-motion, 0)));
+    transition-timing-function: #{$easing};
+}

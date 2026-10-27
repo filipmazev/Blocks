@@ -18,11 +18,11 @@ export class DeviceTypeService {
     if (this.isBrowser) {
       const win = this.document.defaultView;
       const screenObj = win?.screen as any;
-      
-      this.screenOrientation = 
-        (screenObj?.orientation || {}).type ?? 
-        screenObj?.mozOrientation ?? 
-        screenObj?.msOrientation ?? 
+
+      this.screenOrientation =
+        (screenObj?.orientation || {}).type ??
+        screenObj?.mozOrientation ??
+        screenObj?.msOrientation ??
         (!screenObj?.orientation && win?.matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary');
 
       if (screenObj?.orientation) {
@@ -34,16 +34,6 @@ export class DeviceTypeService {
         });
       }
     }
-  }
-
-  private get userAgent(): string {
-    if (!this.isBrowser) return '';
-    const win = this.document.defaultView as Window & { opera?: string };
-    return win?.navigator?.userAgent || win?.navigator?.vendor || win?.opera || '';
-  }
-
-  private get isDesktopDevice(): boolean {
-    return !this.isMobileDevice() && !this.isTabletDevice();
   }
 
   public isLandscapeOrientation(): boolean {
@@ -58,7 +48,7 @@ export class DeviceTypeService {
     const isMobile = this.isMobileDevice();
     const isTablet = this.isTabletDevice();
     const isDesktop = this.isDesktopDevice;
-    
+
     const mobileOS = this.getMobileOS();
     const desktopOS = this.getDesktopOS();
     const deviceOS = mobileOS ?? desktopOS;
@@ -77,6 +67,16 @@ export class DeviceTypeService {
       isLandscapeOrientation: () => this.isLandscapeOrientation(),
       isPortraitOrientation: () => this.isPortraitOrientation()
     };
+  }
+
+  private get userAgent(): string {
+    if (!this.isBrowser) return '';
+    const win = this.document.defaultView as Window & { opera?: string };
+    return win?.navigator?.userAgent || win?.navigator?.vendor || win?.opera || '';
+  }
+
+  private get isDesktopDevice(): boolean {
+    return !this.isMobileDevice() && !this.isTabletDevice();
   }
 
   private isMobileDevice(): boolean {

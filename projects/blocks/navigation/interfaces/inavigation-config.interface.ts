@@ -1,5 +1,5 @@
-import { INavigationItem } from "./inavigation-item.interface";
-import { INavigationSectionConfig } from "./inavigation-section-config.interface";
+import { INavigationItem } from './inavigation-item.interface';
+import { INavigationSectionConfig } from './inavigation-section-config.interface';
 
 export interface INavigationConfig {
   sections?: INavigationSectionConfig[];

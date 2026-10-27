@@ -1,4 +1,5 @@
-import { Component, input, booleanAttribute, HostListener, inject, computed } from '@angular/core';
+import { injectComponentSurface } from '@filip.mazev/blocks/effects';
+import { Component, input, booleanAttribute, HostListener, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { BxA11yService } from '@filip.mazev/blocks/core';
 import { ButtonColor, ButtonVariant } from '../../types/form.types';
 
@@ -7,6 +8,7 @@ import { ButtonColor, ButtonVariant } from '../../types/form.types';
   standalone: true,
   templateUrl: './button.html',
   styleUrl: './button.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': '"bx-btn bx-btn-" + variant() + " bx-btn-color-" + color()',
     '[class.bx-btn-is-outlined]': 'outlined()',
@@ -19,6 +21,16 @@ import { ButtonColor, ButtonVariant } from '../../types/form.types';
   }
 })
 export class Button {
+  private readonly appearance = injectComponentSurface(() => ({
+    interactive: !this.interactive() || this.disabled() ? false : undefined,
+    emission:
+      this.interactive() && !this.disabled()
+        ? this.color() === 'primary' || this.color() === 'grayscale'
+          ? 'var(--bx-primary)'
+          : `var(--bx-text-${this.color()})`
+        : undefined
+  }));
+
   private readonly a11y = inject(BxA11yService);
 
   public readonly isAnimated = computed(() => {
@@ -30,7 +42,7 @@ export class Button {
   public readonly outlined = input<boolean>(false);
   public readonly elevated = input<boolean>(false);
   public readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
-  
+
   public readonly interactive = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   @HostListener('click', ['$event'])

@@ -1,48 +1,26 @@
+<oddity-canvas [config]="look()" class="oddity-canvas" />
+
 <div class="home-container">
-    <header class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">
-                Build <span class="highlight">Better</span> Angular Apps.
-            </h1>
-            <p class="hero-subtitle">
-                The comprehensive, modular UI ecosystem. Bridging the gap between TypeScript logic and SCSS styling.
-            </p>
-            <div class="hero-actions">
-                <a bx-button variant="filled" [outlined]="true" color="primary" routerLink="/modal">View Flagship
-                    Component</a>
-                <a bx-button variant="filled" [outlined]="true" color="grayscale"
-                    href="https://www.npmjs.com/package/@filip.mazev/blocks" target="_blank">
-                    Get Started
-                    <bx-icon name="arrow-right" />
-                </a>
-            </div>
-        </div>
-
-        <div class="hero-visual">
-            <div class="block block-1"></div>
-            <div class="block block-2"></div>
-            <div class="block block-3"></div>
-        </div>
-    </header>
-
-    <section class="section features">
-        <h2 class="section-title">Core Philosophy</h2>
-        <div class="grid">
-            @for (feature of features; track feature.title) {
-            <div class="card card-item-card">
-                <div class="card-item-header">
-                    <bx-icon [name]="feature.icon" />
-                    <span class="card-item-name">{{ feature.title }}</span>
-                </div>
-                <p class="card-item-desc">{{ feature.description }}</p>
-            </div>
-            }
-        </div>
-    </section>
-
-    <footer class="home-footer">
-        <p>Designed & Developed by Filip Mazev</p>
-        <div class="version">v1.0.0</div>
-    </footer>
-
+  <header class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Blocks · Angular components</p>
+      <h1>Build with clarity.<br><span>Give it depth.</span></h1>
+      <p class="hero-subtitle">A modular UI library with shared theming, accessible controls, and materials that feel at home throughout your application.</p>
+      <div class="hero-actions">
+        <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon name="arrow-right" size="20" /></a>
+        <a bx-button variant="filled" [outlined]="true" color="grayscale" routerLink="/components">Browse components</a>
+      </div>
+    </div>
+  </header>
+  <section class="features" aria-labelledby="features-title">
+    <h2 id="features-title">Built on the Blocks foundations</h2>
+    <div class="feature-grid">
+      @for (feature of features; track feature.title) {
+        <a bxSurface class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" /><h3>{{ feature.title }}</h3><p>{{ feature.description }}</p><span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span></a>
+      }
+    </div>
+  </section>
+  <section class="home-links" aria-label="Flagship components"><a bx-button variant="text" routerLink="/modal">Modal playground<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text" routerLink="/toastr">Toast playground<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text" routerLink="/icon-catalog">Icon catalog<bx-icon name="arrow-right" size="16" /></a></section>
+  <footer class="home-footer"><span>Designed &amp; developed by Filip Mazev</span><span>Blocks {{ version }}</span><a href="https://www.npmjs.com/package/@filip.mazev/blocks" target="_blank" rel="noopener noreferrer">npm package</a></footer>
 </div>
+

@@ -1,30 +1,22 @@
-<div class="actions-area">
-    <button bx-button [bxDropdown]="themeMenu" placement="bottom" variant="filled" color="grayscale" [outlined]="true"
-        class="theme-select-trigger" [bxTooltip]="'Choose a Theme'">
-        {{ selectedThemeLabel() }}
-        <bx-icon name="chevron-down" class="bx-icon-pos-end" size="16" />
-    </button>
-
-    <ng-template #themeMenu>
-        <bx-menu>
-            @for(theme of availableThemes; track theme.id) {
-            <bx-menu-item [label]="theme.label" [icon]="selectedThemeId() === theme.id ? 'check' : undefined"
-                (action)="onThemeChange(theme.id);">
-            </bx-menu-item>
-            }
-        </bx-menu>
-    </ng-template>
-
-    <button bx-button (click)="toggleTheme()" variant="mini-fab" color="grayscale" [outlined]="true"
-        [attr.aria-label]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'" class="theme-toggle">
-        <bx-icon [name]="isDarkMode() ? 'sun' : 'moon'" />
-    </button>
-</div>
-
-
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="app-container">
-    <app-sidenav [title]="'Blocks'"></app-sidenav>
-    <div class="app-content-container">
-        <router-outlet></router-outlet>
-    </div>
+  <app-sidenav title="Blocks" />
+  <div class="app-main">
+    <header class="app-toolbar" data-bx-light-scope bxSurface aria-label="Playground appearance">
+      <span class="toolbar-label">Component playground</span>
+      <div class="toolbar-actions">
+        <a bx-button variant="tonal" color="grayscale" routerLink="/appearance" aria-label="Configure appearance for the whole playground"><bx-icon name="sliders-horizontal" size="16" /><span>Appearance</span></a>
+        <button bx-button type="button" [bxDropdown]="themeMenu" bxTransition="fade" placement="bottom" variant="tonal" color="grayscale" aria-label="Choose theme palette">{{ selectedThemeLabel() }}<bx-icon name="chevron-down" size="16" /></button>
+        <button bx-button type="button" (click)="toggleTheme()" variant="tonal" class="theme-mode-toggle" color="grayscale" [attr.aria-label]="isDarkMode() ? 'Switch to light theme' : 'Switch to dark theme'"><bx-icon [name]="isDarkMode() ? 'sun' : 'moon'" size="20" /></button>
+      </div>
+    </header>
+    <main class="app-content-container" id="main-content" tabindex="-1"><router-outlet /></main>
+  </div>
 </div>
+<ng-template #themeMenu>
+  <bx-menu>
+    @for (palette of availableThemes; track palette.id) {
+      <bx-menu-item [label]="palette.label" [icon]="selectedThemeId() === palette.id ? 'check' : undefined" (action)="theme.setPalette(palette.id)" />
+    }
+  </bx-menu>
+</ng-template>

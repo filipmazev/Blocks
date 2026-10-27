@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -11,7 +11,7 @@
     gap: spacing(1);
 
     position: relative;
-    padding-bottom: 1.5rem;
+    padding-bottom: spacing(6);
 }
 
 .bx-field-header {
@@ -67,10 +67,10 @@
     font-size: 0.75rem;
     color: var(--bx-text-danger);
 
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
     margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
 
     &.bx-animated {
         animation: bx-slide-down 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
@@ -98,3 +98,12 @@
         transform: translateY(0);
     }
 }
+.bx-field-tooltip-trigger, .bx-inline-tooltip-trigger { border: 0; padding: .25rem; background: transparent; color: var(--bx-text-secondary); cursor: help; }
+
+.bx-field-error-projected:empty { display: none; }
+.bx-field-control { min-width: 0; }
+.bx-field-control-inline { display: flex; align-items: center; gap: spacing(1); }
+.bx-field-control-inline .bx-field-tooltip-trigger { flex: 0 0 auto; }
+.bx-field-tooltip-trigger { border-radius: radius(sm); padding: spacing(1); }
+.bx-field-tooltip-trigger:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 0; }
+.bx-field-error { align-items: flex-start; }

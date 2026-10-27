@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucideMusic2 = defineIcon({
   name: 'music-2',
   viewBox: '0 0 24 24',
-  svgContent: `<circle cx="8" cy="18" r="4" /><path d="M12 18V2l7 4" />`
+  svgContent: `<path d="m19 6-5.2-3.9a.5.5 0 0 0-.8.4V18" /><circle cx="9" cy="18" r="4" />`
 } as const);

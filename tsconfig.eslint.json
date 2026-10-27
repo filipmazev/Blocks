@@ -5,8 +5,14 @@
   },
   "include": [
     "*.ts",
-    "projects/*/*.ts",
-    "projects/*/src/**/*.ts",
-    "projects/*/src/**/*.html"
+    "projects/blocks/**/*.ts",
+    "projects/playground/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".angular",
+    "coverage",
+    "out-tsc"
   ]
 }

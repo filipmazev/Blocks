@@ -1,0 +1,7 @@
+import { defineIcon } from '../../helpers/define-icon';
+
+export const lucideClockArrowLeft = defineIcon({
+  name: 'clock-arrow-left',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M12 6v6l1.5.8" /><path d="M12.338 21.994a10 10 0 1 1 9.587-8.767" /><path d="M14 18h8" /><path d="m18 22-4-4 4-4" />`
+} as const);

@@ -4,23 +4,9 @@ import { ResolvableText, ValidatorKey } from '../types/core.types';
 
 @Directive()
 export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
-  public readonly ngControl = inject(NgControl, { optional: true, self: true });
-
-  public readonly label = input<ResolvableText | undefined>(undefined);
-  public readonly placeholder = input<ResolvableText | undefined>(undefined);
-  public readonly tooltip = input<ResolvableText | undefined>(undefined);
-  public readonly dataTestId = input<string | undefined>(undefined);
-  public readonly ariaLabel = input<string | undefined>(undefined);
-  
-  public readonly errorMessages = input<Partial<Record<ValidatorKey, ResolvableText>>>({});
-
-  public readonly required = input<boolean>(false);
-  public readonly loading = input<boolean>(false);
-  public readonly disabled = input<boolean>(false);
-
-   protected readonly isFieldRequired = computed(() => {
+  protected readonly isFieldRequired = computed(() => {
     if (this.required && this.required()) return true;
-    
+
     const control = this.ngControl?.control;
     return control?.hasValidator ? control.hasValidator(Validators.required) : false;
   });
@@ -28,6 +14,21 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   protected readonly internalValue = signal<T | null>(null);
   protected readonly isTouched = signal<boolean>(false);
   protected readonly isDisabled = signal<boolean>(false);
+  public readonly ngControl = inject(NgControl, { optional: true, self: true });
+
+  public readonly label = input<ResolvableText | undefined>(undefined);
+
+  public readonly placeholder = input<ResolvableText | undefined>(undefined);
+
+  public readonly tooltip = input<ResolvableText | undefined>(undefined);
+  public readonly dataTestId = input<string | undefined>(undefined);
+  public readonly ariaLabel = input<string | undefined>(undefined);
+
+  public readonly errorMessages = input<Partial<Record<ValidatorKey, ResolvableText>>>({});
+
+  public readonly required = input<boolean>(false);
+  public readonly loading = input<boolean>(false);
+  public readonly disabled = input<boolean>(false);
 
   protected onChange: (value: T | null) => void = () => {};
   protected onTouched: () => void = () => {};
@@ -39,12 +40,15 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   }
 
   public ngOnInit(): void {
-    this.isDisabled.set(this.disabled());
+    // Forms may call setDisabledState before ngOnInit. Preserve that state.
+    this.isDisabled.set(this.disabled() || this.ngControl?.disabled === true);
 
     if (isDevMode() && this.ngControl?.control?.validator) {
       const hasMessages = Object.keys(this.errorMessages()).length > 0;
       if (!hasMessages) {
-        console.error(`[Blocks UI Strict Mode] The form control for this field has validators, but the [errorMessages] input is empty. You must provide error messages for all applied validators.`);
+        console.error(
+          `[Blocks UI Strict Mode] The form control for this field has validators, but the [errorMessages] input is empty. You must provide error messages for all applied validators.`
+        );
       }
     }
   }
@@ -82,7 +86,7 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
     if (this.ngControl?.invalid && (this.ngControl.touched || this.ngControl.dirty)) {
       const errors = this.ngControl.errors;
       if (!errors) return undefined;
-      
+
       const firstKey = Object.keys(errors)[0] as ValidatorKey;
       const customErrorMap = this.errorMessages();
 
@@ -97,8 +101,8 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
       if (isDevMode()) {
         console.error(`[Blocks UI Strict Mode] Validation failed for key '${firstKey}', but no message was provided in [errorMessages].`);
       }
-      
-      return `[Missing error message: ${firstKey}]`; 
+
+      return `[Missing error message: ${firstKey}]`;
     }
     return undefined;
   }

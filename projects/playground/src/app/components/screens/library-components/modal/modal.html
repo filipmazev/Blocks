@@ -1,15 +1,18 @@
+<header class="page-heading"><p class="eyebrow">Overlay components</p><h1>Modals</h1><p>Configure dialogs, side panels, and sheets using the shared Blocks theme.</p></header>
 <div class="demo-container">
-    <app-component-info [codeFiles]="codeFiles" [readmePath]="modalReadmePath()"></app-component-info>
+    <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="modalReadmePath()"></app-component-info>
 
-    <div class="config-container">
-        <div class="config-header">Demo</div>
+    <div #configPanel class="config-container" bxSurface>
+        <div class="config-header">Configurator</div>
+        <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
+        <p class="hint" role="status">{{ resultMessage() }}</p>
 
         <form [formGroup]="form" class="config-form form-section">
 
             <div class="form-section">
                 <h3>General Style</h3>
 
-                <bx-select label="Default Layout" formControlName="layout" [options]="layoutSelectOptions">
+                <bx-select label="Default Layout" [errorMessages]="{ required: 'Choose a layout.' }" formControlName="layout" [options]="layoutSelectOptions">
                 </bx-select>
 
                 <bx-input-field label="Header Text" formControlName="headerText"></bx-input-field>

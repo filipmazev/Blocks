@@ -1,5 +1,6 @@
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { Component, QueryList, TemplateRef, ViewChildren, effect, input, output, signal, computed } from '@angular/core';
+import { Component, QueryList, TemplateRef, ViewChildren, effect, input, output, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { ModalConfig } from '../../../classes/modal-config';
 import { IModalView } from '../../../interfaces/imodal-view.interface';
 import { ModalCloseMode, ModalLayout } from '../../../types/modal.types';
@@ -9,8 +10,9 @@ import { Icon } from '@filip.mazev/blocks/icons';
 
 @Component({
   selector: 'bx-modal-side',
-  imports: [NgTemplateOutlet, ModalBottomSheet, NgClass, ModalBanner, Icon],
+  imports: [BxSurfaceDirective, NgTemplateOutlet, ModalBottomSheet, NgClass, ModalBanner, Icon],
   templateUrl: './modal-side.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal-side.scss'
 })
 export class ModalSide<D = unknown, R = unknown> implements IModalView<D, R> {

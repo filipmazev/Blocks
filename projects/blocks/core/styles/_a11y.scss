@@ -1,3 +1,5 @@
+@forward 'motion';
+
 :root {
     --bx-reduced-motion: 0;
 
@@ -17,10 +19,4 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-}
-
-@mixin bx-transition($property, $duration, $easing) {
-    transition-property: #{$property};
-    transition-duration: calc(#{$duration} * (1 - var(--bx-reduced-motion, 0)));
-    transition-timing-function: #{$easing};
 }

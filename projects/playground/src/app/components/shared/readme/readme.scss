@@ -1,127 +1,21 @@
-@use 'core/styles/index' as *;
-@use '../../../../styles/common' as *;
-
-.readme-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    min-width: 0;
-}
-
-.readme-header {
-    @include header-base;
-
-    .badge {
-        font-size: 0.75rem;
-        background: var(--bx-bg-element);
-        padding: 4px 8px;
-        border-radius: 4px;
-        color: var(--bx-text-primary, #fff);
-        text-transform: uppercase;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-    }
-}
-
-.readme-content {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-
-    background-color: var(--bx-bg-surface);
-    flex: 1;
-    width: 100%;
-
-    max-height: 79vh;
-    max-height: 79dvh;
-
-    overflow-y: auto;
-    overflow-x: auto;
-
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--bx-text-primary);
-    line-height: 1.6;
-
-    ::ng-deep {
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            word-break: break-word;
-            max-width: 100%;
-        }
-
-        h1,
-        h2,
-        h3 {
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        h1 {
-            font-size: 2em;
-            border-bottom: 1px solid var(--bx-border-default, #eaeaea);
-            padding-bottom: 0.3em;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            border-bottom: 1px solid var(--bx-border-default, #eaeaea);
-            padding-bottom: 0.3em;
-        }
-
-        h3 {
-            font-size: 1.25em;
-        }
-
-        p {
-            margin-bottom: 1rem;
-        }
-
-        ul,
-        ol {
-            padding-left: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        li {
-            margin-bottom: 0.25rem;
-        }
-
-        img,
-        table {
-            max-width: 100%;
-        }
-
-        code {
-            background: rgba(27, 31, 35, 0.05);
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 85%;
-            color: var(--bx-text-primary);
-        }
-
-        pre {
-            background: var(--bx-bg-element);
-            padding: 1rem;
-            border-radius: 6px;
-            overflow-x: auto;
-            max-width: 100%;
-
-            code {
-                background-color: transparent;
-                padding: 0;
-                white-space: pre;
-            }
-        }
-    }
+@use 'core/styles/helpers' as *;
+:host { display: block; min-width: 0; }
+.readme-container { min-width: 0; }
+.readme-header { font-size: .75rem; color: var(--bx-text-secondary); text-transform: uppercase; letter-spacing: .06em; padding-bottom: spacing(3); border-bottom: 1px solid var(--bx-border-default); }
+.readme-content { min-width: 0; color: var(--bx-text-primary); line-height: 1.7; overflow-wrap: anywhere; }
+.readme-content ::ng-deep {
+  h1 { font-size: 1.75rem; margin-top: spacing(6); }
+  h2 { font-size: 1.375rem; padding-top: spacing(6); border-top: 1px solid var(--bx-border-default); }
+  h3 { font-size: 1.125rem; margin-top: spacing(6); }
+  p { margin-bottom: spacing(4); }
+  ul, ol { padding-left: spacing(6); }
+  li { margin-bottom: spacing(2); }
+  img { max-width: 100%; height: auto; }
+  table { display: block; max-width: 100%; width: max-content; overflow-x: auto; border-collapse: collapse; font-size: .875rem; margin-block: spacing(4); }
+  th, td { padding: spacing(2) spacing(3); border: 1px solid var(--bx-border-default); text-align: left; vertical-align: top; }
+  th { background: var(--bx-bg-surface-alt); }
+  code { padding: .15em .35em; border-radius: radius(sm); background: var(--bx-bg-surface-alt); font-size: .85em; }
+  pre { max-width: 100%; overflow-x: auto; border: 1px solid var(--bx-border-default); background: var(--bx-bg-surface); border-radius: radius(md); padding: spacing(4); line-height: 1.6; }
+  pre code { background: transparent; padding: 0; white-space: pre; }
+  blockquote { margin-inline: 0; padding-left: spacing(4); border-left: 3px solid var(--bx-border-brand); color: var(--bx-text-secondary); }
 }

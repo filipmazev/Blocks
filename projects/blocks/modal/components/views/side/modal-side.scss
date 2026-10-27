@@ -1,4 +1,4 @@
-@use '../../../../core/styles/index' as *;
+@use '../../../../core/styles/helpers' as *;
 
 .side-modal-content-wrapper {
     position: fixed;
@@ -87,3 +87,30 @@
     gap: spacing(2);
     padding-bottom: spacing(3);
 }
+[data-bx-surface] {
+    --bx-glass-surface: var(--bx-modal-bg, var(--bx-bg-surface));
+    --bx-glass-text: var(--bx-modal-text, var(--bx-text-primary));
+    --bx-glass-shadow: #{shadow(modal)};
+    --bx-glass-min-opacity: .52;
+    --bx-glass-rim-opacity: 1;
+    border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
+}
+
+.bx-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--bx-rounded-sm, #{radius(sm)});
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    &:hover { background: var(--bx-bg-element-hover); }
+    &:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 2px; }
+}
+
+:host-context([data-theme='dark']) [data-bx-surface] { --bx-glass-min-opacity: .72; }

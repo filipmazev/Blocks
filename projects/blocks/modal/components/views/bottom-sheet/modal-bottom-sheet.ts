@@ -1,5 +1,6 @@
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output, signal, computed } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, input, output, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { ModalConfig } from '../../../classes/modal-config';
 import { ModalCloseMode } from '../../../types/modal.types';
 import { ModalBanner } from '../../shared/ui/banner/modal-banner';
@@ -7,8 +8,9 @@ import * as bottomSheetConst from '../../../constants/modal-bottom-sheet.constan
 
 @Component({
   selector: 'bx-modal-bottom-sheet',
-  imports: [NgClass, NgTemplateOutlet, ModalBanner],
+  imports: [BxSurfaceDirective, NgClass, NgTemplateOutlet, ModalBanner],
   templateUrl: './modal-bottom-sheet.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal-bottom-sheet.scss'
 })
 export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDestroy {

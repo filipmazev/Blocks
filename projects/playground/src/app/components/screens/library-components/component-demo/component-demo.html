@@ -1,0 +1,93 @@
+<article class="component-page">
+  <header class="component-header">
+    <a routerLink="/components" class="back-link">All components</a>
+    <p class="eyebrow">{{ entry().group }}</p>
+    <h1>{{ entry().title }}</h1>
+    <p class="description">{{ entry().description }}</p>
+    <div class="component-meta"><code>{{ entry().selector }}</code><a routerLink="/appearance">Configure appearance globally</a></div>
+  </header>
+
+  <section class="demo-section" aria-labelledby="preview-heading">
+    <div class="section-heading"><h2 id="preview-heading">Interactive example</h2><span>Uses your active theme</span></div>
+    <div class="demo-stage" bxSurface>
+      @switch (entry().id) {
+        @case ('button') {
+          <div class="demo-stack">
+            <div class="demo-row"><button bx-button variant="filled" (click)="activate('Primary action')">Primary action</button><button bx-button variant="tonal" (click)="activate('Tonal action')">Tonal</button><button bx-button (click)="activate('Text action')">Text</button><button bx-button variant="filled" [disabled]="true">Disabled</button></div>
+            <div class="demo-row"><button bx-button variant="filled" color="success" (click)="activate('Success')">Success</button><button bx-button variant="tonal" color="warn" (click)="activate('Warning')">Warning</button><button bx-button variant="tonal" color="danger" (click)="activate('Delete')">Delete</button><button bx-button variant="fab" aria-label="Add item" (click)="activate('Add item')"><bx-icon name="plus" /></button></div>
+          </div>
+        }
+        @case ('checkbox') {
+          <div class="demo-stack"><bx-checkbox label="Receive product updates" [formControl]="checked" /><bx-checkbox label="Include preview features" [formControl]="secondChecked" /><bx-checkbox label="Unavailable setting" [formControl]="disabledCheck" /><output>Updates: {{ checked.value ? 'on' : 'off' }} · Previews: {{ secondChecked.value ? 'on' : 'off' }}</output></div>
+        }
+        @case ('form-field') {
+          <div class="demo-stack control-width"><bx-form-field label="Project name" forId="field-preview" [required]="true" [error]="fieldError()"><span bxSurface class="native-control-surface"><input class="native-control" id="field-preview" [value]="fieldValue()" (input)="updateField($event)" (blur)="showError.set(true)" [attr.aria-invalid]="!!fieldError()" /></span></bx-form-field><button bx-button variant="tonal" (click)="showError.set(true)">Validate name</button><output>Value: {{ fieldValue() || 'empty' }}</output></div>
+        }
+        @case ('input-field') {
+          <div class="demo-stack control-width"><bx-input-field label="Project name" [errorMessages]="{ required: 'Enter a project name.' }" [formControl]="name" /><bx-input-field label="Email address" type="email" [errorMessages]="{ email: 'Enter a valid email address.' }" [formControl]="email" /><bx-input-field label="Team members" type="number" [min]="1" [max]="20" [formControl]="quantity" /><output>{{ name.value }} · {{ quantity.value }} members</output></div>
+        }
+        @case ('radio') {
+          <fieldset class="demo-stack"><legend>Notification frequency</legend><bx-radio label="Daily summary" name="frequency-demo" value="daily" [formControl]="frequency" /><bx-radio label="Weekly summary" name="frequency-demo" value="weekly" [formControl]="frequency" /><bx-radio label="Only important updates" name="frequency-demo" value="important" [formControl]="frequency" /><output>Selected: {{ frequency.value }}</output><button bx-button (click)="frequency.reset()">Reset frequency</button></fieldset>
+        }
+        @case ('search-input') {
+          <div class="demo-stack control-width"><bx-search-input label="Find a component" placeholder="Try menu" [formControl]="query" (search)="searchTerm.set($event)" /><ul class="search-results">@for (name of searchResults(); track name) { <li>{{ name }}</li> } @empty { <li>No components match your search.</li> }</ul><output>{{ searchResults().length }} results</output></div>
+        }
+        @case ('select') {
+          <div class="demo-stack control-width"><bx-select label="Destination" [options]="options" [isSearchable]="true" [formControl]="destination" /><output>Selected: {{ destination.value }}</output></div>
+        }
+        @case ('slider') {
+          <div class="demo-stack control-width"><label for="volume-demo">Volume</label><input bxSlider id="volume-demo" type="range" min="0" max="100" [formControl]="volume" /><output>{{ volume.value }}%</output><button bx-button (click)="volume.setValue(50)">Reset volume</button><label for="disabled-volume">Unavailable range</label><input bxSlider id="disabled-volume" type="range" value="30" disabled /></div>
+        }
+        @case ('slide-toggle') {
+          <div class="demo-stack"><bx-slide-toggle label="Enable notifications" [formControl]="enabled" /><bx-slide-toggle label="Unavailable setting" [formControl]="disabledCheck" /><output>Notifications are {{ enabled.value ? 'enabled' : 'disabled' }}.</output></div>
+        }
+        @case ('error') {
+          <div class="demo-stack control-width"><bx-form-field label="Reference" forId="error-preview"><span bxSurface class="native-control-surface"><input class="native-control" id="error-preview" [value]="fieldValue()" (input)="updateField($event)" (blur)="showError.set(true)" [attr.aria-invalid]="!!fieldError()" [attr.aria-describedby]="fieldError() ? 'custom-error' : null" /></span>@if (fieldError()) { <bx-error id="custom-error">{{ fieldError() }}</bx-error> }</bx-form-field><button bx-button variant="tonal" (click)="showError.set(true)">Validate reference</button></div>
+        }
+        @case ('menu') {
+          <bx-menu class="menu-preview"><bx-menu-item label="Duplicate project" icon="copy" (action)="activate('Project duplicated')" /><bx-menu-item label="Archive project" icon="archive" (action)="activate('Project archived')" /><bx-menu-item label="Unavailable action" [disabled]="true" /></bx-menu>
+        }
+        @case ('menu-item') {
+          <bx-menu class="menu-preview"><bx-menu-item label="Copy link" icon="link" (action)="activate('Copy link')" /><bx-menu-item label="Open settings" icon="settings" endIcon="chevron-right" (action)="activate('Open settings')" /><bx-menu-item label="Delete project" icon="trash-2" [danger]="true" (action)="activate('Delete requested')" /><bx-menu-item label="Unavailable action" [disabled]="true" /></bx-menu>
+        }
+        @case ('tooltip') {
+          <div class="demo-stack"><bx-tooltip text="Your changes are saved automatically." /><p>Standalone tooltip content. Use the trigger directive for positioned help.</p><a routerLink="/components/tooltip-directive">Try the tooltip trigger</a></div>
+        }
+        @case ('tooltip-directive') {
+          <div class="demo-row"><button bx-button variant="tonal" bxTooltip="Saves the current project" placement="top" (click)="activate('Saved')">Hover or focus for help</button><button bx-button variant="icon" aria-label="More information" bxTooltip="Appearance settings apply to all components" placement="bottom"><bx-icon name="info" /></button></div>
+        }
+        @case ('dropdown') {
+          <div class="demo-stack"><button bx-button variant="filled" [bxDropdown]="dropdownActions" bxTransition="fade" #dropdown="bxDropdown">Project actions <bx-icon name="chevron-down" size="20" /></button><ng-template #dropdownActions><bx-menu><bx-menu-item label="Duplicate" icon="copy" (action)="activate('Project duplicated'); dropdown.close()" /><bx-menu-item label="Archive" icon="archive" (action)="activate('Project archived'); dropdown.close()" /><bx-menu-item label="Delete" icon="trash-2" [danger]="true" (action)="activate('Delete requested'); dropdown.close()" /></bx-menu></ng-template><output>Transition: {{ dropdown.state() }}</output><p>Open, close, or reopen while the menu fades. Its contents keep their full size throughout.</p></div>
+        }
+        @case ('context-menu') {
+          <div class="demo-stack"><div class="context-target" [bxContextMenu]="contextActions" tabindex="0">Right-click here, or press Shift + F10.</div><button bx-button variant="tonal" (click)="openContextMenu($event)">Open actions</button><ng-template #contextActions><bx-menu><bx-menu-item label="Copy selection" icon="copy" (action)="activate('Selection copied')" /><bx-menu-item label="Archive selection" icon="archive" (action)="activate('Selection archived')" /></bx-menu></ng-template></div>
+        }
+        @case ('breadcrumbs') {
+          <div class="demo-stack"><bx-breadcrumbs [minimumBreadcrumbs]="1" /><p>This trail comes from the current route metadata. Select Components to navigate back.</p><a routerLink="/components/button">Navigate to Button</a></div>
+        }
+        @case ('icon') {
+          <div class="demo-stack"><div class="demo-row icon-row"><bx-icon name="sparkles" size="32" color="text-primary" [decorative]="false" ariaLabel="Highlights" /><bx-icon name="check-circle" size="32" color="text-success" /><bx-icon name="info" size="32" color="text-info" bgColor="auto" /><bx-icon name="triangle-alert" size="32" color="text-warn" /><bx-icon name="heart" size="40" color="text-danger" /></div><a routerLink="/icon-catalog">Browse the searchable icon catalog</a></div>
+        }
+        @case ('modal-banner') {
+          <div class="demo-stack banner-preview">@if (bannerVisible()) { <bx-modal-banner [header]="{ text: 'Project settings', icon: { name: 'settings' } }" [showCloseButton]="true" (close)="bannerVisible.set(false); activate('Banner dismissed')" /> } @else { <button bx-button variant="tonal" (click)="bannerVisible.set(true)">Restore banner</button> }<button bx-button variant="filled" (click)="openModal()">See banner in a dialog</button></div>
+        }
+        @case ('toast-core') {
+          <div class="demo-stack"><div class="demo-row"><button bx-button variant="tonal" color="success" (click)="notify('success')">Success</button><button bx-button variant="tonal" color="info" (click)="notify('info')">Information</button><button bx-button variant="tonal" color="warn" (click)="notify('warn')">Warning</button><button bx-button variant="tonal" color="danger" (click)="notify('danger')">Error</button></div><p>The toast host manages the progress indicator, dismiss action, pause and cleanup.</p><a routerLink="/toastr">Open the full toast configurator</a></div>
+        }
+        @case ('simple-toast') {
+          <div class="demo-stack"><div class="demo-row"><button bx-button variant="filled" color="success" (click)="notify('success')">Show success</button><button bx-button variant="tonal" color="info" (click)="notify('info')">Show information</button><button bx-button variant="tonal" color="warn" (click)="notify('warn')">Show warning</button><button bx-button variant="tonal" color="danger" (click)="notify('danger')">Show error</button></div><p>Semantic colors remain tied to the active Blocks palette.</p></div>
+        }
+        @case ('surface') {
+          <section bxSurface class="custom-surface"><bx-icon name="layers" size="28" /><h3>A custom Blocks surface</h3><p>Material, blur, tint, lighting and motion follow the same global configuration as the controls around it.</p><button bx-button variant="tonal" (click)="activate('Custom surface action')">Try an action</button></section>
+        }
+        @default {
+          <div class="demo-stack"><div class="demo-row"><button bx-button variant="filled" (click)="openModal()">Open {{ entry().title.toLowerCase() }}</button>@if (entry().id === 'modal-side') { <button bx-button variant="tonal" (click)="openModal('left')">Open on the left</button> }</div><p>Try editing, saving, pressing Escape, and dismissing through the backdrop. This is the actual service-created component.</p><a routerLink="/modal">Open the full modal configurator</a></div>
+        }
+      }
+    </div>
+    <p class="action-status" role="status" aria-live="polite">{{ status() }}</p>
+  </section>
+
+  <section class="usage-section" aria-labelledby="usage-heading"><h2 id="usage-heading">Quick usage</h2><pre><code [textContent]="'import { ' + entry().symbol + ' } from \'' + entry().package + '\';'"></code></pre><pre><code [textContent]="entry().example"></code></pre></section>
+  <section class="documentation-section" aria-label="Component documentation"><app-readme [path]="entry().readme" /></section>
+</article>

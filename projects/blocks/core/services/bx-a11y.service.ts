@@ -1,7 +1,7 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
+import { Injectable, PLATFORM_ID, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 
-@Injectable({ 
+@Injectable({
   providedIn: 'root'
 })
 export class BxA11yService {
@@ -34,9 +34,9 @@ export class BxA11yService {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.osPrefersReducedMotion.set(mediaQuery.matches);
 
-    mediaQuery.addEventListener('change', (e) => {
-      this.osPrefersReducedMotion.set(e.matches);
-    });
+    const listener = (e: MediaQueryListEvent) => this.osPrefersReducedMotion.set(e.matches);
+    mediaQuery.addEventListener('change', listener);
+    inject(DestroyRef).onDestroy(() => mediaQuery.removeEventListener('change', listener));
   }
 
   private syncWithDOM(): void {

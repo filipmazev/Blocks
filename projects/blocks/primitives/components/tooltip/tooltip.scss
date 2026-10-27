@@ -1,71 +1,66 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
-:host {
-    display: block;
-    pointer-events: none;
-    z-index: z(tooltip);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-}
+:host { display: block; pointer-events: none; z-index: z(tooltip); }
 
-.bx-tooltip-surface {
+.bx-tooltip-surface[data-bx-surface] {
     position: relative;
-    background-color: var(--bx-bg-element-active);
-    color: var(--bx-text-on-primary);
-
     padding: spacing(1) spacing(2);
+    border: 1px solid var(--bx-border-default);
     border-radius: radius(sm);
-
-    font-size: 0.75rem;
+    font-size: .75rem;
     font-family: inherit;
-    white-space: nowrap;
-
-    opacity: 0;
-    transform: scale(0.95);
-    animation: bx-tooltip-appear 0.01ms forwards;
-
-    &.bx-tooltip-animated {
-        animation: bx-tooltip-appear 0.15s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-    }
+    max-width: min(22rem, calc(100vw - #{spacing(6)}));
+    white-space: normal;
+    overflow-wrap: anywhere;
+    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-shadow: #{shadow(sm)};
+    --bx-glass-min-opacity: 1;
+    // The body and arrow share one opaque color, including with reduced motion.
+    --bx-glass-decoration-opacity: 0;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 
     &::after {
         content: '';
         position: absolute;
-        width: 8px;
-        height: 8px;
-        background-color: var(--bx-bg-element-active);
-        transform: rotate(45deg);
-        border-radius: 1px;
-        z-index: -1;
+        z-index: 2;
+        width: spacing(2);
+        height: spacing(2);
+        box-sizing: border-box;
+        border-radius: radius(none);
+        background: var(--bx-glass-surface);
+        border: 0 solid var(--bx-border-default);
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
     }
 }
 
-:host-context(.bx-overlay-pos-top) .bx-tooltip-surface::after {
-    bottom: -4px;
-    left: 50%;
-    margin-left: -4px;
-}
-
+// Only the outward sides of the diamond have a border; its inner half covers the seam.
 :host-context(.bx-overlay-pos-bottom) .bx-tooltip-surface::after {
-    top: -4px;
-    left: 50%;
-    margin-left: -4px;
+    top: -1px;
+    left: clamp(#{spacing(3)}, var(--bx-tooltip-arrow-x, 50%), calc(100% - #{spacing(3)}));
+    border-top-width: 1px;
+    border-left-width: 1px;
 }
-
+:host-context(.bx-overlay-pos-top) .bx-tooltip-surface::after {
+    top: calc(100% + 1px);
+    left: clamp(#{spacing(3)}, var(--bx-tooltip-arrow-x, 50%), calc(100% - #{spacing(3)}));
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+}
 :host-context(.bx-overlay-pos-left) .bx-tooltip-surface::after {
-    right: -4px;
-    top: 50%;
-    margin-top: -4px;
+    left: calc(100% + 1px);
+    top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
+    border-top-width: 1px;
+    border-right-width: 1px;
 }
-
 :host-context(.bx-overlay-pos-right) .bx-tooltip-surface::after {
-    left: -4px;
-    top: 50%;
-    margin-top: -4px;
+    left: -1px;
+    top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
+    border-bottom-width: 1px;
+    border-left-width: 1px;
 }
-
-@keyframes bx-tooltip-appear {
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+@media (forced-colors: active) {
+    .bx-tooltip-surface[data-bx-surface]::after { background: Canvas; border-color: CanvasText; }
 }

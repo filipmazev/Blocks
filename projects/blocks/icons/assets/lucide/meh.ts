@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucideMeh = defineIcon({
   name: 'meh',
   viewBox: '0 0 24 24',
-  svgContent: `<circle cx="12" cy="12" r="10" /><line x1="8" x2="16" y1="15" y2="15" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" />`
+  svgContent: `<path d="M15 10V9" /><path d="M8 16h8" /><path d="M9 10V9" /><circle cx="12" cy="12" r="10" />`
 } as const);

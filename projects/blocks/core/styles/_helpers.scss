@@ -1,0 +1,6 @@
+// Sass definitions only. Include core/styles/index once in global styles.
+@forward 'mixins';
+@forward 'variables';
+@forward 'palettes';
+@forward 'motion';
+@forward 'field-state';

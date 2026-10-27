@@ -1,9 +1,10 @@
 <div #animatorWrapper class="toast-animator" [class.collapsing]="isCollapsing()" [class.is-bottom]="isBottom()">
-    <div #toastSwipeTarget class="toast-wrapper" [ngClass]="wrapperClasses()" [class.show]="isVisible()"
-        [class.no-animate]="!isAnimated()" [style.transform]="toastrTransform()">
+    <div #toastSwipeTarget bxSurface class="toast-wrapper" [ngClass]="wrapperClasses()" [class.show]="isVisible()"
+        [class.no-animate]="!isAnimated()" [style.transform]="toastrTransform()" [style.--bx-toast-bg]="simpleToastSurface()" [style.--bx-toast-emission]="emissionColor()" [class.has-emission]="!!emissionColor()">
         @if(showCloseButton()) {
-        <bx-icon name="x" size="20" [color]="closeButtonColor()" class="toast-close-button" (click)="closeToast()"
-            aria-label="Close toast" />
+        <button type="button" class="toast-close-button" (click)="closeToast()" aria-label="Close toast">
+            <bx-icon name="x" size="20" [color]="closeButtonColor()" />
+        </button>
         }
 
         <ng-container #dynamicContainer></ng-container>

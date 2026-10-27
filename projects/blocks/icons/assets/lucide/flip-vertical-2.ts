@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucideFlipVertical2 = defineIcon({
   name: 'flip-vertical-2',
   viewBox: '0 0 24 24',
-  svgContent: `<path d="m17 3-5 5-5-5h10" /><path d="m17 21-5-5-5 5h10" /><path d="M4 12H2" /><path d="M10 12H8" /><path d="M16 12h-2" /><path d="M22 12h-2" />`
+  svgContent: `<path d="M12 14v2" /><path d="M12 20v2" /><path d="M12 2v2" /><path d="M12 8v2" /><path d="M20.288 16.703A1 1 0 0022 16V8a1 1 0 00-1.712-.703l-3.99 3.991a1 1 0 00-.001 1.424z" /><path d="M3.712 16.703A1 1 0 012 16V8a1 1 0 011.712-.703l3.99 3.991a1 1 0 01.001 1.424z" />`
 } as const);

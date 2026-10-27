@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucideSquareArrowDownRight = defineIcon({
   name: 'square-arrow-down-right',
   viewBox: '0 0 24 24',
-  svgContent: `<rect width="18" height="18" x="3" y="3" rx="2" /><path d="m8 8 8 8" /><path d="M16 8v8H8" />`
+  svgContent: `<path d="M15 15 9 9" /><path d="M9 15h6V9" /><rect x="3" y="3" width="18" height="18" rx="2" />`
 } as const);

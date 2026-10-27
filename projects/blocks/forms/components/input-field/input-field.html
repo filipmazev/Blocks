@@ -1,6 +1,6 @@
-<bx-form-field [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
+<bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
 
-    <div class="bx-input-wrapper" [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()"
+    <div class="bx-input-wrapper" bxSurface [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()"
         [class.has-spinners]="type() === 'number'" [class.is-floating]="isFloating()">
 
         <div class="bx-input-container">

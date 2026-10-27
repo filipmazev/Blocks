@@ -13,6 +13,6 @@
     }
 
     @if(showCloseButton()) {
-    <bx-icon [name]="'x'" (click)="close.emit('cancel')" [ariaLabel]="'Close'" [style.cursor]="'pointer'" />
+    <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')"><bx-icon name="x" /></button>
     }
 </div>

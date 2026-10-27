@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -59,6 +59,7 @@
 
 .bx-input-container {
     flex: 1;
+    min-width: 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -169,3 +170,19 @@
         opacity: 0.3;
     }
 }
+.bx-input-wrapper[data-bx-surface] {
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-shadow: none;
+    &.is-invalid { --bx-glass-edge: var(--bx-border-danger); }
+}
+
+.bx-input-wrapper[data-bx-surface] {
+    @include glass-field;
+}
+
+.bx-input-wrapper[data-bx-surface].is-invalid {
+    @include invalid-glass-field;
+}
+
+.bx-spinners-group { border-radius: inherit; border-start-start-radius: radius(none); border-end-start-radius: radius(none); overflow: hidden; }
+.bx-spin-btn:last-child { border-start-end-radius: inherit; border-end-end-radius: inherit; }

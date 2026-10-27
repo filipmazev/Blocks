@@ -1,4 +1,4 @@
-@use '../../../../core/styles/index' as *;
+@use '../../../../core/styles/helpers' as *;
 
 .simple-toast {
     display: flex;
@@ -7,8 +7,9 @@
     position: relative;
     padding: spacing(4);
     border-radius: radius(md);
-    box-shadow: shadow(toast);
-    border: 1px solid var(--bx-border-default, #ccc);
+    // The parent toast owns elevation and backdrop; content supplies semantic foreground.
+    background: transparent;
+    border: 0;
     overflow: hidden;
 
     p,
@@ -21,26 +22,26 @@
 
     &.info {
         color: var(--bx-text-info);
-        background-color: var(--bx-bg-info-subtle);
-        border: 1px solid var(--bx-border-info);
+
+
     }
 
     &.success {
         color: var(--bx-text-success);
-        background-color: var(--bx-bg-success-subtle);
-        border: 1px solid var(--bx-border-success);
+
+
     }
 
     &.warn {
         color: var(--bx-text-warn);
-        background-color: var(--bx-bg-warn-subtle);
-        border: 1px solid var(--bx-border-warn);
+
+
     }
 
     &.danger {
         color: var(--bx-text-danger);
-        background-color: var(--bx-bg-danger-subtle);
-        border: 1px solid var(--bx-border-danger);
+
+
     }
 }
 

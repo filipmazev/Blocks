@@ -1,0 +1,21 @@
+/* Generated from Blocks core tokens by tools/sync-effects-tokens.mjs. */
+:root {
+  --bx-rounded-none: 0;
+  --bx-rounded-sm: 0.25rem;
+  --bx-rounded-md: 0.5rem;
+  --bx-rounded-lg: 0.75rem;
+  --bx-rounded-xl: 1rem;
+  --bx-rounded-2xl: 1.5rem;
+  --bx-rounded-3xl: 1.875rem;
+  --bx-rounded-pill: 9999px;
+  --bx-space-0: 0;
+  --bx-space-1: 0.25rem;
+  --bx-space-2: 0.5rem;
+  --bx-space-3: 0.75rem;
+  --bx-space-4: 1rem;
+  --bx-space-5: 1.25rem;
+  --bx-space-6: 1.5rem;
+  --bx-space-8: 2rem;
+  --bx-space-10: 2.5rem;
+  --bx-space-12: 3rem;
+}

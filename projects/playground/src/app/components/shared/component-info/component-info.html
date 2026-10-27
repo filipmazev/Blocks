@@ -2,11 +2,11 @@
 
     <div class="info-header">
         <div class="toggle-group">
-            <button class="toggle-btn" [class.active]="viewMode() === 'documentation'"
+            <button type="button" class="toggle-btn" [class.active]="viewMode() === 'documentation'" [attr.aria-pressed]="viewMode() === 'documentation'"
                 (click)="viewMode.set('documentation')">
                 Documentation
             </button>
-            <button class="toggle-btn" [class.active]="viewMode() === 'code'" (click)="viewMode.set('code')">
+            <button type="button" class="toggle-btn" [class.active]="viewMode() === 'code'" [attr.aria-pressed]="viewMode() === 'code'" (click)="viewMode.set('code')">
                 Code Examples
             </button>
         </div>

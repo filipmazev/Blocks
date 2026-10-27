@@ -1,0 +1,3 @@
+@use '../../core/styles/helpers' as *;
+:host { position: fixed; inset: 0; z-index: z(modal); pointer-events: none; }
+:host > * { pointer-events: auto; }

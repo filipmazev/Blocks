@@ -1,47 +1,77 @@
-@if(!isBottomSheetModalActive()) {
-<div class="modal-overlay" [ngClass]="{'modal-backdrop': config()?.style?.hasBackdrop}" [id]="id() ?? ''"
-    (click)="config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null">
+@if (!isBottomSheetModalActive()) {
+  <div
+    class="modal-overlay"
+    [id]="id() ?? ''"
+    (click)="config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null"
+  >
+    @if (config()?.style?.hasBackdrop) {
+      <div class="modal-backdrop" aria-hidden="true"></div>
+    }
     <div class="modal-overlay-wrapper">
-        <div [ngClass]="modalClasses()" (click)="$event.stopPropagation()">
-            <div class="centered-modal-inner-content-container" [class]="config()?.style?.wrapperClasses ?? ''"
-                [style]="config()?.style?.wrapperStyles ?? ''">
-
-                <div class="centered-modal-top-group">
-                    @if (hasBanner()) {
-                    <bx-modal-banner [header]="config()?.header" (close)="close.emit('cancel')"
-                        [showCloseButton]="config()?.style?.showCloseButton ?? true"></bx-modal-banner>
-                    }
-                    @if (headerTemplate()) {
-                    <div class="centered-modal-header">
-                        <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
-                        @if(!hasBanner()) {
-                        <bx-icon [name]="'x'" (click)="close.emit('cancel')" [ariaLabel]="'Close'"
-                            [style.cursor]="'pointer'" />
-                        }
-                    </div>
-                    }
-                    <div class="centered-modal-main-content-container">
-                        <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
-                    </div>
-                </div>
-
-                @if (footerTemplate()) {
-                <div class="centered-modal-footer">
-                    <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
-                </div>
+      <div
+        [ngClass]="modalClasses()"
+        bxSurface
+        data-bx-light-scope
+        (click)="$event.stopPropagation()"
+      >
+        <div
+          class="centered-modal-inner-content-container"
+          [class]="config()?.style?.wrapperClasses ?? ''"
+          [style]="config()?.style?.wrapperStyles ?? ''"
+        >
+          <div class="centered-modal-top-group">
+            @if (hasBanner()) {
+              <bx-modal-banner
+                [header]="$safeNavigationMigration(config()?.header)"
+                (close)="close.emit('cancel')"
+                [showCloseButton]="config()?.style?.showCloseButton ?? true"
+              ></bx-modal-banner>
+            }
+            @if (headerTemplate()) {
+              <div class="centered-modal-header">
+                <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
+                @if (!hasBanner()) {
+                  <button
+                    type="button"
+                    class="bx-modal-close"
+                    aria-label="Close dialog"
+                    (click)="close.emit('cancel')"
+                  >
+                    <bx-icon name="x" />
+                  </button>
                 }
+              </div>
+            }
+            <div class="centered-modal-main-content-container">
+              <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
             </div>
+          </div>
+
+          @if (footerTemplate()) {
+            <div class="centered-modal-footer">
+              <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+            </div>
+          }
         </div>
+      </div>
     </div>
-</div>
+  </div>
 } @else {
-<bx-modal-bottom-sheet [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [config]="config()"
-    [id]="id()" [isOpen]="isOpen()" [isAnimated]="isAnimated()" [hasBanner]="hasBanner()"
-    [animationDuration]="animationDuration()" (close)="close.emit('cancel')">
+  <bx-modal-bottom-sheet
+    [headerTemplate]="headerTemplate()"
+    [footerTemplate]="footerTemplate()"
+    [config]="config()"
+    [id]="id()"
+    [isOpen]="isOpen()"
+    [isAnimated]="isAnimated()"
+    [hasBanner]="hasBanner()"
+    [animationDuration]="animationDuration()"
+    (close)="close.emit('cancel')"
+  >
     <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
-</bx-modal-bottom-sheet>
+  </bx-modal-bottom-sheet>
 }
 
 <ng-template #contentTemplate>
-    <ng-content></ng-content>
+  <ng-content></ng-content>
 </ng-template>

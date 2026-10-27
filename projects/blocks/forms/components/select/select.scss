@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -68,6 +68,7 @@
 
 .bx-select-container {
     flex: 1;
+    min-width: 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -79,15 +80,15 @@
     box-sizing: border-box;
 
     padding: spacing(6) 0 spacing(2) spacing(3);
-    height: 3.85rem;
+    min-height: spacing(12);
 
-    display: flex;
-    align-items: center;
+    display: block;
     font-size: 1rem;
     color: var(--bx-text-heading);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.4;
     z-index: 1;
 
     &.is-placeholder {
@@ -150,7 +151,8 @@
     box-sizing: border-box;
 
     min-width: 100%;
-    width: max-content;
+    width: 100%;
+    max-width: 100%;
 
     background-color: var(--bx-bg-surface);
     border: 1px solid var(--bx-border-subtle);
@@ -184,7 +186,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--bx-scroll-thumb);
-        border-radius: 99px;
+        border-radius: radius(pill);
     }
 
     &::-webkit-scrollbar-thumb:hover {
@@ -221,3 +223,25 @@ bx-menu-item:hover .bx-select-check-placeholder {
     font-size: 0.875rem;
     font-style: italic;
 }
+.bx-select-trigger[data-bx-surface] {
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-shadow: none;
+    &.is-invalid { --bx-glass-edge: var(--bx-border-danger); }
+}
+
+.bx-select-panel[data-bx-surface] { --bx-glass-shadow: #{shadow(sm)}; }
+
+.bx-select-trigger[data-bx-surface] {
+    @include glass-field;
+}
+
+.bx-select-panel[data-bx-surface] { --bx-glass-min-opacity: .8; }
+
+.bx-select-trigger[data-bx-surface].is-invalid {
+    @include invalid-glass-field;
+}
+
+.bx-select-trigger.is-floating .bx-floating-label { position: static; transform: none; padding: spacing(2) 0 0 spacing(3); overflow-wrap: anywhere; }
+.bx-select-trigger.is-floating .bx-select-value { padding-top: spacing(1); min-height: spacing(8); }
+.bx-select-trigger:not(.is-floating) .bx-floating-label { right: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bx-select-item-inner > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,0 +1,14 @@
+@use 'core/styles/helpers' as *;
+:host { display: block; min-height: 100dvh; }
+.app-container { display: flex; align-items: flex-start; min-height: 100dvh; }
+app-sidenav { flex: 0 0 15rem; position: sticky; top: 0; z-index: z(fixed); }
+.app-main { min-width: 0; flex: 1; }
+.app-toolbar { --bx-glass-min-opacity: .72; min-height: 4rem; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: spacing(4); padding: spacing(2) spacing(6); position: sticky; top: 0; z-index: z(sticky); border-radius: radius(none); border-bottom: 1px solid var(--bx-border-default); }
+.toolbar-label { font-size: .875rem; color: var(--bx-text-secondary); }
+.toolbar-actions { display: flex; align-items: center; gap: spacing(2); }
+.toolbar-actions > .theme-mode-toggle { padding: 0; width: spacing(10); height: spacing(10); --bx-glass-radius: #{radius(pill)}; }
+.app-content-container { padding: clamp(1rem, 3vw, 2.5rem); outline: none; }
+.skip-link { position: fixed; top: -5rem; left: spacing(4); z-index: 10000; padding: spacing(3) spacing(4); border-radius: radius(md); background: var(--bx-bg-surface); color: var(--bx-text-primary); box-shadow: shadow(md); }
+.skip-link:focus { top: spacing(4); }
+@include respond-down(lg) { app-sidenav { flex-basis: 0; } .app-main { width: 100%; padding-top: var(--mobile-header-height); } .app-toolbar { top: var(--mobile-header-height); min-height: 3.75rem; padding-inline: spacing(4); } .toolbar-label { display: none; } .toolbar-actions { width: 100%; justify-content: flex-end; } }
+@include respond-down(sm) { .toolbar-actions { gap: spacing(1); } .toolbar-actions > a span { display: none; } }

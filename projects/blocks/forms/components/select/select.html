@@ -1,9 +1,10 @@
-<bx-form-field [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
+<bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
 
-    <button type="button" cdkOverlayOrigin #origin="cdkOverlayOrigin" class="bx-select-trigger"
+    <button type="button" role="combobox" aria-haspopup="listbox" cdkOverlayOrigin bxSurface #origin="cdkOverlayOrigin" class="bx-select-trigger"
         [class.is-invalid]="!!errorMessage" [class.is-open]="isOpen()" [class.is-floating]="isFloating()"
-        [attr.id]="inputId()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()"
-        [disabled]="isDisabled() || loading()" (click)="toggleOpen()">
+        [attr.id]="inputId()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel() || resolvedLabel()"
+        [disabled]="isDisabled() || loading()" (click)="toggleOpen()" (keydown)="onTriggerKey($event)"
+        [attr.aria-expanded]="isOpen()" [attr.aria-controls]="isPanelAttached() ? inputId() + '-options' : null">
 
         <div class="bx-select-container">
             @if (label()) {
@@ -13,7 +14,7 @@
             </label>
             }
 
-            <span class="bx-select-value" [class.is-placeholder]="internalValue() === null">
+            <span class="bx-select-value" [attr.title]="selectedOptionLabel() || resolvedPlaceholder()" [class.is-placeholder]="internalValue() === null">
                 @if (internalValue() === null && isFloating()) {
                 {{ resolvedPlaceholder() }}
                 } @else {
@@ -25,12 +26,12 @@
         <bx-icon class="bx-select-caret" name="chevron-down" size="16"></bx-icon>
     </button>
 
-    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isOpen()"
+    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isPanelAttached()"
         [cdkConnectedOverlayPositions]="overlayPositions" [cdkConnectedOverlayHasBackdrop]="false"
-        [cdkConnectedOverlayMinWidth]="origin.elementRef.nativeElement.offsetWidth"
-        (overlayOutsideClick)="onOutsideClick($event)">
+        [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
+        (overlayOutsideClick)="onOutsideClick($event)" (attach)="onPanelAttach()" (detach)="onPanelDetach()" (positionChange)="refreshPanel()">
 
-        <div class="bx-select-panel">
+        <div class="bx-select-panel" bxSurface role="listbox" [attr.aria-label]="resolvedLabel()" [id]="inputId() + '-options'" (keydown)="onPanelKey($event)">
 
             @if (isSearchable()) {
             <div class="bx-select-search-container">
@@ -43,14 +44,14 @@
             <div class="bx-select-menu-container">
                 @for (option of filteredOptions(); track option.value) {
 
-                <bx-menu-item [disabled]="option.disabled ?? false" (action)="selectOption(option)">
+                <bx-menu-item role="option" [attr.aria-selected]="internalValue() === option.value" [disabled]="option.disabled ?? false" (action)="selectOption(option)">
                     <div class="bx-select-item-inner">
                         <div class="bx-select-check-placeholder">
                             @if (internalValue() === option.value) {
                             <bx-icon name="check" size="16"></bx-icon>
                             }
                         </div>
-                        <span>{{ option.resolvedStr }}</span>
+                        <span [title]="option.resolvedStr">{{ option.resolvedStr }}</span>
                     </div>
                 </bx-menu-item>
 

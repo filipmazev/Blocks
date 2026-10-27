@@ -1,4 +1,4 @@
-<button class="bx-menu-item-btn" [class.is-disabled]="disabled()" [class.is-danger]="danger()"
+<button type="button" [disabled]="disabled()" class="bx-menu-item-btn" [class.is-disabled]="disabled()" [class.is-danger]="danger()"
     [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)">
 
     @if (icon()) {

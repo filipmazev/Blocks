@@ -1,138 +1,40 @@
-import { Component, computed, DOCUMENT, inject, Renderer2, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { HighlightLoader } from 'ngx-highlightjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
-import { IThemePalette } from '@playground/interfaces/itheme-palette.interface';
-import { FormsModule } from '@angular/forms';
-import { ThemeId } from '@playground/types/common.types';
-import { combineLatest } from 'rxjs';
 import { Icon } from '@icons/components/icon';
 import { ThemingService } from '@core/services/theming.service';
 import { Button } from '@forms/components/button/button';
 import { Menu } from '@primitives/components/menu/menu';
 import { MenuItem } from '@primitives/components/menu-item/menu-item';
 import { DropdownDirective } from '@primitives/directives/dropdown.directive';
-import { TooltipDirective } from '@primitives/directives/tooltip.directive';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Sidenav, FormsModule, Button, Icon, Menu, MenuItem, DropdownDirective, TooltipDirective],
+  imports: [RouterOutlet, RouterLink, Sidenav, Button, Icon, Menu, MenuItem, DropdownDirective, BxSurfaceDirective],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
-  private readonly renderer = inject(Renderer2);
   private readonly document = inject(DOCUMENT);
-
-  protected readonly title = signal('playground');
-
-  protected readonly availableThemes: IThemePalette[] = [
-    { id: 'purple', label: 'Purple', className: '' },
-    { id: 'orange', label: 'Orange', className: 'theme-orange' },
-    { id: 'red', label: 'Red', className: 'theme-red' },
-    { id: 'green', label: 'Green', className: 'theme-green' },
-    { id: 'cyberpunk', label: 'Cyberpunk', className: 'theme-cyberpunk' },
-    { id: 'high-contrast', label: 'High Contrast', className: 'high-contrast' }
-  ];
-
-  public readonly selectedThemeLabel = computed(() => {
-    const activeId = this.selectedThemeId();
-    return this.availableThemes.find((t) => t.id === activeId)?.label ?? 'Select Theme';
-  });
-
-  protected isDarkMode = signal(false);
-
-  protected selectedThemeId = signal<ThemeId>('orange');
-
-  private hljsLoader: HighlightLoader = inject(HighlightLoader);
-
-  private themingService = inject(ThemingService);
+  private readonly highlight = inject(HighlightLoader);
+  protected readonly theme = inject(ThemingService);
+  protected readonly availableThemes = this.theme.palettes;
+  protected readonly selectedThemeId = this.theme.palette;
+  protected readonly selectedThemeLabel = this.theme.paletteLabel;
+  protected readonly isDarkMode = computed(() => this.theme.activeTheme() === 'dark');
 
   constructor() {
-    this.initThemeSubscription();
-    this.initPalette();
-  }
-
-  private initPalette() {
-    const savedPalette = localStorage.getItem('theme-palette');
-
-    if (savedPalette && this.availableThemes.some((t) => t.id === savedPalette)) {
-      this.setPalette(savedPalette as ThemeId);
-    } else {
-      this.setPalette('orange');
-    }
-  }
-
-  protected initThemeSubscription() {
-    combineLatest({
-      systemTheme: this.themingService.getSystemTheme$(),
-      appTheme: this.themingService.getApplicationTheme$()
-    })
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ systemTheme, appTheme }) => {
-        const savedPreference = appTheme ?? localStorage.getItem('theme') ?? 'auto';
-        const themeToApply = savedPreference === 'auto' ? systemTheme : savedPreference;
-
-        if (themeToApply === 'dark') {
-          this.enableDarkMode();
-        } else {
-          this.disableDarkMode();
-        }
-
-        this.setCodeTheme();
-      });
-  }
-
-  protected onThemeChange(themeId: ThemeId) {
-    this.setPalette(themeId);
-  }
-
-  protected toggleTheme() {
-    if (this.isDarkMode()) {
-      this.disableDarkMode();
-    } else {
-      this.enableDarkMode();
-    }
-    this.setCodeTheme();
-  }
-
-  protected goToProfile(): void {}
-
-  private enableDarkMode() {
-    this.isDarkMode.set(true);
-    this.renderer.setAttribute(this.document.documentElement, 'data-theme', 'dark');
-    this.themingService.setApplicationTheme('dark');
-  }
-
-  private disableDarkMode() {
-    this.isDarkMode.set(false);
-    this.renderer.removeAttribute(this.document.documentElement, 'data-theme');
-    this.themingService.setApplicationTheme('light');
-  }
-
-  private setCodeTheme() {
-    const codeTheme = this.isDarkMode() ? 'assets/styles/vs2015.css' : 'assets/styles/github.css';
-    this.hljsLoader.setTheme(codeTheme);
-  }
-
-  private setPalette(themeId: ThemeId) {
-    const theme = this.availableThemes.find((t) => t.id === themeId);
-    if (!theme) return;
-
-    this.selectedThemeId.set(themeId);
-    localStorage.setItem('theme-palette', themeId);
-
-    const root = this.document.documentElement;
-
-    this.availableThemes.forEach((t) => {
-      if (t.className) {
-        this.renderer.removeClass(root, t.className);
-      }
+    effect(() => {
+      const dark = this.isDarkMode();
+      this.document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      if (this.document.defaultView) this.highlight.setTheme(dark ? 'assets/styles/vs2015.css' : 'assets/styles/github.css');
     });
+  }
 
-    if (theme.className) {
-      this.renderer.addClass(root, theme.className);
-    }
+  protected toggleTheme(): void {
+    this.theme.setApplicationTheme(this.isDarkMode() ? 'light' : 'dark');
   }
 }

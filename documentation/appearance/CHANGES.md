@@ -1,0 +1,211 @@
+# Changes from Blocks 1.3.0 glass preview to 1.4.0
+
+## Behavior and integration
+
+- Glass is now the shared component material, configured through the existing ThemingService and Blocks semantic tokens. Content-only parts retain their containing material. Global changes propagate to mounted controls and open overlays.
+- Connected emerging/merging motion applies to dropdowns, selects, context menus and tooltips. The actual blurred material follows the changing silhouette. Dragging is not included.
+- Shared spatial lighting adds bounded light and foreground/background reflection proxies, with capability-based enhanced rendering, accessibility fallbacks and idle cleanup. This is an approximation, not physical arbitrary-DOM refraction.
+- Existing component inconsistencies were corrected, including radio presentation, transparent-state contrast, literal select searches, accessible dismiss controls, and overlay/timer cleanup.
+- All public components have documentation and dedicated demos: 28 component/directive routes, plus existing configurators. The playground uses global appearance controls, lazy routes, 48-result icon pagination and build-rendered documentation/snippets.
+- Removed unused runtime Markdown/Mermaid dependencies. Kept the Angular21 framework/toolchain and regenerated the workspace lockfile. Added glass stylesheet setup to ng add.
+- The ZIP excludes automated test files and unused test targets. Engine compiled output and generated documentation are included.
+
+See DELIVERY-PLAN.md, ACCEPTANCE.md and VALIDATION.md for planning and the distinction between source review and browser verification.
+
+## Modified files (130)
+
+- `README.md`
+- `angular.json`
+- `documentation/appearance/README.md`
+- `documentation/appearance/VALIDATION.md`
+- `package-lock.json`
+- `package.json`
+- `projects/blocks/README.md`
+- `projects/blocks/core/public-api.ts`
+- `projects/blocks/core/services/bx-a11y.service.ts`
+- `projects/blocks/core/services/theming.service.ts`
+- `projects/blocks/core/styles/_theme-engine.scss`
+- `projects/blocks/core/styles/themes/_high-contrast-theme.scss`
+- `projects/blocks/forms/components/button/button.scss`
+- `projects/blocks/forms/components/button/button.ts`
+- `projects/blocks/forms/components/checkbox/checkbox.html`
+- `projects/blocks/forms/components/checkbox/checkbox.scss`
+- `projects/blocks/forms/components/checkbox/checkbox.ts`
+- `projects/blocks/forms/components/input-field/input-field.html`
+- `projects/blocks/forms/components/input-field/input-field.scss`
+- `projects/blocks/forms/components/input-field/input-field.ts`
+- `projects/blocks/forms/components/radio-button/radio-button.html`
+- `projects/blocks/forms/components/radio-button/radio-button.scss`
+- `projects/blocks/forms/components/radio-button/radio-button.ts`
+- `projects/blocks/forms/components/search-input/search-input.html`
+- `projects/blocks/forms/components/search-input/search-input.scss`
+- `projects/blocks/forms/components/search-input/search-input.ts`
+- `projects/blocks/forms/components/select/select.html`
+- `projects/blocks/forms/components/select/select.scss`
+- `projects/blocks/forms/components/select/select.ts`
+- `projects/blocks/forms/components/slide-toggle/slide-toggle.html`
+- `projects/blocks/forms/components/slide-toggle/slide-toggle.scss`
+- `projects/blocks/forms/components/slide-toggle/slide-toggle.ts`
+- `projects/blocks/effects/directives/surface.directive.ts`
+- `projects/blocks/effects/public-api.ts`
+- `projects/blocks/modal/components/shared/ui/banner/modal-banner.html`
+- `projects/blocks/modal/components/shared/ui/banner/modal-banner.scss`
+- `projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.html`
+- `projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss`
+- `projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.ts`
+- `projects/blocks/modal/components/views/centered/modal-centered.html`
+- `projects/blocks/modal/components/views/centered/modal-centered.scss`
+- `projects/blocks/modal/components/views/centered/modal-centered.ts`
+- `projects/blocks/modal/components/views/side/modal-side.html`
+- `projects/blocks/modal/components/views/side/modal-side.scss`
+- `projects/blocks/modal/components/views/side/modal-side.ts`
+- `projects/blocks/navigation/components/breadcrumbs/breadcrumbs.html`
+- `projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss`
+- `projects/blocks/navigation/components/breadcrumbs/breadcrumbs.ts`
+- `projects/blocks/package.json`
+- `projects/blocks/primitives/components/menu-item/menu-item.html`
+- `projects/blocks/primitives/components/menu/menu.html`
+- `projects/blocks/primitives/components/menu/menu.scss`
+- `projects/blocks/primitives/components/menu/menu.ts`
+- `projects/blocks/primitives/components/tooltip/tooltip.html`
+- `projects/blocks/primitives/components/tooltip/tooltip.scss`
+- `projects/blocks/primitives/components/tooltip/tooltip.ts`
+- `projects/blocks/primitives/directives/context-menu.directive.ts`
+- `projects/blocks/primitives/directives/dropdown.directive.ts`
+- `projects/blocks/primitives/directives/tooltip.directive.ts`
+- `projects/blocks/schematics/ng-add/index.js`
+- `projects/blocks/schematics/ng-add/index.ts`
+- `projects/blocks/src/public-api.ts`
+- `projects/blocks/toastr/components/toast-core.html`
+- `projects/blocks/toastr/components/toast-core.scss`
+- `projects/blocks/toastr/components/toast-core.ts`
+- `projects/blocks/toastr/components/views/simple-toast/simple-toast.scss`
+- `projects/blocks/effects/runtime/README.md`
+- `dist/effects-runtime/geometry.js`
+- `dist/effects-runtime/geometry.js.map`
+- `dist/effects-runtime/index.d.ts`
+- `dist/effects-runtime/index.d.ts.map`
+- `dist/effects-runtime/index.js`
+- `dist/effects-runtime/index.js.map`
+- `dist/effects-runtime/surface.d.ts`
+- `dist/effects-runtime/surface.d.ts.map`
+- `dist/effects-runtime/surface.js`
+- `dist/effects-runtime/surface.js.map`
+- `dist/effects-runtime/transition.d.ts`
+- `dist/effects-runtime/transition.d.ts.map`
+- `dist/effects-runtime/transition.js`
+- `dist/effects-runtime/transition.js.map`
+- `dist/effects-runtime/types.d.ts`
+- `dist/effects-runtime/types.d.ts.map`
+- `projects/blocks/effects/runtime/examples/index.html`
+- `projects/blocks/effects/runtime/package.json`
+- `projects/blocks/effects/runtime/src/geometry.ts`
+- `projects/blocks/effects/effects.css`
+- `projects/blocks/effects/runtime/src/index.ts`
+- `projects/blocks/effects/runtime/src/surface.ts`
+- `projects/blocks/effects/runtime/src/transition.ts`
+- `projects/blocks/effects/runtime/src/types.ts`
+- `projects/playground/src/app/app.config.ts`
+- `projects/playground/src/app/app.html`
+- `projects/playground/src/app/app.routes.ts`
+- `projects/playground/src/app/app.scss`
+- `projects/playground/src/app/app.ts`
+- `projects/playground/src/app/components/screens/appearance/appearance.html`
+- `projects/playground/src/app/components/screens/appearance/appearance.scss`
+- `projects/playground/src/app/components/screens/appearance/appearance.ts`
+- `projects/playground/src/app/components/screens/home/home.html`
+- `projects/playground/src/app/components/screens/home/home.scss`
+- `projects/playground/src/app/components/screens/home/home.ts`
+- `projects/playground/src/app/components/screens/icon-catalog/icon-catalog.html`
+- `projects/playground/src/app/components/screens/icon-catalog/icon-catalog.scss`
+- `projects/playground/src/app/components/screens/icon-catalog/icon-catalog.ts`
+- `projects/playground/src/app/components/screens/library-components/modal/components/demo-modal/demo-modal.scss`
+- `projects/playground/src/app/components/screens/library-components/modal/modal.html`
+- `projects/playground/src/app/components/screens/library-components/modal/modal.scss`
+- `projects/playground/src/app/components/screens/library-components/modal/modal.ts`
+- `projects/playground/src/app/components/screens/library-components/toastr/components/demo-toast/demo-toast.scss`
+- `projects/playground/src/app/components/screens/library-components/toastr/toastr.html`
+- `projects/playground/src/app/components/screens/library-components/toastr/toastr.ts`
+- `projects/playground/src/app/components/shared/code/code.scss`
+- `projects/playground/src/app/components/shared/code/code.ts`
+- `projects/playground/src/app/components/shared/component-info/component-info.html`
+- `projects/playground/src/app/components/shared/component-info/component-info.scss`
+- `projects/playground/src/app/components/shared/readme/readme.html`
+- `projects/playground/src/app/components/shared/readme/readme.scss`
+- `projects/playground/src/app/components/shared/readme/readme.ts`
+- `projects/playground/src/app/components/shared/sidenav/sidenav.html`
+- `projects/playground/src/app/components/shared/sidenav/sidenav.scss`
+- `projects/playground/src/app/components/shared/sidenav/sidenav.ts`
+- `projects/playground/src/assets/code-snippets/modal/confirm-close-modal.ts.txt`
+- `projects/playground/src/assets/code-snippets/modal/modal-usage.ts.txt`
+- `projects/playground/src/assets/code-snippets/modal/modal.ts.txt`
+- `projects/playground/src/assets/code-snippets/modal/styles.scss.txt`
+- `projects/playground/src/assets/code-snippets/toastr/demo-toast.ts.txt`
+- `projects/playground/src/assets/code-snippets/toastr/toastr-usage.ts.txt`
+- `projects/playground/src/styles.scss`
+- `projects/playground/src/styles/_common.scss`
+
+## Added files (50)
+
+- `documentation/appearance/ACCEPTANCE.md`
+- `documentation/appearance/DELIVERY-PLAN.md`
+- `projects/blocks/core/helpers/overlay-theme.ts`
+- `projects/blocks/core/types/appearance.types.ts`
+- `projects/blocks/forms/components/button/README.md`
+- `projects/blocks/forms/components/checkbox/README.md`
+- `projects/blocks/forms/components/form-field/README.md`
+- `projects/blocks/forms/components/input-field/README.md`
+- `projects/blocks/forms/components/radio-button/README.md`
+- `projects/blocks/forms/components/search-input/README.md`
+- `projects/blocks/forms/components/select/README.md`
+- `projects/blocks/forms/components/slide-toggle/README.md`
+- `projects/blocks/forms/directives/error/README.md`
+- `projects/blocks/effects/README.md`
+- `projects/blocks/effects/component-surface.ts`
+- `projects/blocks/icons/components/README.md`
+- `projects/blocks/modal/components/README.md`
+- `projects/blocks/modal/components/shared/ui/backdrop/README.md`
+- `projects/blocks/modal/components/shared/ui/banner/README.md`
+- `projects/blocks/modal/components/views/bottom-sheet/README.md`
+- `projects/blocks/modal/components/views/centered/README.md`
+- `projects/blocks/modal/components/views/side/README.md`
+- `projects/blocks/modal/directives/footer/README.md`
+- `projects/blocks/modal/directives/header/README.md`
+- `projects/blocks/navigation/components/breadcrumbs/README.md`
+- `projects/blocks/primitives/components/menu-item/README.md`
+- `projects/blocks/primitives/components/menu/README.md`
+- `projects/blocks/primitives/components/tooltip/README.md`
+- `projects/blocks/primitives/directives/context-menu/README.md`
+- `projects/blocks/primitives/directives/dropdown/README.md`
+- `projects/blocks/primitives/directives/tooltip/README.md`
+- `projects/blocks/toastr/components/README.md`
+- `projects/blocks/toastr/components/views/simple-toast/README.md`
+- `dist/effects-runtime/configuration.d.ts`
+- `dist/effects-runtime/configuration.d.ts.map`
+- `dist/effects-runtime/configuration.js`
+- `dist/effects-runtime/configuration.js.map`
+- `dist/effects-runtime/scene.d.ts`
+- `dist/effects-runtime/scene.d.ts.map`
+- `dist/effects-runtime/scene.js`
+- `dist/effects-runtime/scene.js.map`
+- `projects/blocks/effects/runtime/src/configuration.ts`
+- `projects/blocks/effects/runtime/src/scene.ts`
+- `projects/playground/src/app/components/screens/library-components/component-demo/component-catalog.ts`
+- `projects/playground/src/app/components/screens/library-components/component-demo/component-demo.html`
+- `projects/playground/src/app/components/screens/library-components/component-demo/component-demo.scss`
+- `projects/playground/src/app/components/screens/library-components/component-demo/component-demo.ts`
+- `projects/playground/src/app/components/screens/library-components/component-demo/component-index.ts`
+- `projects/playground/src/app/generated/documentation.ts`
+- `tools/docs/build-docs.mjs`
+
+## Removed files (8)
+
+- `projects/blocks/tsconfig.spec.json`
+- `projects/blocks/effects/runtime/tests/fake-dom.mjs`
+- `projects/blocks/effects/runtime/tests/geometry.test.mjs`
+- `projects/blocks/effects/runtime/tests/scheduler.test.mjs`
+- `projects/blocks/effects/runtime/tests/spring.test.mjs`
+- `projects/blocks/effects/runtime/tests/surface-lifecycle.test.mjs`
+- `projects/blocks/effects/runtime/tests/transition-lifecycle.test.mjs`
+- `projects/playground/tsconfig.spec.json`
+

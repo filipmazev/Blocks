@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { RouterLink } from '@angular/router';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'; // <-- Added import
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MarkdownModule } from 'ngx-markdown';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ToastrConfigFormControls } from '@playground/types/form.types';
@@ -19,8 +20,9 @@ import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 
 @Component({
   selector: 'app-toastr-demo',
-  imports: [ReactiveFormsModule, MarkdownModule, ComponentInfo, Button, InputField, Checkbox, Select],
+  imports: [BxSurfaceDirective, RouterLink, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './toastr.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toastr.scss'
 })
 export class Toastr {
@@ -41,13 +43,30 @@ export class Toastr {
     value: pos
   }));
 
+  protected readonly resultMessage = signal('Queue a notification to preview its appearance and lifetime.');
   protected toastrReadmePath = signal<string>('assets/toastr-readme/README.md');
 
   protected codeFiles: ICodeFile[] = [
-    { title: 'toastr-usage.ts', path: 'assets/code-snippets/toastr/toastr-usage.ts.txt', language: 'typescript' },
-    { title: 'demo-toast.ts', path: 'assets/code-snippets/toastr/demo-toast.ts.txt', language: 'typescript' },
-    { title: 'demo-toast.html', path: 'assets/code-snippets/toastr/demo-toast.html.txt', language: 'html' },
-    { title: 'demo-toast.scss', path: 'assets/code-snippets/toastr/demo-toast.scss.txt', language: 'scss' }
+    {
+      title: 'toastr-usage.ts',
+      path: 'assets/code-snippets/toastr/toastr-usage.ts.txt',
+      language: 'typescript'
+    },
+    {
+      title: 'demo-toast.ts',
+      path: 'assets/code-snippets/toastr/demo-toast.ts.txt',
+      language: 'typescript'
+    },
+    {
+      title: 'demo-toast.html',
+      path: 'assets/code-snippets/toastr/demo-toast.html.txt',
+      language: 'html'
+    },
+    {
+      title: 'demo-toast.scss',
+      path: 'assets/code-snippets/toastr/demo-toast.scss.txt',
+      language: 'scss'
+    }
   ];
 
   private toastCount = 0;
@@ -84,7 +103,7 @@ export class Toastr {
       durationInMs: request.durationInMs ?? undefined,
       animate: request.animate ?? undefined,
       swipeToDismiss: request.swipeToDismiss ?? undefined,
-      hasDefaultBackground: false,
+      hasDefaultBackground: true,
       data: {
         title: `${request.title} #${this.toastCount}`,
         message: request.message ?? '',
@@ -93,9 +112,10 @@ export class Toastr {
     });
 
     toastRef.afterClosed$.subscribe((result: IDemoToastResult | undefined) => {
-      console.log(`Toast #${this.openedCount} closed with result:`, result ?? 'No result');
       this.openedCount = result?.openedCount ?? this.openedCount;
+      this.resultMessage.set('Notification dismissed.');
     });
+    this.resultMessage.set(`Notification ${this.toastCount} queued.`);
   }
 
   protected queueSimpleToast(type: SimpleToastType): void {

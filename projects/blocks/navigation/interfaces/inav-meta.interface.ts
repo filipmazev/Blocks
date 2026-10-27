@@ -1,5 +1,5 @@
-import { IconData } from "@filip.mazev/blocks/icons";
-import { NavText } from "../types/navigation.types";
+import { IconData } from '@filip.mazev/blocks/icons';
+import { NavText } from '../types/navigation.types';
 
 export interface INavMeta {
   label?: NavText;

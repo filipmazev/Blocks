@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: inline-flex;
@@ -100,59 +100,10 @@
     &.bx-btn-fab,
     &.bx-btn-mini-fab {
         padding: 0;
-        border-radius: 50%;
+        border-radius: radius(pill);
 
         .bx-btn-content-wrapper {
             gap: 0;
-        }
-    }
-
-    &.bx-btn-filled,
-    &.bx-btn-fab,
-    &.bx-btn-mini-fab,
-    &.bx-btn-extended-fab {
-        background: var(--btn-theme-base);
-        color: var(--btn-theme-text);
-
-        &:not(.bx-btn-non-interactive) {
-            &:hover {
-                background: var(--btn-theme-hover);
-            }
-
-            &:active {
-                background: var(--btn-theme-active);
-            }
-        }
-    }
-
-    &.bx-btn-text,
-    &.bx-btn-icon {
-        background: transparent;
-        color: var(--btn-theme-text);
-
-        &:not(.bx-btn-non-interactive) {
-            &:hover {
-                background: var(--btn-theme-tonal-bg);
-            }
-
-            &:active {
-                background: var(--btn-theme-active);
-            }
-        }
-    }
-
-    &.bx-btn-tonal {
-        background: var(--btn-theme-tonal-bg);
-        color: var(--btn-theme-tonal-text);
-
-        &:not(.bx-btn-non-interactive) {
-            &:hover {
-                opacity: 0.8;
-            }
-
-            &:active {
-                opacity: 0.9;
-            }
         }
     }
 
@@ -170,7 +121,7 @@
     &.bx-btn-extended-fab {
         padding: 0 1.5rem;
         height: 3.5rem;
-        border-radius: 9999px;
+        border-radius: radius(pill);
     }
 
     &.bx-btn-is-outlined {
@@ -196,4 +147,100 @@
     width: 100%;
     height: 100%;
     color: inherit;
+}
+:host([data-bx-surface]), :host(:not([data-bx-surface])) {
+    border-radius: var(--bx-glass-radius, #{radius(md)});
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-text: var(--btn-theme-tonal-text, var(--bx-text-primary));
+    --bx-glass-edge: var(--bx-border-default);
+    --bx-glass-min-opacity: .35;
+    border-color: var(--bx-glass-edge);
+    --bx-glass-shadow: 0 2px 4px rgb(0 0 0 / .08);
+    color: var(--bx-glass-text);
+    background: var(--bx-glass-surface);
+    @supports (background: color-mix(in srgb, white, transparent)) {
+        background: color-mix(in srgb, var(--bx-glass-surface) calc(max(.35, var(--bx-glass-opacity, .24)) * 100%), transparent);
+    }
+
+    &.bx-btn-is-elevated { --bx-glass-shadow: #{shadow(md)}; }
+    &.bx-btn-icon, &.bx-btn-fab, &.bx-btn-mini-fab {
+        border-radius: var(--bx-glass-radius, #{radius(pill)});
+    }
+
+    &.bx-btn-extended-fab {
+        border-radius: var(--bx-glass-radius, #{radius(pill)});
+    }
+
+    &.bx-btn-color-danger { --bx-glass-text: var(--bx-text-danger); }
+    &.bx-btn-color-success { --bx-glass-text: var(--bx-text-success); }
+    &.bx-btn-color-info { --bx-glass-text: var(--bx-text-info); }
+    &.bx-btn-color-warn { --bx-glass-text: var(--bx-text-warn); }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand, currentColor);
+        outline-offset: -2px;
+    }
+
+    &.bx-btn-tonal:not(.bx-btn-non-interactive) {
+        &:hover, &:active { opacity: 1; }
+    }
+}
+
+:host([data-bx-surface]):hover:not(.bx-btn-non-interactive) {
+    --bx-glass-surface: var(--bx-bg-neutral-hover);
+    --bx-glass-edge: var(--bx-border-strong);
+}
+:host([data-bx-surface]):active:not(.bx-btn-non-interactive) {
+    --bx-glass-shadow: inset 0 1px 3px rgb(0 0 0 / .12);
+}
+
+// Standard control state drives the shared material and emitted border light.
+:host(:is([aria-pressed="true"], [aria-selected="true"], [aria-expanded="true"], [aria-current]:not([aria-current="false"]):not([aria-current=""])):not(.bx-btn-non-interactive):not([aria-disabled="true"])) {
+    --bx-glass-surface: var(--btn-selected-surface, var(--bx-bg-neutral-active));
+}
+
+// Tonal actions use their semantic tint, including selected/open states.
+:host(.bx-btn-tonal) {
+    --bx-glass-surface: var(--btn-theme-tonal-bg);
+    --btn-selected-surface: var(--btn-theme-tonal-bg);
+    &:hover:not(.bx-btn-non-interactive):not([aria-disabled="true"]),
+    &:active:not(.bx-btn-non-interactive):not([aria-disabled="true"]) {
+        --bx-glass-surface: var(--btn-theme-tonal-bg);
+    }
+}
+
+// Filled actions retain their intent color in every material. Keep enough tint
+// for the paired foreground token to remain legible over either light or dark content.
+:host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined)) {
+    --bx-glass-surface: var(--btn-theme-base);
+    --btn-selected-surface: var(--btn-theme-base);
+    --bx-glass-text: var(--btn-theme-text);
+    --bx-glass-min-opacity: .88;
+
+    &[data-bx-surface="frosted"] { --bx-glass-min-opacity: .94; }
+    &:hover:not(.bx-btn-non-interactive):not([aria-disabled="true"]) {
+        --bx-glass-surface: var(--btn-theme-hover);
+        --btn-selected-surface: var(--btn-theme-hover);
+    }
+    &:active:not(.bx-btn-non-interactive):not([aria-disabled="true"]) {
+        --bx-glass-surface: var(--btn-theme-active);
+        --btn-selected-surface: var(--btn-theme-active);
+    }
+}
+
+// Text actions are link-like in every material and interaction state. Hide the
+// decorative layers too, so incoming lighting cannot paint a border or backing.
+:host(.bx-btn-text) {
+    background: transparent !important;
+    border: 0;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+
+    &:hover:not(.bx-btn-non-interactive):not([aria-disabled="true"]) {
+        text-decoration: underline;
+        text-underline-offset: .2em;
+    }
 }

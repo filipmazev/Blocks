@@ -29,31 +29,10 @@
                             ]
                         },
                         "assets": [
-                            "projects/playground/src/favicon.ico",
                             "projects/playground/src/assets",
                             {
                                 "glob": "**/*",
                                 "input": "projects/playground/public"
-                            },
-                            {
-                                "glob": "README.md",
-                                "input": "documentation/modal",
-                                "output": "/assets/modal-readme"
-                            },
-                            {
-                                "glob": "README.md",
-                                "input": "documentation/core",
-                                "output": "/assets/blocks-core-readme"
-                            },
-                            {
-                                "glob": "README.md",
-                                "input": "documentation/toastr",
-                                "output": "/assets/toastr-readme"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "projects/playground/src/app/components/modal",
-                                "output": "/assets/code-snippets"
                             },
                             {
                                 "glob": "github.css",
@@ -64,9 +43,15 @@
                                 "glob": "vs2015.css",
                                 "input": "./node_modules/highlight.js/styles",
                                 "output": "/assets/styles"
+                            },
+                            {
+                                "glob": "**/*.md",
+                                "input": "documentation",
+                                "output": "/assets/documentation"
                             }
                         ],
                         "styles": [
+                            "projects/blocks/effects/effects.css",
                             "projects/playground/src/styles.scss"
                         ]
                     },
@@ -109,15 +94,12 @@
                         "port": 8080
                     }
                 },
-                "test": {
-                    "builder": "@angular/build:unit-test"
-                },
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
                         "lintFilePatterns": [
-                            "projects/playground/src/**/*.ts",
-                            "projects/playground/src/**/*.html"
+                            "projects/playground/**/*.ts",
+                            "projects/playground/**/*.html"
                         ]
                     }
                 },
@@ -144,18 +126,12 @@
                     },
                     "defaultConfiguration": "production"
                 },
-                "test": {
-                    "builder": "@angular/build:unit-test",
-                    "options": {
-                        "tsConfig": "projects/blocks/tsconfig.spec.json"
-                    }
-                },
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
                         "lintFilePatterns": [
-                            "projects/blocks/src/**/*.ts",
-                            "projects/blocks/src/**/*.html"
+                            "projects/blocks/**/*.ts",
+                            "projects/blocks/**/*.html"
                         ]
                     }
                 }

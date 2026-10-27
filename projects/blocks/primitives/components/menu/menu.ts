@@ -1,11 +1,13 @@
-import { Component, computed, inject } from '@angular/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { BxA11yService } from '@filip.mazev/blocks/core';
 
 @Component({
   selector: 'bx-menu',
-  imports: [],
+  imports: [BxSurfaceDirective],
   templateUrl: './menu.html',
-  styleUrl: './menu.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './menu.scss'
 })
 export class Menu {
   private readonly a11y = inject(BxA11yService);

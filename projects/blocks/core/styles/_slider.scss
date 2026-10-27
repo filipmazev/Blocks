@@ -1,0 +1,101 @@
+@use 'mixins' as *;
+@use 'motion' as *;
+
+// Native range pseudo-elements differ across engines and must remain separate rules.
+@mixin track {
+    box-sizing: border-box;
+    height: spacing(2);
+    border: 1px solid var(--bx-border-strong);
+    border-radius: radius(pill);
+    background: linear-gradient(to right, var(--bx-primary) 0 var(--bx-slider-progress, 50%), var(--bx-bg-neutral) var(--bx-slider-progress, 50%) 100%);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / .16);
+}
+@mixin thumb {
+    appearance: none;
+    box-sizing: border-box;
+    width: spacing(6);
+    height: spacing(6);
+    border-radius: radius(pill);
+    border: 1px solid var(--bx-border-strong);
+    background: var(--bx-bg-surface);
+    background: radial-gradient(circle at 35% 0%, rgb(255 255 255 / .24), transparent 65%), var(--bx-bg-surface);
+    border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) calc(var(--bx-slider-light-strength, .18) * 100%), var(--bx-border-strong));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / .45), inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) 30%, transparent), 0 2px 5px rgb(0 0 0 / .18);
+}
+.bx-slider-shell {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    input.bx-slider { display: block; }
+    // The native thumb remains the hit target; the opaque decorative thumb reflects nearby colors.
+    input.bx-slider::-webkit-slider-thumb { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+    input.bx-slider::-moz-range-thumb { background: transparent; border-color: transparent; box-shadow: none; backdrop-filter: none; }
+    &.is-disabled .bx-slider-thumb { opacity: .5; }
+}
+.bx-slider-thumb {
+    @include thumb;
+    @include bx-transition('border-color, box-shadow', .2s, ease-out);
+    position: absolute;
+    top: var(--bx-slider-center-y, 50%);
+    left: calc(var(--bx-slider-track-start, 0px) + var(--bx-slider-position, .5) * (var(--bx-slider-track-width, 100%) - #{spacing(6)}));
+    transform: translateY(-50%);
+    pointer-events: none;
+    &::after {
+        @include bx-transition(opacity, .2s, ease-out);
+        content: '';
+        position: absolute;
+        inset: -1px;
+        box-sizing: border-box;
+        border-radius: inherit;
+        padding: 1px;
+        background: radial-gradient(circle at var(--bx-slider-light-x, 35%) var(--bx-slider-light-y, 0%), var(--bx-slider-light-color, var(--bx-primary)), transparent 75%);
+        opacity: var(--bx-slider-light-strength, .25);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+    }
+}
+input.bx-slider {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: spacing(10);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    &:dir(rtl) { direction: ltr; transform: scaleX(-1); }
+    &::-webkit-slider-runnable-track { @include track; }
+    &::-moz-range-track { @include track; }
+    &::-webkit-slider-thumb { @include thumb; margin-top: calc((#{spacing(2)} - #{spacing(6)}) / 2 - 1px); }
+    &::-moz-range-thumb { @include thumb; }
+    &:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 3px; border-radius: radius(pill); }
+    &:disabled { opacity: .5; cursor: not-allowed; }
+}
+@mixin opaque-thumb { background: var(--bx-bg-surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-bx-glass-material='solid'] .bx-slider-thumb,
+[data-bx-reduced-transparency='true'] .bx-slider-thumb { @include opaque-thumb; }
+[data-bx-glass-material='solid'] input.bx-slider,
+[data-bx-reduced-transparency='true'] input.bx-slider {
+    &::-webkit-slider-thumb { @include opaque-thumb; }
+    &::-moz-range-thumb { @include opaque-thumb; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .bx-slider-thumb { @include opaque-thumb; }
+    input.bx-slider::-webkit-slider-thumb { @include opaque-thumb; }
+    input.bx-slider::-moz-range-thumb { @include opaque-thumb; }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    .bx-slider-thumb { @include opaque-thumb; }
+    input.bx-slider::-webkit-slider-thumb { @include opaque-thumb; }
+    input.bx-slider::-moz-range-thumb { @include opaque-thumb; }
+}
+@media (forced-colors: active) {
+    .bx-slider-thumb { display: none; }
+    input.bx-slider { appearance: auto; -webkit-appearance: auto; accent-color: Highlight; }
+    input.bx-slider::-webkit-slider-thumb, .bx-slider-shell input.bx-slider::-webkit-slider-thumb { background: ButtonText; border-color: ButtonText; box-shadow: none; }
+    input.bx-slider::-moz-range-thumb, .bx-slider-shell input.bx-slider::-moz-range-thumb { background: ButtonText; border-color: ButtonText; box-shadow: none; }
+}

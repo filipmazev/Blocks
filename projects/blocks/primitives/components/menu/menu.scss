@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -27,3 +27,18 @@
         pointer-events: none;
     }
 }
+// The shared material owns the backing; rows inherit it without nested blur.
+:host([data-bx-surface]) {
+    border-radius: var(--bx-glass-radius, #{radius(sm)});
+    --bx-glass-shadow: #{shadow(sm)};
+    color: var(--bx-glass-text, var(--bx-text-primary));
+
+    .bx-menu-wrapper {
+        background: transparent;
+        border-color: transparent;
+        border-radius: inherit;
+        box-shadow: none;
+    }
+}
+
+[data-bx-surface] { --bx-glass-min-opacity: .8; }

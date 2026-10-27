@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucideHdmiPort = defineIcon({
   name: 'hdmi-port',
   viewBox: '0 0 24 24',
-  svgContent: `<path d="M22 9a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1l2 2h12l2-2h1a1 1 0 0 0 1-1Z" /><path d="M7.5 12h9" />`
+  svgContent: `<path d="M22 9a1 1 0 00-1-1H3a1 1 0 00-1 1v4a1 1 0 001 1h.5a2 2 0 011.6.8l.3.4A2 2 0 007 16h10a2 2 0 001.6-.8l.3-.4a2 2 0 011.6-.8h.5a1 1 0 001-1z" /><path d="M8 12h8" />`
 } as const);

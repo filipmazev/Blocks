@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
@@ -11,6 +11,7 @@ import { Button } from '@forms/components/button/button';
   selector: 'app-demo-modal',
   imports: [ModalHeaderDirective, ModalFooterDirective, NgClass, Button],
   templateUrl: './demo-modal.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './demo-modal.scss'
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {

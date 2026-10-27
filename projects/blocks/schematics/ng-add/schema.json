@@ -8,6 +8,7 @@
             "type": "string",
             "description": "Select the theme for your UI.",
             "enum": [
+                "white",
                 "purple",
                 "orange",
                 "red",
@@ -18,6 +19,10 @@
                 "message": "Which theme would you like to use?",
                 "type": "list",
                 "items": [
+                    {
+                        "value": "white",
+                        "label": "White Theme"
+                    },
                     {
                         "value": "purple",
                         "label": "Purple Theme"
@@ -40,10 +45,7 @@
                     }
                 ]
             },
-            "default": "purple"
+            "default": "white"
         }
-    },
-    "required": [
-        "theme"
-    ]
+    }
 }

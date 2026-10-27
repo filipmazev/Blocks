@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -14,7 +14,8 @@
     border: 1px solid var(--bx-border-default);
     border-radius: radius(sm);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    padding: 0 spacing(3);
+    min-height: spacing(10);
+    padding: spacing(1) spacing(2) spacing(1) spacing(3);
     gap: spacing(2);
 
     &:hover:not(.is-disabled) {
@@ -47,8 +48,10 @@
 }
 
 .bx-native-search-input {
-    flex: 1;
-    width: 100%;
+    flex: 1 1 0;
+    min-width: 0;
+    width: 0;
+    text-overflow: ellipsis;
     box-sizing: border-box;
     padding: spacing(2) 0;
     background: transparent;
@@ -74,15 +77,19 @@
     justify-content: center;
     background: transparent;
     border: none;
-    padding: 0;
+    padding: spacing(1);
+    width: spacing(6);
+    height: spacing(6);
+    border-radius: radius(sm);
     color: var(--bx-text-secondary);
     cursor: pointer;
-    outline: none;
     flex-shrink: 0;
+    &:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 0; }
     transition: color 0.15s ease;
 
     &:hover {
-        color: var(--bx-text-danger);
+        color: var(--bx-text-primary);
+        background: var(--bx-bg-element-hover);
     }
 
     &.hidden {
@@ -90,4 +97,17 @@
         pointer-events: none;
         user-select: none;
     }
+}
+.bx-search-input-wrapper[data-bx-surface] {
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-shadow: none;
+    &.is-invalid { --bx-glass-edge: var(--bx-border-danger); }
+}
+
+.bx-search-input-wrapper[data-bx-surface] {
+    @include glass-field;
+}
+
+.bx-search-input-wrapper[data-bx-surface].is-invalid {
+    @include invalid-glass-field;
 }

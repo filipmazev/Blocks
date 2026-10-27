@@ -1,4 +1,5 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { Component, computed, DestroyRef, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
 import { FormField } from '../form-field/form-field';
@@ -8,33 +9,22 @@ import { Icon } from '@filip.mazev/blocks/icons';
 @Component({
   selector: 'bx-input-field',
   standalone: true,
-  imports: [CommonModule, FormField, Icon],
+  imports: [BxSurfaceDirective, CommonModule, FormField, Icon],
   templateUrl: './input-field.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './input-field.scss'
 })
 export class InputField extends BxBaseControl<any> {
   private readonly i18n = inject(BX_I18N, { optional: true });
-
   protected readonly inputId = computed(() => `bx-input-${uuidv4()}`);
-
-  public readonly type = input<InputFieldTypes>('text');
-  
-  public readonly min = input<number | undefined>(undefined);
-  public readonly max = input<number | undefined>(undefined);
-  public readonly step = input<number>(1);
-
   protected readonly isFocused = signal<boolean>(false);
-
   protected readonly isFloating = computed(() => {
     const val = this.internalValue();
     const hasValue = val !== null && val !== undefined && val !== '';
     const isDateType = ['date', 'time', 'datetime-local'].includes(this.type());
-    
+
     return this.isFocused() || hasValue || isDateType;
   });
-
-  private spinTimeout?: ReturnType<typeof setTimeout>;
-  private spinInterval?: ReturnType<typeof setInterval>;
 
   protected readonly resolvedPlaceholder = computed(() => {
     this.i18n?.version?.();
@@ -50,24 +40,18 @@ export class InputField extends BxBaseControl<any> {
     return isTextWithKey(l) ? (this.i18n?.translate(l.key) ?? l.key) : l;
   });
 
-  protected onInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    
-    const value = this.type() === 'number' 
-      ? (target.value === '' ? null : Number(target.value)) 
-      : target.value;
-      
-    this.updateValue(value);
-  }
- 
-  protected onFocus(): void {
-    this.isFocused.set(true);
+  public readonly type = input<InputFieldTypes>('text');
+  public readonly min = input<number | undefined>(undefined);
+  public readonly max = input<number | undefined>(undefined);
+  public readonly step = input<number>(1);
+  constructor() {
+    super();
+    inject(DestroyRef).onDestroy(() => this.stopSpin());
   }
 
-  protected onBlur(): void {
-    this.isFocused.set(false);
-    this.markAsTouched();
-  }
+  private spinTimeout?: ReturnType<typeof setTimeout>;
+
+  private spinInterval?: ReturnType<typeof setInterval>;
 
   public startSpin(direction: number, event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -79,7 +63,7 @@ export class InputField extends BxBaseControl<any> {
       this.spinInterval = setInterval(() => {
         this.applyStep(direction);
       }, 50);
-    }, 400); 
+    }, 400);
   }
 
   public stopSpin(): void {
@@ -87,9 +71,26 @@ export class InputField extends BxBaseControl<any> {
     clearInterval(this.spinInterval);
   }
 
+  protected onInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
+    const value = this.type() === 'number' ? (target.value === '' ? null : Number(target.value)) : target.value;
+
+    this.updateValue(value);
+  }
+
+  protected onFocus(): void {
+    this.isFocused.set(true);
+  }
+
+  protected onBlur(): void {
+    this.isFocused.set(false);
+    this.markAsTouched();
+  }
+
   private applyStep(direction: number): void {
     const current = Number(this.internalValue()) || 0;
-    let next = current + (direction * this.step());
+    let next = current + direction * this.step();
 
     if (this.min() !== undefined && next < this.min()!) next = this.min()!;
     if (this.max() !== undefined && next > this.max()!) next = this.max()!;

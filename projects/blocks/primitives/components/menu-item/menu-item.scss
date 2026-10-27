@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -18,6 +18,11 @@
     text-align: left;
     border-radius: radius(sm);
     color: var(--bx-text-primary);
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: -2px;
+    }
 
     &.bx-menu-item-animated {
         transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
@@ -71,9 +76,11 @@
 
 .bx-menu-item-content {
     flex: 1 1 auto;
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.4;
     text-align: left;
 }
 

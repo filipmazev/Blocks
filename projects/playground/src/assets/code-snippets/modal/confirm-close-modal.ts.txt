@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Modal, ModalFooterDirective } from '@filip.mazev/modal';
+import { Modal, ModalFooterDirective } from '@filip.mazev/blocks/modal';
 
 @Component({
   selector: 'app-confirm-close',

@@ -1,0 +1,10 @@
+@use 'core/styles/helpers' as *;
+:host { display:block; } .catalog-page { max-width:70rem; margin:auto; padding:spacing(8); color:var(--bx-text-primary); }
+    header { max-width:48rem; margin-bottom:spacing(8); } .eyebrow,.result-count { font-size:.875rem; color:var(--bx-text-secondary); }
+    h1 { font-size:clamp(1.75rem,4vw,2.5rem); margin:spacing(2) 0 spacing(4); } h2 { font-size:1.125rem; margin:0 0 spacing(4); } .catalog-group { padding:spacing(5); margin:spacing(6) 0; border-radius:radius(lg); } h3 { font-size:1rem; margin:0; }
+    p { line-height:1.65; color:var(--bx-text-secondary); } .catalog-search { display:flex; flex-direction:column; gap:spacing(2); max-width:30rem; font-size:.875rem; }
+    .catalog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr)); gap:spacing(4); }
+    .catalog-card { display:flex; flex-direction:column; padding:spacing(5); border:1px solid var(--bx-border-default); border-radius:radius(lg); text-decoration:none; background:transparent; color:inherit; }
+    .catalog-card:hover { border-color:var(--bx-border-strong); } .catalog-card:focus-visible,input:focus-visible { outline:2px solid var(--bx-border-brand); outline-offset:3px; }
+    .catalog-card p { margin:spacing(3) 0 spacing(4); font-size:.875rem; flex:1; } code { font-size:.75rem; color:var(--bx-text-secondary); overflow-wrap:anywhere; }
+    @include respond-down(sm) { .catalog-page { padding:spacing(4); } }

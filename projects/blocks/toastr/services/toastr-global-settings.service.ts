@@ -15,7 +15,7 @@ export class ToastrGlobalSettingsService {
 
   public readonly showCloseButton = signal<boolean>(true);
   public readonly closeButtonColor = signal<ThemedColor | undefined>('text-primary');
-  
+
   public readonly showProgressBar = signal<boolean>(true);
   public readonly progressBarColor = signal<ThemedColor | undefined>('text-primary');
 
@@ -39,10 +39,10 @@ export class ToastrGlobalSettingsService {
     if (settings.durationInMs !== undefined) this.durationInMs.set(settings.durationInMs);
     if (settings.swipeToDismiss !== undefined) this.swipeToDismiss.set(settings.swipeToDismiss);
     if (settings.maxOpened !== undefined) this.maxOpened.set(settings.maxOpened);
-   
+
     if (settings.showCloseButton !== undefined) this.showCloseButton.set(settings.showCloseButton);
     if (settings.closeButtonColor !== undefined) this.closeButtonColor.set(settings.closeButtonColor);
-    
+
     if (settings.showProgressBar !== undefined) this.showProgressBar.set(settings.showProgressBar);
     if (settings.progressBarColor !== undefined) this.progressBarColor.set(settings.progressBarColor);
   }

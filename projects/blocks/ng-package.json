@@ -9,6 +9,11 @@
         "schematics/**/*.js",
         "schematics/**/*.d.ts",
         "core/styles/**/*.scss",
-        "_index.scss"
+        "_index.scss",
+        {
+            "glob": "effects.css",
+            "input": "effects",
+            "output": "effects"
+        }
     ]
 }

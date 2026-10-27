@@ -1,5 +1,5 @@
-import { IBreadcrumbItem } from "./ibreadcrumb-item.interface";
-import { INavigationItem } from "./inavigation-item.interface";
+import { IBreadcrumbItem } from './ibreadcrumb-item.interface';
+import { INavigationItem } from './inavigation-item.interface';
 
 export interface IResolvedNavigation {
   current?: INavigationItem;

@@ -1,37 +1,26 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { Highlight } from 'ngx-highlightjs';
+import { CODE_SNIPPETS } from '../../../generated/documentation';
 
 @Component({
   selector: 'app-code',
   imports: [Highlight],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './code.html',
   styleUrl: './code.scss'
 })
-export class Code implements OnInit {
-  private readonly http = inject(HttpClient);
+export class Code {
+  private readonly selectedPath = signal<string | null>(null);
+  protected readonly activeFile = computed(() => this.files().find((file) => file.path === this.selectedPath()) ?? this.files()[0] ?? null);
+  protected readonly codeContent = computed(() => {
+    const file = this.activeFile();
+    return file ? (CODE_SNIPPETS[file.path.replace(/^\/+/, '')] ?? `This snippet is unavailable: ${file.title}`) : '';
+  });
 
   public files = input.required<ICodeFile[]>();
 
-  protected activeFile = signal<ICodeFile | null>(null);
-  protected codeContent = signal<string>('');
-
-  public ngOnInit(): void {
-    if (this.files().length > 0 && !this.activeFile()) {
-      this.selectFile(this.files()[0]);
-    }
-  }
-
   protected selectFile(file: ICodeFile) {
-    this.activeFile.set(file);
-    this.codeContent.set('Loading...');
-
-    this.http.get(file.path, { responseType: 'text' }).subscribe({
-      next: (content) => {
-        this.codeContent.set(content);
-      },
-      error: () => this.codeContent.set(`Error: Could not load file at ${file.path}`)
-    });
+    this.selectedPath.set(file.path);
   }
 }

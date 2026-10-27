@@ -1,6 +1,15 @@
-import { Component, computed, effect, inject, input, isDevMode, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, isDevMode, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Color, getComplementaryToken, invertPaletteToken, isPaletteToken, isThemedColor, resolveTokenToCssVar, ThemedColor, ThemingService } from '@filip.mazev/blocks/core';
+import {
+  Color,
+  getComplementaryToken,
+  invertPaletteToken,
+  isPaletteToken,
+  isThemedColor,
+  resolveTokenToCssVar,
+  ThemedColor,
+  ThemingService
+} from '@filip.mazev/blocks/core';
 import { IconName, IconSize, IconStrokeWidth } from '../types/icon.types';
 import { IconDefinition } from '../interfaces/icon-definition.interface';
 import { loadIcon } from '../helpers/icon.resolve';
@@ -9,6 +18,7 @@ import { loadIcon } from '../helpers/icon.resolve';
   selector: 'bx-icon',
   standalone: true,
   templateUrl: './icon.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './icon.scss'
 })
 export class Icon {

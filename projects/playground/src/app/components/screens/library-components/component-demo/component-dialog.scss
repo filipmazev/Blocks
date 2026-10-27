@@ -1,0 +1,6 @@
+@use 'core/styles/helpers' as *;
+
+:host { display: block; min-width: 0; }
+.dialog-body { width: 28rem; max-width: 100%; min-width: 0; }
+p { color: var(--bx-text-secondary); line-height: 1.6; }
+.dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: spacing(4); }

@@ -1,34 +1,26 @@
-<div class="catalog-container">
-    <header class="filter-bar">
-
-        <bx-search-input label="Search" placeholder="Search icons..." [ngModel]="searchTerm()"
-            (ngModelChange)="searchTerm.set($event)">
-        </bx-search-input>
-
-        <div class="dropdown-group">
-
-            <bx-select label="Size" [options]="sizeSelectOptions" [ngModel]="selectedSize()"
-                (ngModelChange)="selectedSize.set($event)">
-            </bx-select>
-
-            <bx-select label="Stroke" [options]="strokeSelectOptions" [ngModel]="selectedStrokeWidth()"
-                (ngModelChange)="selectedStrokeWidth.set($event)">
-            </bx-select>
-
-        </div>
-    </header>
-
-    <div class="icon-grid">
-        @for (name of filteredIcons(); track name) {
-        <div class="icon-card">
-            <div class="icon-wrapper">
-                <bx-icon [name]="name" [size]="selectedSize()" [strokeWidth]="selectedStrokeWidth()" [color]="'primary'"
-                    [bgColor]="'auto'" />
-            </div>
-            <span class="icon-name">{{ name }}</span>
-        </div>
-        } @empty {
-        <div class="no-results">No icons found.</div>
-        }
-    </div>
-</div>
+<section class="catalog-container" aria-labelledby="icon-title">
+  <header class="page-heading"><p class="eyebrow">Foundations</p><h1 id="icon-title">Icons</h1><p>Find a Lucide icon, tune its proportions, and select it for the usage example.</p></header>
+  <div class="filter-bar">
+    <bx-search-input label="Search icons" placeholder="Search by name…" [ngModel]="searchTerm()" (ngModelChange)="search($event)" />
+    <bx-select label="Size" [options]="sizeSelectOptions" [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)" />
+    <bx-select label="Stroke" [options]="strokeSelectOptions" [ngModel]="selectedStrokeWidth()" (ngModelChange)="selectedStrokeWidth.set($event)" />
+  </div>
+  <div class="catalog-summary"><p role="status">{{ rangeStart() }}–{{ rangeEnd() }} of {{ filteredIcons().length }} icons</p><span>48 per page</span></div>
+  @if (selectedIcon()) {
+    <div class="selected-example" role="status"><span>Selected: {{ selectedIcon() }}</span><code [textContent]="selectedCode()"></code></div>
+  }
+  <div class="icon-grid" aria-label="Icon results">
+    @for (name of visibleIcons(); track name) {
+      <button type="button" class="icon-card" bxSurface [class.selected]="selectedIcon() === name" [attr.aria-pressed]="selectedIcon() === name" (click)="selectedIcon.set(name)">
+        <span class="icon-wrapper"><bx-icon [name]="name" [size]="selectedSize()" [strokeWidth]="selectedStrokeWidth()" color="primary" bgColor="auto" /></span>
+        <span class="icon-name">{{ name }}</span>
+      </button>
+    } @empty { <p class="no-results">No icons match “{{ searchTerm() }}”. Try a shorter name.</p> }
+  </div>
+  <nav class="pagination" aria-label="Icon result pages">
+    <button bx-button type="button" variant="filled" color="grayscale" [outlined]="true" [disabled]="page() === 0" (click)="changePage(-1)">Previous</button>
+    <span aria-live="polite">Page {{ page() + 1 }} of {{ pageCount() }}</span>
+    <button bx-button type="button" variant="filled" color="grayscale" [outlined]="true" [disabled]="page() + 1 >= pageCount()" (click)="changePage(1)">Next</button>
+  </nav>
+  <details class="icon-documentation"><summary>Icon API and accessibility</summary><app-readme path="projects/blocks/icons/components/README.md" /></details>
+</section>

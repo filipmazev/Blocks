@@ -1,4 +1,4 @@
-@use '../../core/styles/index' as *;
+@use '../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -112,8 +112,8 @@
     transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 
     &.default-wrapper {
-        background-color: var(--bx-toast-bg, #fff);
-        color: var(--bx-toast-text, #000);
+        background-color: var(--bx-toast-bg, var(--bx-bg-surface));
+        color: var(--bx-toast-text, var(--bx-text-primary));
         border-radius: radius(md);
         box-shadow: shadow(toast);
         width: 24rem;
@@ -176,4 +176,38 @@
     width: 100%;
     opacity: 0.6;
     transform-origin: left;
+}
+.toast-wrapper[data-bx-surface] {
+    --bx-glass-surface: var(--bx-toast-bg, var(--bx-bg-surface));
+    --bx-glass-text: var(--bx-toast-text, var(--bx-text-primary));
+    --bx-glass-shadow: #{shadow(toast)};
+    --bx-glass-min-opacity: .8;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(xl);
+}
+
+.toast-close-button { width: 2rem; height: 2rem; border-radius: #{radius(sm)}; color: inherit; }
+.toast-close-button:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 2px; }
+
+.toast-wrapper.no-bg[data-bx-surface] {
+    background: transparent !important;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    border-color: transparent;
+    --bx-glass-shadow: none;
+}
+.toast-wrapper.no-bg[data-bx-surface] { --bx-glass-decoration-opacity: 0; }
+
+.toast-wrapper.has-emission::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    background: radial-gradient(ellipse at var(--bx-toast-light-x, 50%) 100%, color-mix(in srgb, var(--bx-toast-emission) 22%, transparent), transparent 65%);
+}
+.toast-wrapper.has-emission { --bx-glass-shadow: #{shadow(toast)}, 0 8px 24px -16px color-mix(in srgb, var(--bx-toast-emission) 55%, transparent); }
+@media (forced-colors: active), (prefers-contrast: more) {
+    .toast-wrapper.has-emission::after { display: none; }
+    .toast-wrapper.has-emission { --bx-glass-shadow: none; }
 }

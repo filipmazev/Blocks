@@ -1,0 +1,7 @@
+import { defineIcon } from '../../helpers/define-icon';
+
+export const lucideCircleChevronsUp = defineIcon({
+  name: 'circle-chevrons-up',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M15 10L12 7L9 10" /><path d="M15 16L12 13L9 16" /><circle cx="12" cy="12" r="10" />`
+} as const);

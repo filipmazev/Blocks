@@ -1,15 +1,18 @@
+<header class="page-heading"><p class="eyebrow">Overlay components</p><h1>Notifications</h1><p>Preview toast placement, behavior, and shared application appearance.</p></header>
 <div class="demo-container">
-    <app-component-info [codeFiles]="codeFiles" [readmePath]="toastrReadmePath()"></app-component-info>
+    <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="toastrReadmePath()"></app-component-info>
 
-    <div class="config-container">
-        <div class="config-header">Demo</div>
+    <div #configPanel class="config-container" bxSurface>
+        <div class="config-header">Configurator</div>
+        <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
+        <p class="hint" role="status">{{ resultMessage() }}</p>
 
         <form [formGroup]="form" class="config-form">
 
             <div class="form-section">
                 <h3>General Style & Data</h3>
 
-                <bx-select label="Position" formControlName="position" [options]="positionSelectOptions">
+                <bx-select label="Position" [errorMessages]="{ required: 'Choose a position.' }" formControlName="position" [options]="positionSelectOptions">
                 </bx-select>
 
                 <bx-input-field label="Title for demo toast" formControlName="title">
@@ -22,11 +25,11 @@
             <div class="form-section">
                 <h3>Behavior & Toggles</h3>
 
-                <bx-input-field label="Duration (ms)" formControlName="durationInMs" type="number"
+                <bx-input-field label="Duration (ms)" [errorMessages]="{ min: 'Duration must be zero or greater.' }" formControlName="durationInMs" type="number"
                     tooltip="Set to 0 to disable auto-close">
                 </bx-input-field>
 
-                <bx-input-field label="Max Opened (Queue Limit)" formControlName="maxOpened" type="number">
+                <bx-input-field label="Max Opened (Queue Limit)" [errorMessages]="{ min: 'Show at least one notification.', max: 'Show at most ten notifications.' }" formControlName="maxOpened" type="number">
                 </bx-input-field>
 
                 <div class="form-checkboxes">

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Toast } from '../../../classes/toast';
 import { ISimpleToastData } from '../../../interfaces/isimple-toast.interface';
 import { BX_I18N, isTextWithKey } from '@filip.mazev/blocks/core';
@@ -9,11 +9,12 @@ import { BX_I18N, isTextWithKey } from '@filip.mazev/blocks/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './simple-toast.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './simple-toast.scss'
 })
 export class SimpleToast extends Toast<ISimpleToastData, undefined> {
   private readonly i18n = inject(BX_I18N, { optional: true });
-  
+
   protected readonly resolvedTitle = computed(() => {
     this.i18n?.version?.();
 

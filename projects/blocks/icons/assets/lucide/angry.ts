@@ -3,5 +3,5 @@ import { defineIcon } from '../../helpers/define-icon';
 export const lucideAngry = defineIcon({
   name: 'angry',
   viewBox: '0 0 24 24',
-  svgContent: `<circle cx="12" cy="12" r="10" /><path d="M16 16s-1.5-2-4-2-4 2-4 2" /><path d="M7.5 8 10 9" /><path d="m14 9 2.5-1" /><path d="M9 10h.01" /><path d="M15 10h.01" />`
+  svgContent: `<path d="M15 12v-1.584" /><path d="M17 10a5 5 0 00-3 1" /><path d="M7 10a5 5 0 013 1" /><path d="M9 12v-1.584" /><path d="M9 17a5 5 0 016.001 0" /><circle cx="12" cy="12" r="10" />`
 } as const);

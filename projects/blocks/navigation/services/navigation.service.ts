@@ -1,16 +1,16 @@
-import { computed, inject, Injectable, Signal } from "@angular/core";
-import { ActivatedRouteSnapshot, NavigationEnd, Router, Routes } from "@angular/router";
-import { NAVIGATION_CONFIG } from "../tokens/navigation-config.token";
-import { IResolvedNavigation } from "../interfaces/iresolved-navigation.interface";
-import { filter } from "rxjs";
-import { IBreadcrumbItem } from "../interfaces/ibreadcrumb-item.interface";
-import { INavMeta } from "../interfaces/inav-meta.interface";
-import { INavigationItem } from "../interfaces/inavigation-item.interface";
-import { NAVIGATION_ACCESS_ADAPTER } from "../tokens/navigation-access-adapter.token";
-import { toSignal } from "@angular/core/rxjs-interop";
-import { INavContext } from "../interfaces/inav-context.interface";
-import { BX_I18N, isTextWithKey, ResolvableText } from "@filip.mazev/blocks/core";
-import { NavText } from "../types/navigation.types";
+import { computed, inject, Injectable, Signal } from '@angular/core';
+import { ActivatedRouteSnapshot, NavigationEnd, Router, Routes } from '@angular/router';
+import { NAVIGATION_CONFIG } from '../tokens/navigation-config.token';
+import { IResolvedNavigation } from '../interfaces/iresolved-navigation.interface';
+import { filter } from 'rxjs';
+import { IBreadcrumbItem } from '../interfaces/ibreadcrumb-item.interface';
+import { INavMeta } from '../interfaces/inav-meta.interface';
+import { INavigationItem } from '../interfaces/inavigation-item.interface';
+import { NAVIGATION_ACCESS_ADAPTER } from '../tokens/navigation-access-adapter.token';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { INavContext } from '../interfaces/inav-context.interface';
+import { BX_I18N, isTextWithKey, ResolvableText } from '@filip.mazev/blocks/core';
+import { NavText } from '../types/navigation.types';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -19,12 +19,10 @@ export class NavigationService {
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly accessAdapter = inject(NAVIGATION_ACCESS_ADAPTER, { optional: true });
 
-  private readonly navEnd = toSignal(
-    this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-  );
+  private readonly navEnd = toSignal(this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)));
 
   public readonly current = computed<IResolvedNavigation>(() => {
-    this.navEnd(); 
+    this.navEnd();
     this.i18n?.version?.();
     return this.resolveCurrent(this.router.routerState.snapshot.root);
   });
@@ -40,8 +38,8 @@ export class NavigationService {
 
   public readonly baseRoute = computed<string | undefined>(() => {
     const viewableRoutes = this.routes();
-    
-    const primaryPrefix = this.routeBase(); 
+
+    const primaryPrefix = this.routeBase();
 
     let firstFoundRoot: string | undefined;
 
@@ -56,7 +54,7 @@ export class NavigationService {
             return item.route;
           }
         }
-        
+
         if (item.children?.length) {
           const childRoot = findRootRoute(item.children);
           if (childRoot) return childRoot;
@@ -74,7 +72,7 @@ export class NavigationService {
 
   public navigateBack(): void {
     const breadcrumbs = this.current().breadcrumbs;
-    
+
     if (breadcrumbs.length > 1) {
       const previousBreadcrumb = breadcrumbs[breadcrumbs.length - 2];
       this.router.navigateByUrl(previousBreadcrumb.route);
@@ -88,28 +86,24 @@ export class NavigationService {
   private extractRoutes(routes: Routes, parentSegment: string[] = []): INavigationItem[] {
     const items: INavigationItem[] = [];
 
-    for(const route of routes) {
-      if(route.redirectTo) continue;
+    for (const route of routes) {
+      if (route.redirectTo) continue;
 
       if (this.accessAdapter && !this.accessAdapter.canAccessMenu(route.data ?? {})) {
         continue;
       }
 
       const ownPath = route.path ?? '';
-      
-      const fullSegments = ownPath 
-        ? [...parentSegment, ownPath] 
-        : [...parentSegment];
+
+      const fullSegments = ownPath ? [...parentSegment, ownPath] : [...parentSegment];
 
       const fullRoute = '/' + fullSegments.filter(Boolean).join('/');
 
-      const children = route.children?.length
-        ? this.extractRoutes(route.children, fullSegments)
-        : [];
-        
+      const children = route.children?.length ? this.extractRoutes(route.children, fullSegments) : [];
+
       const nav = route.data?.['nav'] as INavMeta | undefined;
 
-      if(!nav) {
+      if (!nav) {
         items.push(...children);
         continue;
       }
@@ -136,7 +130,7 @@ export class NavigationService {
     let finalSnapshot: ActivatedRouteSnapshot | undefined;
 
     while (currentNode) {
-      const next: ActivatedRouteSnapshot | null = currentNode.children.find(child => child.outlet === 'primary') ?? null;
+      const next: ActivatedRouteSnapshot | null = currentNode.children.find((child) => child.outlet === 'primary') ?? null;
       if (!next) {
         finalSnapshot = currentNode;
         break;
@@ -146,9 +140,7 @@ export class NavigationService {
 
     if (!finalSnapshot) return { breadcrumbs: [] };
 
-    const urlSegments = finalSnapshot.pathFromRoot
-      .flatMap(s => s.url.map(u => u.path))
-      .filter(Boolean);
+    const urlSegments = finalSnapshot.pathFromRoot.flatMap((s) => s.url.map((u) => u.path)).filter(Boolean);
 
     const breadcrumbs: IBreadcrumbItem[] = [];
     const allItems = this.flattenRoutes(this.routes());
@@ -156,15 +148,14 @@ export class NavigationService {
 
     for (const segment of urlSegments) {
       currentUrl += '/' + segment;
-      
+
       const matchingItem = this.matchRouteToUrl(allItems, currentUrl);
 
       if (matchingItem && matchingItem.data && !matchingItem.data.hidden) {
         const ctx: INavContext = { snapshot: finalSnapshot };
-        
-        const label = this.resolveNavText(matchingItem.data.breadcrumb, ctx) 
-                   ?? this.resolveNavText(matchingItem.data.label, ctx);
-        
+
+        const label = this.resolveNavText(matchingItem.data.breadcrumb, ctx) ?? this.resolveNavText(matchingItem.data.label, ctx);
+
         if (label && breadcrumbs[breadcrumbs.length - 1]?.label !== label) {
           breadcrumbs.push({ label, route: currentUrl });
         }
@@ -173,7 +164,7 @@ export class NavigationService {
 
     const leafNav = finalSnapshot.routeConfig?.data?.['nav'] as INavMeta | undefined;
     const fullUrl = '/' + urlSegments.join('/');
-    
+
     let current: INavigationItem | undefined;
 
     if (leafNav && !leafNav.hidden) {
@@ -205,7 +196,7 @@ export class NavigationService {
           ...item,
           children
         };
-      }) 
+      })
       .filter((item): item is INavigationItem => item !== null);
   }
 
@@ -213,23 +204,23 @@ export class NavigationService {
     const customSort = this.config?.sortItems;
 
     return [...items].sort((a, b) => {
-      if(customSort) {
+      if (customSort) {
         return customSort(a, b);
       }
 
       const orderA = a.data?.order ?? Number.POSITIVE_INFINITY;
       const orderB = b.data?.order ?? Number.POSITIVE_INFINITY;
 
-      if(orderA !== orderB) return orderA - orderB;
+      if (orderA !== orderB) return orderA - orderB;
       return a.label.localeCompare(b.label);
     });
   }
 
   private matchRouteToUrl(items: INavigationItem[], url: string): INavigationItem | undefined {
-    const exactMatch = items.find(i => i.route === url);
+    const exactMatch = items.find((i) => i.route === url);
     if (exactMatch) return exactMatch;
 
-    return items.find(i => {
+    return items.find((i) => {
       if (!i.route.includes(':')) return false;
       const routeRegex = new RegExp('^' + i.route.replace(/:[^\s/]+/g, '([^/]+)') + '$');
       return routeRegex.test(url);
@@ -247,10 +238,8 @@ export class NavigationService {
   private resolveNavText(textDef: NavText | undefined, ctx: INavContext): string | undefined {
     if (!textDef) return undefined;
 
-    const text: ResolvableText = typeof textDef === 'function' 
-      ? textDef(ctx) 
-      : textDef;
-      
+    const text: ResolvableText = typeof textDef === 'function' ? textDef(ctx) : textDef;
+
     if (isTextWithKey(text)) {
       return this.i18n?.translate(text.key, { route: ctx.snapshot });
     }

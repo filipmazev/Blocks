@@ -1,5 +1,6 @@
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
-import { Component, input, output, ViewChildren, QueryList, TemplateRef, computed } from '@angular/core';
+import { Component, input, output, ViewChildren, QueryList, TemplateRef, computed, ChangeDetectionStrategy } from '@angular/core';
 import { ModalConfig } from '../../../classes/modal-config';
 import { IModalView } from '../../../interfaces/imodal-view.interface';
 import { ModalCloseMode } from '../../../types/modal.types';
@@ -9,8 +10,9 @@ import { Icon } from '@filip.mazev/blocks/icons';
 
 @Component({
   selector: 'bx-modal-centered',
-  imports: [NgTemplateOutlet, NgClass, ModalBottomSheet, ModalBanner, Icon],
+  imports: [BxSurfaceDirective, NgTemplateOutlet, NgClass, ModalBottomSheet, ModalBanner, Icon],
   templateUrl: './modal-centered.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal-centered.scss'
 })
 export class ModalCentered<D = unknown, R = unknown> implements IModalView<D, R> {

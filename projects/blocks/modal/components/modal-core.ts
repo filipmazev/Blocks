@@ -13,7 +13,9 @@ import {
   OnInit,
   AfterViewInit,
   computed,
-  DestroyRef
+  DestroyRef,
+  ChangeDetectionStrategy,
+  OnDestroy
 } from '@angular/core';
 import { Subject, Observable, fromEvent, filter, take, from, of } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
@@ -36,9 +38,10 @@ import * as animConst from '../constants/modal-animation.constants';
   selector: 'bx-modal',
   imports: [NgTemplateOutlet, ModalCentered, ModalSide, ModalBackdrop],
   templateUrl: './modal-core.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal-core.scss'
 })
-export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit {
+export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit, OnDestroy {
   private readonly modalService = inject(ModalService);
   private readonly globalSettings = inject(ModalGlobalSettingsService);
   private readonly scrollLockService = inject(ScrollLockService);

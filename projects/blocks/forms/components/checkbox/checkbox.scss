@@ -1,4 +1,4 @@
-@use '../../../core/styles/index' as *;
+@use '../../../core/styles/helpers' as *;
 
 :host {
     display: block;
@@ -57,7 +57,7 @@
     background-color: var(--bx-bg-surface);
     border: 1px solid var(--bx-border-strong);
     border-radius: var(--bx-rounded-sm);
-    color: var(--bx-on-primary);
+    color: var(--bx-text-primary);
     transition: background-color 0.15s ease, border-color 0.15s ease;
 
     &.is-invalid {
@@ -78,4 +78,24 @@
 
 input:focus-visible~.bx-checkbox-box {
     box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+}
+.bx-checkbox-box[data-bx-surface] {
+    --bx-glass-shadow: none;
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-edge: var(--bx-border-strong);
+    --bx-glass-min-opacity: .65;
+    border: 1px solid var(--bx-glass-edge);
+    box-sizing: border-box;
+    --bx-glass-text: var(--bx-text-primary);
+    &.is-checked {
+        --bx-glass-surface: var(--bx-primary);
+        --bx-glass-min-opacity: .55;
+        --bx-glass-edge: var(--bx-border-brand);
+        --bx-glass-text: var(--bx-text-primary);
+    }
+    &.is-invalid {
+        --bx-glass-surface: var(--bx-bg-danger-subtle);
+        --bx-glass-edge: var(--bx-border-danger);
+        --bx-glass-text: var(--bx-text-danger);
+    }
 }

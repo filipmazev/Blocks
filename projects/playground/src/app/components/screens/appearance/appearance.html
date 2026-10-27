@@ -1,0 +1,46 @@
+<section class="appearance" aria-labelledby="appearance-title">
+  <header class="page-heading"><p class="eyebrow">Appearance · application wide</p><h1 id="appearance-title">Appearance</h1><p>Configure the shared material, then preview it over a mountain landscape.</p></header>
+  <div class="lab-layout">
+    <div class="preview-column">
+      <section class="stage" aria-label="Material preview over a mountain photograph">
+        <img class="scene-background" src="assets/images/mountains.jpeg" [attr.data-bx-reduced-motion]="reducedMotion()" alt="" aria-hidden="true" width="5868" height="4016" decoding="async">
+        <article class="preview-surface" bxSurface>
+          <div class="preview-heading"><bx-icon name="layers" size="28" /><span class="material-badge">{{ appearance().material }}</span></div>
+          <h2>This is blocks.</h2><p>Theme the application. Keep the interaction simple.</p>
+          <button bx-button type="button" variant="tonal" color="primary" [bxDropdown]="actions" #menu="bxDropdown" bxTransition="fade" placement="bottom">Explore actions<bx-icon name="chevron-down" size="16" /></button>
+        </article>
+      </section>
+      <p class="interaction-status" role="status">{{ status() }}</p>
+      <section bxSurface class="material-controls" aria-labelledby="material-title">
+        <h2 id="material-title">Material</h2>
+        <p class="section-note">Choose a material and adjust its blur and tint.</p>
+        <fieldset aria-labelledby="material-title"><div class="material-picker">@for (option of materials; track option) {<button bx-button type="button" variant="tonal" [color]="appearance().material === option ? 'primary' : 'grayscale'" [attr.aria-pressed]="appearance().material === option" (click)="setMaterial(option)">{{ option }}</button>}</div></fieldset>
+        <label for="appearance-blur" class="range-control">Backdrop blur <output>{{ appearance().blur }} px</output><input #blur id="appearance-blur" type="range" bxSlider min="0" max="40" [value]="appearance().blur" [disabled]="appearance().material === 'solid'" (input)="updateAppearance({blur: +blur.value})"></label>
+        <label for="appearance-tint" class="range-control">Tint density <output>{{ (appearance().tint * 100).toFixed(0) }}%</output><input #tint id="appearance-tint" type="range" bxSlider min="0" max="1" step="0.01" [value]="appearance().tint" [disabled]="appearance().material === 'solid'" (input)="updateAppearance({tint: +tint.value})"></label>
+      </section>
+    </div>
+    <aside bxSurface class="global-controls" aria-labelledby="global-title">
+      <div class="panel-heading"><h2 id="global-title">Global appearance</h2><button bx-button type="button" variant="tonal" color="grayscale" (click)="reset()">Reset</button></div>
+      <p class="section-note">Changes apply to every Blocks component, including open menus, dialogs, and notifications.</p>
+      <fieldset><legend>Mode</legend><div class="material-picker">
+        <button bx-button type="button" variant="tonal" [color]="theme.activeTheme() === 'light' ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.activeTheme() === 'light'" (click)="theme.setApplicationTheme('light')"><bx-icon name="sun" size="16" />Light</button>
+        <button bx-button type="button" variant="tonal" [color]="theme.activeTheme() === 'dark' ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.activeTheme() === 'dark'" (click)="theme.setApplicationTheme('dark')"><bx-icon name="moon" size="16" />Dark</button>
+      </div></fieldset>
+      <fieldset><legend>Color</legend><div class="palette-picker">
+        @for (palette of theme.palettes; track palette.id) {
+          <button bx-button type="button" variant="tonal" [color]="theme.palette() === palette.id ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.palette() === palette.id" (click)="theme.setPalette(palette.id)">{{ palette.label }}</button>
+        }
+      </div></fieldset>
+      <fieldset><legend>Rendering</legend><div class="quality-picker">@for (option of qualities; track option.value) {<bx-radio name="appearance-quality" [label]="option.label" [value]="option.value" [ngModel]="appearance().quality" (ngModelChange)="updateAppearance({quality: $event})" />}</div></fieldset>
+      <div class="preferences"><bx-slide-toggle label="Reduce motion" [ngModel]="reducedMotion()" (ngModelChange)="setMotion($event)" /><bx-slide-toggle label="Reduce transparency" [ngModel]="appearance().reducedTransparency" (ngModelChange)="updateAppearance({reducedTransparency: $event})" /></div>
+      <p class="section-note">Automatic rendering uses supported enhancements. Your system accessibility settings remain respected.</p>
+    </aside>
+  </div>
+  <section class="implementation" aria-labelledby="implementation-title"><div><p class="eyebrow">Existing Blocks API</p><h2 id="implementation-title">One configuration. Every component.</h2><p>The material follows the existing semantic theme. Use the appearance controls above, or configure the theming service in your application.</p><p class="section-note">The translucent surface samples the photograph behind it. Solid material and reduced transparency keep an opaque backing.</p></div><pre><code [textContent]="codeExample"></code></pre></section>
+  <details class="appearance-documentation"><summary>Appearance API, performance, and accessibility</summary><app-readme path="documentation/appearance/README.md" /></details>
+</section>
+<ng-template #actions><bx-menu>
+  @for (option of materials; track option) {
+    <bx-menu-item [label]="'Use ' + option + ' material'" [icon]="appearance().material === option ? 'check' : undefined" (action)="setMaterial(option)" />
+  }
+</bx-menu></ng-template>

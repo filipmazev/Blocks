@@ -1,3 +1,3 @@
 export type CodeLanguage = 'typescript' | 'html' | 'scss';
 export type ViewMode = 'code' | 'documentation';
-export type ThemeId = 'purple' | 'orange' | 'red' | 'green' | 'cyberpunk' | 'minimal' | 'high-contrast';
+export type { BxThemeId as ThemeId } from '@filip.mazev/blocks/core';

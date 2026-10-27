@@ -1,5 +1,5 @@
-import { IconData } from "@filip.mazev/blocks/icons";
-import { ResolvableText } from "@filip.mazev/blocks/core";
+import { IconData } from '@filip.mazev/blocks/icons';
+import { ResolvableText } from '@filip.mazev/blocks/core';
 
 /**
  * IModalHeaderConfig, the configuration for the modal header

@@ -16,3 +16,4 @@ export * from './interfaces/ibx-select-option.interface';
 export * from './directives/bx-error.directive';
 
 export * from './types/form.types';
+export * from './directives/slider.directive';

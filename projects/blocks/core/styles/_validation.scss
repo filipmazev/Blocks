@@ -1,0 +1,17 @@
+@use 'field-state' as *;
+// A projected surface inside a form field receives the complete field material,
+// including its valid focus state, without application-specific effects CSS.
+.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)) {
+    @include glass-field;
+}
+// Projected native controls receive the same error treatment as Blocks controls.
+.bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface] {
+    @include invalid-glass-field;
+}
+@media (forced-colors: active) {
+    .bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface], [data-bx-surface].is-invalid {
+        --bx-glass-shadow: none;
+        border-color: Mark;
+        outline-color: Mark;
+    }
+}

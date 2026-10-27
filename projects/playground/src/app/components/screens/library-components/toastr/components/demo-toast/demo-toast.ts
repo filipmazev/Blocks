@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
 import { Toast } from '@toastr/classes/toast';
@@ -6,6 +6,7 @@ import { Toast } from '@toastr/classes/toast';
 @Component({
   selector: 'app-demo-toast',
   templateUrl: './demo-toast.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './demo-toast.scss'
 })
 export class DemoToast extends Toast<IDemoToastData, IDemoToastResult> {

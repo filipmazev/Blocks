@@ -57,3 +57,19 @@
         height: auto;
     }
 }
+.bx-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--bx-rounded-sm, #{radius(sm)});
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    &:hover { background: var(--bx-bg-element-hover); }
+    &:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 2px; }
+}

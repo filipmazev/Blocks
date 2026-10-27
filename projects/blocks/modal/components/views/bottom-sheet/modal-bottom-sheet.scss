@@ -1,4 +1,4 @@
-@use '../../../../core/styles/index' as *;
+@use '../../../../core/styles/helpers' as *;
 
 .bottom-sheet-modal-style {
     position: fixed;
@@ -126,3 +126,13 @@
         transform: translateY(0%);
     }
 }
+[data-bx-surface] {
+    --bx-glass-surface: var(--bx-modal-bg, var(--bx-bg-surface));
+    --bx-glass-text: var(--bx-modal-text, var(--bx-text-primary));
+    --bx-glass-shadow: #{shadow(modal)};
+    --bx-glass-min-opacity: .52;
+    --bx-glass-rim-opacity: 1;
+    border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
+}
+
+:host-context([data-theme='dark']) [data-bx-surface] { --bx-glass-min-opacity: .72; }

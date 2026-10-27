@@ -1,13 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { RouterLink } from '@angular/router';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DemoModal } from '@playground/components/screens/library-components/modal/components/demo-modal/demo-modal';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
-import { MODAL_DEFAULT_ANIM_DURATION } from '../../../../../../../blocks/modal/constants/modal-animation.constants';
 import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModalConfigFormControls } from '@playground/types/form.types';
 import { CommonModule } from '@angular/common';
-import { MarkdownModule } from 'ngx-markdown';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ConfirmClose } from './components/confirm-close/confirm-close';
@@ -26,8 +26,9 @@ import { InputField } from '@forms/components/input-field/input-field';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MarkdownModule, ComponentInfo, Button, InputField, Checkbox, Select],
+  imports: [BxSurfaceDirective, RouterLink, CommonModule, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './modal.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal.scss'
 })
 export class Modal {
@@ -48,16 +49,33 @@ export class Modal {
   protected readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
   protected readonly form: FormGroup<ModalConfigFormControls>;
 
+  protected readonly resultMessage = signal('Open a modal to preview its layout and close behavior.');
   protected modalReadmePath = signal<string>('assets/modal-readme/README.md');
 
   protected codeFiles: ICodeFile[] = [
-    { title: 'modal-usage.ts', path: 'assets/code-snippets/modal/modal-usage.ts.txt', language: 'typescript' },
+    {
+      title: 'modal-usage.ts',
+      path: 'assets/code-snippets/modal/modal-usage.ts.txt',
+      language: 'typescript'
+    },
     { title: 'modal.ts', path: 'assets/code-snippets/modal/modal.ts.txt', language: 'typescript' },
     { title: 'modal.html', path: 'assets/code-snippets/modal/modal.html.txt', language: 'html' },
     { title: 'modal.scss', path: 'assets/code-snippets/modal/modal.scss.txt', language: 'scss' },
-    { title: 'confirm-close.ts', path: 'assets/code-snippets/modal/confirm-close-modal.ts.txt', language: 'typescript' },
-    { title: 'confirm-close.html', path: 'assets/code-snippets/modal/confirm-close-modal.html.txt', language: 'html' },
-    { title: 'confirm-close.scss', path: 'assets/code-snippets/modal/confirm-close-modal.scss.txt', language: 'scss' },
+    {
+      title: 'confirm-close.ts',
+      path: 'assets/code-snippets/modal/confirm-close-modal.ts.txt',
+      language: 'typescript'
+    },
+    {
+      title: 'confirm-close.html',
+      path: 'assets/code-snippets/modal/confirm-close-modal.html.txt',
+      language: 'html'
+    },
+    {
+      title: 'confirm-close.scss',
+      path: 'assets/code-snippets/modal/confirm-close-modal.scss.txt',
+      language: 'scss'
+    },
     { title: 'styles.scss', path: 'assets/code-snippets/modal/styles.scss.txt', language: 'scss' }
   ];
 
@@ -69,8 +87,8 @@ export class Modal {
       animate: new FormControl<boolean>(true),
       hasBackdrop: new FormControl<boolean>(true),
       showCloseButton: new FormControl<boolean>(true),
-      title: new FormControl<string>('This is the title of the modal in its header'),
-      headerText: new FormControl<string | null>('The Lorem Ipsum Modal'),
+      title: new FormControl<string>('Review your changes'),
+      headerText: new FormControl<string | null>('Workspace settings'),
       disableClose: new FormControl<boolean>(false),
       disableCloseOnBackdropClick: new FormControl<boolean>(false),
       hasConfirmCloseGuard: new FormControl<boolean>(true)
@@ -107,7 +125,7 @@ export class Modal {
             } as IModalHeaderConfig),
       data: {
         title: request.title,
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris aliquet neque sed enim aliquam ullamcorper.',
+        body: 'This dialog shares the application theme and appearance settings. Confirm to apply the example, or cancel to return to the playground.',
         openedCount: this.openedCount
       },
       style: {
@@ -135,9 +153,9 @@ export class Modal {
     modal.afterClosed().subscribe((result: IModalCloseResult<IDemoModalResult | undefined>) => {
       if (result.state === 'confirm' && result.data) {
         this.openedCount = result.data.openedCount;
-        setTimeout(() => {
-          alert(`This is my ${this.getOrdinal(this.openedCount)} time that I've been closed with the confirm button!`);
-        }, MODAL_DEFAULT_ANIM_DURATION);
+        this.resultMessage.set(`Changes confirmed. This modal has been confirmed ${this.openedCount} time${this.openedCount === 1 ? '' : 's'}.`);
+      } else {
+        this.resultMessage.set('Modal closed. No changes were applied.');
       }
     });
   }
@@ -163,11 +181,5 @@ export class Modal {
     });
 
     return breakpoints;
-  }
-
-  private getOrdinal(n: number): string {
-    const s = ['th', 'st', 'nd', 'rd'];
-    const v = n % 100;
-    return n + (s[(v - 20) % 10] || s[v] || s[0]);
   }
 }

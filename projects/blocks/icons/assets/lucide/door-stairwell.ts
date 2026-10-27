@@ -1,0 +1,7 @@
+import { defineIcon } from '../../helpers/define-icon';
+
+export const lucideDoorStairwell = defineIcon({
+  name: 'door-stairwell',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M12 17v-3a1 1 0 011-1h6" /><path d="M19 17h-9a1 1 0 00-1 1v3" /><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" /><path d="M19 9h-3a1 1 0 00-1 1v3" /><path d="M22 21H2" />`
+} as const);

@@ -8,6 +8,8 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "paths": {
+        "@filip.mazev/blocks/effects/runtime": ["./projects/blocks/effects/runtime/index.ts"],
+        "@filip.mazev/blocks/effects": ["./projects/blocks/effects/public-api.ts"],
     "@filip.mazev/blocks": ["./projects/blocks/src/public-api.ts"],
         "@filip.mazev/blocks/core": ["./projects/blocks/core/public-api.ts"],
         "@filip.mazev/blocks/navigation": ["./projects/blocks/navigation/public-api.ts"],

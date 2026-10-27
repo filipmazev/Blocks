@@ -1,3 +1,4 @@
+import { BxGlassLight, BxGlassLightingService, BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import {
   Component,
   ViewChild,
@@ -10,7 +11,9 @@ import {
   computed,
   AfterViewInit,
   HostListener,
-  inject
+  NgZone,
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { IToastConfig } from '../interfaces/itoast-config.interface';
@@ -18,61 +21,81 @@ import { ToastRef } from '../classes/toast-ref';
 import { IToast } from '../interfaces/itoast.interface';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { Subscription } from 'rxjs';
-import { Color, getComplementaryToken, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
+import { BxA11yService, Color, getComplementaryToken, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
 import { ToastrGlobalSettingsService } from '../services/toastr-global-settings.service';
+import { SimpleToast } from './views/simple-toast/simple-toast';
 
 @Component({
   selector: 'bx-toast-core',
-  imports: [NgClass, Icon],
+  imports: [BxSurfaceDirective, NgClass, Icon],
   templateUrl: './toast-core.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toast-core.scss'
 })
 export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements OnInit, AfterViewInit, OnDestroy {
+  private readonly zone = inject(NgZone);
+  private readonly lighting = inject(BxGlassLightingService);
+  private readonly a11y = inject(BxA11yService);
   private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
-  
   public componentRef!: ComponentRef<C>;
   public config?: IToastConfig<D>;
   public toastRef!: ToastRef<D, R>;
-
   public isVisible = signal(false);
   public currentTranslateY = signal(0);
   public isSwipingFinished = signal(false);
-
   public isCollapsing = signal(false);
-
   protected showCloseButton = computed(() => this.config?.showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton());
+  private light?: BxGlassLight;
+
   protected closeButtonColor = computed(() => this.config?.closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor());
+private lightFrame?: number;
+
   
+  private lastLightProgress = -1;
+
   protected showProgressBar = computed(() => {
-    if (this.config?.showProgressBar === false)
-      return false;
+    if (this.config?.showProgressBar === false) return false;
 
     return this.config?.showProgressBar === true || this.config?.progressBarColor !== undefined;
   });
+private destroyed = false;
+
+  
 
   protected progressBarColor = computed(() => {
-    return this.showProgressBar() 
-    ? ((this.config?.progressBarColor ?? this.toastrGlobalSettingsService.progressBarColor()) as Color) 
-    : undefined;
+    return this.showProgressBar() ? ((this.config?.progressBarColor ?? this.toastrGlobalSettingsService.progressBarColor()) as Color) : undefined;
   });
 
   protected progressBarCssVar = computed(() => {
     const progressBarColor = this.progressBarColor();
-    return progressBarColor ? resolveTokenToCssVar(progressBarColor) : undefined
+    return progressBarColor ? resolveTokenToCssVar(progressBarColor) : undefined;
   });
 
   protected progressBarBgCssVar = computed(() => {
     const progressBarColor = this.progressBarColor();
-    return progressBarColor ? resolveTokenToCssVar(getComplementaryToken(progressBarColor)) : undefined
+    return progressBarColor ? resolveTokenToCssVar(getComplementaryToken(progressBarColor)) : undefined;
   });
 
-  protected isAnimated = computed(() => this.config?.animate !== false);
+  protected isAnimated = computed(() => !this.a11y.isReducedMotion() && this.config?.animate !== false);
+
   protected isBottom = computed(() => (this.config?.position ?? this.toastrGlobalSettingsService.position()).includes('bottom'));
 
-  @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true }) protected dynamicContainer!: ViewContainerRef;
+  @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true })
+  protected dynamicContainer!: ViewContainerRef;
+
   @ViewChild('toastSwipeTarget', { static: true }) protected toastSwipeTarget!: ElementRef;
   @ViewChild('animatorWrapper', { static: true }) protected animatorWrapper!: ElementRef;
   @ViewChild('progressBar') protected progressBar?: ElementRef<HTMLElement>;
+
+  protected simpleToastSurface = computed(() => {
+    const instance = this.componentRef?.instance;
+    return instance instanceof SimpleToast ? `color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-bg-${instance.data.type}))` : null;
+  });
+
+  protected emissionColor = computed(() => {
+    const instance = this.componentRef?.instance;
+    return instance instanceof SimpleToast ? `var(--bx-text-${instance.data.type})` : this.progressBarCssVar();
+  });
 
   protected wrapperClasses = computed(() => {
     const isTop = (this.config?.position ?? 'top-right').includes('top');
@@ -156,12 +179,27 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     if (duration && this.progressBar?.nativeElement) {
       this.progressAnimation = this.progressBar.nativeElement.animate([{ width: '100%' }, { width: '0%' }], { duration, fill: 'forwards' });
 
-      this.subs.add(this.toastRef.onPause$.subscribe(() => this.progressAnimation?.pause()));
-      this.subs.add(this.toastRef.onResume$.subscribe(() => this.progressAnimation?.play()));
+      this.subs.add(
+        this.toastRef.onPause$.subscribe(() => {
+          this.progressAnimation?.pause();
+          this.paintLight();
+          this.stopLightFrame();
+        })
+      );
+      this.subs.add(
+        this.toastRef.onResume$.subscribe(() => {
+          this.progressAnimation?.play();
+          this.startLightFrame();
+        })
+      );
     }
+    this.startLightFrame();
   }
 
   public ngOnDestroy(): void {
+    this.destroyed = true;
+    this.stopLightFrame();
+    this.light?.destroy();
     clearTimeout(this.autoCloseTimeout);
 
     this.stopVerticalSwipeDetection();
@@ -176,6 +214,9 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
   public closeToast(result?: R, fromSwipe = false): void {
     this.closeResult = result !== undefined ? result : this.closeResult;
+    this.stopLightFrame();
+    this.light?.destroy();
+    this.light = undefined;
 
     if (!this.isAnimated()) {
       if (!this.hasEmittedClose) {
@@ -207,7 +248,52 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       this.toastRef.resume();
     }
   }
-  
+
+  private paintLight(): void {
+    const surface = this.toastSwipeTarget.nativeElement as HTMLElement;
+    const color = this.emissionColor();
+    const root = surface.closest<HTMLElement>('.toast-container');
+    if (!color || !root || this.destroyed) return;
+    const bounds = surface.getBoundingClientRect();
+    const bar = this.progressBar?.nativeElement as HTMLElement | undefined;
+    const edge = bar?.getBoundingClientRect();
+    const progress = edge && bounds.width ? (edge.right - bounds.left) / bounds.width : 0.5;
+    if (Math.abs(progress - this.lastLightProgress) < 0.0001) return;
+    this.lastLightProgress = progress;
+    surface.style.setProperty('--bx-toast-light-x', `${progress * 100}%`);
+    const light = {
+      element: bar ?? surface,
+      offsetX: bar ? 1 : 0.5,
+      offsetY: 1,
+      excludeElement: surface,
+      color,
+      z: 48,
+      intensity: 1.1,
+      radius: 360
+    };
+    if (this.light) this.light.update(light);
+    else this.light = this.lighting.register(root, light);
+  }
+
+  private startLightFrame(): void {
+    this.paintLight();
+    if (this.lightFrame !== undefined || !this.progressAnimation || this.destroyed || !this.isAnimated()) return;
+    this.zone.runOutsideAngular(() => {
+      const frame = () => {
+        this.lightFrame = undefined;
+        if (this.destroyed || this.isCollapsing() || !this.isAnimated()) return;
+        this.paintLight();
+        if (this.progressAnimation?.playState === 'running') this.lightFrame = requestAnimationFrame(frame);
+      };
+      this.lightFrame = requestAnimationFrame(frame);
+    });
+  }
+
+  private stopLightFrame(): void {
+    if (this.lightFrame !== undefined) cancelAnimationFrame(this.lightFrame);
+    this.lightFrame = undefined;
+  }
+
   //#region Swipe Logic
 
   private startVerticalSwipeDetection(): void {

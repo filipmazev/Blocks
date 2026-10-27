@@ -1,51 +1,28 @@
-<nav class="sidenav-container">
-    @if (!isHamburgerMenu()) {
-    <aside class="desktop-sidebar">
-
-        <div class="sidebar-header">
-            <div class="logo-area">
-                <span class="logo-icon"></span>
-                <span class="logo-text fade-in">
-                    {{ title() }}
-                </span>
-            </div>
-        </div>
-
-        <div class="nav-links">
-            @for (item of navigationService.menu(); track item.route) {
-            <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                class="nav-item" [title]="item.label">
-
-                <span class="nav-text fade-in">
-                    {{ item.label }}
-                </span>
-            </a>
-            }
-        </div>
-    </aside>
-    }
-
-    @if (isHamburgerMenu()) {
-    <div class="mobile-header">
-        <div class="mobile-logo"></div>
-
-        <button type="button" (click)="toggleMobileMenu()" id="hamburger-menu" aria-label="Toggle Menu"
-            class="hamburger-menu" [ngClass]="{'is-open': isHamburgerMenuOpen()}">
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-        </button>
+@if (isHamburgerMenu()) {
+<header bxSurface class="mobile-header"><a class="brand" routerLink="/home" (click)="closeMobileMenu()">{{ title()
+        }}</a><button #menuToggle bx-button color="grayscale" class="menu-toggle" type="button"
+        aria-controls="component-navigation" [attr.aria-expanded]="isHamburgerMenuOpen()"
+        (click)="toggleMobileMenu()">{{ isHamburgerMenuOpen() ? 'Close menu' : 'Menu' }}</button></header>
+}
+@if (!isHamburgerMenu() || isHamburgerMenuOpen()) {
+@if (isHamburgerMenu()) { <button class="navigation-scrim" type="button" aria-label="Close navigation"
+    (click)="closeMobileMenu()" tabindex="-1"></button> }
+<aside bxSurface [cdkTrapFocus]="isHamburgerMenu()" [cdkTrapFocusAutoCapture]="isHamburgerMenu()"
+    id="component-navigation" class="sidebar" [class.mobile-sidebar]="isHamburgerMenu()"
+    tabindex="-1" (keydown.escape)="closeMobileMenu()">
+    @if (!isHamburgerMenu()) { <div class="sidebar-header"><a class="brand" routerLink="/home">{{ title()
+            }}</a><span>Component library</span></div> }
+    <div class="sidebar-scroll"><bx-search-input class="navigation-search" label="Find a page"
+            placeholder="Search components…" [ngModel]="query()" (ngModelChange)="query.set($event)" />
+        <nav aria-label="Component documentation">
+            @for (group of groups(); track group.title) {
+            <section class="navigation-group" [attr.aria-label]="group.title">
+                <h2>{{ group.title }}</h2>@for (item of group.items; track item.route) { <a bxSurface
+                    [routerLink]="item.route" routerLinkActive="active" ariaCurrentWhenActive="page"
+                    [routerLinkActiveOptions]="{exact:true}" (click)="closeMobileMenu()">{{ item.label }}</a> }
+            </section>
+            } @empty { <p class="empty-navigation">No matching pages.</p> }
+        </nav>
     </div>
-
-    <div class="mobile-menu" [class.open]="isHamburgerMenuOpen()">
-        <div class="mobile-nav-links">
-            @for (item of navigationService.menu(); track item.route) {
-            <a [routerLink]="item.route" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-item">
-                {{ item.label }}
-            </a>
-            }
-        </div>
-    </div>
-    }
-
-</nav>
+</aside>
+}

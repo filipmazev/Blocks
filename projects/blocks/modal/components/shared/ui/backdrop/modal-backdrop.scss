@@ -1,4 +1,4 @@
-@use '../../../../../core/styles/index' as *;
+@use '../../../../../core/styles/helpers' as *;
 
 .modal-backdrop {
     position: fixed;
@@ -14,3 +14,15 @@
     transform-style: preserve-3d;
     transform-origin: center;
 }
+.modal-backdrop {
+    background: rgb(0 0 0 / .32);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .modal-backdrop { background: rgb(0 0 0 / .5); }
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+    .modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / .6); }
+}
+:host-context([data-bx-reduced-transparency="true"]) .modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / .6); }

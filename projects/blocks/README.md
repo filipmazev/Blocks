@@ -6,6 +6,8 @@ The **Blocks** umbrella package is the official entry point and Angular Schemati
 
 ## Installation
 
+Requires Angular 22 and RxJS 7.8 or later within major 7.
+
 To install the complete Blocks ecosystem and automatically configure your workspace, run:
 
 ```bash
@@ -16,7 +18,7 @@ ng add @filip.mazev/blocks
 
 When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:
 
-* Interactive Theme Selection: You will be prompted to choose your preferred global theme.
+* Theme selection: White is the default; Purple, Orange, Red, Green and Cyberpunk are also available. Use `--theme=white` to select White explicitly.
 * Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
 * SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.
 
@@ -35,11 +37,20 @@ Then, manually configure your styles.scss:
 
 @layer base {
     :root {
-        @include bx-theme($purple-light-theme);
+        @include bx-theme($white-light-theme);
     }
 
     [data-theme='dark'] {
-        @include bx-theme($purple-dark-theme);
+        @include bx-theme($white-dark-theme);
     }
 }
 ```
+
+
+## Appearance
+
+Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through `ThemingService.setAppearance({ material: 'glass', blur: 10, tint: 0.4 })`; use `resetAppearance()` for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.
+
+Load `@filip.mazev/blocks/effects/effects.css` once globally alongside the Blocks Sass theme. `ng add` registers the stylesheet for new installations. `BxSurfaceDirective` from `@filip.mazev/blocks/effects` is available for custom containers and local overrides. The framework-independent engine is `@filip.mazev/blocks/effects/runtime`, included in the same package.
+
+The source playground provides a dedicated README and working page for every component, with global appearance controls at `/appearance`.
