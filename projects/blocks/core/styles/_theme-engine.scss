@@ -69,7 +69,7 @@ $required-theme-keys: (
     }
 
     @each $key, $value in $theme {
-        @if string.index($key, 'meta-') !=1 {
+        @if string.index($key, 'meta-') != 1 {
             @if not list.index($required-theme-keys, $key) {
                 @error "Strict Theme Error: '#{$theme-name}' contains an invalid key '#{$key}'. Remove or rename it.";
             }
@@ -133,17 +133,21 @@ $required-theme-keys: (
         'bg-danger-disabled': get-color-from-palette('danger', 50),
         'bg-danger-subtle': rgb(get-color-from-palette('danger', 50), 0.95),
         'scroll-bg': get-color-from-palette($surface-brand, 100),
-        'scroll-thumb': linear-gradient(278deg,
-            get-color-from-palette($accent, 300) -10.44%,
-            get-color-from-palette($accent, 400) 100%),
-        'scroll-thumb-hover': linear-gradient(278deg,
-            get-color-from-palette($accent, 400) -10.44%,
-            get-color-from-palette($accent, 700) 100%),
+        'scroll-thumb': linear-gradient(
+                278deg,
+                get-color-from-palette($accent, 300) -10.44%,
+                get-color-from-palette($accent, 400) 100%
+            ),
+        'scroll-thumb-hover': linear-gradient(
+                278deg,
+                get-color-from-palette($accent, 400) -10.44%,
+                get-color-from-palette($accent, 700) 100%
+            ),
         'meta-brand-palette': $accent,
     );
-$merged-theme: map.merge($base, $overrides);
+    $merged-theme: map.merge($base, $overrides);
 
-@return validate-theme($merged-theme, '#{$surface-brand}-#{$accent}-light');
+    @return validate-theme($merged-theme, '#{$surface-brand}-#{$accent}-light');
 }
 
 @function make-dark-theme($surface-brand, $accent: $surface-brand, $overrides: ()) {
@@ -201,17 +205,21 @@ $merged-theme: map.merge($base, $overrides);
         'bg-danger-disabled': get-color-from-palette('danger', 1000),
         'bg-danger-subtle': rgb(get-color-from-palette('danger', 1000), 0.95),
         'scroll-bg': get-color-from-palette($surface-brand, 900),
-        'scroll-thumb': linear-gradient(278deg,
-            get-color-from-palette($accent, 700) -10.44%,
-            get-color-from-palette($accent, 500) 100%),
-        'scroll-thumb-hover': linear-gradient(278deg,
-            get-color-from-palette($accent, 500) -10.44%,
-            get-color-from-palette($accent, 400) 100%),
+        'scroll-thumb': linear-gradient(
+                278deg,
+                get-color-from-palette($accent, 700) -10.44%,
+                get-color-from-palette($accent, 500) 100%
+            ),
+        'scroll-thumb-hover': linear-gradient(
+                278deg,
+                get-color-from-palette($accent, 500) -10.44%,
+                get-color-from-palette($accent, 400) 100%
+            ),
         'meta-brand-palette': $accent,
     );
-$merged-theme: map.merge($base, $overrides);
+    $merged-theme: map.merge($base, $overrides);
 
-@return validate-theme($merged-theme, '#{$surface-brand}-#{$accent}-dark');
+    @return validate-theme($merged-theme, '#{$surface-brand}-#{$accent}-dark');
 }
 
 @mixin bx-theme($config) {
@@ -222,11 +230,11 @@ $merged-theme: map.merge($base, $overrides);
     --bx-glass-accent: var(--bx-primary);
 
     @each $key, $value in $config {
-        @if $key !='meta-brand-palette' {
+        @if $key != 'meta-brand-palette' {
             --bx-#{$key}: #{$value};
         }
 
-        @if $key =='meta-brand-palette' {
+        @if $key == 'meta-brand-palette' {
             $brand-palette: get-palette($value);
 
             @each $shade, $color in $brand-palette {
@@ -237,28 +245,22 @@ $merged-theme: map.merge($base, $overrides);
 }
 
 @each $key in $required-theme-keys {
-    @if string.index($key, 'bg-')==1 {
+    @if string.index($key, 'bg-') == 1 {
         .bx-#{$key} {
             background-color: var(--bx-#{$key});
             transition: background-color 0.2s ease-in-out;
         }
-    }
-
-    @else if string.index($key, 'text-')==1 {
+    } @else if string.index($key, 'text-') == 1 {
         .bx-#{$key} {
             color: var(--bx-#{$key});
             transition: color 0.2s ease-in-out;
         }
-    }
-
-    @else if string.index($key, 'border-')==1 {
+    } @else if string.index($key, 'border-') == 1 {
         .bx-#{$key} {
             border-color: var(--bx-#{$key});
             transition: border-color 0.2s ease-in-out;
         }
-    }
-
-    @else if not string.index($key, 'scroll-') {
+    } @else if not string.index($key, 'scroll-') {
         .bx-bg-#{$key} {
             background-color: var(--bx-#{$key});
             transition: background-color 0.2s ease-in-out;

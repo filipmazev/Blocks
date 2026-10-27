@@ -28,8 +28,8 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
       ['data-bx-reduced-transparency', options.reducedTransparency]
     ];
     for (const [name, value] of values) if (value !== undefined) root.setAttribute(name, String(value));
-    if (options.blur !== undefined) root.style.setProperty('--bx-glass-blur', `${finiteClamp(options.blur, 0, 40, 10)}px`);
-    if (options.tint !== undefined) root.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.4)));
+    if (options.blur !== undefined) root.style.setProperty('--bx-glass-blur', `${finiteClamp(options.blur, 0, 50, 10)}px`);
+    if (options.tint !== undefined) root.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.5)));
     notify();
   };
   paint();

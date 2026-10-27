@@ -80,7 +80,6 @@ export class SliderDirective {
         this.shell.style.setProperty('--bx-slider-position', position);
         if (this.thumb) refreshGlassLighting(this.thumb);
       }
-      this.shell.classList.toggle('is-disabled', input.disabled);
     }
   }
 }

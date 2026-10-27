@@ -10,7 +10,7 @@
         "tools:generate:icons:lucide": "node tools/icons/generate-lucide-icons.mjs",
         "tools:sync-theme-types": "node tools/tokens/sync-theme-types.mjs",
         "tools:sync-version": "node tools/version-sync.mjs",
-        "build:blocks": "npm run tools:sync-effects-tokens && npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 2 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
+        "build:blocks": "npm run tools:sync-effects-tokens && npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && node tools/restore-full-css-hex.mjs dist/blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 2 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
         "test": "ng test",
         "lint": "npm run lint:ts && npm run lint:styles",
         "lint:ts": "eslint \"projects/blocks/**/*.{ts,html}\" \"projects/playground/**/*.{ts,html}\"",
@@ -64,6 +64,7 @@
         "tslib": "^2.3.0"
     },
     "devDependencies": {
+        "@jridgewell/sourcemap-codec": "^1.6.0",
         "@angular-eslint/eslint-plugin": "^22.6.0",
         "@angular-eslint/eslint-plugin-template": "^22.6.0",
         "@angular-eslint/template-parser": "^22.6.0",

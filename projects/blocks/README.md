@@ -49,7 +49,7 @@ Then, manually configure your styles.scss:
 
 ## Appearance
 
-Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through `ThemingService.setAppearance({ material: 'glass', blur: 10, tint: 0.4 })`; use `resetAppearance()` for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.
+Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through `ThemingService.setAppearance({ material: 'glass', blur: 10, tint: 0.5 })`; use `resetAppearance()` for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.
 
 Load `@filip.mazev/blocks/effects/effects.css` once globally alongside the Blocks Sass theme. `ng add` registers the stylesheet for new installations. `BxSurfaceDirective` from `@filip.mazev/blocks/effects` is available for custom containers and local overrides. The framework-independent engine is `@filip.mazev/blocks/effects/runtime`, included in the same package.
 

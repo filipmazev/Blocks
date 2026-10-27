@@ -18,7 +18,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`label`, `icon`, `endIcon`, `shortcut`, `disabled`, and `danger`. `action` emits the mouse event for enabled items.
+`label`, `icon`, `endIcon`, `shortcut`, `disabled`, `danger`, and `wrapLabel`. Set `wrapLabel` to `true` when a menu item should wrap long content instead of truncating it. `action` emits the mouse event for enabled items.
 
 ## Appearance
 
@@ -31,7 +31,7 @@ import { ThemingService } from '@filip.mazev/blocks/core';
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: 'glass', blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: 'glass', blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: 'solid' });
 ```

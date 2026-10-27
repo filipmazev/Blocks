@@ -10,7 +10,7 @@ export interface BxAppearanceConfig {
 export const DEFAULT_APPEARANCE_CONFIG: Readonly<BxAppearanceConfig> = Object.freeze({
   material: 'glass',
   blur: 10,
-  tint: 0.4,
+  tint: 0.5,
   quality: 'auto',
   reducedTransparency: false
 });

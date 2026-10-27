@@ -13,7 +13,7 @@ import '@filip.mazev/blocks/effects/effects.css';
 import { configureAppearance, mountSurface, createGlassTransition } from '@filip.mazev/blocks/effects/runtime';
 
 const config = configureAppearance(document.documentElement, {
-  material: 'glass', blur: 10, tint: .4,
+  material: 'glass', blur: 10, tint: 0.5,
   quality: 'auto',
 });
 const buttonSkin = mountSurface(button);

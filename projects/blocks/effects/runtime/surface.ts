@@ -204,7 +204,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     element.setAttribute('data-bx-glass-renderer', enhanced ? 'enhanced' : 'baseline');
     if (options.blur !== undefined) element.style.setProperty('--bx-glass-blur', `${finiteClamp(options.blur, 0, 40, 10)}px`);
     else restoreProperty('--bx-glass-blur');
-    if (options.tint !== undefined) element.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.4)));
+    if (options.tint !== undefined) element.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.5)));
     else restoreProperty('--bx-glass-opacity');
     // Absolutely positioned children use the padding box. Extend only across the
     // host's real border so their inherited outer radius describes the same curve.

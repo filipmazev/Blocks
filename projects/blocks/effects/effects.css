@@ -13,7 +13,7 @@
     color: var(--bx-glass-text, var(--bx-text-primary, CanvasText));
     border-color: var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
     --bx-glass-material-blur: 10px;
-    --bx-glass-material-opacity: .4;
+    --bx-glass-material-opacity: .5;
 }
 
 [data-bx-surface="frosted"] {
@@ -44,7 +44,7 @@
 
 @supports (background: color-mix(in srgb, white, transparent)) {
     [data-bx-surface] {
-        background: color-mix(in srgb, var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) calc(max(var(--bx-glass-min-opacity, 0), var(--bx-glass-opacity, var(--bx-glass-material-opacity, .4))) * 100%), transparent) !important;
+        background: color-mix(in srgb, var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) calc(max(var(--bx-glass-min-opacity, 0), var(--bx-glass-opacity, var(--bx-glass-material-opacity, .5))) * 100%), transparent) !important;
     }
 
     .bx-glass-decoration {

@@ -32,7 +32,7 @@
   <p>Open the action panel to see the glass surface open and close. Move the light to change its spatial reflection. These controls configure every glass surface on this page.</p>
   <div class="controls">
     <label>Material<select id="material"><option>glass</option><option>frosted</option><option>solid</option></select></label>
-    <label>Tint <output id="tint-value">40%</output><input id="tint" type="range" min="0" max="100" value="40"></label>
+    <label>Tint <output id="tint-value">50%</output><input id="tint" type="range" min="0" max="100" value="50"></label>
     <label>Blur <output id="blur-value">10 px</output><input id="blur" type="range" min="0" max="40" value="10"></label>
     <label>Light position<input id="light-position" type="range" min="5" max="80" value="25"></label>
     <label>Rendering<select id="quality"><option>auto</option><option>baseline</option><option>enhanced</option></select></label>
@@ -54,7 +54,7 @@
   import { configureAppearance, mountSurface, mountGlassScene, createGlassTransition } from '../../../../dist/blocks/fesm2022/filip.mazev-blocks-effects-runtime.mjs';
   const $ = id => document.getElementById(id);
   const trigger = $('trigger'), panel = $('panel');
-  const config = configureAppearance(document.documentElement, { material:'glass', blur:10, tint:.4, quality:'auto' });
+  const config = configureAppearance(document.documentElement, { material:'glass', blur:10, tint: 0.5, quality:'auto' });
   const surfaces = [trigger,panel].map(element => mountSurface(element));
   const scene = mountGlassScene(document.documentElement, {
     lights:[{element:$('lamp'),z:150,color:'var(--bx-primary)',intensity:1.4,radius:700}],

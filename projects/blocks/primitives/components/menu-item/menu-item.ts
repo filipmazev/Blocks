@@ -35,6 +35,7 @@ export class MenuItem {
   public readonly icon = input<IconName | undefined>(undefined);
   public readonly endIcon = input<IconName | undefined>(undefined);
   public readonly label = input<ResolvableText | undefined>(undefined);
+  public readonly wrapLabel = input(false);
   public readonly disabled = input(false);
   public readonly danger = input(false);
 

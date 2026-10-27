@@ -22,9 +22,9 @@ import { ButtonColor, ButtonVariant } from '../../types/form.types';
 })
 export class Button {
   private readonly appearance = injectComponentSurface(() => ({
-    interactive: !this.interactive() || this.disabled() ? false : undefined,
+    interactive: this.variant() === 'text' || !this.interactive() || this.disabled() ? false : undefined,
     emission:
-      this.interactive() && !this.disabled()
+      this.variant() !== 'text' && this.interactive() && !this.disabled()
         ? this.color() === 'primary' || this.color() === 'grayscale'
           ? 'var(--bx-primary)'
           : `var(--bx-text-${this.color()})`

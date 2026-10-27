@@ -31,7 +31,7 @@ import { ThemingService } from '@filip.mazev/blocks/core';
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: 'glass', blur: 10, tint: 0.4 });
+this.theme.setAppearance({ material: 'glass', blur: 10, tint: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ material: 'solid' });
 ```

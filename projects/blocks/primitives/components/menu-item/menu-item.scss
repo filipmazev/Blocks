@@ -86,6 +86,13 @@
     text-align: left;
 }
 
+.bx-menu-item-content-wrapped {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+}
+
 .bx-menu-item-shortcut {
     display: flex;
     align-items: center;

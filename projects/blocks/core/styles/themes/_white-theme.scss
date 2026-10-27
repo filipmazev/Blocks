@@ -1,7 +1,8 @@
 @use '../theme-engine' as *;
 
-$white-light-theme: make-light-theme('neutral',
-        $overrides: (
+$white-light-theme: make-light-theme(
+    'neutral',
+    $overrides: (
         'primary': #525252,
         'primary-hover': #404040,
         'primary-active': #262626,
@@ -11,8 +12,9 @@ $white-light-theme: make-light-theme('neutral',
         'border-brand': #737373,
     )
 );
-$white-dark-theme: make-dark-theme('neutral',
-        $overrides: (
+$white-dark-theme: make-dark-theme(
+    'neutral',
+    $overrides: (
         'primary': #ffffff,
         'primary-hover': #e5e5e5,
         'primary-active': #d4d4d4,

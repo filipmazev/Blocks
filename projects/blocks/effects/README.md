@@ -13,7 +13,7 @@ private readonly theme = inject(ThemingService);
 this.theme.setAppearance({
   material: 'glass',  // glass | frosted | solid
   blur: 10,           // 0–40 pixels
-  tint: 0.4,         // 0–1 opacity
+  tint: 0.5,         // 0–1 opacity
   quality: 'auto',    // auto | baseline | enhanced
   reducedTransparency: false
 });

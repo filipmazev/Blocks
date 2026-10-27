@@ -44,7 +44,7 @@
             <div class="bx-select-menu-container">
                 @for (option of filteredOptions(); track option.value) {
 
-                <bx-menu-item role="option" [attr.aria-selected]="internalValue() === option.value" [disabled]="option.disabled ?? false" (action)="selectOption(option)">
+                <bx-menu-item role="option" [attr.aria-selected]="internalValue() === option.value" [disabled]="option.disabled ?? false" [wrapLabel]="true" (action)="selectOption(option)">
                     <div class="bx-select-item-inner">
                         <div class="bx-select-check-placeholder">
                             @if (internalValue() === option.value) {

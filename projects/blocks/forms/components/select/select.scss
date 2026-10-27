@@ -259,8 +259,8 @@ bx-menu-item:hover .bx-select-check-placeholder {
 }
 
 .bx-select-item-inner > span:last-child {
+    flex: 1 1 auto;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }

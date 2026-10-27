@@ -27,14 +27,14 @@ export class Appearance {
     { value: 'enhanced', label: 'Enhanced when supported' }
   ];
 
-  protected readonly codeExample = `// Change the material across the application, including open overlays.\nconst theme = inject(ThemingService);\ntheme.setAppearance({ material: 'glass', blur: 10, tint: 0.4 });\n\n// Existing Blocks components inherit these settings.\n<button bx-button [bxDropdown]="actions" bxTransition="fade">\n  Explore actions\n</button>\n\n// Custom native DOM surfaces use bxSurface.\n<article bxSurface>…</article>`;
+  protected readonly codeExample = `// Change the material across the application, including open overlays.\nconst theme = inject(ThemingService);\ntheme.setAppearance({ material: 'glass', blur: 10, tint: 0.5 });\n\n// Existing Blocks components inherit these settings.\n<button bx-button [bxDropdown]="actions" bxTransition="fade">\n  Explore actions\n</button>\n\n// Custom native DOM surfaces use bxSurface.\n<article bxSurface>…</article>`;
 
   protected updateAppearance(settings: Partial<BxAppearanceConfig>): void {
     this.theme.setAppearance(settings);
   }
 
   protected setMaterial(material: BxAppearanceConfig['material']): void {
-    const preset = { glass: { blur: 10, tint: 0.4 }, frosted: { blur: 24, tint: 0.65 }, solid: { blur: 0, tint: 1 } }[material];
+    const preset = { glass: { blur: 10, tint: 0.5 }, frosted: { blur: 24, tint: 0.65 }, solid: { blur: 0, tint: 1 } }[material];
     this.theme.setAppearance({ material, ...preset });
     this.status.set(`${material[0].toUpperCase()}${material.slice(1)} applied throughout Blocks. Open another component page to see the same settings.`);
   }

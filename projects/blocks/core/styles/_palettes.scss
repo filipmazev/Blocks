@@ -10,9 +10,9 @@ $orange-palette: (
     600: #f54900,
     700: #ca3500,
     800: #9f2d00,
-    900: #511,
+    900: #551111,
     1000: #441306,
-    ) !default;
+) !default;
 $purple-palette: (
     50: #f4ebff,
     100: #e6d4ff,
@@ -25,7 +25,7 @@ $purple-palette: (
     800: #2c0066,
     900: #160033,
     1000: #0b001a,
-    ) !default;
+) !default;
 $red-palette: (
     50: #fdf1f0,
     100: #fadcda,
@@ -38,7 +38,7 @@ $red-palette: (
     800: #750904,
     900: #520401,
     1000: #2e0200,
-    ) !default;
+) !default;
 $green-palette: (
     50: #f7fce8,
     100: #edf8c8,
@@ -51,7 +51,7 @@ $green-palette: (
     800: #556d0c,
     900: #3c4e08,
     1000: #212c03,
-    ) !default;
+) !default;
 $danger-palette: (
     50: #fffcfc,
     100: #f4e5e5,
@@ -64,7 +64,7 @@ $danger-palette: (
     800: #722222,
     900: #2b1717,
     1000: #0e0c0c,
-    ) !default;
+) !default;
 $warn-palette: (
     50: #fffefb,
     100: #f7f0e3,
@@ -77,7 +77,7 @@ $warn-palette: (
     800: #6a4817,
     900: #2b2317,
     1000: #0e0d0c,
-    ) !default;
+) !default;
 $success-palette: (
     50: #fcfffc,
     100: #e6f4e6,
@@ -90,7 +90,7 @@ $success-palette: (
     800: #1a5d22,
     900: #172b18,
     1000: #0c0e0c,
-    ) !default;
+) !default;
 $information-palette: (
     50: #fbfdff,
     100: #e5eef7,
@@ -103,7 +103,7 @@ $information-palette: (
     800: #1a4469,
     900: #17202b,
     1000: #0c0d0e,
-    ) !default;
+) !default;
 $neutral-palette: (
     50: #fafafa,
     100: #f5f5f5,
@@ -116,7 +116,7 @@ $neutral-palette: (
     800: #262626,
     900: #171717,
     1000: #0b0b0b,
-    ) !default;
+) !default;
 $cyber-yellow-palette: (
     50: #fffef2,
     100: #fffdd1,
@@ -129,7 +129,7 @@ $cyber-yellow-palette: (
     800: #665e00,
     900: #332f00,
     1000: #141300,
-    ) !default;
+) !default;
 $cyber-slate-palette: (
     50: #ebeff2,
     100: #cdd6df,
@@ -142,13 +142,13 @@ $cyber-slate-palette: (
     800: #121a21,
     900: #0b1015,
     1000: #05080a,
-    ) !default;
+) !default;
 $hc-black: #000000;
 $hc-white: #ffffff;
 $hc-yellow: #e4d500;
 $hc-cyan: #00f3f3;
-$hc-red: #f00;
-$hc-green: #0f0;
+$hc-red: #ff0000;
+$hc-green: #00ff00;
 $all-palettes: (
     'orange': $orange-palette,
     'purple': $purple-palette,
@@ -162,17 +162,14 @@ $all-palettes: (
 
     'cyber-yellow': $cyber-yellow-palette,
     'cyber-slate': $cyber-slate-palette,
-    ) !default;
+) !default;
 
 @function get-palette($name) {
     @if map.has-key($all-palettes, $name) {
-        @return map.get($all-palettes, $name
-    );
-}
-
-@else {
-    @error "The palette '#{$name}' does not exist in @filip.mazev/blocks/core/styles/index.";
-}
+        @return map.get($all-palettes, $name);
+    } @else {
+        @error "The palette '#{$name}' does not exist in @filip.mazev/blocks/core/styles/index.";
+    }
 }
 
 @function get-color-from-palette($palette-name, $shade) {
@@ -180,9 +177,7 @@ $all-palettes: (
 
     @if map.has-key($palette, $shade) {
         @return map.get($palette, $shade);
-    }
-
-    @else {
+    } @else {
         @error "Shade '#{$shade}' not found in palette '#{$palette-name}'.";
     }
 }
