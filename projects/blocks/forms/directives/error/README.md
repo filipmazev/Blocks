@@ -8,7 +8,7 @@ A projected custom error message inside a form-field.
 import { BxError, FormField } from '@filip.mazev/blocks/forms';
 ```
 
-Add the standalone component or directive to your component's `imports`.
+Add the standalone component to your component's `imports`.
 
 ## Usage
 
@@ -21,7 +21,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`BxError` is a marker directive with selector `bx-error`. It has no inputs; the form field projects it into its error region.
+`BxError` is a content projection component with selector `bx-error`. It has no inputs; the form field projects it into its error region.
 
 ## Appearance
 
@@ -43,7 +43,7 @@ this.theme.setAppearance({ material: 'solid' });
 
 ## Behavior and accessibility
 
-Render only when validation should be shown. Tie the input to the error ID with `aria-describedby` and update `aria-invalid` as needed. This directive does not run validation.
+Render only when validation should be shown. Tie the input to the error ID with `aria-describedby` and update `aria-invalid` as needed. This component does not run validation.
 
 ## Playground
 

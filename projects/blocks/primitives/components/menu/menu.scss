@@ -10,13 +10,14 @@
     border-radius: radius(sm);
     box-shadow: shadow(sm);
     padding: spacing(1);
-
     display: flex;
     flex-direction: column;
     min-width: 12rem;
 
     &.bx-menu-animated {
-        transition: opacity 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition:
+            opacity 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+            transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     transform-origin: top;
@@ -27,10 +28,13 @@
         pointer-events: none;
     }
 }
+
 // The shared material owns the backing; rows inherit it without nested blur.
 :host([data-bx-surface]) {
     border-radius: var(--bx-glass-radius, #{radius(sm)});
+
     --bx-glass-shadow: #{shadow(sm)};
+
     color: var(--bx-glass-text, var(--bx-text-primary));
 
     .bx-menu-wrapper {
@@ -41,4 +45,6 @@
     }
 }
 
-[data-bx-surface] { --bx-glass-min-opacity: .8; }
+[data-bx-surface] {
+    --bx-glass-min-opacity: 0.8;
+}

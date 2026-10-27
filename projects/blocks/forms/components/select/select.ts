@@ -92,34 +92,28 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
     const selected = this.resolvedOptions().find((o) => o.value === currentVal);
     return selected ? selected.resolvedStr : '';
   });
-public readonly options = input.required<BxSelectOption<T>[]>();
 
-  
+  protected readonly resolvedSearchPlaceholder = computed(() => this.resolveText(this.searchPlaceholder()));
+  protected readonly resolvedEmptyMessage = computed(() => this.resolveText(this.emptyMessage()));
+  public readonly options = input.required<BxSelectOption<T>[]>();
+
   public readonly isSearchable = input<boolean>(false);
 
   public readonly externalFiltering = input<boolean>(false);
-private transition?: ReturnType<typeof createGlassTransition>;
+  public readonly searchPlaceholder = input<ResolvableText>('Search...');
+  public readonly emptyMessage = input<ResolvableText>('No results found.');
+  // eslint-disable-next-line @angular-eslint/no-output-native -- Keep the established public search event.
+  public readonly search = output<string>();
+  public readonly isOpen = signal<boolean>(false);
+  private transition?: ReturnType<typeof createGlassTransition>;
 
   private disconnectTheme?: () => void;
 
-  
   private transitionRevision = 0;
 
-  protected readonly resolvedSearchPlaceholder = computed(() => this.resolveText(this.searchPlaceholder()));
-private focusOnOpen: 'first' | 'last' | null = null;
+  private focusOnOpen: 'first' | 'last' | null = null;
 
-  
-  protected readonly resolvedEmptyMessage = computed(() => this.resolveText(this.emptyMessage()));
-@ViewChild(CdkConnectedOverlay) private connectedOverlay?: CdkConnectedOverlay;
-
-  
-  public readonly searchPlaceholder = input<ResolvableText>('Search...');
-
-  public readonly emptyMessage = input<ResolvableText>('No results found.');
-
-  public readonly search = output<string>();
-
-  public readonly isOpen = signal<boolean>(false);
+  @ViewChild(CdkConnectedOverlay) private connectedOverlay?: CdkConnectedOverlay;
 
   @ViewChild('searchInput') private searchInputRef?: SearchInput;
 
@@ -159,7 +153,8 @@ private focusOnOpen: 'first' | 'last' | null = null;
     this.isPanelAttached.set(true);
     const pane = this.connectedOverlay?.overlayRef?.overlayElement;
     if (pane) pane.inert = false;
-    if (this.transition) void this.zone.runOutsideAngular(() => this.transition!.enter());
+    const transition = this.transition;
+    if (transition) void this.zone.runOutsideAngular(() => transition.enter());
   }
 
   public close(): void {
@@ -169,9 +164,10 @@ private focusOnOpen: 'first' | 'last' | null = null;
     const pane = this.connectedOverlay?.overlayRef?.overlayElement;
     if (pane?.contains(pane.ownerDocument.activeElement)) this.originRef?.nativeElement.focus({ preventScroll: true });
     if (pane) pane.inert = true;
-    if (this.transition && !this.a11y.isReducedMotion()) {
+    const transition = this.transition;
+    if (transition && !this.a11y.isReducedMotion()) {
       void this.zone
-        .runOutsideAngular(() => this.transition!.exit())
+        .runOutsideAngular(() => transition.exit())
         .then(() => {
           if (revision === this.transitionRevision && !this.isOpen()) this.isPanelAttached.set(false);
         })
@@ -194,8 +190,9 @@ private focusOnOpen: 'first' | 'last' | null = null;
       if (!this.a11y.isReducedMotion()) {
         this.transition?.destroy();
         this.transition = this.zone.runOutsideAngular(() => createGlassTransition(origin, overlay.overlayElement));
+        const transition = this.transition;
         void this.zone
-          .runOutsideAngular(() => this.transition!.enter())
+          .runOutsideAngular(() => transition.enter())
           .catch(() => {
             if (revision === this.transitionRevision) {
               this.transition?.destroy();

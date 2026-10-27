@@ -3,7 +3,6 @@
 @use 'variables' as *;
 @use 'palettes' as *;
 
-
 @each $key, $val in $spacing {
     .bx-p-#{$key} {
         padding: #{$val};
@@ -105,7 +104,7 @@
 }
 
 @each $palette-name, $shades in $all-palettes {
-    @if meta.type-of($shades)=='map' {
+    @if meta.type-of($shades) == 'map' {
         @each $shade, $color in $shades {
             .bx-bg-#{$palette-name}-#{$shade} {
                 background-color: var(--bx-color-#{$palette-name}-#{$shade});
@@ -140,7 +139,7 @@
     }
 
     @each $palette-name, $shades in $all-palettes {
-        @if meta.type-of($shades)=='map' {
+        @if meta.type-of($shades) == 'map' {
             @each $shade, $color in $shades {
                 --bx-color-#{$palette-name}-#{$shade}: #{$color};
             }

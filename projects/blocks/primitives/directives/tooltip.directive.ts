@@ -86,9 +86,10 @@ export class TooltipDirective {
     const revision = ++this.revision;
     this.removeDescription();
     if (!this.overlayRef) return;
-    if (this.transition && !this.a11y.isReducedMotion()) {
+    const transition = this.transition;
+    if (transition && !this.a11y.isReducedMotion()) {
       void this.zone
-        .runOutsideAngular(() => this.transition!.exit())
+        .runOutsideAngular(() => transition.exit())
         .then(() => {
           if (revision === this.revision) this.dispose();
         })

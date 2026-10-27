@@ -8,6 +8,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
 .modal-overlay {
@@ -17,21 +18,24 @@
 }
 
 .modal-backdrop {
+    padding: 0;
+    border: 0;
+    appearance: none;
+    cursor: pointer;
     position: fixed;
     inset: 0;
     z-index: z(modal);
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
-    background: rgb(0, 0, 0, 0.25);
+    background: rgb(0 0 0 / 25%);
     backface-visibility: hidden;
     -webkit-font-smoothing: subpixel-antialiased;
-    -webkit-transform-style: preserve-3d;
-    -moz-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: center;
 }
 
 .centered-modal-content-wrapper {
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
     max-width: 90vw;
@@ -46,7 +50,6 @@
     box-shadow: shadow(modal);
     color: var(--bx-modal-text, var(--bx-text-primary));
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border: 1px solid transparent;
     background-color: var(--bx-modal-bg, var(--bx-bg-surface));
 }
@@ -109,7 +112,7 @@
     }
 }
 
-@-webkit-keyframes centered-modal-animate-in {
+@keyframes centered-modal-animate-in {
     from {
         scale: 0;
     }
@@ -119,7 +122,7 @@
     }
 }
 
-@-moz-keyframes centered-modal-animate-in {
+@keyframes centered-modal-animate-in {
     from {
         scale: 0;
     }
@@ -139,7 +142,7 @@
     }
 }
 
-@-webkit-keyframes centered-modal-animate-out {
+@keyframes centered-modal-animate-out {
     from {
         scale: 1;
     }
@@ -149,7 +152,7 @@
     }
 }
 
-@-moz-keyframes centered-modal-animate-out {
+@keyframes centered-modal-animate-out {
     from {
         scale: 1;
     }
@@ -158,12 +161,14 @@
         scale: 0;
     }
 }
+
 [data-bx-surface] {
     --bx-glass-surface: var(--bx-modal-bg, var(--bx-bg-surface));
     --bx-glass-text: var(--bx-modal-text, var(--bx-text-primary));
     --bx-glass-shadow: #{shadow(modal)};
-    --bx-glass-min-opacity: .52;
+    --bx-glass-min-opacity: 0.52;
     --bx-glass-rim-opacity: 1;
+
     border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
 }
 
@@ -180,21 +185,40 @@
     background: transparent;
     color: inherit;
     cursor: pointer;
-    &:hover { background: var(--bx-bg-element-hover); }
-    &:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: 2px; }
+
+    &:hover {
+        background: var(--bx-bg-element-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
 }
 
 .modal-backdrop {
-    background: rgb(0 0 0 / .32);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgb(0 0 0 / 32%);
     backdrop-filter: blur(8px);
 }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .modal-backdrop { background: rgb(0 0 0 / .5); }
-}
-@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-    .modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / .6); }
-}
-:host-context([data-bx-reduced-transparency="true"]) .modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / .6); }
 
-:host-context([data-theme='dark']) [data-bx-surface] { --bx-glass-min-opacity: .72; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .modal-backdrop {
+        background: rgb(0 0 0 / 50%);
+    }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+    .modal-backdrop {
+        backdrop-filter: none;
+        background: rgb(0 0 0 / 60%);
+    }
+}
+
+:host-context([data-bx-reduced-transparency='true']) .modal-backdrop {
+    backdrop-filter: none;
+    background: rgb(0 0 0 / 60%);
+}
+
+:host-context([data-theme='dark']) [data-bx-surface] {
+    --bx-glass-min-opacity: 0.72;
+}

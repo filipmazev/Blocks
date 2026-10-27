@@ -22,6 +22,12 @@
 }
 
 .touch-hitbox {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -48,7 +54,7 @@
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    padding: 0 spacing(5) spacing(6) spacing(5);
+    padding: 0 spacing(5) spacing(6);
     gap: spacing(6);
     box-sizing: border-box;
     overflow: hidden;
@@ -97,17 +103,7 @@
     gap: spacing(2);
 }
 
-@-moz-keyframes opened-bottom-sheet-modal-anim {
-    0% {
-        transform: translateY(100%);
-    }
-
-    100% {
-        transform: translateY(0%);
-    }
-}
-
-@-webkit-keyframes opened-bottom-sheet-modal-anim {
+@keyframes opened-bottom-sheet-modal-anim {
     0% {
         transform: translateY(100%);
     }
@@ -126,13 +122,27 @@
         transform: translateY(0%);
     }
 }
+
+@keyframes opened-bottom-sheet-modal-anim {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
 [data-bx-surface] {
     --bx-glass-surface: var(--bx-modal-bg, var(--bx-bg-surface));
     --bx-glass-text: var(--bx-modal-text, var(--bx-text-primary));
     --bx-glass-shadow: #{shadow(modal)};
-    --bx-glass-min-opacity: .52;
+    --bx-glass-min-opacity: 0.52;
     --bx-glass-rim-opacity: 1;
+
     border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
 }
 
-:host-context([data-theme='dark']) [data-bx-surface] { --bx-glass-min-opacity: .72; }
+:host-context([data-theme='dark']) [data-bx-surface] {
+    --bx-glass-min-opacity: 0.72;
+}

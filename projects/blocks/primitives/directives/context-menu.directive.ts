@@ -41,9 +41,10 @@ export class ContextMenuDirective {
       this.elementRef.nativeElement.focus({ preventScroll: true });
     }
     this.overlayRef.overlayElement.inert = true;
-    if (this.transition && !this.a11y.isReducedMotion()) {
+    const transition = this.transition;
+    if (transition && !this.a11y.isReducedMotion()) {
       void this.zone
-        .runOutsideAngular(() => this.transition!.exit())
+        .runOutsideAngular(() => transition.exit())
         .then(() => {
           if (revision === this.revision) this.dispose();
         })
@@ -88,13 +89,15 @@ export class ContextMenuDirective {
     view.detectChanges();
     this.overlayRef.updatePosition();
     if (!this.a11y.isReducedMotion()) {
-      this.point = source.ownerDocument.createElement('span');
-      this.point.setAttribute('aria-hidden', 'true');
-      Object.assign(this.point.style, { position: 'fixed', left: `${x}px`, top: `${y}px`, width: '1px', height: '1px', pointerEvents: 'none' });
-      source.ownerDocument.body.append(this.point);
-      this.transition = this.zone.runOutsideAngular(() => createGlassTransition(this.point!, pane));
+      const point = source.ownerDocument.createElement('span');
+      point.setAttribute('aria-hidden', 'true');
+      Object.assign(point.style, { position: 'fixed', left: `${x}px`, top: `${y}px`, width: '1px', height: '1px', pointerEvents: 'none' });
+      source.ownerDocument.body.append(point);
+      this.point = point;
+      const transition = this.zone.runOutsideAngular(() => createGlassTransition(point, pane));
+      this.transition = transition;
       void this.zone
-        .runOutsideAngular(() => this.transition!.enter())
+        .runOutsideAngular(() => transition.enter())
         .catch(() => {
           this.transition?.destroy();
           this.transition = undefined;

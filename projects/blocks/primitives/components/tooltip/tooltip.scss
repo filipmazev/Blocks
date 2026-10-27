@@ -1,24 +1,30 @@
 @use '../../../core/styles/helpers' as *;
 
-:host { display: block; pointer-events: none; z-index: z(tooltip); }
+:host {
+    display: block;
+    pointer-events: none;
+    z-index: z(tooltip);
+}
 
 .bx-tooltip-surface[data-bx-surface] {
     position: relative;
     padding: spacing(1) spacing(2);
     border: 1px solid var(--bx-border-default);
     border-radius: radius(sm);
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-family: inherit;
     max-width: min(22rem, calc(100vw - #{spacing(6)}));
     white-space: normal;
     overflow-wrap: anywhere;
+
     --bx-glass-surface: var(--bx-bg-surface);
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-shadow: #{shadow(sm)};
     --bx-glass-min-opacity: 1;
+
     // The body and arrow share one opaque color, including with reduced motion.
     --bx-glass-decoration-opacity: 0;
-    -webkit-backdrop-filter: none;
+
     backdrop-filter: none;
 
     &::after {
@@ -43,24 +49,31 @@
     border-top-width: 1px;
     border-left-width: 1px;
 }
+
 :host-context(.bx-overlay-pos-top) .bx-tooltip-surface::after {
     top: calc(100% + 1px);
     left: clamp(#{spacing(3)}, var(--bx-tooltip-arrow-x, 50%), calc(100% - #{spacing(3)}));
     border-right-width: 1px;
     border-bottom-width: 1px;
 }
+
 :host-context(.bx-overlay-pos-left) .bx-tooltip-surface::after {
     left: calc(100% + 1px);
     top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
     border-top-width: 1px;
     border-right-width: 1px;
 }
+
 :host-context(.bx-overlay-pos-right) .bx-tooltip-surface::after {
     left: -1px;
     top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
     border-bottom-width: 1px;
     border-left-width: 1px;
 }
+
 @media (forced-colors: active) {
-    .bx-tooltip-surface[data-bx-surface]::after { background: Canvas; border-color: CanvasText; }
+    .bx-tooltip-surface[data-bx-surface]::after {
+        background: Canvas;
+        border-color: CanvasText;
+    }
 }

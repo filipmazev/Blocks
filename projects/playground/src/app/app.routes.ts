@@ -69,4 +69,5 @@ export const ROUTES: Routes = [
 ];
 
 @NgModule({ imports: [RouterModule.forRoot(ROUTES)], exports: [RouterModule] })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Angular requires a class to declare an NgModule.
 export class RegisterRouter {}

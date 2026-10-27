@@ -17,20 +17,17 @@ export class DeviceTypeService {
   constructor() {
     if (this.isBrowser) {
       const win = this.document.defaultView;
-      const screenObj = win?.screen as any;
+      const screenObj = win?.screen as (Screen & { mozOrientation?: string; msOrientation?: string }) | undefined;
 
+      const orientation = screenObj?.orientation?.type ?? screenObj?.mozOrientation ?? screenObj?.msOrientation;
       this.screenOrientation =
-        (screenObj?.orientation || {}).type ??
-        screenObj?.mozOrientation ??
-        screenObj?.msOrientation ??
-        (!screenObj?.orientation && win?.matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary');
+        this.toDeviceOrientation(orientation) ?? (win?.matchMedia('(orientation: portrait)').matches ? 'portrait-primary' : 'landscape-primary');
 
       if (screenObj?.orientation) {
         screenObj.orientation.addEventListener('change', (ev: Event) => {
-          const orientation = ev.target as ScreenOrientation | null;
-          if (orientation?.type) {
-            this.screenOrientation = orientation.type;
-          }
+          const eventOrientation = (ev.target as ScreenOrientation | null)?.type;
+          const supportedOrientation = this.toDeviceOrientation(eventOrientation);
+          if (supportedOrientation) this.screenOrientation = supportedOrientation;
         });
       }
     }
@@ -75,6 +72,12 @@ export class DeviceTypeService {
     return win?.navigator?.userAgent || win?.navigator?.vendor || win?.opera || '';
   }
 
+  private toDeviceOrientation(value: string | undefined): DeviceOrientationType | undefined {
+    return value === 'portrait-primary' || value === 'landscape-primary' || value === 'portrait-secondary' || value === 'landscape-secondary'
+      ? value
+      : undefined;
+  }
+
   private get isDesktopDevice(): boolean {
     return !this.isMobileDevice() && !this.isTabletDevice();
   }
@@ -94,7 +97,8 @@ export class DeviceTypeService {
       const ua = this.userAgent;
       if (/windows phone/i.test(ua)) return MobileOS.WindowsPhone;
       if (/android/i.test(ua)) return MobileOS.Android;
-      if (/iPad|iPhone|iPod/.test(ua) && !(this.document.defaultView as any)?.MSStream) return MobileOS.iOS;
+      const view = this.document.defaultView as (Window & { MSStream?: unknown }) | null;
+      if (/iPad|iPhone|iPod/.test(ua) && !view?.MSStream) return MobileOS.iOS;
 
       return MobileOS.Unknown;
     }

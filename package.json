@@ -12,9 +12,12 @@
         "tools:sync-version": "node tools/version-sync.mjs",
         "build:blocks": "npm run tools:sync-effects-tokens && npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 2 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
         "test": "ng test",
-        "lint": "eslint \"projects/blocks/**/*.{ts,html}\" \"projects/playground/**/*.{ts,html}\"",
-        "lint:blocks": "ng lint blocks",
-        "lint:playground": "ng lint playground",
+        "lint": "npm run lint:ts && npm run lint:styles",
+        "lint:ts": "eslint \"projects/blocks/**/*.{ts,html}\" \"projects/playground/**/*.{ts,html}\"",
+        "lint:styles": "stylelint \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\" && prettier --check --tab-width 4 \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\"",
+        "lint:styles:fix": "prettier --write --tab-width 4 \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\" && stylelint --fix \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\" && prettier --write --tab-width 4 \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\"",
+        "lint:blocks": "ng lint blocks && stylelint \"projects/blocks/**/*.scss\" && prettier --check --tab-width 4 \"projects/blocks/**/*.scss\"",
+        "lint:playground": "ng lint playground && stylelint \"projects/playground/**/*.scss\" && prettier --check --tab-width 4 \"projects/playground/**/*.scss\"",
         "tools:build-docs": "node tools/docs/build-docs.mjs",
         "tools:sync-effects-tokens": "node tools/sync-effects-tokens.mjs",
         "prestart": "npm run tools:build-docs",
@@ -56,9 +59,9 @@
         "mermaid": "^10.9.5",
         "ngx-highlightjs": "^14.0.1",
         "ngx-markdown": "^22.1.1",
+        "oddity-angular": "^0.2.1",
         "rxjs": "~7.8.0",
-        "tslib": "^2.3.0",
-        "oddity-angular": "^0.2.1"
+        "tslib": "^2.3.0"
     },
     "devDependencies": {
         "@angular-eslint/eslint-plugin": "^22.6.0",
@@ -87,13 +90,15 @@
         "karma-jasmine": "~5.1.0",
         "karma-jasmine-html-reporter": "~2.1.0",
         "lucide-static": "^1.8.0",
+        "marked": "^18.1.2",
         "ng-packagr": "^22.2.5",
         "prettier": "^3.8.1",
         "prettier-plugin-tailwindcss": "^0.7.2",
+        "stylelint": "^17.16.0",
+        "stylelint-config-standard-scss": "^17.0.0",
         "typescript": "~6.0.3",
         "typescript-eslint": "^8.72.1",
-        "vitest": "^4.0.8",
-        "marked": "^18.1.2"
+        "vitest": "^4.0.8"
     },
     "engines": {
         "node": "^22.22.3 || ^24.15.0 || >=26.0.0"

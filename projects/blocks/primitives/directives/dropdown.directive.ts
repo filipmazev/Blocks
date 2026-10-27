@@ -78,7 +78,8 @@ export class DropdownDirective {
   public toggle(event?: MouseEvent): void {
     if (this.isDisabled()) return;
     event?.stopPropagation();
-    this.isOpen() ? this.close() : this.open();
+    if (this.isOpen()) this.close();
+    else this.open();
   }
 
   @HostListener('keydown', ['$event'])
@@ -106,9 +107,9 @@ export class DropdownDirective {
     overlay.overlayElement.style.removeProperty('pointer-events');
 
     if (this.bxTransition() !== 'none' && !this.a11y.isReducedMotion()) {
-      this.transition ??= this.zone.runOutsideAngular(() => createGlassTransition(this.elementRef.nativeElement, overlay.overlayElement));
+      const transition = (this.transition ??= this.zone.runOutsideAngular(() => createGlassTransition(this.elementRef.nativeElement, overlay.overlayElement)));
       void this.zone
-        .runOutsideAngular(() => this.transition!.enter())
+        .runOutsideAngular(() => transition.enter())
         .then(() => {
           if (revision === this.revision && this.isOpen()) this.zone.run(() => this._state.set('open'));
         })
@@ -138,9 +139,10 @@ export class DropdownDirective {
     overlay.overlayElement.inert = true;
     overlay.overlayElement.style.pointerEvents = 'none';
 
-    if (this.transition && !this.a11y.isReducedMotion()) {
+    const transition = this.transition;
+    if (transition && !this.a11y.isReducedMotion()) {
       void this.zone
-        .runOutsideAngular(() => this.transition!.exit())
+        .runOutsideAngular(() => transition.exit())
         .then(() => {
           if (revision === this.revision && !this.isOpen()) this.zone.run(() => this.dispose());
         })

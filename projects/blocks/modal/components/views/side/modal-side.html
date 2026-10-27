@@ -3,7 +3,6 @@
     bxSurface
     data-bx-light-scope
     [ngClass]="modalClasses()"
-    (click)="$event.stopPropagation()"
     [id]="id() ?? ''"
     [style.--anim-duration.ms]="animationDuration()"
   >
@@ -14,7 +13,7 @@
     >
       @if (hasBanner()) {
         <bx-modal-banner
-          [header]="$safeNavigationMigration(config()?.header)"
+          [header]="config()?.header"
           (close)="close.emit('cancel')"
           [showCloseButton]="config()?.style?.showCloseButton ?? true"
         ></bx-modal-banner>

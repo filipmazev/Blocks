@@ -37,6 +37,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   private readonly lighting = inject(BxGlassLightingService);
   private readonly a11y = inject(BxA11yService);
   private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
+
   public componentRef!: ComponentRef<C>;
   public config?: IToastConfig<D>;
   public toastRef!: ToastRef<D, R>;
@@ -44,23 +45,15 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   public currentTranslateY = signal(0);
   public isSwipingFinished = signal(false);
   public isCollapsing = signal(false);
+
   protected showCloseButton = computed(() => this.config?.showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton());
-  private light?: BxGlassLight;
-
   protected closeButtonColor = computed(() => this.config?.closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor());
-private lightFrame?: number;
-
-  
-  private lastLightProgress = -1;
 
   protected showProgressBar = computed(() => {
     if (this.config?.showProgressBar === false) return false;
 
     return this.config?.showProgressBar === true || this.config?.progressBarColor !== undefined;
   });
-private destroyed = false;
-
-  
 
   protected progressBarColor = computed(() => {
     return this.showProgressBar() ? ((this.config?.progressBarColor ?? this.toastrGlobalSettingsService.progressBarColor()) as Color) : undefined;
@@ -77,9 +70,7 @@ private destroyed = false;
   });
 
   protected isAnimated = computed(() => !this.a11y.isReducedMotion() && this.config?.animate !== false);
-
   protected isBottom = computed(() => (this.config?.position ?? this.toastrGlobalSettingsService.position()).includes('bottom'));
-
   @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true })
   protected dynamicContainer!: ViewContainerRef;
 
@@ -119,6 +110,11 @@ private destroyed = false;
 
     return null;
   });
+
+  private light?: BxGlassLight;
+  private lightFrame?: number;
+  private lastLightProgress = -1;
+  private destroyed = false;
 
   private progressAnimation?: Animation;
   private subs = new Subscription();

@@ -14,10 +14,20 @@ import { Icon } from '@filip.mazev/blocks/icons';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './input-field.scss'
 })
-export class InputField extends BxBaseControl<any> {
+export class InputField extends BxBaseControl<string | number | null> {
   private readonly i18n = inject(BX_I18N, { optional: true });
   protected readonly inputId = computed(() => `bx-input-${uuidv4()}`);
   protected readonly isFocused = signal<boolean>(false);
+  protected readonly isSpinDownDisabled = computed(() => {
+    const min = this.min();
+    return this.isDisabled() || (min !== undefined && (Number(this.internalValue()) || 0) <= min);
+  });
+
+  protected readonly isSpinUpDisabled = computed(() => {
+    const max = this.max();
+    return this.isDisabled() || (max !== undefined && (Number(this.internalValue()) || 0) >= max);
+  });
+
   protected readonly isFloating = computed(() => {
     const val = this.internalValue();
     const hasValue = val !== null && val !== undefined && val !== '';
@@ -44,14 +54,13 @@ export class InputField extends BxBaseControl<any> {
   public readonly min = input<number | undefined>(undefined);
   public readonly max = input<number | undefined>(undefined);
   public readonly step = input<number>(1);
+  private spinTimeout?: ReturnType<typeof setTimeout>;
+  private spinInterval?: ReturnType<typeof setInterval>;
+
   constructor() {
     super();
     inject(DestroyRef).onDestroy(() => this.stopSpin());
   }
-
-  private spinTimeout?: ReturnType<typeof setTimeout>;
-
-  private spinInterval?: ReturnType<typeof setInterval>;
 
   public startSpin(direction: number, event: MouseEvent | TouchEvent): void {
     event.preventDefault();
@@ -91,9 +100,11 @@ export class InputField extends BxBaseControl<any> {
   private applyStep(direction: number): void {
     const current = Number(this.internalValue()) || 0;
     let next = current + direction * this.step();
+    const min = this.min();
+    const max = this.max();
 
-    if (this.min() !== undefined && next < this.min()!) next = this.min()!;
-    if (this.max() !== undefined && next > this.max()!) next = this.max()!;
+    if (min !== undefined && next < min) next = min;
+    if (max !== undefined && next > max) next = max;
 
     this.updateValue(next);
     this.markAsTouched();

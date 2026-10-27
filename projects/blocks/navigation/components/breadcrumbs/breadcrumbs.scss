@@ -1,8 +1,42 @@
 @use '../../../core/styles/helpers' as *;
-:host { display: block; min-width: 0; }
-.breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: spacing(2); }
-.crumb { color: var(--bx-text-secondary); font: inherit; text-decoration: none; overflow-wrap: anywhere; min-width: 0; }
-a.crumb:hover { color: var(--bx-text-brand); text-decoration: underline; }
-a.crumb:focus-visible { outline: 2px solid var(--bx-border-brand); outline-offset: spacing(1); border-radius: radius(sm); }
-.last { color: var(--bx-text-primary); font-weight: 600; }
-.breadcrumb-separator { flex: 0 0 auto; color: var(--bx-text-secondary); }
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: spacing(2);
+}
+
+.crumb {
+    color: var(--bx-text-secondary);
+    font: inherit;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    min-width: 0;
+}
+
+a.crumb:hover {
+    color: var(--bx-text-brand);
+    text-decoration: underline;
+}
+
+a.crumb:focus-visible {
+    outline: 2px solid var(--bx-border-brand);
+    outline-offset: spacing(1);
+    border-radius: radius(sm);
+}
+
+.last {
+    color: var(--bx-text-primary);
+    font-weight: 600;
+}
+
+.breadcrumb-separator {
+    flex: 0 0 auto;
+    color: var(--bx-text-secondary);
+}

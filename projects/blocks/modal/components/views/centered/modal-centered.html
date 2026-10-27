@@ -2,17 +2,15 @@
   <div
     class="modal-overlay"
     [id]="id() ?? ''"
-    (click)="config()?.style?.hasBackdrop ? onBackdropClick.emit($event) : null"
   >
     @if (config()?.style?.hasBackdrop) {
-      <div class="modal-backdrop" aria-hidden="true"></div>
+      <button type="button" class="modal-backdrop" aria-label="Close dialog" (click)="onBackdropClick.emit($event)"></button>
     }
     <div class="modal-overlay-wrapper">
       <div
         [ngClass]="modalClasses()"
         bxSurface
         data-bx-light-scope
-        (click)="$event.stopPropagation()"
       >
         <div
           class="centered-modal-inner-content-container"
@@ -22,7 +20,7 @@
           <div class="centered-modal-top-group">
             @if (hasBanner()) {
               <bx-modal-banner
-                [header]="$safeNavigationMigration(config()?.header)"
+                [header]="config()?.header"
                 (close)="close.emit('cancel')"
                 [showCloseButton]="config()?.style?.showCloseButton ?? true"
               ></bx-modal-banner>

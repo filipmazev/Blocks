@@ -279,7 +279,7 @@ export const COMPONENT_EXAMPLES: readonly ComponentExample[] = [
     package: '@filip.mazev/blocks/modal',
     selector: 'bx-modal-banner',
     description: 'The shared modal heading, semantic icon and close action.',
-    example: '<bx-modal-banner [header]="{ text: \'Project settings\' }" [showCloseButton]="true" (close)="dismiss($event)" />'
+    example: '<bx-modal-banner [header]="{ text: \'Project settings\' }" [showCloseButton]="true" (close)="handleClose($event)" />'
   },
   {
     id: 'toast-core',

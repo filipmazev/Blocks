@@ -25,6 +25,7 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   public readonly hasBanner = input.required<boolean>();
   public readonly animationDuration = input.required<number>();
 
+  // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the public modal close event name.
   public readonly close = output<ModalCloseMode | undefined>();
 
   public currentTranslateY = signal(0);
@@ -61,6 +62,10 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   public ngOnDestroy(): void {
     this.stopVerticalSwipeDetection();
     this.globalResizeCleanup?.();
+  }
+
+  protected onDismissClick(event: MouseEvent): void {
+    if (!this.isTrackingSwipe || event.detail === 0) this.close.emit('cancel');
   }
 
   //#region Swipe Methods

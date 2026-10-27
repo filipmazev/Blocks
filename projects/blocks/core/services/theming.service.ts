@@ -13,12 +13,11 @@ export class ThemingService implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly a11y = inject(BxA11yService);
   private readonly _appearance = signal<BxAppearanceConfig>({ ...DEFAULT_APPEARANCE_CONFIG });
-  /** Application-wide material settings, including overlays. */
   public readonly appearance = this._appearance.asReadonly();
   public readonly palettes = THEME_PALETTES;
   private readonly _palette = signal<BxThemeId>('white');
   public readonly palette = this._palette.asReadonly();
-  public readonly paletteLabel = computed(() => this.palettes.find((item) => item.id === this.palette())!.label);
+  public readonly paletteLabel = computed(() => this.palettes.find((item) => item.id === this.palette())?.label ?? this.palettes[0].label);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly _systemTheme = signal<DeviceTheme>('light');
@@ -77,13 +76,13 @@ export class ThemingService implements OnDestroy {
 
   public setAppearance(settings: Partial<BxAppearanceConfig>): void {
     const next = { ...this.appearance(), ...settings };
+
     const finite = (value: number, fallback: number, min: number, max: number) => (Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback);
     next.blur = finite(next.blur, DEFAULT_APPEARANCE_CONFIG.blur, 0, 40);
     next.tint = finite(next.tint, DEFAULT_APPEARANCE_CONFIG.tint, 0, 1);
     if (!['glass', 'frosted', 'solid'].includes(next.material)) next.material = 'glass';
     if (!['auto', 'baseline', 'enhanced'].includes(next.quality)) next.quality = 'auto';
-    // Persist only current settings; discard obsolete stored options such as pointer lighting.
-    for (const key of Object.keys(next)) if (!(key in DEFAULT_APPEARANCE_CONFIG)) delete (next as unknown as Record<string, unknown>)[key];
+
     next.reducedTransparency = next.reducedTransparency === true;
     this._appearance.set(next);
     this.appearanceController?.update(next);

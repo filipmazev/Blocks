@@ -8,10 +8,10 @@
 
         <div class="bx-select-container">
             @if (label()) {
-            <label class="bx-floating-label">
+            <span class="bx-floating-label">
                 {{ resolvedLabel() }}
                 @if (isFieldRequired()) { <span class="bx-field-required">*</span> }
-            </label>
+            </span>
             }
 
             <span class="bx-select-value" [attr.title]="selectedOptionLabel() || resolvedPlaceholder()" [class.is-placeholder]="internalValue() === null">
@@ -31,7 +31,7 @@
         [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
         (overlayOutsideClick)="onOutsideClick($event)" (attach)="onPanelAttach()" (detach)="onPanelDetach()" (positionChange)="refreshPanel()">
 
-        <div class="bx-select-panel" bxSurface role="listbox" [attr.aria-label]="resolvedLabel()" [id]="inputId() + '-options'" (keydown)="onPanelKey($event)">
+        <div class="bx-select-panel" bxSurface role="listbox" tabindex="0" [attr.aria-label]="resolvedLabel()" [id]="inputId() + '-options'" (keydown)="onPanelKey($event)">
 
             @if (isSearchable()) {
             <div class="bx-select-search-container">

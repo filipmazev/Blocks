@@ -1,7 +1,9 @@
-import { Directive } from '@angular/core';
+import { Component } from '@angular/core';
 
-@Directive({
+@Component({
   selector: 'bx-error',
-  standalone: true
+  standalone: true,
+  template: '<ng-content />'
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class -- The component provides the projection selector and has no behavior.
 export class BxError {}

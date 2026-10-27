@@ -15,8 +15,8 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
   let options = { ...initial };
   let disposed = false;
   const notify = () => {
-    const ViewEvent = root.ownerDocument.defaultView?.CustomEvent;
-    if (ViewEvent) root.ownerDocument.dispatchEvent(new ViewEvent(configurationEvent, { detail: root }));
+    const viewEvent = root.ownerDocument.defaultView?.CustomEvent;
+    if (viewEvent) root.ownerDocument.dispatchEvent(new viewEvent(configurationEvent, { detail: root }));
   };
   const paint = () => {
     restoreAttributes();

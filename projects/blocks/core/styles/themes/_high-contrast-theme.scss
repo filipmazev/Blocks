@@ -1,151 +1,170 @@
 @use '../palettes' as *;
 @use '../theme-engine' as *;
 
-$high-contrast-light-theme: validate-theme(('bg-canvas': $hc-white,
-            'bg-surface': $hc-white,
-            'bg-surface-alt': $hc-white,
-            'bg-element': $hc-white,
-            'bg-element-hover': $hc-yellow,
-            'bg-element-active': $hc-yellow,
-            'bg-neutral': $hc-white,
-            'bg-neutral-hover': $hc-yellow,
-            'bg-neutral-active': $hc-yellow,
+$high-contrast-light-theme: validate-theme(
+    (
+        'bg-canvas': $hc-white,
+        'bg-surface': $hc-white,
+        'bg-surface-alt': $hc-white,
+        'bg-element': $hc-white,
+        'bg-element-hover': $hc-yellow,
+        'bg-element-active': $hc-yellow,
+        'bg-neutral': $hc-white,
+        'bg-neutral-hover': $hc-yellow,
+        'bg-neutral-active': $hc-yellow,
 
-            'primary': $hc-black,
-            'primary-hover': $hc-black,
-            'primary-active': $hc-black,
-            'primary-subtle': $hc-white,
-            'on-primary': $hc-white,
+        'primary': $hc-black,
+        'primary-hover': $hc-black,
+        'primary-active': $hc-black,
+        'primary-subtle': $hc-white,
+        'on-primary': $hc-white,
 
-            'text-heading': $hc-black,
-            'text-primary': $hc-black,
-            'text-secondary': $hc-black,
-            'text-brand': $hc-black,
-            'text-inverse': $hc-white,
-            'text-info': $hc-cyan,
-            'text-success': $hc-green,
-            'text-warn': $hc-yellow,
-            'text-danger': $hc-red,
+        'text-heading': $hc-black,
+        'text-primary': $hc-black,
+        'text-secondary': $hc-black,
+        'text-brand': $hc-black,
+        'text-inverse': $hc-white,
+        'text-info': $hc-cyan,
+        'text-success': $hc-green,
+        'text-warn': $hc-yellow,
+        'text-danger': $hc-red,
 
-            'border-subtle': $hc-black,
-            'border-default': $hc-black,
-            'border-strong': $hc-black,
-            'border-brand': $hc-black,
-            'border-info': $hc-black,
-            'border-success': $hc-black,
-            'border-warn': $hc-black,
-            'border-danger': $hc-black,
+        'border-subtle': $hc-black,
+        'border-default': $hc-black,
+        'border-strong': $hc-black,
+        'border-brand': $hc-black,
+        'border-info': $hc-black,
+        'border-success': $hc-black,
+        'border-warn': $hc-black,
+        'border-danger': $hc-black,
 
-            'bg-info': $hc-white,
-            'bg-info-hover': $hc-white,
-            'bg-info-active': $hc-white,
-            'bg-info-disabled': $hc-white,
-            'bg-info-subtle': $hc-white,
+        'bg-info': $hc-white,
+        'bg-info-hover': $hc-white,
+        'bg-info-active': $hc-white,
+        'bg-info-disabled': $hc-white,
+        'bg-info-subtle': $hc-white,
 
-            'bg-success': $hc-white,
-            'bg-success-hover': $hc-white,
-            'bg-success-active': $hc-white,
-            'bg-success-disabled': $hc-white,
-            'bg-success-subtle': $hc-white,
+        'bg-success': $hc-white,
+        'bg-success-hover': $hc-white,
+        'bg-success-active': $hc-white,
+        'bg-success-disabled': $hc-white,
+        'bg-success-subtle': $hc-white,
 
-            'bg-warn': $hc-white,
-            'bg-warn-hover': $hc-white,
-            'bg-warn-active': $hc-white,
-            'bg-warn-disabled': $hc-white,
-            'bg-warn-subtle': $hc-white,
+        'bg-warn': $hc-white,
+        'bg-warn-hover': $hc-white,
+        'bg-warn-active': $hc-white,
+        'bg-warn-disabled': $hc-white,
+        'bg-warn-subtle': $hc-white,
 
-            'bg-danger': $hc-white,
-            'bg-danger-hover': $hc-white,
-            'bg-danger-active': $hc-white,
-            'bg-danger-disabled': $hc-white,
-            'bg-danger-subtle': $hc-white,
+        'bg-danger': $hc-white,
+        'bg-danger-hover': $hc-white,
+        'bg-danger-active': $hc-white,
+        'bg-danger-disabled': $hc-white,
+        'bg-danger-subtle': $hc-white,
 
-            'scroll-bg': $hc-white,
-            'scroll-thumb': $hc-black,
-            'scroll-thumb-hover': $hc-yellow,
+        'scroll-bg': $hc-white,
+        'scroll-thumb': $hc-black,
+        'scroll-thumb-hover': $hc-yellow,
 
-            'meta-brand-palette': 'neutral'), 'high-contrast-light') !default;
+        'meta-brand-palette': 'neutral',
+    ),
+    'high-contrast-light'
+) !default;
+$high-contrast-dark-theme: validate-theme(
+    (
+        'bg-canvas': $hc-black,
+        'bg-surface': $hc-black,
+        'bg-surface-alt': $hc-black,
+        'bg-element': $hc-black,
+        'bg-element-hover': $hc-yellow,
+        'bg-element-active': $hc-yellow,
+        'bg-neutral': $hc-black,
+        'bg-neutral-hover': $hc-yellow,
+        'bg-neutral-active': $hc-yellow,
 
-$high-contrast-dark-theme: validate-theme(('bg-canvas': $hc-black,
-            'bg-surface': $hc-black,
-            'bg-surface-alt': $hc-black,
-            'bg-element': $hc-black,
-            'bg-element-hover': $hc-yellow,
-            'bg-element-active': $hc-yellow,
-            'bg-neutral': $hc-black,
-            'bg-neutral-hover': $hc-yellow,
-            'bg-neutral-active': $hc-yellow,
+        'primary': $hc-white,
+        'primary-hover': $hc-white,
+        'primary-active': $hc-white,
+        'primary-subtle': $hc-black,
+        'on-primary': $hc-black,
 
-            'primary': $hc-white,
-            'primary-hover': $hc-white,
-            'primary-active': $hc-white,
-            'primary-subtle': $hc-black,
-            'on-primary': $hc-black,
+        'text-heading': $hc-white,
+        'text-primary': $hc-white,
+        'text-secondary': $hc-white,
+        'text-brand': $hc-white,
+        'text-inverse': $hc-black,
+        'text-info': $hc-cyan,
+        'text-success': $hc-green,
+        'text-warn': $hc-yellow,
+        'text-danger': $hc-red,
 
-            'text-heading': $hc-white,
-            'text-primary': $hc-white,
-            'text-secondary': $hc-white,
-            'text-brand': $hc-white,
-            'text-inverse': $hc-black,
-            'text-info': $hc-cyan,
-            'text-success': $hc-green,
-            'text-warn': $hc-yellow,
-            'text-danger': $hc-red,
+        'border-subtle': $hc-white,
+        'border-default': $hc-white,
+        'border-strong': $hc-white,
+        'border-brand': $hc-white,
+        'border-info': $hc-white,
+        'border-success': $hc-white,
+        'border-warn': $hc-white,
+        'border-danger': $hc-white,
 
-            'border-subtle': $hc-white,
-            'border-default': $hc-white,
-            'border-strong': $hc-white,
-            'border-brand': $hc-white,
-            'border-info': $hc-white,
-            'border-success': $hc-white,
-            'border-warn': $hc-white,
-            'border-danger': $hc-white,
+        'bg-info': $hc-black,
+        'bg-info-hover': $hc-black,
+        'bg-info-active': $hc-black,
+        'bg-info-disabled': $hc-black,
+        'bg-info-subtle': $hc-black,
 
-            'bg-info': $hc-black,
-            'bg-info-hover': $hc-black,
-            'bg-info-active': $hc-black,
-            'bg-info-disabled': $hc-black,
-            'bg-info-subtle': $hc-black,
+        'bg-success': $hc-black,
+        'bg-success-hover': $hc-black,
+        'bg-success-active': $hc-black,
+        'bg-success-disabled': $hc-black,
+        'bg-success-subtle': $hc-black,
 
-            'bg-success': $hc-black,
-            'bg-success-hover': $hc-black,
-            'bg-success-active': $hc-black,
-            'bg-success-disabled': $hc-black,
-            'bg-success-subtle': $hc-black,
+        'bg-warn': $hc-black,
+        'bg-warn-hover': $hc-black,
+        'bg-warn-active': $hc-black,
+        'bg-warn-disabled': $hc-black,
+        'bg-warn-subtle': $hc-black,
 
-            'bg-warn': $hc-black,
-            'bg-warn-hover': $hc-black,
-            'bg-warn-active': $hc-black,
-            'bg-warn-disabled': $hc-black,
-            'bg-warn-subtle': $hc-black,
+        'bg-danger': $hc-black,
+        'bg-danger-hover': $hc-black,
+        'bg-danger-active': $hc-black,
+        'bg-danger-disabled': $hc-black,
+        'bg-danger-subtle': $hc-black,
 
-            'bg-danger': $hc-black,
-            'bg-danger-hover': $hc-black,
-            'bg-danger-active': $hc-black,
-            'bg-danger-disabled': $hc-black,
-            'bg-danger-subtle': $hc-black,
+        'scroll-bg': $hc-black,
+        'scroll-thumb': $hc-white,
+        'scroll-thumb-hover': $hc-yellow,
 
-            'scroll-bg': $hc-black,
-            'scroll-thumb': $hc-white,
-            'scroll-thumb-hover': $hc-yellow,
+        'meta-brand-palette': 'neutral',
+    ),
+    'high-contrast-dark'
+) !default;
 
-            'meta-brand-palette': 'neutral'), 'high-contrast-dark') !default;
 // The Blocks high-contrast palette is an explicit accessibility choice, independent of OS media queries.
 :where(.high-contrast, .bx-high-contrast-scope) {
     [data-bx-surface] {
         --bx-glass-text: var(--bx-text-primary) !important;
         --bx-glass-edge: var(--bx-border-strong) !important;
+
         color: var(--bx-text-primary) !important;
         border-color: var(--bx-border-strong);
     }
-    bx-simple-toast .simple-toast { color: var(--bx-text-primary) !important; }
-    [data-bx-surface], .bx-glass-material {
+
+    bx-simple-toast .simple-toast {
+        color: var(--bx-text-primary) !important;
+    }
+
+    [data-bx-surface],
+    .bx-glass-material {
         background: var(--bx-bg-surface) !important;
-        -webkit-backdrop-filter: none !important;
         backdrop-filter: none !important;
         box-shadow: none !important;
     }
-    .bx-glass-light, .bx-glass-decoration::before, .bx-glass-decoration::after, .bx-glass-material::before {
+
+    .bx-glass-light,
+    .bx-glass-decoration::before,
+    .bx-glass-decoration::after,
+    .bx-glass-material::before {
         display: none !important;
     }
 }

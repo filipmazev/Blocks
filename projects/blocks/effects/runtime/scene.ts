@@ -239,7 +239,7 @@ class SceneRuntime {
       });
   }
 
-  register(element: HTMLElement, hooks: SurfaceHooks): () => void {
+  public register(element: HTMLElement, hooks: SurfaceHooks): () => void {
     this.connect();
     const entry: Entry = { id: this.nextId++, element, hooks, visible: true };
     const overlay = lightingVisibility(this.doc, this.view).boundary(element) !== this.doc.documentElement;
@@ -267,7 +267,7 @@ class SceneRuntime {
     };
   }
 
-  refreshElement(element: HTMLElement): void {
+  public refreshElement(element: HTMLElement): void {
     const entry = this.entries.get(element);
     if (entry) this.updateSelected(entry);
     this.updateEmitter();
@@ -278,7 +278,7 @@ class SceneRuntime {
     }
   }
 
-  scene(root: HTMLElement, options: GlassSceneOptions): GlassScene {
+  public scene(root: HTMLElement, options: GlassSceneOptions): GlassScene {
     this.connect();
     const entry = { id: this.nextId++, root, options };
     this.scenes.add(entry);
@@ -436,15 +436,18 @@ class SceneRuntime {
           let nearest: SceneEntry | undefined;
           for (const candidate of this.scenes)
             if (candidate.root.contains(entry.element) && (!nearest || nearest.root.contains(candidate.root))) nearest = candidate;
-          if (nearest && !sceneData.has(nearest))
-            sceneData.set(nearest, {
-              lights: (nearest.options.lights ?? []).slice(0, 4).map((light, index) => this.lightPoint(light, `${nearest!.id}:${index}`)),
-              reflections: (nearest.options.reflectors ?? []).slice(0, 4).map((reflection) => this.reflectionPoint(reflection))
+          if (nearest && !sceneData.has(nearest)) {
+            const scene = nearest;
+            sceneData.set(scene, {
+              lights: (scene.options.lights ?? []).slice(0, 4).map((light, index) => this.lightPoint(light, `${scene.id}:${index}`)),
+              reflections: (scene.options.reflectors ?? []).slice(0, 4).map((reflection) => this.reflectionPoint(reflection))
             });
+          }
           const data = nearest ? sceneData.get(nearest) : undefined;
+          const sceneRoot = nearest?.root ?? entry.element;
           // Explicit scene lights and an active semantic element share the same spatial model.
           const boundary = visibility.boundary(entry.element);
-          const lights = (data?.lights ?? []).filter((light) => visibility.boundary(light.source ?? nearest!.root) === boundary);
+          const lights = (data?.lights ?? []).filter((light) => visibility.boundary(light.source ?? sceneRoot) === boundary);
           for (const { emitter, light } of activeLights) {
             if (
               this.scope(emitter.element) === this.scope(entry.element) &&
@@ -500,7 +503,7 @@ class SceneRuntime {
   }
 
   private project(entry: Entry, lights: PointLight[], reflectors: Reflection[], visibility: ReturnType<typeof lightingVisibility>): Lighting {
-    const b = entry.bounds!;
+    const b = (entry.bounds ??= entry.element.getBoundingClientRect());
     const cx = b.left + b.width / 2,
       cy = b.top + b.height / 2;
     let x = 25,

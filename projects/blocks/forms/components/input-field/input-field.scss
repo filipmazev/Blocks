@@ -11,11 +11,8 @@
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-
     background-color: var(--bx-bg-neutral);
-
     border-radius: radius(sm) radius(sm) 0 0;
-
     border-bottom: 1px solid var(--bx-border-strong);
     transition: background-color 0.15s ease;
 
@@ -68,10 +65,8 @@
 .bx-native-input {
     width: 100%;
     box-sizing: border-box;
-
-    padding: spacing(6) spacing(3) spacing(2) spacing(3);
+    padding: spacing(6) spacing(3) spacing(2);
     height: 3.85rem;
-
     background: transparent;
     border: none;
     outline: none;
@@ -90,11 +85,10 @@
     }
 
     appearance: textfield;
-    -moz-appearance: textfield;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
+        appearance: none;
         margin: 0;
     }
 }
@@ -108,8 +102,8 @@
     color: var(--bx-text-secondary);
     pointer-events: none;
     z-index: 2;
-
-    transition: top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transition:
+        top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         font-size 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         color 0.15s ease;
@@ -154,7 +148,9 @@
     color: var(--bx-text-secondary);
     cursor: pointer;
     outline: none;
-    transition: background-color 0.1s ease, color 0.1s ease;
+    transition:
+        background-color 0.1s ease,
+        color 0.1s ease;
 
     &:hover:not(:disabled) {
         background-color: var(--bx-bg-element-hover);
@@ -170,10 +166,14 @@
         opacity: 0.3;
     }
 }
+
 .bx-input-wrapper[data-bx-surface] {
     --bx-glass-surface: var(--bx-bg-neutral);
     --bx-glass-shadow: none;
-    &.is-invalid { --bx-glass-edge: var(--bx-border-danger); }
+
+    &.is-invalid {
+        --bx-glass-edge: var(--bx-border-danger);
+    }
 }
 
 .bx-input-wrapper[data-bx-surface] {
@@ -184,5 +184,14 @@
     @include invalid-glass-field;
 }
 
-.bx-spinners-group { border-radius: inherit; border-start-start-radius: radius(none); border-end-start-radius: radius(none); overflow: hidden; }
-.bx-spin-btn:last-child { border-start-end-radius: inherit; border-end-end-radius: inherit; }
+.bx-spinners-group {
+    border-radius: inherit;
+    border-start-start-radius: radius(none);
+    border-end-start-radius: radius(none);
+    overflow: hidden;
+}
+
+.bx-spin-btn:last-child {
+    border-start-end-radius: inherit;
+    border-end-end-radius: inherit;
+}

@@ -13,7 +13,7 @@ Add the standalone component or directive to your component's `imports`.
 ## Usage
 
 ```html
-<bx-modal-banner [header]="{ text: 'Project settings' }" [showCloseButton]="true" (close)="dismiss($event)" />
+<bx-modal-banner [header]="{ text: 'Project settings' }" [showCloseButton]="true" (close)="handleClose($event)" />
 ```
 
 ## API

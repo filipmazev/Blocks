@@ -5,7 +5,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@icons/components/icon';
 import { IconName } from '@icons/types/icon.types';
 import { Button } from '@forms/components/button/button';
-import { IOddityConfig, OddityCanvas } from 'oddity-angular';
+import { OddityCanvas } from 'oddity-angular';
 import { ThemingService } from '@core/services/theming.service';
 
 @Component({
@@ -45,15 +45,14 @@ export class Home {
     this.themingService.palette();
     this.themingService.activeTheme();
 
-    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-neutral');
-    const primaryColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
-    const surfaceColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-surface');
+    const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
+    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas');
 
     return {
       fxOrder: 'Ggr',
       stops: [
-        { color: primaryColor.replace('#', ''), pos: 0 },
-        { color: surfaceColor.replace('#', ''), pos: 57 },
+        { color: accentColor.replace('#', ''), pos: 0 },
+        { color: bgColor.replace('#', ''), pos: 57 },
         { color: bgColor.replace('#', ''), pos: 100 }
       ],
       seed: 511,

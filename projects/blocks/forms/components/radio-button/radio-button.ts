@@ -6,8 +6,8 @@ import { FormField } from '../form-field/form-field';
 
 @Injectable({ providedIn: 'root' })
 class RadioRegistry {
-  readonly radios = new Set<Radio>();
-  select(radio: Radio): void {
+  public readonly radios = new Set<Radio>();
+  public select(radio: Radio): void {
     for (const peer of this.radios) {
       if (peer !== radio && peer.sharesGroup(radio)) peer.writeValue(radio.value());
     }
@@ -22,7 +22,7 @@ class RadioRegistry {
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './radio-button.scss'
 })
-export class Radio extends BxBaseControl<any> {
+export class Radio extends BxBaseControl<unknown> {
   private readonly registry = inject(RadioRegistry);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
@@ -35,7 +35,7 @@ export class Radio extends BxBaseControl<any> {
     return isTextWithKey(l) ? (this.i18n?.translate(l.key) ?? l.key) : l;
   });
 
-  public readonly value = input.required<any>();
+  public readonly value = input.required<unknown>();
   public readonly name = input<string>('');
   protected showTooltip = false;
   constructor() {

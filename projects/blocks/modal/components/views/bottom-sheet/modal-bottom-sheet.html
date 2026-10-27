@@ -1,7 +1,6 @@
 <div
   bxSurface
   data-bx-light-scope
-  (click)="$event.stopPropagation()"
   [id]="id() ?? ''"
   [class]="config()?.style?.wrapperClasses ?? ''"
   [style]="config()?.style?.wrapperStyles ?? ''"
@@ -14,19 +13,21 @@
   #elementRef
   class="bottom-sheet-modal-style"
 >
-  <div
+  <button
     #verticalSwipeTarget
+    type="button"
+    aria-label="Close dialog"
     class="touch-hitbox bottom-sheet-modal-top-bar"
-    (click)="isTrackingSwipe ? null : close.emit('cancel')"
+    (click)="onDismissClick($event)"
   >
     <div class="swipe-line"></div>
-  </div>
+  </button>
 
   <div class="bottom-sheet-modal-inner-content-container">
     <div class="bottom-sheet-modal-top-group">
       @if (hasBanner()) {
         <bx-modal-banner
-          [header]="$safeNavigationMigration(config()?.header)"
+          [header]="config()?.header"
           [showCloseButton]="false"
         ></bx-modal-banner>
       }

@@ -1,10 +1,20 @@
 @use 'core/styles/helpers' as *;
+
 @mixin card-base {
-  background: color-mix(in srgb, var(--bx-bg-surface) 86%, transparent);
-  border-radius: radius(lg);
-  box-shadow: shadow(sm);
-  border: 1px solid var(--bx-border-default);
-  min-width: 0;
-  padding: spacing(6);
+    background: color-mix(in srgb, var(--bx-bg-surface) 86%, transparent);
+    border-radius: radius(lg);
+    box-shadow: shadow(sm);
+    border: 1px solid var(--bx-border-default);
+    min-width: 0;
+    padding: spacing(6);
 }
-@mixin header-base { font-weight: 600; font-size: 1.25rem; color: var(--bx-text-primary); display: flex; justify-content: space-between; align-items: center; gap: spacing(3); }
+
+@mixin header-base {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--bx-text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: spacing(3);
+}

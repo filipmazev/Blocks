@@ -7,6 +7,7 @@
     position: relative;
     padding: spacing(4);
     border-radius: radius(md);
+
     // The parent toast owns elevation and backdrop; content supplies semantic foreground.
     background: transparent;
     border: 0;
@@ -22,26 +23,18 @@
 
     &.info {
         color: var(--bx-text-info);
-
-
     }
 
     &.success {
         color: var(--bx-text-success);
-
-
     }
 
     &.warn {
         color: var(--bx-text-warn);
-
-
     }
 
     &.danger {
         color: var(--bx-text-danger);
-
-
     }
 }
 
@@ -56,7 +49,7 @@
 }
 
 .simple-toast-title {
-    margin: 0 0 spacing(1) 0;
+    margin: 0 0 spacing(1);
     font-size: 1rem;
     font-weight: 600;
 }

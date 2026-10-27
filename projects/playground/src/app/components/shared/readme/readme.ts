@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DOCUMENT, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, HostListener, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { DOCUMENTATION, DOCUMENTATION_ALIASES } from '../../../generated/documentation';
 
@@ -22,6 +22,7 @@ export class Readme {
   public readonly path = input.required<string>();
 
   /** Generated HTML uses a single delegated handler so internal links keep SPA navigation. */
+  @HostListener('click', ['$event'])
   protected navigateDocumentation(event: MouseEvent): void {
     if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     const target = event.target as Element | null;

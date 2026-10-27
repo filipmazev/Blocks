@@ -1,28 +1,41 @@
 @use '../../../../../core/styles/helpers' as *;
 
 .modal-backdrop {
+    padding: 0;
+    border: 0;
+    appearance: none;
+    cursor: pointer;
     position: fixed;
     inset: 0;
     z-index: z(modal);
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
-    background: rgb(0, 0, 0, 0.25);
+    background: rgb(0 0 0 / 25%);
     backface-visibility: hidden;
     -webkit-font-smoothing: subpixel-antialiased;
-    -webkit-transform-style: preserve-3d;
-    -moz-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: center;
 }
+
 .modal-backdrop {
-    background: rgb(0 0 0 / .32);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgb(0 0 0 / 32%);
     backdrop-filter: blur(8px);
 }
+
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .modal-backdrop { background: rgb(0 0 0 / .5); }
+    .modal-backdrop {
+        background: rgb(0 0 0 / 50%);
+    }
 }
+
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-    .modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / .6); }
+    .modal-backdrop {
+        backdrop-filter: none;
+        background: rgb(0 0 0 / 60%);
+    }
 }
-:host-context([data-bx-reduced-transparency="true"]) .modal-backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(0 0 0 / .6); }
+
+:host-context([data-bx-reduced-transparency='true']) .modal-backdrop {
+    backdrop-filter: none;
+    background: rgb(0 0 0 / 60%);
+}

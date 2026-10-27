@@ -3,25 +3,37 @@
 // Shared by native projected fields and Blocks input, search and select controls.
 @mixin glass-field {
     --bx-glass-surface: var(--bx-bg-neutral);
-    --bx-glass-min-opacity: .45;
+    --bx-glass-min-opacity: 0.45;
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: none;
+
     border: 1px solid var(--bx-glass-edge);
     border-radius: radius(lg);
-    &::after { display: none; }
-    &:focus-within:not(.is-disabled):not(:disabled), &:focus-visible:not(:disabled), &.is-open:not(:disabled) {
+
+    &::after {
+        display: none;
+    }
+
+    &:focus-within:not(.is-disabled, :disabled),
+    &:focus-visible:not(:disabled),
+    &.is-open:not(:disabled) {
         --bx-glass-edge: var(--bx-border-brand);
+
         outline: 2px solid var(--bx-border-brand);
         outline-offset: -2px;
+
         --bx-glass-shadow: none;
     }
 }
 
 @mixin invalid-glass-field {
     --bx-glass-surface: var(--bx-bg-neutral);
-    --bx-glass-min-opacity: .45;
+    --bx-glass-min-opacity: 0.45;
     --bx-glass-edge: color-mix(in srgb, var(--bx-text-danger) 40%, var(--bx-border-default));
+
     border-block-end-color: var(--bx-glass-edge);
+
     --bx-glass-shadow: 0 8px 18px -10px color-mix(in srgb, var(--bx-text-danger) 65%, transparent);
+
     outline-color: var(--bx-border-danger);
 }

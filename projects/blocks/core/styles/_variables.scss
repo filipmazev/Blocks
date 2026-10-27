@@ -11,8 +11,7 @@ $spacing: (
     8: 2rem,
     10: 2.5rem,
     12: 3rem,
-    ) !default;
-
+) !default;
 $radiuses: (
     none: 0,
     sm: 0.25rem,
@@ -22,16 +21,27 @@ $radiuses: (
     2xl: 1.5rem,
     3xl: 1.875rem,
     pill: 9999px,
-    ) !default;
-
+) !default;
 $shadows: (
-    sm: (0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)),
-    md: (0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12)),
-    lg: (0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)),
-    xl: (0 24px 32px -5px rgba(0, 0, 0, 0.25), 0 10px 12px -5px rgba(0, 0, 0, 0.15)),
-    modal: 0 8px 20px rgba(0, 0, 0, 0.12),
-    toast: 0 4px 12px rgba(0, 0, 0, 0.15)) !default;
-
+    sm: (
+        0 2px 4px 0 rgb(0 0 0 / 10%),
+        0 1px 2px -1px rgb(0 0 0 / 10%),
+    ),
+    md: (
+        0 4px 8px -1px rgb(0 0 0 / 15%),
+        0 2px 4px -2px rgb(0 0 0 / 12%),
+    ),
+    lg: (
+        0 12px 20px -3px rgb(0 0 0 / 20%),
+        0 4px 6px -2px rgb(0 0 0 / 10%),
+    ),
+    xl: (
+        0 24px 32px -5px rgb(0 0 0 / 25%),
+        0 10px 12px -5px rgb(0 0 0 / 15%),
+    ),
+    modal: 0 8px 20px rgb(0 0 0 / 12%),
+    toast: 0 4px 12px rgb(0 0 0 / 15%),
+) !default;
 $z-index: (
     base: 1,
     dropdown: 100,
@@ -41,8 +51,7 @@ $z-index: (
     popover: 500,
     tooltip: 600,
     toast: 9999,
-    ) !default;
-
+) !default;
 $breakpoints: (
     xs: 360px,
 
@@ -54,4 +63,5 @@ $breakpoints: (
 
     2xl: 1536px,
     3xl: 1920px,
-    4xl: 2560px) !default;
+    4xl: 2560px,
+) !default;

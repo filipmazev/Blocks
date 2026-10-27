@@ -27,7 +27,11 @@ export class ModalCentered<D = unknown, R = unknown> implements IModalView<D, R>
   public readonly animationDuration = input.required<number>();
   public readonly hasDefaultContentWrapperClass = input.required<boolean>();
   public readonly hasBanner = input.required<boolean>();
+
+  // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the public modal close event name.
   public readonly close = output<ModalCloseMode | undefined>();
+
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix -- Keep the existing modal backdrop event.
   public readonly onBackdropClick = output<MouseEvent>();
 
   @ViewChildren(ModalBottomSheet) public bottomSheet!: QueryList<ModalBottomSheet>;

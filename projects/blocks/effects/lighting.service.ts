@@ -12,7 +12,7 @@ export class BxGlassLightingService {
   private readonly zone = inject(NgZone);
   private readonly groups = new Map<HTMLElement, { scene: GlassScene; lights: Map<symbol, GlassLight> }>();
 
-  register(root: HTMLElement, light: GlassLight): BxGlassLight {
+  public register(root: HTMLElement, light: GlassLight): BxGlassLight {
     let group = this.groups.get(root);
     if (!group) {
       group = { scene: this.zone.runOutsideAngular(() => mountGlassScene(root)), lights: new Map() };

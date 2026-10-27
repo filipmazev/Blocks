@@ -21,14 +21,14 @@
         @if (type() === 'number') {
         <div class="bx-spinners-group">
             <button type="button" class="bx-spin-btn" tabindex="-1"
-                [disabled]="isDisabled() || (min() !== undefined && internalValue() <= min()!)"
+                [disabled]="isSpinDownDisabled()"
                 (mousedown)="startSpin(-1, $event)" (touchstart)="startSpin(-1, $event)" (mouseup)="stopSpin()"
                 (mouseleave)="stopSpin()" (touchend)="stopSpin()">
                 <bx-icon name="minus" size="16"></bx-icon>
             </button>
 
             <button type="button" class="bx-spin-btn" tabindex="-1"
-                [disabled]="isDisabled() || (max() !== undefined && internalValue() >= max()!)"
+                [disabled]="isSpinUpDisabled()"
                 (mousedown)="startSpin(1, $event)" (touchstart)="startSpin(1, $event)" (mouseup)="stopSpin()"
                 (mouseleave)="stopSpin()" (touchend)="stopSpin()">
                 <bx-icon name="plus" size="16"></bx-icon>

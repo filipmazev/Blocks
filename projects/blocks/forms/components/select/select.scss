@@ -11,16 +11,12 @@
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-
     background-color: var(--bx-bg-neutral);
     border-radius: radius(sm) radius(sm) 0 0;
-
     border: none;
     border-bottom: 1px solid var(--bx-border-strong);
     transition: background-color 0.15s ease;
-
     padding: 0 spacing(3) 0 0;
-
     cursor: pointer;
     text-align: left;
     font-family: inherit;
@@ -78,10 +74,8 @@
 .bx-select-value {
     width: 100%;
     box-sizing: border-box;
-
     padding: spacing(6) 0 spacing(2) spacing(3);
     min-height: spacing(12);
-
     display: block;
     font-size: 1rem;
     color: var(--bx-text-heading);
@@ -105,8 +99,8 @@
     color: var(--bx-text-secondary);
     pointer-events: none;
     z-index: 2;
-
-    transition: top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transition:
+        top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         font-size 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
         color 0.15s ease;
@@ -149,16 +143,13 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-
     min-width: 100%;
     width: 100%;
     max-width: 100%;
-
     background-color: var(--bx-bg-surface);
     border: 1px solid var(--bx-border-subtle);
     border-radius: radius(sm);
     box-shadow: shadow(sm);
-
     overflow: hidden;
     max-height: 18rem;
 }
@@ -172,8 +163,7 @@
 }
 
 .bx-select-menu-container {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     padding: spacing(1);
 
     &::-webkit-scrollbar {
@@ -213,7 +203,7 @@
 }
 
 bx-menu-item:hover .bx-select-check-placeholder {
-    color: currentColor;
+    color: currentcolor;
 }
 
 .bx-select-empty {
@@ -223,25 +213,54 @@ bx-menu-item:hover .bx-select-check-placeholder {
     font-size: 0.875rem;
     font-style: italic;
 }
+
 .bx-select-trigger[data-bx-surface] {
     --bx-glass-surface: var(--bx-bg-neutral);
     --bx-glass-shadow: none;
-    &.is-invalid { --bx-glass-edge: var(--bx-border-danger); }
+
+    &.is-invalid {
+        --bx-glass-edge: var(--bx-border-danger);
+    }
 }
 
-.bx-select-panel[data-bx-surface] { --bx-glass-shadow: #{shadow(sm)}; }
+.bx-select-panel[data-bx-surface] {
+    --bx-glass-shadow: #{shadow(sm)};
+}
 
 .bx-select-trigger[data-bx-surface] {
     @include glass-field;
 }
 
-.bx-select-panel[data-bx-surface] { --bx-glass-min-opacity: .8; }
+.bx-select-panel[data-bx-surface] {
+    --bx-glass-min-opacity: 0.8;
+}
 
 .bx-select-trigger[data-bx-surface].is-invalid {
     @include invalid-glass-field;
 }
 
-.bx-select-trigger.is-floating .bx-floating-label { position: static; transform: none; padding: spacing(2) 0 0 spacing(3); overflow-wrap: anywhere; }
-.bx-select-trigger.is-floating .bx-select-value { padding-top: spacing(1); min-height: spacing(8); }
-.bx-select-trigger:not(.is-floating) .bx-floating-label { right: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bx-select-item-inner > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bx-select-trigger.is-floating .bx-floating-label {
+    position: static;
+    transform: none;
+    padding: spacing(2) 0 0 spacing(3);
+    overflow-wrap: anywhere;
+}
+
+.bx-select-trigger.is-floating .bx-select-value {
+    padding-top: spacing(1);
+    min-height: spacing(8);
+}
+
+.bx-select-trigger:not(.is-floating) .bx-floating-label {
+    right: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bx-select-item-inner > span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

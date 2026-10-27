@@ -25,6 +25,7 @@ export class SearchInput extends BxBaseControl<string> {
     return isTextWithKey(p) ? (this.i18n?.translate(p.key) ?? p.key) : p;
   });
 
+  // eslint-disable-next-line @angular-eslint/no-output-native -- Keep the established public search event.
   public readonly search = output<string>();
 
   @ViewChild('inputElement') private inputElement?: ElementRef<HTMLInputElement>;

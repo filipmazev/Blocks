@@ -22,8 +22,10 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
   if (!workspaceConfigBuffer) return;
 
   const workspaceConfig = JSON.parse(workspaceConfigBuffer.toString('utf-8'));
+
   const projectName =
     workspaceConfig.defaultProject || Object.keys(workspaceConfig.projects ?? {}).find((name) => workspaceConfig.projects[name].projectType === 'application');
+
   const project = workspaceConfig.projects[projectName];
 
   if (!project) {
@@ -39,9 +41,12 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
 
   buildOptions.styles ??= [];
   const effectsStyles = 'node_modules/@filip.mazev/blocks/effects/effects.css';
+
   const legacyStyles = new Set(['node_modules/@filip.mazev/blocks/glass/glass.css', 'node_modules/@filip.mazev/blocks-glass/glass.css']);
   buildOptions.styles = buildOptions.styles.filter((style: string | { input: string }) => !legacyStyles.has(typeof style === 'string' ? style : style.input));
+
   const hasEffectsStyles = buildOptions.styles.some((style: string | { input: string }) => (typeof style === 'string' ? style : style.input) === effectsStyles);
+
   if (!hasEffectsStyles) buildOptions.styles.unshift(effectsStyles);
   tree.overwrite(workspaceConfigPath, JSON.stringify(workspaceConfig, null, 2) + '\n');
   context.logger.info('Configured the shared Blocks effects stylesheet.');
@@ -60,7 +65,9 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
     return;
   }
 
-  const content = tree.read(targetStylePath)!.toString('utf-8');
+  const targetStyle = tree.read(targetStylePath);
+  if (!targetStyle) return;
+  const content = targetStyle.toString('utf-8');
 
   // Existing themes still receive the effects stylesheet above.
   if (content.includes('@filip.mazev/blocks')) {

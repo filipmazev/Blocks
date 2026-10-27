@@ -29,5 +29,6 @@ export class ModalBanner {
 
   public readonly header = input.required<IModalHeaderConfig | undefined>();
   public readonly showCloseButton = input.required<boolean>();
+  // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the public modal close event name.
   public readonly close = output<ModalCloseMode | undefined>();
 }

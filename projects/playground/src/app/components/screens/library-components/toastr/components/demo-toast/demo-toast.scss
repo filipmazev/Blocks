@@ -1,6 +1,31 @@
 @use 'core/styles/helpers' as *;
+
 // The ToastCore owns the material. Keep projected toast content transparent.
-.notification { display: flex; position: relative; padding: spacing(4); min-height: 2.5rem; color: var(--bx-text-primary); }
-.notification-content { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; flex: 1; padding-right: spacing(6); }
-.notification-title { margin: 0 0 spacing(1); font-size: 1rem; font-weight: 600; }
-.notification-message { margin: 0; font-size: .875rem; line-height: 1.5; }
+.notification {
+    display: flex;
+    position: relative;
+    padding: spacing(4);
+    min-height: 2.5rem;
+    color: var(--bx-text-primary);
+}
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    padding-right: spacing(6);
+}
+
+.notification-title {
+    margin: 0 0 spacing(1);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notification-message {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
