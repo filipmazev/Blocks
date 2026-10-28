@@ -1,4 +1,4 @@
-import{Er as z,Q as O,S as Co,St as W,bn as jt,br as xc,gn as it,ln as gt,m as Bh,nr as tn,o as $s,pt as Tc,q as Mc,zn as p}from"./chunk-Cx6yy8Y4.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Cn as on,D as Hc,F as K,J as P,Nt as at,Pn as ra,Ut as f,cn as ko,ct as V,d as Bc,in as jc,j as Jf,st as Ut,wn as ot}from"./chunk-D44OVyuP.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -7,6 +7,8 @@ import{Er as z,Q as O,S as Co,St as W,bn as jt,br as xc,gn as it,ln as gt,m as B
 npm start
 </code></pre>
 <p>Open <a href="http://localhost:8080">http://localhost:8080</a>. The component catalogue links each component to its own demonstration and README. <code>/appearance</code> provides application-wide material controls and spatial-lighting and fade demonstrations. <code>/icon-catalog</code> provides searchable, paginated icons.</p>
+<p>The playground defaults to Blue (<code>#217eff</code>) when no saved palette is present; Reset returns to Blue. Saved palette preferences remain available.</p>
+<p>The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.</p>
 <pre><code class="language-sh">npm run build:playground
 npm run build:blocks
 </code></pre>
@@ -675,7 +677,7 @@ export class MyFeatureComponent {
 <h2>What does ng add do?</h2>
 <p>When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:</p>
 <ul>
-<li>Theme selection: White is the default; Purple, Orange, Red, Green and Cyberpunk are also available. Use <code>--theme=white</code> to select White explicitly.</li>
+<li>Theme selection: White is the CLI default; Blue, Purple, Orange, Red, Green and Cyberpunk are also available. Use <code>--theme=blue</code> for the Blue palette based on <code>#217eff</code>.</li>
 <li>Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.</li>
 <li>SCSS Injection: Intelligently locates your project&#39;s global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.</li>
 </ul>
@@ -977,6 +979,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>label</code>, <code>tooltip</code>, <code>error</code>: text or a translation key object. <code>forId</code>: the native input ID. <code>required</code>, <code>loading</code>: booleans. Projects the control and an optional <code>bx-error</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p><code>--bx-field-padding-bottom</code> overrides the field wrapper\u2019s bottom padding (default: <code>1.5rem</code>). Set it on a group of controls when the group provides its own row spacing.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
@@ -990,6 +993,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Set <code>forId</code> to the actual input ID. Required decoration does not add validation to your control; apply the corresponding validator and native required attribute. Associate custom error text with <code>aria-describedby</code> when projecting your own control.</p>
+<p>The information button reveals short help on mouse hover or keyboard focus, and toggles it on touch tap. Tap elsewhere, scroll, or press Escape to dismiss it. Its description also remains available to screen readers when the visual help is hidden. Keep essential field instructions visible rather than relying on the help button.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/form-field</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/forms/components/input-field/README.md":`<h1>Input field</h1>
@@ -1708,6 +1712,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <h2>API</h2>
 <p><code>bxTooltip</code>: required text or translation key. <code>placement</code>: top, bottom, left, right, and supported aligned placements. <code>show()</code> and <code>hide()</code> expose explicit lifecycle control.</p>
+<p><code>bxTooltipTouch</code> defaults to <code>&#39;none&#39;</code>: normal touch taps activate the control without showing its tooltip. Set it to <code>&#39;longpress&#39;</code> for an optional touch-and-hold hint, or <code>&#39;tap&#39;</code> on a dedicated information button that has no other action.</p>
+<pre><code class="language-html">&lt;button type=&quot;button&quot; bxTooltip=&quot;Appearance settings apply to all components&quot; bxTooltipTouch=&quot;tap&quot; aria-label=&quot;More information&quot;&gt;\u24D8&lt;/button&gt;
+&lt;button type=&quot;button&quot; bxTooltip=&quot;Optional extra context&quot; bxTooltipTouch=&quot;longpress&quot;&gt;Hold for a hint&lt;/button&gt;
+</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1723,6 +1731,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Keep trigger text meaningful without its tooltip. Use short, non-interactive text; put interactive help in a menu or dialog.</p>
+<p>Tooltips open on mouse hover and keyboard focus. Touch focus and compatibility mouse events do not show ordinary tooltips. Screen-reader descriptions remain available while the visual tooltip is hidden, and existing <code>aria-describedby</code> references are preserved. Supply an accessible label independently for icon-only controls.</p>
+<p>Optional long press opens after 500 ms. Moving more than 10 CSS pixels, scrolling, another finger, cancellation, or releasing early cancels it. Releasing after a successful hold does not click the control; the hint dismisses after 1.5 seconds, or on another press or scrolling. Editable controls and existing text selections keep their native behavior. For dedicated non-selectable hold targets, apply <code>user-select: none</code> and <code>-webkit-touch-callout: none</code> in the target&#39;s styles.</p>
+<p>Long-press hints yield to a <code>bxContextMenu</code> directive on the trigger or an ancestor. Dedicated tap help remains available. Avoid assigning multiple hold gestures to one target.</p>
+<p>Tap mode is intended for dedicated help buttons, including the built-in form-field information buttons. Tap again, tap elsewhere, scroll, or press Escape to dismiss the help. Use a separate popover or dialog for interactive or essential explanations rather than hiding them in a tooltip.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/tooltip-directive</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/toastr/components/README.md":`<h1>Toast core</h1>
@@ -1995,11 +2007,11 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
 @import '@filip.mazev/blocks/effects/effects.css';
 
 :root {
-  @include bx.bx-theme(bx.$orange-light-theme);
+  @include bx.bx-theme(bx.$blue-light-theme);
 }
 
 [data-theme='dark'] {
-  @include bx.bx-theme(bx.$orange-dark-theme);
+  @include bx.bx-theme(bx.$blue-dark-theme);
 }
 
 // Modal and toast surfaces use the shared semantic theme.
@@ -2085,7 +2097,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var A=class r{document=p(z);router=p(tn);readmeContent=W(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=O.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=gt({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&it(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(Mc(0,`div`,0)(1,`div`,1)(2,`span`),Co(3,`Documentation`),xc()(),$s(4,`article`,2),xc()),n&2&&(jt(4),Tc(`innerHTML`,o.readmeContent(),Bh))},styles:[`
+`};var A=class r{document=f(V);router=f(on);readmeContent=K(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=P.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=ot({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&at(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(jc(0,`div`,0)(1,`div`,1)(2,`span`),ko(3,`Documentation`),Bc()(),ra(4,`article`,2),Bc()),n&2&&(Ut(4),Hc(`innerHTML`,o.readmeContent(),Jf))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
