@@ -1,8 +1,8 @@
-import { createGlassTransition } from '@filip.mazev/blocks/effects/runtime';
+import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Component, computed, inject, input, output, signal, ViewChild, OnInit, OnDestroy, ElementRef, NgZone, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OverlayModule, ConnectionPositionPair, CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { Overlay, OverlayModule, ConnectionPositionPair, CdkConnectedOverlay, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import {
   BX_I18N,
   BxBaseControl,
@@ -17,7 +17,7 @@ import { Icon } from '@filip.mazev/blocks/icons';
 import { FormField } from '../form-field/form-field';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { MenuItem } from '@filip.mazev/blocks/primitives';
+import { BX_OVERLAY_CONTEXT, MenuItem } from '@filip.mazev/blocks/primitives';
 import { BxSelectOption } from '../../interfaces/ibx-select-option.interface';
 import { SearchInput } from '../search-input/search-input';
 
@@ -32,6 +32,9 @@ import { SearchInput } from '../search-input/search-input';
 export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
   private readonly a11y = inject(BxA11yService);
   private readonly zone = inject(NgZone);
+  private readonly overlay = inject(Overlay);
+  private readonly overlayContext = inject(BX_OVERLAY_CONTEXT, { optional: true });
+  protected readonly panelScrollStrategy = this.overlay.scrollStrategies.noop();
   protected readonly isPanelAttached = signal(false);
   private readonly i18n = inject(BX_I18N, { optional: true });
   protected readonly searchTerm = signal<string>('');
@@ -108,6 +111,8 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
   private transition?: ReturnType<typeof createGlassTransition>;
 
   private disconnectTheme?: () => void;
+  private disconnectLighting?: () => void;
+  private disconnectScroll?: () => void;
 
   private transitionRevision = 0;
 
@@ -179,17 +184,24 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
 
   protected onPanelAttach(): void {
     const revision = this.transitionRevision;
+    const origin = this.originRef?.nativeElement;
+    const overlay = this.connectedOverlay?.overlayRef;
+    if (origin && overlay?.hasAttached()) {
+      this.disconnectLighting?.();
+      this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, origin);
+      this.trackPanelScroll(overlay, origin);
+    }
     // Wait for the attached view's synchronous surface directives to finish mounting.
     queueMicrotask(() => {
-      const overlay = this.connectedOverlay?.overlayRef;
-      const origin = this.originRef?.nativeElement;
-      if (!overlay?.hasAttached() || !origin || !this.isOpen() || revision !== this.transitionRevision) return;
+      const attachedOverlay = this.connectedOverlay?.overlayRef;
+      const attachedOrigin = this.originRef?.nativeElement;
+      if (!attachedOverlay?.hasAttached() || !attachedOrigin || !this.isOpen() || revision !== this.transitionRevision) return;
       this.disconnectTheme?.();
-      this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(origin, overlay.overlayElement));
-      overlay.updatePosition();
+      this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(attachedOrigin, attachedOverlay.overlayElement));
+      attachedOverlay.updatePosition();
       if (!this.a11y.isReducedMotion()) {
         this.transition?.destroy();
-        this.transition = this.zone.runOutsideAngular(() => createGlassTransition(origin, overlay.overlayElement));
+        this.transition = this.zone.runOutsideAngular(() => createGlassTransition(attachedOrigin, attachedOverlay.overlayElement));
         const transition = this.transition;
         void this.zone
           .runOutsideAngular(() => transition.enter())
@@ -214,6 +226,18 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
     this.transition = undefined;
     this.disconnectTheme?.();
     this.disconnectTheme = undefined;
+    this.disconnectLighting?.();
+    this.disconnectLighting = undefined;
+    this.disconnectScroll?.();
+    this.disconnectScroll = undefined;
+  }
+
+  protected overlayPopoverLocation(origin: HTMLElement): CdkConnectedOverlay['usePopover'] {
+    const useTopLayer =
+      !!this.overlayContext?.useTopLayer || !!origin.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]');
+    // A null location disables the CDK popover; explicit contexts and native
+    // top-layer containers opt back into the global popover.
+    return useTopLayer ? 'global' : null;
   }
 
   protected refreshPanel(): void {
@@ -281,6 +305,23 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
 
   protected onSearchChange(value: string): void {
     this.searchSubject.next(value);
+  }
+
+  private trackPanelScroll(overlay: NonNullable<CdkConnectedOverlay['overlayRef']>, origin: HTMLElement): void {
+    const view = origin.ownerDocument.defaultView;
+    if (!view) return;
+    this.disconnectScroll?.();
+    this.zone.runOutsideAngular(() => {
+      const reposition = (event: Event) => {
+        const target = event.target;
+        if (!overlay.hasAttached() || !(target === view || (target instanceof Node && target.contains(origin)))) return;
+        const positionStrategy = overlay.getConfig().positionStrategy;
+        if (positionStrategy instanceof FlexibleConnectedPositionStrategy) positionStrategy.reapplyLastPosition();
+        else overlay.updatePosition();
+      };
+      view.addEventListener('scroll', reposition, { capture: true, passive: true });
+      this.disconnectScroll = () => view.removeEventListener('scroll', reposition, true);
+    });
   }
 
   private panelItems(): HTMLElement[] {

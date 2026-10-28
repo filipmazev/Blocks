@@ -221,10 +221,6 @@ export class DropdownDirective {
     this.zone.runOutsideAngular(() => {
       const reposition = (event: Event) => {
         const target = event.target;
-        // Capture viewport and ancestor scrolling before document-level effects.
-        // Nested scrollers do not need to register with CDK's ScrollDispatcher.
-        // Reuse the selected placement without resetting styles and measuring
-        // all fallback positions on every scroll event. Resize still recalculates.
         if (overlay.hasAttached() && (target === view || (target instanceof Node && target.contains(source)))) positionStrategy.reapplyLastPosition();
       };
       view.addEventListener('scroll', reposition, { capture: true, passive: true });
@@ -241,10 +237,11 @@ export class DropdownDirective {
     const pane = this.overlayRef?.overlayElement;
     if (!pane) return [];
     return Array.from(pane.querySelectorAll<HTMLElement>('button, a[href], [role="menuitem"]')).filter((item) => {
-      if (item.matches(':disabled, [disabled], [aria-disabled="true"], .is-disabled')) return false;
+      if (item.matches(':disabled, [disabled], [aria-disabled="true"]') || item.closest('[aria-disabled="true"]')) return false;
       if (item.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
+      if (item.tabIndex < 0 && !item.hasAttribute('tabindex')) return false;
       const style = item.ownerDocument.defaultView?.getComputedStyle(item);
-      return style?.display !== 'none' && style?.visibility !== 'hidden' && item.getClientRects().length > 0;
+      return !!style && style.display !== 'none' && style.visibility !== 'hidden' && item.getClientRects().length > 0;
     });
   }
 

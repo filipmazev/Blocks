@@ -44,6 +44,18 @@ this.theme.setAppearance({ reducedTransparency: true });
 
 Use stable option values. For external filtering, update the options in response to `search`; the application owns request cancellation and loading state. Disabled options cannot be selected.
 
+## Overlay stacking
+
+The options panel follows `BX_OVERLAY_CONTEXT` and automatically enters the browser top layer inside native dialogs and popovers. For custom application chrome that also needs the top layer, provide the context around the select:
+
+```html
+<header [bxOverlayContext]="{ useTopLayer: true }">
+  <bx-select label="Destination" [options]="options" />
+</header>
+```
+
+Import `BxOverlayContextDirective` where the context is declared. Select panels outside these contexts stay in the regular CDK overlay layer so sticky application chrome can remain above them.
+
 ## Playground
 
 Open `/components/select` for a working example and its current value or action result.

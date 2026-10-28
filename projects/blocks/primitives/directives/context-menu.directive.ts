@@ -1,10 +1,19 @@
-import { DestroyRef, Directive, ElementRef, HostListener, inject, input, NgZone, TemplateRef, ViewContainerRef } from '@angular/core';
+import { booleanAttribute, DestroyRef, Directive, ElementRef, HostListener, inject, input, NgZone, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BxA11yService, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { BX_OVERLAY_CONTEXT } from './overlay-context.token';
 import { Subscription } from 'rxjs';
+
+interface TouchPress {
+  pointerId: number;
+  x: number;
+  y: number;
+  timer: number;
+  opened: boolean;
+  events: AbortController;
+}
 
 @Directive({ selector: '[bxContextMenu]' })
 export class ContextMenuDirective {
@@ -16,6 +25,55 @@ export class ContextMenuDirective {
   private readonly zone = inject(NgZone);
   private readonly vcr = inject(ViewContainerRef);
   public readonly bxContextMenu = input.required<TemplateRef<unknown>>();
+  public readonly bxContextMenuLongPress = input(true, { transform: booleanAttribute });
+  private readonly onPointerDown = (event: PointerEvent): void => {
+    this.lastPointerType = event.pointerType;
+    this.cancelTouchPress();
+    if (event.isPrimary) this.clearTouchGuard();
+    if (event.pointerType !== 'touch' || !event.isPrimary || event.button !== 0 || !this.bxContextMenuLongPress() || this.hasNativeTouchAction(event)) return;
+    const source = this.elementRef.nativeElement;
+    const doc = source.ownerDocument;
+    const win = doc.defaultView;
+    if (!win || this.hasTextSelection()) return;
+    const press: TouchPress = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, timer: 0, opened: false, events: new AbortController() };
+    this.touchPress = press;
+    const options = { capture: true, passive: true, signal: press.events.signal };
+    const finish = () => this.cancelTouchPress();
+    doc.addEventListener(
+      'pointermove',
+      (move) => {
+        if (move.pointerId === press.pointerId && !press.opened && Math.hypot(move.clientX - press.x, move.clientY - press.y) > 10) finish();
+      },
+      options
+    );
+    for (const type of ['pointerup', 'pointercancel'] as const) {
+      doc.addEventListener(
+        type,
+        (end) => {
+          if (end.pointerId === press.pointerId) finish();
+        },
+        options
+      );
+    }
+    doc.addEventListener(
+      'pointerdown',
+      (next) => {
+        if (next.pointerId !== press.pointerId) finish();
+      },
+      options
+    );
+    doc.addEventListener('scroll', finish, options);
+    doc.addEventListener(
+      'visibilitychange',
+      () => {
+        if (doc.hidden) finish();
+      },
+      options
+    );
+    win.addEventListener('blur', finish, { signal: press.events.signal });
+    press.timer = win.setTimeout(() => this.zone.run(() => this.openTouchMenu(press)), 500);
+  };
+
   private overlayRef: OverlayRef | null = null;
   private transition?: ReturnType<typeof createGlassTransition>;
   private point?: HTMLElement;
@@ -23,17 +81,41 @@ export class ContextMenuDirective {
   private disconnectLighting?: () => void;
   private subscriptions = new Subscription();
   private revision = 0;
+  private touchPress?: TouchPress;
+  private touchGuard?: AbortController;
+  private touchGuardTimer?: number;
+  private lastPointerType = '';
 
   constructor() {
+    const source = this.elementRef.nativeElement;
+    if (source.ownerDocument.defaultView) {
+      this.zone.runOutsideAngular(() => source.addEventListener('pointerdown', this.onPointerDown, { passive: true }));
+    }
     inject(DestroyRef).onDestroy(() => {
       ++this.revision;
+      source.removeEventListener('pointerdown', this.onPointerDown);
+      this.cancelTouchPress();
+      this.clearTouchGuard();
       this.dispose();
     });
   }
 
   @HostListener('contextmenu', ['$event'])
   public open(event: MouseEvent): void {
+    if (event.type === 'contextmenu' && this.lastPointerType === 'touch') {
+      const press = this.touchPress;
+      if (!press) return;
+      if (!this.bxContextMenuLongPress() || this.hasNativeTouchAction(event) || this.hasTextSelection()) {
+        this.cancelTouchPress();
+        return;
+      }
+      event.preventDefault();
+      this.openTouchMenu(press);
+      return;
+    }
     event.preventDefault();
+    this.cancelTouchPress();
+    this.clearTouchGuard();
     this.openAt(event.clientX, event.clientY);
   }
 
@@ -61,6 +143,9 @@ export class ContextMenuDirective {
   protected onKey(event: KeyboardEvent): void {
     if (event.key !== 'ContextMenu' && !(event.shiftKey && event.key === 'F10')) return;
     event.preventDefault();
+    this.lastPointerType = '';
+    this.cancelTouchPress();
+    this.clearTouchGuard();
     const rect = this.elementRef.nativeElement.getBoundingClientRect();
     this.openAt(rect.left + Math.min(24, rect.width / 2), rect.bottom);
     this.items()[0]?.focus();
@@ -70,6 +155,94 @@ export class ContextMenuDirective {
   protected onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
     if (target && this.overlayRef?.overlayElement.contains(target) && target.closest('button, a, [role="menuitem"]')) this.close();
+  }
+
+  private hasNativeTouchAction(event: Event): boolean {
+    const source = this.elementRef.nativeElement;
+    for (const node of event.composedPath()) {
+      if (node instanceof HTMLElement) {
+        if (node.isContentEditable || node.matches('input, textarea, select, :disabled, [aria-disabled="true"], [inert]')) return true;
+        if (node === source) break;
+      }
+    }
+    return !!source.closest(':disabled, [aria-disabled="true"], [inert]');
+  }
+
+  private hasTextSelection(): boolean {
+    const source = this.elementRef.nativeElement;
+    const selection = source.ownerDocument.getSelection();
+    return !!selection && !selection.isCollapsed && (source.contains(selection.anchorNode) || source.contains(selection.focusNode));
+  }
+
+  private openTouchMenu(press: TouchPress): void {
+    if (this.touchPress !== press || press.opened) return;
+    const source = this.elementRef.nativeElement;
+    if (
+      !this.bxContextMenuLongPress() ||
+      !source.isConnected ||
+      source.isContentEditable ||
+      source.closest(':disabled, [aria-disabled="true"], [inert]') ||
+      this.hasTextSelection()
+    ) {
+      this.cancelTouchPress();
+      return;
+    }
+    press.opened = true;
+    this.elementRef.nativeElement.ownerDocument.defaultView?.clearTimeout(press.timer);
+    this.guardTouchRelease();
+    this.openAt(press.x, press.y + 12);
+  }
+
+  private cancelTouchPress(): void {
+    const press = this.touchPress;
+    if (!press) return;
+    this.touchPress = undefined;
+    const win = this.elementRef.nativeElement.ownerDocument.defaultView;
+    win?.clearTimeout(press.timer);
+    press.events.abort();
+    if (press.opened && win) this.touchGuardTimer = win.setTimeout(() => this.clearTouchGuard(), 800);
+  }
+
+  private guardTouchRelease(): void {
+    this.clearTouchGuard();
+    const doc = this.elementRef.nativeElement.ownerDocument;
+    const guard = new AbortController();
+    this.touchGuard = guard;
+    const options = { capture: true, signal: guard.signal };
+    // Consume only the hold's compatibility click; a fresh press can select or dismiss normally.
+    doc.addEventListener(
+      'click',
+      (event) => {
+        if (event.detail === 0) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        this.clearTouchGuard();
+      },
+      options
+    );
+    doc.addEventListener(
+      'contextmenu',
+      (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      },
+      options
+    );
+    doc.addEventListener(
+      'pointerdown',
+      (event) => {
+        if (event.isPrimary) this.clearTouchGuard();
+      },
+      { ...options, passive: true }
+    );
+    doc.addEventListener('keydown', () => this.clearTouchGuard(), options);
+  }
+
+  private clearTouchGuard(): void {
+    this.touchGuard?.abort();
+    this.touchGuard = undefined;
+    this.elementRef.nativeElement.ownerDocument.defaultView?.clearTimeout(this.touchGuardTimer);
+    this.touchGuardTimer = undefined;
   }
 
   private openAt(x: number, y: number): void {

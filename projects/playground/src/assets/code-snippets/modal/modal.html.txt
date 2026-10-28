@@ -14,9 +14,9 @@
             Open actions<bx-icon name="chevron-down" size="16" />
         </button>
         <button bx-button type="button" variant="tonal" color="grayscale" [bxContextMenu]="contextActions" class="modal-context-target">
-            <bx-icon name="mouse-pointer-2" size="16" />Right-click for more actions
+            <bx-icon name="mouse-pointer-2" size="16" />Right-click or hold for more actions
         </button>
-        <p class="menu-hint">You can also focus the right-click example and press Shift + F10. Escape closes the menu first.</p>
+        <p class="menu-hint">On touch screens, touch and hold for more actions. With a keyboard, focus the example and press Shift + F10. Escape closes the menu first.</p>
         <p class="menu-status" role="status">{{ menuStatus() }}</p>
     </section>
 </div>

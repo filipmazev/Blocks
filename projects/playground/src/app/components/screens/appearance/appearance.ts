@@ -27,8 +27,7 @@ export class Appearance {
 
   protected readonly qualities: { value: BxAppearanceConfig['quality']; label: string }[] = [
     { value: 'auto', label: 'Automatic' },
-    { value: 'baseline', label: 'Baseline' },
-    { value: 'enhanced', label: 'Enhanced when supported' }
+    { value: 'baseline', label: 'Baseline' }
   ];
 
   protected readonly codeExample = `const theme = inject(ThemingService);
@@ -53,6 +52,7 @@ theme.setAppearance({ reducedTransparency: true });
   protected reset(): void {
     this.theme.resetAppearance();
     this.theme.setPalette('orange');
+    this.theme.setHighContrast(false);
     this.a11y.setReducedMotion(null);
   }
 }

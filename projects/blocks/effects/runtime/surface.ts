@@ -17,10 +17,8 @@ function isActionSurface(element: HTMLElement): boolean {
     typeof element.onclick === 'function'
   )
     return true;
-  // Checkbox/radio/switch visuals share a label with their native control.
+
   if (element.closest('label')?.control) return true;
-  // Only a semantic field may infer interactivity from its input. A panel
-  // containing one control is still a passive surface, including slider panels.
   if (!element.closest('bx-form-field')) return false;
   const controls = element.querySelectorAll('input:not([type="hidden"]), select, textarea');
   return controls.length === 1 && controls[0].closest('[data-bx-surface]') === element;

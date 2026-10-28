@@ -1,6 +1,13 @@
 :host {
     display: block;
     flex: none;
+    --blocks-logo-surface: var(--bx-bg-element, #f5f5f5);
+    --blocks-logo-specular: color-mix(in srgb, var(--bx-bg-surface, #ffffff) 88%, var(--bx-text-primary, #171717) 12%);
+    --blocks-logo-shadow: color-mix(in srgb, var(--bx-bg-canvas, #ffffff) 75%, var(--bx-text-heading, #171717) 25%);
+}
+
+:host-context([data-theme='dark']) {
+    --blocks-logo-specular: color-mix(in srgb, var(--bx-bg-element, #262626) 25%, var(--bx-text-primary, #e5e5e5) 75%);
 }
 
 svg {

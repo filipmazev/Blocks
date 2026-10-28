@@ -1,7 +1,7 @@
 <svg width="805" height="776" viewBox="0 0 805 776" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M27.0656 12.8256H776.066V761.826H27.0656V12.8256Z" fill="url(#paint0_radial_2_133)"/>
 <g filter="url(#filter0_f_2_133)">
-<path d="M647.919 48.2668L90.9866 106.803C64.6221 109.574 45.4959 133.193 48.2669 159.557L103.458 684.665C106.229 711.029 129.848 730.155 156.212 727.384L713.145 668.848C739.509 666.077 758.635 642.459 755.864 616.094L700.673 90.9865C697.902 64.6221 674.283 45.4958 647.919 48.2668Z" fill="black" fill-opacity="0.48"/>
+<path d="M647.919 48.2668L90.9866 106.803C64.6221 109.574 45.4959 133.193 48.2669 159.557L103.458 684.665C106.229 711.029 129.848 730.155 156.212 727.384L713.145 668.848C739.509 666.077 758.635 642.459 755.864 616.094L700.673 90.9865C697.902 64.6221 674.283 45.4958 647.919 48.2668Z" fill="var(--blocks-logo-shadow)" fill-opacity="0.48"/>
 </g>
 <path d="M647.919 48.2668L90.9866 106.803C64.6221 109.574 45.4959 133.193 48.2669 159.557L103.458 684.665C106.229 711.029 129.848 730.155 156.212 727.384L713.145 668.848C739.509 666.077 758.635 642.459 755.864 616.094L700.673 90.9865C697.902 64.6221 674.283 45.4958 647.919 48.2668Z" fill="url(#paint1_linear_2_133)" stroke-width="3" stroke="url(#paint2_linear_2_133)"/>
 <mask id="mask0_2_133" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="48" y="48" width="709" height="680">
@@ -13,12 +13,12 @@
 <path d="M393.862 300.203C430.447 313.452 484.256 308.802 528.698 282.009" stroke-width="64" stroke-linecap="round" stroke="var(--bx-primary)" stroke-opacity="0.1"/>
 </g>
 <path d="M393.862 300.203C430.447 313.452 484.256 308.802 528.698 282.009" stroke-width="13" stroke-linecap="round" stroke="url(#paint4_linear_2_133)"/>
-<path d="M401.191 293.4C436.572 304.764 483.21 298.856 521.895 274.68" stroke-width="2.5" stroke-linecap="round" stroke="color-mix(in srgb, var(--bx-primary) 8%, white)" stroke-opacity="0.72"/>
+<path d="M401.191 293.4C436.572 304.764 483.21 298.856 521.895 274.68" stroke-width="2.5" stroke-linecap="round" stroke="color-mix(in srgb, var(--bx-primary) 8%, var(--blocks-logo-specular))" stroke-opacity="0.72"/>
 <path d="M87.6744 199.658C245.29 120.75 465.028 87.5996 647.647 112.648" stroke-width="2.5" stroke="url(#paint5_linear_2_133)"/>
-<path d="M100.968 211.332C241.622 143.257 430.531 113.347 582.74 126.508" stroke-width="1.2" stroke="white" stroke-opacity="0.12"/>
-<path d="M186.583 652.801C342.403 671.617 549.526 642.809 691.594 578.607" stroke-width="1.4" stroke="white" stroke-opacity="0.1"/>
+<path d="M100.968 211.332C241.622 143.257 430.531 113.347 582.74 126.508" stroke-width="1.2" stroke="var(--blocks-logo-specular)" stroke-opacity="0.12"/>
+<path d="M186.583 652.801C342.403 671.617 549.526 642.809 691.594 578.607" stroke-width="1.4" stroke="var(--blocks-logo-specular)" stroke-opacity="0.1"/>
 </g>
-<path d="M92.7128 113.66L647.656 55.333C670.725 52.9084 691.391 69.6439 693.816 92.7128L748.798 615.831C751.223 638.9 734.487 659.567 711.418 661.991L156.475 720.318C133.406 722.743 112.74 706.007 110.315 682.939L55.3331 159.82C52.9084 136.751 69.6439 116.085 92.7128 113.66Z" stroke-width="1.2" stroke="white" stroke-opacity="0.18"/>
+<path d="M92.7128 113.66L647.656 55.333C670.725 52.9084 691.391 69.6439 693.816 92.7128L748.798 615.831C751.223 638.9 734.487 659.567 711.418 661.991L156.475 720.318C133.406 722.743 112.74 706.007 110.315 682.939L55.3331 159.82C52.9084 136.751 69.6439 116.085 92.7128 113.66Z" stroke-width="1.2" stroke="var(--blocks-logo-specular)" stroke-opacity="0.18"/>
 <mask id="mask1_2_133" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="55" y="55" width="695" height="666">
 <path d="M647.656 55.3331L92.7128 113.66C69.6439 116.085 52.9084 136.751 55.3331 159.82L110.315 682.939C112.74 706.008 133.406 722.743 156.475 720.318L711.418 661.991C734.487 659.567 751.223 638.9 748.798 615.831L693.816 92.7128C691.391 69.6439 670.725 52.9085 647.656 55.3331Z" fill="#D9D9D9"/>
 </mask>
@@ -28,16 +28,16 @@
 </g>
 </g>
 <path d="M532.066 291.826C597.787 291.826 651.066 238.548 651.066 172.826C651.066 107.104 597.787 53.8256 532.066 53.8256C466.344 53.8256 413.066 107.104 413.066 172.826C413.066 238.548 466.344 291.826 532.066 291.826Z" fill="url(#paint6_radial_2_133)" stroke-width="3.5" stroke="url(#paint7_linear_2_133)"/>
-<path d="M640.066 172.826C640.066 232.472 591.712 280.826 532.066 280.826C472.419 280.826 424.066 232.472 424.066 172.826C424.066 113.179 472.419 64.8256 532.066 64.8256C591.712 64.8256 640.066 113.179 640.066 172.826Z" stroke-width="1.2" stroke="white" stroke-opacity="0.22"/>
+<path d="M640.066 172.826C640.066 232.472 591.712 280.826 532.066 280.826C472.419 280.826 424.066 232.472 424.066 172.826C424.066 113.179 472.419 64.8256 532.066 64.8256C591.712 64.8256 640.066 113.179 640.066 172.826Z" stroke-width="1.2" stroke="var(--blocks-logo-specular)" stroke-opacity="0.22"/>
 <path d="M522.066 255.826C567.905 255.826 605.066 222.247 605.066 180.826C605.066 139.404 567.905 105.826 522.066 105.826C476.226 105.826 439.066 139.404 439.066 180.826C439.066 222.247 476.226 255.826 522.066 255.826Z" fill="url(#paint8_radial_2_133)"/>
 <g filter="url(#filter3_f_2_133)">
 <path d="M447.066 188.826C471.066 140.826 506.066 117.826 538.066 134.826C565.066 149.826 580.066 184.826 616.066 168.826" stroke-width="34" stroke-linecap="round" stroke="var(--bx-primary)" stroke-opacity="0.74"/>
 </g>
 <path d="M447.066 188.826C471.066 140.826 506.066 117.826 538.066 134.826C565.066 149.826 580.066 184.826 616.066 168.826" stroke-width="12" stroke-linecap="round" stroke="url(#paint9_linear_2_133)"/>
-<path d="M456.066 183.826C477.066 146.826 507.066 129.826 532.066 143.826C556.066 156.826 571.066 184.826 600.066 172.826" stroke-width="2.4" stroke-linecap="round" stroke="white" stroke-opacity="0.86"/>
-<path d="M460.066 123.826C478.066 101.826 505.066 88.8256 532.066 85.8256" stroke-width="5" stroke-linecap="round" stroke="white" stroke-opacity="0.7"/>
-<path d="M465.066 130.826C478.066 117.826 493.066 108.826 508.066 103.826" stroke-width="2" stroke-linecap="round" stroke="white" stroke-opacity="0.52"/>
-<path d="M482.066 111.326C484.551 111.326 486.566 109.311 486.566 106.826C486.566 104.34 484.551 102.326 482.066 102.326C479.58 102.326 477.566 104.34 477.566 106.826C477.566 109.311 479.58 111.326 482.066 111.326Z" fill="white" fill-opacity="0.86"/>
+<path d="M456.066 183.826C477.066 146.826 507.066 129.826 532.066 143.826C556.066 156.826 571.066 184.826 600.066 172.826" stroke-width="2.4" stroke-linecap="round" stroke="var(--blocks-logo-specular)" stroke-opacity="0.86"/>
+<path d="M460.066 123.826C478.066 101.826 505.066 88.8256 532.066 85.8256" stroke-width="5" stroke-linecap="round" stroke="var(--blocks-logo-specular)" stroke-opacity="0.7"/>
+<path d="M465.066 130.826C478.066 117.826 493.066 108.826 508.066 103.826" stroke-width="2" stroke-linecap="round" stroke="var(--blocks-logo-specular)" stroke-opacity="0.52"/>
+<path d="M482.066 111.326C484.551 111.326 486.566 109.311 486.566 106.826C486.566 104.34 484.551 102.326 482.066 102.326C479.58 102.326 477.566 104.34 477.566 106.826C477.566 109.311 479.58 111.326 482.066 111.326Z" fill="var(--blocks-logo-specular)" fill-opacity="0.86"/>
 <defs>
 <filter id="filter0_f_2_133" x="0" y="0" width="804.131" height="775.651" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
@@ -65,16 +65,16 @@
 <stop offset="1" stop-color="var(--bx-primary)" stop-opacity="0"/>
 </radialGradient>
 <linearGradient id="paint1_linear_2_133" x1="98.0511" y1="131.158" x2="667.589" y2="698.833" gradientUnits="userSpaceOnUse">
-<stop stop-color="white" stop-opacity="0.2"/>
-<stop offset="0.42" stop-color="white" stop-opacity="0.075"/>
-<stop offset="1" stop-color="white" stop-opacity="0.035"/>
+<stop stop-color="var(--blocks-logo-surface)" stop-opacity="0.34"/>
+<stop offset="0.42" stop-color="var(--blocks-logo-surface)" stop-opacity="0.15"/>
+<stop offset="1" stop-color="var(--blocks-logo-surface)" stop-opacity="0.07"/>
 </linearGradient>
 <linearGradient id="paint2_linear_2_133" x1="43.2495" y1="111.82" x2="731.541" y2="698.267" gradientUnits="userSpaceOnUse">
-<stop stop-color="white" stop-opacity="0.82"/>
-<stop offset="0.25" stop-color="white" stop-opacity="0.3"/>
+<stop stop-color="var(--blocks-logo-specular)" stop-opacity="0.82"/>
+<stop offset="0.25" stop-color="var(--blocks-logo-specular)" stop-opacity="0.3"/>
 <stop offset="0.55" stop-color="var(--bx-primary)" stop-opacity="0.52"/>
-<stop offset="0.8" stop-color="white" stop-opacity="0.18"/>
-<stop offset="1" stop-color="white" stop-opacity="0.58"/>
+<stop offset="0.8" stop-color="var(--blocks-logo-specular)" stop-opacity="0.18"/>
+<stop offset="1" stop-color="var(--blocks-logo-specular)" stop-opacity="0.58"/>
 </linearGradient>
 <radialGradient id="paint3_radial_2_133" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(537.769 235.526) rotate(-6) scale(439.52 418.08)">
 <stop stop-color="var(--bx-primary)" stop-opacity="0.4"/>
@@ -85,36 +85,36 @@
 <linearGradient id="paint4_linear_2_133" x1="393.443" y1="296.225" x2="438.356" y2="354.826" gradientUnits="userSpaceOnUse">
 <stop stop-color="var(--bx-primary)" stop-opacity="0"/>
 <stop offset="0.4" stop-color="var(--bx-primary)" stop-opacity="0.44"/>
-<stop offset="0.68" stop-color="color-mix(in srgb, var(--bx-primary) 44%, white)" stop-opacity="0.8"/>
+<stop offset="0.68" stop-color="color-mix(in srgb, var(--bx-primary) 44%, var(--blocks-logo-specular))" stop-opacity="0.8"/>
 <stop offset="1" stop-color="var(--bx-primary)" stop-opacity="0"/>
 </linearGradient>
 <linearGradient id="paint5_linear_2_133" x1="81.9226" y1="144.933" x2="218.003" y2="363.352" gradientUnits="userSpaceOnUse">
-<stop stop-color="white" stop-opacity="0.78"/>
-<stop offset="0.48" stop-color="white" stop-opacity="0.2"/>
-<stop offset="1" stop-color="white" stop-opacity="0"/>
+<stop stop-color="var(--blocks-logo-specular)" stop-opacity="0.78"/>
+<stop offset="0.48" stop-color="var(--blocks-logo-specular)" stop-opacity="0.2"/>
+<stop offset="1" stop-color="var(--blocks-logo-specular)" stop-opacity="0"/>
 </linearGradient>
 <radialGradient id="paint6_radial_2_133" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(486.846 113.326) scale(195.16)">
-<stop stop-color="white" stop-opacity="0.54"/>
-<stop offset="0.28" stop-color="white" stop-opacity="0.24"/>
-<stop offset="0.7" stop-color="white" stop-opacity="0.075"/>
+<stop stop-color="var(--blocks-logo-specular)" stop-opacity="0.54"/>
+<stop offset="0.28" stop-color="var(--blocks-logo-specular)" stop-opacity="0.24"/>
+<stop offset="0.7" stop-color="var(--blocks-logo-specular)" stop-opacity="0.075"/>
 <stop offset="1" stop-color="var(--bx-primary)" stop-opacity="0.16"/>
 </radialGradient>
 <linearGradient id="paint7_linear_2_133" x1="429.726" y1="63.3456" x2="639.166" y2="291.826" gradientUnits="userSpaceOnUse">
-<stop stop-color="white" stop-opacity="0.94"/>
-<stop offset="0.3" stop-color="white" stop-opacity="0.36"/>
+<stop stop-color="var(--blocks-logo-specular)" stop-opacity="0.94"/>
+<stop offset="0.3" stop-color="var(--blocks-logo-specular)" stop-opacity="0.36"/>
 <stop offset="0.66" stop-color="var(--bx-primary)" stop-opacity="0.56"/>
-<stop offset="1" stop-color="white" stop-opacity="0.82"/>
+<stop offset="1" stop-color="var(--blocks-logo-specular)" stop-opacity="0.82"/>
 </linearGradient>
 <radialGradient id="paint8_radial_2_133" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(508.786 165.826) scale(112.88 102)">
-<stop stop-color="color-mix(in srgb, var(--bx-primary) 10%, white)" stop-opacity="0.96"/>
-<stop offset="0.18" stop-color="color-mix(in srgb, var(--bx-primary) 52%, white)" stop-opacity="0.9"/>
+<stop stop-color="color-mix(in srgb, var(--bx-primary) 10%, var(--blocks-logo-specular))" stop-opacity="0.96"/>
+<stop offset="0.18" stop-color="color-mix(in srgb, var(--bx-primary) 52%, var(--blocks-logo-specular))" stop-opacity="0.9"/>
 <stop offset="0.48" stop-color="var(--bx-primary)" stop-opacity="0.66"/>
 <stop offset="1" stop-color="var(--bx-primary)" stop-opacity="0"/>
 </radialGradient>
 <linearGradient id="paint9_linear_2_133" x1="447.066" y1="135.211" x2="498.003" y2="236.364" gradientUnits="userSpaceOnUse">
 <stop stop-color="var(--bx-primary)" stop-opacity="0"/>
-<stop offset="0.34" stop-color="color-mix(in srgb, var(--bx-primary) 68%, white)" stop-opacity="0.88"/>
-<stop offset="0.58" stop-color="white" stop-opacity="0.98"/>
+<stop offset="0.34" stop-color="color-mix(in srgb, var(--bx-primary) 68%, var(--blocks-logo-specular))" stop-opacity="0.88"/>
+<stop offset="0.58" stop-color="var(--blocks-logo-specular)" stop-opacity="0.98"/>
 <stop offset="0.84" stop-color="var(--bx-primary)" stop-opacity="0.86"/>
 <stop offset="1" stop-color="var(--bx-primary)" stop-opacity="0"/>
 </linearGradient>

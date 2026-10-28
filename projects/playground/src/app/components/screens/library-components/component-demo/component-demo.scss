@@ -150,6 +150,9 @@ output {
     padding: spacing(8);
     border: 1px dashed var(--bx-border-default);
     border-radius: radius(lg);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .banner-preview {

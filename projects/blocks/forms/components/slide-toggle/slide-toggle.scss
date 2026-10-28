@@ -97,18 +97,23 @@ input:focus-visible ~ .bx-slide-toggle-track {
     left: 2px;
     width: 18px;
     height: 18px;
-    background: linear-gradient(150deg, #ffffff, #dce1e7);
-    border: 1px solid rgb(255 255 255 / 70%);
+    background: var(--bx-text-secondary);
+    border: 1px solid var(--bx-bg-surface);
     box-sizing: border-box;
     border-radius: radius(pill);
     transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     box-shadow: var(--bx-shadow-sm);
 }
 
+.is-checked .bx-slide-toggle-thumb {
+    background: var(--bx-on-primary);
+    border-color: var(--bx-on-primary);
+}
+
 .bx-slide-toggle-track[data-bx-surface] {
     --bx-glass-shadow: none;
     --bx-glass-surface: var(--bx-bg-neutral);
-    --bx-glass-edge: var(--bx-border-strong);
+    --bx-glass-edge: var(--bx-text-secondary);
     --bx-glass-min-opacity: 0.65;
 
     border: 1px solid var(--bx-glass-edge);

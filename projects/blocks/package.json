@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/blocks",
-    "version": "1.4.7",
+    "version": "1.4.9",
     "license": "MIT",
     "schematics": "./schematics/collection.json",
     "exports": {

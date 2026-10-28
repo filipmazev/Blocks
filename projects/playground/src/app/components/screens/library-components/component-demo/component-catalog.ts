@@ -182,7 +182,7 @@ export const COMPONENT_EXAMPLES: readonly ComponentExample[] = [
     selector: '[bxContextMenu]',
     description: 'A menu positioned at a context action’s coordinates.',
     example:
-      '<div [bxContextMenu]="actions">Right-click here</div>\n<ng-template #actions><bx-menu><bx-menu-item label="Copy" (action)="copy()" /></bx-menu></ng-template>'
+      '<div [bxContextMenu]="actions" tabindex="0">Right-click or touch and hold here</div>\n<ng-template #actions><bx-menu><bx-menu-item label="Copy" (action)="copy()" /></bx-menu></ng-template>'
   },
   {
     id: 'tooltip-directive',

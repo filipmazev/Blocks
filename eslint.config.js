@@ -7,6 +7,7 @@ import prettierPlugin from "eslint-plugin-prettier";
 import preferArrow from "eslint-plugin-prefer-arrow";
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import { typescriptFormatOptions } from './tools/typescript-format-options.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50,17 +51,7 @@ export default [
                 "always",
                 { "exceptAfterSingleLine": true }
             ],
-            "prettier/prettier": [
-                "error",
-                {
-                    printWidth: 160,
-                    tabWidth: 2,
-                    useTabs: false,
-                    singleQuote: true,
-                    trailingComma: "none",
-                    plugins: ["prettier-plugin-tailwindcss"],
-                }
-            ],
+            "prettier/prettier": ["error", typescriptFormatOptions],
             "@typescript-eslint/naming-convention": [
                 "error",
                 {

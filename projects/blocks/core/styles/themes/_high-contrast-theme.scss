@@ -7,11 +7,11 @@ $high-contrast-light-theme: validate-theme(
         'bg-surface': $hc-white,
         'bg-surface-alt': $hc-white,
         'bg-element': $hc-white,
-        'bg-element-hover': $hc-yellow,
-        'bg-element-active': $hc-yellow,
+        'bg-element-hover': get-color-from-palette('neutral', 50),
+        'bg-element-active': get-color-from-palette('neutral', 100),
         'bg-neutral': $hc-white,
-        'bg-neutral-hover': $hc-yellow,
-        'bg-neutral-active': $hc-yellow,
+        'bg-neutral-hover': get-color-from-palette('neutral', 50),
+        'bg-neutral-active': get-color-from-palette('neutral', 100),
 
         'primary': $hc-black,
         'primary-hover': $hc-black,
@@ -24,10 +24,10 @@ $high-contrast-light-theme: validate-theme(
         'text-secondary': $hc-black,
         'text-brand': $hc-black,
         'text-inverse': $hc-white,
-        'text-info': $hc-cyan,
-        'text-success': $hc-green,
-        'text-warn': $hc-yellow,
-        'text-danger': $hc-red,
+        'text-info': get-color-from-palette('information', 700),
+        'text-success': get-color-from-palette('success', 800),
+        'text-warn': get-color-from-palette('warn', 800),
+        'text-danger': get-color-from-palette('danger', 700),
 
         'border-subtle': $hc-black,
         'border-default': $hc-black,
@@ -64,7 +64,7 @@ $high-contrast-light-theme: validate-theme(
 
         'scroll-bg': $hc-white,
         'scroll-thumb': $hc-black,
-        'scroll-thumb-hover': $hc-yellow,
+        'scroll-thumb-hover': get-color-from-palette('neutral', 700),
 
         'meta-brand-palette': 'neutral',
     ),
@@ -76,11 +76,11 @@ $high-contrast-dark-theme: validate-theme(
         'bg-surface': $hc-black,
         'bg-surface-alt': $hc-black,
         'bg-element': $hc-black,
-        'bg-element-hover': $hc-yellow,
-        'bg-element-active': $hc-yellow,
+        'bg-element-hover': get-color-from-palette('neutral', 1000),
+        'bg-element-active': get-color-from-palette('neutral', 1000),
         'bg-neutral': $hc-black,
-        'bg-neutral-hover': $hc-yellow,
-        'bg-neutral-active': $hc-yellow,
+        'bg-neutral-hover': get-color-from-palette('neutral', 1000),
+        'bg-neutral-active': get-color-from-palette('neutral', 1000),
 
         'primary': $hc-white,
         'primary-hover': $hc-white,
@@ -133,7 +133,7 @@ $high-contrast-dark-theme: validate-theme(
 
         'scroll-bg': $hc-black,
         'scroll-thumb': $hc-white,
-        'scroll-thumb-hover': $hc-yellow,
+        'scroll-thumb-hover': get-color-from-palette('neutral', 300),
 
         'meta-brand-palette': 'neutral',
     ),
@@ -143,11 +143,8 @@ $high-contrast-dark-theme: validate-theme(
 // The Blocks high-contrast palette is an explicit accessibility choice, independent of OS media queries.
 :where(.high-contrast, .bx-high-contrast-scope) {
     [data-bx-surface] {
-        --bx-glass-text: var(--bx-text-primary) !important;
-        --bx-glass-edge: var(--bx-border-strong) !important;
-
-        color: var(--bx-text-primary) !important;
-        border-color: var(--bx-border-strong);
+        color: var(--bx-glass-text, var(--bx-text-primary)) !important;
+        border-color: var(--bx-glass-edge, var(--bx-border-strong));
     }
 
     bx-simple-toast .simple-toast {
@@ -156,7 +153,8 @@ $high-contrast-dark-theme: validate-theme(
 
     [data-bx-surface],
     .bx-glass-material {
-        background: var(--bx-bg-surface) !important;
+        background: var(--bx-glass-surface, var(--bx-bg-surface)) !important;
+        -webkit-backdrop-filter: none !important;
         backdrop-filter: none !important;
         box-shadow: none !important;
     }

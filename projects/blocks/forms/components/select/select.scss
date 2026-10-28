@@ -146,9 +146,9 @@
     min-width: 100%;
     width: 100%;
     max-width: 100%;
-    background-color: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-subtle);
-    border-radius: radius(sm);
+    background-color: var(--bx-glass-surface, var(--bx-bg-surface));
+    border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
+    border-radius: radius(lg);
     box-shadow: shadow(sm);
     overflow: hidden;
     max-height: 18rem;
@@ -224,15 +224,18 @@ bx-menu-item:hover .bx-select-check-placeholder {
 }
 
 .bx-select-panel[data-bx-surface] {
+    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: #{shadow(sm)};
+    --bx-glass-min-opacity: 0;
+    --bx-glass-decoration-opacity: 1;
+    --bx-glass-rim-visibility: 1;
+    --bx-glass-unified-lighting: 0;
 }
 
 .bx-select-trigger[data-bx-surface] {
     @include glass-field;
-}
-
-.bx-select-panel[data-bx-surface] {
-    --bx-glass-min-opacity: 0.8;
 }
 
 .bx-select-trigger[data-bx-surface].is-invalid {

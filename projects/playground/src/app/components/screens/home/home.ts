@@ -51,7 +51,7 @@ export class Home {
 
   protected readonly look = computed(() => {
     this.themingService.palette();
-    this.themingService.activeTheme();
+    const theme = this.themingService.activeTheme();
 
     const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
     const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas');
@@ -75,9 +75,9 @@ export class Home {
       lightAmount: 0.11,
       lightSize: 0.27,
       lightFollow: 1,
-      glassMode: 1,
+      glassMode: theme === 'dark' ? 1 : 2,
       glassAmount: 0.42,
-      glassCount: 10,
+      glassCount: theme === 'dark' ? 10 : 90,
       glassAngle: 145,
       glassProfile: 2,
       glassBevel: 0.01,

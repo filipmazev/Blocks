@@ -141,7 +141,6 @@ export class AmbientSampler {
   }
 
   private scan(root: ParentNode): void {
-    // Inventory only on insertion, including open shadow roots; never rescan the page on a tick.
     if ('host' in root) this.observeRoot(root as ShadowRoot);
     if ('tagName' in root && /^(IMG|VIDEO|CANVAS)$/.test(String(root.tagName))) this.sources.add(root as Element);
     const shadow = 'shadowRoot' in root ? (root as Element).shadowRoot : null;

@@ -18,6 +18,8 @@ export class ThemingService implements OnDestroy {
   private readonly _palette = signal<BxThemeId>('white');
   public readonly palette = this._palette.asReadonly();
   public readonly paletteLabel = computed(() => this.palettes.find((item) => item.id === this.palette())?.label ?? this.palettes[0].label);
+  private readonly _highContrast = signal(false);
+  public readonly highContrast = this._highContrast.asReadonly();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly _systemTheme = signal<DeviceTheme>('light');
@@ -43,7 +45,9 @@ export class ThemingService implements OnDestroy {
       const storedTheme = this.readStored('theme') as DeviceTheme | null;
       this.restoreAppearance();
       const palette = this.readStored('theme-palette');
+      const storedHighContrast = this.readStored('theme-high-contrast');
       this.setPalette(this.palettes.some((item) => item.id === palette) ? (palette as BxThemeId) : 'white');
+      this.setHighContrast(storedHighContrast === null ? palette === 'high-contrast' : storedHighContrast === 'true');
       this.appearanceController = configureAppearance(this.document.documentElement, { ...this.appearance(), reducedMotion: this.a11y.isReducedMotion() });
       if (storedTheme === 'dark' || storedTheme === 'light') {
         this._applicationTheme.set(storedTheme);
@@ -72,6 +76,13 @@ export class ThemingService implements OnDestroy {
     this._palette.set(palette);
     for (const item of this.palettes) this.document.documentElement.classList.toggle(item.className, item.id === palette);
     if (this.isBrowser) this.writeStored('theme-palette', palette);
+  }
+
+  public setHighContrast(enabled: boolean): void {
+    this._highContrast.set(enabled);
+    if (!this.isBrowser) return;
+    this.document.documentElement.classList.toggle('high-contrast', enabled);
+    this.writeStored('theme-high-contrast', String(enabled));
   }
 
   public setAppearance(settings: Partial<BxAppearanceConfig>): void {

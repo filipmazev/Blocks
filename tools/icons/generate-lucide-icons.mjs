@@ -2,6 +2,8 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import prettier from 'prettier';
+import { typescriptFormatOptions } from '../typescript-format-options.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,6 +60,12 @@ function extractSvgParts(svg) {
 
 async function ensureDir(dir) {
     await fs.mkdir(dir, { recursive: true });
+}
+
+async function writeTypeScript(fileName, source) {
+    const target = path.join(outRoot, fileName);
+    const formatted = await prettier.format(source, { ...typescriptFormatOptions, filepath: target });
+    await fs.writeFile(target, formatted, 'utf8');
 }
 
 async function removeDir(dir) {
@@ -141,7 +149,7 @@ async function generateLucide() {
             relativeDefineIconImport: '../../helpers/define-icon' // Adjusted path
         });
 
-        await fs.writeFile(path.join(outRoot, `${iconName}.ts`), ts, 'utf8');
+        await writeTypeScript(`${iconName}.ts`, ts);
 
         names.push(iconName);
         loaderEntries.push({
@@ -150,23 +158,11 @@ async function generateLucide() {
         });
     }
 
-    await fs.writeFile(
-        path.join(outRoot, 'names.ts'),
-        buildNamesTs(names),
-        'utf8'
-    );
+    await writeTypeScript('names.ts', buildNamesTs(names));
 
-    await fs.writeFile(
-        path.join(outRoot, 'icon-loader.ts'),
-        buildLoaderTs(loaderEntries),
-        'utf8'
-    );
+    await writeTypeScript('icon-loader.ts', buildLoaderTs(loaderEntries));
 
-    await fs.writeFile(
-        path.join(outRoot, 'public-api.ts'),
-        `export * from './names';\nexport * from './loader';\n`,
-        'utf8'
-    );
+    await writeTypeScript('public-api.ts', `export * from './names';\nexport * from './loader';\n`);
 
     console.log(`Generated ${files.length} icons for Lucide`);
 }

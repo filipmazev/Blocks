@@ -2,6 +2,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fs from 'fs';
+import prettier from 'prettier';
+import { typescriptFormatOptions } from '../typescript-format-options.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,7 +52,8 @@ export type SemanticColorToken =
   | '${keys.join("'\n  | '")}';
 `;
 
-    fs.writeFileSync(tsPath, tsDefinition);
+    const formatted = await prettier.format(tsDefinition, { ...typescriptFormatOptions, filepath: tsPath });
+    fs.writeFileSync(tsPath, formatted);
     console.log(`✅ Successfully generated SemanticColorToken with ${keys.length} keys!`);
 
 } catch (error) {

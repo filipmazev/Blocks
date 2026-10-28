@@ -28,6 +28,8 @@
 
     <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isPanelAttached()"
         [cdkConnectedOverlayPositions]="overlayPositions" [cdkConnectedOverlayHasBackdrop]="false"
+        [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy"
+        [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
         [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
         (overlayOutsideClick)="onOutsideClick($event)" (attach)="onPanelAttach()" (detach)="onPanelDetach()" (positionChange)="refreshPanel()">
 

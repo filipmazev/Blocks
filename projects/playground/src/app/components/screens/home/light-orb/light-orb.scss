@@ -101,6 +101,7 @@
     touch-action: none;
     user-select: none;
     will-change: transform;
+    box-shadow: 0 4px 10px #0000001a;
 }
 
 .light-orb[data-state='dragging'] {
@@ -131,44 +132,38 @@
         color-mix(in srgb, var(--bx-bg-surface) 15%, transparent);
     box-shadow:
         inset 1px 1px 2px #ffffff66,
-        inset -2px -2px 5px #00000018,
-        0 4px 10px #0000001a;
+        inset -2px -2px 5px #00000018;
+    -webkit-backdrop-filter: blur(5px) saturate(1.2);
     backdrop-filter: blur(5px) saturate(1.2);
 }
 
 .orb-rim {
-    padding: 1.5px;
-    background: conic-gradient(
-        from 25deg,
-        #ffffffcc,
-        currentcolor 15%,
-        transparent 36%,
-        currentcolor 62%,
-        #ffffffbb 83%,
-        transparent 94%,
-        #ffffffcc
-    );
-    mask:
-        linear-gradient(#ffffff 0 0) content-box,
-        linear-gradient(#ffffff 0 0);
-    mask-composite: exclude;
+    box-sizing: border-box;
+    border: 1px solid color-mix(in srgb, currentcolor 35%, transparent);
+    box-shadow:
+        inset 0 1px 2px #ffffff33,
+        inset 0 -1px 2px color-mix(in srgb, currentcolor 20%, transparent),
+        inset 0 0 0 0.5px #ffffff1a;
 }
 
 .orb-halo {
     inset: -9px;
-    background: currentcolor;
-    filter: blur(13px);
-    opacity: 0.16;
+    background: radial-gradient(
+        circle,
+        color-mix(in srgb, currentcolor 34%, transparent) 0%,
+        color-mix(in srgb, currentcolor 22%, transparent) 32%,
+        transparent 72%
+    );
+    opacity: 0.55;
 }
 
 .light-orb[data-mood='danger'] .orb-halo {
-    opacity: 0.3;
+    opacity: 0.8;
 }
 
 .orb-glint {
     inset: 6px 15px 33px 11px;
-    background: #ffffff88;
-    filter: blur(1px);
+    background: radial-gradient(ellipse, #ffffff88 0%, #ffffff44 38%, transparent 76%);
     transform: rotate(-30deg);
 }
 
@@ -188,17 +183,17 @@
 
 .ribbon-core {
     opacity: 0.8;
-    filter: drop-shadow(0 0 1px currentcolor);
 }
 
 .ribbon-glow {
-    opacity: 0.55;
-    filter: blur(2.8px);
+    opacity: 0.22;
+    stroke: currentcolor;
+    stroke-width: 3px;
+    stroke-opacity: 0.3;
 }
 
 .ribbon-tail {
     opacity: 0.25;
-    filter: blur(0.65px);
 }
 
 .orb-shadow {
@@ -257,6 +252,7 @@
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
     .orb-body {
         background: var(--bx-bg-surface);
+        -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
 }
@@ -276,7 +272,6 @@
             color-mix(in srgb, currentcolor 24%, transparent),
             transparent 62%
         );
-    filter: blur(3px);
 }
 
 .orb-home:disabled {
