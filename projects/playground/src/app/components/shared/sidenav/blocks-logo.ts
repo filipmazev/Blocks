@@ -8,4 +8,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { 'aria-hidden': 'true' }
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class BlocksLogo {}
