@@ -8,11 +8,12 @@ import { Button } from '@forms/components/button/button';
 import { Menu } from '@primitives/components/menu/menu';
 import { MenuItem } from '@primitives/components/menu-item/menu-item';
 import { DropdownDirective } from '@primitives/directives/dropdown.directive';
+import { BxOverlayContextDirective } from '@primitives/directives/overlay-context.directive';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, Sidenav, Button, Icon, Menu, MenuItem, DropdownDirective, BxSurfaceDirective],
+  imports: [RouterOutlet, RouterLink, Sidenav, Button, Icon, Menu, MenuItem, DropdownDirective, BxOverlayContextDirective, BxSurfaceDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

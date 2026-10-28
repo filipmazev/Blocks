@@ -9,3 +9,5 @@ export * from './components/menu-item/menu-item';
 export * from './directives/tooltip.directive';
 export * from './directives/dropdown.directive';
 export * from './directives/context-menu.directive';
+export * from './directives/overlay-context.directive';
+export * from './directives/overlay-context.token';

@@ -35,13 +35,22 @@
 }
 
 .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing(2);
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--bx-text-primary);
     text-decoration: none;
 }
 
-.sidebar-header span {
+.brand-logo {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+.sidebar-header > span {
     color: var(--bx-text-secondary);
     font-size: 0.75rem;
 }

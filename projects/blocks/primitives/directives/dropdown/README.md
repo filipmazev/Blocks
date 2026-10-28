@@ -5,7 +5,7 @@ A positioned menu that fades in and out without resizing its contents.
 ## Import
 
 ```ts
-import { DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+import { BxOverlayContextDirective, DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
 ```
 
 Add the standalone component or directive to your component's `imports`.
@@ -22,6 +22,18 @@ Add the standalone component or directive to your component's `imports`.
 ## API
 
 `bxDropdown`: required TemplateRef. `placement`: overlay placement. `bxTransition`: fade (default) or none; emerge remains a compatibility alias for fade. Export as `bxDropdown`; call `open()`, `close()`, or `toggle()`. Read `isOpen()` and `state()` for lifecycle.
+
+## Overlay placement
+
+Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:
+
+```html
+<header [bxOverlayContext]="{ useTopLayer: true }">
+  <button [bxDropdown]="actions">Actions</button>
+</header>
+```
+
+Import `BxOverlayContextDirective` alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide `BX_OVERLAY_CONTEXT` with `{ useTopLayer: true }` to scope the behavior to their view.
 
 ## Appearance
 

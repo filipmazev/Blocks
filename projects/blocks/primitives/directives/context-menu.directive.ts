@@ -3,12 +3,14 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BxA11yService, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { BX_OVERLAY_CONTEXT } from './overlay-context.token';
 import { Subscription } from 'rxjs';
 
 @Directive({ selector: '[bxContextMenu]' })
 export class ContextMenuDirective {
   private readonly overlay = inject(Overlay);
   private readonly positionBuilder = inject(BxOverlayPositionService);
+  private readonly overlayContext = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly a11y = inject(BxA11yService);
   private readonly zone = inject(NgZone);
@@ -77,7 +79,7 @@ export class ContextMenuDirective {
     this.overlayRef = this.overlay.create({
       positionStrategy: this.positionBuilder.getCoordinateStrategy(x, y),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      usePopover: !!source.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
+      usePopover: !!this.overlayContext?.useTopLayer || !!source.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop'
     });

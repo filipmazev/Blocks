@@ -18,7 +18,6 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconCatalog {
-  // Searching touches names only. At most 48 icon components request SVG modules.
   protected readonly pageSize = 48;
   protected readonly allIcons: readonly IconName[] = lucideNames;
   protected readonly sizes: IconSize[] = ['16', '20', '24', '28', '32', '36', '40', '44', '48'];

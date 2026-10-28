@@ -2,7 +2,7 @@
 <div class="app-container">
   <app-sidenav title="Blocks" />
   <div class="app-main">
-    <header class="app-toolbar" data-bx-light-scope bxSurface aria-label="Playground appearance">
+    <header class="app-toolbar" [bxOverlayContext]="{ useTopLayer: true }" data-bx-light-scope bxSurface aria-label="Playground appearance">
       <span class="toolbar-label">Component playground</span>
       <div class="toolbar-actions">
         <a bx-button class="appearance-button" variant="tonal" color="grayscale" routerLink="/appearance" aria-label="Configure appearance for the whole playground"><bx-icon name="sliders-horizontal" size="20" /><span>Appearance</span></a>

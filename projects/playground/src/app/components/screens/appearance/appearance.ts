@@ -24,6 +24,7 @@ export class Appearance {
     if (value < 0.75) return 'Balanced glass';
     return 'Richly tinted glass';
   });
+
   protected readonly qualities: { value: BxAppearanceConfig['quality']; label: string }[] = [
     { value: 'auto', label: 'Automatic' },
     { value: 'baseline', label: 'Baseline' },

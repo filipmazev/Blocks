@@ -7,11 +7,12 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { WindowDimensionsService } from '@core/services/window-dimension.service';
 import { NavigationService } from '@filip.mazev/blocks/navigation';
+import { BlocksLogo } from './blocks-logo';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [A11yModule, FormsModule, SearchInput, RouterLink, RouterLinkActive, BxSurfaceDirective],
+  imports: [A11yModule, FormsModule, SearchInput, RouterLink, RouterLinkActive, BxSurfaceDirective, BlocksLogo],
   templateUrl: './sidenav.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './sidenav.scss'

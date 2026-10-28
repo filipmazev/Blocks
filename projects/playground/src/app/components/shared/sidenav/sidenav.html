@@ -1,6 +1,9 @@
 @if (isHamburgerMenu()) {
     <header bxSurface class="mobile-header">
-        <a class="brand" routerLink="/home" (click)="closeMobileMenu()">{{ title() }}</a>
+        <a class="brand" routerLink="/home" (click)="closeMobileMenu()">
+            <app-blocks-logo class="brand-logo" />
+            <span>{{ title() }}</span>
+        </a>
         <button
             #menuToggle
             class="menu-toggle"
@@ -45,7 +48,10 @@
 >
     @if (!isHamburgerMenu()) {
         <div class="sidebar-header">
-            <a class="brand" routerLink="/home">{{ title() }}</a>
+            <a class="brand" routerLink="/home">
+                <app-blocks-logo class="brand-logo" />
+                <span>{{ title() }}</span>
+            </a>
             <span>Component library</span>
         </div>
     }

@@ -17,6 +17,7 @@ import { FlexibleConnectedPositionStrategy, Overlay, OverlayRef } from '@angular
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BxA11yService, BxPlacement, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { BX_OVERLAY_CONTEXT } from './overlay-context.token';
 import { Subscription } from 'rxjs';
 
 export type DropdownTransition = 'none' | 'fade' | 'emerge';
@@ -36,6 +37,7 @@ export class DropdownDirective {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly overlay = inject(Overlay);
   private readonly positionBuilder = inject(BxOverlayPositionService);
+  private readonly overlayContext = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly a11y = inject(BxA11yService);
   private readonly zone = inject(NgZone);
   private readonly vcr = inject(ViewContainerRef);
@@ -172,8 +174,9 @@ export class DropdownDirective {
     const overlay = this.overlay.create({
       positionStrategy,
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      // Page menus follow application z-index; dialog menus still escape their container.
-      usePopover: !!this.elementRef.nativeElement.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
+      usePopover:
+        !!this.overlayContext?.useTopLayer ||
+        !!this.elementRef.nativeElement.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
       // A fading surface keeps its trigger reachable while it opens/closes.
       hasBackdrop: this.bxTransition() === 'none',
       backdropClass: 'cdk-overlay-transparent-backdrop'

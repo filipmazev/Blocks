@@ -5,7 +5,7 @@ A menu positioned at a context action’s coordinates.
 ## Import
 
 ```ts
-import { ContextMenuDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+import { BxOverlayContextDirective, ContextMenuDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
 ```
 
 Add the standalone component or directive to your component's `imports`.
@@ -20,6 +20,19 @@ Add the standalone component or directive to your component's `imports`.
 ## API
 
 `bxContextMenu` requires a TemplateRef. `open(event: MouseEvent)` positions the menu at the event coordinates.
+
+## Overlay placement
+
+Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:
+
+```html
+<header [bxOverlayContext]="{ useTopLayer: true }">
+  <button [bxDropdown]="actions">Actions</button>
+  <div [bxContextMenu]="actions">More actions</div>
+</header>
+```
+
+Import `BxOverlayContextDirective` alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide `BX_OVERLAY_CONTEXT` with `{ useTopLayer: true }` to scope the behavior to their view.
 
 ## Appearance
 
