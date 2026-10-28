@@ -2386,17 +2386,15 @@
   scroll-behavior: auto !important;
 }
 :where(.high-contrast, .bx-high-contrast-scope) [data-bx-surface] {
-  --bx-glass-text: var(--bx-text-primary) !important;
-  --bx-glass-edge: var(--bx-border-strong) !important;
-  color: var(--bx-text-primary) !important;
-  border-color: var(--bx-border-strong);
+  color: var(--bx-glass-text, var(--bx-text-primary)) !important;
+  border-color: var(--bx-glass-edge, var(--bx-border-strong));
 }
 :where(.high-contrast, .bx-high-contrast-scope) bx-simple-toast .simple-toast {
   color: var(--bx-text-primary) !important;
 }
 :where(.high-contrast, .bx-high-contrast-scope) [data-bx-surface],
 :where(.high-contrast, .bx-high-contrast-scope) .bx-glass-material {
-  background: var(--bx-bg-surface) !important;
+  background: var(--bx-glass-surface, var(--bx-bg-surface)) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
@@ -3791,11 +3789,11 @@ input.bx-slider:disabled {
   --bx-bg-surface: #ffffff;
   --bx-bg-surface-alt: #ffffff;
   --bx-bg-element: #ffffff;
-  --bx-bg-element-hover: #e4d500;
-  --bx-bg-element-active: #e4d500;
+  --bx-bg-element-hover: #fafafa;
+  --bx-bg-element-active: #f5f5f5;
   --bx-bg-neutral: #ffffff;
-  --bx-bg-neutral-hover: #e4d500;
-  --bx-bg-neutral-active: #e4d500;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #f5f5f5;
   --bx-primary: #000000;
   --bx-primary-hover: #000000;
   --bx-primary-active: #000000;
@@ -3806,10 +3804,10 @@ input.bx-slider:disabled {
   --bx-text-secondary: #000000;
   --bx-text-brand: #000000;
   --bx-text-inverse: #ffffff;
-  --bx-text-info: #00f3f3;
-  --bx-text-success: #00ff00;
-  --bx-text-warn: #e4d500;
-  --bx-text-danger: #ff0000;
+  --bx-text-info: #1e69a7;
+  --bx-text-success: #1a5d22;
+  --bx-text-warn: #6a4817;
+  --bx-text-danger: #ba2e2e;
   --bx-border-subtle: #000000;
   --bx-border-default: #000000;
   --bx-border-strong: #000000;
@@ -3840,7 +3838,7 @@ input.bx-slider:disabled {
   --bx-bg-danger-subtle: #ffffff;
   --bx-scroll-bg: #ffffff;
   --bx-scroll-thumb: #000000;
-  --bx-scroll-thumb-hover: #e4d500;
+  --bx-scroll-thumb-hover: #404040;
   --bx-color-primary-50: #fafafa;
   --bx-color-primary-100: #f5f5f5;
   --bx-color-primary-200: #e5e5e5;
@@ -3862,11 +3860,11 @@ input.bx-slider:disabled {
   --bx-bg-surface: #000000;
   --bx-bg-surface-alt: #000000;
   --bx-bg-element: #000000;
-  --bx-bg-element-hover: #e4d500;
-  --bx-bg-element-active: #e4d500;
+  --bx-bg-element-hover: #0b0b0b;
+  --bx-bg-element-active: #0b0b0b;
   --bx-bg-neutral: #000000;
-  --bx-bg-neutral-hover: #e4d500;
-  --bx-bg-neutral-active: #e4d500;
+  --bx-bg-neutral-hover: #0b0b0b;
+  --bx-bg-neutral-active: #0b0b0b;
   --bx-primary: #ffffff;
   --bx-primary-hover: #ffffff;
   --bx-primary-active: #ffffff;
@@ -3911,7 +3909,7 @@ input.bx-slider:disabled {
   --bx-bg-danger-subtle: #000000;
   --bx-scroll-bg: #000000;
   --bx-scroll-thumb: #ffffff;
-  --bx-scroll-thumb-hover: #e4d500;
+  --bx-scroll-thumb-hover: #d4d4d4;
   --bx-color-primary-50: #fafafa;
   --bx-color-primary-100: #f5f5f5;
   --bx-color-primary-200: #e5e5e5;

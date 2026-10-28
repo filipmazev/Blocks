@@ -1,4 +1,4 @@
-import{Fn as p,H as L,K as Mc,Sr as z,Zn as tn,an as gt,b as Co,fn as it,gn as jt,hr as xc,o as $s,p as Bh,ut as Tc,yt as W}from"./chunk-CNPhXHsc.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Er as z,Q as O,S as Co,St as W,bn as jt,br as xc,gn as it,ln as gt,m as Bh,nr as tn,o as $s,pt as Tc,q as Mc,zn as p}from"./chunk-Cx6yy8Y4.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -1108,6 +1108,13 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use stable option values. For external filtering, update the options in response to <code>search</code>; the application owns request cancellation and loading state. Disabled options cannot be selected.</p>
+<h2>Overlay stacking</h2>
+<p>The options panel follows <code>BX_OVERLAY_CONTEXT</code> and automatically enters the browser top layer inside native dialogs and popovers. For custom application chrome that also needs the top layer, provide the context around the select:</p>
+<pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
+  &lt;bx-select label=&quot;Destination&quot; [options]=&quot;options&quot; /&gt;
+&lt;/header&gt;
+</code></pre>
+<p>Import <code>BxOverlayContextDirective</code> where the context is declared. Select panels outside these contexts stay in the regular CDK overlay layer so sticky application chrome can remain above them.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/select</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/forms/components/slide-toggle/README.md":`<h1>Slide toggle</h1>
@@ -1619,11 +1626,12 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;div [bxContextMenu]=&quot;actions&quot;&gt;Right-click here&lt;/div&gt;
+<pre><code class="language-html">&lt;div [bxContextMenu]=&quot;actions&quot; tabindex=&quot;0&quot;&gt;Right-click or touch and hold here&lt;/div&gt;
 &lt;ng-template #actions&gt;&lt;bx-menu&gt;&lt;bx-menu-item label=&quot;Copy&quot; (action)=&quot;copy()&quot; /&gt;&lt;/bx-menu&gt;&lt;/ng-template&gt;
 </code></pre>
 <h2>API</h2>
 <p><code>bxContextMenu</code> requires a TemplateRef. <code>open(event: MouseEvent)</code> positions the menu at the event coordinates.</p>
+<p><code>bxContextMenuLongPress</code> defaults to <code>true</code>. Set it to <code>false</code> on targets where native touch selection or another hold gesture should take precedence. Mouse and keyboard activation remain available.</p>
 <h2>Overlay placement</h2>
 <p>Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:</p>
 <pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
@@ -1646,7 +1654,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
-<p>Always offer the same actions through a visible button or menu. Pointer context menus alone are not accessible on touch devices. The playground includes a visible Open actions button and keyboard equivalent.</p>
+<p>Touch and hold for 500 ms to open the menu. Moving more than 10 CSS pixels, scrolling, adding another finger, releasing early, or cancelling the pointer cancels the pending hold. Normal scrolling and pinch gestures are preserved. The release after a successful hold does not activate the target or a menu action, and a browser-generated context menu does not reopen the menu.</p>
+<p>Long press follows touch input on devices with both touch and mouse support. Inputs, text areas, selects, editable content, disabled controls, and existing text selections keep their native touch behavior. Text selection is not disabled by the directive; dedicated non-selectable action targets can use <code>user-select: none</code> and <code>-webkit-touch-callout: none</code> in their own styles.</p>
+<p>Always offer the same actions through a visible button or menu; a hold gesture is not easily discoverable. A focusable trigger also supports Shift + F10 and the Context Menu key. The playground includes a visible Open actions button and keyboard equivalent.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/context-menu</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/primitives/directives/dropdown/README.md":`<h1>Dropdown</h1>
@@ -1854,9 +1864,9 @@ export class ModalExample {
             Open actions<bx-icon name="chevron-down" size="16" />
         </button>
         <button bx-button type="button" variant="tonal" color="grayscale" [bxContextMenu]="contextActions" class="modal-context-target">
-            <bx-icon name="mouse-pointer-2" size="16" />Right-click for more actions
+            <bx-icon name="mouse-pointer-2" size="16" />Right-click or hold for more actions
         </button>
-        <p class="menu-hint">You can also focus the right-click example and press Shift + F10. Escape closes the menu first.</p>
+        <p class="menu-hint">On touch screens, touch and hold for more actions. With a keyboard, focus the example and press Shift + F10. Escape closes the menu first.</p>
         <p class="menu-status" role="status">{{ menuStatus() }}</p>
     </section>
 </div>
@@ -1927,6 +1937,9 @@ export class ModalExample {
 
 .modal-context-target {
     border-style: dashed;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .menu-hint,
@@ -2072,7 +2085,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var A=class r{document=p(z);router=p(tn);readmeContent=W(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=L.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=gt({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&it(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(Mc(0,`div`,0)(1,`div`,1)(2,`span`),Co(3,`Documentation`),xc()(),$s(4,`article`,2),xc()),n&2&&(jt(4),Tc(`innerHTML`,o.readmeContent(),Bh))},styles:[`
+`};var A=class r{document=p(z);router=p(tn);readmeContent=W(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=O.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=gt({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&it(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(Mc(0,`div`,0)(1,`div`,1)(2,`span`),Co(3,`Documentation`),xc()(),$s(4,`article`,2),xc()),n&2&&(jt(4),Tc(`innerHTML`,o.readmeContent(),Bh))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;

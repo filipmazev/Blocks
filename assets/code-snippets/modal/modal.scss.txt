@@ -46,6 +46,9 @@
 
 .modal-context-target {
     border-style: dashed;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .menu-hint,
