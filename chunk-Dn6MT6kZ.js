@@ -1,4 +1,4 @@
-import{$n as sh,A as Ht,B as Kn,Mn as nc,Nt as Zn,Xn as re,Zt as ec,b as FA,f as CC,nr as tc,s as B,tt as Q,un as hs,zn as p}from"./chunk-BTQvnuSt.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{En as mt,H as L,K as Mc,N as Ic,Rn as p,Vn as q,bt as W,f as Co,ft as Us,mn as jh,mr as xc,nr as tn,un as it,vt as Vt}from"./chunk-D_BXh9rw.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -21,16 +21,14 @@ export class Settings {
 
   setAppearance() {
     this.theme.setAppearance({
-      material: &#39;glass&#39;,
-      blur: 10,
-      tint: 0.5,
+      glassiness: 0.5,
       quality: &#39;auto&#39;,
     });
   }
 }
 </code></pre>
-<p>There is no global emission setting. Light comes only from explicitly colored borders and items. Neutral edges and restrained highlights define the material; semantic color remains available for selected controls and status content. Floating surfaces enforce a minimum tint density for legibility.</p>
-<p><code>theme.appearance()</code> is the current typed configuration; <code>theme.resetAppearance()</code> restores defaults. Changes apply to existing components and open overlays. Material is <code>glass</code>, <code>frosted</code>, or <code>solid</code>; blur is 0\u201340 CSS pixels, tint is 0\u20131. Quality is <code>auto</code>, <code>baseline</code>, or <code>enhanced</code>. Reduced motion continues through <code>BxA11yService</code>; system transparency and contrast preferences remain respected.</p>
+<p>There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Floating surfaces enforce a minimum tint density for legibility.</p>
+<p><code>theme.appearance()</code> is the current typed configuration; <code>theme.resetAppearance()</code> restores defaults. Changes apply to existing components and open overlays. <code>glassiness</code> is 0\u20131, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint at 80% to retain a glassy appearance. There are no independent tint, blur, or material preset settings. <code>reducedTransparency: true</code> supplies fully opaque surfaces and preserves the chosen glassiness for when transparency is restored. Quality is <code>auto</code>, <code>baseline</code>, or <code>enhanced</code>. Reduced motion continues through <code>BxA11yService</code>; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to glassiness, and a saved solid preference becomes reduced transparency.</p>
 <p>The global styles are required once. <code>ng add @filip.mazev/blocks</code> adds the distributed material stylesheet to the application build. For an existing application, add <code>node_modules/@filip.mazev/blocks/effects/effects.css</code> to <code>angular.json</code> styles before the application stylesheet, or import <code>@filip.mazev/blocks/effects/effects.css</code> globally. Continue including the usual Blocks Sass theme once. The playground already does this.</p>
 <h2>Existing components and custom surfaces</h2>
 <p>Blocks components receive glass automatically. The <code>BxSurfaceDirective</code> remains useful for your own containers and local overrides:</p>
@@ -46,7 +44,7 @@ export class Settings {
 </code></pre>
 <p>Place custom surfaces on containers with measurable CSS boxes. Native replaced elements such as inputs and images need a wrapper for decoration; use the dedicated <code>SliderDirective</code> (<code>input[type=range][bxSlider]</code>) for native ranges; Blocks form components already provide appropriate wrappers. Nested surfaces retain tint and reflection while avoiding a second backdrop-filter pass.</p>
 <h2>Overlay fades</h2>
-<p>The engine fades overlays in and out while preserving their full dimensions. Their backing stays solid and theme-colored throughout the fade and at rest, avoiding delayed blur. Reopening reverses from the current opacity. Dropdowns use <code>bxTransition=&quot;fade&quot;</code> by default; the former <code>emerge</code> value remains a compatibility alias.</p>
+<p>The engine fades the material surface itself in and out while preserving its full dimensions, blur, and translucency. The positioning pane remains at full opacity so it does not interrupt backdrop filtering. Reopening reverses from the current opacity. Dropdowns use <code>bxTransition=&quot;fade&quot;</code> by default; the former <code>emerge</code> value remains a compatibility alias.</p>
 <p>Dropdowns expose <code>#actions=&quot;bxDropdown&quot;</code>, <code>open()</code>, <code>close()</code>, <code>toggle()</code>, <code>isOpen()</code> and <code>state()</code>. The adapter keeps an exiting panel inert and disposes it after motion settles, with revision guards for reopening. Focus and keyboard behavior remain native. No dragging or repositioning behavior was added in this iteration.</p>
 <h2>Framework-independent API</h2>
 <pre><code class="language-ts">import {
@@ -58,7 +56,7 @@ export class Settings {
 import &#39;@filip.mazev/blocks/effects/effects.css&#39;;
 
 const configuration = configureAppearance(document.documentElement, {
-  material: &#39;glass&#39;, blur: 10, tint: 0.5, quality: &#39;auto&#39;,
+  glassiness: 0.5, quality: &#39;auto&#39;,
 });
 const surface = mountSurface(button);
 const scene = mountGlassScene(container, {
@@ -81,9 +79,9 @@ python3 -m http.server 8081
 </code></pre>
 <p>Open <a href="http://localhost:8081/projects/blocks/effects/examples/">http://localhost:8081/projects/blocks/effects/examples/</a>.</p>
 <h2>Lighting and rendering limits</h2>
-<p>Lighting uses a bounded spatial model: up to four lights and four foreground/background reflection proxies per scene. Element positions, depth, intensity and colors influence the highlight and reflected tint. Real CSS backdrop filtering responds to the pixels behind a surface.</p>
-<p>These are deliberate optical approximations. The engine does not capture arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call <code>scene.refresh()</code> when your application changes them; there is no perpetual polling loop.</p>
-<p>Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Solid, unsupported-backdrop, increased-contrast and reduced-transparency modes provide opaque material.</p>
+<p>Lighting uses a bounded spatial model: up to four explicit lights and four foreground/background reflection proxies per scene. Every mounted glass surface also samples a few points around its edge and picks up subtle color from nearby visible CSS backgrounds, images, video and canvas. Paint order separates foreground from backdrop cues; depth and distance reduce their strength. Different sources retain localized edge colors, crossfading beneath existing semantic and explicit lights. Real CSS backdrop filtering continues to display the pixels behind a surface.</p>
+<p>These are deliberate optical approximations. Media sampling uses a small downscaled buffer at selected edge points; the engine does not capture or mirror the page or arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call <code>scene.refresh()</code> when your application changes them; call <code>refreshGlassLighting(element)</code> after application-driven changes around an automatically lit surface. Static scenes do no ongoing sampling. Layout changes are coalesced over 180 ms; visible live media is checked every 500 ms, backing off to 2 seconds when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit testing. Hidden pages and reduced-motion receivers stop live media checks.</p>
+<p>Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.</p>
 <p>Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing high blur or putting glass over frequently changing content.</p>
 `,"documentation/core/README.md":`<h1>@filip.mazev/blocks-core</h1>
 <h2>Blocks - Core Library</h2>
@@ -699,7 +697,7 @@ export class MyFeatureComponent {
 }
 </code></pre>
 <h2>Appearance</h2>
-<p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
+<p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ glassiness: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
 <p>Load <code>@filip.mazev/blocks/effects/effects.css</code> once globally alongside the Blocks Sass theme. <code>ng add</code> registers the stylesheet for new installations. <code>BxSurfaceDirective</code> from <code>@filip.mazev/blocks/effects</code> is available for custom containers and local overrides. The framework-independent engine is <code>@filip.mazev/blocks/effects/runtime</code>, included in the same package.</p>
 <p>The source playground provides a dedicated README and working page for every component, with global appearance controls at <code>/appearance</code>.</p>
 `,"projects/blocks/effects/README.md":`<h1>Appearance effects</h1>
@@ -711,9 +709,7 @@ import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 private readonly theme = inject(ThemingService);
 
 this.theme.setAppearance({
-  material: &#39;glass&#39;,  // glass | frosted | solid
-  blur: 10,           // 0\u201340 pixels
-  tint: 0.5,         // 0\u20131 opacity
+  glassiness: 0.5,    // 0\u20131; the midpoint balances clarity and tint
   quality: &#39;auto&#39;,    // auto | baseline | enhanced
   reducedTransparency: false
 });
@@ -731,7 +727,7 @@ this.theme.resetAppearance();
   &lt;p&gt;This surface inherits the global material.&lt;/p&gt;
 &lt;/section&gt;
 </code></pre>
-<p>Provide layout and padding using the existing Blocks styling helpers. The directive supplies the material and token-based default border and radius. Controls and actionable surfaces get automatic hover/focus lighting; decorative containers receive nearby light without responding to hover themselves. Components can override the default border and radius with their existing tokens.</p>
+<p>Provide layout and padding using the existing Blocks styling helpers. The directive supplies the material and token-based default border and radius. Controls and actionable surfaces get automatic hover/focus lighting; decorative containers receive nearby light without responding to hover themselves. Containing one input does not turn a panel into an interactive surface. Wrappers inside <code>bx-form-field</code> retain field interaction; custom control wrappers outside a field can opt in with <code>bxSurfaceInteractive</code>. Components can override the default border and radius with their existing tokens.</p>
 <table>
 <thead>
 <tr>
@@ -741,18 +737,8 @@ this.theme.resetAppearance();
 </tr>
 </thead>
 <tbody><tr>
-<td><code>bxSurface</code></td>
-<td>Global material</td>
-<td><code>glass</code>, <code>frosted</code>, <code>solid</code></td>
-</tr>
-<tr>
-<td><code>bxSurfaceBlur</code></td>
-<td>Global blur</td>
-<td>0\u201340 pixels</td>
-</tr>
-<tr>
-<td><code>bxSurfaceTint</code></td>
-<td>Global tint</td>
+<td><code>bxSurfaceGlassiness</code></td>
+<td>Global glassiness</td>
 <td>0\u20131</td>
 </tr>
 <tr>
@@ -778,8 +764,8 @@ this.theme.resetAppearance();
 </tbody></table>
 <p>Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.</p>
 <h2>Composition and motion</h2>
-<p>Use a single backing per physical surface. For example, a menu owns the backing while menu-item content shares it; a form-field label does not need an extra blurred card. Apply <code>bxTransition=&quot;fade&quot;</code> on a dropdown to fade its menu without resizing its contents. Animated overlays keep a solid theme-colored backing throughout their lifetime, avoiding a blur/tint pop at the end of motion. Other surfaces remain translucent.</p>
-<p>Buttons, links, native field surfaces and elements with actionable ARIA roles automatically illuminate their border and nearby surfaces on hover or focus. Active ARIA states keep the light enabled. Plain panels, sections and other decorative containers remain passive receivers. Give a custom clickable element its appropriate role (such as <code>role=&quot;button&quot;</code>), or explicitly enable <code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> only to override the semantic color. The source is the element\u2019s geometry, never the mouse coordinates.</p>
+<p>Use a single backing per physical surface. For example, a menu owns the backing while menu-item content shares it; a form-field label does not need an extra blurred card. Apply <code>bxTransition=&quot;fade&quot;</code> on a dropdown to fade its menu without resizing its contents. The fade runs on the material itself, preserving the configured translucency and blur throughout the animation.</p>
+<p>Buttons, links, native field surfaces and elements with actionable ARIA roles automatically illuminate their border and nearby surfaces on hover or focus. Active ARIA states keep the light enabled. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order, depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as <code>role=&quot;button&quot;</code>), or explicitly enable <code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> only to override the semantic color. The source is the element\u2019s geometry, never the mouse coordinates.</p>
 <p>There is no drag-to-reposition interaction in this iteration. Spatial highlights are a lightweight lighting approximation, while backdrop blur uses browser compositing. These effects do not ray-trace arbitrary DOM content. Rendering quality can add supported enhancements, and baseline/solid modes remain available for constrained devices.</p>
 <h2>Accessibility and lifecycle</h2>
 <p><code>BxA11yService</code> controls reduced motion. Reduced transparency, unsupported backdrop filters and forced colors use opaque surfaces. Give controls visible or accessible labels independently of the glass decoration.</p>
@@ -798,7 +784,7 @@ this.theme.resetAppearance();
 import { configureAppearance, mountSurface, createGlassTransition } from &#39;@filip.mazev/blocks/effects/runtime&#39;;
 
 const config = configureAppearance(document.documentElement, {
-  material: &#39;glass&#39;, blur: 10, tint: 0.5,
+  glassiness: 0.5,
   quality: &#39;auto&#39;,
 });
 const buttonSkin = mountSurface(button);
@@ -807,7 +793,7 @@ const panelSkin = mountSurface(panel);
 // The application or overlay library positions the panel before this call.
 const transition = createGlassTransition(button, panel);
 await transition.enter();
-config.update({ tint: .45 }); // All existing surfaces and body-mounted overlays update.
+config.update({ glassiness: .45 }); // All existing surfaces and body-mounted overlays update.
 const result = await transition.exit();
 if (result === &#39;finished&#39;) panel.hidden = true;
 
@@ -817,7 +803,7 @@ transition.destroy(); buttonSkin.destroy(); panelSkin.destroy(); config.destroy(
 <p><code>configureAppearance</code> owns one root scope, merges updates, and restores the attributes and inline properties it owned on destroy. Mount it on <code>document.documentElement</code> to include overlays. Per-surface options override the global configuration; omitted options inherit it. There must be only one configuration controller per root and one surface controller per element. <code>surface.update(options)</code> replaces that surface&#39;s local options so <code>{}</code> returns it to global settings.</p>
 <h2>Global material and theme contract</h2>
 <p>The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component&#39;s border radius, size and layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.</p>
-<p><code>mountSurface(element)</code> includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their border and nearby surfaces on interaction or an active ARIA state. Decorative containers receive nearby light without their own hover effect. The default color is the theme accent, or the error color inside an invalid Blocks form field. Override <code>emission</code>/<code>focusEmission</code> for a different semantic color; <code>interactive</code> explicitly overrides automatic control/action detection.</p>
+<p><code>mountSurface(element)</code> includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their border and nearby surfaces on interaction or an active ARIA state. Decorative containers receive nearby light without their own hover effect, even when they contain a single input such as a slider. Only wrappers within <code>bx-form-field</code> infer interactivity from their input; other custom wrappers can opt in with <code>interactive: true</code>. The default color is the theme accent, or the error color inside an invalid Blocks form field. Override <code>emission</code>/<code>focusEmission</code> for a different semantic color; <code>interactive</code> explicitly overrides automatic control/action detection.</p>
 <table>
 <thead>
 <tr>
@@ -827,19 +813,9 @@ transition.destroy(); buttonSkin.destroy(); panelSkin.destroy(); config.destroy(
 </tr>
 </thead>
 <tbody><tr>
-<td><code>material</code></td>
-<td><code>glass</code>, <code>frosted</code>, <code>solid</code></td>
-<td>root <code>data-bx-glass-material</code></td>
-</tr>
-<tr>
-<td><code>blur</code></td>
-<td>0\u201340 CSS pixels</td>
-<td><code>--bx-glass-blur</code></td>
-</tr>
-<tr>
-<td><code>tint</code></td>
-<td>0\u20131, larger means more opaque</td>
-<td><code>--bx-glass-opacity</code></td>
+<td><code>glassiness</code></td>
+<td>0\u20131, balanced default 0.5</td>
+<td><code>--bx-glassiness</code></td>
 </tr>
 <tr>
 <td><code>quality</code></td>
@@ -857,6 +833,7 @@ transition.destroy(); buttonSkin.destroy(); panelSkin.destroy(); config.destroy(
 <td>root <code>data-bx-reduced-motion</code></td>
 </tr>
 </tbody></table>
+<p>Glassiness controls tint and blur together. Tint is <code>0.06 + 1.02 \xD7 glassiness \u2212 0.28 \xD7 glassiness\xB2</code>; blur is <code>4 + 24 \xD7 glassiness\xB2</code> CSS pixels. The minimum is nearly clear with a light blur, the midpoint uses 10 px blur and a balanced tint, and the maximum caps tint at 80% to remain glassy. Components retain their semantic minimum opacity where needed for readable controls. There are no selectable material presets or independent blur/tint options. Reduced transparency disables backdrop filtering and provides fully opaque surfaces without discarding the glassiness preference.</p>
 <p>Local color aliases preserve component intent:</p>
 <table>
 <thead>
@@ -901,16 +878,21 @@ scene.update({ lights: [{ x: 300, y: 80, z: 220, intensity: 1 }] });
 // On teardown:
 scene.destroy();
 </code></pre>
-<p>Coordinates are viewport CSS pixels. An element supplies its live bounding-box center (<code>offsetX</code>/<code>offsetY</code>, from 0 to 1, can move the source within it); a reflector uses its computed background color unless <code>color</code> is supplied. Signed <code>depth</code> places foreground and background reflection proxies relative to the glass plane. Light distance, height and falloff affect the position and strength of the highlight. Scrolling, resizing, visibility changes and explicit refreshes invalidate the scene; call <code>refresh()</code> after application-driven transforms or layout changes.</p>
-<p>This is a bounded, stylized lighting model. Actual content behind glass contributes through the browser&#39;s backdrop filter. Registered foreground/background objects contribute colored reflection proxies; the package does <strong>not</strong> rasterize arbitrary HTML, implement ray tracing, or physically refract arbitrary page pixels. Gradient-backed reflectors should supply an explicit representative color.</p>
+<p>Coordinates are viewport CSS pixels. An element supplies its live bounding-box center (<code>offsetX</code>/<code>offsetY</code>, from 0 to 1, can move the source within it); a reflector uses its computed background color unless <code>color</code> is supplied. Signed <code>depth</code> places foreground and background reflection proxies relative to the glass plane. Light distance, height and falloff affect the position and strength of the highlight. Scrolling, resizing, visibility changes and explicit refreshes invalidate the scene; call <code>refresh()</code> after application-driven transforms or layout changes. For frequent updates that only move lights, <code>reuseGeometry: true</code> in the scene options retains receiver measurements until those invalidations. Ordinary scene updates continue to remeasure receivers.</p>
+<p>Every mounted glass surface also gets subtle, localized edge colors from the visible layers around its perimeter. Different sources keep their own colors; ambient gradients crossfade beneath hover, focus, validation and explicit scene lights. The runtime samples nearby computed backgrounds and local pixels from visible images, video and canvas, including <code>pointer-events: none</code> backdrops. Hit-test order and stacking layers distinguish foreground from background; depth and distance reduce the contribution. CSS gradients are approximated from their color stops. If the browser blocks pixel access to cross-origin or tainted media, the runtime falls back to the element&#39;s computed CSS colors. Asset loads, layout/scroll changes, and visual class/style changes refresh the samples; call <code>refreshGlassLighting(element)</code> after application-driven changes to a custom surface&#39;s surroundings.</p>
+<p>Portalled overlays can call <code>inheritGlassLighting(overlay, trigger)</code> before mounting their surfaces to receive light from the trigger&#39;s context. Call the returned cleanup function after removing the overlay. Tooltips and menus use this connection to preserve dialog boundaries and receive nearby colors. Tooltips remain transparent to pointer events.</p>
+<p>For compound opaque shapes, <code>--bx-glass-unified-lighting: 1</code> exposes restrained samples of received lighting through <code>--bx-glass-lit-edge</code> and its <code>-top</code>, <code>-right</code>, <code>-bottom</code>, and <code>-left</code> variants. Tooltip bodies retain their neutral backing and use a subtle spatial rim; arrows sample their facing side instead of tinting the entire outline. Interior decorative lighting stays hidden to avoid coloring the fill or introducing seams.</p>
+<p>This is a bounded, stylized lighting model. The browser&#39;s backdrop filter still displays content behind glass. Raster sampling uses a shared 32-by-32 scratch buffer and caches each source across receivers and frames; the package does <strong>not</strong> capture or mirror the page or arbitrary DOM into a texture, implement ray tracing, or physically refract page pixels. Registered foreground/background objects remain available as explicit reflection proxies when a more deliberate scene is needed. Gradient-backed reflectors can supply an explicit representative color.</p>
 <h2>Overlay fades</h2>
-<p>Overlays fade in over 180 ms and out over 140 ms. Their dimensions, clipping and text size remain unchanged. The backing stays opaque and theme-colored both during the fade and at rest, avoiding delayed backdrop blur. Other surfaces retain their normal glass material. Reversing an active fade continues from its current opacity; the interrupted promise resolves to <code>cancelled</code>.</p>
-<p>The transition temporarily owns <code>opacity</code>, <code>visibility</code> and the backing\u2019s <code>data-bx-motion-material</code> attribute. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. <code>refresh()</code> remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1\u2019s <code>createLiquidTransition</code> and associated type names remain deprecated aliases for <code>createGlassTransition</code>.</p>
+<p>Overlays fade in over 180 ms and out over 140 ms. Their dimensions, clipping and text size remain unchanged. The fade composites the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop root that cuts off the page behind the glass. Reversing an active fade continues from its current opacity; the interrupted promise resolves to <code>cancelled</code>.</p>
+<p>The transition temporarily owns the first material surface\u2019s <code>opacity</code> and the target\u2019s <code>visibility</code>. If no material is present, it fades the target. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. <code>refresh()</code> remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1\u2019s <code>createLiquidTransition</code> and associated type names remain deprecated aliases for <code>createGlassTransition</code>.</p>
 <h2>Performance and accessibility</h2>
 <ul>
 <li>One lazy animation clock and delegated press, hover-boundary and focus handling per document. Moving the pointer within an element does not change lighting. Settled scenes schedule no animation frames.</li>
 <li>At most four explicit lights and four reflectors per scene, and 24 visible surface lighting updates per frame. Interaction and active-state emitters share one delegated event stream and semantic-attribute observer; there is no observer per control.</li>
-<li>Geometry is cached between invalidations and measured before a batch writes lighting values. No screenshot capture, DOM mirroring, canvas renderer, permanent animation loop or drag handling.</li>
+<li>Ambient geometry/style invalidations coalesce over 180 ms. A sampling frame handles at most four receivers, yielding after about 4 ms between receivers; a single receiver/readback remains atomic. Sixteen perimeter probes discover nearby colors, and media inventories update on insertion rather than on each frame.</li>
+<li>Static images and failed readbacks are cached until their assets change. Only media used by visible receivers is polled: live canvas/video checks begin at 500 ms and back off to 2 seconds while unchanged. Color-only changes reuse source bindings and geometry without hit testing; coverage or layout changes rediscover the layers. Unchanged samples do not repaint. Image/video samples respect object fit and position.</li>
+<li>Each surface uses two shared ambient edge layers for a 180 ms crossfade, instead of a DOM layer and animation per sample. Semantic lighting retains its independent contributions and immediate interaction updates. Hidden documents, reduced-motion receivers and unused media stop live polling; removing the last receiver tears down sampling. Static scenes schedule no polling or animation frames.</li>
 <li>Nested surfaces retain their tint and reflection but skip additional backdrop filters.</li>
 <li><code>baseline</code> uses one backdrop pass and a dynamic highlight. Supported <code>enhanced</code> rendering adds a narrow specular edge and colored reflection overlay without another backdrop pass. <code>auto</code> chooses the baseline for coarse pointers, data saving or low reported CPU concurrency; capability checks guard enhancements. Hardware hints are conservative defaults, not measured frame-rate guarantees.</li>
 <li>Operating-system reduced motion/transparency, increased contrast and forced colors receive simpler rendering. A global <code>reducedTransparency: false</code> leaves the OS transparency preference enabled; explicit surface options can override it. An explicit reduced-motion setting takes precedence so Blocks can preserve its existing manual accessibility override; omit it to follow the OS. Reduced motion finishes transitions immediately. Unsupported backdrop filtering or color mixing produces an opaque fallback.</li>
@@ -934,18 +916,18 @@ scene.destroy();
 <h2>API</h2>
 <p><code>variant</code>: text, filled, tonal, icon, fab, mini-fab, extended-fab. <code>color</code>: primary, success, danger, info, warn, grayscale. <code>outlined</code>, <code>elevated</code>, <code>disabled</code>, and <code>interactive</code> control presentation and availability.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, <code>aria-expanded=&quot;true&quot;</code>, or a current <code>aria-current</code> value. Primary and grayscale buttons use the application&#39;s accent; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.</p>
-<p>Filled buttons retain their semantic background and paired foreground color in glass, frosted and solid materials, including hover and press. Glass and frosted fills keep a minimum tint for readable text while retaining translucency and surface lighting. Text buttons have no background, border, shadow or backdrop blur in any material; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
+<p>Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Fills keep a minimum tint for readable text while retaining translucency and surface lighting. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -964,16 +946,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -994,16 +976,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>label</code>, <code>tooltip</code>, <code>error</code>: text or a translation key object. <code>forId</code>: the native input ID. <code>required</code>, <code>loading</code>: booleans. Projects the control and an optional <code>bx-error</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1023,16 +1005,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <p><code>type</code>: text, password, email, number, date, time, datetime-local. Numeric controls accept <code>min</code>, <code>max</code>, and <code>step</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1053,16 +1035,17 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <p><code>value</code> is required and identifies this option. <code>name</code> groups the native radio inputs.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Selected radios keep emitting the theme color after pointer release and blur. Hovering the circle or its label highlights the surface and emits color; disabled controls do neither.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1082,16 +1065,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <p><code>search</code> emits the current string on input and clear. Public methods <code>clear()</code> and <code>focus()</code> support integration.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1111,16 +1094,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <p><code>options</code> is required: <code>{ label, value, disabled? }[]</code>. <code>isSearchable</code>, <code>externalFiltering</code>, <code>searchPlaceholder</code>, <code>emptyMessage</code> configure search. <code>search</code> emits debounced external filter terms. <code>toggleOpen()</code> and <code>close()</code> control the panel.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1139,16 +1122,17 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Toggles keep emitting the theme color while switched on, including values set through Angular forms. Hovering the track or its label highlights the surface and emits color; disabled controls do neither.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1170,16 +1154,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>BxError</code> is a content projection component with selector <code>bx-error</code>. It has no inputs; the form field projects it into its error region.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1207,16 +1191,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>name</code> is required. <code>size</code>, <code>strokeWidth</code>, <code>color</code>, <code>bgColor</code>, <code>decorative</code>, <code>ariaLabel</code> configure rendering. Color accepts a semantic token or themed color; <code>bgColor=&quot;auto&quot;</code> derives a complementary token.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1241,16 +1225,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 });
 </code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1275,16 +1259,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 });
 </code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1303,16 +1287,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>Required inputs: <code>header</code> (header config or undefined), <code>showCloseButton</code> (boolean). <code>close</code> emits a modal close mode or undefined. Header supports text and an optional icon configuration.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1337,16 +1321,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 });
 </code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1371,16 +1355,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 });
 </code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1405,16 +1389,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 });
 </code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1433,16 +1417,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>A standalone structural directive. It captures a TemplateRef and registers it with the owning ModalCore; it has no public inputs.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1461,22 +1445,56 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>A standalone structural directive. It captures a TemplateRef and registers it with the owning ModalCore; it has no public inputs.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use only inside content opened by ModalService. The template moves to the active modal view. Keep action buttons keyboard accessible and use ModalRef to close with a result. Outside a modal the directive emits a development warning.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/modal-header</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/navigation/README.md":`<h1>Navigation</h1>
+<p>Declare UI sections once with <code>defineNavigation</code>. Its <code>withNav</code> helper restricts each route&#39;s <code>section</code> to the declared IDs and checks the remaining navigation metadata. Declarations can live in <code>app.routes.ts</code> or a shared <code>app.navigation.ts</code> used by multiple route files.</p>
+<pre><code class="language-ts">import { defineNavigation } from &#39;@filip.mazev/blocks/navigation&#39;;
+import { Routes } from &#39;@angular/router&#39;;
+
+export const navigation = defineNavigation({
+  sections: [
+    { id: &#39;start&#39;, title: &#39;Get started&#39; },
+    { id: &#39;forms&#39;, title: &#39;Form controls&#39; }
+  ]
+});
+
+const { withNav } = navigation;
+
+export const routes: Routes = [
+  withNav(
+    { path: &#39;home&#39;, loadComponent: () =&gt; import(&#39;./home&#39;).then(m =&gt; m.Home) },
+    { label: &#39;Overview&#39;, section: &#39;start&#39; }
+  )
+];
+
+// withNav({}, { section: &#39;typo&#39; }); // TypeScript error: undeclared section.
+</code></pre>
+<p>Provide the same configuration in your application&#39;s providers:</p>
+<pre><code class="language-ts">import { provideNavigation } from &#39;@filip.mazev/blocks/navigation&#39;;
+import { navigation } from &#39;./app.routes&#39;;
+
+// In ApplicationConfig.providers, alongside provideRouter(routes):
+provideNavigation(navigation.config)
+</code></pre>
+<p><code>NavigationService.menuGroups()</code> returns nonempty <code>{ id, title, items }</code> groups. Sections follow declaration order unless their numeric <code>order</code> is specified; sections with an order come first. Titles default to the section ID. Each group&#39;s items are flat entries from the menu tree, including descendants, with existing route ordering, access checks, visibility and translations applied. Excluded parent containers do not become links. <code>menu()</code> continues to expose the menu tree.</p>
+<p>The standalone <code>withNav</code> and <code>provideNavigation</code> helpers remain available. For these existing callers, undeclared sections appear after declared sections with their ID as the title. Items without a section appear in a group with an empty ID and title. Type checking against a declaration applies when using the <code>withNav</code> returned by <code>defineNavigation</code>.</p>
+<p>The UI can apply search to <code>menuGroups()</code> without defining section titles, ordering or flattening. Track groups by <code>id</code> and entries by <code>route</code>.</p>
+<p>Run the grouping and metadata type checks with <code>npm run test:navigation</code>.</p>
 `,"projects/blocks/navigation/components/breadcrumbs/README.md":`<h1>Breadcrumbs</h1>
 <p>A route-aware trail derived from Blocks navigation metadata.</p>
 <h2>Import</h2>
@@ -1489,16 +1507,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>minimumBreadcrumbs</code> defaults to 2; values below 1 are clamped. <code>divider</code> accepts an icon name. Route labels come from <code>withNav</code> metadata and <code>NavigationService</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1517,16 +1535,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, <code>danger</code>, and <code>wrapLabel</code>. Set <code>wrapLabel</code> to <code>true</code> when a menu item should wrap long content instead of truncating it. <code>action</code> emits the mouse event for enabled items.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1548,16 +1566,17 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>Menu</code> projects its children and provides the menu surface. Use <code>MenuItem</code> for consistent action styling. Place it in <code>bxDropdown</code> for positioned dismissal and keyboard behavior.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Dropdown and context menus follow the configured glass tint and radius, including after their opening fade. Nearby sources and active menu rows illuminate the outer border; rows share the containing material.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1576,16 +1595,17 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>text</code> is required and accepts plain text or a translation key object. For automatic positioning and trigger handling, use <code>TooltipDirective</code> instead.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Tooltips retain their neutral, opaque background while nearby emissive colors add a restrained, directional highlight to the facing border. The arrow shares the body&#39;s background and samples the lighting on its side of the bubble. Positioned tooltips receive light from their trigger&#39;s context, including inside dialogs, while remaining transparent to pointer events. The overview&#39;s wake-up hint and Bring home action include explanatory tooltips. The hint fades without changing the layout and appears only while the orb is asleep in its pod.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1605,16 +1625,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>bxContextMenu</code> requires a TemplateRef. <code>open(event: MouseEvent)</code> positions the menu at the event coordinates.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1636,16 +1656,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>bxDropdown</code>: required TemplateRef. <code>placement</code>: overlay placement. <code>bxTransition</code>: fade (default) or none; emerge remains a compatibility alias for fade. Export as <code>bxDropdown</code>; call <code>open()</code>, <code>close()</code>, or <code>toggle()</code>. Read <code>isOpen()</code> and <code>state()</code> for lifecycle.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1664,16 +1684,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p><code>bxTooltip</code>: required text or translation key. <code>placement</code>: top, bottom, left, right, and supported aligned placements. <code>show()</code> and <code>hide()</code> expose explicit lifecycle control.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1692,16 +1712,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>Use <code>ToastrService.queueToast(ContentComponent, config)</code> for custom content, or queueInfo, queueSuccess, queueWarning and queueDanger for common messages. Config controls position, durationInMs, progress and close actions.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1720,16 +1740,16 @@ this.theme.setAppearance({ material: &#39;solid&#39; });
 <h2>API</h2>
 <p>Use <code>toastr.queueSuccess({ title: &quot;Saved&quot;, message: &quot;Your settings are up to date.&quot; })</code>. Equivalent methods queueInfo, queueWarning and queueDanger set the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ material: &#39;glass&#39;, blur: 10, tint: 0.5 });
+this.theme.setAppearance({ glassiness: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ material: &#39;solid&#39; });
+this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
@@ -1813,12 +1833,38 @@ export class ModalExample {
     <div>
         {{ data.body }}
     </div>
+    <section class="modal-menu-demo" aria-label="Menus inside this modal">
+        <h3>Menus inside the modal</h3>
+        <button bx-button type="button" variant="tonal" color="primary" [bxDropdown]="dropdownActions" placement="bottom">
+            Open actions<bx-icon name="chevron-down" size="16" />
+        </button>
+        <button bx-button type="button" variant="tonal" color="grayscale" [bxContextMenu]="contextActions" class="modal-context-target">
+            <bx-icon name="mouse-pointer-2" size="16" />Right-click for more actions
+        </button>
+        <p class="menu-hint">You can also focus the right-click example and press Shift + F10. Escape closes the menu first.</p>
+        <p class="menu-status" role="status">{{ menuStatus() }}</p>
+    </section>
 </div>
+
+<ng-template #dropdownActions>
+    <bx-menu>
+        <bx-menu-item label="Edit details" icon="pencil" (action)="selectAction('Edit details')" />
+        <bx-menu-item label="Duplicate" icon="copy" (action)="selectAction('Duplicate')" />
+    </bx-menu>
+</ng-template>
+<ng-template #contextActions>
+    <bx-menu>
+        <bx-menu-item label="Copy link" icon="link" (action)="selectAction('Copy link')" />
+        <bx-menu-item label="Archive" icon="archive" (action)="selectAction('Archive')" />
+        <bx-menu-item label="Delete" icon="trash-2" [danger]="true" (action)="selectAction('Delete')" />
+    </bx-menu>
+</ng-template>
 
 <div class="button-container" *appModalFooter>
     <button bx-button (click)="confirm()" variant="filled" color="success">Confirm</button>
     <button bx-button (click)="close()" variant="filled" color="danger">Cancel</button>
-</div>`,"assets/code-snippets/modal/modal.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
+</div>
+`,"assets/code-snippets/modal/modal.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
 
 .demo-modal-content-class {
     box-sizing: border-box;
@@ -1850,6 +1896,33 @@ export class ModalExample {
         cursor: pointer;
     }
 }
+
+.modal-menu-demo {
+    display: grid;
+    justify-items: start;
+    gap: spacing(3);
+    padding-top: spacing(4);
+    border-top: 1px solid var(--bx-border-default);
+}
+
+.modal-menu-demo h3,
+.modal-menu-demo p {
+    margin: 0;
+}
+
+.modal-context-target {
+    border-style: dashed;
+}
+
+.menu-hint,
+.menu-status {
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}
+
+.menu-status {
+    min-height: 2.5em;
+}
 `,"assets/code-snippets/modal/modal.ts.txt":`import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
@@ -1858,15 +1931,19 @@ import { ModalHeaderDirective } from '@filip.mazev/blocks/modal';
 import { ModalFooterDirective } from '@filip.mazev/blocks/modal';
 import { Modal } from '@filip.mazev/blocks/modal';
 import { Button } from '@filip.mazev/blocks/forms';
+import { ContextMenuDirective, DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+import { Icon } from '@filip.mazev/blocks/icons';
 
 @Component({
   selector: 'app-demo-modal',
-  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass, Button],
+  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass, Button, ContextMenuDirective, DropdownDirective, Menu, MenuItem, Icon],
   templateUrl: './demo-modal.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './demo-modal.scss'
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
+  protected readonly menuStatus = signal('Try either menu. Actions keep this modal open.');
+
   protected isSideModal = signal(false);
   protected isCenteredModal = signal(false);
 
@@ -1880,6 +1957,10 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
     this.modal?.close('confirm', {
       openedCount: this.data.openedCount + 1
     });
+  }
+
+  protected selectAction(action: string): void {
+    this.menuStatus.set(\`\${action} selected. The modal is still open.\`);
   }
 }
 `,"assets/code-snippets/modal/styles.scss.txt":`@use '@filip.mazev/blocks/core/styles/index' as bx;
@@ -1976,7 +2057,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var A=class s{document=p(B);router=p(Ht);readmeContent=Q(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=re.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||s)};static ɵcmp=Zn({type:s,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Kn(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(ec(0,`div`,0)(1,`div`,1)(2,`span`),FA(3,`Documentation`),tc()(),hs(4,`article`,2),tc()),t&2&&(CC(4),nc(`innerHTML`,o.readmeContent(),sh))},styles:[`
+`};var A=class r{document=p(q);router=p(tn);readmeContent=W(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=L.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=mt({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&it(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(Ic(0,`div`,0)(1,`div`,1)(2,`span`),Co(3,`Documentation`),Mc()(),Us(4,`article`,2),Mc()),n&2&&(Vt(4),xc(`innerHTML`,o.readmeContent(),jh))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;

@@ -1,4 +1,4 @@
-@use '@filip.mazev/blocks-core/src/lib/styles/index' as *;
+@use 'core/styles/helpers' as *;
 
 .demo-modal-content-class {
     box-sizing: border-box;
@@ -6,7 +6,7 @@
     flex-direction: column;
     gap: 1rem;
     overflow-y: auto;
-    
+
     @include respond-up(xl) {
         &.side-modal {
             max-width: 30vw;
@@ -31,24 +31,29 @@
     }
 }
 
-.confirm-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    cursor: pointer;
-
-    background-color: var(--bx-bg-success);
-    color: var(--bx-text-success);
-    border: none;
-    border-radius: 4px;
+.modal-menu-demo {
+    display: grid;
+    justify-items: start;
+    gap: spacing(3);
+    padding-top: spacing(4);
+    border-top: 1px solid var(--bx-border-default);
 }
 
-.cancel-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    cursor: pointer;
+.modal-menu-demo h3,
+.modal-menu-demo p {
+    margin: 0;
+}
 
-    background-color: var(--bx-bg-danger);
-    color: var(--bx-text-danger);
-    border: none;
-    border-radius: 4px;
+.modal-context-target {
+    border-style: dashed;
+}
+
+.menu-hint,
+.menu-status {
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}
+
+.menu-status {
+    min-height: 2.5em;
 }

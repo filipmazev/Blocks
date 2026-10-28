@@ -35,18 +35,16 @@ export class Settings {
 
   setAppearance() {
     this.theme.setAppearance({
-      material: 'glass',
-      blur: 10,
-      tint: 0.5,
+      glassiness: 0.5,
       quality: 'auto',
     });
   }
 }
 ```
 
-There is no global emission setting. Light comes only from explicitly colored borders and items. Neutral edges and restrained highlights define the material; semantic color remains available for selected controls and status content. Floating surfaces enforce a minimum tint density for legibility.
+There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Floating surfaces enforce a minimum tint density for legibility.
 
-`theme.appearance()` is the current typed configuration; `theme.resetAppearance()` restores defaults. Changes apply to existing components and open overlays. Material is `glass`, `frosted`, or `solid`; blur is 0–40 CSS pixels, tint is 0–1. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system transparency and contrast preferences remain respected.
+`theme.appearance()` is the current typed configuration; `theme.resetAppearance()` restores defaults. Changes apply to existing components and open overlays. `glassiness` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint at 80% to retain a glassy appearance. There are no independent tint, blur, or material preset settings. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen glassiness for when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to glassiness, and a saved solid preference becomes reduced transparency.
 
 The global styles are required once. `ng add @filip.mazev/blocks` adds the distributed material stylesheet to the application build. For an existing application, add `node_modules/@filip.mazev/blocks/effects/effects.css` to `angular.json` styles before the application stylesheet, or import `@filip.mazev/blocks/effects/effects.css` globally. Continue including the usual Blocks Sass theme once. The playground already does this.
 
@@ -70,7 +68,7 @@ Place custom surfaces on containers with measurable CSS boxes. Native replaced e
 
 ## Overlay fades
 
-The engine fades overlays in and out while preserving their full dimensions. Their backing stays solid and theme-colored throughout the fade and at rest, avoiding delayed blur. Reopening reverses from the current opacity. Dropdowns use `bxTransition="fade"` by default; the former `emerge` value remains a compatibility alias.
+The engine fades the material surface itself in and out while preserving its full dimensions, blur, and translucency. The positioning pane remains at full opacity so it does not interrupt backdrop filtering. Reopening reverses from the current opacity. Dropdowns use `bxTransition="fade"` by default; the former `emerge` value remains a compatibility alias.
 
 Dropdowns expose `#actions="bxDropdown"`, `open()`, `close()`, `toggle()`, `isOpen()` and `state()`. The adapter keeps an exiting panel inert and disposes it after motion settles, with revision guards for reopening. Focus and keyboard behavior remain native. No dragging or repositioning behavior was added in this iteration.
 
@@ -86,7 +84,7 @@ import {
 import '@filip.mazev/blocks/effects/effects.css';
 
 const configuration = configureAppearance(document.documentElement, {
-  material: 'glass', blur: 10, tint: 0.5, quality: 'auto',
+  glassiness: 0.5, quality: 'auto',
 });
 const surface = mountSurface(button);
 const scene = mountGlassScene(container, {
@@ -116,10 +114,10 @@ Open <http://localhost:8081/projects/blocks/effects/examples/>.
 
 ## Lighting and rendering limits
 
-Lighting uses a bounded spatial model: up to four lights and four foreground/background reflection proxies per scene. Element positions, depth, intensity and colors influence the highlight and reflected tint. Real CSS backdrop filtering responds to the pixels behind a surface.
+Lighting uses a bounded spatial model: up to four explicit lights and four foreground/background reflection proxies per scene. Every mounted glass surface also samples a few points around its edge and picks up subtle color from nearby visible CSS backgrounds, images, video and canvas. Paint order separates foreground from backdrop cues; depth and distance reduce their strength. Different sources retain localized edge colors, crossfading beneath existing semantic and explicit lights. Real CSS backdrop filtering continues to display the pixels behind a surface.
 
-These are deliberate optical approximations. The engine does not capture arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call `scene.refresh()` when your application changes them; there is no perpetual polling loop.
+These are deliberate optical approximations. Media sampling uses a small downscaled buffer at selected edge points; the engine does not capture or mirror the page or arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call `scene.refresh()` when your application changes them; call `refreshGlassLighting(element)` after application-driven changes around an automatically lit surface. Static scenes do no ongoing sampling. Layout changes are coalesced over 180 ms; visible live media is checked every 500 ms, backing off to 2 seconds when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit testing. Hidden pages and reduced-motion receivers stop live media checks.
 
-Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Solid, unsupported-backdrop, increased-contrast and reduced-transparency modes provide opaque material.
+Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.
 
 Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing high blur or putting glass over frequently changing content.

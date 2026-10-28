@@ -1,10 +1,10 @@
-import{r as t,t as r}from"./chunk-C9yOwMO6.js";import{Dn as mb,F as Jl,Gt as dA,K as Mb,Mt as Zc,Nt as Zn,P as JT,Qn as se,Rt as ab,S as Fl,Wt as cz,Xn as re,b as FA,bn as ke,et as Pt,f as CC,h as De,hn as jh,i as $h,r as $e,rr as te,rt as QT,st as R_,tt as Q,un as hs,v as E_,wn as lr,zn as p}from"./chunk-BTQvnuSt.js";import{t as S}from"./main-UZ7SQ7UX.js";var at=`1.4.3`;function Lt(a,i){let n=parseInt(a,16);return Number.isFinite(n)?[n>>16&255,n>>8&255,n&255]:[...i]}function ct(a){let i=a.padStart(6,`0`),n=parseInt(i.slice(0,2),16)||0,e=parseInt(i.slice(2,4),16)||0,f=parseInt(i.slice(4,6),16)||0;return .3*n+.59*e+.11*f}function ht(a){let i=0,n=-1;return a.forEach((e,f)=>{let u=ct(e.color);u>n&&(n=u,i=f)}),i}function Ft(a){let i=0,n=1/0;return a.forEach((e,f)=>{let u=ct(e.color);u<n&&(n=u,i=f)}),i}var J=`auto`;var Ot={h:`light`,t:`light`,a:`dark`,c:`dark`};function it(a,i){let n=Ot[i]===`light`;return a.length?a[n?ht(a):Ft(a)].color:n?`ffffff`:`000000`}var rt={fxOrder:`G`,hidden:``,shape:4,stops:[{color:`1e1b4b`,pos:0},{color:`4338ca`,pos:25},{color:`7c6ff0`,pos:50},{color:`cbb0f7`,pos:75},{color:`faf9f6`,pos:100}],seed:128,warp:.8,noiseScale:1.2,detail:3,contrast:1,angle:45,centerX:.5,centerY:.5,gradientFollow:0,gradientOpacity:1,gradientBlend:0,oklab:!1,imageSrc:``,imageKind:`img`,imageOpacity:1,imageBlend:0,imageBlur:0,imageFit:0,imageFocalX:.5,imageFocalY:.5,imageZoom:1,patternSource:`l`,patternLayout:`b`,patternCols:6,patternRows:6,patternGap:8,patternRadius:16,patternGapColor:``,patternSeed:1,aberration:0,lensDistort:0,softness:0,lightMode:0,lightAmount:.5,lightSize:.5,lightX:.5,lightY:.5,lightCount:1,lightFollow:0,light2X:.25,light2Y:.7,light3X:.75,light3Y:.7,light4X:.5,light4Y:.85,lightColor:`ffffff`,lightColor2:`ffffff`,lightColor3:`ffffff`,lightColor4:`ffffff`,lightGain:1,lightGain2:1,lightGain3:1,lightGain4:1,lightSpread:1,lightSpread2:1,lightSpread3:1,lightSpread4:1,waveMode:0,waveSide:0,waveAmount:.3,waveFrequency:8,waveFalloff:.5,wavePhase:0,waveX:.5,waveY:.5,glassMode:0,glassAmount:.5,glassCount:24,glassRatio:1,glassAngle:0,glassProfile:3,glassBevel:.04,glassShadow:.3,glassHighlight:.3,pixelate:0,pixelateRatio:1,pixelateGap:0,pixelateGroutColor:``,ditherAlgo:0,ditherMatrix:4,ditherScale:4,ditherLevels:4,ditherStrength:1,ditherColorMode:0,ditherThreshold:.5,ditherGamma:1,ditherInvert:!1,ditherRatio:1,halftoneSize:8,halftoneStyle:0,halftoneStagger:!1,halftoneDotScale:.85,halftoneColor:1,halftonePaper:.2,halftonePaperColor:`ffffff`,halftoneEmboss:0,halftoneWind:0,halftoneWindAngle:0,halftoneWobble:0,halftoneGlint:0,halftoneJitter:0,halftoneJitterSeed:0,halftoneAngle:0,halftoneGamma:1,halftoneInvert:!1,halftoneRatio:1,halftoneInkColor:``,asciiSize:16,asciiRatio:1,asciiStyle:0,asciiColor:1,asciiBackground:.2,asciiExposure:1,asciiFill:1,asciiDensity:64,asciiScatter:0,asciiGap:0,asciiAngle:0,asciiThreshold:.5,asciiGamma:1,asciiInvert:!1,asciiInkColor:``,asciiPaperColor:`000000`,asciiOpacity:1,asciiBlend:0,contourLevels:8,contourWeight:2,contourDash:0,contourGlow:0,contourColor:1,contourPaper:.2,contourInkColor:``,contourPaperColor:``,toneGeoSize:36,toneGeoLow:.4,toneGeoHigh:.6,toneGeoInvert:!1,toneGeoRules:3,toneGeoCross:0,toneGeoAngle:0,toneGeoGrid:0,toneGeoJitter:0,toneGeoJitterSeed:0,toneGeoInkColor:``,toneGeoPaperColor:`ffffff`,toneGeoWeight:.5,toneGeoColor:1,toneGeoPaper:.2,grain:0,grainSize:1,paperAmount:0,paperColor:``,paperFibre:1,paperVignette:1,pointerMode:0,pointerAmount:.5,pointerSize:.4,pointerFade:.5,pointerDamping:-1,pointerFlip:!1,animate:!1,animSpeed:1,aspect:`1x1`,sizeAnchor:1};var Dt=[`b`,`g`,`m`,`c`];var Ut=[`1x1`,`16x9`,`9x16`,`2x1`,`3x4`];var Bt={"1x1":`1080x1080`,"16x9":`1920x1080`,"9x16":`1080x1920`,"2x1":`1920x960`,"3x4":`1080x1440`};Ut.map(a=>{let i=a.replace(`x`,`:`);return a===`1x1`?`${i} \u2014 Square`:a===`16x9`?`${i} \u2014 Landscape`:a===`9x16`?`${i} \u2014 Mobile`:a===`2x1`?`${i} \u2014 Banner`:a===`3x4`?`${i} \u2014 Portrait`:i});var Nt=`img`;function Xt(a,i){if(a===Nt)return nt(i?.height??1080);let n=Bt[a]??a,e=Number(n.split(`x`)[1]);return nt(Number.isFinite(e)&&e>0?e:1080)}function nt(a){return Math.min(8192,Math.max(64,a))}var Wt=`GIPowglpdhasrmct`;function st(a,i){return a.fxOrder.includes(i)&&!a.hidden.includes(i)}function ft(a){let i=[];for(let n of a)Wt.includes(n)&&!i.includes(n)&&i.push(n);return i.join(``)}function $t(a){let i=[...ft(a.fxOrder)].filter(n=>!a.hidden.includes(n));return!i.includes(`G`)&&!i.includes(`I`)?``:i.join(``)}Object.fromEntries([{code:`w`,keys:[`waveMode`,`waveSide`,`waveAmount`,`waveFrequency`,`waveFalloff`,`wavePhase`,`waveX`,`waveY`],name:`Waves`,lock:`waves`,family:`Warp`,onAdd:a=>a.waveAmount>0?{}:{waveAmount:.3}},{code:`g`,keys:[`glassMode`,`glassAmount`,`glassCount`,`glassRatio`,`glassAngle`,`glassProfile`,`glassBevel`,`glassShadow`,`glassHighlight`],name:`Glass`,lock:`glass`,family:`Warp`,onAdd:a=>a.glassMode>0?{}:{glassMode:1}},{code:`l`,keys:[`lightMode`,`lightAmount`,`lightSize`,`lightX`,`lightY`,`lightCount`,`lightFollow`,`light2X`,`light2Y`,`light3X`,`light3Y`,`light4X`,`light4Y`,`lightColor`,`lightColor2`,`lightColor3`,`lightColor4`,`lightGain`,`lightGain2`,`lightGain3`,`lightGain4`,`lightSpread`,`lightSpread2`,`lightSpread3`,`lightSpread4`],name:`Light`,lock:`light`,family:`Light`,onAdd:a=>a.lightMode>0?{}:{lightMode:1}},{code:`p`,keys:[`pixelate`,`pixelateRatio`,`pixelateGap`,`pixelateGroutColor`],name:`Pixelate`,lock:`pixelate`,family:`Raster`,onAdd:a=>a.pixelate>=2?{}:{pixelate:48}},{code:`d`,name:`Dither`,lock:`dither`,family:`Raster`,keys:[`ditherAlgo`,`ditherMatrix`,`ditherScale`,`ditherLevels`,`ditherStrength`,`ditherColorMode`,`ditherThreshold`,`ditherGamma`,`ditherInvert`,`ditherRatio`],onAdd:()=>({})},{code:`h`,name:`Halftone`,lock:`halftone`,family:`Print screens`,keys:[`halftoneSize`,`halftoneStyle`,`halftoneStagger`,`halftoneDotScale`,`halftoneColor`,`halftonePaper`,`halftonePaperColor`,`halftoneEmboss`,`halftoneWind`,`halftoneWindAngle`,`halftoneWobble`,`halftoneGlint`,`halftoneJitter`,`halftoneJitterSeed`,`halftoneAngle`,`halftoneGamma`,`halftoneInvert`,`halftoneRatio`,`halftoneInkColor`],onAdd:()=>({halftonePaperColor:J})},{code:`a`,name:`ASCII`,lock:`ascii`,family:`Print screens`,keys:[`asciiSize`,`asciiRatio`,`asciiStyle`,`asciiColor`,`asciiBackground`,`asciiExposure`,`asciiFill`,`asciiDensity`,`asciiScatter`,`asciiGap`,`asciiAngle`,`asciiThreshold`,`asciiGamma`,`asciiInvert`,`asciiInkColor`,`asciiPaperColor`,`asciiOpacity`,`asciiBlend`],onAdd:()=>({asciiPaperColor:J})},{code:`c`,keys:[`contourLevels`,`contourWeight`,`contourDash`,`contourGlow`,`contourColor`,`contourPaper`],name:`Contours`,lock:`contour`,family:`Print screens`,onAdd:()=>({contourPaperColor:J})},{code:`t`,keys:[`toneGeoSize`,`toneGeoLow`,`toneGeoHigh`,`toneGeoInvert`,`toneGeoRules`,`toneGeoCross`,`toneGeoAngle`,`toneGeoGrid`,`toneGeoJitter`,`toneGeoJitterSeed`,`toneGeoWeight`,`toneGeoColor`,`toneGeoPaper`],name:`Hatch`,lock:`tonegeo`,family:`Print screens`,onAdd:()=>({toneGeoPaperColor:J})},{code:`o`,keys:[`aberration`,`softness`,`lensDistort`],name:`Lens`,lock:`optics`,family:`Finish`,onAdd:a=>a.aberration>0||a.softness>0||a.lensDistort!==0?{}:{aberration:.25}},{code:`r`,keys:[`grain`,`grainSize`],name:`Grain`,lock:`grain`,family:`Finish`,onAdd:a=>a.grain>0?{}:{grain:.075}},{code:`s`,keys:[`paperAmount`,`paperColor`,`paperFibre`,`paperVignette`],name:`Paper`,lock:`paper`,family:`Finish`,onAdd:a=>a.paperAmount>0?{}:{paperAmount:.5}},{code:`m`,keys:[`pointerMode`,`pointerAmount`,`pointerSize`,`pointerFade`,`pointerDamping`,`pointerFlip`],name:`Pointer`,lock:`pointer`,family:`Interact`,onAdd:a=>a.pointerMode>=2?{}:{pointerMode:2}}].map(a=>[a.code,a]));function lt(a){let u=a,{bake3d:i}=u,n=t(u,[`bake3d`]),e={};for(let[S,T]of Object.entries(n))T!==void 0&&(e[S]=T);let f=r(r({},rt),e);return f.stops=(e.stops??rt.stops).map(S=>r({},S)),f.fxOrder=ft(f.fxOrder),f}var Vt=`#version 300 es
+import{r as t,t as r}from"./chunk-C9yOwMO6.js";import{$t as fi$1,Bt as bp,Cn as lr,Dt as Zt$1,E as Eu,En as mt,F as It$1,H as L,I as J,J as NT,Qn as st,Rn as p,S as Dr,Sr as z,W as Le,Wt as cr,Xt as ey,Y as OT,Zn as s_,an as hi$1,at as S,b as De,bt as W,cr as vo,dt as Um,er as td,f as Co,ft as Us,gn as jt,it as Rc,k as GC,lt as Te,p as Cp,q as Mr,qn as re,un as it,vt as Vt,wt as Yt,yn as ke,yt as Vz,z as Jv}from"./chunk-D_BXh9rw.js";import{t as S$1}from"./main-OD6N7B5J.js";var Et=`1.4.4`;function Zt(n,o){let a=parseInt(n,16);return Number.isFinite(a)?[a>>16&255,a>>8&255,a&255]:[...o]}function Gt(n){let o=n.padStart(6,`0`),a=parseInt(o.slice(0,2),16)||0,e=parseInt(o.slice(2,4),16)||0,r=parseInt(o.slice(4,6),16)||0;return .3*a+.59*e+.11*r}function Lt(n){let o=0,a=-1;return n.forEach((e,r)=>{let s=Gt(e.color);s>a&&(a=s,o=r)}),o}function ei(n){let o=0,a=1/0;return n.forEach((e,r)=>{let s=Gt(e.color);s<a&&(a=s,o=r)}),o}var ge=`auto`;var ti={h:`light`,t:`light`,a:`dark`,c:`dark`};function St(n,o){let a=ti[o]===`light`;return n.length?n[a?Lt(n):ei(n)].color:a?`ffffff`:`000000`}var Tt={fxOrder:`G`,hidden:``,shape:4,stops:[{color:`1e1b4b`,pos:0},{color:`4338ca`,pos:25},{color:`7c6ff0`,pos:50},{color:`cbb0f7`,pos:75},{color:`faf9f6`,pos:100}],seed:128,warp:.8,noiseScale:1.2,detail:3,contrast:1,angle:45,centerX:.5,centerY:.5,gradientFollow:0,gradientOpacity:1,gradientBlend:0,oklab:!1,imageSrc:``,imageKind:`img`,imageOpacity:1,imageBlend:0,imageBlur:0,imageFit:0,imageFocalX:.5,imageFocalY:.5,imageZoom:1,patternSource:`l`,patternLayout:`b`,patternCols:6,patternRows:6,patternGap:8,patternRadius:16,patternGapColor:``,patternSeed:1,aberration:0,lensDistort:0,softness:0,lightMode:0,lightAmount:.5,lightSize:.5,lightX:.5,lightY:.5,lightCount:1,lightFollow:0,light2X:.25,light2Y:.7,light3X:.75,light3Y:.7,light4X:.5,light4Y:.85,lightColor:`ffffff`,lightColor2:`ffffff`,lightColor3:`ffffff`,lightColor4:`ffffff`,lightGain:1,lightGain2:1,lightGain3:1,lightGain4:1,lightSpread:1,lightSpread2:1,lightSpread3:1,lightSpread4:1,waveMode:0,waveSide:0,waveAmount:.3,waveFrequency:8,waveFalloff:.5,wavePhase:0,waveX:.5,waveY:.5,glassMode:0,glassAmount:.5,glassCount:24,glassRatio:1,glassAngle:0,glassProfile:3,glassBevel:.04,glassShadow:.3,glassHighlight:.3,pixelate:0,pixelateRatio:1,pixelateGap:0,pixelateGroutColor:``,ditherAlgo:0,ditherMatrix:4,ditherScale:4,ditherLevels:4,ditherStrength:1,ditherColorMode:0,ditherThreshold:.5,ditherGamma:1,ditherInvert:!1,ditherRatio:1,halftoneSize:8,halftoneStyle:0,halftoneStagger:!1,halftoneDotScale:.85,halftoneColor:1,halftonePaper:.2,halftonePaperColor:`ffffff`,halftoneEmboss:0,halftoneWind:0,halftoneWindAngle:0,halftoneWobble:0,halftoneGlint:0,halftoneJitter:0,halftoneJitterSeed:0,halftoneAngle:0,halftoneGamma:1,halftoneInvert:!1,halftoneRatio:1,halftoneInkColor:``,asciiSize:16,asciiRatio:1,asciiStyle:0,asciiColor:1,asciiBackground:.2,asciiExposure:1,asciiFill:1,asciiDensity:64,asciiScatter:0,asciiGap:0,asciiAngle:0,asciiThreshold:.5,asciiGamma:1,asciiInvert:!1,asciiInkColor:``,asciiPaperColor:`000000`,asciiOpacity:1,asciiBlend:0,contourLevels:8,contourWeight:2,contourDash:0,contourGlow:0,contourColor:1,contourPaper:.2,contourInkColor:``,contourPaperColor:``,toneGeoSize:36,toneGeoLow:.4,toneGeoHigh:.6,toneGeoInvert:!1,toneGeoRules:3,toneGeoCross:0,toneGeoAngle:0,toneGeoGrid:0,toneGeoJitter:0,toneGeoJitterSeed:0,toneGeoInkColor:``,toneGeoPaperColor:`ffffff`,toneGeoWeight:.5,toneGeoColor:1,toneGeoPaper:.2,grain:0,grainSize:1,paperAmount:0,paperColor:``,paperFibre:1,paperVignette:1,pointerMode:0,pointerAmount:.5,pointerSize:.4,pointerFade:.5,pointerDamping:-1,pointerFlip:!1,animate:!1,animSpeed:1,aspect:`1x1`,sizeAnchor:1};var ii=[`b`,`g`,`m`,`c`];var oi=[`1x1`,`16x9`,`9x16`,`2x1`,`3x4`];var ai={"1x1":`1080x1080`,"16x9":`1920x1080`,"9x16":`1080x1920`,"2x1":`1920x960`,"3x4":`1080x1440`};oi.map(n=>{let o=n.replace(`x`,`:`);return n===`1x1`?`${o} \u2014 Square`:n===`16x9`?`${o} \u2014 Landscape`:n===`9x16`?`${o} \u2014 Mobile`:n===`2x1`?`${o} \u2014 Banner`:n===`3x4`?`${o} \u2014 Portrait`:o});var ni=`img`;function ri(n,o){if(n===ni)return At(o?.height??1080);let a=ai[n]??n,e=Number(a.split(`x`)[1]);return At(Number.isFinite(e)&&e>0?e:1080)}function At(n){return Math.min(8192,Math.max(64,n))}var ci=`GIPowglpdhasrmct`;function Ct(n,o){return n.fxOrder.includes(o)&&!n.hidden.includes(o)}function Ot(n){let o=[];for(let a of n)ci.includes(a)&&!o.includes(a)&&o.push(a);return o.join(``)}function hi(n){let o=[...Ot(n.fxOrder)].filter(a=>!n.hidden.includes(a));return!o.includes(`G`)&&!o.includes(`I`)?``:o.join(``)}Object.fromEntries([{code:`w`,keys:[`waveMode`,`waveSide`,`waveAmount`,`waveFrequency`,`waveFalloff`,`wavePhase`,`waveX`,`waveY`],name:`Waves`,lock:`waves`,family:`Warp`,onAdd:n=>n.waveAmount>0?{}:{waveAmount:.3}},{code:`g`,keys:[`glassMode`,`glassAmount`,`glassCount`,`glassRatio`,`glassAngle`,`glassProfile`,`glassBevel`,`glassShadow`,`glassHighlight`],name:`Glass`,lock:`glass`,family:`Warp`,onAdd:n=>n.glassMode>0?{}:{glassMode:1}},{code:`l`,keys:[`lightMode`,`lightAmount`,`lightSize`,`lightX`,`lightY`,`lightCount`,`lightFollow`,`light2X`,`light2Y`,`light3X`,`light3Y`,`light4X`,`light4Y`,`lightColor`,`lightColor2`,`lightColor3`,`lightColor4`,`lightGain`,`lightGain2`,`lightGain3`,`lightGain4`,`lightSpread`,`lightSpread2`,`lightSpread3`,`lightSpread4`],name:`Light`,lock:`light`,family:`Light`,onAdd:n=>n.lightMode>0?{}:{lightMode:1}},{code:`p`,keys:[`pixelate`,`pixelateRatio`,`pixelateGap`,`pixelateGroutColor`],name:`Pixelate`,lock:`pixelate`,family:`Raster`,onAdd:n=>n.pixelate>=2?{}:{pixelate:48}},{code:`d`,name:`Dither`,lock:`dither`,family:`Raster`,keys:[`ditherAlgo`,`ditherMatrix`,`ditherScale`,`ditherLevels`,`ditherStrength`,`ditherColorMode`,`ditherThreshold`,`ditherGamma`,`ditherInvert`,`ditherRatio`],onAdd:()=>({})},{code:`h`,name:`Halftone`,lock:`halftone`,family:`Print screens`,keys:[`halftoneSize`,`halftoneStyle`,`halftoneStagger`,`halftoneDotScale`,`halftoneColor`,`halftonePaper`,`halftonePaperColor`,`halftoneEmboss`,`halftoneWind`,`halftoneWindAngle`,`halftoneWobble`,`halftoneGlint`,`halftoneJitter`,`halftoneJitterSeed`,`halftoneAngle`,`halftoneGamma`,`halftoneInvert`,`halftoneRatio`,`halftoneInkColor`],onAdd:()=>({halftonePaperColor:ge})},{code:`a`,name:`ASCII`,lock:`ascii`,family:`Print screens`,keys:[`asciiSize`,`asciiRatio`,`asciiStyle`,`asciiColor`,`asciiBackground`,`asciiExposure`,`asciiFill`,`asciiDensity`,`asciiScatter`,`asciiGap`,`asciiAngle`,`asciiThreshold`,`asciiGamma`,`asciiInvert`,`asciiInkColor`,`asciiPaperColor`,`asciiOpacity`,`asciiBlend`],onAdd:()=>({asciiPaperColor:ge})},{code:`c`,keys:[`contourLevels`,`contourWeight`,`contourDash`,`contourGlow`,`contourColor`,`contourPaper`],name:`Contours`,lock:`contour`,family:`Print screens`,onAdd:()=>({contourPaperColor:ge})},{code:`t`,keys:[`toneGeoSize`,`toneGeoLow`,`toneGeoHigh`,`toneGeoInvert`,`toneGeoRules`,`toneGeoCross`,`toneGeoAngle`,`toneGeoGrid`,`toneGeoJitter`,`toneGeoJitterSeed`,`toneGeoWeight`,`toneGeoColor`,`toneGeoPaper`],name:`Hatch`,lock:`tonegeo`,family:`Print screens`,onAdd:()=>({toneGeoPaperColor:ge})},{code:`o`,keys:[`aberration`,`softness`,`lensDistort`],name:`Lens`,lock:`optics`,family:`Finish`,onAdd:n=>n.aberration>0||n.softness>0||n.lensDistort!==0?{}:{aberration:.25}},{code:`r`,keys:[`grain`,`grainSize`],name:`Grain`,lock:`grain`,family:`Finish`,onAdd:n=>n.grain>0?{}:{grain:.075}},{code:`s`,keys:[`paperAmount`,`paperColor`,`paperFibre`,`paperVignette`],name:`Paper`,lock:`paper`,family:`Finish`,onAdd:n=>n.paperAmount>0?{}:{paperAmount:.5}},{code:`m`,keys:[`pointerMode`,`pointerAmount`,`pointerSize`,`pointerFade`,`pointerDamping`,`pointerFlip`],name:`Pointer`,lock:`pointer`,family:`Interact`,onAdd:n=>n.pointerMode>=2?{}:{pointerMode:2}}].map(n=>[n.code,n]));function Mt(n){let s=n,{bake3d:o}=s,a=t(s,[`bake3d`]),e={};for(let[u,A]of Object.entries(a))A!==void 0&&(e[u]=A);let r$1=r(r({},Tt),e);return r$1.stops=(e.stops??Tt.stops).map(u=>r({},u)),r$1.fxOrder=Ot(r$1.fxOrder),r$1}var di=`#version 300 es
 void main() {
   // fullscreen triangle, no buffers needed
   vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
   gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
 }
-`;var dt=`
+`;var It=`
 float hash21(vec2 p) {
   p = fract(p * vec2(234.34, 435.345));
   p += dot(p, p + 34.23);
@@ -21,7 +21,7 @@ float vnoise(vec2 p) {
   float d = hash21(i + vec2(1.0, 1.0));
   return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
-`;var Yt=`#version 300 es
+`;var pi=`#version 300 es
 precision highp float;
 
 out vec4 outColor;
@@ -33,7 +33,7 @@ uniform float u_seed;
 
 const float TAU = 6.283185307179586;
 
-${dt}
+${It}
 
 // Seamless drift: a circular orbit through noise space that lands back on
 // its start every cycle and vanishes at phase 0, so still frames render
@@ -41,7 +41,7 @@ ${dt}
 vec2 drift(float k) {
   return vec2(cos(u_phase * TAU) - 1.0, sin(u_phase * TAU)) * k;
 }
-`;var Jt=`
+`;var fi=`
 const int MAX_STOPS = 8;
 
 uniform int   u_shape;        // 0 linear 1 radial 2 conic 3 mesh 4 warped field 5 metaballs 6 voronoi 7 aurora 8 liquid marble
@@ -394,7 +394,7 @@ vec3 gradientColor(vec2 uv) {
   }
   return ramp(t);
 }
-`;var Kt=`
+`;var mi=`
 float lum(vec3 c) { return dot(c, vec3(0.3, 0.59, 0.11)); }
 
 // clamp a luma-shifted color back into gamut, preserving its luminance
@@ -430,7 +430,7 @@ vec3 blendColors(int mode, vec3 b, vec3 s) {
   if (mode == 9) return clipLum(b + (lum(s) - lum(b)));       // luminosity: backdrop hue+sat, source luma
   return s;                                                   // normal
 }
-`;var jt=`
+`;var gi=`
 uniform sampler2D u_image;
 uniform int   u_imageOn;      // 0 until the texture is decoded & uploaded
 uniform float u_imageAspect;  // width / height
@@ -479,7 +479,7 @@ vec4 imageColor(vec2 uv) {
   img.a *= mask;
   return img;
 }
-`;var Zt=a=>`
+`;var vi=n=>`
 uniform int   u_patternSource;  // 0 layout blocks \xB7 1 tile shapes
 uniform int   u_patternLayout;  // 0 bento \xB7 1 grid \xB7 2 mosaic \xB7 3 circles
 uniform int   u_patternCols;
@@ -543,7 +543,7 @@ vec3 tilesColor(vec2 uv) {
 
   float aa = 1.5 / u_resolution.y;
   float mask = 1.0 - smoothstep(0.0, aa, d);
-  return mix(u_patternGapColor, ${a}(uv), mask);
+  return mix(u_patternGapColor, ${n}(uv), mask);
 }
 
 vec3 patternColor(vec2 uv) {
@@ -637,27 +637,27 @@ vec3 patternColor(vec2 uv) {
       floor(hash21(vec2(float(ci) + u_patternSeed, float(ri) * 5.1)) * float(cols)),
       floor(hash21(vec2(float(ri) + u_patternSeed * 1.3, float(ci) * 9.2)) * float(rows))
     );
-    inner = ${a}((src + local) / vec2(float(cols), float(rows)));
+    inner = ${n}((src + local) / vec2(float(cols), float(rows)));
   } else {
-    inner = ${a}(uv);
+    inner = ${n}(uv);
   }
   return mix(u_patternGapColor, inner, mask);
 }
-`;function Qt(a,i,n){switch(n){case`G`:return`vec3 ${a}(vec2 uv) {
-  vec3 b = ${i}(uv);
+`;function bi(n,o,a){switch(a){case`G`:return`vec3 ${n}(vec2 uv) {
+  vec3 b = ${o}(uv);
   vec3 g = clamp(blendColors(u_gradientBlend, b, gradientColor(uv)), 0.0, 1.0);
   return mix(b, g, u_gradientOpacity);
-}`;case`I`:return`vec3 ${a}(vec2 uv) {
-  vec3 b = ${i}(uv);
+}`;case`I`:return`vec3 ${n}(vec2 uv) {
+  vec3 b = ${o}(uv);
   if (u_imageOn == 0) return b;
   vec4 img = imageColor(uv);
   vec3 blended = clamp(blendColors(u_imageBlend, b, img.rgb), 0.0, 1.0);
   return mix(b, blended, img.a * u_imageOpacity);
-}`;default:return`vec3 ${a}(vec2 uv) { return patternColor(uv); }`}}function eo(a,i){let n=u=>a.includes(u),e=[Yt];(n(`G`)||n(`I`))&&e.push(Kt),n(`G`)&&e.push(Jt),n(`I`)&&e.push(jt),e.push(i?`vec3 L0(vec2 uv) { return texture(u_scene, clamp(uv, 0.0, 1.0)).rgb; }`:`vec3 L0(vec2 uv) { return vec3(0.051, 0.051, 0.055); }`);let f=`L0`;return[...a].forEach((u,S)=>{let T=`L${S+1}_${u}`;u===`P`&&e.push(Zt(f)),e.push(Qt(T,f,u)),f=T}),e.push(`void main() {
+}`;default:return`vec3 ${n}(vec2 uv) { return patternColor(uv); }`}}function _i(n,o){let a=s=>n.includes(s),e=[pi];(a(`G`)||a(`I`))&&e.push(mi),a(`G`)&&e.push(fi),a(`I`)&&e.push(gi),e.push(o?`vec3 L0(vec2 uv) { return texture(u_scene, clamp(uv, 0.0, 1.0)).rgb; }`:`vec3 L0(vec2 uv) { return vec3(0.051, 0.051, 0.055); }`);let r=`L0`;return[...n].forEach((s,u)=>{let A=`L${u+1}_${s}`;s===`P`&&e.push(vi(r)),e.push(bi(A,r,s)),r=A}),e.push(`void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution; // 0..1, y up
-  outColor = vec4(clamp(${f}(uv), 0.0, 1.0), 1.0);
+  outColor = vec4(clamp(${r}(uv), 0.0, 1.0), 1.0);
 }`),e.join(`
-`)}var to=`#version 300 es
+`)}var yi=`#version 300 es
 precision highp float;
 
 out vec4 outColor;
@@ -677,7 +677,7 @@ uniform float u_pixelScale;
 
 const float TAU = 6.283185307179586;
 
-${dt}
+${It}
 
 // Seamless drift: a circular orbit through noise space that lands back on
 // its start every cycle and vanishes at phase 0 (matches the scene pass).
@@ -746,7 +746,7 @@ float toneGamma(float t, float gamma) {
 float toneFlip(float t, int invert) {
   return invert == 1 ? 1.0 - t : t;
 }
-`;var oo=`
+`;var xi=`
 uniform int   u_waveMode;      // 0 circular \xB7 1 linear
 uniform vec2  u_waveAxis;      // linear: unit vector the front travels along
 uniform float u_waveAmount;
@@ -781,7 +781,7 @@ vec2 waveMap(vec2 uv) {
   // shove on screen whichever way the wave points
   return uv + dir * ripple * u_waveAmount * 0.035 * fall / vec2(ca, 1.0);
 }
-`;var ao=`
+`;var wi=`
 uniform int   u_glassMode;     // 1 fluted \xB7 2 mosaic
 uniform float u_glassAmount;
 uniform float u_glassCount;
@@ -875,7 +875,7 @@ vec2 glassMap(vec2 uv, out vec2 shade) {
   }
   return uv;
 }
-`;var io=`
+`;var ki=`
 uniform float u_pixelate;      // block rows; <2 = off
 uniform float u_pixelateRatio; // block height / width; 1 = square
 uniform float u_pixelateGap;   // grout width as a fraction of a block; 0 = off
@@ -930,7 +930,7 @@ vec3 mosaicGrout(vec3 color, vec2 cell) {
   vec3 grout = u_pixelateGroutAuto == 1 ? color * 0.35 : u_pixelateGrout;
   return mix(grout, color, tile);
 }
-`;var ro=`
+`;var Ei=`
 const int MAX_LIGHTS = 4;
 
 uniform int   u_lightMode;     // 1 glow \xB7 2 rays \xB7 3 iridescence \xB7 4 caustics
@@ -1034,7 +1034,7 @@ vec3 applyLight(vec3 color, vec2 uv) {
   }
   return screenBlend(color, acc);
 }
-`;var no=`
+`;var Si=`
 uniform int   u_ditherAlgo;    // 0 ordered \xB7 1 white noise \xB7 2 blue noise
 uniform int   u_ditherMatrix;  // 2 | 4 | 8 (ordered only)
 uniform float u_ditherScale;   // pattern cell in device px
@@ -1110,7 +1110,7 @@ vec3 ditherColor(vec3 color, vec2 fragPx) {
   float lq = floor((l + push + lift) * steps + 0.5) / steps;
   return clamp(color * (l > 1e-3 ? lq / l : 0.0), 0.0, 1.0);
 }
-`;var so=`
+`;var Ti=`
 uniform float u_aberration;    // 0..1
 // Softness no longer appears in this pass at all: it's a real Gaussian
 // blur of the scene buffer now (BLUR_FRAG), which the renderer binds to
@@ -1145,7 +1145,7 @@ vec2 lensDistort(vec2 uv) {
   float norm = 1.0 + k * corner;
   return 0.5 + (d * (1.0 + k * r2) / max(norm, 1e-4)) / aspect;
 }
-`;var lo=a=>`
+`;var Ai=n=>`
 uniform float u_halftoneSize;    // cell in device px
 uniform int   u_halftoneStyle;   // 0 dots \xB7 1 rings \xB7 2 dots+squares \xB7 3 uniform grid
 uniform int   u_halftoneStagger;
@@ -1245,7 +1245,7 @@ vec3 halftoneApply(vec3 base, vec2 uv) {
   vec2 centreUv = u_halftoneRatio == 1.0
     ? (outOf * (id + 0.5)) * cell / u_resolution
     : (outOf * ((id + 0.5) * cellSize)) / u_resolution;
-  vec3 cellColor = ${a}(centreUv);
+  vec3 cellColor = ${n}(centreUv);
   // every mark swells and settles a few percent on its own staggered
   // beat \u2014 the screen breathes instead of printing dead still
   // gamma sits HERE, not inside halftoneInk: from here it reaches all
@@ -1290,7 +1290,7 @@ vec3 halftoneApply(vec3 base, vec2 uv) {
   vec3 paper = mix(base, u_halftonePaperColor, u_halftonePaper);
   return mix(paper, inkColor, clamp(ink, 0.0, 1.0));
 }
-`;var uo=(a,i=!1)=>`
+`;var Ci=(n,o=!1)=>`
 uniform sampler2D u_asciiAtlas;  // glyph ramp strip, dark -> dense
 uniform float u_asciiChars;      // glyphs in the atlas
 uniform float u_asciiSize;       // cell width in device px
@@ -1389,7 +1389,7 @@ void asciiCellInk(vec2 id, vec2 p, vec2 cellSize, vec2 centreUv, out float glyph
   // scatter: jitter each cell's sample point for a looser, organic grid
   vec2 jitter = (vec2(hash21(id + 11.3), hash21(id + 47.7)) - 0.5)
               * u_asciiScatter * cellSize;
-  vec3 cellColor = ${a}(centreUv + jitter);
+  vec3 cellColor = ${n}(centreUv + jitter);
   float lum = toneGamma(
     clamp(dot(cellColor, vec3(0.2126, 0.7152, 0.0722)), 0.0, 1.0), u_asciiGamma);
   lum = toneFlip(lum, u_asciiInvert);
@@ -1441,7 +1441,7 @@ vec3 asciiBlendInk(vec3 base, vec3 fg, float glyph) {
   }
   return mix(base, blended, u_asciiOpacity);
 }
-${i?`
+${o?`
 // The spring-scatter raster: every glyph is a particle. For this pixel,
 // scan the cell neighbourhood and ask which cell's glyph \u2014 translated
 // rigidly by that cell's OWN flight vector \u2014 inks it. Farthest-flung
@@ -1509,7 +1509,7 @@ vec3 asciiApply(vec3 base, vec2 uv) {
   asciiCellInk(id, fract(g), cellSize, asciiCentre(id, cellPx), glyph, fg);
   return asciiBlendInk(base, fg, glyph);
 }
-`}`;var co=`
+`}`;var Mi=`
 uniform vec2  u_pointer;       // eased cursor, canvas uv (gl orientation)
 uniform float u_pointerAmount;
 uniform float u_pointerSize;   // reaction radius, fraction of the frame
@@ -1526,7 +1526,7 @@ vec2 pointerMap(vec2 uv) {
   float s = u_pointerFlip == 1.0 ? -1.0 : 1.0;
   return uv - (d / aspect) * exp(-r * r) * u_pointerAmount * 0.35 * s;
 }
-`;var ho=`
+`;var Pi=`
 uniform vec2  u_pointer;
 uniform float u_pointerAmount;
 uniform float u_pointerSize;   // unused in parallax; kept for one upload path
@@ -1541,7 +1541,7 @@ vec2 pointerMap(vec2 uv) {
   float s = u_pointerFlip == 1.0 ? -1.0 : 1.0;
   return (uv - 0.5) * (1.0 - lean) + 0.5 - (u_pointer - 0.5) * lean * s;
 }
-`;var fo=`
+`;var Ri=`
 uniform vec2  u_pointer;
 uniform float u_pointerAmount;
 uniform float u_pointerSize;
@@ -1561,7 +1561,7 @@ vec2 pointerMap(vec2 uv) {
   float c = cos(ang);
   return u_pointer + (mat2(c, -s, s, c) * d) / aspect;
 }
-`;var po=`
+`;var Gi=`
 uniform sampler2D u_trail;     // the spring field: disp.x packed 16-bit in RG, disp.y in BA
 uniform vec2  u_pointer;       // unused in spring; kept for one upload path
 uniform float u_pointerAmount;
@@ -1633,7 +1633,7 @@ vec2 pointerMap(vec2 uv) {
   vec2 c1 = floor(springGrid(uv - springThrow(c0, cellUv, outOf), cellUv, into));
   return uv - springThrow(c1, cellUv, outOf);
 }
-`;var mo=`
+`;var Li=`
 uniform sampler2D u_trail;     // the spring field: disp.x packed 16-bit in RG, disp.y in BA
 uniform float u_pointerAmount;
 
@@ -1666,7 +1666,7 @@ vec2 springCellThrow(vec2 id, vec2 cellSize, vec2 centreUv) {
   if (len > 1e-5) t *= SPRING_REACH * tanh(len / SPRING_REACH) / len;
   return t * cellSize;
 }
-`;var go=`#version 300 es
+`;var Oi=`#version 300 es
 precision highp float;
 
 uniform sampler2D u_src;
@@ -1698,7 +1698,7 @@ void main() {
   }
   outColor = acc / wsum;
 }
-`;var vo=`#version 300 es
+`;var Ii=`#version 300 es
 precision highp float;
 
 layout(location = 0) out vec4 outDisp;
@@ -1793,7 +1793,7 @@ void main() {
   outDisp = pack16(clamp(disp / DISP_RANGE, -1.0, 1.0));
   outVel  = pack16(clamp(vel / VEL_RANGE, -1.0, 1.0));
 }
-`;var _o=`
+`;var Fi=`
 uniform float u_paperAmount;
 uniform vec3  u_paperTint;     // the stock (P10); '' resolves to the pre-P10 warm white
 uniform float u_paperFibre;    // stock coarseness; 1 = pre-P10
@@ -1824,7 +1824,7 @@ vec3 paperApply(vec3 color, vec2 fragPx) {
   return mix(color, color * vec3(0.42, 0.33, 0.24),
              vig * u_paperAmount * 0.5 * u_paperVignette);
 }
-`;var bo=`
+`;var Di=`
 uniform float u_grain;
 uniform float u_grainSize;
 
@@ -1841,7 +1841,7 @@ vec3 grainApply(vec3 color, vec2 fragPx) {
   float g = hash21(mod(id + u_seed, 256.0));
   return color + (g - 0.5) * u_grain;
 }
-`;var xo=`
+`;var Ni=`
 uniform float u_contourLevels;
 uniform float u_contourWeight;   // line half-width in device px
 uniform float u_contourDash;     // 0..1 dash amount
@@ -1893,7 +1893,7 @@ vec3 contourApply(vec3 below, vec3 smoothBelow, vec2 uv) {
   }
   return outc;
 }
-`;var wo=a=>`
+`;var Bi=n=>`
 uniform float u_toneGeoSize;    // cell in device px
 uniform float u_toneGeoLow;
 uniform float u_toneGeoHigh;
@@ -1967,7 +1967,7 @@ vec3 toneGeoApply(vec3 base, vec2 uv) {
   // the cell centre rotates back out before it samples the stack below,
   // so the grid turns over a still picture instead of turning it too
   vec2 centre = mat2(ca, sa, -sa, ca) * (id + 0.5);
-  vec3 cellColor = ${a}(centre * cell / u_resolution);
+  vec3 cellColor = ${n}(centre * cell / u_resolution);
   float tone = toneFlip(
     clamp(dot(cellColor, vec3(0.2126, 0.7152, 0.0722)), 0.0, 1.0),
     u_toneGeoInvert);
@@ -1988,17 +1988,17 @@ vec3 toneGeoApply(vec3 base, vec2 uv) {
   vec3 paper = mix(base, u_toneGeoPaperColor, u_toneGeoPaper);
   return mix(paper, inkColor, clamp(ink, 0.0, 1.0));
 }
-`;function ut(a,i,n,e,f=!1){switch(n){case`m`:return e===5&&f?`vec3 ${a}(vec2 uv) { return ${i}(uv); }`:e>=2&&e<=5?`vec3 ${a}(vec2 uv) { return ${i}(pointerMap(uv)); }`:`vec3 ${a}(vec2 uv) { return ${i}(uv); }`;case`w`:return`vec3 ${a}(vec2 uv) { return ${i}(waveMap(uv)); }`;case`p`:return`vec3 ${a}(vec2 uv) {
+`;function Pt(n,o,a,e,r=!1){switch(a){case`m`:return e===5&&r?`vec3 ${n}(vec2 uv) { return ${o}(uv); }`:e>=2&&e<=5?`vec3 ${n}(vec2 uv) { return ${o}(pointerMap(uv)); }`:`vec3 ${n}(vec2 uv) { return ${o}(uv); }`;case`w`:return`vec3 ${n}(vec2 uv) { return ${o}(waveMap(uv)); }`;case`p`:return`vec3 ${n}(vec2 uv) {
   vec2 cell;
-  vec3 color = ${i}(pixelateMap(uv, cell));
+  vec3 color = ${o}(pixelateMap(uv, cell));
   return mosaicGrout(color, cell);
-}`;case`g`:return`vec3 ${a}(vec2 uv) {
+}`;case`g`:return`vec3 ${n}(vec2 uv) {
   vec2 shade;
-  vec3 color = ${i}(glassMap(uv, shade));
+  vec3 color = ${o}(glassMap(uv, shade));
   color = mix(color, vec3(1.0), shade.x); // seam ridges lift to white
   color *= 1.0 - shade.y;                 // pane shading falls across each cell
   return color;
-}`;case`l`:return`vec3 ${a}(vec2 uv) { return applyLight(${i}(uv), clamp(uv, 0.0, 1.0)); }`;case`d`:return`vec3 ${a}(vec2 uv) { return ditherColor(${i}(uv), uv * u_resolution); }`;case`r`:return`vec3 ${a}(vec2 uv) { return grainApply(${i}(uv), uv * u_resolution); }`;case`s`:return`vec3 ${a}(vec2 uv) { return paperApply(${i}(uv), uv * u_resolution); }`;case`c`:return`vec3 ${a}(vec2 uv) {
+}`;case`l`:return`vec3 ${n}(vec2 uv) { return applyLight(${o}(uv), clamp(uv, 0.0, 1.0)); }`;case`d`:return`vec3 ${n}(vec2 uv) { return ditherColor(${o}(uv), uv * u_resolution); }`;case`r`:return`vec3 ${n}(vec2 uv) { return grainApply(${o}(uv), uv * u_resolution); }`;case`s`:return`vec3 ${n}(vec2 uv) { return paperApply(${o}(uv), uv * u_resolution); }`;case`c`:return`vec3 ${n}(vec2 uv) {
   // The supersample radius is a LOOK, not an antialias: it decides how
   // much of the picture the iso field is smoothed over, and therefore
   // how many lines resolve and how fat each one reads. Left at a flat
@@ -2009,11 +2009,11 @@ vec3 toneGeoApply(vec3 base, vec2 uv) {
   // pins legacy (sizeAnchor=0) looks to a constant fraction of their CSS
   // box, which is the same promise those were authored against.
   vec2 e = (0.75 * max(u_pixelScale, 1e-3)) / u_resolution;
-  vec3 c0 = ${i}(uv);
-  vec3 s = (c0 + ${i}(uv + e) + ${i}(uv - e)
-          + ${i}(uv + vec2(e.x, -e.y)) + ${i}(uv + vec2(-e.x, e.y))) * 0.2;
+  vec3 c0 = ${o}(uv);
+  vec3 s = (c0 + ${o}(uv + e) + ${o}(uv - e)
+          + ${o}(uv + vec2(e.x, -e.y)) + ${o}(uv + vec2(-e.x, e.y))) * 0.2;
   return contourApply(c0, s, uv);
-}`;case`o`:return`vec3 ${a}(vec2 uv) {
+}`;case`o`:return`vec3 ${n}(vec2 uv) {
   // the glass curves first, then fringes: distortion bends where the
   // lens LOOKS, and the chromatic split is a property of the ray it
   // ends up taking. Doing it the other way round would fringe along
@@ -2021,24 +2021,320 @@ vec3 toneGeoApply(vec3 base, vec2 uv) {
   // way at the corners. lensDistort returns its argument untouched at
   // 0, so a look without it is bit-identical.
   vec2 cuv = clamp(lensDistort(uv), 0.0, 1.0);
-  if (u_aberration <= 0.0) return ${i}(cuv);
+  if (u_aberration <= 0.0) return ${o}(cuv);
   // offset R and B radially in opposite directions \u2014 the lens fringes
   // everything rendered beneath it; the cycle breathes the fringe width
   // like a lens easing focus (exactly neutral at phase 0)
   vec2 off = (cuv - 0.5) * u_aberration * 0.03 * breath(0.12);
   return vec3(
-    ${i}(clamp(cuv + off, 0.0, 1.0)).r,
-    ${i}(cuv).g,
-    ${i}(clamp(cuv - off, 0.0, 1.0)).b
+    ${o}(clamp(cuv + off, 0.0, 1.0)).r,
+    ${o}(cuv).g,
+    ${o}(clamp(cuv - off, 0.0, 1.0)).b
   );
-}`;case`h`:return`vec3 ${a}(vec2 uv) { return halftoneApply(${i}(uv), uv); }`;case`t`:return`vec3 ${a}(vec2 uv) { return toneGeoApply(${i}(uv), uv); }`;default:return`vec3 ${a}(vec2 uv) { return asciiApply(${i}(uv), uv); }`}}function yo(a,i=0){let n=[...a],e=_=>a.includes(_),f=i===5&&(()=>{for(let _=a.indexOf(`m`)-1;_>=0;_--)if(`ahtpd`.includes(n[_]))return n[_]===`a`;return!1})(),u=[to];e(`w`)&&u.push(oo),e(`g`)&&u.push(ao),e(`p`)&&u.push(io),e(`l`)&&u.push(ro),e(`d`)&&u.push(no),e(`o`)&&u.push(so),e(`r`)&&u.push(bo),e(`s`)&&u.push(_o),e(`c`)&&u.push(xo),e(`m`)&&i===2&&u.push(co),e(`m`)&&i===3&&u.push(ho),e(`m`)&&i===4&&u.push(fo),e(`m`)&&i===5&&u.push(f?mo:po),u.push(`vec3 plainSample(vec2 uv) {
+}`;case`h`:return`vec3 ${n}(vec2 uv) { return halftoneApply(${o}(uv), uv); }`;case`t`:return`vec3 ${n}(vec2 uv) { return toneGeoApply(${o}(uv), uv); }`;default:return`vec3 ${n}(vec2 uv) { return asciiApply(${o}(uv), uv); }`}}function Xi(n,o=0){let a=[...n],e=f=>n.includes(f),r=o===5&&(()=>{for(let f=n.indexOf(`m`)-1;f>=0;f--)if(`ahtpd`.includes(a[f]))return a[f]===`a`;return!1})(),s=[yi];e(`w`)&&s.push(xi),e(`g`)&&s.push(wi),e(`p`)&&s.push(ki),e(`l`)&&s.push(Ei),e(`d`)&&s.push(Si),e(`o`)&&s.push(Ti),e(`r`)&&s.push(Di),e(`s`)&&s.push(Fi),e(`c`)&&s.push(Ni),e(`m`)&&o===2&&s.push(Mi),e(`m`)&&o===3&&s.push(Pi),e(`m`)&&o===4&&s.push(Ri),e(`m`)&&o===5&&s.push(r?Li:Gi),s.push(`vec3 plainSample(vec2 uv) {
   return texture(u_scene, clamp(uv, 0.0, 1.0)).rgb;
-}`);let S=`plainSample`,T=`plainSample`,N=`plainSample`;if(e(`h`)||e(`a`)||e(`t`)){let _=`plainSample`;n.forEach((G,X)=>{if(G===`h`){S=_;return}if(G===`a`){T=_;return}if(G===`t`){N=_;return}let oe=`S${X+1}_${G}`;u.push(ut(oe,_,G,i,f)),_=oe})}e(`h`)&&u.push(lo(S)),e(`a`)&&u.push(uo(T,f)),e(`t`)&&u.push(wo(N));let y=`plainSample`;return n.forEach((_,G)=>{let X=`F${G+1}_${_}`;u.push(ut(X,y,_,i,f)),y=X}),u.push(`void main() {
+}`);let u=`plainSample`,A=`plainSample`,C=`plainSample`;if(e(`h`)||e(`a`)||e(`t`)){let f=`plainSample`;a.forEach((_,G)=>{if(_===`h`){u=f;return}if(_===`a`){A=f;return}if(_===`t`){C=f;return}let F=`S${G+1}_${_}`;s.push(Pt(F,f,_,o,r)),f=F})}e(`h`)&&s.push(Ai(u)),e(`a`)&&s.push(Ci(A,r)),e(`t`)&&s.push(Bi(C));let x=`plainSample`;return a.forEach((f,_)=>{let G=`F${_+1}_${f}`;s.push(Pt(G,x,f,o,r)),x=G}),s.push(`void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution;
-  vec3 color = ${y}(uv);
+  vec3 color = ${x}(uv);
   outColor = vec4(clamp(color, 0.0, 1.0), 1.0);
-}`),u.join(`
-`)}var ko=12;function Eo(a,i,n){let e=a.getContext(`webgl2`,{antialias:!1,preserveDrawingBuffer:!0});if(!e)return null;let f=(t,o)=>{let l=e.createShader(t);if(e.shaderSource(l,o),e.compileShader(l),!e.getShaderParameter(l,e.COMPILE_STATUS)){let s=e.getShaderInfoLog(l);throw e.deleteShader(l),new Error(`Shader compile failed: ${s}`)}return l},u=t=>{let o=e.createProgram();if(e.attachShader(o,f(e.VERTEX_SHADER,n.vertex)),e.attachShader(o,f(e.FRAGMENT_SHADER,t)),e.linkProgram(o),!e.getProgramParameter(o,e.LINK_STATUS))throw new Error(`Program link failed: ${e.getProgramInfoLog(o)}`);return o},S=(t,o)=>{let l={};for(let s of o)l[s]=e.getUniformLocation(t,s);return l},T=t=>t?y(t):[1,1,1],N=(t,o,l)=>t===J?it(o,l):t,y=t=>{let[o,l,s]=Lt(t,[255,255,255]);return[o/255,l/255,s/255]},_=`GIP`,G=`GIPowglpdhasrmct`,X=t=>{let o=[];for(let l of t.fxOrder)G.includes(l)&&!o.includes(l)&&!t.hidden.includes(l)&&o.push(l);return!o.includes(`G`)&&!o.includes(`I`)?``:o.join(``)},oe=[`u_shape`,`u_warp`,`u_scale`,`u_detail`,`u_contrast`,`u_angle`,`u_center`,`u_stopCount`,`u_followCursor`,`u_followAmount`,`u_followPos`,`u_followIndex`,`u_gradientOpacity`,`u_gradientBlend`,`u_oklab`,`u_image`,`u_imageOn`,`u_imageAspect`,`u_imageOpacity`,`u_imageBlend`,`u_imageFit`,`u_imageFocal`,`u_imageZoom`,`u_patternSource`,`u_patternLayout`,`u_patternCols`,`u_patternRows`,`u_patternGap`,`u_patternRadius`,`u_patternGapColor`,`u_patternSeed`,`u_scene`,`u_resolution`,`u_seed`,`u_phase`,`u_aberration`,`u_lensDistort`,`u_lightMode`,`u_lightAmount`,`u_lightSize`,`u_lightCount`,`u_waveMode`,`u_waveAxis`,`u_waveAmount`,`u_waveFrequency`,`u_waveFalloff`,`u_wavePhase`,`u_waveCenter`,`u_glassMode`,`u_glassAmount`,`u_glassCount`,`u_glassShadow`,`u_glassHighlight`,`u_pixelate`,`u_ditherAlgo`,`u_ditherMatrix`,`u_ditherScale`,`u_ditherLevels`,`u_ditherStrength`,`u_ditherColorMode`,`u_ditherThreshold`,`u_ditherGamma`,`u_halftoneSize`,`u_halftoneStyle`,`u_halftoneStagger`,`u_halftoneDotScale`,`u_halftoneColor`,`u_halftonePaper`,`u_halftonePaperColor`,`u_halftoneInkColor`,`u_halftoneEmboss`,`u_halftoneWind`,`u_halftoneWindAngle`,`u_halftoneWobble`,`u_halftoneGlint`,`u_halftoneAngle`,`u_halftoneGamma`,`u_halftoneInvert`,`u_halftoneRatio`,`u_ditherRatio`,`u_pixelateRatio`,`u_glassRatio`,`u_glassAngle`,`u_glassProfile`,`u_glassBevel`,`u_halftoneJitter`,`u_halftoneJitterSeed`,`u_toneGeoJitter`,`u_toneGeoJitterSeed`,`u_pixelateGap`,`u_pixelateGrout`,`u_pixelateGroutAuto`,`u_pointerFlip`,`u_paperTint`,`u_paperFibre`,`u_paperVignette`,`u_asciiInvert`,`u_ditherInvert`,`u_toneGeoInvert`,`u_asciiAtlas`,`u_asciiChars`,`u_asciiSize`,`u_asciiRatio`,`u_asciiStyle`,`u_asciiColor`,`u_asciiBackground`,`u_asciiExposure`,`u_asciiFill`,`u_asciiDensity`,`u_asciiScatter`,`u_asciiGap`,`u_asciiAngle`,`u_asciiThreshold`,`u_asciiGamma`,`u_asciiInkColor`,`u_asciiPaperColor`,`u_asciiOpacity`,`u_asciiBlend`,`u_grain`,`u_grainSize`,`u_paperAmount`,`u_pixelScale`,`u_contourLevels`,`u_contourWeight`,`u_contourDash`,`u_contourGlow`,`u_contourColor`,`u_contourPaper`,`u_contourInkColor`,`u_contourPaperColor`,`u_toneGeoSize`,`u_toneGeoLow`,`u_toneGeoHigh`,`u_toneGeoAngle`,`u_toneGeoGrid`,`u_toneGeoRules`,`u_toneGeoCross`,`u_toneGeoInkColor`,`u_toneGeoPaperColor`,`u_toneGeoWeight`,`u_toneGeoColor`,`u_toneGeoPaper`,`u_pointer`,`u_pointerAmount`,`u_pointerSize`,`u_trail`,`u_markCell`,`u_markAngle`],gt=()=>{let t=` .:-=+*#%@`,l=document.createElement(`canvas`);l.width=640,l.height=64;let s=l.getContext(`2d`);s.fillStyle=`#000`,s.fillRect(0,0,l.width,l.height),s.fillStyle=`#fff`,s.font=`51.2px ui-monospace, Menlo, monospace`,s.textAlign=`center`,s.textBaseline=`middle`;for(let c=0;c<10;c++)s.fillText(t[c],(c+.5)*64,34.56);let r=e.createTexture();return e.bindTexture(e.TEXTURE_2D,r),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!0),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,e.RGBA,e.UNSIGNED_BYTE,l),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!1),e.generateMipmap(e.TEXTURE_2D),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR_MIPMAP_LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),{texture:r,chars:10}},ae=new Map,Ae=(t,o)=>{let l=ae.get(t);if(!l){let s=u(o()),r=S(s,oe);for(let c=0;c<8;c++)r[`u_colors[${c}]`]=e.getUniformLocation(s,`u_colors[${c}]`),r[`u_positions[${c}]`]=e.getUniformLocation(s,`u_positions[${c}]`);for(let c=0;c<4;c++)r[`u_lightPos[${c}]`]=e.getUniformLocation(s,`u_lightPos[${c}]`),r[`u_lightColor[${c}]`]=e.getUniformLocation(s,`u_lightColor[${c}]`),r[`u_lightGain[${c}]`]=e.getUniformLocation(s,`u_lightGain[${c}]`),r[`u_lightSpread[${c}]`]=e.getUniformLocation(s,`u_lightSpread[${c}]`);l={prog:s,u:r},ae.set(t,l)}return l},le=gt(),ie=[e.createTexture(),e.createTexture()],ue=[e.createFramebuffer(),e.createFramebuffer()],ce=0,he=0,Te=1,vt=()=>{if(!(ce===a.width&&he===a.height)){ce=a.width,he=a.height;for(let t=0;t<2;t++)e.bindTexture(e.TEXTURE_2D,ie[t]),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,ce,he,0,e.RGBA,e.UNSIGNED_BYTE,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),e.bindFramebuffer(e.FRAMEBUFFER,ue[t]),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,ie[t],0);e.bindFramebuffer(e.FRAMEBUFFER,null)}},fe=t=>Math.max(t,.05),_t=(t,o,l)=>{let s=c=>c*Math.PI/180,r=o.indexOf(`m`);for(let c=r-1;c>=0;c--)switch(o[c]){case`a`:{let p=Math.max(t.asciiSize*l,4),g=Math.max(Math.floor(a.width/p),4),P=Math.max(Math.floor(a.height/(p*t.asciiRatio)),4);return[a.width/g,a.height/P,s(t.asciiAngle)]}case`h`:{let p=Math.max(t.halftoneSize*l,4);return[p,p*fe(t.halftoneRatio),s(t.halftoneAngle)]}case`t`:{let p=Math.max(t.toneGeoSize*l,8);return[p,p,s(t.toneGeoGrid)]}case`p`:{if(t.pixelate<2)break;let p=a.height/t.pixelate;return[p,p*fe(t.pixelateRatio),0]}case`d`:{let p=Math.max(t.ditherScale*l,1);return[p,p*fe(t.ditherRatio),0]}}return[0,0,0]},Ce=()=>({tex:[null,null],fbo:[null,null],w:0,h:0}),Re=Ce(),Ge=Ce(),z=null,bt=[`u_src`,`u_outRes`,`u_step`,`u_sigma`],Pe=12,xt=Pe/3,wt=t=>t<=24?1:t<=48?2:t<=96?4:8,yt=(t,o,l)=>{if(!(t.w===o&&t.h===l&&t.tex[0])){t.w=o,t.h=l;for(let s=0;s<2;s++)t.tex[s]??=e.createTexture(),t.fbo[s]??=e.createFramebuffer(),e.bindTexture(e.TEXTURE_2D,t.tex[s]),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,o,l,0,e.RGBA,e.UNSIGNED_BYTE,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),e.bindFramebuffer(e.FRAMEBUFFER,t.fbo[s]),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,t.tex[s],0);e.bindFramebuffer(e.FRAMEBUFFER,null)}},Me=(t,o,l,s,r)=>{let c=wt(r),p=Math.max(1,Math.floor(l/c)),g=Math.max(1,Math.floor(s/c));if(yt(t,p,g),!z){let M=u(n.blur);z={prog:M,u:S(M,bt)}}let C=3*(Math.max(r,.5)/3/c)/Pe,A=z;return e.useProgram(A.prog),e.viewport(0,0,p,g),e.uniform2f(A.u.u_outRes,p,g),e.uniform1f(A.u.u_sigma,xt),e.activeTexture(e.TEXTURE6),e.bindFramebuffer(e.FRAMEBUFFER,t.fbo[0]),e.bindTexture(e.TEXTURE_2D,o),e.uniform1i(A.u.u_src,6),e.uniform2f(A.u.u_step,C/p,0),e.drawArrays(e.TRIANGLES,0,3),e.bindFramebuffer(e.FRAMEBUFFER,t.fbo[1]),e.bindTexture(e.TEXTURE_2D,t.tex[0]),e.uniform1i(A.u.u_src,6),e.uniform2f(A.u.u_step,0,C/g),e.drawArrays(e.TRIANGLES,0,3),e.bindFramebuffer(e.FRAMEBUFFER,null),t.tex[1]},q={key:``,tex:null},Ie=()=>{q.key=``},kt=t=>{if(!(t.imageBlur>0)||!d.ready||!d.width)return null;let o=`${d.width}x${d.height}|${t.imageBlur}|${t.imageSrc}`;if(q.key===o&&q.tex)return q.tex;let l=t.imageBlur*t.imageBlur*.06*Math.max(d.width,d.height),s=Me(Ge,K,d.width,d.height,l);return q.key=o,q.tex=s,s},h={disp:[null,null],vel:[null,null],fbo:[null,null],w:0,h:0,read:0,prog:null,lastTime:0,busyUntil:0},Et=[`u_prevDisp`,`u_prevVel`,`u_fieldRes`,`u_aspect`,`u_now`,`u_paint`,`u_radius`,`u_amount`,`u_stiff`,`u_frames`,`u_damping`,`u_flip`],Le=()=>{e.clearColor(128/255,0,128/255,0);for(let t=0;t<2;t++)e.bindFramebuffer(e.FRAMEBUFFER,h.fbo[t]),e.clear(e.COLOR_BUFFER_BIT);e.bindFramebuffer(e.FRAMEBUFFER,null)},St=()=>{let t=256/Math.max(a.width,a.height,1),o=Math.max(16,Math.round(a.width*t)),l=Math.max(16,Math.round(a.height*t));if(!(h.w===o&&h.h===l&&h.disp[0])){h.w=o,h.h=l;for(let s=0;s<2;s++){h.disp[s]??=e.createTexture(),h.vel[s]??=e.createTexture(),h.fbo[s]??=e.createFramebuffer();for(let r of[h.disp[s],h.vel[s]])e.bindTexture(e.TEXTURE_2D,r),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,o,l,0,e.RGBA,e.UNSIGNED_BYTE,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE);e.bindFramebuffer(e.FRAMEBUFFER,h.fbo[s]),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,h.disp[s],0),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT1,e.TEXTURE_2D,h.vel[s],0),e.drawBuffers([e.COLOR_ATTACHMENT0,e.COLOR_ATTACHMENT1])}Le()}},At=(t,o)=>{if(St(),!h.prog){let g=u(n.spring);h.prog={prog:g,u:S(g,Et)}}let l=performance.now(),s=l-h.lastTime;h.lastTime=l,s>400&&Le();let r=Math.min(s,100)/(1e3/60);o.strength>.01&&(h.busyUntil=l+2500);let c=1-h.read,p=h.prog;e.bindFramebuffer(e.FRAMEBUFFER,h.fbo[c]),e.viewport(0,0,h.w,h.h),e.useProgram(p.prog),e.activeTexture(e.TEXTURE4),e.bindTexture(e.TEXTURE_2D,h.disp[h.read]),e.uniform1i(p.u.u_prevDisp,4),e.activeTexture(e.TEXTURE5),e.bindTexture(e.TEXTURE_2D,h.vel[h.read]),e.uniform1i(p.u.u_prevVel,5),e.uniform2f(p.u.u_fieldRes,h.w,h.h),e.uniform1f(p.u.u_aspect,a.width/Math.max(a.height,1)),e.uniform2f(p.u.u_now,o.x,o.y),e.uniform1f(p.u.u_paint,o.strength),e.uniform1f(p.u.u_radius,t.pointerSize),e.uniform1f(p.u.u_amount,t.pointerAmount),e.uniform1f(p.u.u_stiff,t.pointerFade),e.uniform1f(p.u.u_damping,t.pointerDamping<0?-1:Math.min(1,t.pointerDamping)),e.uniform1f(p.u.u_flip,t.pointerFlip?1:0),e.uniform1f(p.u.u_frames,r),e.drawArrays(e.TRIANGLES,0,3),e.bindFramebuffer(e.FRAMEBUFFER,null),h.read=c},K=e.createTexture(),d={src:``,kind:`img`,aspect:1,width:0,height:0,ready:!1},m=null,F=null,de=!1,W=0,re=t=>{t.pause(),t.removeAttribute(`src`),t.load()},pe=()=>{F&&(re(F),F=null),m&&(re(m),m=null,de=!1)},me=()=>{!m||m.readyState<2||(e.bindTexture(e.TEXTURE_2D,K),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!0),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!0),de?e.texSubImage2D(e.TEXTURE_2D,0,0,0,e.RGBA,e.UNSIGNED_BYTE,m):(e.texImage2D(e.TEXTURE_2D,0,e.RGBA,e.RGBA,e.UNSIGNED_BYTE,m),de=!0),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!1),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!1),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),Ie())},Tt=t=>new Promise((o,l)=>{let s=++W;pe(),d.src=t,d.kind=`img`,d.ready=!1;let r=new Image;r.onload=()=>{if(s!==W)return o();e.bindTexture(e.TEXTURE_2D,K),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!0),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!0),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,e.RGBA,e.UNSIGNED_BYTE,r),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!1),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!1),e.generateMipmap(e.TEXTURE_2D),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR_MIPMAP_LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),d.aspect=r.naturalWidth/r.naturalHeight,d.width=r.naturalWidth,d.height=r.naturalHeight,d.ready=!0,Ie(),i.onImageReady?.(),o()},r.onerror=()=>{console.error(`Image failed to load: ${t}`),l(new Error(`Image failed to load: ${t}`))},r.crossOrigin=`anonymous`,r.src=t}),Ct=t=>new Promise((o,l)=>{let s=++W;pe(),d.src=t,d.kind=`vid`,d.ready=!1;let r=document.createElement(`video`);r.muted=!0,r.playsInline=!0,r.loop=!0,r.preload=`auto`,r.crossOrigin=`anonymous`;let c=()=>{if(s!==W)return re(r),o();if(!r.videoWidth||!r.videoHeight)return F=null,re(r),console.error(`File has no video track: ${t}`),l(new Error(`File has no video track: ${t}`));F=null,m=r,d.aspect=r.videoWidth/Math.max(1,r.videoHeight),d.width=r.videoWidth,d.height=r.videoHeight,me(),d.ready=!0,r.addEventListener(`playing`,()=>{s===W&&i.onImageReady?.()}),i.videoAutoplay&&r.play().catch(()=>{}),i.onImageReady?.(),o()};r.onloadeddata=()=>{r.onloadeddata=null,Number.isFinite(r.duration)?c():(r.addEventListener(`seeked`,()=>{r.addEventListener(`seeked`,c,{once:!0}),r.currentTime=0},{once:!0}),r.currentTime=1e6)},r.onerror=()=>{F===r&&(F=null),console.error(`Video failed to load: ${t}`),l(new Error(`Video failed to load: ${t}`))},F=r,r.src=t}),Fe=t=>t.imageKind===`vid`?Ct(t.imageSrc):Tt(t.imageSrc),Rt=(t,o,l,s,r,c,p,g)=>{e.uniform2f(t.u_resolution,a.width,a.height),e.uniform1f(t.u_phase,l),e.uniform1f(t.u_seed,o.seed),e.uniform1i(t.u_scene,1),e.uniform1i(t.u_shape,o.shape),e.uniform1f(t.u_warp,o.warp),e.uniform1f(t.u_scale,o.noiseScale),e.uniform1i(t.u_detail,o.detail),e.uniform1f(t.u_contrast,o.contrast),e.uniform1f(t.u_angle,o.angle*Math.PI/180),e.uniform2f(t.u_center,o.centerX,o.centerY),e.uniform1f(t.u_gradientOpacity,o.gradientOpacity),e.uniform1i(t.u_gradientBlend,o.gradientBlend),e.uniform1i(t.u_oklab,o.oklab?1:0);let P=[...o.stops].sort((k,D)=>k.pos-D.pos),C=Math.min(P.length,8);e.uniform1i(t.u_stopCount,C);for(let k=0;k<8;k++){let D=P[Math.min(k,C-1)],U=y(D.color);e.uniform3f(t[`u_colors[${k}]`],U[0],U[1],U[2]),e.uniform1f(t[`u_positions[${k}]`],D.pos/100)}let A=Math.round(o.gradientFollow),M=A!==0&&C>1?P.indexOf(o.stops[A>0&&A<=C?A-1:ht(o.stops)]):-1;e.uniform2f(t.u_followCursor,r?r.x:.5,r?r.y:.5),e.uniform1f(t.u_followAmount,M>=0&&r?r.strength:0),e.uniform1f(t.u_followPos,M>=0?P[M].pos/100:0),e.uniform1i(t.u_followIndex,M),e.uniform1i(t.u_image,0),e.uniform1i(t.u_imageOn,s?1:0),e.uniform1f(t.u_imageAspect,d.aspect),e.uniform1f(t.u_imageOpacity,o.imageOpacity),e.uniform1i(t.u_imageBlend,o.imageBlend),e.uniform1i(t.u_imageFit,o.imageFit===1?1:0),e.uniform2f(t.u_imageFocal,o.imageFocalX,o.imageFocalY),e.uniform1f(t.u_imageZoom,o.imageZoom),e.uniform1i(t.u_patternSource,o.patternSource===`t`?1:0),e.uniform1i(t.u_patternLayout,Math.max(0,Dt.indexOf(o.patternLayout))),e.uniform1i(t.u_patternCols,o.patternCols),e.uniform1i(t.u_patternRows,o.patternRows),e.uniform1f(t.u_patternGap,o.patternGap*g),e.uniform1f(t.u_patternRadius,o.patternRadius*g);let O=y(o.patternGapColor||P[0].color);e.uniform3f(t.u_patternGapColor,O[0],O[1],O[2]),e.uniform1f(t.u_patternSeed,o.patternSeed),e.uniform1f(t.u_aberration,o.aberration),e.uniform1f(t.u_lensDistort,Math.min(1,Math.max(-1,o.lensDistort))),e.uniform1i(t.u_lightMode,o.lightMode);let E=Math.min(4,Math.max(1,Math.round(o.lightCount)||1)),R=Math.min(E,Math.round(o.lightFollow)||0),b=R>0&&r?r.strength:0,I=R===1&&E===1;e.uniform1f(t.u_lightAmount,I?o.lightAmount*b:o.lightAmount),e.uniform1f(t.u_lightSize,o.lightSize),e.uniform1i(t.u_lightCount,E);let j=[[o.lightX,o.lightY,o.lightColor,o.lightGain,o.lightSpread],[o.light2X,o.light2Y,o.lightColor2,o.lightGain2,o.lightSpread2],[o.light3X,o.light3Y,o.lightColor3,o.lightGain3,o.lightSpread3],[o.light4X,o.light4Y,o.lightColor4,o.lightGain4,o.lightSpread4]];for(let k=0;k<4;k++){let[D,U,Gt,Pt,Mt]=j[k],ye=R===k+1;e.uniform2f(t[`u_lightPos[${k}]`],ye&&r?D+(r.x-D)*b:D,ye&&r?U+(r.y-U)*b:U);let ke=y(Gt),Ee=ye&&!I?b:1;e.uniform3f(t[`u_lightColor[${k}]`],ke[0]*Ee,ke[1]*Ee,ke[2]*Ee),e.uniform1f(t[`u_lightGain[${k}]`],Math.min(2,Math.max(0,Pt))),e.uniform1f(t[`u_lightSpread[${k}]`],Math.min(2,Math.max(.05,Mt)))}let Z=[[1,0],[-1,0],[0,-1],[0,1]],Q=Z[Math.round(o.waveSide)]??Z[0];e.uniform1i(t.u_waveMode,Math.round(o.waveMode)===1?1:0),e.uniform2f(t.u_waveAxis,Q[0],Q[1]),e.uniform1f(t.u_waveAmount,o.waveAmount),e.uniform1f(t.u_waveFrequency,o.waveFrequency),e.uniform1f(t.u_waveFalloff,o.waveFalloff),e.uniform1f(t.u_wavePhase,o.wavePhase),e.uniform2f(t.u_waveCenter,o.waveX,o.waveY),e.uniform1i(t.u_glassMode,o.glassMode),e.uniform1f(t.u_glassAmount,o.glassAmount),e.uniform1f(t.u_glassCount,o.glassCount),e.uniform1f(t.u_glassAngle,o.glassAngle*Math.PI/180),e.uniform1f(t.u_glassProfile,Math.min(5,Math.max(1,o.glassProfile))),e.uniform1f(t.u_glassBevel,Math.min(.4,Math.max(.005,o.glassBevel))),e.uniform1f(t.u_glassShadow,o.glassShadow),e.uniform1f(t.u_glassHighlight,o.glassHighlight),e.uniform1f(t.u_pixelate,o.pixelate),e.uniform1i(t.u_ditherAlgo,o.ditherAlgo),e.uniform1i(t.u_ditherMatrix,o.ditherMatrix),e.uniform1f(t.u_ditherScale,o.ditherScale*g),e.uniform1f(t.u_ditherLevels,o.ditherLevels),e.uniform1f(t.u_ditherStrength,o.ditherStrength),e.uniform1i(t.u_ditherColorMode,o.ditherColorMode),e.uniform1f(t.u_ditherThreshold,o.ditherThreshold),e.uniform1f(t.u_ditherGamma,o.ditherGamma),e.uniform1f(t.u_halftoneSize,o.halftoneSize*g),e.uniform1i(t.u_halftoneStyle,o.halftoneStyle),e.uniform1i(t.u_halftoneStagger,o.halftoneStagger?1:0),e.uniform1f(t.u_halftoneDotScale,o.halftoneDotScale),e.uniform1i(t.u_halftoneColor,o.halftoneColor),e.uniform1f(t.u_halftonePaper,o.halftonePaper);let $=y(N(o.halftonePaperColor,o.stops,`h`));e.uniform3f(t.u_halftonePaperColor,$[0],$[1],$[2]);let H=T(o.halftoneInkColor);e.uniform3f(t.u_halftoneInkColor,H[0],H[1],H[2]),e.uniform1f(t.u_halftoneEmboss,o.halftoneEmboss),e.uniform1f(t.u_halftoneWind,o.halftoneWind),e.uniform1f(t.u_halftoneWindAngle,o.halftoneWindAngle*Math.PI/180),e.uniform1f(t.u_halftoneWobble,o.halftoneWobble),e.uniform1f(t.u_halftoneGlint,o.halftoneGlint),e.uniform1f(t.u_halftoneJitter,Math.min(1,Math.max(0,o.halftoneJitter))),e.uniform1f(t.u_halftoneJitterSeed,Math.min(999,Math.max(0,Math.round(o.halftoneJitterSeed)))),e.uniform1f(t.u_halftoneAngle,o.halftoneAngle*Math.PI/180),e.uniform1f(t.u_halftoneGamma,o.halftoneGamma),e.uniform1i(t.u_halftoneInvert,o.halftoneInvert?1:0),e.uniform1f(t.u_halftoneRatio,o.halftoneRatio),e.uniform1f(t.u_ditherRatio,o.ditherRatio),e.uniform1f(t.u_pixelateRatio,o.pixelateRatio),e.uniform1f(t.u_pixelateGap,Math.min(.9,Math.max(0,o.pixelateGap))),e.uniform1i(t.u_pixelateGroutAuto,o.pixelateGroutColor?0:1);let V=o.pixelateGroutColor?y(o.pixelateGroutColor):[0,0,0];e.uniform3f(t.u_pixelateGrout,V[0],V[1],V[2]),e.uniform1f(t.u_glassRatio,o.glassRatio),e.uniform1i(t.u_asciiInvert,o.asciiInvert?1:0),e.uniform1i(t.u_ditherInvert,o.ditherInvert?1:0),e.uniform1i(t.u_toneGeoInvert,o.toneGeoInvert?1:0),e.uniform1i(t.u_asciiAtlas,2),e.uniform1f(t.u_asciiChars,le.chars),e.uniform1f(t.u_asciiSize,o.asciiSize*g),e.uniform1f(t.u_asciiRatio,o.asciiRatio),e.uniform1i(t.u_asciiStyle,o.asciiStyle),e.uniform1i(t.u_asciiColor,o.asciiColor),e.uniform1f(t.u_asciiBackground,o.asciiBackground),e.uniform1f(t.u_asciiExposure,o.asciiExposure),e.uniform1f(t.u_asciiFill,o.asciiFill),e.uniform1f(t.u_asciiDensity,o.asciiDensity),e.uniform1f(t.u_asciiScatter,o.asciiScatter),e.uniform1f(t.u_asciiGap,o.asciiGap),e.uniform1f(t.u_asciiAngle,o.asciiAngle*Math.PI/180),e.uniform1f(t.u_asciiThreshold,o.asciiThreshold),e.uniform1f(t.u_asciiGamma,o.asciiGamma);let ee=T(o.asciiInkColor);e.uniform3f(t.u_asciiInkColor,ee[0],ee[1],ee[2]);let ge=y(N(o.asciiPaperColor,o.stops,`a`)||`000000`);e.uniform3f(t.u_asciiPaperColor,ge[0],ge[1],ge[2]),e.uniform1f(t.u_asciiOpacity,o.asciiOpacity),e.uniform1i(t.u_asciiBlend,o.asciiBlend),e.uniform1f(t.u_grain,o.grain),e.uniform1f(t.u_grainSize,o.grainSize*g),e.uniform1f(t.u_paperAmount,o.paperAmount);let ve=o.paperColor?y(o.paperColor):[.98,.94,.86];e.uniform3f(t.u_paperTint,ve[0],ve[1],ve[2]),e.uniform1f(t.u_paperFibre,Math.min(4,Math.max(.25,o.paperFibre))),e.uniform1f(t.u_paperVignette,Math.min(2,Math.max(0,o.paperVignette))),e.uniform1f(t.u_pixelScale,g),e.uniform1f(t.u_contourLevels,o.contourLevels),e.uniform1f(t.u_contourWeight,o.contourWeight*g),e.uniform1f(t.u_contourDash,o.contourDash),e.uniform1f(t.u_contourGlow,o.contourGlow),e.uniform1i(t.u_contourColor,o.contourColor),e.uniform1f(t.u_contourPaper,o.contourPaper);let _e=o.contourInkColor?y(o.contourInkColor):[.92,.92,.92];e.uniform3f(t.u_contourInkColor,_e[0],_e[1],_e[2]);let be=o.contourPaperColor===J?y(it(o.stops,`c`)):o.contourPaperColor?y(o.contourPaperColor):[.07,.07,.08];e.uniform3f(t.u_contourPaperColor,be[0],be[1],be[2]),e.uniform1f(t.u_toneGeoSize,o.toneGeoSize*g),e.uniform1f(t.u_toneGeoLow,o.toneGeoLow),e.uniform1f(t.u_toneGeoHigh,o.toneGeoHigh),e.uniform1f(t.u_toneGeoAngle,o.toneGeoAngle*Math.PI/180),e.uniform1f(t.u_toneGeoRules,o.toneGeoRules),e.uniform1f(t.u_toneGeoCross,o.toneGeoCross*Math.PI/180),e.uniform1f(t.u_toneGeoGrid,o.toneGeoGrid*Math.PI/180),e.uniform1f(t.u_toneGeoJitter,Math.min(1,Math.max(0,o.toneGeoJitter))),e.uniform1f(t.u_toneGeoJitterSeed,Math.min(999,Math.max(0,Math.round(o.toneGeoJitterSeed))));let xe=T(o.toneGeoInkColor);e.uniform3f(t.u_toneGeoInkColor,xe[0],xe[1],xe[2]);let we=y(N(o.toneGeoPaperColor,o.stops,`t`)||`ffffff`);e.uniform3f(t.u_toneGeoPaperColor,we[0],we[1],we[2]),e.uniform1f(t.u_toneGeoWeight,o.toneGeoWeight),e.uniform1i(t.u_toneGeoColor,o.toneGeoColor),e.uniform1f(t.u_toneGeoPaper,o.toneGeoPaper),e.uniform2f(t.u_pointer,r?r.x:.5,r?r.y:.5),e.uniform1f(t.u_pointerAmount,c&&r?c===5?o.pointerAmount:o.pointerAmount*r.strength:0),e.uniform1f(t.u_pointerSize,o.pointerSize),e.uniform1f(t.u_pointerFlip,o.pointerFlip?1:0),e.uniform1i(t.u_trail,4),e.uniform2f(t.u_markCell,p[0],p[1]),e.uniform1f(t.u_markAngle,p[2])};return{render:(t,o=0,l,s)=>{vt();let r=X(t);t.fxOrder.includes(`I`)&&t.imageSrc&&t.imageSrc!==d.src&&Fe(t).catch(()=>{});let c=r.includes(`I`)&&d.ready&&d.src===t.imageSrc;i.videoAutoplay&&d.kind===`vid`&&m&&d.ready&&(c&&m.paused&&!m.ended?m.play().catch(()=>{}):!c&&!m.paused&&m.pause()),c&&d.kind===`vid`&&m&&!m.paused&&!m.ended&&me();let p=kt(t)??K;e.activeTexture(e.TEXTURE0),e.bindTexture(e.TEXTURE_2D,p),e.activeTexture(e.TEXTURE2),e.bindTexture(e.TEXTURE_2D,le.texture);let g=r.includes(`m`)&&t.pointerMode||0,C=t.sizeAnchor===1&&!i.forcePixelScale?a.height/Xt(t.aspect,d.ready&&d.width>0?{width:d.width,height:d.height}:null):Te,A=t.softness*t.softness*56*C,M=g===5?_t(t,r,C):[0,0,0];g===5&&l&&(At(t,l),e.activeTexture(e.TEXTURE4),e.bindTexture(e.TEXTURE_2D,h.disp[h.read]));let O=b=>_.includes(b),E=[];for(let b of r){let I=E.length?E[E.length-1]:null;I&&O(I[0])===O(b)?E[E.length-1]+=b:E.push(b)}(!E.length||!O(E[0][0]))&&E.unshift(``);let R=null;E.forEach((b,I)=>{let j=I===E.length-1,Z=b===``||O(b[0]),Q=Z?Ae(`L|${b}|${R?1:0}`,()=>n.layersFor(b,!!R)):Ae(`E|${b}|${g}`,()=>n.effectsFor(b,g)),$=R&&!Z&&b.includes(`o`)&&t.softness>0?Me(Re,R,a.width,a.height,A):R;if(e.bindFramebuffer(e.FRAMEBUFFER,j?null:ue[I%2]),j&&s?.clip){let H=ee=>Math.round(Math.min(1,Math.max(0,ee))*a.width),V=H(s.clip[0]);e.enable(e.SCISSOR_TEST),e.scissor(V,0,Math.max(H(s.clip[1])-V,0),a.height)}e.useProgram(Q.prog),e.viewport(0,0,a.width,a.height),$&&(e.activeTexture(e.TEXTURE1),e.bindTexture(e.TEXTURE_2D,$),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR)),Rt(Q.u,t,o,c,l,g,M,C),e.drawArrays(e.TRIANGLES,0,3),R=j?null:ie[I%2]}),s?.clip&&e.disable(e.SCISSOR_TEST)},resize(t,o,l){return Te=l,a.width===t&&a.height===o?!1:(a.width=t,a.height=o,!0)},async preload(t){t.fxOrder.includes(`I`)&&t.imageSrc&&t.imageSrc!==d.src&&await Fe(t)},imageDims(){return d.ready&&d.width>0?{width:d.width,height:d.height}:null},videoActive(){return d.ready&&d.kind===`vid`&&!!m&&!m.paused&&!m.ended},pointerBusy(){return performance.now()<h.busyUntil},videoDuration(){return m&&Number.isFinite(m.duration)?m.duration:null},videoTime(){return m?.currentTime??0},seekVideo(t){let o=m;if(!o||o.readyState<1)return Promise.resolve();o.pause();let l=Number.isFinite(o.duration)?t%o.duration:t;return new Promise(s=>{let r=()=>{me(),s()};if(Math.abs(o.currentTime-l)<1e-4&&o.readyState>=2)return r();o.addEventListener(`seeked`,r,{once:!0}),o.currentTime=l})},playVideo(t=0){m&&(m.currentTime=t,m.play().catch(()=>{}))},dispose(){W++,pe(),e.deleteTexture(le.texture),e.deleteTexture(K);for(let t=0;t<2;t++)e.deleteTexture(ie[t]),e.deleteFramebuffer(ue[t]),h.disp[t]&&e.deleteTexture(h.disp[t]),h.vel[t]&&e.deleteTexture(h.vel[t]),h.fbo[t]&&e.deleteFramebuffer(h.fbo[t]);h.prog&&e.deleteProgram(h.prog.prog);for(let t of[Re,Ge]){for(let o=0;o<2;o++)t.tex[o]&&e.deleteTexture(t.tex[o]),t.fbo[o]&&e.deleteFramebuffer(t.fbo[o]),t.tex[o]=null,t.fbo[o]=null;t.w=0,t.h=0}z&&(e.deleteProgram(z.prog),z=null);for(let{prog:t}of ae.values())e.deleteProgram(t);ae.clear(),i.releaseContext&&e.getExtension(`WEBGL_lose_context`)?.loseContext()}}}function So(a,i={}){return Eo(a,i,{vertex:Vt,layersFor:eo,effectsFor:yo,spring:vo,blur:go})}var pt=(()=>{class a{config=re.required();canvasRef=cz.required(`canvas`);host=p(se);destroyRef=p(te);isBrowser=$e(p(De));renderer=null;design=lt({});animateOn=!1;pointerOn=!1;target={x:.5,y:.5,strength:0};eased={x:.5,y:.5,strength:0};phase=0;raf=0;last=0;onscreen=!0;tabVisible=!0;zone=null;playsFootage=!1;constructor(){ke(()=>{let n=this.config();this.renderer&&this.apply(n)}),Pt(()=>{let n=this.canvasRef().nativeElement;if(this.playsFootage=!matchMedia(`(prefers-reduced-motion: reduce)`).matches,this.renderer=So(n,{onImageReady:()=>{this.draw(),this.wake()},videoAutoplay:this.playsFootage}),!this.renderer)return;let e=new ResizeObserver(this.resize);e.observe(this.host.nativeElement);let f=new IntersectionObserver(u=>{this.onscreen=u[u.length-1].isIntersecting,this.syncVideo(),this.wake()});f.observe(this.host.nativeElement),document.addEventListener(`visibilitychange`,this.onVisibility),this.zone=this.host.nativeElement.parentElement,this.zone?.addEventListener(`pointermove`,this.onPointerMove),this.zone?.addEventListener(`pointerleave`,this.onPointerLeave),this.destroyRef.onDestroy(()=>{e.disconnect(),f.disconnect(),document.removeEventListener(`visibilitychange`,this.onVisibility),this.zone?.removeEventListener(`pointermove`,this.onPointerMove),this.zone?.removeEventListener(`pointerleave`,this.onPointerLeave),this.zone=null,cancelAnimationFrame(this.raf),this.renderer?.dispose(),this.renderer=null}),this.apply(this.config())})}apply(n){this.design=lt(n);let e=this.design,f=matchMedia(`(prefers-reduced-motion: reduce)`).matches;this.animateOn=e.animate&&!f;let u=e.pointerMode>0&&$t(e).includes(`m`)||st(e,`G`)&&e.gradientFollow!==0&&e.stops.length>1;this.pointerOn=u&&!f&&matchMedia(`(hover: hover)`).matches;let S=[this.renderer.preload(e).catch(()=>{})];Promise.all(S).then(()=>{this.resize(),this.syncVideo(),this.draw(),this.wake()})}draw=()=>{this.renderer?.render(this.design,this.phase,this.eased),this.syncVideo()};syncVideo(n=this.onscreen&&this.tabVisible){let e=this.renderer;!e||!this.playsFootage||this.design.imageKind!==`vid`||!st(this.design,`I`)||n!==e.videoActive()&&(n?e.playVideo(e.videoTime()):e.seekVideo(e.videoTime()))}needsFrames(){return this.onscreen&&this.tabVisible&&(this.animateOn||this.renderer?.videoActive()===!0||this.pointerOn&&(this.target.strength>0||this.eased.strength>.003||this.renderer?.pointerBusy()===!0))}tick=n=>{if(this.raf=0,!this.needsFrames()){this.target.strength===0&&this.eased.strength>0&&(this.eased.strength=0,this.draw()),this.last=0;return}let e=this.last?(n-this.last)/1e3:0;if(this.last=n,this.animateOn&&e&&(this.phase=(this.phase+e*this.design.animSpeed/ko)%1),this.pointerOn&&e){let f=1-Math.exp(-e*10),u=1-Math.exp(-e*6);this.eased.x+=(this.target.x-this.eased.x)*f,this.eased.y+=(this.target.y-this.eased.y)*f,this.eased.strength+=(this.target.strength-this.eased.strength)*u}this.draw(),this.raf=requestAnimationFrame(this.tick)};wake(){!this.raf&&this.needsFrames()&&(this.last=0,this.raf=requestAnimationFrame(this.tick))}resize=()=>{let n=this.host.nativeElement.getBoundingClientRect(),e=Math.min(devicePixelRatio||1,2);this.renderer?.resize(Math.max(1,Math.round(n.width*e)),Math.max(1,Math.round(n.height*e)),e)&&this.draw()};onPointerMove=n=>{let e=this.host.nativeElement.getBoundingClientRect();this.target.x=(n.clientX-e.left)/Math.max(1,e.width),this.target.y=1-(n.clientY-e.top)/Math.max(1,e.height),this.target.strength=1,this.wake()};onPointerLeave=()=>{this.target.strength=0,this.wake()};onVisibility=()=>{this.tabVisible=!document.hidden,this.syncVideo(),this.wake()};static ɵfac=function(e){return new(e||a)};static ɵcmp=(function(){let n=[`canvas`];return Zn({type:a,selectors:[[`oddity-canvas`]],viewQuery:function(f,u){f&1&&mb(u.canvasRef,n,5),f&2&&dA()},hostAttrs:[`aria-hidden`,`true`],inputs:{config:[1,`config`]},decls:2,vars:0,consts:[[`canvas`,``]],template:function(f,u){f&1&&hs(0,`canvas`,null,0)},styles:[`[_nghost-%COMP%]{position:absolute;inset:0;display:block;overflow:hidden;pointer-events:none}canvas[_ngcontent-%COMP%]{display:block;width:100%;height:100%}`]})})()}return a})();var Ao=(a,i)=>i.title;function To(a,i){if(a&1&&(Fl(0,`a`,13),Jl(1,`bx-icon`,21),Fl(2,`h3`),FA(3),jh(),Fl(4,`p`),FA(5),jh(),Fl(6,`span`,22),FA(7,`Explore`),Jl(8,`bx-icon`,23),jh()()),a&2){let n=i.$implicit;ab(`routerLink`,n.route),CC(),ab(`name`,n.icon),CC(2),Mb(n.title),CC(2),Mb(n.description)}}var mt=class a{version=at;themingService=p(lr);features=[{title:`One shared material`,description:`Set appearance once. Buttons, fields, menus, dialogs, and notifications share your application settings.`,icon:`layers`,route:`/appearance`},{title:`Your Blocks theme`,description:`Existing semantic colors, spacing, radii, and palettes carry through every surface.`,icon:`palette`,route:`/components/button`},{title:`Familiar interactions`,description:`Keep native controls, keyboard navigation, and reduced motion while adding fluid transitions.`,icon:`accessibility`,route:`/modal`}];look=Q(()=>{this.themingService.palette(),this.themingService.activeTheme();let i=window.getComputedStyle(document.body).getPropertyValue(`--bx-primary`),n=window.getComputedStyle(document.body).getPropertyValue(`--bx-bg-canvas`);return{fxOrder:`Ggr`,stops:[{color:i.replace(`#`,``),pos:0},{color:n.replace(`#`,``),pos:57},{color:n.replace(`#`,``),pos:100}],seed:511,warp:.35,noiseScale:1.36,detail:0,contrast:.82,angle:180,centerX:.713,centerY:.271,lightMode:3,lightAmount:.11,lightSize:.27,lightFollow:1,glassMode:1,glassAmount:.42,glassCount:5,glassAngle:145,glassProfile:2,glassBevel:.01,glassShadow:.16,glassHighlight:.27,pointerMode:2,pointerDamping:1,pointerFlip:!0,animate:!0}});static ɵfac=function(n){return new(n||a)};static ɵcmp=Zn({type:a,selectors:[[`app-home`]],decls:42,vars:3,consts:[[1,`oddity-canvas`,3,`config`],[1,`home-container`],[1,`hero`],[1,`hero-content`],[1,`eyebrow`],[1,`hero-subtitle`],[1,`hero-actions`],[`bx-button`,``,`variant`,`filled`,`color`,`primary`,`routerLink`,`/appearance`],[`name`,`arrow-right`,`size`,`20`],[`bx-button`,``,`variant`,`filled`,`color`,`grayscale`,`routerLink`,`/components`,3,`outlined`],[`aria-labelledby`,`features-title`,1,`features`],[`id`,`features-title`],[1,`feature-grid`],[`bxSurface`,``,1,`feature-card`,3,`routerLink`],[`aria-label`,`Flagship components`,1,`home-links`],[`bx-button`,``,`variant`,`text`,`routerLink`,`/modal`],[`name`,`arrow-right`,`size`,`16`],[`bx-button`,``,`variant`,`text`,`routerLink`,`/toastr`],[`bx-button`,``,`variant`,`text`,`routerLink`,`/icon-catalog`],[1,`home-footer`],[`href`,`https://www.npmjs.com/package/@filip.mazev/blocks`,`target`,`_blank`,`rel`,`noopener noreferrer`],[`size`,`24`,3,`name`],[1,`feature-link`],[`name`,`arrow-up-right`,`size`,`16`]],template:function(n,e){n&1&&(Jl(0,`oddity-canvas`,0),Fl(1,`div`,1)(2,`header`,2)(3,`div`,3)(4,`p`,4),FA(5,`Blocks · Angular components`),jh(),Fl(6,`h1`),FA(7,`Build with clarity.`),Jl(8,`br`),Fl(9,`span`),FA(10,`Give it depth.`),jh()(),Fl(11,`p`,5),FA(12,`A modular UI library with shared theming, accessible controls, and materials that feel at home throughout your application.`),jh(),Fl(13,`div`,6)(14,`a`,7),FA(15,`Configure appearance`),Jl(16,`bx-icon`,8),jh(),Fl(17,`a`,9),FA(18,`Browse components`),jh()()()(),Fl(19,`section`,10)(20,`h2`,11),FA(21,`Built on the Blocks foundations`),jh(),Fl(22,`div`,12),QT(23,To,9,4,`a`,13,Ao),jh()(),Fl(25,`section`,14)(26,`a`,15),FA(27,`Modal playground`),Jl(28,`bx-icon`,16),jh(),Fl(29,`a`,17),FA(30,`Toast playground`),Jl(31,`bx-icon`,16),jh(),Fl(32,`a`,18),FA(33,`Icon catalog`),Jl(34,`bx-icon`,16),jh()(),Fl(35,`footer`,19)(36,`span`),FA(37,`Designed & developed by Filip Mazev`),jh(),Fl(38,`span`),FA(39),jh(),Fl(40,`a`,20),FA(41,`npm package`),jh()()()),n&2&&(ab(`config`,e.look()),CC(17),ab(`outlined`,!0),CC(6),JT(e.features),CC(16),$h(`Blocks `,e.version))},dependencies:[Zc,R_,S,E_,pt],styles:[`
+}`),s.join(`
+`)}var Ui=12;function zi(n,o,a){let e=n.getContext(`webgl2`,{antialias:!1,preserveDrawingBuffer:!0});if(!e)return null;let r=(t,i)=>{let h=e.createShader(t);if(e.shaderSource(h,i),e.compileShader(h),!e.getShaderParameter(h,e.COMPILE_STATUS)){let c=e.getShaderInfoLog(h);throw e.deleteShader(h),new Error(`Shader compile failed: ${c}`)}return h},s=t=>{let i=e.createProgram();if(e.attachShader(i,r(e.VERTEX_SHADER,a.vertex)),e.attachShader(i,r(e.FRAGMENT_SHADER,t)),e.linkProgram(i),!e.getProgramParameter(i,e.LINK_STATUS))throw new Error(`Program link failed: ${e.getProgramInfoLog(i)}`);return i},u=(t,i)=>{let h={};for(let c of i)h[c]=e.getUniformLocation(t,c);return h},A=t=>t?x(t):[1,1,1],C=(t,i,h)=>t===ge?St(i,h):t,x=t=>{let[i,h,c]=Zt(t,[255,255,255]);return[i/255,h/255,c/255]},f=`GIP`,_=`GIPowglpdhasrmct`,G=t=>{let i=[];for(let h of t.fxOrder)_.includes(h)&&!i.includes(h)&&!t.hidden.includes(h)&&i.push(h);return!i.includes(`G`)&&!i.includes(`I`)?``:i.join(``)},F=[`u_shape`,`u_warp`,`u_scale`,`u_detail`,`u_contrast`,`u_angle`,`u_center`,`u_stopCount`,`u_followCursor`,`u_followAmount`,`u_followPos`,`u_followIndex`,`u_gradientOpacity`,`u_gradientBlend`,`u_oklab`,`u_image`,`u_imageOn`,`u_imageAspect`,`u_imageOpacity`,`u_imageBlend`,`u_imageFit`,`u_imageFocal`,`u_imageZoom`,`u_patternSource`,`u_patternLayout`,`u_patternCols`,`u_patternRows`,`u_patternGap`,`u_patternRadius`,`u_patternGapColor`,`u_patternSeed`,`u_scene`,`u_resolution`,`u_seed`,`u_phase`,`u_aberration`,`u_lensDistort`,`u_lightMode`,`u_lightAmount`,`u_lightSize`,`u_lightCount`,`u_waveMode`,`u_waveAxis`,`u_waveAmount`,`u_waveFrequency`,`u_waveFalloff`,`u_wavePhase`,`u_waveCenter`,`u_glassMode`,`u_glassAmount`,`u_glassCount`,`u_glassShadow`,`u_glassHighlight`,`u_pixelate`,`u_ditherAlgo`,`u_ditherMatrix`,`u_ditherScale`,`u_ditherLevels`,`u_ditherStrength`,`u_ditherColorMode`,`u_ditherThreshold`,`u_ditherGamma`,`u_halftoneSize`,`u_halftoneStyle`,`u_halftoneStagger`,`u_halftoneDotScale`,`u_halftoneColor`,`u_halftonePaper`,`u_halftonePaperColor`,`u_halftoneInkColor`,`u_halftoneEmboss`,`u_halftoneWind`,`u_halftoneWindAngle`,`u_halftoneWobble`,`u_halftoneGlint`,`u_halftoneAngle`,`u_halftoneGamma`,`u_halftoneInvert`,`u_halftoneRatio`,`u_ditherRatio`,`u_pixelateRatio`,`u_glassRatio`,`u_glassAngle`,`u_glassProfile`,`u_glassBevel`,`u_halftoneJitter`,`u_halftoneJitterSeed`,`u_toneGeoJitter`,`u_toneGeoJitterSeed`,`u_pixelateGap`,`u_pixelateGrout`,`u_pixelateGroutAuto`,`u_pointerFlip`,`u_paperTint`,`u_paperFibre`,`u_paperVignette`,`u_asciiInvert`,`u_ditherInvert`,`u_toneGeoInvert`,`u_asciiAtlas`,`u_asciiChars`,`u_asciiSize`,`u_asciiRatio`,`u_asciiStyle`,`u_asciiColor`,`u_asciiBackground`,`u_asciiExposure`,`u_asciiFill`,`u_asciiDensity`,`u_asciiScatter`,`u_asciiGap`,`u_asciiAngle`,`u_asciiThreshold`,`u_asciiGamma`,`u_asciiInkColor`,`u_asciiPaperColor`,`u_asciiOpacity`,`u_asciiBlend`,`u_grain`,`u_grainSize`,`u_paperAmount`,`u_pixelScale`,`u_contourLevels`,`u_contourWeight`,`u_contourDash`,`u_contourGlow`,`u_contourColor`,`u_contourPaper`,`u_contourInkColor`,`u_contourPaperColor`,`u_toneGeoSize`,`u_toneGeoLow`,`u_toneGeoHigh`,`u_toneGeoAngle`,`u_toneGeoGrid`,`u_toneGeoRules`,`u_toneGeoCross`,`u_toneGeoInkColor`,`u_toneGeoPaperColor`,`u_toneGeoWeight`,`u_toneGeoColor`,`u_toneGeoPaper`,`u_pointer`,`u_pointerAmount`,`u_pointerSize`,`u_trail`,`u_markCell`,`u_markAngle`],L=()=>{let t=` .:-=+*#%@`,h=document.createElement(`canvas`);h.width=640,h.height=64;let c=h.getContext(`2d`);c.fillStyle=`#000`,c.fillRect(0,0,h.width,h.height),c.fillStyle=`#fff`,c.font=`51.2px ui-monospace, Menlo, monospace`,c.textAlign=`center`,c.textBaseline=`middle`;for(let d=0;d<10;d++)c.fillText(t[d],(d+.5)*64,34.56);let l=e.createTexture();return e.bindTexture(e.TEXTURE_2D,l),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!0),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,e.RGBA,e.UNSIGNED_BYTE,h),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!1),e.generateMipmap(e.TEXTURE_2D),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR_MIPMAP_LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),{texture:l,chars:10}},m=new Map,k=(t,i)=>{let h=m.get(t);if(!h){let c=s(i()),l=u(c,F);for(let d=0;d<8;d++)l[`u_colors[${d}]`]=e.getUniformLocation(c,`u_colors[${d}]`),l[`u_positions[${d}]`]=e.getUniformLocation(c,`u_positions[${d}]`);for(let d=0;d<4;d++)l[`u_lightPos[${d}]`]=e.getUniformLocation(c,`u_lightPos[${d}]`),l[`u_lightColor[${d}]`]=e.getUniformLocation(c,`u_lightColor[${d}]`),l[`u_lightGain[${d}]`]=e.getUniformLocation(c,`u_lightGain[${d}]`),l[`u_lightSpread[${d}]`]=e.getUniformLocation(c,`u_lightSpread[${d}]`);h={prog:c,u:l},m.set(t,h)}return h},g=L(),p=[e.createTexture(),e.createTexture()],M=[e.createFramebuffer(),e.createFramebuffer()],$=0,S=0,V=1,z=()=>{if(!($===n.width&&S===n.height)){$=n.width,S=n.height;for(let t=0;t<2;t++)e.bindTexture(e.TEXTURE_2D,p[t]),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,$,S,0,e.RGBA,e.UNSIGNED_BYTE,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),e.bindFramebuffer(e.FRAMEBUFFER,M[t]),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,p[t],0);e.bindFramebuffer(e.FRAMEBUFFER,null)}},be=t=>Math.max(t,.05),Ce=(t,i,h)=>{let c=d=>d*Math.PI/180,l=i.indexOf(`m`);for(let d=l-1;d>=0;d--)switch(i[d]){case`a`:{let y=Math.max(t.asciiSize*h,4),P=Math.max(Math.floor(n.width/y),4),j=Math.max(Math.floor(n.height/(y*t.asciiRatio)),4);return[n.width/P,n.height/j,c(t.asciiAngle)]}case`h`:{let y=Math.max(t.halftoneSize*h,4);return[y,y*be(t.halftoneRatio),c(t.halftoneAngle)]}case`t`:{let y=Math.max(t.toneGeoSize*h,8);return[y,y,c(t.toneGeoGrid)]}case`p`:{if(t.pixelate<2)break;let y=n.height/t.pixelate;return[y,y*be(t.pixelateRatio),0]}case`d`:{let y=Math.max(t.ditherScale*h,1);return[y,y*be(t.ditherRatio),0]}}return[0,0,0]},_e=()=>({tex:[null,null],fbo:[null,null],w:0,h:0}),tt=_e(),it=_e(),re=null,Bt=[`u_src`,`u_outRes`,`u_step`,`u_sigma`],ot=12,Xt=ot/3,Ut=t=>t<=24?1:t<=48?2:t<=96?4:8,zt=(t,i,h)=>{if(!(t.w===i&&t.h===h&&t.tex[0])){t.w=i,t.h=h;for(let c=0;c<2;c++)t.tex[c]??=e.createTexture(),t.fbo[c]??=e.createFramebuffer(),e.bindTexture(e.TEXTURE_2D,t.tex[c]),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,i,h,0,e.RGBA,e.UNSIGNED_BYTE,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),e.bindFramebuffer(e.FRAMEBUFFER,t.fbo[c]),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,t.tex[c],0);e.bindFramebuffer(e.FRAMEBUFFER,null)}},at=(t,i,h,c,l)=>{let d=Ut(l),y=Math.max(1,Math.floor(h/d)),P=Math.max(1,Math.floor(c/d));if(zt(t,y,P),!re){let J=s(a.blur);re={prog:J,u:u(J,Bt)}}let Y=3*(Math.max(l,.5)/3/d)/ot,W=re;return e.useProgram(W.prog),e.viewport(0,0,y,P),e.uniform2f(W.u.u_outRes,y,P),e.uniform1f(W.u.u_sigma,Xt),e.activeTexture(e.TEXTURE6),e.bindFramebuffer(e.FRAMEBUFFER,t.fbo[0]),e.bindTexture(e.TEXTURE_2D,i),e.uniform1i(W.u.u_src,6),e.uniform2f(W.u.u_step,Y/y,0),e.drawArrays(e.TRIANGLES,0,3),e.bindFramebuffer(e.FRAMEBUFFER,t.fbo[1]),e.bindTexture(e.TEXTURE_2D,t.tex[0]),e.uniform1i(W.u.u_src,6),e.uniform2f(W.u.u_step,0,Y/P),e.drawArrays(e.TRIANGLES,0,3),e.bindFramebuffer(e.FRAMEBUFFER,null),t.tex[1]},se={key:``,tex:null},nt=()=>{se.key=``},Wt=t=>{if(!(t.imageBlur>0)||!b.ready||!b.width)return null;let i=`${b.width}x${b.height}|${t.imageBlur}|${t.imageSrc}`;if(se.key===i&&se.tex)return se.tex;let h=t.imageBlur*t.imageBlur*.06*Math.max(b.width,b.height),c=at(it,ye,b.width,b.height,h);return se.key=i,se.tex=c,c},v={disp:[null,null],vel:[null,null],fbo:[null,null],w:0,h:0,read:0,prog:null,lastTime:0,busyUntil:0},$t=[`u_prevDisp`,`u_prevVel`,`u_fieldRes`,`u_aspect`,`u_now`,`u_paint`,`u_radius`,`u_amount`,`u_stiff`,`u_frames`,`u_damping`,`u_flip`],rt=()=>{e.clearColor(128/255,0,128/255,0);for(let t=0;t<2;t++)e.bindFramebuffer(e.FRAMEBUFFER,v.fbo[t]),e.clear(e.COLOR_BUFFER_BIT);e.bindFramebuffer(e.FRAMEBUFFER,null)},qt=()=>{let t=256/Math.max(n.width,n.height,1),i=Math.max(16,Math.round(n.width*t)),h=Math.max(16,Math.round(n.height*t));if(!(v.w===i&&v.h===h&&v.disp[0])){v.w=i,v.h=h;for(let c=0;c<2;c++){v.disp[c]??=e.createTexture(),v.vel[c]??=e.createTexture(),v.fbo[c]??=e.createFramebuffer();for(let l of[v.disp[c],v.vel[c]])e.bindTexture(e.TEXTURE_2D,l),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,i,h,0,e.RGBA,e.UNSIGNED_BYTE,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE);e.bindFramebuffer(e.FRAMEBUFFER,v.fbo[c]),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,v.disp[c],0),e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT1,e.TEXTURE_2D,v.vel[c],0),e.drawBuffers([e.COLOR_ATTACHMENT0,e.COLOR_ATTACHMENT1])}rt()}},Ht=(t,i)=>{if(qt(),!v.prog){let P=s(a.spring);v.prog={prog:P,u:u(P,$t)}}let h=performance.now(),c=h-v.lastTime;v.lastTime=h,c>400&&rt();let l=Math.min(c,100)/(1e3/60);i.strength>.01&&(v.busyUntil=h+2500);let d=1-v.read,y=v.prog;e.bindFramebuffer(e.FRAMEBUFFER,v.fbo[d]),e.viewport(0,0,v.w,v.h),e.useProgram(y.prog),e.activeTexture(e.TEXTURE4),e.bindTexture(e.TEXTURE_2D,v.disp[v.read]),e.uniform1i(y.u.u_prevDisp,4),e.activeTexture(e.TEXTURE5),e.bindTexture(e.TEXTURE_2D,v.vel[v.read]),e.uniform1i(y.u.u_prevVel,5),e.uniform2f(y.u.u_fieldRes,v.w,v.h),e.uniform1f(y.u.u_aspect,n.width/Math.max(n.height,1)),e.uniform2f(y.u.u_now,i.x,i.y),e.uniform1f(y.u.u_paint,i.strength),e.uniform1f(y.u.u_radius,t.pointerSize),e.uniform1f(y.u.u_amount,t.pointerAmount),e.uniform1f(y.u.u_stiff,t.pointerFade),e.uniform1f(y.u.u_damping,t.pointerDamping<0?-1:Math.min(1,t.pointerDamping)),e.uniform1f(y.u.u_flip,t.pointerFlip?1:0),e.uniform1f(y.u.u_frames,l),e.drawArrays(e.TRIANGLES,0,3),e.bindFramebuffer(e.FRAMEBUFFER,null),v.read=d},ye=e.createTexture(),b={src:``,kind:`img`,aspect:1,width:0,height:0,ready:!1},T=null,ee=null,Be=!1,le=0,Me=t=>{t.pause(),t.removeAttribute(`src`),t.load()},Xe=()=>{ee&&(Me(ee),ee=null),T&&(Me(T),T=null,Be=!1)},Ue=()=>{!T||T.readyState<2||(e.bindTexture(e.TEXTURE_2D,ye),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!0),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!0),Be?e.texSubImage2D(e.TEXTURE_2D,0,0,0,e.RGBA,e.UNSIGNED_BYTE,T):(e.texImage2D(e.TEXTURE_2D,0,e.RGBA,e.RGBA,e.UNSIGNED_BYTE,T),Be=!0),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!1),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!1),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),nt())},Yt=t=>new Promise((i,h)=>{let c=++le;Xe(),b.src=t,b.kind=`img`,b.ready=!1;let l=new Image;l.onload=()=>{if(c!==le)return i();e.bindTexture(e.TEXTURE_2D,ye),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!0),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!0),e.texImage2D(e.TEXTURE_2D,0,e.RGBA,e.RGBA,e.UNSIGNED_BYTE,l),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,!1),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,!1),e.generateMipmap(e.TEXTURE_2D),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR_MIPMAP_LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),b.aspect=l.naturalWidth/l.naturalHeight,b.width=l.naturalWidth,b.height=l.naturalHeight,b.ready=!0,nt(),o.onImageReady?.(),i()},l.onerror=()=>{console.error(`Image failed to load: ${t}`),h(new Error(`Image failed to load: ${t}`))},l.crossOrigin=`anonymous`,l.src=t}),Vt=t=>new Promise((i,h)=>{let c=++le;Xe(),b.src=t,b.kind=`vid`,b.ready=!1;let l=document.createElement(`video`);l.muted=!0,l.playsInline=!0,l.loop=!0,l.preload=`auto`,l.crossOrigin=`anonymous`;let d=()=>{if(c!==le)return Me(l),i();if(!l.videoWidth||!l.videoHeight)return ee=null,Me(l),console.error(`File has no video track: ${t}`),h(new Error(`File has no video track: ${t}`));ee=null,T=l,b.aspect=l.videoWidth/Math.max(1,l.videoHeight),b.width=l.videoWidth,b.height=l.videoHeight,Ue(),b.ready=!0,l.addEventListener(`playing`,()=>{c===le&&o.onImageReady?.()}),o.videoAutoplay&&l.play().catch(()=>{}),o.onImageReady?.(),i()};l.onloadeddata=()=>{l.onloadeddata=null,Number.isFinite(l.duration)?d():(l.addEventListener(`seeked`,()=>{l.addEventListener(`seeked`,d,{once:!0}),l.currentTime=0},{once:!0}),l.currentTime=1e6)},l.onerror=()=>{ee===l&&(ee=null),console.error(`Video failed to load: ${t}`),h(new Error(`Video failed to load: ${t}`))},ee=l,l.src=t}),st=t=>t.imageKind===`vid`?Vt(t.imageSrc):Yt(t.imageSrc),Kt=(t,i,h,c,l,d,y,P)=>{e.uniform2f(t.u_resolution,n.width,n.height),e.uniform1f(t.u_phase,h),e.uniform1f(t.u_seed,i.seed),e.uniform1i(t.u_scene,1),e.uniform1i(t.u_shape,i.shape),e.uniform1f(t.u_warp,i.warp),e.uniform1f(t.u_scale,i.noiseScale),e.uniform1i(t.u_detail,i.detail),e.uniform1f(t.u_contrast,i.contrast),e.uniform1f(t.u_angle,i.angle*Math.PI/180),e.uniform2f(t.u_center,i.centerX,i.centerY),e.uniform1f(t.u_gradientOpacity,i.gradientOpacity),e.uniform1i(t.u_gradientBlend,i.gradientBlend),e.uniform1i(t.u_oklab,i.oklab?1:0);let j=[...i.stops].sort((B,ie)=>B.pos-ie.pos),Y=Math.min(j.length,8);e.uniform1i(t.u_stopCount,Y);for(let B=0;B<8;B++){let ie=j[Math.min(B,Y-1)],oe=x(ie.color);e.uniform3f(t[`u_colors[${B}]`],oe[0],oe[1],oe[2]),e.uniform1f(t[`u_positions[${B}]`],ie.pos/100)}let W=Math.round(i.gradientFollow),J=W!==0&&Y>1?j.indexOf(i.stops[W>0&&W<=Y?W-1:Lt(i.stops)]):-1;e.uniform2f(t.u_followCursor,l?l.x:.5,l?l.y:.5),e.uniform1f(t.u_followAmount,J>=0&&l?l.strength:0),e.uniform1f(t.u_followPos,J>=0?j[J].pos/100:0),e.uniform1i(t.u_followIndex,J),e.uniform1i(t.u_image,0),e.uniform1i(t.u_imageOn,c?1:0),e.uniform1f(t.u_imageAspect,b.aspect),e.uniform1f(t.u_imageOpacity,i.imageOpacity),e.uniform1i(t.u_imageBlend,i.imageBlend),e.uniform1i(t.u_imageFit,i.imageFit===1?1:0),e.uniform2f(t.u_imageFocal,i.imageFocalX,i.imageFocalY),e.uniform1f(t.u_imageZoom,i.imageZoom),e.uniform1i(t.u_patternSource,i.patternSource===`t`?1:0),e.uniform1i(t.u_patternLayout,Math.max(0,ii.indexOf(i.patternLayout))),e.uniform1i(t.u_patternCols,i.patternCols),e.uniform1i(t.u_patternRows,i.patternRows),e.uniform1f(t.u_patternGap,i.patternGap*P),e.uniform1f(t.u_patternRadius,i.patternRadius*P);let te=x(i.patternGapColor||j[0].color);e.uniform3f(t.u_patternGapColor,te[0],te[1],te[2]),e.uniform1f(t.u_patternSeed,i.patternSeed),e.uniform1f(t.u_aberration,i.aberration),e.uniform1f(t.u_lensDistort,Math.min(1,Math.max(-1,i.lensDistort))),e.uniform1i(t.u_lightMode,i.lightMode);let X=Math.min(4,Math.max(1,Math.round(i.lightCount)||1)),K=Math.min(X,Math.round(i.lightFollow)||0),D=K>0&&l?l.strength:0,Q=K===1&&X===1;e.uniform1f(t.u_lightAmount,Q?i.lightAmount*D:i.lightAmount),e.uniform1f(t.u_lightSize,i.lightSize),e.uniform1i(t.u_lightCount,X);let xe=[[i.lightX,i.lightY,i.lightColor,i.lightGain,i.lightSpread],[i.light2X,i.light2Y,i.lightColor2,i.lightGain2,i.lightSpread2],[i.light3X,i.light3Y,i.lightColor3,i.lightGain3,i.lightSpread3],[i.light4X,i.light4Y,i.lightColor4,i.lightGain4,i.lightSpread4]];for(let B=0;B<4;B++){let[ie,oe,jt,Jt,Qt]=xe[B],Ve=K===B+1;e.uniform2f(t[`u_lightPos[${B}]`],Ve&&l?ie+(l.x-ie)*D:ie,Ve&&l?oe+(l.y-oe)*D:oe);let Ke=x(jt),je=Ve&&!Q?D:1;e.uniform3f(t[`u_lightColor[${B}]`],Ke[0]*je,Ke[1]*je,Ke[2]*je),e.uniform1f(t[`u_lightGain[${B}]`],Math.min(2,Math.max(0,Jt))),e.uniform1f(t[`u_lightSpread[${B}]`],Math.min(2,Math.max(.05,Qt)))}let we=[[1,0],[-1,0],[0,-1],[0,1]],ke=we[Math.round(i.waveSide)]??we[0];e.uniform1i(t.u_waveMode,Math.round(i.waveMode)===1?1:0),e.uniform2f(t.u_waveAxis,ke[0],ke[1]),e.uniform1f(t.u_waveAmount,i.waveAmount),e.uniform1f(t.u_waveFrequency,i.waveFrequency),e.uniform1f(t.u_waveFalloff,i.waveFalloff),e.uniform1f(t.u_wavePhase,i.wavePhase),e.uniform2f(t.u_waveCenter,i.waveX,i.waveY),e.uniform1i(t.u_glassMode,i.glassMode),e.uniform1f(t.u_glassAmount,i.glassAmount),e.uniform1f(t.u_glassCount,i.glassCount),e.uniform1f(t.u_glassAngle,i.glassAngle*Math.PI/180),e.uniform1f(t.u_glassProfile,Math.min(5,Math.max(1,i.glassProfile))),e.uniform1f(t.u_glassBevel,Math.min(.4,Math.max(.005,i.glassBevel))),e.uniform1f(t.u_glassShadow,i.glassShadow),e.uniform1f(t.u_glassHighlight,i.glassHighlight),e.uniform1f(t.u_pixelate,i.pixelate),e.uniform1i(t.u_ditherAlgo,i.ditherAlgo),e.uniform1i(t.u_ditherMatrix,i.ditherMatrix),e.uniform1f(t.u_ditherScale,i.ditherScale*P),e.uniform1f(t.u_ditherLevels,i.ditherLevels),e.uniform1f(t.u_ditherStrength,i.ditherStrength),e.uniform1i(t.u_ditherColorMode,i.ditherColorMode),e.uniform1f(t.u_ditherThreshold,i.ditherThreshold),e.uniform1f(t.u_ditherGamma,i.ditherGamma),e.uniform1f(t.u_halftoneSize,i.halftoneSize*P),e.uniform1i(t.u_halftoneStyle,i.halftoneStyle),e.uniform1i(t.u_halftoneStagger,i.halftoneStagger?1:0),e.uniform1f(t.u_halftoneDotScale,i.halftoneDotScale),e.uniform1i(t.u_halftoneColor,i.halftoneColor),e.uniform1f(t.u_halftonePaper,i.halftonePaper);let ce=x(C(i.halftonePaperColor,i.stops,`h`));e.uniform3f(t.u_halftonePaperColor,ce[0],ce[1],ce[2]);let he=A(i.halftoneInkColor);e.uniform3f(t.u_halftoneInkColor,he[0],he[1],he[2]),e.uniform1f(t.u_halftoneEmboss,i.halftoneEmboss),e.uniform1f(t.u_halftoneWind,i.halftoneWind),e.uniform1f(t.u_halftoneWindAngle,i.halftoneWindAngle*Math.PI/180),e.uniform1f(t.u_halftoneWobble,i.halftoneWobble),e.uniform1f(t.u_halftoneGlint,i.halftoneGlint),e.uniform1f(t.u_halftoneJitter,Math.min(1,Math.max(0,i.halftoneJitter))),e.uniform1f(t.u_halftoneJitterSeed,Math.min(999,Math.max(0,Math.round(i.halftoneJitterSeed)))),e.uniform1f(t.u_halftoneAngle,i.halftoneAngle*Math.PI/180),e.uniform1f(t.u_halftoneGamma,i.halftoneGamma),e.uniform1i(t.u_halftoneInvert,i.halftoneInvert?1:0),e.uniform1f(t.u_halftoneRatio,i.halftoneRatio),e.uniform1f(t.u_ditherRatio,i.ditherRatio),e.uniform1f(t.u_pixelateRatio,i.pixelateRatio),e.uniform1f(t.u_pixelateGap,Math.min(.9,Math.max(0,i.pixelateGap))),e.uniform1i(t.u_pixelateGroutAuto,i.pixelateGroutColor?0:1);let ue=i.pixelateGroutColor?x(i.pixelateGroutColor):[0,0,0];e.uniform3f(t.u_pixelateGrout,ue[0],ue[1],ue[2]),e.uniform1f(t.u_glassRatio,i.glassRatio),e.uniform1i(t.u_asciiInvert,i.asciiInvert?1:0),e.uniform1i(t.u_ditherInvert,i.ditherInvert?1:0),e.uniform1i(t.u_toneGeoInvert,i.toneGeoInvert?1:0),e.uniform1i(t.u_asciiAtlas,2),e.uniform1f(t.u_asciiChars,g.chars),e.uniform1f(t.u_asciiSize,i.asciiSize*P),e.uniform1f(t.u_asciiRatio,i.asciiRatio),e.uniform1i(t.u_asciiStyle,i.asciiStyle),e.uniform1i(t.u_asciiColor,i.asciiColor),e.uniform1f(t.u_asciiBackground,i.asciiBackground),e.uniform1f(t.u_asciiExposure,i.asciiExposure),e.uniform1f(t.u_asciiFill,i.asciiFill),e.uniform1f(t.u_asciiDensity,i.asciiDensity),e.uniform1f(t.u_asciiScatter,i.asciiScatter),e.uniform1f(t.u_asciiGap,i.asciiGap),e.uniform1f(t.u_asciiAngle,i.asciiAngle*Math.PI/180),e.uniform1f(t.u_asciiThreshold,i.asciiThreshold),e.uniform1f(t.u_asciiGamma,i.asciiGamma);let Ee=A(i.asciiInkColor);e.uniform3f(t.u_asciiInkColor,Ee[0],Ee[1],Ee[2]);let ze=x(C(i.asciiPaperColor,i.stops,`a`)||`000000`);e.uniform3f(t.u_asciiPaperColor,ze[0],ze[1],ze[2]),e.uniform1f(t.u_asciiOpacity,i.asciiOpacity),e.uniform1i(t.u_asciiBlend,i.asciiBlend),e.uniform1f(t.u_grain,i.grain),e.uniform1f(t.u_grainSize,i.grainSize*P),e.uniform1f(t.u_paperAmount,i.paperAmount);let We=i.paperColor?x(i.paperColor):[.98,.94,.86];e.uniform3f(t.u_paperTint,We[0],We[1],We[2]),e.uniform1f(t.u_paperFibre,Math.min(4,Math.max(.25,i.paperFibre))),e.uniform1f(t.u_paperVignette,Math.min(2,Math.max(0,i.paperVignette))),e.uniform1f(t.u_pixelScale,P),e.uniform1f(t.u_contourLevels,i.contourLevels),e.uniform1f(t.u_contourWeight,i.contourWeight*P),e.uniform1f(t.u_contourDash,i.contourDash),e.uniform1f(t.u_contourGlow,i.contourGlow),e.uniform1i(t.u_contourColor,i.contourColor),e.uniform1f(t.u_contourPaper,i.contourPaper);let $e=i.contourInkColor?x(i.contourInkColor):[.92,.92,.92];e.uniform3f(t.u_contourInkColor,$e[0],$e[1],$e[2]);let qe=i.contourPaperColor===ge?x(St(i.stops,`c`)):i.contourPaperColor?x(i.contourPaperColor):[.07,.07,.08];e.uniform3f(t.u_contourPaperColor,qe[0],qe[1],qe[2]),e.uniform1f(t.u_toneGeoSize,i.toneGeoSize*P),e.uniform1f(t.u_toneGeoLow,i.toneGeoLow),e.uniform1f(t.u_toneGeoHigh,i.toneGeoHigh),e.uniform1f(t.u_toneGeoAngle,i.toneGeoAngle*Math.PI/180),e.uniform1f(t.u_toneGeoRules,i.toneGeoRules),e.uniform1f(t.u_toneGeoCross,i.toneGeoCross*Math.PI/180),e.uniform1f(t.u_toneGeoGrid,i.toneGeoGrid*Math.PI/180),e.uniform1f(t.u_toneGeoJitter,Math.min(1,Math.max(0,i.toneGeoJitter))),e.uniform1f(t.u_toneGeoJitterSeed,Math.min(999,Math.max(0,Math.round(i.toneGeoJitterSeed))));let He=A(i.toneGeoInkColor);e.uniform3f(t.u_toneGeoInkColor,He[0],He[1],He[2]);let Ye=x(C(i.toneGeoPaperColor,i.stops,`t`)||`ffffff`);e.uniform3f(t.u_toneGeoPaperColor,Ye[0],Ye[1],Ye[2]),e.uniform1f(t.u_toneGeoWeight,i.toneGeoWeight),e.uniform1i(t.u_toneGeoColor,i.toneGeoColor),e.uniform1f(t.u_toneGeoPaper,i.toneGeoPaper),e.uniform2f(t.u_pointer,l?l.x:.5,l?l.y:.5),e.uniform1f(t.u_pointerAmount,d&&l?d===5?i.pointerAmount:i.pointerAmount*l.strength:0),e.uniform1f(t.u_pointerSize,i.pointerSize),e.uniform1f(t.u_pointerFlip,i.pointerFlip?1:0),e.uniform1i(t.u_trail,4),e.uniform2f(t.u_markCell,y[0],y[1]),e.uniform1f(t.u_markAngle,y[2])};return{render:(t,i=0,h,c)=>{z();let l=G(t);t.fxOrder.includes(`I`)&&t.imageSrc&&t.imageSrc!==b.src&&st(t).catch(()=>{});let d=l.includes(`I`)&&b.ready&&b.src===t.imageSrc;o.videoAutoplay&&b.kind===`vid`&&T&&b.ready&&(d&&T.paused&&!T.ended?T.play().catch(()=>{}):!d&&!T.paused&&T.pause()),d&&b.kind===`vid`&&T&&!T.paused&&!T.ended&&Ue();let y=Wt(t)??ye;e.activeTexture(e.TEXTURE0),e.bindTexture(e.TEXTURE_2D,y),e.activeTexture(e.TEXTURE2),e.bindTexture(e.TEXTURE_2D,g.texture);let P=l.includes(`m`)&&t.pointerMode||0,Y=t.sizeAnchor===1&&!o.forcePixelScale?n.height/ri(t.aspect,b.ready&&b.width>0?{width:b.width,height:b.height}:null):V,W=t.softness*t.softness*56*Y,J=P===5?Ce(t,l,Y):[0,0,0];P===5&&h&&(Ht(t,h),e.activeTexture(e.TEXTURE4),e.bindTexture(e.TEXTURE_2D,v.disp[v.read]));let te=D=>f.includes(D),X=[];for(let D of l){let Q=X.length?X[X.length-1]:null;Q&&te(Q[0])===te(D)?X[X.length-1]+=D:X.push(D)}(!X.length||!te(X[0][0]))&&X.unshift(``);let K=null;X.forEach((D,Q)=>{let xe=Q===X.length-1,we=D===``||te(D[0]),ke=we?k(`L|${D}|${K?1:0}`,()=>a.layersFor(D,!!K)):k(`E|${D}|${P}`,()=>a.effectsFor(D,P)),ce=K&&!we&&D.includes(`o`)&&t.softness>0?at(tt,K,n.width,n.height,W):K;if(e.bindFramebuffer(e.FRAMEBUFFER,xe?null:M[Q%2]),xe&&c?.clip){let he=Ee=>Math.round(Math.min(1,Math.max(0,Ee))*n.width),ue=he(c.clip[0]);e.enable(e.SCISSOR_TEST),e.scissor(ue,0,Math.max(he(c.clip[1])-ue,0),n.height)}e.useProgram(ke.prog),e.viewport(0,0,n.width,n.height),ce&&(e.activeTexture(e.TEXTURE1),e.bindTexture(e.TEXTURE_2D,ce),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR)),Kt(ke.u,t,i,d,h,P,J,Y),e.drawArrays(e.TRIANGLES,0,3),K=xe?null:p[Q%2]}),c?.clip&&e.disable(e.SCISSOR_TEST)},resize(t,i,h){return V=h,n.width===t&&n.height===i?!1:(n.width=t,n.height=i,!0)},async preload(t){t.fxOrder.includes(`I`)&&t.imageSrc&&t.imageSrc!==b.src&&await st(t)},imageDims(){return b.ready&&b.width>0?{width:b.width,height:b.height}:null},videoActive(){return b.ready&&b.kind===`vid`&&!!T&&!T.paused&&!T.ended},pointerBusy(){return performance.now()<v.busyUntil},videoDuration(){return T&&Number.isFinite(T.duration)?T.duration:null},videoTime(){return T?.currentTime??0},seekVideo(t){let i=T;if(!i||i.readyState<1)return Promise.resolve();i.pause();let h=Number.isFinite(i.duration)?t%i.duration:t;return new Promise(c=>{let l=()=>{Ue(),c()};if(Math.abs(i.currentTime-h)<1e-4&&i.readyState>=2)return l();i.addEventListener(`seeked`,l,{once:!0}),i.currentTime=h})},playVideo(t=0){T&&(T.currentTime=t,T.play().catch(()=>{}))},dispose(){le++,Xe(),e.deleteTexture(g.texture),e.deleteTexture(ye);for(let t=0;t<2;t++)e.deleteTexture(p[t]),e.deleteFramebuffer(M[t]),v.disp[t]&&e.deleteTexture(v.disp[t]),v.vel[t]&&e.deleteTexture(v.vel[t]),v.fbo[t]&&e.deleteFramebuffer(v.fbo[t]);v.prog&&e.deleteProgram(v.prog.prog);for(let t of[tt,it]){for(let i=0;i<2;i++)t.tex[i]&&e.deleteTexture(t.tex[i]),t.fbo[i]&&e.deleteFramebuffer(t.fbo[i]),t.tex[i]=null,t.fbo[i]=null;t.w=0,t.h=0}re&&(e.deleteProgram(re.prog),re=null);for(let{prog:t}of m.values())e.deleteProgram(t);m.clear(),o.releaseContext&&e.getExtension(`WEBGL_lose_context`)?.loseContext()}}}function Wi(n,o={}){return zi(n,o,{vertex:di,layersFor:_i,effectsFor:Xi,spring:Ii,blur:Oi})}var Ft=(()=>{class n{config=L.required();canvasRef=Vz.required(`canvas`);host=p(re);destroyRef=p(J);isBrowser=Le(p(De));renderer=null;design=Mt({});animateOn=!1;pointerOn=!1;target={x:.5,y:.5,strength:0};eased={x:.5,y:.5,strength:0};phase=0;raf=0;last=0;onscreen=!0;tabVisible=!0;zone=null;playsFootage=!1;constructor(){Te(()=>{let a=this.config();this.renderer&&this.apply(a)}),Yt(()=>{let a=this.canvasRef().nativeElement;if(this.playsFootage=!matchMedia(`(prefers-reduced-motion: reduce)`).matches,this.renderer=Wi(a,{onImageReady:()=>{this.draw(),this.wake()},videoAutoplay:this.playsFootage}),!this.renderer)return;let e=new ResizeObserver(this.resize);e.observe(this.host.nativeElement);let r=new IntersectionObserver(s=>{this.onscreen=s[s.length-1].isIntersecting,this.syncVideo(),this.wake()});r.observe(this.host.nativeElement),document.addEventListener(`visibilitychange`,this.onVisibility),this.zone=this.host.nativeElement.parentElement,this.zone?.addEventListener(`pointermove`,this.onPointerMove),this.zone?.addEventListener(`pointerleave`,this.onPointerLeave),this.destroyRef.onDestroy(()=>{e.disconnect(),r.disconnect(),document.removeEventListener(`visibilitychange`,this.onVisibility),this.zone?.removeEventListener(`pointermove`,this.onPointerMove),this.zone?.removeEventListener(`pointerleave`,this.onPointerLeave),this.zone=null,cancelAnimationFrame(this.raf),this.renderer?.dispose(),this.renderer=null}),this.apply(this.config())})}apply(a){this.design=Mt(a);let e=this.design,r=matchMedia(`(prefers-reduced-motion: reduce)`).matches;this.animateOn=e.animate&&!r;let s=e.pointerMode>0&&hi(e).includes(`m`)||Ct(e,`G`)&&e.gradientFollow!==0&&e.stops.length>1;this.pointerOn=s&&!r&&matchMedia(`(hover: hover)`).matches;let u=[this.renderer.preload(e).catch(()=>{})];Promise.all(u).then(()=>{this.resize(),this.syncVideo(),this.draw(),this.wake()})}draw=()=>{this.renderer?.render(this.design,this.phase,this.eased),this.syncVideo()};syncVideo(a=this.onscreen&&this.tabVisible){let e=this.renderer;!e||!this.playsFootage||this.design.imageKind!==`vid`||!Ct(this.design,`I`)||a!==e.videoActive()&&(a?e.playVideo(e.videoTime()):e.seekVideo(e.videoTime()))}needsFrames(){return this.onscreen&&this.tabVisible&&(this.animateOn||this.renderer?.videoActive()===!0||this.pointerOn&&(this.target.strength>0||this.eased.strength>.003||this.renderer?.pointerBusy()===!0))}tick=a=>{if(this.raf=0,!this.needsFrames()){this.target.strength===0&&this.eased.strength>0&&(this.eased.strength=0,this.draw()),this.last=0;return}let e=this.last?(a-this.last)/1e3:0;if(this.last=a,this.animateOn&&e&&(this.phase=(this.phase+e*this.design.animSpeed/Ui)%1),this.pointerOn&&e){let r=1-Math.exp(-e*10),s=1-Math.exp(-e*6);this.eased.x+=(this.target.x-this.eased.x)*r,this.eased.y+=(this.target.y-this.eased.y)*r,this.eased.strength+=(this.target.strength-this.eased.strength)*s}this.draw(),this.raf=requestAnimationFrame(this.tick)};wake(){!this.raf&&this.needsFrames()&&(this.last=0,this.raf=requestAnimationFrame(this.tick))}resize=()=>{let a=this.host.nativeElement.getBoundingClientRect(),e=Math.min(devicePixelRatio||1,2);this.renderer?.resize(Math.max(1,Math.round(a.width*e)),Math.max(1,Math.round(a.height*e)),e)&&this.draw()};onPointerMove=a=>{let e=this.host.nativeElement.getBoundingClientRect();this.target.x=(a.clientX-e.left)/Math.max(1,e.width),this.target.y=1-(a.clientY-e.top)/Math.max(1,e.height),this.target.strength=1,this.wake()};onPointerLeave=()=>{this.target.strength=0,this.wake()};onVisibility=()=>{this.tabVisible=!document.hidden,this.syncVideo(),this.wake()};static ɵfac=function(e){return new(e||n)};static ɵcmp=(function(){let a=[`canvas`];return mt({type:n,selectors:[[`oddity-canvas`]],viewQuery:function(r,s){r&1&&GC(s.canvasRef,a,5),r&2&&NT()},hostAttrs:[`aria-hidden`,`true`],inputs:{config:[1,`config`]},decls:2,vars:0,consts:[[`canvas`,``]],template:function(r,s){r&1&&Us(0,`canvas`,null,0)},styles:[`[_nghost-%COMP%]{position:absolute;inset:0;display:block;overflow:hidden;pointer-events:none}canvas[_ngcontent-%COMP%]{display:block;width:100%;height:100%}`]})})()}return n})();var R=(n,o,a)=>Math.max(o,Math.min(a,n));var Ne=class{x=0;y=0;vx=0;vy=0;angle=0;spin=0;stretchAngle=0;scaleX=.74;scaleY=.74;state=`asleep`;mood=`primary`;impactWall=`bottom`;contact;impactSerial=0;bounds={left:0,right:0,top:0,bottom:0,cruiseY:0};initialized=!1;clock=0;age=0;grounded=0;impact=0;agitation=0;quiet=0;moodTime=0;calmReturn=!1;recoveryAngle=0;courseX=0;courseY=0;steeringFromNudge=!1;resize(o){this.bounds=o,(!this.initialized||this.state===`asleep`)&&(this.x=this.homeX(),this.y=this.homeY(),this.initialized=!0),this.x=R(this.x,o.left,o.right),this.y=R(this.y,o.top,o.bottom)}wake(){this.state===`asleep`&&(this.state=`waking`,this.age=0)}grab(){this.state=`dragging`,this.age=this.vx=this.vy=this.impact=0,this.scaleX=this.scaleY=1,this.stretchAngle=0}drag(o,a){this.x=R(o,this.bounds.left,this.bounds.right),this.y=R(a,this.bounds.top,this.bounds.bottom)}throw(o,a,e=0,r){this.spin=R(e,-25,25);let s=Math.hypot(o,a)>=650&&(r===void 0||r>=28);this.state=s||this.mood===`danger`?`falling`:`coasting`,this.vx=R(o,-2200,2200),this.vy=R(a,-2200,2200),this.age=this.grounded=this.quiet=0;let u=Math.min(1,Math.hypot(this.vx,this.vy)/1200);this.agitation=Math.min(1.5,this.agitation+(u<.25?.04:.18+u*.28)),this.agitation>=.85||this.mood===`danger`?this.setMood(`danger`,6.5):u>=.45?this.setMood(`warn`,2.4):this.mood!==`info`&&this.setMood(`success`,2.6)}nudge(o=0,a=0,e=this.spin){this.state=this.mood===`danger`?`falling`:`coasting`,this.vx=R(o,-650,650),this.vy=R(a,-650,650),this.spin=R(e,-25,25),this.age=0}drop(){this.state=`falling`,this.age=this.grounded=0}fly(){this.steeringFromNudge=!1,this.state=`flying`,this.age=this.grounded=this.impact=0,this.vy=this.mood===`danger`?-600:-220,this.courseX=this.x,this.courseY=this.y}returnHome(o=!1){if(o){this.sleep();return}this.mood!==`danger`&&(this.state=`returning`,this.age=0)}park(){this.vx=this.vy=this.impact=0}step(o){let a=R(o,0,.15);for(;a>1e-8;){let e=Math.min(a,.008333333333333333);this.advance(e),a-=e}}advance(o){if(this.state===`asleep`)return;if(this.clock+=o,this.age+=o,this.quiet+=o,this.updateMood(o),this.state===`dragging`){this.age>1.4&&this.mood===`primary`&&this.setMood(`success`,2);return}this.impact*=Math.exp(-o*12),this.updateDeformation();let a=this.bounds;if(this.state===`waking`){let r=Math.min(1,this.age/.65),s=r*r*(3-2*r);this.x=this.homeX(),this.y=Math.max(a.top,this.homeY()-s*32),this.scaleX=this.scaleY=.74+s*.26,this.angle=Math.sin(r*Math.PI)*-.16,r===1&&this.fly();return}if(this.state===`recovering`){let r=R((this.age-.25)/.6,0,1);this.angle=this.recoveryAngle+Math.sin(r*Math.PI*8)*Math.sin(r*Math.PI)*.24,this.scaleX=1+Math.sin(r*Math.PI*6)*.07,this.scaleY=2-this.scaleX,this.age>=1.05&&(this.calmReturn?this.returnHome():this.fly());return}if(this.state===`returning`){this.vx+=((this.homeX()-this.x)*15-this.vx*7.5)*o,this.vy+=((this.homeY()-this.y)*15-this.vy*7.5)*o;let r=Math.hypot(this.homeX()-this.x,this.homeY()-this.y);if(this.scaleX=this.scaleY=.74+Math.min(1,r/75)*.26,this.angle*=Math.exp(-o*6),r<1.2&&Math.hypot(this.vx,this.vy)<6||this.age>5){this.sleep();return}}else if(this.state===`coasting`)this.vx*=Math.exp(-o*.6),this.vy*=Math.exp(-o*.6),this.age>.9&&(this.courseX=this.x,this.courseY=this.y,this.steeringFromNudge=!0,this.state=`flying`,this.age=0);else if(this.state===`flying`&&this.mood!==`danger`){let r=a.right-a.left,s=a.left+r*(.5+Math.sin(this.clock*.48+.8)*.4),u=R(a.cruiseY+Math.sin(this.clock*.9)*48,a.top,a.bottom-24),A=Math.min(1,this.age/2.2),C=A*A*(3-2*A),x=this.courseX+(s-this.courseX)*C,f=this.courseY+(u-this.courseY)*C;if(this.steeringFromNudge){let _=1-Math.exp(-o*2.2*C);this.vx+=(R((s-this.x)*.7,-200,200)-this.vx)*_,this.vy+=(R((u-this.y)*.7,-150,150)-this.vy)*_}else this.vx+=((x-this.x)*3.6-this.vx*3.2)*o,this.vy+=((f-this.y)*4-this.vy*3)*o;this.age>10&&this.mood===`primary`&&this.returnHome()}else this.vy+=(this.mood===`danger`?2150:1850)*o,this.vx*=Math.exp(-o*.16);this.x+=this.vx*o,this.y+=this.vy*o,this.state!==`returning`&&(this.angle+=this.spin*o,this.spin*=Math.exp(-o*(this.state===`falling`||this.state===`coasting`?.28:1.2)));let e=this.mood===`danger`;(this.x<a.left||this.x>a.right)&&(this.hit(this.x<a.left?`left`:`right`,Math.abs(this.vx)),this.x=R(this.x,a.left,a.right),this.vx*=e?-.97:-.82,this.spin=this.spin*.8+this.vy*(this.impactWall===`left`?.003:-.003)),this.y<a.top&&(this.hit(`top`,Math.abs(this.vy)),this.y=a.top,this.vy=Math.abs(this.vy)*(e?.9:.7),this.spin=this.spin*.8-this.vx*.003),this.y>=a.bottom&&(this.y=a.bottom,this.vy>75&&(this.spin=this.spin*.8+this.vx*.003),this.hit(`bottom`,this.vy),e?(this.vy=-R(Math.abs(this.vy)*.94,680,1100),this.vx=(Math.sign(this.vx)||(this.x>(a.left+a.right)/2?-1:1))*Math.max(850,Math.abs(this.vx)*.97)):this.vy>75?(this.vy*=-.62,this.vx*=.8):(this.vy=0,this.vx*=Math.exp(-o*9),this.grounded+=o),!e&&this.state===`falling`&&this.grounded>.13&&(this.state=`recovering`,this.recoveryAngle=this.angle,this.age=this.vx=this.vy=this.spin=0))}updateMood(o){this.quiet>2&&(this.agitation=Math.max(0,this.agitation-o*.1)),!(this.moodTime<=0)&&(this.moodTime-=o,!(this.moodTime>0)&&(this.mood===`danger`?(this.agitation=.12,this.calmReturn=!0,this.setMood(`info`,3.5),this.state===`flying`&&(this.state=`falling`),this.vx*=.65,this.vy*=.65):(this.setMood(`primary`,0),this.calmReturn&&this.state===`flying`&&this.returnHome())))}hit(o,a){a<120||(this.impact=Math.min(1,a/650),this.impactWall=o,this.impactSerial++,this.updateDeformation())}updateDeformation(){let o=Math.min(1,Math.hypot(this.vx,this.vy)/1300);if(this.contact=this.impact>.03?this.impactWall:void 0,this.impact>.03){let a=this.impactWall===`left`||this.impactWall===`right`;this.stretchAngle=0,this.scaleX=1+this.impact*(a?-.3:.34),this.scaleY=1+this.impact*(a?.3:-.27)}else this.state===`falling`||this.state===`flying`&&this.mood===`danger`?(this.stretchAngle=Math.atan2(this.vy,this.vx)-Math.PI/2,this.scaleX=1-o*.12,this.scaleY=1+o*.2):(this.stretchAngle=0,this.scaleX=this.scaleY=1)}setMood(o,a){this.mood=o,this.moodTime=a}sleep(){this.state=`asleep`,this.x=this.homeX(),this.y=this.homeY(),this.vx=this.vy=this.angle=this.spin=this.stretchAngle=this.agitation=this.moodTime=0,this.mood=`primary`,this.calmReturn=!1,this.scaleX=this.scaleY=.74}homeX(){return R(this.bounds.homeX??this.bounds.left+(this.bounds.right-this.bounds.left)*.76,this.bounds.left,this.bounds.right)}homeY(){return R(this.bounds.homeY??this.bounds.cruiseY,this.bounds.top,this.bounds.bottom)}};function $i(n,o){let a=n[n.length-1];if(!a||o-a.time>120)return[0,0];let e=n.filter(_=>a.time-_.time<=100);if(e.length<2)return[0,0];let r=e[0].time,s=e.reduce((_,G)=>_+(G.time-r)/1e3,0)/e.length,u=e.reduce((_,G)=>_+G.x,0)/e.length,A=e.reduce((_,G)=>_+G.y,0)/e.length,C=0,x=0,f=0;for(let _ of e){let G=(_.time-r)/1e3-s;C+=G*G,x+=G*(_.x-u),f+=G*(_.y-A)}return C>1e-7?[R(x/C,-2200,2200),R(f/C,-2200,2200)]:[R((a.x-e[0].x)/.008,-2200,2200),R((a.y-e[0].y)/.008,-2200,2200)]}function et(n,o){let a=n[n.length-1],[e,r]=$i(n,a?Math.min(o,a.time+120):o);if(!a||o-a.time>180)return{vx:0,vy:0,spin:0,travel:0};let s=n.filter(L=>a.time-L.time<=90),u=(L,m)=>{if(s.length<3)return m;let k=s.map(p=>({t:(p.time-a.time)/1e3,p:p[L]})),g=Array.from({length:3},(p,M)=>Array.from({length:4},($,S)=>S===3?k.reduce((V,z)=>V+z.p*Math.pow(z.t,M),0):k.reduce((V,z)=>V+Math.pow(z.t,M+S),0)));for(let p=0;p<3;p++){let M=p;for(let S=p+1;S<3;S++)Math.abs(g[S][p])>Math.abs(g[M][p])&&(M=S);if(Math.abs(g[M][p])<1e-10)return m;[g[p],g[M]]=[g[M],g[p]];let $=g[p][p];for(let S=p;S<4;S++)g[p][S]/=$;for(let S=0;S<3;S++)if(S!==p){let V=g[S][p];for(let z=p;z<4;z++)g[S][z]-=V*g[p][z]}}return R(g[1][3],-2200,2200)},A=0,C=0,x=0;for(let L=1;L<s.length;L++)x+=Math.hypot(s[L].x-s[L-1].x,s[L].y-s[L-1].y);for(let L=2;L<s.length;L++){let m=s[L-2],k=s[L-1],g=s[L],p=k.x-m.x,M=k.y-m.y,$=g.x-k.x,S=g.y-k.y;Math.hypot(p,M)<.4||Math.hypot($,S)<.4||(A+=Math.atan2(p*S-M*$,p*$+M*S),C+=(g.time-m.time)/2e3)}let f=u(`x`,e),_=u(`y`,r);Math.hypot(f,_)<Math.hypot(e,r)*.65&&(f=e*.8,_=r*.8);let F=Math.hypot(f,_);return x>=4&&F>0&&F<80&&(f=f/F*80,_=_/F*80),{vx:f,vy:_,spin:x>12&&C>.01&&Math.abs(A)>.1?R(A/C,-25,25):0,travel:x}}var Hi=[`orb`];var Yi=[`plane`];var Vi=[`shadow`];var Ki=[`impact`];var ji=[`charge`];var Ji=[`ribbonCore`];var Qi=[`ribbonGlow`];var Zi=[`ribbonTail`];var eo=[`probes`];var H=26;var Dt=[`primary`,`success`,`warn`,`danger`,`info`];var to=Array.from({length:25},(n,o)=>{let a=o/24*Math.PI*2;return{u:a,cos:Math.cos(a),sin:Math.sin(a)}});var ve=class n{theme=p(Dr);ready=S(!1);state=S(`asleep`);mood=S(`primary`);reducedMotion=p(ke).isReducedMotion;message=W(()=>this.state()===`asleep`?`A little light lives in your ${this.theme.paletteLabel().toLowerCase()} theme.`:this.mood()===`danger`?`Too many throws. Someone is cross.`:this.mood()===`info`?`Taking a breath. Give it a moment.`:this.mood()===`warn`?`Easy now. This little light has feelings.`:this.mood()===`success`?`That was gentle. A happy little light.`:this.state()===`returning`?`Time to curl up in its swatch.`:this.state()===`recovering`?`A little wobble. All better.`:`Curious? Catch it. Be kind.`);showWakeHint=W(()=>this.ready()&&this.state()===`asleep`&&!this.reducedMotion());stage=L.required();cards=L.required();zone=p(z);orb=Vz.required(`orb`);plane=Vz.required(`plane`);shadow=Vz.required(`shadow`);impact=Vz.required(`impact`);charge=Vz.required(`charge`);ribbonCore=Vz.required(`ribbonCore`);ribbonGlow=Vz.required(`ribbonGlow`);ribbonTail=Vz.required(`ribbonTail`);probes=Vz.required(`probes`);physics=new Ne;view;home;scene;pose;colorPose;lastColor=``;lastCharge=-1;lastShadow=``;lastPointerPoint;shadowPose;chargePose;ribbonTime=0;lastRibbon=-1/0;lightLevel=0;lastPose=``;lastScene=``;lastGeometry=``;stayHome=!1;impactAnimation;events;resize;intersection;frame;wakeTimer;lastTime;lastLight=-1/0;lastImpact=0;originX=0;originY=0;floor=0;dirtyGeometry=!0;colorsDirty=!0;visible=!0;homeVisible=!1;motionEnabled=!0;pointer;offsetX=0;offsetY=0;fromHome=!1;dragDistance=0;samples=[];colors=Object.fromEntries(Dt.map(o=>[o,[255,255,255]]));rgb=[255,255,255];color=`rgb(255 255 255)`;invalidateGeometry=()=>{this.dirtyGeometry=!0,this.start(!0)};visibilityChange=()=>{!this.visible||this.stage().ownerDocument.hidden?(this.cancelDrag(),this.stop(),this.clearWake()):(this.dirtyGeometry=!0,this.start(!0))};wake=()=>{!this.motionEnabled||this.physics.state!==`asleep`||(this.stayHome=!1,this.clearWake(),this.physics.wake(),this.start())};grab=o=>{if(this.pointer!==void 0||!o.isPrimary||o.button!==0)return;o.preventDefault(),this.dirtyGeometry&&this.measure(),this.clearWake();let a=this.orb().nativeElement;a.focus({preventScroll:!0}),this.pointer=o.pointerId,this.offsetX=o.clientX-this.originX-this.physics.x,this.offsetY=o.clientY-this.originY-this.physics.y,this.fromHome=this.physics.state===`asleep`||this.physics.state===`waking`,this.dragDistance=0,this.lastPointerPoint={x:o.clientX,y:o.clientY,time:o.timeStamp},this.samples=[this.lastPointerPoint],this.stayHome=!1,this.physics.grab(),this.motionEnabled||(this.lightLevel=1),a.setPointerCapture(o.pointerId),this.paint(performance.now(),!0),this.start()};drag=o=>{if(o.pointerId!==this.pointer)return;this.dirtyGeometry&&this.measure(),this.physics.drag(o.clientX-this.originX-this.offsetX,o.clientY-this.originY-this.offsetY);let a=o.getCoalescedEvents?.()??[];for(let r of a.length?a:[o]){let s=this.samples[this.samples.length-1],u=this.lastPointerPoint??s;this.dragDistance+=Math.hypot(r.clientX-u.x,r.clientY-u.y),this.lastPointerPoint={x:r.clientX,y:r.clientY,time:r.timeStamp},(!s||r.timeStamp-s.time>=3||o.type===`pointerup`)&&(!s||Math.hypot(r.clientX-s.x,r.clientY-s.y)>.1)&&this.samples.push(this.lastPointerPoint)}let e=this.samples[this.samples.length-1];this.samples=this.samples.filter(r=>e.time-r.time<=120).slice(-64),this.motionEnabled||this.paint(performance.now())};release=o=>{if(o.pointerId!==this.pointer)return;this.drag(o);let{vx:a,vy:e,spin:r,travel:s}=et(this.samples,o.timeStamp),u=this.fromHome&&this.dragDistance<6;this.endPointer(),this.motionEnabled?u?this.physics.fly():this.physics.throw(a,e,r,s):this.physics.park(),this.paint(performance.now(),!0),this.start()};cancelDrag=o=>{if(this.pointer===void 0)return;let a=et(this.samples,o?.timeStamp||performance.now());this.endPointer(),this.physics.nudge(a.vx,a.vy,a.spin),this.motionEnabled||this.physics.park(),this.start()};tick=o=>{this.frame=void 0,this.dirtyGeometry&&this.measure(),this.colorsDirty&&this.readColors();let a=this.lastTime===void 0?1/60:Math.min(.15,(o-this.lastTime)/1e3);this.motionEnabled&&(this.physics.step(a),this.ribbonTime+=a);let e=this.physics.state,r=e===`asleep`?0:e===`waking`||e===`returning`?Math.max(0,Math.min(1,(this.physics.scaleX-.74)/.26)):1;this.lightLevel+=(r-this.lightLevel)*(1-Math.exp(-a*(r>this.lightLevel?2.5:4))),r===0&&this.lightLevel<.003&&(this.lightLevel=0),this.lastTime=this.motionEnabled?o:void 0,this.paint(o),e===`asleep`&&this.scheduleWake(),e!==`asleep`||this.lightLevel>0?this.start():this.lastTime=void 0};constructor(){Yt(()=>this.zone.runOutsideAngular(()=>this.initialize())),Te(()=>{this.theme.palette(),this.theme.activeTheme(),this.colorsDirty=!0,this.zone.runOutsideAngular(()=>this.start(!0))}),Te(()=>{this.motionEnabled=!this.reducedMotion(),this.zone.runOutsideAngular(()=>{this.view&&(this.motionEnabled||(this.cancelDrag(),this.physics.returnHome(!0),this.lightLevel=0,this.stop(),this.clearWake()),this.start(!0))})}),p(J).onDestroy(()=>{this.stop(),this.clearWake(),this.events?.abort(),this.resize?.disconnect(),this.intersection?.disconnect(),this.pose?.cancel(),this.colorPose?.cancel(),this.shadowPose?.cancel(),this.chargePose?.cancel(),this.impactAnimation?.cancel(),this.scene?.destroy()})}initialize(){let o=this.stage(),a=o.ownerDocument.defaultView;if(!a)return;this.view=a,this.home=this.cards().querySelector(`.orb-nest-well`)??this.cards(),this.events=new AbortController;let e=this.events.signal,r=this.orb().nativeElement;this.pose=r.animate([{transform:`none`}],{duration:1,fill:`both`}),this.colorPose=r.animate([{color:this.color},{color:this.color}],{duration:1,fill:`both`}),this.shadowPose=this.shadow().nativeElement.animate([{opacity:0}],{duration:1,fill:`both`}),this.chargePose=this.charge().nativeElement.animate([{opacity:0},{opacity:0}],{duration:1,fill:`both`});for(let s of[this.pose,this.shadowPose,this.chargePose,this.colorPose])s.pause(),s.currentTime=0;this.scene=Um(o),r.addEventListener(`pointerdown`,this.grab,{signal:e}),r.addEventListener(`pointermove`,this.drag,{signal:e}),r.addEventListener(`pointerup`,this.release,{signal:e}),r.addEventListener(`pointercancel`,this.cancelDrag,{signal:e}),r.addEventListener(`lostpointercapture`,this.cancelDrag,{signal:e}),r.addEventListener(`pointerenter`,this.wake,{signal:e}),r.addEventListener(`focus`,this.wake,{signal:e}),a.addEventListener(`blur`,this.cancelDrag,{signal:e}),a.addEventListener(`resize`,this.invalidateGeometry,{signal:e,passive:!0}),o.ownerDocument.addEventListener(`scroll`,this.invalidateGeometry,{signal:e,capture:!0,passive:!0}),o.ownerDocument.addEventListener(`visibilitychange`,this.visibilityChange,{signal:e}),this.resize=new ResizeObserver(this.invalidateGeometry),this.resize.observe(o),this.resize.observe(this.cards()),this.intersection=new IntersectionObserver(s=>{for(let u of s)u.target===o&&(this.visible=u.isIntersecting),u.target===this.home&&(this.homeVisible=u.isIntersecting);this.visibilityChange()}),this.intersection.observe(o),this.intersection.observe(this.home),this.measure(),this.readColors(),this.paint(performance.now(),!0),this.ready.set(!0),this.scheduleWake()}bringHome(){this.physics.mood!==`danger`&&(this.stayHome=!0,this.clearWake(),this.cancelDrag(),this.physics.returnHome(!this.motionEnabled),this.motionEnabled||(this.lightLevel=0),this.paint(performance.now(),!0),this.start(!0))}toss(o){o.detail!==0||!this.motionEnabled||(this.clearWake(),this.physics.state===`asleep`?this.physics.wake():this.physics.throw(160,-650),this.start())}keydown(o){if(o.key===`Escape`){this.bringHome();return}else if(o.key.startsWith(`Arrow`)){o.preventDefault(),this.clearWake();let a=o.key===`ArrowLeft`?-30:o.key===`ArrowRight`?30:0,e=o.key===`ArrowUp`?-30:o.key===`ArrowDown`?30:0;this.physics.fly(),this.physics.drag(this.physics.x+a,this.physics.y+e),this.motionEnabled?this.physics.throw(a*10,e*10-220):(this.physics.park(),this.lightLevel=1)}else return;this.paint(performance.now(),!0),this.start()}measure(){let o=this.plane().nativeElement.getBoundingClientRect(),a=this.cards().getBoundingClientRect(),e=this.home?.getBoundingClientRect()??a,r=`${o.left}:${o.top}:${o.width}:${o.height}:${a.left}:${a.top}:${a.width}:${a.height}:${e.left}:${e.top}:${e.width}:${e.height}`;if(r===this.lastGeometry){this.dirtyGeometry=!1;return}this.lastGeometry=r,this.originX=o.left,this.originY=o.top,this.floor=o.height-H-2,this.physics.resize({left:H+2,right:Math.max(H+2,o.width-H-2),top:H+2,bottom:Math.max(H+2,this.floor),cruiseY:e.top-o.top+e.height/2,homeX:e.left-o.left+e.width/2,homeY:e.top-o.top+e.height/2}),this.dirtyGeometry=!1,this.scene?.refresh()}readColors(){let o=this.probes().nativeElement.children;Dt.forEach((a,e)=>{let r=this.view?.getComputedStyle(o[e]).color??``,s=r.match(/[\d.]+/g)?.slice(0,3).map(Number);s?.length===3&&(this.colors[a]=s.map(u=>r.startsWith(`color(`)?u*255:u))}),this.rgb=[...this.colors[this.physics.mood]],this.colorsDirty=!1}endPointer(){let o=this.pointer;this.pointer=void 0,this.samples=[],this.lastPointerPoint=void 0;let a=this.orb().nativeElement;o!==void 0&&a.hasPointerCapture(o)&&a.releasePointerCapture(o)}start(o=!1){!this.view||this.frame!==void 0||!this.visible||this.stage().ownerDocument.hidden||!o&&(!this.motionEnabled||this.physics.state===`asleep`&&this.lightLevel===0)||(this.frame=this.view.requestAnimationFrame(this.tick))}stop(){this.frame!==void 0&&this.view?.cancelAnimationFrame(this.frame),this.frame=this.lastTime=void 0}clearWake(){this.wakeTimer!==void 0&&this.view?.clearTimeout(this.wakeTimer),this.wakeTimer=void 0}scheduleWake(){this.stayHome||this.wakeTimer!==void 0||!this.motionEnabled||!this.visible||!this.homeVisible||this.stage().ownerDocument.hidden||(this.wakeTimer=this.view?.setTimeout(()=>{this.wakeTimer=void 0,this.wake()},4500))}paint(o,a=!1){if(!this.pose||!this.shadowPose)return;let e=this.physics,r=a||o-this.lastLight>=(e.state===`dragging`||e.state===`falling`?50:80);if(r){let m=this.colors[e.mood],k=!this.motionEnabled||e.state===`asleep`&&this.lightLevel===0?1:.35;this.rgb=this.rgb.map((g,p)=>g+(m[p]-g)*k),this.color=`rgb(${this.rgb.map(Math.round).join(` `)})`}let s=e.contact,u=e.scaleX<1?H*(1-e.scaleX)*(s===`left`?-1:s===`right`?1:0):0,A=e.scaleY<1?H*(1-e.scaleY)*(s===`top`?-1:s===`bottom`?1:0):0,C={transform:`translate3d(${e.x-H+u}px, ${e.y-H+A}px, 0) rotate(${e.stretchAngle}rad) scale(${e.scaleX}, ${e.scaleY}) rotate(${e.angle-e.stretchAngle}rad)`},x=C.transform;if(x!==this.lastPose&&(this.lastPose=x,this.pose.effect.setKeyframes([C,C])),this.colorPose&&this.color!==this.lastColor){this.lastColor=this.color;let m={color:this.color};this.colorPose.effect.setKeyframes([m,m])}if(this.chargePose&&(Math.abs(this.lightLevel-this.lastCharge)>.002||this.lightLevel===0&&this.lastCharge!==0)){this.lastCharge=this.lightLevel;let m={opacity:this.lightLevel};this.chargePose.effect.setKeyframes([m,m])}if(o-this.lastRibbon>=40&&this.lightLevel>.002){this.lastRibbon=o;let m=e.mood===`danger`?3.4:e.mood===`info`?.65:e.mood===`warn`?1.9:1.1,k=e.mood===`danger`?1.3:e.mood===`info`?.65:1,g=this.liquidPath(this.ribbonTime*m,0,k);this.ribbonCore().nativeElement.setAttribute(`d`,g),this.ribbonGlow().nativeElement.setAttribute(`d`,g),this.ribbonTail().nativeElement.setAttribute(`d`,this.liquidPath(this.ribbonTime*m*.8,2.4,k*.8))}let f=Math.max(0,this.floor-e.y),_={transform:`translate3d(${e.x-26}px, ${this.floor+H-6}px, 0) scale(${1+Math.min(f,180)/150})`,opacity:e.state===`asleep`?0:Math.max(0,.22-f/650)},G=_.opacity<.002?`hidden`:`${_.transform}:${_.opacity.toFixed(2)}`;G!==this.lastShadow&&(this.lastShadow=G,this.shadowPose.effect.setKeyframes([_,_]));let F=e.state;if(this.state()!==F&&this.state.set(F),this.mood()!==e.mood&&this.mood.set(e.mood),e.impactSerial!==this.lastImpact&&(this.lastImpact=e.impactSerial,this.motionEnabled)){let m={left:0,right:1,top:2,bottom:3}[e.impactWall],k=this.impact().nativeElement.children[m];this.impactAnimation?.cancel(),this.impactAnimation=k.animate([{backgroundColor:this.color,opacity:.8},{backgroundColor:this.color,opacity:0}],{duration:420,easing:`ease-out`})}if(!r)return;this.lastLight=o;let L=`${this.originX}:${this.originY}:${e.x.toFixed(1)}:${e.y.toFixed(1)}:${e.angle.toFixed(2)}:${this.color}:${this.lightLevel.toFixed(3)}:${e.mood}`;L!==this.lastScene&&(this.lastScene=L,this.scene?.update({reuseGeometry:!0,lights:this.lightLevel===0?[]:[{x:this.originX+e.x,y:this.originY+e.y+H+9,z:30,color:this.color,intensity:this.lightLevel*(e.mood===`danger`?1.5:1.15),radius:e.state===`asleep`?140:280}]}))}liquidPath(o,a,e){let r=o*.32+a,s=.55+Math.sin(o*.31+a)*.35,u=Math.cos(r),A=Math.sin(r),C=Math.cos(s),x=Math.sin(s),f=to.map(({u:m,cos:k,sin:g})=>{let p=15+Math.sin(m*3-o*.65+a)*1.8,M=k*p,$=Math.sin(m*2+o*.4+a)*(4+e*1.6),S=g*p,V=M*u+S*A,z=S*u-M*A,be=$*C-z*x,Ce=$*x+z*C,_e=55/(55-Ce);return{x:30+V*_e,y:30+be*_e,width:(.75+(Ce+20)/40*1.9)*e}}),_=f.map((m,k)=>{let g=f[Math.max(0,k-1)],p=f[Math.min(f.length-1,k+1)],M=Math.hypot(p.x-g.x,p.y-g.y)||1;return{x:m.x-(p.y-g.y)/M*m.width,y:m.y+(p.x-g.x)/M*m.width}}),G=f.map((m,k)=>{let g=f[Math.max(0,k-1)],p=f[Math.min(f.length-1,k+1)],M=Math.hypot(p.x-g.x,p.y-g.y)||1;return{x:m.x+(p.y-g.y)/M*m.width,y:m.y-(p.x-g.x)/M*m.width}}).reverse(),F=[..._,...G],L=`M${F[0].x.toFixed(2)} ${F[0].y.toFixed(2)}`;for(let m=1;m<F.length;m++){let k=F[m-1],g=F[m];L+=`Q${k.x.toFixed(2)} ${k.y.toFixed(2)} ${((k.x+g.x)/2).toFixed(2)} ${((k.y+g.y)/2).toFixed(2)}`}return L+`Z`}static ɵfac=function(a){return new(a||n)};static ɵcmp=mt({type:n,selectors:[[`app-light-orb`]],viewQuery:function(a,e){a&1&&GC(e.orb,Hi,5)(e.plane,Yi,5)(e.shadow,Vi,5)(e.impact,Ki,5)(e.charge,ji,5)(e.ribbonCore,Ji,5)(e.ribbonGlow,Qi,5)(e.ribbonTail,Zi,5)(e.probes,eo,5),a&2&&NT(9)},inputs:{stage:[1,`stage`],cards:[1,`cards`]},decls:49,vars:9,consts:[[`plane`,``],[`impact`,``],[`shadow`,``],[`orb`,``],[`charge`,``],[`ribbonGlow`,``],[`ribbonTail`,``],[`ribbonCore`,``],[`probes`,``],[1,`orb-controls`],[`id`,`orb-instructions`,`role`,`status`,1,`orb-message`],[`aria-hidden`,`true`,1,`mood-dot`],[`type`,`button`,`placement`,`top`,`aria-label`,`Bring the light home`,1,`orb-home`,3,`click`,`disabled`,`bxTooltip`],[`viewBox`,`0 0 20 20`,`fill`,`none`,`stroke`,`currentColor`,`stroke-width`,`1.4`,`stroke-linecap`,`round`,`stroke-linejoin`,`round`,`aria-hidden`,`true`],[`d`,`m3 9 7-6 7 6v8H3zM8 17v-6h4v6`],[1,`orb-plane`],[`aria-hidden`,`true`,1,`orb-impact-layer`],[1,`orb-impact`,`orb-impact-left`],[1,`orb-impact`,`orb-impact-right`],[1,`orb-impact`,`orb-impact-top`],[1,`orb-impact`,`orb-impact-bottom`],[`aria-hidden`,`true`,1,`orb-shadow`],[`type`,`button`,`aria-label`,`Your theme's little light. Hover to wake, drag to throw, or press Enter to play. Arrow keys move it; Escape sends it home.`,`aria-describedby`,`orb-instructions`,1,`light-orb`,3,`click`,`keydown`],[`aria-hidden`,`true`,1,`orb-body`],[`aria-hidden`,`true`,1,`orb-charge`],[1,`orb-halo`],[1,`orb-volume`],[1,`orb-rim`],[`viewBox`,`0 0 60 60`,1,`orb-ribbons`],[`id`,`orb-liquid-light`,`x1`,`0`,`y1`,`0`,`x2`,`1`,`y2`,`0`],[`offset`,`0`,`stop-color`,`currentColor`,`stop-opacity`,`0`],[`offset`,`0.28`,`stop-color`,`currentColor`,`stop-opacity`,`0.65`],[`offset`,`0.53`,`stop-color`,`currentColor`,`stop-opacity`,`1`],[`offset`,`0.8`,`stop-color`,`currentColor`,`stop-opacity`,`0.55`],[`offset`,`1`,`stop-color`,`currentColor`,`stop-opacity`,`0`],[`fill`,`url(#orb-liquid-light)`,1,`ribbon`,`ribbon-glow`],[`fill`,`url(#orb-liquid-light)`,1,`ribbon`,`ribbon-tail`],[`fill`,`url(#orb-liquid-light)`,1,`ribbon`,`ribbon-core`],[`aria-hidden`,`true`,1,`orb-glint`],[`aria-hidden`,`true`,1,`orb-color-probes`],[2,`color`,`var(--bx-primary)`],[2,`color`,`var(--bx-text-success)`],[2,`color`,`var(--bx-text-warn)`],[2,`color`,`var(--bx-text-danger)`],[2,`color`,`var(--bx-text-info)`]],template:function(a,e){a&1&&(It$1(0,`div`,9)(1,`p`,10),fi$1(2,`span`,11),Co(3),jt(),It$1(4,`button`,12),it(`click`,function(){return e.bringHome()}),Jv(),It$1(5,`svg`,13),fi$1(6,`path`,14),jt(),ey(),It$1(7,`span`),Co(8,`Bring home`),jt()()(),It$1(9,`div`,15,0)(11,`span`,16,1),fi$1(13,`span`,17)(14,`span`,18)(15,`span`,19)(16,`span`,20),jt(),fi$1(17,`span`,21,2),It$1(19,`button`,22,3),it(`click`,function(s){return e.toss(s)})(`keydown`,function(s){return e.keydown(s)}),fi$1(21,`span`,23),It$1(22,`span`,24,4),fi$1(24,`span`,25)(25,`span`,26)(26,`span`,27),Jv(),It$1(27,`svg`,28)(28,`defs`)(29,`linearGradient`,29),fi$1(30,`stop`,30)(31,`stop`,31)(32,`stop`,32)(33,`stop`,33)(34,`stop`,34),jt()(),fi$1(35,`path`,35,5)(37,`path`,36,6)(39,`path`,37,7),jt()(),ey(),fi$1(41,`span`,38),jt()(),It$1(42,`span`,39,8),fi$1(44,`i`,40)(45,`i`,41)(46,`i`,42)(47,`i`,43)(48,`i`,44),jt()),a&2&&(Zt$1(`data-bx-reduced-motion`,e.reducedMotion()),Vt(2),Zt$1(`data-mood`,e.mood()),Vt(),Rc(e.message()),Vt(),vo(`disabled`,e.mood()===`danger`)(`bxTooltip`,e.mood()===`danger`?`The orb needs a moment to cool down before returning to its pod in the theme card.`:`Bring the orb back to its pod in the theme card.`),Vt(5),st(`orb-ready`,e.ready()),Vt(10),Zt$1(`data-state`,e.state())(`data-mood`,e.mood()))},dependencies:[s_],styles:[`
+[_nghost-%COMP%] {
+  display: contents;
+}
+.orb-controls[_ngcontent-%COMP%] {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2rem;
+  margin-top: 0;
+  flex: 0 1 28rem;
+  color: var(--%NS%bx-text-secondary);
+  font-size: 0.75rem;
+}
+.orb-message[_ngcontent-%COMP%] {
+  display: flex;
+  align-items: center;
+  flex: 1 1 14rem;
+  gap: 0.55rem;
+  margin: 0;
+  min-height: 2.5em;
+}
+.mood-dot[_ngcontent-%COMP%] {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--%NS%bx-primary);
+}
+.mood-dot[data-mood=success][_ngcontent-%COMP%] {
+  background: var(--%NS%bx-text-success);
+}
+.mood-dot[data-mood=warn][_ngcontent-%COMP%] {
+  background: var(--%NS%bx-text-warn);
+}
+.mood-dot[data-mood=danger][_ngcontent-%COMP%] {
+  background: var(--%NS%bx-text-danger);
+}
+.mood-dot[data-mood=info][_ngcontent-%COMP%] {
+  background: var(--%NS%bx-text-info);
+}
+.orb-home[_ngcontent-%COMP%] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: none;
+  min-height: 1.85rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--%NS%bx-border-default);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--%NS%bx-bg-surface) 60%, transparent);
+  color: var(--%NS%bx-text-secondary);
+  font: inherit;
+  font-size: 0.6875rem;
+  cursor: pointer;
+}
+.orb-home[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+.orb-plane[_ngcontent-%COMP%] {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: clip;
+  border-radius: var(--%NS%orb-garden-radius, 1.5rem);
+  pointer-events: none;
+  visibility: hidden;
+}
+.orb-plane.orb-ready[_ngcontent-%COMP%] {
+  visibility: visible;
+}
+.light-orb[_ngcontent-%COMP%] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--%NS%bx-primary);
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  will-change: transform;
+}
+.light-orb[data-state=dragging][_ngcontent-%COMP%] {
+  cursor: grabbing;
+}
+.light-orb[_ngcontent-%COMP%]:focus-visible, 
+.orb-home[_ngcontent-%COMP%]:focus-visible {
+  outline: 2px solid var(--%NS%bx-text-primary);
+  outline-offset: 5px;
+}
+.orb-charge[_ngcontent-%COMP%], 
+.orb-body[_ngcontent-%COMP%], 
+.orb-halo[_ngcontent-%COMP%], 
+.orb-rim[_ngcontent-%COMP%], 
+.orb-glint[_ngcontent-%COMP%] {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.orb-body[_ngcontent-%COMP%] {
+  background:
+    radial-gradient(
+      ellipse at 28% 20%,
+      rgba(255, 255, 255, 0.3333333333),
+      rgba(255, 255, 255, 0) 48%),
+    radial-gradient(
+      ellipse at 65% 90%,
+      rgba(0, 0, 0, 0.0784313725),
+      rgba(0, 0, 0, 0) 62%),
+    color-mix(in srgb, var(--%NS%bx-bg-surface) 15%, transparent);
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.0941176471),
+    0 4px 10px rgba(0, 0, 0, 0.1019607843);
+  -webkit-backdrop-filter: blur(5px) saturate(1.2);
+  backdrop-filter: blur(5px) saturate(1.2);
+}
+.orb-rim[_ngcontent-%COMP%] {
+  padding: 1.5px;
+  background:
+    conic-gradient(
+      from 25deg,
+      rgba(255, 255, 255, 0.8),
+      currentcolor 15%,
+      transparent 36%,
+      currentcolor 62%,
+      rgba(255, 255, 255, 0.7333333333) 83%,
+      transparent 94%,
+      rgba(255, 255, 255, 0.8));
+  -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+  mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.orb-halo[_ngcontent-%COMP%] {
+  inset: -9px;
+  background: currentcolor;
+  filter: blur(13px);
+  opacity: 0.16;
+}
+.light-orb[data-mood=danger][_ngcontent-%COMP%]   .orb-halo[_ngcontent-%COMP%] {
+  opacity: 0.3;
+}
+.orb-glint[_ngcontent-%COMP%] {
+  inset: 6px 15px 33px 11px;
+  background: rgba(255, 255, 255, 0.5333333333);
+  filter: blur(1px);
+  transform: rotate(-30deg);
+}
+.orb-ribbons[_ngcontent-%COMP%] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.ribbon[_ngcontent-%COMP%] {
+  stroke-linejoin: round;
+}
+.ribbon-core[_ngcontent-%COMP%] {
+  opacity: 0.8;
+  filter: drop-shadow(0 0 1px currentcolor);
+}
+.ribbon-glow[_ngcontent-%COMP%] {
+  opacity: 0.55;
+  filter: blur(2.8px);
+}
+.ribbon-tail[_ngcontent-%COMP%] {
+  opacity: 0.25;
+  filter: blur(0.65px);
+}
+.orb-shadow[_ngcontent-%COMP%] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 52px;
+  height: 8px;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse,
+      #000000,
+      rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+}
+.orb-impact-layer[_ngcontent-%COMP%] {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.orb-impact[_ngcontent-%COMP%] {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+.orb-impact-left[_ngcontent-%COMP%] {
+  inset: 0 auto 0 0;
+  width: 10px;
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent);
+  mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent);
+}
+.orb-impact-right[_ngcontent-%COMP%] {
+  inset: 0 0 0 auto;
+  width: 10px;
+  -webkit-mask-image:
+    linear-gradient(
+      to left,
+      black,
+      transparent);
+  mask-image:
+    linear-gradient(
+      to left,
+      black,
+      transparent);
+}
+.orb-impact-top[_ngcontent-%COMP%] {
+  inset: 0 0 auto;
+  height: 10px;
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      black,
+      transparent);
+  mask-image:
+    linear-gradient(
+      to bottom,
+      black,
+      transparent);
+}
+.orb-impact-bottom[_ngcontent-%COMP%] {
+  inset: auto 0 0;
+  height: 10px;
+  -webkit-mask-image:
+    linear-gradient(
+      to top,
+      black,
+      transparent);
+  mask-image:
+    linear-gradient(
+      to top,
+      black,
+      transparent);
+}
+.orb-color-probes[_ngcontent-%COMP%] {
+  display: none;
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .orb-body[_ngcontent-%COMP%] {
+    background: var(--%NS%bx-bg-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+.orb-volume[_ngcontent-%COMP%] {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse at 40% 58%,
+      color-mix(in srgb, currentcolor 32%, transparent),
+      transparent 68%),
+    radial-gradient(
+      ellipse at 62% 40%,
+      color-mix(in srgb, currentcolor 24%, transparent),
+      transparent 62%);
+  filter: blur(3px);
+}
+.orb-home[_ngcontent-%COMP%]:disabled {
+  opacity: 0.4;
+  cursor: default;
+}`]})};var io=(n,o)=>o.title;function oo(n,o){n&1&&(It$1(0,`span`,29),fi$1(1,`span`,32),It$1(2,`span`,33),Co(3,`Primary`),jt()())}function ao(n,o){if(n&1&&(It$1(0,`a`,20),fi$1(1,`bx-icon`,28),lr(2,oo,4,0,`span`,29),It$1(3,`h3`),Co(4),jt(),It$1(5,`p`),Co(6),jt(),It$1(7,`span`,30),Co(8,`Explore`),fi$1(9,`bx-icon`,31),jt()()),n&2){let a=o.$implicit;vo(`routerLink`,a.route),Vt(),vo(`name`,a.icon),Vt(),cr(a.icon===`palette`?2:-1),Vt(2),Rc(a.title),Vt(2),Rc(a.description)}}var Nt=class n{version=Et;reducedMotion=p(ke).isReducedMotion;lightOrb=Vz(ve);wakeHint=Vz(s_);themingService=p(Dr);features=[{title:`One shared material`,description:`Set appearance once. Buttons, fields, menus, dialogs, and notifications share your application settings.`,icon:`layers`,route:`/appearance`},{title:`Your Blocks theme`,description:`Existing semantic colors, spacing, radii, and palettes carry through every surface.`,icon:`palette`,route:`/components/button`},{title:`Familiar interactions`,description:`Keep native controls, keyboard navigation, and reduced motion while adding fluid transitions.`,icon:`accessibility`,route:`/modal`}];look=W(()=>{this.themingService.palette(),this.themingService.activeTheme();let o=window.getComputedStyle(document.body).getPropertyValue(`--bx-primary`),a=window.getComputedStyle(document.body).getPropertyValue(`--bx-bg-canvas`);return{fxOrder:`Ggr`,stops:[{color:o.replace(`#`,``),pos:0},{color:a.replace(`#`,``),pos:57},{color:a.replace(`#`,``),pos:100}],seed:511,warp:.35,noiseScale:1.36,detail:0,contrast:.82,angle:180,centerX:.713,centerY:.271,lightMode:3,lightAmount:.11,lightSize:.27,lightFollow:1,glassMode:1,glassAmount:.42,glassCount:10,glassAngle:145,glassProfile:2,glassBevel:.01,glassShadow:.16,glassHighlight:.27,pointerMode:2,pointerDamping:1,pointerFlip:!0,animate:!0}});constructor(){Te(()=>{this.lightOrb()?.showWakeHint()||this.wakeHint()?.hide()})}static ɵfac=function(a){return new(a||n)};static ɵcmp=mt({type:n,selectors:[[`app-home`]],viewQuery:function(a,e){a&1&&GC(e.lightOrb,ve,5)(e.wakeHint,s_,5),a&2&&NT(2)},decls:50,vars:11,consts:[[`lightGarden`,``],[`orb`,``],[`featureGrid`,``],[1,`oddity-canvas`,3,`config`],[1,`home-container`,`light-garden`],[1,`hero`],[1,`hero-content`],[1,`eyebrow`],[1,`hero-subtitle`],[1,`hero-actions`],[`bx-button`,``,`variant`,`filled`,`color`,`primary`,`routerLink`,`/appearance`],[`name`,`arrow-right`,`size`,`20`],[`bx-button`,``,`variant`,`filled`,`color`,`grayscale`,`routerLink`,`/components`,3,`outlined`],[`aria-labelledby`,`features-title`,1,`features`],[1,`features-heading`],[1,`features-title`],[`id`,`features-title`],[`bxTooltip`,`Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces.`,`placement`,`top`,1,`orb-hint`,3,`inert`],[3,`stage`,`cards`],[1,`feature-grid`],[`bxSurface`,``,1,`feature-card`,3,`routerLink`],[`aria-label`,`Flagship components`,1,`home-links`],[`bx-button`,``,`variant`,`text`,`routerLink`,`/modal`],[`name`,`arrow-right`,`size`,`16`],[`bx-button`,``,`variant`,`text`,`routerLink`,`/toastr`],[`bx-button`,``,`variant`,`text`,`routerLink`,`/icon-catalog`],[1,`home-footer`],[`href`,`https://www.npmjs.com/package/@filip.mazev/blocks`,`target`,`_blank`,`rel`,`noopener noreferrer`],[`size`,`24`,3,`name`],[`aria-hidden`,`true`,1,`orb-nest`],[1,`feature-link`],[`name`,`arrow-up-right`,`size`,`16`],[1,`orb-nest-well`],[1,`orb-nest-label`]],template:function(a,e){if(a&1&&(fi$1(0,`oddity-canvas`,3),It$1(1,`div`,4,0)(3,`header`,5)(4,`div`,6)(5,`p`,7),Co(6,`Blocks · Angular components`),jt(),It$1(7,`h1`),Co(8,`Build with clarity.`),fi$1(9,`br`),It$1(10,`span`),Co(11,`Give it depth.`),jt()(),It$1(12,`p`,8),Co(13,`A modular UI library with shared theming, accessible controls, and materials that feel at home throughout your application.`),jt(),It$1(14,`div`,9)(15,`a`,10),Co(16,`Configure appearance`),fi$1(17,`bx-icon`,11),jt(),It$1(18,`a`,12),Co(19,`Browse components`),jt()()()(),It$1(20,`section`,13)(21,`div`,14)(22,`div`,15)(23,`h2`,16),Co(24,`Built on the Blocks foundations`),jt(),It$1(25,`span`,17),Co(26,`Hover on the orb to wake it up`),jt()(),fi$1(27,`app-light-orb`,18,1),jt(),It$1(29,`div`,19,2),bp(31,ao,10,5,`a`,20,io),jt()(),It$1(33,`section`,21)(34,`a`,22),Co(35,`Modal playground`),fi$1(36,`bx-icon`,23),jt(),It$1(37,`a`,24),Co(38,`Toast playground`),fi$1(39,`bx-icon`,23),jt(),It$1(40,`a`,25),Co(41,`Icon catalog`),fi$1(42,`bx-icon`,23),jt()(),It$1(43,`footer`,26)(44,`span`),Co(45,`Designed & developed by Filip Mazev`),jt(),It$1(46,`span`),Co(47),jt(),It$1(48,`a`,27),Co(49,`npm package`),jt()()()),a&2){let r=OT(2),s=OT(28),u=OT(30);vo(`config`,e.look()),Vt(18),vo(`outlined`,!0),Vt(4),Zt$1(`data-bx-reduced-motion`,e.reducedMotion()),Vt(3),st(`is-visible`,s.showWakeHint()),vo(`inert`,!s.showWakeHint()),Zt$1(`aria-hidden`,!s.showWakeHint())(`tabindex`,s.showWakeHint()?0:-1),Vt(2),vo(`stage`,r)(`cards`,u),Vt(4),Cp(e.features),Vt(16),hi$1(`Blocks `,e.version)}},dependencies:[Eu,td,S$1,Mr,Ft,ve,s_],styles:[`
 [_nghost-%COMP%] {
   display: block;
 }
@@ -2076,8 +2372,43 @@ vec3 toneGeoApply(vec3 base, vec2 uv) {
   padding-block: 2rem;
   border-top: 1px solid var(--%NS%bx-border-default);
 }
-.features[_ngcontent-%COMP%]    > h2[_ngcontent-%COMP%] {
+.features-heading[_ngcontent-%COMP%] {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+}
+.features-heading[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {
+  margin: 0;
+}
+.features-title[_ngcontent-%COMP%] {
+  display: grid;
+  grid-template-rows: auto 1.125rem;
+  gap: 0.25rem;
+}
+.orb-hint[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-tertiary, var(--%NS%bx-text-secondary));
+  font-size: 0.6875rem;
+  cursor: help;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease, visibility 0s linear 180ms;
+}
+.orb-hint.is-visible[_ngcontent-%COMP%] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.orb-hint[_ngcontent-%COMP%]:focus-visible {
+  outline: 2px solid var(--%NS%bx-border-brand);
+  outline-offset: 3px;
+}
+.features-title[data-bx-reduced-motion=true][_ngcontent-%COMP%]   .orb-hint[_ngcontent-%COMP%] {
+  transition: none;
 }
 .feature-grid[_ngcontent-%COMP%] {
   display: grid;
@@ -2165,4 +2496,52 @@ vec3 toneGeoApply(vec3 base, vec2 uv) {
   z-index: 0;
   width: 100vw;
   height: 100dvh;
-}`]})};export{mt as Home};
+}
+.light-garden[_ngcontent-%COMP%] {
+  --%NS%orb-garden-radius: 1.5rem;
+  position: relative;
+  max-width: none;
+  min-height: calc(100dvh - 7rem);
+  padding: 1.5rem;
+  border: 1px solid var(--%NS%bx-border-strong);
+  border-bottom-width: 3px;
+  border-radius: var(--%NS%orb-garden-radius);
+  background: color-mix(in srgb, var(--%NS%bx-bg-canvas) 14%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 15%, transparent), inset 0 -8px 18px -16px var(--%NS%bx-text-primary);
+}
+.orb-nest[_ngcontent-%COMP%] {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+.orb-nest-well[_ngcontent-%COMP%] {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border: 1px solid color-mix(in srgb, var(--%NS%bx-primary) 35%, var(--%NS%bx-border-default));
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--%NS%bx-bg-canvas) 70%, transparent);
+  box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.1333333333), 0 1px 0 rgba(255, 255, 255, 0.1333333333);
+}
+.orb-nest-label[_ngcontent-%COMP%] {
+  color: var(--%NS%bx-text-secondary);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .light-garden[_ngcontent-%COMP%] {
+    padding: 0.75rem;
+  }
+}
+.home-container[_ngcontent-%COMP%]    > .hero[_ngcontent-%COMP%], 
+.home-container[_ngcontent-%COMP%]    > .features[_ngcontent-%COMP%], 
+.home-container[_ngcontent-%COMP%]    > .home-links[_ngcontent-%COMP%], 
+.home-container[_ngcontent-%COMP%]    > .home-footer[_ngcontent-%COMP%] {
+  max-width: 80rem;
+  margin-inline: auto;
+}`]})};export{Nt as Home};
