@@ -1,4 +1,4 @@
-import{En as mt,H as L,K as Mc,N as Ic,Rn as p,Vn as q,bt as W,f as Co,ft as Us,mn as jh,mr as xc,nr as tn,un as it,vt as Vt}from"./chunk-D_BXh9rw.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{En as mt,H as L,K as Mc,N as Ic,Rn as p,Vn as q,bt as W,f as Co,ft as Us,mn as jh,mr as xc,nr as tn,un as it,vt as Vt}from"./chunk-DtVVo_Bz.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
