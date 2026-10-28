@@ -91,10 +91,26 @@
     z-index: 1;
     border-radius: inherit;
     pointer-events: none;
-    padding: 1px;
+    padding: 2px;
     box-sizing: border-box;
     display: none;
     opacity: var(--bx-glass-rim-visibility, 1);
+}
+
+.bx-glass-environment {
+    transition: opacity 180ms ease-out;
+}
+
+[data-bx-reduced-motion="true"] > .bx-glass-rim > .bx-glass-environment {
+    transition: none;
+}
+
+@supports (-webkit-mask-composite: xor) {
+    .bx-glass-rim {
+        display: block;
+        -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+        -webkit-mask-composite: xor;
+    }
 }
 
 @supports (mask-composite: exclude) {

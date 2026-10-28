@@ -69,7 +69,7 @@ export class Home {
       lightFollow: 1,
       glassMode: 1,
       glassAmount: 0.42,
-      glassCount: 5,
+      glassCount: 10,
       glassAngle: 145,
       glassProfile: 2,
       glassBevel: 0.01,

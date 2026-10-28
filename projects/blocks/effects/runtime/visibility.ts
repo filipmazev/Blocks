@@ -7,13 +7,49 @@ export function lightingVisibility(doc: Document, view: Window) {
   const styles = new Map<Element, CSSStyleDeclaration>();
   const boundaries = new Map<HTMLElement, HTMLElement>();
   const layers = new Map<HTMLElement, HTMLElement>();
-  const style = (element: HTMLElement) => {
+  const ambientBoundaries = new Map<Element, HTMLElement>();
+  const hitStacks = new Map<string, Element[]>();
+  const style = (element: Element) => {
     let value = styles.get(element);
     if (!value) {
       value = view.getComputedStyle(element);
       styles.set(element, value);
     }
     return value;
+  };
+  const elementsAt = (x: number, y: number): Element[] => {
+    const key = `${Math.round(x)},${Math.round(y)}`;
+    const cached = hitStacks.get(key);
+    if (cached) return cached;
+    const elements = [...doc.elementsFromPoint(x, y)];
+    for (let index = 0; index < elements.length; index++) {
+      const root = elements[index].shadowRoot;
+      if (!root) continue;
+      const shadowElements = root.elementsFromPoint(x, y);
+      if (!shadowElements.length) continue;
+      elements.splice(index, 0, ...shadowElements);
+      index += shadowElements.length;
+    }
+    hitStacks.set(key, elements);
+    return elements;
+  };
+  const ambientBoundary = (element: Element): HTMLElement => {
+    const cached = ambientBoundaries.get(element);
+    if (cached) return cached;
+    let current: Element | null = element;
+    const visited: Element[] = [];
+    while (current) {
+      visited.push(current);
+      const boundary = ambientBoundaries.get(current) ?? current.closest<HTMLElement>(lightBoundarySelector);
+      if (boundary) {
+        for (const ancestor of visited) ambientBoundaries.set(ancestor, boundary);
+        return boundary;
+      }
+      const root = current.getRootNode() as ShadowRoot;
+      current = current.parentElement ?? root.host ?? null;
+    }
+    for (const ancestor of visited) ambientBoundaries.set(ancestor, doc.documentElement);
+    return doc.documentElement;
   };
   const boundary = (element: HTMLElement): HTMLElement => {
     const cached = boundaries.get(element);
@@ -60,5 +96,5 @@ export function lightingVisibility(doc: Document, view: Window) {
     const hit = doc.elementFromPoint(px, py);
     return !!hit && (hit === element || element.contains(hit));
   };
-  return { boundary, layer, exposed };
+  return { boundary, layer, exposed, style, elementsAt, ambientBoundary };
 }

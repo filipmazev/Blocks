@@ -1,3 +1,4 @@
+import { AmbientSampler } from './ambient';
 import { configurationEvent } from './configuration';
 import { finiteClamp } from './dom';
 import { subscribeFrame } from './scheduler';
@@ -11,6 +12,8 @@ export interface LightContribution {
   color: string;
   strength: number;
   edgeStrength: number;
+  ambient?: boolean;
+  spread?: number;
 }
 export interface Lighting {
   x: number;
@@ -47,10 +50,12 @@ interface SceneEntry {
   root: HTMLElement;
   options: GlassSceneOptions;
 }
-interface PointLight {
+export interface PointLight {
   key: string;
   bounds?: DOMRect;
   source?: HTMLElement;
+  ambient?: boolean;
+  spread?: number;
   excludeSource?: boolean;
   excludeElement?: HTMLElement;
   x: number;
@@ -98,7 +103,7 @@ export function refreshGlassLighting(element: HTMLElement): void {
   runtimeFor(element.ownerDocument).refreshElement(element);
 }
 
-/** Lighting is an explicit spatial model; this does not capture or rasterize arbitrary page content. */
+/** Light fields are explicit; surfaces also sample nearby visual sources for ambient edge color. */
 export function mountGlassScene(root: HTMLElement, options: GlassSceneOptions = {}): GlassScene {
   return runtimeFor(root.ownerDocument).scene(root, options);
 }
@@ -122,6 +127,18 @@ class SceneRuntime {
   private motion: MediaQueryList;
   private transparency: MediaQueryList;
   private view: Window;
+  private ambient: AmbientSampler;
+  private renderedStyles = new WeakMap<HTMLElement, string | null>();
+  private assetLoad = (event: Event) => {
+    const target = event.target as Element | null;
+    if (target && /^(IMG|VIDEO)$/.test(target.tagName)) this.ambient.assetChanged(target);
+  };
+
+  private visibilityChange = () => {
+    if (!this.doc.hidden) this.refresh();
+    this.ambient.resume();
+  };
+
   private down = (event: PointerEvent) => {
     this.pressed = this.find(event);
     this.pressed?.hooks.press();
@@ -189,6 +206,7 @@ class SceneRuntime {
   };
 
   private refresh = () => {
+    this.ambient.invalidate();
     for (const entry of this.entries.values()) {
       entry.bounds = undefined;
       if (entry.visible) this.queue.add(entry);
@@ -200,6 +218,16 @@ class SceneRuntime {
     const view = doc.defaultView;
     if (!view) throw new Error('Glass scenes require a browser document.');
     this.view = view;
+    this.ambient = new AmbientSampler(
+      doc,
+      view,
+      (entry) => {
+        if (this.entries.get(entry.element) !== entry) return;
+        this.queue.add(entry as Entry);
+        this.schedule();
+      },
+      (root) => this.observeState(root)
+    );
     this.motion = view.matchMedia('(prefers-reduced-motion: reduce)');
     this.transparency = view.matchMedia('(prefers-reduced-transparency: reduce)');
     if (typeof view.IntersectionObserver === 'function')
@@ -209,6 +237,7 @@ class SceneRuntime {
             const entry = this.entries.get(record.target as HTMLElement);
             if (!entry) continue;
             entry.visible = record.isIntersecting;
+            this.ambient.invalidate(entry);
             if (entry.visible) {
               entry.bounds = undefined;
               this.queue.add(entry);
@@ -218,21 +247,46 @@ class SceneRuntime {
         },
         { rootMargin: '64px' }
       );
-    // Watch semantic state only, once per document. Decoration/style mutations
-    // and pointer movement never trigger this observer.
+    // Watch semantic and visual source changes once per document. Lighting's
+    // own decoration writes are excluded so sampling cannot trigger a loop.
     if (typeof view.MutationObserver === 'function')
       this.stateObserver = new view.MutationObserver((records) => {
         const changed = new Set<Entry>();
+        let visualChanged = false;
         for (const record of records) {
-          const entry = this.entries.get(record.target as HTMLElement);
+          if (record.type === 'childList') {
+            if ([...record.addedNodes, ...record.removedNodes].some((node) => !this.isLightingDecoration(node))) {
+              visualChanged = true;
+              this.ambient.sourcesChanged(record);
+            }
+            continue;
+          }
+          const target = record.target as HTMLElement;
+          if (record.attributeName === 'style' && this.renderedStyles.get(target) === target.getAttribute('style')) continue;
+          if (
+            record.attributeName === 'class' ||
+            record.attributeName === 'style' ||
+            record.attributeName === 'hidden' ||
+            /^(role|data-bx-light-scope|data-bx-surface|data-bx-reduced-transparency|data-bx-reduced-motion|src|srcset|width|height)$/.test(
+              record.attributeName ?? ''
+            )
+          ) {
+            if (!this.isLightingDecoration(target)) {
+              visualChanged = true;
+              if (/^(src|srcset|width|height)$/.test(record.attributeName ?? '')) this.ambient.assetChanged(target);
+            }
+            continue;
+          }
+          const entry = this.entries.get(target);
           if (entry) changed.add(entry);
           if (record.attributeName === 'data-bx-field-invalid') {
-            for (const surface of (record.target as HTMLElement).querySelectorAll<HTMLElement>('[data-bx-surface]')) {
+            for (const surface of target.querySelectorAll<HTMLElement>('[data-bx-surface]')) {
               const child = this.entries.get(surface);
               if (child) changed.add(child);
             }
           }
         }
+        if (visualChanged) this.ambient.invalidate();
         if (!changed.size) return;
         for (const entry of changed) this.updateSelected(entry);
         this.updateEmitter();
@@ -244,6 +298,7 @@ class SceneRuntime {
     const entry: Entry = { id: this.nextId++, element, hooks, visible: true };
     const overlay = lightingVisibility(this.doc, this.view).boundary(element) !== this.doc.documentElement;
     this.entries.set(element, entry);
+    this.ambient.add(entry);
     this.observer?.observe(element);
     this.updateSelected(entry);
     this.updateEmitter();
@@ -254,6 +309,7 @@ class SceneRuntime {
     return () => {
       this.observer?.unobserve(element);
       this.entries.delete(element);
+      this.ambient.remove(entry);
       this.queue.delete(entry);
       this.selected.delete(entry);
       if (this.pressed === entry) this.pressed = undefined;
@@ -272,6 +328,7 @@ class SceneRuntime {
     if (entry) this.updateSelected(entry);
     this.updateEmitter();
     if (entry) {
+      this.ambient.invalidate(entry);
       entry.bounds = undefined;
       this.queue.add(entry);
       this.schedule();
@@ -292,7 +349,10 @@ class SceneRuntime {
         }
       },
       refresh: () => {
-        if (!disposed) this.refreshRoot(root);
+        if (!disposed) {
+          this.ambient.invalidate();
+          this.refreshRoot(root);
+        }
       },
       destroy: () => {
         if (disposed) return;
@@ -302,6 +362,12 @@ class SceneRuntime {
         this.disconnectIfEmpty();
       }
     };
+  }
+
+  private isLightingDecoration(node: Node): boolean {
+    if (node.nodeType !== node.ELEMENT_NODE) return true;
+    const element = node as Element;
+    return element.matches('.bx-glass-decoration, .bx-glass-rim') || !!element.closest('.bx-glass-decoration, .bx-glass-rim');
   }
 
   private find(event: Event): Entry | undefined {
@@ -360,14 +426,40 @@ class SceneRuntime {
     this.schedule();
   }
 
+  private observeState(root: Node): void {
+    this.stateObserver?.observe(root, {
+      subtree: true,
+      attributes: true,
+      childList: true,
+      attributeFilter: [
+        'aria-pressed',
+        'aria-selected',
+        'aria-expanded',
+        'aria-current',
+        'disabled',
+        'aria-disabled',
+        'aria-invalid',
+        'data-bx-field-invalid',
+        'class',
+        'style',
+        'hidden',
+        'role',
+        'data-bx-light-scope',
+        'data-bx-surface',
+        'data-bx-reduced-transparency',
+        'data-bx-reduced-motion',
+        'src',
+        'srcset',
+        'width',
+        'height'
+      ]
+    });
+  }
+
   private connect(): void {
     if (this.connected) return;
     this.connected = true;
-    this.stateObserver?.observe(this.doc.documentElement, {
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['aria-pressed', 'aria-selected', 'aria-expanded', 'aria-current', 'disabled', 'aria-disabled', 'aria-invalid', 'data-bx-field-invalid']
-    });
+    this.observeState(this.doc.documentElement);
     this.doc.addEventListener('pointerdown', this.down, { passive: true });
     this.doc.addEventListener('pointerover', this.over, { passive: true });
     this.doc.addEventListener('pointerout', this.out, { passive: true });
@@ -379,6 +471,12 @@ class SceneRuntime {
     this.view.addEventListener('blur', this.blur);
     this.view.addEventListener('resize', this.refresh, { passive: true });
     this.doc.addEventListener('scroll', this.refresh, { passive: true, capture: true });
+    this.doc.addEventListener('load', this.assetLoad, true);
+    this.doc.addEventListener('loadeddata', this.assetLoad, true);
+    this.doc.addEventListener('play', this.assetLoad, true);
+    this.doc.addEventListener('pause', this.assetLoad, true);
+    this.doc.addEventListener('seeked', this.assetLoad, true);
+    this.doc.addEventListener('visibilitychange', this.visibilityChange);
     this.doc.addEventListener(configurationEvent, this.sync);
     this.motion.addEventListener('change', this.sync);
     this.transparency.addEventListener('change', this.sync);
@@ -386,6 +484,7 @@ class SceneRuntime {
 
   private disconnectIfEmpty(): void {
     if (this.entries.size || this.scenes.size) return;
+    this.ambient.destroy();
     this.stopFrame?.();
     this.stopFrame = undefined;
     this.queue.clear();
@@ -404,6 +503,12 @@ class SceneRuntime {
     this.view.removeEventListener('blur', this.blur);
     this.view.removeEventListener('resize', this.refresh);
     this.doc.removeEventListener('scroll', this.refresh, true);
+    this.doc.removeEventListener('load', this.assetLoad, true);
+    this.doc.removeEventListener('loadeddata', this.assetLoad, true);
+    this.doc.removeEventListener('play', this.assetLoad, true);
+    this.doc.removeEventListener('pause', this.assetLoad, true);
+    this.doc.removeEventListener('seeked', this.assetLoad, true);
+    this.doc.removeEventListener('visibilitychange', this.visibilityChange);
     this.doc.removeEventListener(configurationEvent, this.sync);
     this.motion.removeEventListener('change', this.sync);
     this.transparency.removeEventListener('change', this.sync);
@@ -457,12 +562,19 @@ class SceneRuntime {
             )
               lights.push(light);
           }
+          lights.push(...this.ambient.lights(entry));
           const reflections = (data?.reflections ?? []).filter((reflection) => visibility.boundary(reflection.source) === boundary);
           return [entry, this.project(entry, lights, reflections, visibility)] as const;
         });
       for (const entry of batch) this.queue.delete(entry);
       for (const { emitter, color, exposed } of emissions) emitter.hooks.emit?.(exposed, color);
-      for (const [entry, lighting] of projections) entry.hooks.light(lighting);
+      for (const [entry, lighting] of projections) {
+        const before = entry.element.getAttribute('style');
+        entry.hooks.light(lighting);
+        const after = entry.element.getAttribute('style');
+        // Native receivers (e.g. the slider thumb) paint on their host, not a decoration child.
+        if (before !== after) this.renderedStyles.set(entry.element, after);
+      }
       if (!this.queue.size) this.stopFrame = undefined;
       return this.queue.size > 0;
     });
@@ -531,23 +643,34 @@ class SceneRuntime {
       const edgeDistance = Math.hypot(Math.max(b.left - lx, 0, lx - b.right), Math.max(b.top - ly, 0, ly - b.bottom), light.z);
       const edgeWeight = Math.min(0.85, light.intensity * Math.pow(Math.max(0, 1 - edgeDistance / light.radius), 2));
       if (edgeWeight <= 0.01 && weight <= 0.001) continue;
-      if (!visibility.exposed(entry.hooks.hitTarget ?? entry.element, lx, ly, b)) continue;
-      if (light.source) {
+      if (!light.ambient && !visibility.exposed(entry.hooks.hitTarget ?? entry.element, lx, ly, b)) continue;
+      if (!light.ambient && light.source) {
         const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
         if (!visibility.exposed(source, lx, ly, source.getBoundingClientRect())) continue;
       }
-      weightedX += localX * weight;
-      weightedY += localY * weight;
       if (edgeWeight > 0.01)
         rims.push(
-          `radial-gradient(ellipse farthest-side at ${localX.toFixed(2)}% ${localY.toFixed(2)}%, color-mix(in srgb, ${light.color} ${(edgeWeight * 100).toFixed(2)}%, transparent), transparent 75%)`
+          `radial-gradient(${light.spread ? `circle ${light.spread}px` : 'ellipse farthest-side'} at ${localX.toFixed(2)}% ${localY.toFixed(2)}%, color-mix(in srgb, ${light.color} ${(edgeWeight * 100).toFixed(2)}%, transparent), transparent 75%)`
         );
       if (edgeWeight > 0.01 || weight > 0.001)
-        contributions.push({ key: light.key, x: localX, y: localY, color: light.color, strength: Math.min(0.25, weight * 0.4), edgeStrength: edgeWeight });
-      totalWeight += weight;
-      if (weight > strongest) {
-        strongest = weight;
-        color = light.color;
+        contributions.push({
+          key: light.key,
+          x: localX,
+          y: localY,
+          color: light.color,
+          strength: light.ambient ? 0 : Math.min(0.25, weight * 0.4),
+          edgeStrength: edgeWeight,
+          ambient: light.ambient,
+          spread: light.spread
+        });
+      if (!light.ambient) {
+        weightedX += localX * weight;
+        weightedY += localY * weight;
+        totalWeight += weight;
+        if (weight > strongest) {
+          strongest = weight;
+          color = light.color;
+        }
       }
     }
     if (totalWeight > 0.001) {

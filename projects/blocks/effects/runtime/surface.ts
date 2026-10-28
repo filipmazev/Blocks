@@ -45,37 +45,57 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       }
     ])
   );
+
   const decoration = doc.createElement('span');
   decoration.className = 'bx-glass-decoration';
   decoration.setAttribute('aria-hidden', 'true');
+
   const light = doc.createElement('span');
   light.className = 'bx-glass-light';
+
   const rim = doc.createElement('span');
   rim.className = 'bx-glass-rim';
   rim.setAttribute('aria-hidden', 'true');
   element.append(rim);
+
+  const environment = [doc.createElement('span'), doc.createElement('span')];
+  for (const node of environment) {
+    node.className = 'bx-glass-contribution bx-glass-environment';
+    node.style.opacity = '0';
+    rim.append(node);
+  }
+  let environmentImage = 'none';
+  let environmentIndex = 0;
+
   const ambient = doc.createElement('span');
   ambient.className = 'bx-glass-ambient';
   decoration.append(light);
   element.append(decoration);
   decoration.append(ambient);
+
   const motion = view.matchMedia('(prefers-reduced-motion: reduce)');
   const transparency = view.matchMedia('(prefers-reduced-transparency: reduce)');
+
   let options = { ...initial };
   let disposed = false;
   let unsubscribe: (() => void) | undefined;
   let reducedMotion = false;
+
   const interactive = () => options.interactive ?? isActionSurface(element);
   let emitting = false;
   let emittingColor: string | undefined;
+
   type Layer = { edge: HTMLElement; glow: HTMLElement; animations: Animation[]; leaving: boolean };
+
   const layers = new Map<string, Layer>();
+
   const removeLayer = (key: string, layer: Layer) => {
     layer.animations.forEach((animation) => animation.cancel());
     layer.edge.remove();
     layer.glow.remove();
     layers.delete(key);
   };
+
   const fadeLayer = (key: string, layer: Layer, visible: boolean) => {
     const opacity = view.getComputedStyle(layer.edge).opacity;
     layer.animations.forEach((animation) => animation.cancel());
@@ -94,6 +114,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
         /* Interrupted fades continue from their rendered opacity. */
       });
   };
+
   const setLayer = (value: LightContribution, source = false) => {
     let layer = layers.get(value.key);
     const fresh = !layer;
@@ -109,23 +130,25 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       layers.set(value.key, layer);
     }
     const at = `${value.x.toFixed(2)}% ${value.y.toFixed(2)}%`;
+
     const edgeColor = `color-mix(in srgb, ${value.color} ${(value.edgeStrength * 100).toFixed(2)}%, transparent)`;
     layer.edge.style.backgroundImage = source
       ? `linear-gradient(${edgeColor}, ${edgeColor})`
       : `radial-gradient(ellipse farthest-side at ${at}, ${edgeColor}, transparent 75%)`;
     layer.glow.style.backgroundImage = `radial-gradient(ellipse at ${at}, color-mix(in srgb, ${value.color} ${(value.strength * 100).toFixed(2)}%, transparent), transparent 68%)`;
     if (fresh || layer.leaving) fadeLayer(value.key, layer, true);
-    // Bound retiring layers during rapid movement across a dense grid.
     if (layers.size > 8)
       for (const [key, old] of layers) {
         if (old.leaving) removeLayer(key, old);
         if (layers.size <= 8) break;
       }
   };
+
   const emissionColor = () =>
     options.emission ??
     options.focusEmission ??
     (element.closest('[data-bx-field-invalid="true"]') || element.matches('[aria-invalid="true"]') ? 'var(--bx-text-danger)' : 'var(--bx-primary)');
+
   const emit = (active: boolean, color = emissionColor()) => {
     emitting = active;
     emittingColor = color;
@@ -135,18 +158,20 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       if (layer && !layer.leaving) fadeLayer('emitter', layer, false);
     }
   };
+
   const x = new Spring(25, { stiffness: 300, damping: 30 });
   const y = new Spring(0, { stiffness: 300, damping: 30 });
   const strength = new Spring(0.04, { stiffness: 300, damping: 30 });
   const pressure = new Spring(0, { stiffness: 440, damping: 25 });
   const globalValue = (name: string) => inheritedAttribute(element.parentElement ?? element, name);
+
   const paint = () => {
-    // The backdrop and its reflection share this geometry; content remains unscaled and selectable.
     decoration.style.setProperty('--bx-glass-light-x', `${x.value.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-light-y', `${y.value.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-light-strength', strength.value.toFixed(3));
     decoration.style.setProperty('--bx-glass-press', pressure.value.toFixed(4));
   };
+
   const animate = () => {
     if (disposed || unsubscribe) return;
     if (reducedMotion || typeof requestAnimationFrame !== 'function') {
@@ -165,13 +190,37 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       return moving;
     });
   };
+
   const lighting = (value: Lighting) => {
-    // Geometry is already measured from the rendered source. A second spring would make it drift.
     x.snap(value.x);
     y.snap(value.y);
     strength.target = value.strength;
-    const active = new Set(value.contributions.map((contribution) => contribution.key));
-    for (const contribution of value.contributions) setLayer(contribution);
+
+    const ambientImage =
+      value.contributions
+        .filter((contribution) => contribution.ambient)
+        .map(
+          (contribution) =>
+            `radial-gradient(circle ${contribution.spread}px at ${contribution.x.toFixed(2)}% ${contribution.y.toFixed(2)}%, color-mix(in srgb, ${contribution.color} ${(contribution.edgeStrength * 100).toFixed(2)}%, transparent), transparent 75%)`
+        )
+        .join(', ') || 'none';
+
+    if (ambientImage !== environmentImage) {
+      environmentImage = ambientImage;
+
+      const previous = environment[environmentIndex];
+      environmentIndex = 1 - environmentIndex;
+
+      const next = environment[environmentIndex];
+      next.style.backgroundImage = ambientImage;
+      next.style.opacity = '1';
+      previous.style.opacity = '0';
+    }
+
+    const contributions = value.contributions.filter((contribution) => !contribution.ambient);
+    const active = new Set(contributions.map((contribution) => contribution.key));
+
+    for (const contribution of contributions) setLayer(contribution);
     for (const [key, layer] of layers) if (key !== 'emitter' && !active.has(key) && !layer.leaving) fadeLayer(key, layer, false);
     decoration.style.setProperty('--bx-glass-light-color', value.color);
     decoration.style.setProperty('--bx-glass-reflection-color', value.reflection);
@@ -206,10 +255,12 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     else restoreProperty('--bx-glass-blur');
     if (options.tint !== undefined) element.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.5)));
     else restoreProperty('--bx-glass-opacity');
+
     // Absolutely positioned children use the padding box. Extend only across the
     // host's real border so their inherited outer radius describes the same curve.
     // Borderless and one-sided surfaces must never grow beyond their border box.
     const style = view.getComputedStyle(element);
+
     for (const side of ['top', 'right', 'bottom', 'left']) {
       const width = style.getPropertyValue(`border-${side}-width`);
       const inset = `${-parseFloat(width || '0')}px`;
