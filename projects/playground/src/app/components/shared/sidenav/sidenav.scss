@@ -47,10 +47,11 @@
 }
 
 .navigation-search {
+    flex: none;
     display: flex;
     flex-direction: column;
     gap: spacing(2);
-    margin-bottom: spacing(5);
+    margin-bottom: spacing(3);
 }
 
 .search-label {
@@ -131,14 +132,56 @@ input:focus-visible {
 }
 
 .menu-toggle {
-    padding: spacing(2) spacing(3);
-    font: inherit;
-    font-size: 0.875rem;
-    border: 1px solid var(--bx-border-default);
-    background: var(--bx-bg-canvas);
-    color: var(--bx-text-primary);
+    flex: 0 0 spacing(10);
+    width: spacing(10);
+    height: spacing(10);
+    padding: 0;
     border-radius: radius(md);
     cursor: pointer;
+}
+
+.hamburger-icon {
+    position: relative;
+    display: block;
+    width: spacing(5);
+    height: spacing(4);
+}
+
+.hamburger-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: radius(pill);
+    background: currentcolor;
+    transition:
+        transform 220ms ease,
+        opacity 160ms ease;
+}
+
+.hamburger-line:first-child {
+    top: 0;
+}
+
+.hamburger-line:nth-child(2) {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hamburger-line:last-child {
+    bottom: 0;
+}
+
+.menu-toggle.is-open .hamburger-line:first-child {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.is-open .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.is-open .hamburger-line:last-child {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 .navigation-scrim {
@@ -147,6 +190,19 @@ input:focus-visible {
     border: 0;
     background: rgb(0 0 0 / 30%);
     z-index: 211;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 220ms ease,
+        visibility 0s linear 220ms;
+}
+
+.navigation-scrim-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
 }
 
 .mobile-sidebar {
@@ -155,6 +211,27 @@ input:focus-visible {
     height: calc(100dvh - var(--mobile-header-height));
     z-index: 212;
     width: min(320px, 85vw);
+    transform: translateX(-100%);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        transform 300ms ease,
+        visibility 0s linear 300ms;
+}
+
+.mobile-sidebar-open {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hamburger-line,
+    .navigation-scrim,
+    .mobile-sidebar {
+        transition: none;
+    }
 }
 
 .sidebar,
@@ -169,7 +246,7 @@ input:focus-visible {
     flex: 1 1 0;
     overflow: hidden auto;
     overscroll-behavior: contain;
-    padding: 3px;
+    padding: 3px spacing(3) 3px 3px;
 }
 
 nav a[data-bx-surface] {

@@ -111,6 +111,13 @@ app-sidenav {
         gap: spacing(1);
     }
 
+    .toolbar-actions > .appearance-button {
+        flex: 0 0 spacing(10);
+        width: spacing(10);
+        height: spacing(10);
+        padding: 0;
+    }
+
     .toolbar-actions > a span {
         display: none;
     }
