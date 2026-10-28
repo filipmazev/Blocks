@@ -44,6 +44,7 @@ interface Entry {
   hooks: SurfaceHooks;
   visible: boolean;
   bounds?: DOMRect;
+  lastLighting?: Lighting;
 }
 interface SceneEntry {
   id: number;
@@ -209,6 +210,7 @@ class SceneRuntime {
     this.ambient.invalidate();
     for (const entry of this.entries.values()) {
       entry.bounds = undefined;
+      entry.lastLighting = undefined;
       if (entry.visible) this.queue.add(entry);
     }
     this.schedule();
@@ -240,6 +242,7 @@ class SceneRuntime {
             this.ambient.invalidate(entry);
             if (entry.visible) {
               entry.bounds = undefined;
+              entry.lastLighting = undefined;
               this.queue.add(entry);
             }
           }
@@ -255,6 +258,7 @@ class SceneRuntime {
         let visualChanged = false;
         for (const record of records) {
           if (record.type === 'childList') {
+            if (record.target.nodeType === 1 && this.isLightingDecoration(record.target)) continue;
             if ([...record.addedNodes, ...record.removedNodes].some((node) => !this.isLightingDecoration(node))) {
               visualChanged = true;
               this.ambient.sourcesChanged(record);
@@ -286,7 +290,13 @@ class SceneRuntime {
             }
           }
         }
-        if (visualChanged) this.ambient.invalidate();
+        if (visualChanged) {
+          for (const entry of this.entries.values()) {
+            entry.bounds = undefined;
+            entry.lastLighting = undefined;
+          }
+          this.ambient.invalidate();
+        }
         if (!changed.size) return;
         for (const entry of changed) this.updateSelected(entry);
         this.updateEmitter();
@@ -330,6 +340,7 @@ class SceneRuntime {
     if (entry) {
       this.ambient.invalidate(entry);
       entry.bounds = undefined;
+      entry.lastLighting = undefined;
       this.queue.add(entry);
       this.schedule();
     }
@@ -345,7 +356,7 @@ class SceneRuntime {
       update: (next) => {
         if (!disposed) {
           entry.options = next;
-          this.refreshRoot(root);
+          this.refreshRoot(root, next.reuseGeometry !== true);
         }
       },
       refresh: () => {
@@ -406,6 +417,7 @@ class SceneRuntime {
       // A panel may have finished its opening animation since its surfaces were registered.
       if (affected) {
         entry.bounds = undefined;
+        entry.lastLighting = undefined;
         this.queue.add(entry);
       }
     }
@@ -417,10 +429,13 @@ class SceneRuntime {
     else this.selected.delete(entry);
   }
 
-  private refreshRoot(root: HTMLElement): void {
+  private refreshRoot(root: HTMLElement, measure = true): void {
     for (const entry of this.entries.values()) {
       if (!root.contains(entry.element)) continue;
-      entry.bounds = undefined;
+      if (measure) {
+        entry.bounds = undefined;
+        entry.lastLighting = undefined;
+      }
       if (entry.visible) this.queue.add(entry);
     }
     this.schedule();
@@ -569,6 +584,8 @@ class SceneRuntime {
       for (const entry of batch) this.queue.delete(entry);
       for (const { emitter, color, exposed } of emissions) emitter.hooks.emit?.(exposed, color);
       for (const [entry, lighting] of projections) {
+        if (this.sameLighting(entry.lastLighting, lighting)) continue;
+        entry.lastLighting = lighting;
         const before = entry.element.getAttribute('style');
         entry.hooks.light(lighting);
         const after = entry.element.getAttribute('style');
@@ -577,6 +594,36 @@ class SceneRuntime {
       }
       if (!this.queue.size) this.stopFrame = undefined;
       return this.queue.size > 0;
+    });
+  }
+
+  private sameLighting(previous: Lighting | undefined, next: Lighting): boolean {
+    if (
+      !previous ||
+      previous.x !== next.x ||
+      previous.y !== next.y ||
+      previous.color !== next.color ||
+      previous.strength !== next.strength ||
+      previous.rim !== next.rim ||
+      previous.reflection !== next.reflection ||
+      previous.reflectionStrength !== next.reflectionStrength ||
+      previous.reflectionX !== next.reflectionX ||
+      previous.reflectionY !== next.reflectionY ||
+      previous.contributions.length !== next.contributions.length
+    )
+      return false;
+    return previous.contributions.every((light, index) => {
+      const other = next.contributions[index];
+      return (
+        light.key === other.key &&
+        light.x === other.x &&
+        light.y === other.y &&
+        light.color === other.color &&
+        light.strength === other.strength &&
+        light.edgeStrength === other.edgeStrength &&
+        light.ambient === other.ambient &&
+        light.spread === other.spread
+      );
     });
   }
 

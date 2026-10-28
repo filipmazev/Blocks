@@ -7,10 +7,11 @@ import { IconName } from '@icons/types/icon.types';
 import { Button } from '@forms/components/button/button';
 import { OddityCanvas } from 'oddity-angular';
 import { ThemingService } from '@core/services/theming.service';
+import { LightOrb } from './light-orb/light-orb';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, Icon, Button, BxSurfaceDirective, OddityCanvas],
+  imports: [RouterLink, Icon, Button, BxSurfaceDirective, OddityCanvas, LightOrb],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -69,7 +70,7 @@ export class Home {
       lightFollow: 1,
       glassMode: 1,
       glassAmount: 0.42,
-      glassCount: 10,
+      glassCount: 5,
       glassAngle: 145,
       glassProfile: 2,
       glassBevel: 0.01,

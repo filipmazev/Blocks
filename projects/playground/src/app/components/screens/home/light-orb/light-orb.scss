@@ -1,0 +1,290 @@
+:host {
+    display: contents;
+}
+
+.orb-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2rem;
+    margin-top: 0;
+    flex: 0 1 28rem;
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+}
+
+.orb-message {
+    display: flex;
+    align-items: center;
+    flex: 1 1 14rem;
+    gap: 0.55rem;
+    margin: 0;
+    min-height: 2.5em;
+}
+
+.mood-dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--bx-primary);
+}
+
+.mood-dot[data-mood='success'] {
+    background: var(--bx-text-success);
+}
+
+.mood-dot[data-mood='warn'] {
+    background: var(--bx-text-warn);
+}
+
+.mood-dot[data-mood='danger'] {
+    background: var(--bx-text-danger);
+}
+
+.mood-dot[data-mood='info'] {
+    background: var(--bx-text-info);
+}
+
+.orb-hint {
+    display: none;
+    color: var(--bx-text-tertiary, var(--bx-text-secondary));
+    font-size: 0.6875rem;
+}
+
+.orb-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    flex: none;
+    min-height: 1.85rem;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--bx-border-default);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bx-bg-surface) 60%, transparent);
+    color: var(--bx-text-secondary);
+    font: inherit;
+    font-size: 0.6875rem;
+    cursor: pointer;
+}
+
+.orb-home svg {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+
+.orb-plane {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: clip;
+    border-radius: var(--orb-garden-radius, 1.5rem);
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.orb-plane.orb-ready {
+    visibility: visible;
+}
+
+.light-orb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--bx-primary);
+    cursor: grab;
+    pointer-events: auto;
+    touch-action: none;
+    user-select: none;
+    will-change: transform;
+}
+
+.light-orb[data-state='dragging'] {
+    cursor: grabbing;
+}
+
+.light-orb:focus-visible,
+.orb-home:focus-visible {
+    outline: 2px solid var(--bx-text-primary);
+    outline-offset: 5px;
+}
+
+.orb-charge,
+.orb-body,
+.orb-halo,
+.orb-rim,
+.orb-glint {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.orb-body {
+    background:
+        radial-gradient(ellipse at 28% 20%, #ffffff55, #ffffff00 48%),
+        radial-gradient(ellipse at 65% 90%, #00000014, #00000000 62%),
+        color-mix(in srgb, var(--bx-bg-surface) 15%, transparent);
+    box-shadow:
+        inset 1px 1px 2px #ffffff66,
+        inset -2px -2px 5px #00000018,
+        0 4px 10px #0000001a;
+    backdrop-filter: blur(5px) saturate(1.2);
+}
+
+.orb-rim {
+    padding: 1.5px;
+    background: conic-gradient(
+        from 25deg,
+        #ffffffcc,
+        currentcolor 15%,
+        transparent 36%,
+        currentcolor 62%,
+        #ffffffbb 83%,
+        transparent 94%,
+        #ffffffcc
+    );
+    mask:
+        linear-gradient(#ffffff 0 0) content-box,
+        linear-gradient(#ffffff 0 0);
+    mask-composite: exclude;
+}
+
+.orb-halo {
+    inset: -9px;
+    background: currentcolor;
+    filter: blur(13px);
+    opacity: 0.16;
+}
+
+.light-orb[data-mood='danger'] .orb-halo {
+    opacity: 0.3;
+}
+
+.orb-glint {
+    inset: 6px 15px 33px 11px;
+    background: #ffffff88;
+    filter: blur(1px);
+    transform: rotate(-30deg);
+}
+
+.orb-ribbons {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.ribbon {
+    stroke-linejoin: round;
+}
+
+.ribbon-core {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 1px currentcolor);
+}
+
+.ribbon-glow {
+    opacity: 0.55;
+    filter: blur(2.8px);
+}
+
+.ribbon-tail {
+    opacity: 0.25;
+    filter: blur(0.65px);
+}
+
+.orb-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 52px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, #000000, #00000000 70%);
+    pointer-events: none;
+}
+
+.orb-impact-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.orb-impact {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.orb-impact-left {
+    inset: 0 auto 0 0;
+    width: 10px;
+    mask-image: linear-gradient(to right, black, transparent);
+}
+
+.orb-impact-right {
+    inset: 0 0 0 auto;
+    width: 10px;
+    mask-image: linear-gradient(to left, black, transparent);
+}
+
+.orb-impact-top {
+    inset: 0 0 auto;
+    height: 10px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.orb-impact-bottom {
+    inset: auto 0 0;
+    height: 10px;
+    mask-image: linear-gradient(to top, black, transparent);
+}
+
+.orb-color-probes {
+    display: none;
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+    .orb-body {
+        background: var(--bx-bg-surface);
+        backdrop-filter: none;
+    }
+}
+
+.orb-volume {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            ellipse at 40% 58%,
+            color-mix(in srgb, currentcolor 32%, transparent),
+            transparent 68%
+        ),
+        radial-gradient(
+            ellipse at 62% 40%,
+            color-mix(in srgb, currentcolor 24%, transparent),
+            transparent 62%
+        );
+    filter: blur(3px);
+}
+
+.orb-home:disabled {
+    opacity: 0.4;
+    cursor: default;
+}

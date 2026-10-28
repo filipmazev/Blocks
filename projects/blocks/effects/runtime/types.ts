@@ -76,6 +76,8 @@ export interface GlassReflector {
   depth?: number;
 }
 export interface GlassSceneOptions {
+  /** Reuse receiver measurements for frequent light-only updates. refresh() still invalidates them. */
+  reuseGeometry?: boolean;
   /** At most four lights and four reflectors are evaluated per scene. */
   lights?: readonly GlassLight[];
   reflectors?: readonly GlassReflector[];

@@ -45,8 +45,17 @@
     border-top: 1px solid var(--bx-border-default);
 }
 
-.features > h2 {
+.features-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: spacing(3);
     margin-bottom: spacing(6);
+}
+
+.features-heading h2 {
+    margin: 0;
 }
 
 .feature-grid {
@@ -150,4 +159,68 @@
     z-index: 0;
     width: 100vw;
     height: 100dvh;
+}
+
+.features-note {
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+}
+
+.light-garden {
+    --orb-garden-radius: 1.5rem;
+
+    position: relative;
+    max-width: none;
+    min-height: calc(100dvh - 7rem);
+    padding: spacing(6);
+    border: 1px solid var(--bx-border-strong);
+    border-bottom-width: 3px;
+    border-radius: var(--orb-garden-radius);
+    background: color-mix(in srgb, var(--bx-bg-canvas) 14%, transparent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, white 15%, transparent),
+        inset 0 -8px 18px -16px var(--bx-text-primary);
+}
+
+.orb-nest {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    pointer-events: none;
+}
+
+.orb-nest-well {
+    display: block;
+    width: 56px;
+    height: 56px;
+    border: 1px solid color-mix(in srgb, var(--bx-primary) 35%, var(--bx-border-default));
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bx-bg-canvas) 70%, transparent);
+    box-shadow:
+        inset 0 3px 7px #00000022,
+        0 1px 0 #ffffff22;
+}
+
+.orb-nest-label {
+    color: var(--bx-text-secondary);
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+@include respond-down(md) {
+    .light-garden {
+        padding: spacing(3);
+    }
+}
+
+.home-container > .hero,
+.home-container > .features,
+.home-container > .home-links,
+.home-container > .home-footer {
+    max-width: 80rem;
+    margin-inline: auto;
 }

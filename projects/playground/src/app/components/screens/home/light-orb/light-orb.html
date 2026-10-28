@@ -1,0 +1,36 @@
+<div class="orb-controls">
+  <p id="orb-instructions" class="orb-message" role="status"><span class="mood-dot" [attr.data-mood]="mood()" aria-hidden="true"></span>{{ message() }}</p>
+  <span class="orb-hint">Hover to wake · drag to play</span>
+  <button class="orb-home" type="button" (click)="bringHome()" [disabled]="mood() === 'danger'" [attr.title]="mood() === 'danger' ? 'Letting off steam. It will come home when ready.' : 'Bring the light home'" aria-label="Bring the light home">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 7-6 7 6v8H3zM8 17v-6h4v6" /></svg>
+    <span>Bring home</span>
+  </button>
+</div>
+<div #plane class="orb-plane" [class.orb-ready]="ready()">
+  <span #impact class="orb-impact-layer" aria-hidden="true"><span class="orb-impact orb-impact-left"></span><span class="orb-impact orb-impact-right"></span><span class="orb-impact orb-impact-top"></span><span class="orb-impact orb-impact-bottom"></span></span>
+  <span #shadow class="orb-shadow" aria-hidden="true"></span>
+  <button #orb class="light-orb" type="button" [attr.data-state]="state()" [attr.data-mood]="mood()" aria-label="Your theme's little light. Hover to wake, drag to throw, or press Enter to play. Arrow keys move it; Escape sends it home." aria-describedby="orb-instructions" (click)="toss($event)" (keydown)="keydown($event)">
+    <span class="orb-body" aria-hidden="true"></span>
+    <span #charge class="orb-charge" aria-hidden="true">
+      <span class="orb-halo"></span>
+      <span class="orb-volume"></span>
+      <span class="orb-rim"></span>
+      <svg class="orb-ribbons" viewBox="0 0 60 60">
+        <defs>
+          <linearGradient id="orb-liquid-light" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="currentColor" stop-opacity="0" />
+            <stop offset="0.28" stop-color="currentColor" stop-opacity="0.65" />
+            <stop offset="0.53" stop-color="currentColor" stop-opacity="1" />
+            <stop offset="0.8" stop-color="currentColor" stop-opacity="0.55" />
+            <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <path #ribbonGlow class="ribbon ribbon-glow" fill="url(#orb-liquid-light)" />
+        <path #ribbonTail class="ribbon ribbon-tail" fill="url(#orb-liquid-light)" />
+        <path #ribbonCore class="ribbon ribbon-core" fill="url(#orb-liquid-light)" />
+      </svg>
+    </span>
+    <span class="orb-glint" aria-hidden="true"></span>
+  </button>
+</div>
+<span #probes class="orb-color-probes" aria-hidden="true"><i style="color:var(--bx-primary)"></i><i style="color:var(--bx-text-success)"></i><i style="color:var(--bx-text-warn)"></i><i style="color:var(--bx-text-danger)"></i><i style="color:var(--bx-text-info)"></i></span>

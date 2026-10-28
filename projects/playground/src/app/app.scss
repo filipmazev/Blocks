@@ -83,6 +83,8 @@ app-sidenav {
 @include respond-down(lg) {
     app-sidenav {
         flex-basis: 0;
+        min-width: 0;
+        width: 0;
     }
 
     .app-main {

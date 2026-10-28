@@ -428,3 +428,61 @@ test('explicit edge sources, exclusions and reflections retain independent behav
   await page.evaluate(() => scene.destroy());
   await page.waitForFunction(() => lighting.contributions.every((light) => light.ambient));
 });
+
+test('retiring semantic light nodes do not invalidate ambient sampling', async (t) => {
+  const page = await pageFor(t, false, true);
+  await page.evaluate(() => {
+    const source = document.getElementById('left');
+    source.setAttribute('role', 'button');
+    handles.push(runtime.mountSurface(source, { emission: '#ff3300' }));
+  });
+  await page.locator('#left').hover();
+  await page.waitForTimeout(500);
+  const hits = await page.evaluate(() => metrics.hits);
+  await page.mouse.move(500, 50);
+  await page.waitForTimeout(650);
+  assert.equal(await page.evaluate(() => metrics.hits), hits);
+  assert.equal(await page.locator('#receiver [data-bx-light-source^="hover:"]').count(), 0);
+});
+
+test('light-only updates can reuse receiver geometry and skip identical paints without changing normal refreshes', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(() => {
+    window.options = {
+      reuseGeometry: true,
+      lights: [{ x: 670, y: 260, z: 30, color: '#ff00ff', radius: 400 }],
+    };
+    window.scene = runtime.mountGlassScene(document.body, options);
+    handles.push(scene);
+  });
+  await page.waitForFunction(() =>
+    lighting.contributions.some((light) => light.color === '#ff00ff'),
+  );
+  await page.waitForTimeout(300);
+  const before = await page.evaluate(() => ({ ...metrics }));
+  await page.evaluate(async () => {
+    for (let i = 0; i < 12; i++) {
+      scene.update(options);
+      await new Promise(requestAnimationFrame);
+    }
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+  });
+  const after = await page.evaluate(() => ({ ...metrics }));
+  assert.equal(after.rects, before.rects);
+  assert.equal(after.lights, before.lights);
+  await page.evaluate(() => {
+    receiver.style.left = '350px';
+    scene.update(options);
+  });
+  await page.waitForFunction(
+    (before) => metrics.rects > before.rects && metrics.lights > before.lights,
+    before,
+  );
+  const moved = await page.evaluate(() => ({ ...metrics }));
+  await page.evaluate(() => scene.update({ ...options, reuseGeometry: false }));
+  await page.waitForFunction(
+    (before) => metrics.rects > before.rects && metrics.lights > before.lights,
+    moved,
+  );
+});

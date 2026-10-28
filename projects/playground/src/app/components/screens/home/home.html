@@ -1,6 +1,6 @@
 <oddity-canvas [config]="look()" class="oddity-canvas" />
 
-<div class="home-container">
+<div #lightGarden class="home-container light-garden">
   <header class="hero">
     <div class="hero-content">
       <p class="eyebrow">Blocks · Angular components</p>
@@ -13,10 +13,17 @@
     </div>
   </header>
   <section class="features" aria-labelledby="features-title">
-    <h2 id="features-title">Built on the Blocks foundations</h2>
-    <div class="feature-grid">
+    <div class="features-heading">
+      <h2 id="features-title">Built on the Blocks foundations</h2>
+      <app-light-orb [stage]="lightGarden" [cards]="featureGrid" />
+    </div>
+    <div #featureGrid class="feature-grid">
       @for (feature of features; track feature.title) {
-        <a bxSurface class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" /><h3>{{ feature.title }}</h3><p>{{ feature.description }}</p><span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span></a>
+        <a bxSurface class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" />
+          @if (feature.icon === 'palette') {
+            <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
+          }
+          <h3>{{ feature.title }}</h3><p>{{ feature.description }}</p><span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span></a>
       }
     </div>
   </section>

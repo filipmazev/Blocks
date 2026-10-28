@@ -19,9 +19,12 @@ import { NavigationService, INavigationItem } from '@filip.mazev/blocks/navigati
 export class Sidenav {
   private readonly dimensions = inject(WindowDimensionsService);
   private readonly navigation = inject(NavigationService);
+
   protected readonly isHamburgerMenuOpen = signal(false);
   protected readonly isHamburgerMenu = computed(() => this.dimensions.dimensions().width <= this.dimensions.breakpoints.lg);
+
   protected readonly query = signal('');
+
   protected readonly groups = computed(() => {
     const flatten = (items: INavigationItem[]): INavigationItem[] => items.flatMap((item) => [item, ...flatten(item.children ?? [])]);
     const term = this.query().trim().toLowerCase();
@@ -35,6 +38,7 @@ export class Sidenav {
   private readonly scrollLock = inject(ScrollLockService);
   private readonly scrollLockId = uuidv4();
   private readonly menuToggle = viewChild('menuToggle', { read: ElementRef });
+
   constructor() {
     effect(() => {
       if (this.isHamburgerMenuOpen()) this.scrollLock.disableScroll(this.scrollLockId, { handleTouchInput: false });
@@ -47,7 +51,6 @@ export class Sidenav {
   }
 
   protected toggleMobileMenu(): void {
-    // WebKit does not focus clicked buttons. Give the focus trap a return target.
     this.menuToggle()?.nativeElement.focus({ preventScroll: true });
     this.isHamburgerMenuOpen.update((open) => !open);
   }
