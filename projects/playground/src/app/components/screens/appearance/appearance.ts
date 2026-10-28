@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Button, Radio, SlideToggle, SliderDirective } from '@filip.mazev/blocks/forms';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
+import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 import { Readme } from '../../shared/readme/readme';
+import { AppearancePreview } from './appearance-preview/appearance-preview';
 
 @Component({
   selector: 'app-appearance',
-  imports: [FormsModule, Radio, SlideToggle, SliderDirective, Button, BxSurfaceDirective, Icon, Readme],
+  imports: [FormsModule, Radio, SlideToggle, SliderDirective, Button, BxSurfaceDirective, Icon, TooltipDirective, Readme, AppearancePreview],
   templateUrl: './appearance.html',
   styleUrl: './appearance.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -51,7 +53,7 @@ theme.setAppearance({ reducedTransparency: true });
 
   protected reset(): void {
     this.theme.resetAppearance();
-    this.theme.setPalette('orange');
+    this.theme.setPalette('blue');
     this.theme.setHighContrast(false);
     this.a11y.setReducedMotion(null);
   }

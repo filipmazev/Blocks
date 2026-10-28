@@ -1,7 +1,7 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
 export interface NgAddOptions {
-  theme?: 'white' | 'purple' | 'orange' | 'red' | 'green' | 'cyberpunk';
+  theme?: 'white' | 'blue' | 'purple' | 'orange' | 'red' | 'green' | 'cyberpunk';
 }
 
 export function ngAdd(options: NgAddOptions): Rule {

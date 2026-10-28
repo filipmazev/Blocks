@@ -1,0 +1,4 @@
+@use '../theme-engine' as *;
+
+$blue-light-theme: make-light-theme('blue');
+$blue-dark-theme: make-dark-theme('blue');

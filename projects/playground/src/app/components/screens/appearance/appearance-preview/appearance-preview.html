@@ -1,0 +1,60 @@
+<div #reader class="preview-reader" tabindex="0" role="region" aria-label="Scrollable national parks article">
+  <article class="park-article">
+    <img class="article-hero" src="assets/images/appearance/mountains-2400.webp" srcset="assets/images/appearance/mountains-640.webp 640w, assets/images/appearance/mountains.webp 1200w, assets/images/appearance/mountains-2400.webp 2400w" sizes="(max-width: 640px) 150vw, (max-width: 1280px) 90vw, 55vw" alt="A snow-covered mountain landscape" width="2400" height="1643" loading="eager" fetchpriority="high" decoding="async">
+    <header class="article-copy article-heading">
+      <h2>National Parks</h2>
+    </header>
+    <div class="article-copy">
+      <p class="article-eyebrow">Discover Macedonia</p>
+      <p class="article-lead">Explore the natural beauty of Macedonia through the power of photography.</p>
+    </div>
+    @for (park of parks(); track park.id) {
+      <section [id]="park.id" class="park-story" [attr.aria-labelledby]="park.id + '-title'">
+        <div class="article-copy">
+          <p class="article-eyebrow">{{ park.subtitle }}</p>
+          <h3 [id]="park.id + '-title'">{{ park.title }}</h3>
+          @for (paragraph of park.paragraphs; track paragraph) { <p>{{ paragraph }}</p> }
+        </div>
+        <figure class="article-photo">
+          <img [src]="park.photo.src" [attr.srcset]="park.photo.srcset" sizes="(max-width: 640px) 100vw, (max-width: 1280px) 85vw, 55vw" [alt]="park.photo.alt" [width]="park.photo.width" [height]="park.photo.height" loading="eager" decoding="async">
+          <figcaption>{{ park.caption }}</figcaption>
+        </figure>
+        <div class="article-copy">
+          <h4>{{ park.detail.title }}</h4>
+          @for (paragraph of park.detail.paragraphs; track paragraph) { <p>{{ paragraph }}</p> }
+        </div>
+        <figure class="article-photo article-detail-photo">
+          <img [src]="park.detail.photo.src" [attr.srcset]="park.detail.photo.srcset" sizes="(max-width: 640px) 100vw, (max-width: 1280px) 85vw, 55vw" [alt]="park.detail.photo.alt" [width]="park.detail.photo.width" [height]="park.detail.photo.height" loading="eager" decoding="async">
+          <figcaption>{{ park.detail.caption }}</figcaption>
+        </figure>
+      </section>
+    } @empty {
+      <div class="article-copy empty-search" role="status"><h3>No places found</h3><p>Try searching for Šar Mountain, Korab, or lakes.</p><button bx-button type="button" variant="tonal" (click)="search.set('')">Clear search</button></div>
+    }
+    <footer class="article-copy article-footer"><bx-icon name="leaf" size="16" /><span>Leave the trails as beautiful as you found them.</span></footer>
+  </article>
+</div>
+
+<div class="preview-tools" role="group" aria-label="Nature journal controls">
+  <button bx-button type="button" variant="icon" color="grayscale" class="preview-icon-button" aria-label="Back to the start of the article" (click)="scrollTo(reader)"><bx-icon name="arrow-up" size="16" /></button>
+  <div bxSurface bxSurfaceInteractive bxSurfaceFocusEmission="var(--bx-primary)" class="preview-search">
+    <bx-icon name="search" size="16" />
+    <input #query type="search" aria-label="Search the national parks article" placeholder="Find a place" [value]="search()" (input)="search.set(query.value)">
+  </div>
+  <button bx-button type="button" variant="icon" [color]="saved() ? 'primary' : 'grayscale'" class="preview-icon-button" [attr.aria-pressed]="saved()" [attr.aria-label]="saved() ? 'Remove article from saved places' : 'Save article to your places'" (click)="saved.set(!saved())"><bx-icon [name]="saved() ? 'bookmark-check' : 'bookmark'" size="16" /></button>
+  <button bx-button type="button" variant="icon" color="grayscale" class="preview-icon-button" aria-label="Article contents" [bxDropdown]="contents" placement="bottom"><bx-icon name="ellipsis" size="20" /></button>
+</div>
+
+<nav bxSurface class="preview-navigation" aria-label="Places in this article">
+  <span class="preview-saved-status" role="status">{{ saved() ? 'Saved to your places' : 'Explore Macedonia' }}</span>
+  @for (park of parks(); track park.id) {
+    <button type="button" (click)="scrollTo(reader, park.id)"><bx-icon name="mountain" size="16" /><span>{{ park.shortTitle }}</span></button>
+  }
+</nav>
+
+<ng-template #contents>
+  <bx-menu>
+    <bx-menu-item label="Back to the top" icon="arrow-up" (action)="scrollTo(reader)" />
+    @for (park of parks(); track park.id) { <bx-menu-item [label]="park.title" icon="mountain" (action)="scrollTo(reader, park.id)" /> }
+  </bx-menu>
+</ng-template>

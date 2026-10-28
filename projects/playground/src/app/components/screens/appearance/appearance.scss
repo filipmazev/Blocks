@@ -19,53 +19,16 @@
 .preview-column {
     display: flex;
     flex-direction: column;
+    gap: spacing(4);
     min-width: 0;
 }
 
-.material-preview {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0;
+.glassiness-controls {
+    flex: none;
+    padding: spacing(3) spacing(6);
     border: 1px solid var(--bx-border-default);
-    border-radius: radius(lg);
+    border-radius: radius(pill);
     background: var(--bx-bg-surface);
-}
-
-.stage {
-    position: relative;
-    display: grid;
-    place-items: center;
-    flex: 1;
-    min-height: 29rem;
-    min-width: 0;
-    padding: 0;
-    background: var(--bx-bg-surface-alt);
-    border-top-left-radius: calc(#{radius(lg)} - 1px);
-    border-top-right-radius: calc(#{radius(lg)} - 1px);
-    overflow: clip;
-}
-
-.preview-surface {
-    position: relative;
-    z-index: 1;
-    width: calc(100% - #{spacing(8)});
-    max-width: 23rem;
-    margin-block: spacing(4);
-    border: 1px solid var(--bx-border-default);
-    padding: spacing(8);
-    border-radius: radius(lg);
-
-    --bx-glass-radius: #{radius(lg)};
-}
-
-.preview-surface h2 {
-    font-size: 1.75rem;
-    margin-block: spacing(6) spacing(3);
-}
-
-.preview-surface > p {
-    color: var(--bx-text-heading);
 }
 
 .global-controls {
@@ -84,13 +47,19 @@
 
 .panel-heading h2,
 .glassiness-controls h2 {
-    margin: 0;
+    margin-block: spacing(3) spacing(6);
     font-size: 1.25rem;
 }
 
-.section-note {
+.section-note,
+.glassiness-note {
     color: var(--bx-text-secondary);
     font-size: 0.875rem;
+}
+
+.glassiness-note {
+    margin: 0;
+    padding-inline: spacing(2);
 }
 
 .global-controls > .rendering-note {
@@ -100,7 +69,7 @@
 fieldset {
     border: 0;
     padding: 0;
-    margin: 0 0 spacing(6);
+    margin: 0 0 spacing(4);
     min-width: 0;
 }
 
@@ -123,10 +92,8 @@ legend,
     flex-wrap: wrap;
 }
 
-.glassiness-controls {
-    flex: none;
-    padding: spacing(6);
-    border-top: 1px solid var(--bx-border-default);
+.palette-picker > button {
+    padding-inline: spacing(3);
 }
 
 .glassiness-range {
@@ -151,10 +118,24 @@ input[type='range'] {
     cursor: pointer;
 }
 
+.glassiness-controls.is-disabled {
+    cursor: not-allowed;
+}
+
+input[type='range']:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .quality-picker {
     display: grid;
     gap: spacing(3);
     font-size: 0.875rem;
+}
+
+.quality-picker,
+.accessibility-options {
+    --bx-field-padding-bottom: 0;
 }
 
 .quality-picker > label,
@@ -180,10 +161,6 @@ input[type='range'] {
     display: grid;
     gap: spacing(3);
     font-size: 0.875rem;
-}
-
-.glassiness-controls .section-note {
-    margin-block: spacing(3) spacing(6);
 }
 
 .implementation {
@@ -221,29 +198,17 @@ input[type='range'] {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .global-controls {
-        order: -1;
-    }
-
     .implementation {
         grid-template-columns: minmax(0, 1fr);
     }
 }
 
 @include respond-down(sm) {
-    .stage {
-        min-height: 25rem;
-    }
-
-    .preview-surface {
-        width: calc(100% - #{spacing(4)});
-        padding: spacing(6);
-    }
-
     .global-controls,
     .glassiness-controls {
         padding: spacing(4);
     }
+
 }
 
 .lab-layout > *,
@@ -251,34 +216,3 @@ input[type='range'] {
     min-width: 0;
 }
 
-.scene-background {
-    position: absolute;
-    inset-inline: 0;
-    top: calc(-25% - 1px);
-    width: 100%;
-    height: calc(125% + 2px);
-    object-fit: cover;
-    object-position: center;
-    pointer-events: none;
-    animation: backdrop-drift 30s ease-in-out infinite alternate;
-}
-
-@keyframes backdrop-drift {
-    from {
-        transform: translateY(0);
-    }
-
-    to {
-        transform: translateY(20%);
-    }
-}
-
-.scene-background[data-bx-reduced-motion='true'] {
-    animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .scene-background:not([data-bx-reduced-motion='false']) {
-        animation-play-state: paused;
-    }
-}

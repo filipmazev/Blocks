@@ -8,8 +8,8 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
     const current = new Set<string>();
     for (let index = 0; index < styles.length; index++) {
       const property = styles.item(index);
-      // Material settings remain inherited from the application root and update immediately.
-      if (property.startsWith('--bx-') && property !== '--bx-glassiness' && (!property.startsWith('--bx-glass-') || property === '--bx-glass-radius')) {
+      // Copy theme tokens, not the trigger's material or shape. Overlays own their radius.
+      if (property.startsWith('--bx-') && property !== '--bx-glassiness' && !property.startsWith('--bx-glass-')) {
         pane.style.setProperty(property, styles.getPropertyValue(property));
         current.add(property);
       }

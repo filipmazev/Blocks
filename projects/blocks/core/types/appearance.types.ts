@@ -12,9 +12,10 @@ export const DEFAULT_APPEARANCE_CONFIG: Readonly<BxAppearanceConfig> = Object.fr
   reducedTransparency: false
 });
 
-export type BxThemeId = 'white' | 'purple' | 'orange' | 'red' | 'green' | 'cyberpunk';
+export type BxThemeId = 'white' | 'blue' | 'purple' | 'orange' | 'red' | 'green' | 'cyberpunk';
 export const THEME_PALETTES: ReadonlyArray<{ id: BxThemeId; label: string; className: string }> = [
   { id: 'white', label: 'White', className: 'theme-white' },
+  { id: 'blue', label: 'Blue', className: 'theme-blue' },
   { id: 'purple', label: 'Purple', className: 'theme-purple' },
   { id: 'orange', label: 'Orange', className: 'theme-orange' },
   { id: 'red', label: 'Red', className: 'theme-red' },

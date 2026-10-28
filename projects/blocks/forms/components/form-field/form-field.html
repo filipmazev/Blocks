@@ -8,7 +8,7 @@
         </label>
 
         @if (tooltip()) {
-        <button type="button" class="bx-field-tooltip-trigger" [bxTooltip]="tooltip()!" placement="top" aria-label="More information">
+        <button type="button" class="bx-field-tooltip-trigger" [bxTooltip]="tooltip()!" bxTooltipTouch="tap" placement="top" aria-label="More information">
             <bx-icon name="help-circle" size="16"></bx-icon>
         </button>
         }
@@ -22,7 +22,7 @@
     <div class="bx-field-control" [class.bx-field-control-inline]="inline()">
         <ng-content></ng-content>
         @if (inline() && tooltip()) {
-        <button type="button" class="bx-field-tooltip-trigger" [bxTooltip]="tooltip()!" placement="top" [attr.aria-label]="'More information'">
+        <button type="button" class="bx-field-tooltip-trigger" [bxTooltip]="tooltip()!" bxTooltipTouch="tap" placement="top" [attr.aria-label]="'More information'">
             <bx-icon name="help-circle" size="16"></bx-icon>
         </button>
         }

@@ -10,7 +10,7 @@
     flex-direction: column;
     gap: spacing(1);
     position: relative;
-    padding-bottom: spacing(6);
+    padding-bottom: var(--bx-field-padding-bottom, #{spacing(6)});
 }
 
 .bx-field-header {

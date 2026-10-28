@@ -9,6 +9,7 @@
             "description": "Select the theme for your UI.",
             "enum": [
                 "white",
+                "blue",
                 "purple",
                 "orange",
                 "red",
@@ -22,6 +23,10 @@
                     {
                         "value": "white",
                         "label": "White Theme"
+                    },
+                    {
+                        "value": "blue",
+                        "label": "Blue Theme"
                     },
                     {
                         "value": "purple",

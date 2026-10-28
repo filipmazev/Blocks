@@ -1,5 +1,18 @@
 @use 'sass:map';
 
+$blue-palette: (
+    50: #eff6ff,
+    100: #dceaff,
+    200: #bfd9ff,
+    300: #91bdff,
+    400: #589dff,
+    500: #217eff,
+    600: #1465df,
+    700: #1350b5,
+    800: #15418d,
+    900: #16386f,
+    1000: #0c1f40,
+) !default;
 $orange-palette: (
     50: #fff7ed,
     100: #ffedd4,
@@ -150,6 +163,7 @@ $hc-cyan: #00f3f3;
 $hc-red: #ff0000;
 $hc-green: #00ff00;
 $all-palettes: (
+    'blue': $blue-palette,
     'orange': $orange-palette,
     'purple': $purple-palette,
     'red': $red-palette,

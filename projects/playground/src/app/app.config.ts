@@ -44,7 +44,7 @@ export const APP_CONFIG: ApplicationConfig = {
       }
       // Read the preference before the shared service initializes its library default.
       const theme = inject(ThemingService);
-      if (!theme.palettes.some((palette) => palette.id === savedPalette)) theme.setPalette('orange');
+      if (!theme.palettes.some((palette) => palette.id === savedPalette)) theme.setPalette('blue');
       if (theme.appearance().quality === 'enhanced') theme.setAppearance({ quality: 'auto' });
     }),
     provideRouter(ROUTES, withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })),

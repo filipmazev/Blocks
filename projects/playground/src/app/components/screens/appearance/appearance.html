@@ -1,25 +1,16 @@
 <section class="appearance" aria-labelledby="appearance-title">
-  <header class="page-heading"><p class="eyebrow">Appearance · application wide</p><h1 id="appearance-title">Appearance</h1><p>Find your balance of clear and tinted glass, then preview it over a mountain landscape.</p></header>
+  <header class="page-heading"><p class="eyebrow">Appearance · application wide</p><h1 id="appearance-title">Appearance</h1><p>Find your balance of clear and tinted glass, then scroll through a nature journal to see it over photographs and text.</p></header>
   <div class="lab-layout">
     <div class="preview-column">
-      <section class="material-preview" aria-label="Appearance preview and glassiness controls">
-        <div class="stage" role="group" aria-label="Material preview over a mountain photograph">
-          <img class="scene-background" src="assets/images/mountains.webp" [attr.data-bx-reduced-motion]="reducedMotion()" alt="" aria-hidden="true" width="5868" height="4016" decoding="async">
-          <article class="preview-surface" bxSurface>
-            <bx-icon name="layers" size="28" />
-            <h2>This is blocks.</h2><p>Theme the application. Keep the interaction simple.</p>
-          </article>
-        </div>
-        <section class="glassiness-controls" aria-labelledby="glassiness-title">
-          <h2 id="glassiness-title">Glassiness</h2>
-          <p id="glassiness-note" class="section-note">{{ appearance().reducedTransparency ? 'Reduced transparency keeps surfaces opaque. Turn it off to adjust glassiness.' : 'Slide from nearly clear glass to a richer tint. The middle balances clarity and depth.' }}</p>
-          <div class="glassiness-range">
+      <app-appearance-preview />
+      <section class="glassiness-controls" aria-label="Glassiness" aria-describedby="glassiness-note" [class.is-disabled]="appearance().reducedTransparency" [attr.tabindex]="appearance().reducedTransparency ? 0 : null" [bxTooltip]="appearance().reducedTransparency ? 'Turn off Reduce transparency to adjust glassiness.' : ''">
+        <div class="glassiness-range">
             <bx-icon name="circle-dashed" size="20" [decorative]="false" ariaLabel="Nearly transparent" />
-            <input #glassiness id="appearance-glassiness" type="range" bxSlider min="0" max="1" step="0.01" aria-labelledby="glassiness-title" aria-describedby="glassiness-note" [attr.aria-valuetext]="glassinessDescription()" [value]="appearance().glassiness" [disabled]="appearance().reducedTransparency" (input)="updateAppearance({glassiness: +glassiness.value})">
+            <input #glassiness id="appearance-glassiness" type="range" bxSlider min="0" max="1" step="0.01" aria-label="Glassiness" aria-describedby="glassiness-note" [attr.aria-valuetext]="glassinessDescription()" [value]="appearance().glassiness" [disabled]="appearance().reducedTransparency" (input)="updateAppearance({glassiness: +glassiness.value})">
             <bx-icon class="glassiness-tinted-icon" name="circle" size="20" [decorative]="false" ariaLabel="Richly tinted" />
-          </div>
-        </section>
-      </section>
+        </div>
+    </section>
+    <p id="glassiness-note" class="glassiness-note">{{ appearance().reducedTransparency ? 'Reduced transparency keeps surfaces opaque. Turn it off to adjust glassiness.' : 'Slide from nearly clear glass to a richer tint. The middle balances clarity and depth.' }}</p>
     </div>
     <aside bxSurface class="global-controls" aria-labelledby="global-title">
       <div class="panel-heading"><h2 id="global-title">Global appearance</h2><button bx-button type="button" variant="tonal" color="grayscale" (click)="reset()">Reset</button></div>
@@ -33,7 +24,7 @@
         }
       </div></fieldset>
       <fieldset class="rendering-options"><legend>Rendering</legend><div class="quality-picker">@for (option of qualities; track option.value) {<bx-radio name="appearance-quality" [label]="option.label" [value]="option.value" [ngModel]="appearance().quality" (ngModelChange)="updateAppearance({quality: $event})" />}</div></fieldset>
-      <p class="section-note rendering-note">Baseline keeps the standard glass blur, tint, and lighting, without extra reflections and specular highlights. Automatic adds those details when supported and suitable for this device.</p>
+      <p class="section-note rendering-note">Baseline uses blur and tint. Automatic adds reflections and highlights when supported.</p>
       <div class="accessibility-controls" role="group" aria-labelledby="accessibility-title">
         <h3 id="accessibility-title">Accessibility</h3>
         <div class="accessibility-options">

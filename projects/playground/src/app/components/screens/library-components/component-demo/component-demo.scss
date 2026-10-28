@@ -150,6 +150,10 @@ output {
     padding: spacing(8);
     border: 1px dashed var(--bx-border-default);
     border-radius: radius(lg);
+}
+
+.context-target,
+.tooltip-hold-target {
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;

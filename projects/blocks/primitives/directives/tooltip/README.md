@@ -20,6 +20,13 @@ Add the standalone component or directive to your component's `imports`.
 
 `bxTooltip`: required text or translation key. `placement`: top, bottom, left, right, and supported aligned placements. `show()` and `hide()` expose explicit lifecycle control.
 
+`bxTooltipTouch` defaults to `'none'`: normal touch taps activate the control without showing its tooltip. Set it to `'longpress'` for an optional touch-and-hold hint, or `'tap'` on a dedicated information button that has no other action.
+
+```html
+<button type="button" bxTooltip="Appearance settings apply to all components" bxTooltipTouch="tap" aria-label="More information">ⓘ</button>
+<button type="button" bxTooltip="Optional extra context" bxTooltipTouch="longpress">Hold for a hint</button>
+```
+
 ## Appearance
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
@@ -41,6 +48,14 @@ this.theme.setAppearance({ reducedTransparency: true });
 ## Behavior and accessibility
 
 Keep trigger text meaningful without its tooltip. Use short, non-interactive text; put interactive help in a menu or dialog.
+
+Tooltips open on mouse hover and keyboard focus. Touch focus and compatibility mouse events do not show ordinary tooltips. Screen-reader descriptions remain available while the visual tooltip is hidden, and existing `aria-describedby` references are preserved. Supply an accessible label independently for icon-only controls.
+
+Optional long press opens after 500 ms. Moving more than 10 CSS pixels, scrolling, another finger, cancellation, or releasing early cancels it. Releasing after a successful hold does not click the control; the hint dismisses after 1.5 seconds, or on another press or scrolling. Editable controls and existing text selections keep their native behavior. For dedicated non-selectable hold targets, apply `user-select: none` and `-webkit-touch-callout: none` in the target's styles.
+
+Long-press hints yield to a `bxContextMenu` directive on the trigger or an ancestor. Dedicated tap help remains available. Avoid assigning multiple hold gestures to one target.
+
+Tap mode is intended for dedicated help buttons, including the built-in form-field information buttons. Tap again, tap elsewhere, scroll, or press Escape to dismiss the help. Use a separate popover or dialog for interactive or essential explanations rather than hiding them in a tooltip.
 
 ## Playground
 

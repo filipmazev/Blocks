@@ -18,7 +18,7 @@ ng add @filip.mazev/blocks
 
 When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:
 
-* Theme selection: White is the default; Purple, Orange, Red, Green and Cyberpunk are also available. Use `--theme=white` to select White explicitly.
+* Theme selection: White is the CLI default; Blue, Purple, Orange, Red, Green and Cyberpunk are also available. Use `--theme=blue` for the Blue palette based on `#217eff`.
 * Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
 * SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.
 

@@ -7,7 +7,7 @@
 }
 
 :root {
-    @include bx-theme($orange-light-theme);
+    @include bx-theme($blue-light-theme);
 
     --mobile-header-height: 60px;
 
@@ -15,7 +15,7 @@
 }
 
 [data-theme='dark'] {
-    @include bx-theme($orange-dark-theme);
+    @include bx-theme($blue-dark-theme);
 
     color-scheme: dark;
 }
@@ -25,6 +25,14 @@
 
     &[data-theme='dark'] {
         @include bx-theme($white-dark-theme);
+    }
+}
+
+.theme-blue {
+    @include bx-theme($blue-light-theme);
+
+    &[data-theme='dark'] {
+        @include bx-theme($blue-dark-theme);
     }
 }
 

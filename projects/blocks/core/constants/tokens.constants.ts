@@ -1,6 +1,6 @@
 import { SemanticColorToken } from '../types/theme.types';
 
-export const PALETTE_NAMES = ['orange', 'purple', 'red', 'green', 'danger', 'success', 'information', 'neutral'] as const;
+export const PALETTE_NAMES = ['blue', 'orange', 'purple', 'red', 'green', 'danger', 'success', 'information', 'neutral'] as const;
 export const SHADE_NUMBERS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000] as const;
 
 export const TOKEN_PREFIX = 'bx';
