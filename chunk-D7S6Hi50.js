@@ -1,4 +1,4 @@
-import{En as mt,H as L,K as Mc,N as Ic,Rn as p,Vn as q,bt as W,f as Co,ft as Us,mn as jh,mr as xc,nr as tn,un as it,vt as Vt}from"./chunk-DtVVo_Bz.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Fn as p,H as L,K as Mc,Sr as z,Zn as tn,an as gt,b as Co,fn as it,gn as jt,hr as xc,o as $s,p as Bh,ut as Tc,yt as W}from"./chunk-CNPhXHsc.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -1615,7 +1615,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/directives/context-menu/README.md":`<h1>Context menu</h1>
 <p>A menu positioned at a context action\u2019s coordinates.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ContextMenuDirective, Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
+<pre><code class="language-ts">import { BxOverlayContextDirective, ContextMenuDirective, Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
 </code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
@@ -1624,6 +1624,14 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <h2>API</h2>
 <p><code>bxContextMenu</code> requires a TemplateRef. <code>open(event: MouseEvent)</code> positions the menu at the event coordinates.</p>
+<h2>Overlay placement</h2>
+<p>Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:</p>
+<pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
+  &lt;button [bxDropdown]=&quot;actions&quot;&gt;Actions&lt;/button&gt;
+  &lt;div [bxContextMenu]=&quot;actions&quot;&gt;More actions&lt;/div&gt;
+&lt;/header&gt;
+</code></pre>
+<p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1644,7 +1652,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/directives/dropdown/README.md":`<h1>Dropdown</h1>
 <p>A positioned menu that fades in and out without resizing its contents.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { DropdownDirective, Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
+<pre><code class="language-ts">import { BxOverlayContextDirective, DropdownDirective, Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
 </code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
@@ -1655,6 +1663,13 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <h2>API</h2>
 <p><code>bxDropdown</code>: required TemplateRef. <code>placement</code>: overlay placement. <code>bxTransition</code>: fade (default) or none; emerge remains a compatibility alias for fade. Export as <code>bxDropdown</code>; call <code>open()</code>, <code>close()</code>, or <code>toggle()</code>. Read <code>isOpen()</code> and <code>state()</code> for lifecycle.</p>
+<h2>Overlay placement</h2>
+<p>Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:</p>
+<pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
+  &lt;button [bxDropdown]=&quot;actions&quot;&gt;Actions&lt;/button&gt;
+&lt;/header&gt;
+</code></pre>
+<p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -2057,7 +2072,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var A=class r{document=p(q);router=p(tn);readmeContent=W(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=L.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=mt({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&it(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(Ic(0,`div`,0)(1,`div`,1)(2,`span`),Co(3,`Documentation`),Mc()(),Us(4,`article`,2),Mc()),n&2&&(Vt(4),xc(`innerHTML`,o.readmeContent(),jh))},styles:[`
+`};var A=class r{document=p(z);router=p(tn);readmeContent=W(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=L.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=gt({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&it(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(Mc(0,`div`,0)(1,`div`,1)(2,`span`),Co(3,`Documentation`),xc()(),$s(4,`article`,2),xc()),n&2&&(jt(4),Tc(`innerHTML`,o.readmeContent(),Bh))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
