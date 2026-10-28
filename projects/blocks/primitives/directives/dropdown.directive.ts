@@ -13,7 +13,7 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BxA11yService, BxPlacement, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
@@ -171,7 +171,9 @@ export class DropdownDirective {
     const positionStrategy = this.positionBuilder.getElementStrategy(this.elementRef.nativeElement, this.placement(), 4);
     const overlay = this.overlay.create({
       positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      scrollStrategy: this.overlay.scrollStrategies.noop(),
+      // Page menus follow application z-index; dialog menus still escape their container.
+      usePopover: !!this.elementRef.nativeElement.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
       // A fading surface keeps its trigger reachable while it opens/closes.
       hasBackdrop: this.bxTransition() === 'none',
       backdropClass: 'cdk-overlay-transparent-backdrop'
@@ -181,6 +183,7 @@ export class DropdownDirective {
     this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(this.elementRef.nativeElement, overlay.overlayElement));
     this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, this.elementRef.nativeElement);
     this.subscriptions = new Subscription();
+    this.trackScroll(overlay, positionStrategy);
     this.subscriptions.add(overlay.backdropClick().subscribe(() => this.close()));
     this.subscriptions.add(
       overlay.outsidePointerEvents().subscribe((event) => {
@@ -206,6 +209,24 @@ export class DropdownDirective {
     const view = overlay.attach(new TemplatePortal(this.bxDropdown(), this.vcr));
     view.detectChanges();
     overlay.updatePosition();
+  }
+
+  private trackScroll(overlay: OverlayRef, positionStrategy: FlexibleConnectedPositionStrategy): void {
+    const source = this.elementRef.nativeElement;
+    const view = source.ownerDocument.defaultView;
+    if (!view) return;
+    this.zone.runOutsideAngular(() => {
+      const reposition = (event: Event) => {
+        const target = event.target;
+        // Capture viewport and ancestor scrolling before document-level effects.
+        // Nested scrollers do not need to register with CDK's ScrollDispatcher.
+        // Reuse the selected placement without resetting styles and measuring
+        // all fallback positions on every scroll event. Resize still recalculates.
+        if (overlay.hasAttached() && (target === view || (target instanceof Node && target.contains(source)))) positionStrategy.reapplyLastPosition();
+      };
+      view.addEventListener('scroll', reposition, { capture: true, passive: true });
+      this.subscriptions.add(() => view.removeEventListener('scroll', reposition, true));
+    });
   }
 
   private isDisabled(): boolean {

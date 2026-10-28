@@ -1,8 +1,8 @@
-export type GlassMaterial = 'glass' | 'frosted' | 'solid';
 export type GlassQuality = 'auto' | 'baseline' | 'enhanced';
 
 export interface SurfaceOptions {
-  material?: GlassMaterial;
+  /** 0–1 glassiness; omitted values inherit the application's balanced default. */
+  glassiness?: number;
   /** Override automatic action/control detection for interaction lighting and press deformation. */
   interactive?: boolean;
   /** Override the default theme accent/error color emitted on interaction or an active ARIA state. */
@@ -11,10 +11,6 @@ export interface SurfaceOptions {
   focusEmission?: string;
   reducedMotion?: boolean;
   reducedTransparency?: boolean;
-  /** Backdrop blur in CSS pixels, clamped to 0–40. */
-  blur?: number;
-  /** Tint opacity, clamped to 0–1. */
-  tint?: number;
 }
 export interface AppearanceConfiguration extends Omit<SurfaceOptions, 'interactive' | 'emission' | 'focusEmission'> {
   quality?: GlassQuality;

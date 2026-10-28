@@ -1,28 +1,28 @@
 <section class="appearance" aria-labelledby="appearance-title">
-  <header class="page-heading"><p class="eyebrow">Appearance · application wide</p><h1 id="appearance-title">Appearance</h1><p>Configure the shared material, then preview it over a mountain landscape.</p></header>
+  <header class="page-heading"><p class="eyebrow">Appearance · application wide</p><h1 id="appearance-title">Appearance</h1><p>Find your balance of clear and tinted glass, then preview it over a mountain landscape.</p></header>
   <div class="lab-layout">
     <div class="preview-column">
       <section class="stage" aria-label="Material preview over a mountain photograph">
         <img class="scene-background" src="assets/images/mountains.webp" [attr.data-bx-reduced-motion]="reducedMotion()" alt="" aria-hidden="true" width="5868" height="4016" decoding="async">
         <article class="preview-surface" bxSurface>
-          <div class="preview-heading"><bx-icon name="layers" size="28" /><span class="material-badge">{{ appearance().material }}</span></div>
+          <bx-icon name="layers" size="28" />
           <h2>This is blocks.</h2><p>Theme the application. Keep the interaction simple.</p>
-          <button bx-button type="button" variant="tonal" color="primary" [bxDropdown]="actions" #menu="bxDropdown" bxTransition="fade" placement="bottom">Explore actions<bx-icon name="chevron-down" size="16" /></button>
         </article>
       </section>
-      <p class="interaction-status" role="status">{{ status() }}</p>
-      <section bxSurface class="material-controls" aria-labelledby="material-title">
-        <h2 id="material-title">Material</h2>
-        <p class="section-note">Choose a material and adjust its blur and tint.</p>
-        <fieldset aria-labelledby="material-title"><div class="material-picker">@for (option of materials; track option) {<button bx-button type="button" variant="tonal" [color]="appearance().material === option ? 'primary' : 'grayscale'" [attr.aria-pressed]="appearance().material === option" (click)="setMaterial(option)">{{ option }}</button>}</div></fieldset>
-        <label for="appearance-blur" class="range-control">Backdrop blur <output>{{ appearance().blur }} px</output><input #blur id="appearance-blur" type="range" bxSlider min="0" max="40" [value]="appearance().blur" [disabled]="appearance().material === 'solid'" (input)="updateAppearance({blur: +blur.value})"></label>
-        <label for="appearance-tint" class="range-control">Tint density <output>{{ (appearance().tint * 100).toFixed(0) }}%</output><input #tint id="appearance-tint" type="range" bxSlider min="0" max="1" step="0.01" [value]="appearance().tint" [disabled]="appearance().material === 'solid'" (input)="updateAppearance({tint: +tint.value})"></label>
+      <section bxSurface class="glassiness-controls" aria-labelledby="glassiness-title">
+        <h2 id="glassiness-title">Glassiness</h2>
+        <p id="glassiness-note" class="section-note">{{ appearance().reducedTransparency ? 'Reduced transparency keeps surfaces opaque. Turn it off to adjust glassiness.' : 'Slide from nearly clear glass to a richer tint. The middle balances clarity and depth.' }}</p>
+        <div class="glassiness-range">
+          <bx-icon name="circle-dashed" size="20" [decorative]="false" ariaLabel="Nearly transparent" />
+          <input #glassiness id="appearance-glassiness" type="range" bxSlider min="0" max="1" step="0.01" aria-labelledby="glassiness-title" aria-describedby="glassiness-note" [attr.aria-valuetext]="glassinessDescription()" [value]="appearance().glassiness" [disabled]="appearance().reducedTransparency" (input)="updateAppearance({glassiness: +glassiness.value})">
+          <bx-icon class="glassiness-tinted-icon" name="circle" size="20" [decorative]="false" ariaLabel="Richly tinted" />
+        </div>
       </section>
     </div>
     <aside bxSurface class="global-controls" aria-labelledby="global-title">
       <div class="panel-heading"><h2 id="global-title">Global appearance</h2><button bx-button type="button" variant="tonal" color="grayscale" (click)="reset()">Reset</button></div>
       <p class="section-note">Changes apply to every Blocks component, including open menus, dialogs, and notifications.</p>
-      <fieldset><legend>Mode</legend><div class="material-picker">
+      <fieldset><legend>Mode</legend><div class="mode-picker">
         <button bx-button type="button" variant="tonal" [color]="theme.activeTheme() === 'light' ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.activeTheme() === 'light'" (click)="theme.setApplicationTheme('light')"><bx-icon name="sun" size="16" />Light</button>
         <button bx-button type="button" variant="tonal" [color]="theme.activeTheme() === 'dark' ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.activeTheme() === 'dark'" (click)="theme.setApplicationTheme('dark')"><bx-icon name="moon" size="16" />Dark</button>
       </div></fieldset>
@@ -36,11 +36,6 @@
       <p class="section-note">Automatic rendering uses supported enhancements. Your system accessibility settings remain respected.</p>
     </aside>
   </div>
-  <section class="implementation" aria-labelledby="implementation-title"><div><p class="eyebrow">Existing Blocks API</p><h2 id="implementation-title">One configuration. Every component.</h2><p>The material follows the existing semantic theme. Use the appearance controls above, or configure the theming service in your application.</p><p class="section-note">The translucent surface samples the photograph behind it. Solid material and reduced transparency keep an opaque backing.</p></div><pre><code [textContent]="codeExample"></code></pre></section>
+  <section class="implementation" aria-labelledby="implementation-title"><div><p class="eyebrow">Existing Blocks API</p><h2 id="implementation-title">One configuration. Every component.</h2><p>Glass follows the existing semantic theme. Use the appearance controls above, or configure the theming service in your application.</p><p class="section-note">Glassiness adjusts tint and blur together. Reduced transparency provides an opaque backing while keeping your glassiness preference.</p></div><pre><code [textContent]="codeExample"></code></pre></section>
   <details class="appearance-documentation"><summary>Appearance API, performance, and accessibility</summary><app-readme path="documentation/appearance/README.md" /></details>
 </section>
-<ng-template #actions><bx-menu>
-  @for (option of materials; track option) {
-    <bx-menu-item [label]="'Use ' + option + ' material'" [icon]="appearance().material === option ? 'check' : undefined" (action)="setMaterial(option)" />
-  }
-</bx-menu></ng-template>

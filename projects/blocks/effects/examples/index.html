@@ -22,7 +22,8 @@
     #panel button { display:block; width:100%; text-align:left; padding:.65rem; border:0; border-radius:var(--bx-rounded-sm); background:transparent; }
     #panel button:hover { background:color-mix(in srgb,var(--bx-primary) 12%,transparent); }
     :focus-visible { outline:2px solid var(--bx-primary); outline-offset:3px; }
-    output { font-variant-numeric:tabular-nums; } .hint { opacity:.75; font-size:.875rem; }
+    .glassiness-range { display:flex; align-items:center; gap:.75rem; } .glassiness-range svg { width:20px; height:20px; flex:none; }
+    .check-control { display:flex; align-items:center; gap:.5rem; } .hint { opacity:.75; font-size:.875rem; }
   </style>
 </head>
 <body>
@@ -31,9 +32,12 @@
   <h1>One material. Native controls.</h1>
   <p>Open the action panel to see the glass surface open and close. Move the light to change its spatial reflection. These controls configure every glass surface on this page.</p>
   <div class="controls">
-    <label>Material<select id="material"><option>glass</option><option>frosted</option><option>solid</option></select></label>
-    <label>Tint <output id="tint-value">50%</output><input id="tint" type="range" min="0" max="100" value="50"></label>
-    <label>Blur <output id="blur-value">10 px</output><input id="blur" type="range" min="0" max="40" value="10"></label>
+    <label>Glassiness<span class="glassiness-range">
+      <svg viewBox="0 0 24 24" role="img" aria-label="Nearly transparent"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" /></svg>
+      <input id="glassiness" type="range" min="0" max="1" step=".01" value=".5" aria-valuetext="Balanced glass">
+      <svg viewBox="0 0 24 24" role="img" aria-label="Richly tinted"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity=".8" /></svg>
+    </span></label>
+    <label class="check-control"><input id="reduced-transparency" type="checkbox">Reduce transparency</label>
     <label>Light position<input id="light-position" type="range" min="5" max="80" value="25"></label>
     <label>Rendering<select id="quality"><option>auto</option><option>baseline</option><option>enhanced</option></select></label>
   </div>
@@ -46,15 +50,15 @@
   <p class="hint">Lighting uses bounded spatial proxies. Background pixels pass through the browser's backdrop filter. Automatic rendering favors simpler effects on smaller devices; operating-system accessibility preferences are respected.</p>
 </main>
 <div id="panel" role="menu" aria-label="Glass actions" hidden>
-  <button role="menuitem" data-material="glass">Clear glass</button>
-  <button role="menuitem" data-material="frosted">Frosted glass</button>
-  <button role="menuitem" data-material="solid">Solid surface</button>
+  <button role="menuitem" data-action="Edit details">Edit details</button>
+  <button role="menuitem" data-action="Duplicate">Duplicate</button>
+  <button role="menuitem" data-action="Archive">Archive</button>
 </div>
 <script type="module">
   import { configureAppearance, mountSurface, mountGlassScene, createGlassTransition } from '../../../../dist/blocks/fesm2022/filip.mazev-blocks-effects-runtime.mjs';
   const $ = id => document.getElementById(id);
   const trigger = $('trigger'), panel = $('panel');
-  const config = configureAppearance(document.documentElement, { material:'glass', blur:10, tint: 0.5, quality:'auto' });
+  const config = configureAppearance(document.documentElement, { glassiness:.5, quality:'auto' });
   const surfaces = [trigger,panel].map(element => mountSurface(element));
   const scene = mountGlassScene(document.documentElement, {
     lights:[{element:$('lamp'),z:150,color:'var(--bx-primary)',intensity:1.4,radius:700}],
@@ -92,12 +96,16 @@
   document.addEventListener('pointerdown',event=>{if(opened&&!panel.contains(event.target)&&!trigger.contains(event.target))toggle(false);});
   document.addEventListener('focusin',event=>{if(opened&&!panel.contains(event.target)&&!trigger.contains(event.target))toggle(false);});
   for(const button of panel.querySelectorAll('button')) button.addEventListener('click',()=>{
-    const material=button.dataset.material; config.update({material}); $('material').value=material; $('status').textContent=`Material changed to ${material}.`; toggle(false);
+    $('status').textContent=`${button.dataset.action} selected.`; toggle(false);
   });
-  $('material').addEventListener('change',event=>config.update({material:event.target.value}));
   $('quality').addEventListener('change',event=>config.update({quality:event.target.value}));
-  $('tint').addEventListener('input',event=>{const value=Number(event.target.value);config.update({tint:value/100});$('tint-value').value=`${value}%`;});
-  $('blur').addEventListener('input',event=>{const value=Number(event.target.value);config.update({blur:value});$('blur-value').value=`${value} px`;});
+  $('glassiness').addEventListener('input',event=>{
+    const value=Number(event.target.value); config.update({glassiness:value});
+    event.target.setAttribute('aria-valuetext',value<.25?'Nearly transparent glass':value<.75?'Balanced glass':'Richly tinted glass');
+  });
+  $('reduced-transparency').addEventListener('change',event=>{
+    config.update({reducedTransparency:event.target.checked}); $('glassiness').disabled=event.target.checked;
+  });
   $('light-position').addEventListener('input',event=>{$('lamp').style.left=`${event.target.value}%`;scene.refresh();});
   addEventListener('resize',()=>{if(opened)place();});
   addEventListener('scroll',()=>{if(opened)place();},{passive:true});

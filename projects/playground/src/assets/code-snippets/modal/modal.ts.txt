@@ -1,20 +1,21 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IDemoModalData } from '../interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '../interfaces/modals/result/idemo-modal-result.interface';
 import { NgClass } from '@angular/common';
 import { Modal, ModalHeaderDirective, ModalFooterDirective } from '@filip.mazev/blocks/modal';
+import { Button } from '@filip.mazev/blocks/forms';
+import { ContextMenuDirective, DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+import { Icon } from '@filip.mazev/blocks/icons';
 
 @Component({
-  selector: 'app-modal',
-  imports: [
-    ModalHeaderDirective,
-    ModalFooterDirective,
-    NgClass
-  ],
-  templateUrl: './modal.html',
-  styleUrl: './modal.scss',
+  selector: 'app-demo-modal',
+  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass, Button, ContextMenuDirective, DropdownDirective, Menu, MenuItem, Icon],
+  templateUrl: './demo-modal.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './demo-modal.scss'
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
+  protected readonly menuStatus = signal('Try either menu. Actions keep this modal open.');
 
   protected isSideModal = signal(false);
   protected isCenteredModal = signal(false);
@@ -29,5 +30,9 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
     this.modal?.close('confirm', {
       openedCount: this.data.openedCount + 1
     });
+  }
+
+  protected selectAction(action: string): void {
+    this.menuStatus.set(`${action} selected. The modal is still open.`);
   }
 }

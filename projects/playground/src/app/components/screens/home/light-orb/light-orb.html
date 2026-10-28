@@ -1,7 +1,6 @@
-<div class="orb-controls">
+<div class="orb-controls" [attr.data-bx-reduced-motion]="reducedMotion()">
   <p id="orb-instructions" class="orb-message" role="status"><span class="mood-dot" [attr.data-mood]="mood()" aria-hidden="true"></span>{{ message() }}</p>
-  <span class="orb-hint">Hover to wake · drag to play</span>
-  <button class="orb-home" type="button" (click)="bringHome()" [disabled]="mood() === 'danger'" [attr.title]="mood() === 'danger' ? 'Letting off steam. It will come home when ready.' : 'Bring the light home'" aria-label="Bring the light home">
+  <button class="orb-home" type="button" (click)="bringHome()" [disabled]="mood() === 'danger'" [bxTooltip]="mood() === 'danger' ? 'The orb needs a moment to cool down before returning to its pod in the theme card.' : 'Bring the orb back to its pod in the theme card.'" placement="top" aria-label="Bring the light home">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 7-6 7 6v8H3zM8 17v-6h4v6" /></svg>
     <span>Bring home</span>
   </button>

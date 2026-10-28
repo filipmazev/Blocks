@@ -3,6 +3,7 @@
 }
 
 .orb-controls {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -45,12 +46,6 @@
 
 .mood-dot[data-mood='info'] {
     background: var(--bx-text-info);
-}
-
-.orb-hint {
-    display: none;
-    color: var(--bx-text-tertiary, var(--bx-text-secondary));
-    font-size: 0.6875rem;
 }
 
 .orb-home {

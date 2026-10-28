@@ -16,7 +16,10 @@
     font-family: inherit;
     font-size: 0.875rem;
     text-align: left;
-    border-radius: max(0px, calc(var(--bx-glass-radius, #{radius(lg)}) - #{spacing(1)}));
+    border-radius: max(
+        0px,
+        calc(var(--bx-glass-radius, var(--bx-rounded-lg, #{radius(lg)})) - #{spacing(1)})
+    );
     color: var(--bx-text-primary);
 
     // Rows emit light into their containing menu without adding another material.

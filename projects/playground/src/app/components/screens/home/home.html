@@ -14,9 +14,11 @@
   </header>
   <section class="features" aria-labelledby="features-title">
     <div class="features-heading">
-      <h2 id="features-title">Built on the Blocks foundations</h2>
-      <bx-tooltip class="orb-tooltip-preview bx-overlay-pos-top" text="A little light goes a long way." />
-      <app-light-orb [stage]="lightGarden" [cards]="featureGrid" />
+      <div class="features-title" [attr.data-bx-reduced-motion]="reducedMotion()">
+        <h2 id="features-title">Built on the Blocks foundations</h2>
+        <span class="orb-hint" [class.is-visible]="orb.showWakeHint()" [inert]="!orb.showWakeHint()" [attr.aria-hidden]="!orb.showWakeHint()" [attr.tabindex]="orb.showWakeHint() ? 0 : -1" bxTooltip="Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces." placement="top">Hover on the orb to wake it up</span>
+      </div>
+      <app-light-orb #orb [stage]="lightGarden" [cards]="featureGrid" />
     </div>
     <div #featureGrid class="feature-grid">
       @for (feature of features; track feature.title) {

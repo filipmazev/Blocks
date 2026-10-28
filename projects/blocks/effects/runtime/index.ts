@@ -6,7 +6,6 @@ export { createGlassTransition, createLiquidTransition } from './transition';
 export { Spring } from './spring';
 export type { SpringOptions } from './spring';
 export type {
-  GlassMaterial,
   GlassQuality,
   SurfaceOptions,
   GlassSurface,

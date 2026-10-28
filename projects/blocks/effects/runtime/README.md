@@ -13,7 +13,7 @@ import '@filip.mazev/blocks/effects/effects.css';
 import { configureAppearance, mountSurface, createGlassTransition } from '@filip.mazev/blocks/effects/runtime';
 
 const config = configureAppearance(document.documentElement, {
-  material: 'glass', blur: 10, tint: 0.5,
+  glassiness: 0.5,
   quality: 'auto',
 });
 const buttonSkin = mountSurface(button);
@@ -22,7 +22,7 @@ const panelSkin = mountSurface(panel);
 // The application or overlay library positions the panel before this call.
 const transition = createGlassTransition(button, panel);
 await transition.enter();
-config.update({ tint: .45 }); // All existing surfaces and body-mounted overlays update.
+config.update({ glassiness: .45 }); // All existing surfaces and body-mounted overlays update.
 const result = await transition.exit();
 if (result === 'finished') panel.hidden = true;
 
@@ -36,16 +36,16 @@ transition.destroy(); buttonSkin.destroy(); panelSkin.destroy(); config.destroy(
 
 The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component's border radius, size and layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.
 
-`mountSurface(element)` includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their border and nearby surfaces on interaction or an active ARIA state. Decorative containers receive nearby light without their own hover effect. The default color is the theme accent, or the error color inside an invalid Blocks form field. Override `emission`/`focusEmission` for a different semantic color; `interactive` explicitly overrides automatic control/action detection.
+`mountSurface(element)` includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their border and nearby surfaces on interaction or an active ARIA state. Decorative containers receive nearby light without their own hover effect, even when they contain a single input such as a slider. Only wrappers within `bx-form-field` infer interactivity from their input; other custom wrappers can opt in with `interactive: true`. The default color is the theme accent, or the error color inside an invalid Blocks form field. Override `emission`/`focusEmission` for a different semantic color; `interactive` explicitly overrides automatic control/action detection.
 
 | Setting | Values | Inherited CSS property |
 | --- | --- | --- |
-| `material` | `glass`, `frosted`, `solid` | root `data-bx-glass-material` |
-| `blur` | 0–40 CSS pixels | `--bx-glass-blur` |
-| `tint` | 0–1, larger means more opaque | `--bx-glass-opacity` |
+| `glassiness` | 0–1, balanced default 0.5 | `--bx-glassiness` |
 | `quality` | `auto`, `baseline`, `enhanced` | root `data-bx-glass-quality` |
 | `reducedTransparency` | boolean | root `data-bx-reduced-transparency` |
 | `reducedMotion` | boolean | root `data-bx-reduced-motion` |
+
+Glassiness controls tint and blur together. Tint is `0.06 + 1.02 × glassiness − 0.28 × glassiness²`; blur is `4 + 24 × glassiness²` CSS pixels. The minimum is nearly clear with a light blur, the midpoint uses 10 px blur and a balanced tint, and the maximum caps tint at 80% to remain glassy. Components retain their semantic minimum opacity where needed for readable controls. There are no selectable material presets or independent blur/tint options. Reduced transparency disables backdrop filtering and provides fully opaque surfaces without discarding the glassiness preference.
 
 Local color aliases preserve component intent:
 
@@ -85,15 +85,15 @@ Every mounted glass surface also gets subtle, localized edge colors from the vis
 
 Portalled overlays can call `inheritGlassLighting(overlay, trigger)` before mounting their surfaces to receive light from the trigger's context. Call the returned cleanup function after removing the overlay. Tooltips and menus use this connection to preserve dialog boundaries and receive nearby colors. Tooltips remain transparent to pointer events.
 
-For compound opaque shapes, `--bx-glass-unified-lighting: 1` exposes `--bx-glass-lit-edge` based on received lighting. Tooltip bodies and arrows share this outline color and retain the same neutral background, with separate decorative layers hidden, to avoid seams.
+For compound opaque shapes, `--bx-glass-unified-lighting: 1` exposes restrained samples of received lighting through `--bx-glass-lit-edge` and its `-top`, `-right`, `-bottom`, and `-left` variants. Tooltip bodies retain their neutral backing and use a subtle spatial rim; arrows sample their facing side instead of tinting the entire outline. Interior decorative lighting stays hidden to avoid coloring the fill or introducing seams.
 
 This is a bounded, stylized lighting model. The browser's backdrop filter still displays content behind glass. Raster sampling uses a shared 32-by-32 scratch buffer and caches each source across receivers and frames; the package does **not** capture or mirror the page or arbitrary DOM into a texture, implement ray tracing, or physically refract page pixels. Registered foreground/background objects remain available as explicit reflection proxies when a more deliberate scene is needed. Gradient-backed reflectors can supply an explicit representative color.
 
 ## Overlay fades
 
-Overlays fade in over 180 ms and out over 140 ms. Their dimensions, clipping and text size remain unchanged. The backing is opaque during the fade; on completion the configured material, blur and tint resume. Reversing an active fade continues from its current opacity; the interrupted promise resolves to `cancelled`.
+Overlays fade in over 180 ms and out over 140 ms. Their dimensions, clipping and text size remain unchanged. The fade composites the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop root that cuts off the page behind the glass. Reversing an active fade continues from its current opacity; the interrupted promise resolves to `cancelled`.
 
-The transition temporarily owns `opacity`, `visibility` and the backing’s `data-bx-motion-material` attribute. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. `refresh()` remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1’s `createLiquidTransition` and associated type names remain deprecated aliases for `createGlassTransition`.
+The transition temporarily owns the first material surface’s `opacity` and the target’s `visibility`. If no material is present, it fades the target. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. `refresh()` remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1’s `createLiquidTransition` and associated type names remain deprecated aliases for `createGlassTransition`.
 
 ## Performance and accessibility
 

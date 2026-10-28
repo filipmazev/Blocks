@@ -5,21 +5,28 @@
 }
 
 .bx-menu-wrapper {
-    background-color: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-subtle);
-    border-radius: var(--bx-glass-radius, #{radius(lg)});
+    // Start a neutral material instead of inheriting a trigger's tint or hidden rim.
+    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-edge: var(--bx-border-default);
+    --bx-glass-min-opacity: 0;
+    --bx-glass-decoration-opacity: 1;
+    --bx-glass-rim-visibility: 1;
+    --bx-glass-unified-lighting: 0;
+    --bx-glass-shadow: #{shadow(sm)};
+
+    background-color: var(--bx-glass-surface);
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, #{radius(lg)}));
     box-shadow: shadow(sm);
     padding: spacing(1);
     display: flex;
     flex-direction: column;
     min-width: 12rem;
 
-    --bx-glass-shadow: #{shadow(sm)};
-
     &.bx-menu-animated {
-        transition:
-            opacity 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-            transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        // The overlay runtime owns opacity; a second CSS fade would lag its frames.
+        transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     transform-origin: top;
@@ -33,7 +40,7 @@
 
 // The shared material owns the backing; rows inherit it without nested blur.
 :host([data-bx-surface]) {
-    border-radius: var(--bx-glass-radius, #{radius(lg)});
+    border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, #{radius(lg)}));
 
     --bx-glass-shadow: #{shadow(sm)};
 

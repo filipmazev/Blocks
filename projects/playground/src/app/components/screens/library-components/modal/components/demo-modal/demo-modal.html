@@ -8,7 +8,32 @@
     <div>
         {{ data.body }}
     </div>
+    <section class="modal-menu-demo" aria-label="Menus inside this modal">
+        <h3>Menus inside the modal</h3>
+        <button bx-button type="button" variant="tonal" color="primary" [bxDropdown]="dropdownActions" placement="bottom">
+            Open actions<bx-icon name="chevron-down" size="16" />
+        </button>
+        <button bx-button type="button" variant="tonal" color="grayscale" [bxContextMenu]="contextActions" class="modal-context-target">
+            <bx-icon name="mouse-pointer-2" size="16" />Right-click for more actions
+        </button>
+        <p class="menu-hint">You can also focus the right-click example and press Shift + F10. Escape closes the menu first.</p>
+        <p class="menu-status" role="status">{{ menuStatus() }}</p>
+    </section>
 </div>
+
+<ng-template #dropdownActions>
+    <bx-menu>
+        <bx-menu-item label="Edit details" icon="pencil" (action)="selectAction('Edit details')" />
+        <bx-menu-item label="Duplicate" icon="copy" (action)="selectAction('Duplicate')" />
+    </bx-menu>
+</ng-template>
+<ng-template #contextActions>
+    <bx-menu>
+        <bx-menu-item label="Copy link" icon="link" (action)="selectAction('Copy link')" />
+        <bx-menu-item label="Archive" icon="archive" (action)="selectAction('Archive')" />
+        <bx-menu-item label="Delete" icon="trash-2" [danger]="true" (action)="selectAction('Delete')" />
+    </bx-menu>
+</ng-template>
 
 <div class="button-container" *appModalFooter>
     <button bx-button (click)="confirm()" variant="filled" color="success">Confirm</button>

@@ -12,15 +12,16 @@ const mounted = new WeakMap<HTMLElement, GlassSurface>();
 function isActionSurface(element: HTMLElement): boolean {
   if (
     element.matches(
-      'button, bx-button, [bx-button], a[href], summary, input:not([type="hidden"]), select, textarea, [role="button"], [role="link"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"], [role="menuitem"], [role="combobox"], [onclick]'
+      'button, bx-button, [bx-button], a[href], summary, input:not([type="hidden"]), select, textarea, [role="button"], [role="link"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"], [role="menuitem"], [role="combobox"], [role="textbox"], [role="searchbox"], [role="slider"], [role="spinbutton"], [onclick]'
     ) ||
     typeof element.onclick === 'function'
   )
     return true;
   // Checkbox/radio/switch visuals share a label with their native control.
   if (element.closest('label')?.control) return true;
-  // A field's surface may wrap its input, including a floating-label container.
-  // A surrounding panel must not inherit interactivity from nested glass controls.
+  // Only a semantic field may infer interactivity from its input. A panel
+  // containing one control is still a passive surface, including slider panels.
+  if (!element.closest('bx-form-field')) return false;
   const controls = element.querySelectorAll('input:not([type="hidden"]), select, textarea');
   return controls.length === 1 && controls[0].closest('[data-bx-surface]') === element;
 }
@@ -31,7 +32,15 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   const doc = element.ownerDocument;
   const view = doc.defaultView;
   if (!view) throw new Error('Glass surfaces must be mounted in a browser document.');
-  const ownProperties = ['position', '--bx-glass-blur', '--bx-glass-opacity', '--bx-glass-lit-edge'];
+  const ownProperties = [
+    'position',
+    '--bx-glassiness',
+    '--bx-glass-lit-edge',
+    '--bx-glass-lit-edge-top',
+    '--bx-glass-lit-edge-right',
+    '--bx-glass-lit-edge-bottom',
+    '--bx-glass-lit-edge-left'
+  ];
   const restoreStyles = rememberStyles(element, ownProperties);
   const attributes = ['data-bx-surface', 'data-bx-reduced-transparency', 'data-bx-reduced-motion', 'data-bx-glass-renderer'];
   const originalAttributes = new Map(attributes.map((name) => [name, element.getAttribute(name)]));
@@ -198,14 +207,23 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     strength.target = value.strength;
 
     if (unifiedLighting) {
-      let edge = 'var(--bx-border-default, GrayText)';
-      // Compound silhouettes share one lit outline while retaining their neutral backing.
       const sources = [...value.contributions].sort((a, b) => a.edgeStrength - b.edgeStrength).slice(-4);
-      for (const source of sources) {
-        const strength = finiteClamp(source.edgeStrength, 0, 0.85, 0);
-        edge = `color-mix(in srgb, ${source.color} ${(strength * 100).toFixed(2)}%, ${edge})`;
-      }
-      element.style.setProperty('--bx-glass-lit-edge', edge);
+      // Sample the same localized falloff used by the rim, rather than tinting
+      // the entire silhouette. Small attached shapes can share a facing edge.
+      const edgeAt = (x: number, y: number) => {
+        let edge = 'var(--bx-border-default, GrayText)';
+        for (const source of sources) {
+          const distance = Math.hypot((x - source.x) / Math.max(1, source.x, 100 - source.x), (y - source.y) / Math.max(1, source.y, 100 - source.y));
+          const strength = finiteClamp(source.edgeStrength, 0, 0.85, 0) * 0.35 * Math.max(0, 1 - distance / 0.75);
+          if (strength > 0.001) edge = `color-mix(in srgb, ${source.color} ${(strength * 100).toFixed(2)}%, ${edge})`;
+        }
+        return edge;
+      };
+      element.style.setProperty('--bx-glass-lit-edge', edgeAt(50, 50));
+      element.style.setProperty('--bx-glass-lit-edge-top', edgeAt(50, 0));
+      element.style.setProperty('--bx-glass-lit-edge-right', edgeAt(100, 50));
+      element.style.setProperty('--bx-glass-lit-edge-bottom', edgeAt(50, 100));
+      element.style.setProperty('--bx-glass-lit-edge-left', edgeAt(0, 50));
     }
 
     const ambientImage =
@@ -242,9 +260,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     animate();
   };
   const sync = () => {
-    const inheritedMaterial = inheritedAttribute(element, 'data-bx-glass-material');
-    const material = options.material ?? (inheritedMaterial === 'frosted' || inheritedMaterial === 'solid' ? inheritedMaterial : 'glass');
-    element.setAttribute('data-bx-surface', material);
+    element.setAttribute('data-bx-surface', 'glass');
     const inheritedMotion = globalValue('data-bx-reduced-motion') ?? originalAttributes.get('data-bx-reduced-motion');
     const inheritedTransparency = globalValue('data-bx-reduced-transparency') ?? originalAttributes.get('data-bx-reduced-transparency');
     reducedMotion = options.reducedMotion ?? (inheritedMotion === null || inheritedMotion === undefined ? motion.matches : inheritedMotion === 'true');
@@ -263,10 +279,8 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       view.matchMedia('(pointer: coarse)').matches;
     const enhanced = quality !== 'baseline' && supported && (quality === 'enhanced' || !economical);
     element.setAttribute('data-bx-glass-renderer', enhanced ? 'enhanced' : 'baseline');
-    if (options.blur !== undefined) element.style.setProperty('--bx-glass-blur', `${finiteClamp(options.blur, 0, 40, 10)}px`);
-    else restoreProperty('--bx-glass-blur');
-    if (options.tint !== undefined) element.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.5)));
-    else restoreProperty('--bx-glass-opacity');
+    if (options.glassiness !== undefined) element.style.setProperty('--bx-glassiness', String(finiteClamp(options.glassiness, 0, 1, 0.5)));
+    else restoreProperty('--bx-glassiness');
 
     // Absolutely positioned children use the padding box. Extend only across the
     // host's real border so their inherited outer radius describes the same curve.

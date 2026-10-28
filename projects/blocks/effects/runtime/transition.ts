@@ -1,4 +1,4 @@
-import { rememberAttributes, rememberStyles, smoothstep } from './dom';
+import { rememberStyles, smoothstep } from './dom';
 import { configurationEvent, inheritedAttribute } from './configuration';
 import { subscribeFrame } from './scheduler';
 import type { GlassTransition, GlassTransitionOptions, MotionResult } from './types';
@@ -9,9 +9,10 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   const view = doc.defaultView;
   if (!view) throw new Error('Glass transitions must be mounted in a browser document.');
   if (origin.ownerDocument !== doc) throw new Error('Glass transition endpoints must share a document.');
-  const restoreStyles = rememberStyles(target, ['opacity', 'visibility']);
   const skin = target.matches('[data-bx-surface]') ? target : (target.querySelector<HTMLElement>('[data-bx-surface]') ?? target);
-  const restoreMaterial = rememberAttributes(skin, ['data-bx-motion-material']);
+  const restoreOpacity = rememberStyles(skin, ['opacity']);
+  const restoreVisibility = rememberStyles(target, ['visibility']);
+  const opacity = Number(view.getComputedStyle(skin).opacity);
   const preference = view.matchMedia('(prefers-reduced-motion: reduce)');
   let disposed = false;
   let active = false;
@@ -26,7 +27,10 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     return options.reducedMotion ?? (inherited === null ? preference.matches : inherited === 'true');
   };
   const paint = () => {
-    target.style.opacity = String(value);
+    // Opacity on the CDK pane would create a backdrop root above the material,
+    // cutting off its view of the page for every intermediate animation frame.
+    // Composite the surface's own backdrop and content together instead.
+    skin.style.opacity = String(value * opacity);
     options.onUpdate?.();
   };
   function settle(): void {
@@ -34,8 +38,8 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     value = destination;
     unsubscribe?.();
     unsubscribe = undefined;
-    restoreStyles();
-    restoreMaterial();
+    restoreOpacity();
+    restoreVisibility();
     if (destination === 0) target.style.visibility = 'hidden';
     const resolve = resolvePending;
     resolvePending = undefined;
@@ -50,9 +54,7 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     destination = open ? 1 : 0;
     elapsed = 0;
     active = true;
-    restoreStyles();
-    // Keep the fade stable, then restore the configured glass material at rest.
-    skin.setAttribute('data-bx-motion-material', 'solid');
+    restoreVisibility();
     const finished = new Promise<MotionResult>((resolve) => {
       resolvePending = resolve;
     });
@@ -93,8 +95,8 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
       resolvePending = undefined;
       preference.removeEventListener('change', onPreference);
       doc.removeEventListener(configurationEvent, onPreference);
-      restoreStyles();
-      restoreMaterial();
+      restoreOpacity();
+      restoreVisibility();
     }
   };
 }

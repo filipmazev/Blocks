@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
 import { GlassScene, mountGlassScene } from '@filip.mazev/blocks/effects/runtime';
+import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 import { LightOrbPhysics, OrbMood, OrbState, orbReleaseMotion } from './light-orb-physics';
 
 type RGB = [number, number, number];
@@ -31,6 +32,7 @@ interface PointerSample {
 
 @Component({
   selector: 'app-light-orb',
+  imports: [TooltipDirective],
   templateUrl: './light-orb.html',
   styleUrl: './light-orb.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -56,6 +58,8 @@ export class LightOrb {
     if (this.state() === 'recovering') return 'A little wobble. All better.';
     return 'Curious? Catch it. Be kind.';
   });
+
+  public readonly showWakeHint = computed(() => this.ready() && this.state() === 'asleep' && !this.reducedMotion());
 
   public readonly stage = input.required<HTMLElement>();
 

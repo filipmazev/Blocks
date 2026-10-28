@@ -30,3 +30,30 @@
         cursor: pointer;
     }
 }
+
+.modal-menu-demo {
+    display: grid;
+    justify-items: start;
+    gap: spacing(3);
+    padding-top: spacing(4);
+    border-top: 1px solid var(--bx-border-default);
+}
+
+.modal-menu-demo h3,
+.modal-menu-demo p {
+    margin: 0;
+}
+
+.modal-context-target {
+    border-style: dashed;
+}
+
+.menu-hint,
+.menu-status {
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}
+
+.menu-status {
+    min-height: 2.5em;
+}

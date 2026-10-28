@@ -1,16 +1,13 @@
 /** Application-wide material preferences, inherited by components and overlays. */
 export interface BxAppearanceConfig {
-  material: 'glass' | 'frosted' | 'solid';
-  blur: number;
-  tint: number;
+  /** 0 is lightly blurred and nearly clear; 1 is richly tinted, retaining translucency. */
+  glassiness: number;
   quality: 'auto' | 'baseline' | 'enhanced';
   reducedTransparency: boolean;
 }
 
 export const DEFAULT_APPEARANCE_CONFIG: Readonly<BxAppearanceConfig> = Object.freeze({
-  material: 'glass',
-  blur: 10,
-  tint: 0.5,
+  glassiness: 0.5,
   quality: 'auto',
   reducedTransparency: false
 });

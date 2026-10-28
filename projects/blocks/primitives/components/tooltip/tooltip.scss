@@ -10,7 +10,7 @@
     position: relative;
     padding: spacing(1) spacing(2);
     border: 1px solid var(--bx-glass-edge);
-    border-radius: radius(sm);
+    border-radius: var(--bx-glass-radius, var(--bx-rounded-sm, #{radius(sm)}));
     font-size: 0.75rem;
     font-family: inherit;
     max-width: min(22rem, calc(100vw - #{spacing(6)}));
@@ -18,15 +18,15 @@
     overflow-wrap: anywhere;
 
     --bx-glass-unified-lighting: 1;
-    --bx-glass-surface: var(--bx-bg-surface);
-    --bx-glass-edge: var(--bx-glass-lit-edge, var(--bx-border-default));
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-edge: var(--bx-border-default);
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-shadow: #{shadow(sm)};
     --bx-glass-min-opacity: 1;
 
     // The body and arrow share one opaque color, including with reduced motion.
     --bx-glass-decoration-opacity: 0;
-    --bx-glass-rim-visibility: 0;
+    --bx-glass-rim-visibility: 0.35;
 
     backdrop-filter: none;
 
@@ -39,7 +39,7 @@
         box-sizing: border-box;
         border-radius: radius(none);
         background: var(--bx-glass-surface);
-        border: 0 solid var(--bx-glass-edge);
+        border: 0 solid var(--bx-tooltip-arrow-edge, var(--bx-glass-edge));
         transform: translate(-50%, -50%) rotate(45deg);
         pointer-events: none;
     }
@@ -50,14 +50,26 @@
         --bx-glass-surface: var(--bx-bg-surface);
         --bx-glass-edge: currentcolor;
     }
+
+    .bx-tooltip-surface[data-bx-surface]::after {
+        border-color: currentcolor;
+    }
 }
 
 // Only the outward sides of the diamond have a border; its inner half covers the seam.
+:host-context(.bx-overlay-pos-bottom) .bx-tooltip-surface {
+    --bx-tooltip-arrow-edge: var(--bx-glass-lit-edge-top, var(--bx-glass-edge));
+}
+
 :host-context(.bx-overlay-pos-bottom) .bx-tooltip-surface::after {
     top: -1px;
     left: clamp(#{spacing(3)}, var(--bx-tooltip-arrow-x, 50%), calc(100% - #{spacing(3)}));
     border-top-width: 1px;
     border-left-width: 1px;
+}
+
+:host-context(.bx-overlay-pos-top) .bx-tooltip-surface {
+    --bx-tooltip-arrow-edge: var(--bx-glass-lit-edge-bottom, var(--bx-glass-edge));
 }
 
 :host-context(.bx-overlay-pos-top) .bx-tooltip-surface::after {
@@ -67,11 +79,19 @@
     border-bottom-width: 1px;
 }
 
+:host-context(.bx-overlay-pos-left) .bx-tooltip-surface {
+    --bx-tooltip-arrow-edge: var(--bx-glass-lit-edge-right, var(--bx-glass-edge));
+}
+
 :host-context(.bx-overlay-pos-left) .bx-tooltip-surface::after {
     left: calc(100% + 1px);
     top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
     border-top-width: 1px;
     border-right-width: 1px;
+}
+
+:host-context(.bx-overlay-pos-right) .bx-tooltip-surface {
+    --bx-tooltip-arrow-edge: var(--bx-glass-lit-edge-left, var(--bx-glass-edge));
 }
 
 :host-context(.bx-overlay-pos-right) .bx-tooltip-surface::after {

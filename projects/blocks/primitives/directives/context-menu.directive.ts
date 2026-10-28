@@ -76,11 +76,24 @@ export class ContextMenuDirective {
     const source = this.elementRef.nativeElement;
     this.overlayRef = this.overlay.create({
       positionStrategy: this.positionBuilder.getCoordinateStrategy(x, y),
-      scrollStrategy: this.overlay.scrollStrategies.close(),
+      scrollStrategy: this.overlay.scrollStrategies.noop(),
+      usePopover: !!source.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop'
     });
     this.subscriptions = new Subscription();
+    const win = source.ownerDocument.defaultView;
+    if (win) {
+      this.zone.runOutsideAngular(() => {
+        const closeOnScroll = (event: Event) => {
+          const target = event.target;
+          if (this.overlayRef?.overlayElement.inert) return;
+          if (target === win || (target instanceof Node && target.contains(source))) this.zone.run(() => this.close());
+        };
+        win.addEventListener('scroll', closeOnScroll, { capture: true, passive: true });
+        this.subscriptions.add(() => win.removeEventListener('scroll', closeOnScroll, true));
+      });
+    }
     this.subscriptions.add(this.overlayRef.backdropClick().subscribe(() => this.close()));
     this.subscriptions.add(this.overlayRef.detachments().subscribe(() => this.dispose()));
     this.subscriptions.add(this.overlayRef.keydownEvents().subscribe((event) => this.onMenuKey(event)));

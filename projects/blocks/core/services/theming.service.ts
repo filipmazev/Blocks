@@ -75,15 +75,15 @@ export class ThemingService implements OnDestroy {
   }
 
   public setAppearance(settings: Partial<BxAppearanceConfig>): void {
-    const next = { ...this.appearance(), ...settings };
-
-    const finite = (value: number, fallback: number, min: number, max: number) => (Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback);
-    next.blur = finite(next.blur, DEFAULT_APPEARANCE_CONFIG.blur, 0, 40);
-    next.tint = finite(next.tint, DEFAULT_APPEARANCE_CONFIG.tint, 0, 1);
-    if (!['glass', 'frosted', 'solid'].includes(next.material)) next.material = 'glass';
+    const current = this.appearance();
+    const glassiness = settings.glassiness ?? current.glassiness;
+    const next: BxAppearanceConfig = {
+      glassiness: Number.isFinite(glassiness) ? Math.min(1, Math.max(0, glassiness)) : DEFAULT_APPEARANCE_CONFIG.glassiness,
+      quality: settings.quality ?? current.quality,
+      reducedTransparency: (settings.reducedTransparency ?? current.reducedTransparency) === true
+    };
     if (!['auto', 'baseline', 'enhanced'].includes(next.quality)) next.quality = 'auto';
 
-    next.reducedTransparency = next.reducedTransparency === true;
     this._appearance.set(next);
     this.appearanceController?.update(next);
     if (this.isBrowser) this.writeStored('blocks-appearance', JSON.stringify(next));
@@ -104,7 +104,16 @@ export class ThemingService implements OnDestroy {
   private restoreAppearance(): void {
     try {
       const stored = this.readStored('blocks-appearance');
-      if (stored) this.setAppearance(JSON.parse(stored));
+      if (stored) {
+        const saved = JSON.parse(stored) as Partial<BxAppearanceConfig> & { tint?: number; material?: string };
+        if (!saved || typeof saved !== 'object') return;
+        // Migrate old preferences once; only the new configuration is persisted.
+        this.setAppearance({
+          glassiness: saved.glassiness ?? saved.tint ?? DEFAULT_APPEARANCE_CONFIG.glassiness,
+          quality: saved.quality ?? DEFAULT_APPEARANCE_CONFIG.quality,
+          reducedTransparency: saved.reducedTransparency === true || saved.material === 'solid'
+        });
+      }
     } catch {
       /* A stale or malformed preference uses the defaults. */
     }

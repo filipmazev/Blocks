@@ -263,10 +263,6 @@
     --bx-glass-text: var(--btn-theme-text);
     --bx-glass-min-opacity: 0.88;
 
-    &[data-bx-surface='frosted'] {
-        --bx-glass-min-opacity: 0.94;
-    }
-
     &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
         --bx-glass-surface: var(--btn-theme-hover);
         --btn-selected-surface: var(--btn-theme-hover);

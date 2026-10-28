@@ -151,12 +151,10 @@ input.bx-slider {
     backdrop-filter: none;
 }
 
-[data-bx-glass-material='solid'] .bx-slider-thumb,
 [data-bx-reduced-transparency='true'] .bx-slider-thumb {
     @include opaque-thumb;
 }
 
-[data-bx-glass-material='solid'] input.bx-slider,
 [data-bx-reduced-transparency='true'] input.bx-slider {
     &::-webkit-slider-thumb {
         @include opaque-thumb;

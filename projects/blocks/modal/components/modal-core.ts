@@ -190,7 +190,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   private initKeyboardSubscription(): void {
     fromEvent<KeyboardEvent>(document, 'keydown')
       .pipe(
-        filter((event: KeyboardEvent) => event.key === 'Escape'),
+        filter((event: KeyboardEvent) => event.key === 'Escape' && !event.defaultPrevented),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {

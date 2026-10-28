@@ -11,9 +11,7 @@ import { ThemingService } from '@filip.mazev/blocks/core';
 private readonly theme = inject(ThemingService);
 
 this.theme.setAppearance({
-  material: 'glass',  // glass | frosted | solid
-  blur: 10,           // 0–40 pixels
-  tint: 0.5,         // 0–1 opacity
+  glassiness: 0.5,    // 0–1; the midpoint balances clarity and tint
   quality: 'auto',    // auto | baseline | enhanced
   reducedTransparency: false
 });
@@ -38,13 +36,11 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 </section>
 ```
 
-Provide layout and padding using the existing Blocks styling helpers. The directive supplies the material and token-based default border and radius. Controls and actionable surfaces get automatic hover/focus lighting; decorative containers receive nearby light without responding to hover themselves. Components can override the default border and radius with their existing tokens.
+Provide layout and padding using the existing Blocks styling helpers. The directive supplies the material and token-based default border and radius. Controls and actionable surfaces get automatic hover/focus lighting; decorative containers receive nearby light without responding to hover themselves. Containing one input does not turn a panel into an interactive surface. Wrappers inside `bx-form-field` retain field interaction; custom control wrappers outside a field can opt in with `bxSurfaceInteractive`. Components can override the default border and radius with their existing tokens.
 
 | Input | Default | Local override |
 | --- | --- | --- |
-| `bxSurface` | Global material | `glass`, `frosted`, `solid` |
-| `bxSurfaceBlur` | Global blur | 0–40 pixels |
-| `bxSurfaceTint` | Global tint | 0–1 |
+| `bxSurfaceGlassiness` | Global glassiness | 0–1 |
 | `bxSurfaceInteractive` | Automatic control/action detection | Boolean; explicitly enables or disables interaction lighting and press deformation |
 | `bxSurfaceEmission` | Theme accent (error color in invalid fields) | Override the semantic color emitted on hover, press or an active state |
 | `bxSurfaceFocusEmission` | Surface emission color | Override the color emitted while a contained or associated native control has focus |
@@ -54,7 +50,7 @@ Omit local inputs to keep the surface connected to application settings. A delib
 
 ## Composition and motion
 
-Use a single backing per physical surface. For example, a menu owns the backing while menu-item content shares it; a form-field label does not need an extra blurred card. Apply `bxTransition="fade"` on a dropdown to fade its menu without resizing its contents. Animated overlays keep a solid theme-colored backing throughout their lifetime, avoiding a blur/tint pop at the end of motion. Other surfaces remain translucent.
+Use a single backing per physical surface. For example, a menu owns the backing while menu-item content shares it; a form-field label does not need an extra blurred card. Apply `bxTransition="fade"` on a dropdown to fade its menu without resizing its contents. The fade runs on the material itself, preserving the configured translucency and blur throughout the animation.
 
 Buttons, links, native field surfaces and elements with actionable ARIA roles automatically illuminate their border and nearby surfaces on hover or focus. Active ARIA states keep the light enabled. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order, depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as `role="button"`), or explicitly enable `bxSurfaceInteractive` for a custom interaction. Use `bxSurfaceEmission` only to override the semantic color. The source is the element’s geometry, never the mouse coordinates.
 

@@ -2,8 +2,8 @@ import { finiteClamp, rememberAttributes, rememberStyles } from './dom';
 import type { AppearanceConfiguration, AppearanceConfigurationController } from './types';
 
 export const configurationEvent = 'bx-glass-config-change';
-const attributes = ['data-bx-glass-material', 'data-bx-glass-quality', 'data-bx-reduced-motion', 'data-bx-reduced-transparency'];
-const properties = ['--bx-glass-blur', '--bx-glass-opacity'];
+const attributes = ['data-bx-glass-quality', 'data-bx-reduced-motion', 'data-bx-reduced-transparency'];
+const properties = ['--bx-glassiness'];
 const configured = new WeakSet<HTMLElement>();
 
 /** Configure one inherited application scope. Use document.documentElement to include overlays. */
@@ -22,14 +22,12 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
     restoreAttributes();
     restoreStyles();
     const values: [string, unknown][] = [
-      ['data-bx-glass-material', options.material],
       ['data-bx-glass-quality', options.quality],
       ['data-bx-reduced-motion', options.reducedMotion],
       ['data-bx-reduced-transparency', options.reducedTransparency]
     ];
     for (const [name, value] of values) if (value !== undefined) root.setAttribute(name, String(value));
-    if (options.blur !== undefined) root.style.setProperty('--bx-glass-blur', `${finiteClamp(options.blur, 0, 50, 10)}px`);
-    if (options.tint !== undefined) root.style.setProperty('--bx-glass-opacity', String(finiteClamp(options.tint, 0, 1, 0.5)));
+    if (options.glassiness !== undefined) root.style.setProperty('--bx-glassiness', String(finiteClamp(options.glassiness, 0, 1, 0.5)));
     notify();
   };
   paint();

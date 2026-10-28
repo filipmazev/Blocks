@@ -270,10 +270,6 @@ nav a[data-bx-surface].active {
     font-weight: 600;
     border-color: var(--bx-border-default);
 
-    &[data-bx-surface='frosted'] {
-        --bx-glass-min-opacity: 0.94;
-    }
-
     &:hover {
         --bx-glass-surface: var(--bx-primary-hover);
     }

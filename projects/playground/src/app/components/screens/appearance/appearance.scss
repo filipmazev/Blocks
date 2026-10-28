@@ -41,21 +41,6 @@
     --bx-glass-radius: #{radius(lg)};
 }
 
-.preview-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: spacing(4);
-}
-
-.material-badge {
-    font-size: 0.75rem;
-    color: var(--bx-text-heading);
-    border: 1px solid var(--bx-border-default);
-    padding: spacing(1) spacing(2);
-    border-radius: radius(pill);
-}
-
 .preview-surface h2 {
     font-size: 1.75rem;
     margin-block: spacing(6) spacing(3);
@@ -65,25 +50,8 @@
     color: var(--bx-text-heading);
 }
 
-.preview-surface > button {
-    margin-top: spacing(4);
-}
-
-.motion-state {
-    margin: spacing(3) 0 0;
-    font-size: 0.75rem;
-    text-transform: capitalize;
-}
-
-.interaction-status {
-    font-size: 0.875rem;
-    color: var(--bx-text-secondary);
-    min-height: 2.7rem;
-    padding-top: spacing(3);
-}
-
 .global-controls,
-.material-controls {
+.glassiness-controls {
     padding: spacing(6);
     border: 1px solid var(--bx-border-default);
     border-radius: radius(lg);
@@ -102,7 +70,7 @@
 }
 
 .panel-heading h2,
-.material-controls h2 {
+.glassiness-controls h2 {
     margin: 0;
     font-size: 1.25rem;
 }
@@ -129,39 +97,35 @@ legend {
     margin-bottom: spacing(3);
 }
 
-.material-picker,
+.mode-picker,
 .palette-picker {
     display: flex;
     gap: spacing(2);
     flex-wrap: wrap;
 }
 
-.material-picker button {
-    text-transform: capitalize;
+.glassiness-controls {
+    margin-top: spacing(6);
 }
 
-.range-control {
-    display: flex;
-    flex-wrap: wrap;
+.glassiness-range {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: spacing(2);
-    font-size: 0.875rem;
-}
-
-.range-control {
-    margin-bottom: spacing(6);
-}
-
-output {
+    gap: spacing(4);
     color: var(--bx-text-secondary);
-    font-variant-numeric: tabular-nums;
+}
+
+.glassiness-tinted-icon {
+    background: radial-gradient(circle, currentcolor 48%, transparent 52%);
+    opacity: 0.8;
 }
 
 input[type='range'] {
     display: block;
     width: 100%;
-    margin: spacing(2) 0 0;
+    min-width: 0;
+    margin: 0;
     min-height: 1.5rem;
     cursor: pointer;
 }
@@ -187,7 +151,7 @@ input[type='range'] {
     padding-top: spacing(4);
 }
 
-.material-controls .section-note {
+.glassiness-controls .section-note {
     margin-block: spacing(3) spacing(6);
 }
 
@@ -246,7 +210,7 @@ input[type='range'] {
     }
 
     .global-controls,
-    .material-controls {
+    .glassiness-controls {
         padding: spacing(4);
     }
 }
@@ -286,8 +250,4 @@ input[type='range'] {
     .scene-background:not([data-bx-reduced-motion='false']) {
         animation-play-state: paused;
     }
-}
-
-.material-controls > .range-control:last-child {
-    margin-bottom: 0;
 }

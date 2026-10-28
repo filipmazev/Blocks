@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BLOCKS_VERSION } from '@filip.mazev/blocks';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -7,18 +7,24 @@ import { IconName } from '@icons/types/icon.types';
 import { Button } from '@forms/components/button/button';
 import { OddityCanvas } from 'oddity-angular';
 import { ThemingService } from '@core/services/theming.service';
+import { BxA11yService } from '@core/services/bx-a11y.service';
+import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 import { LightOrb } from './light-orb/light-orb';
-import { Tooltip } from '@filip.mazev/blocks/primitives';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, Icon, Button, BxSurfaceDirective, OddityCanvas, LightOrb, Tooltip],
+  imports: [RouterLink, Icon, Button, BxSurfaceDirective, OddityCanvas, LightOrb, TooltipDirective],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Home {
   protected readonly version = BLOCKS_VERSION;
+
+  protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
+
+  private readonly lightOrb = viewChild(LightOrb);
+  private readonly wakeHint = viewChild(TooltipDirective);
 
   private readonly themingService = inject(ThemingService);
 
@@ -83,4 +89,10 @@ export class Home {
       animate: true
     };
   });
+
+  constructor() {
+    effect(() => {
+      if (!this.lightOrb()?.showWakeHint()) this.wakeHint()?.hide();
+    });
+  }
 }
