@@ -130,6 +130,16 @@ input:focus-visible ~ .bx-slide-toggle-track {
     }
 }
 
+.bx-inline-wrapper:not(.is-disabled):hover
+    .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid) {
+    --bx-glass-surface: var(--bx-bg-neutral-hover);
+    --bx-glass-edge: var(--bx-border-brand);
+
+    &.is-checked {
+        --bx-glass-surface: var(--bx-primary-hover);
+    }
+}
+
 @media (forced-colors: active) {
     .bx-slide-toggle-thumb {
         background: ButtonText;

@@ -59,7 +59,7 @@
     backdrop-filter: none;
 }
 
-/* Fading overlays deliberately keep an opaque backing, including at rest. */
+/* Overlay fades temporarily use an opaque backing; the configured material resumes at rest. */
 [data-bx-motion-material="solid"] {
     background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
     -webkit-backdrop-filter: none;

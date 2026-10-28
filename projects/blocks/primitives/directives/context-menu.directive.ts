@@ -2,7 +2,7 @@ import { DestroyRef, Directive, ElementRef, HostListener, inject, input, NgZone,
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BxA11yService, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
-import { createGlassTransition } from '@filip.mazev/blocks/effects/runtime';
+import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { Subscription } from 'rxjs';
 
 @Directive({ selector: '[bxContextMenu]' })
@@ -18,6 +18,7 @@ export class ContextMenuDirective {
   private transition?: ReturnType<typeof createGlassTransition>;
   private point?: HTMLElement;
   private disconnectTheme?: () => void;
+  private disconnectLighting?: () => void;
   private subscriptions = new Subscription();
   private revision = 0;
 
@@ -85,6 +86,7 @@ export class ContextMenuDirective {
     this.subscriptions.add(this.overlayRef.keydownEvents().subscribe((event) => this.onMenuKey(event)));
     const pane = this.overlayRef.overlayElement;
     this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(source, pane));
+    this.disconnectLighting = inheritGlassLighting(pane, source);
     const view = this.overlayRef.attach(new TemplatePortal(this.bxContextMenu(), this.vcr));
     view.detectChanges();
     this.overlayRef.updatePosition();
@@ -148,5 +150,7 @@ export class ContextMenuDirective {
     const overlay = this.overlayRef;
     this.overlayRef = null;
     overlay?.dispose();
+    this.disconnectLighting?.();
+    this.disconnectLighting = undefined;
   }
 }

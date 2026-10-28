@@ -1,10 +1,11 @@
 import { BX_I18N, BxA11yService, BxShortcutService, isTextWithKey, ResolvableShortcut, ResolvableText } from '@filip.mazev/blocks/core';
 import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { Icon, IconName } from '@filip.mazev/blocks/icons';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 @Component({
   selector: 'bx-menu-item',
-  imports: [Icon],
+  imports: [Icon, BxSurfaceDirective],
   templateUrl: './menu-item.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './menu-item.scss'

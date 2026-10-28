@@ -12,8 +12,6 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   const restoreStyles = rememberStyles(target, ['opacity', 'visibility']);
   const skin = target.matches('[data-bx-surface]') ? target : (target.querySelector<HTMLElement>('[data-bx-surface]') ?? target);
   const restoreMaterial = rememberAttributes(skin, ['data-bx-motion-material']);
-  // Opacity isolates a descendant's backdrop. Keep a consistent opaque backing at rest as well.
-  skin.setAttribute('data-bx-motion-material', 'solid');
   const preference = view.matchMedia('(prefers-reduced-motion: reduce)');
   let disposed = false;
   let active = false;
@@ -37,6 +35,7 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     unsubscribe?.();
     unsubscribe = undefined;
     restoreStyles();
+    restoreMaterial();
     if (destination === 0) target.style.visibility = 'hidden';
     const resolve = resolvePending;
     resolvePending = undefined;
@@ -52,6 +51,8 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     elapsed = 0;
     active = true;
     restoreStyles();
+    // Keep the fade stable, then restore the configured glass material at rest.
+    skin.setAttribute('data-bx-motion-material', 'solid');
     const finished = new Promise<MotionResult>((resolve) => {
       resolvePending = resolve;
     });

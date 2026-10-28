@@ -12,6 +12,7 @@
         "tools:sync-version": "node tools/version-sync.mjs",
         "build:blocks": "npm run tools:sync-effects-tokens && npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && node tools/restore-full-css-hex.mjs dist/blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 2 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
         "test": "ng test",
+        "test:navigation": "vitest run --config projects/blocks/navigation/vitest.config.mts && tsc -p projects/blocks/navigation/tsconfig.spec.json",
         "lint": "npm run lint:ts && npm run lint:styles",
         "lint:ts": "eslint \"projects/blocks/**/*.{ts,html}\" \"projects/playground/**/*.{ts,html}\"",
         "lint:styles": "stylelint \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\" && prettier --check --tab-width 4 \"projects/blocks/**/*.scss\" \"projects/playground/**/*.scss\"",

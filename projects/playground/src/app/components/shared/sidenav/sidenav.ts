@@ -1,17 +1,17 @@
 import { DestroyRef, ElementRef, viewChild, Component, computed, effect, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { FormsModule } from '@angular/forms';
-import { SearchInput, Button } from '@filip.mazev/blocks/forms';
+import { SearchInput } from '@filip.mazev/blocks/forms';
 import { ScrollLockService, uuidv4 } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { WindowDimensionsService } from '@core/services/window-dimension.service';
-import { NavigationService, INavigationItem } from '@filip.mazev/blocks/navigation';
+import { NavigationService } from '@filip.mazev/blocks/navigation';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [A11yModule, FormsModule, SearchInput, Button, RouterLink, RouterLinkActive, BxSurfaceDirective],
+  imports: [A11yModule, FormsModule, SearchInput, RouterLink, RouterLinkActive, BxSurfaceDirective],
   templateUrl: './sidenav.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './sidenav.scss'
@@ -26,11 +26,14 @@ export class Sidenav {
   protected readonly query = signal('');
 
   protected readonly groups = computed(() => {
-    const flatten = (items: INavigationItem[]): INavigationItem[] => items.flatMap((item) => [item, ...flatten(item.children ?? [])]);
     const term = this.query().trim().toLowerCase();
-    const items = flatten(this.navigation.menu()).filter((item) => !term || `${item.label} ${item.section ?? ''}`.toLowerCase().includes(term));
-    const groupOrder = ['Start', 'Forms', 'Primitives', 'Navigation', 'Icons', 'Modals', 'Notifications', 'Tools'];
-    return groupOrder.map((title) => ({ title, items: items.filter((item) => item.section === title) })).filter((group) => group.items.length);
+    return this.navigation
+      .menuGroups()
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => !term || `${item.label} ${group.title}`.toLowerCase().includes(term))
+      }))
+      .filter((group) => group.items.length > 0);
   });
 
   public readonly title = input.required<string>();

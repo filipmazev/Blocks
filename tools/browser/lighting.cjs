@@ -164,6 +164,96 @@ test('hover, focus and explicit sources coexist above bounded ambient layers', a
   assert.ok(await page.locator('#receiver [data-bx-light-source^="hover:"]').count());
 });
 
+async function checkedControlsFor(t) {
+  const page = await pageFor(t, false, true);
+  await page.evaluate(() => {
+    receiver.style.left = '250px';
+    document.getElementById('left').innerHTML = `
+      <label id="radio-a-label"><input type="radio" name="frequency" checked><span id="radio-a" class="is-checked"></span><span>Daily</span></label>
+      <label id="radio-b-label"><input type="radio" name="frequency"><span id="radio-b"></span><span>Weekly</span></label>
+      <label id="toggle-label"><input type="checkbox" checked><span id="toggle" class="is-checked"></span><span>On</span></label>`;
+    for (const label of document.querySelectorAll('#left label')) {
+      label.style.cssText = 'display:flex;align-items:center;gap:8px;height:32px;cursor:pointer';
+      label.control.style.cssText = 'position:absolute;width:1px;height:1px;clip-path:inset(50%)';
+    }
+    for (const id of ['radio-a', 'radio-b', 'toggle']) {
+      const element = document.getElementById(id);
+      element.style.cssText = 'display:block;flex:none;width:20px;height:20px;border-radius:10px;background:#222';
+      handles.push(runtime.mountSurface(element, { emission: '#ff3300' }));
+    }
+  });
+  return page;
+}
+
+const waitForEmission = (page, id, active) => page.waitForFunction(
+  ([id, active]) => !!document.querySelector(`#${id} .bx-glass-rim [data-bx-light-source="emitter"]`) === active,
+  [id, active],
+);
+
+test('checked native radios and switches keep emitting after release and blur, and radio peers stop', async (t) => {
+  const page = await checkedControlsFor(t);
+  await waitForEmission(page, 'radio-a', true);
+  await waitForEmission(page, 'toggle', true);
+  await waitForEmission(page, 'radio-b', false);
+  await page.locator('#radio-b-label').click();
+  await page.mouse.move(900, 600);
+  await page.evaluate(() => document.activeElement.blur());
+  await waitForEmission(page, 'radio-a', false);
+  await waitForEmission(page, 'radio-b', true);
+  await waitForEmission(page, 'toggle', true);
+  await page.waitForTimeout(250);
+  assert.equal(await page.locator('#radio-a-label input').isChecked(), false);
+  assert.equal(await page.locator('#radio-b-label input').isChecked(), true);
+  assert.ok(await page.locator('#receiver [data-bx-light-source^="hover:"]').count());
+});
+
+test('form-style checked class updates and native disabled state update persistent emission', async (t) => {
+  const page = await checkedControlsFor(t);
+  await waitForEmission(page, 'toggle', true);
+  await page.evaluate(() => {
+    const visual = document.getElementById('toggle');
+    visual.closest('label').control.checked = false;
+    visual.classList.remove('is-checked');
+  });
+  await waitForEmission(page, 'toggle', false);
+  await page.evaluate(() => {
+    const visual = document.getElementById('toggle');
+    visual.closest('label').control.checked = true;
+    visual.classList.add('is-checked');
+  });
+  await waitForEmission(page, 'toggle', true);
+  await page.evaluate(() => document.getElementById('toggle-label').control.disabled = true);
+  await waitForEmission(page, 'toggle', false);
+  await page.locator('#toggle-label').hover();
+  await waitForEmission(page, 'toggle', false);
+  await page.evaluate(() => document.getElementById('toggle-label').control.disabled = false);
+  await page.mouse.move(900, 600);
+  await waitForEmission(page, 'toggle', true);
+});
+
+test('hovering an unchecked radio label emits through its visual and stops on leave', async (t) => {
+  const page = await checkedControlsFor(t);
+  await page.locator('#radio-b-label > span:last-child').hover();
+  await waitForEmission(page, 'radio-b', true);
+  await page.locator('#radio-b').hover();
+  await waitForEmission(page, 'radio-b', true);
+  await page.mouse.move(900, 600);
+  await waitForEmission(page, 'radio-b', false);
+});
+
+test('ARIA checked state emits for custom radio and switch surfaces', async (t) => {
+  const page = await pageFor(t, false, true);
+  await page.evaluate(() => {
+    const source = document.getElementById('left');
+    source.setAttribute('role', 'switch');
+    source.setAttribute('aria-checked', 'true');
+    handles.push(runtime.mountSurface(source, { emission: '#ff3300' }));
+  });
+  await waitForEmission(page, 'left', true);
+  await page.evaluate(() => document.getElementById('left').setAttribute('aria-checked', 'false'));
+  await waitForEmission(page, 'left', false);
+});
+
 test('visual mutations are coalesced and decorations do not cause a feedback loop', async (t) => {
   const page = await pageFor(t, false, true);
   const before = await page.evaluate(() => ({ ...metrics }));

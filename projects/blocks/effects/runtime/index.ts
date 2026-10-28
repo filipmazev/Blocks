@@ -1,6 +1,7 @@
 export { mountSurface } from './surface';
 export { configureAppearance } from './configuration';
 export { mountGlassScene, observeGlassLighting, refreshGlassLighting } from './scene';
+export { inheritGlassLighting } from './visibility';
 export { createGlassTransition, createLiquidTransition } from './transition';
 export { Spring } from './spring';
 export type { SpringOptions } from './spring';

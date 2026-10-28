@@ -3,6 +3,19 @@ import { INavMeta } from '../interfaces/inav-meta.interface';
 import { INavigationConfig } from '../interfaces/inavigation-config.interface';
 import { NAVIGATION_CONFIG } from '../tokens/navigation-config.token';
 import { Route } from '@angular/router';
+import { INavigationSectionConfig } from '../interfaces/inavigation-section-config.interface';
+
+/** Declares UI sections and binds route metadata to their literal IDs. */
+export function defineNavigation<const TSections extends readonly INavigationSectionConfig[]>(
+  config: Omit<INavigationConfig, 'sections'> & { sections: TSections }
+) {
+  return {
+    config,
+    withNav<T extends INavMeta<TSections[number]['id']>>(route: Route, nav: Strict<T, INavMeta<TSections[number]['id']>>): Route {
+      return withNav(route, nav);
+    }
+  };
+}
 
 /**
  *
@@ -29,7 +42,7 @@ export function provideNavigation(config: INavigationConfig) {
  * The function returns a new `Route` object with the provided navigation metadata merged into the existing route data under the 'nav' property.
  * This allows you to easily associate navigation information with your routes, which can then be used by navigation components to generate menus, breadcrumbs, etc.
  */
-export function withNav<T>(route: Route, nav: Strict<T, INavMeta>): Route {
+export function withNav<T extends INavMeta>(route: Route, nav: Strict<T, INavMeta>): Route {
   const existingNav = (route.data?.['nav'] as INavMeta | undefined) ?? {};
 
   return {

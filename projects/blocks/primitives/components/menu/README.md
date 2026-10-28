@@ -27,6 +27,8 @@ Add the standalone component or directive to your component's `imports`.
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
+Dropdown and context menus follow the configured glass tint and radius, including after their opening fade. Nearby sources and active menu rows illuminate the outer border; rows share the containing material.
+
 ```ts
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';

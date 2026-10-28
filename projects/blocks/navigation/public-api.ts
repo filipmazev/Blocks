@@ -10,6 +10,7 @@ export * from './interfaces/inav-meta.interface';
 export * from './interfaces/inav-route-data.interface';
 export * from './interfaces/inavigation-access-adapter.interface';
 export * from './interfaces/inavigation-config.interface';
+export * from './interfaces/inavigation-group.interface';
 export * from './interfaces/inavigation-item.interface';
 export * from './interfaces/inavigation-section-config.interface';
 export * from './interfaces/iresolved-navigation.interface';

@@ -51,7 +51,9 @@
     background-color: var(--bx-bg-surface);
     border: 1px solid var(--bx-border-strong);
     border-radius: radius(pill);
-    transition: border-color 0.15s ease;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
 
     &.is-invalid {
         border-color: var(--bx-border-danger);
@@ -110,5 +112,14 @@ input:focus-visible ~ .bx-radio-circle {
         --bx-glass-surface: var(--bx-bg-danger-subtle);
         --bx-glass-edge: var(--bx-border-danger);
         --bx-glass-text: var(--bx-text-danger);
+    }
+}
+
+.bx-inline-wrapper:not(.is-disabled):hover .bx-radio-circle[data-bx-surface]:not(.is-invalid) {
+    --bx-glass-surface: var(--bx-bg-neutral-hover);
+    --bx-glass-edge: var(--bx-border-brand);
+
+    &.is-checked {
+        --bx-glass-surface: var(--bx-primary-hover);
     }
 }

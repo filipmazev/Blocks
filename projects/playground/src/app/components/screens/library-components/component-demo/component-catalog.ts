@@ -1,7 +1,9 @@
+import type { AppNavigationSection } from '../../../../app.navigation';
+
 export interface ComponentExample {
   id: string;
   title: string;
-  group: string;
+  group: AppNavigationSection;
   readme: string;
   symbol: string;
   package: string;

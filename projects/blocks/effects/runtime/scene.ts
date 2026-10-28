@@ -2,7 +2,7 @@ import { AmbientSampler } from './ambient';
 import { configurationEvent } from './configuration';
 import { finiteClamp } from './dom';
 import { subscribeFrame } from './scheduler';
-import { lightBoundarySelector, lightingVisibility } from './visibility';
+import { lightBoundarySelector, lightingOrigin, lightingVisibility } from './visibility';
 import type { GlassLight, GlassReflector, GlassScene, GlassSceneOptions } from './types';
 
 export interface LightContribution {
@@ -77,7 +77,7 @@ interface Reflection {
 }
 const runtimes = new WeakMap<Document, SceneRuntime>();
 const activeStateSelector =
-  '[aria-pressed="true"], [aria-selected="true"], [aria-expanded="true"], [aria-current]:not([aria-current="false"]):not([aria-current=""])';
+  ':checked, [aria-checked="true"], [aria-pressed="true"], [aria-selected="true"], [aria-expanded="true"], [aria-current]:not([aria-current="false"]):not([aria-current=""])';
 const disabledSelector = ':disabled, [aria-disabled="true"], .is-disabled, [inert]';
 
 function runtimeFor(doc: Document): SceneRuntime {
@@ -175,7 +175,8 @@ class SceneRuntime {
   };
 
   private out = (event: PointerEvent) => {
-    if (this.hovered && !this.hovered.element.contains(event.relatedTarget as Node | null)) {
+    const target = this.hovered?.element.closest('label') ?? this.hovered?.element;
+    if (target && !target.contains(event.relatedTarget as Node | null)) {
       this.hovered = undefined;
       this.updateEmitter();
     }
@@ -194,6 +195,11 @@ class SceneRuntime {
   private unfocus = () => {
     this.focused = undefined;
     this.focusedTarget = undefined;
+    this.updateEmitter();
+  };
+
+  private change = () => {
+    for (const entry of this.entries.values()) this.updateSelected(entry);
     this.updateEmitter();
   };
 
@@ -267,6 +273,10 @@ class SceneRuntime {
           }
           const target = record.target as HTMLElement;
           if (record.attributeName === 'style' && this.renderedStyles.get(target) === target.getAttribute('style')) continue;
+          if (record.attributeName === 'class') {
+            const entry = this.entries.get(target);
+            if (entry) changed.add(entry);
+          }
           if (
             record.attributeName === 'class' ||
             record.attributeName === 'style' ||
@@ -281,7 +291,10 @@ class SceneRuntime {
             }
             continue;
           }
-          const entry = this.entries.get(target);
+          const visual = target.matches('input[type="checkbox"], input[type="radio"]')
+            ? target.closest('label')?.querySelector<HTMLElement>('[data-bx-surface]')
+            : undefined;
+          const entry = this.entries.get(target) ?? (visual ? this.entries.get(visual) : undefined);
           if (entry) changed.add(entry);
           if (record.attributeName === 'data-bx-field-invalid') {
             for (const surface of target.querySelectorAll<HTMLElement>('[data-bx-surface]')) {
@@ -297,7 +310,7 @@ class SceneRuntime {
           }
           this.ambient.invalidate();
         }
-        if (!changed.size) return;
+        if (!changed.size && !visualChanged) return;
         for (const entry of changed) this.updateSelected(entry);
         this.updateEmitter();
       });
@@ -389,16 +402,22 @@ class SceneRuntime {
       // A decorative surface inside a button/link is still part of that action.
       if (found.hooks.interactive()) return found;
     }
+    const target = event.target as Element;
+    const label = target.closest('label');
+    const visual = label?.control?.matches('input[type="checkbox"], input[type="radio"]') ? label.querySelector<HTMLElement>('[data-bx-surface]') : undefined;
+    const found = visual ? this.entries.get(visual) : undefined;
+    if (found && !found.element.closest(disabledSelector) && !label?.control?.matches(disabledSelector) && found.hooks.interactive()) return found;
     return undefined;
   }
 
   private scope(element: HTMLElement): HTMLElement {
-    return element.closest<HTMLElement>(`${lightBoundarySelector}, main, aside, nav`) ?? this.doc.body;
+    return lightingOrigin(element).closest<HTMLElement>(`${lightBoundarySelector}, main, aside, nav`) ?? this.doc.body;
   }
 
   private updateEmitter(): void {
     const next = new Map<Entry, string>();
-    const enabled = (entry: Entry) => entry.hooks.interactive() && !entry.element.closest(disabledSelector);
+    const enabled = (entry: Entry) =>
+      entry.hooks.interactive() && !entry.element.closest(disabledSelector) && !entry.element.closest('label')?.control?.matches(disabledSelector);
     for (const entry of [...this.selected, this.hovered, this.pressed]) {
       const color = entry && enabled(entry) ? entry.hooks.emission?.() : undefined;
       if (entry && color) next.set(entry, color);
@@ -425,13 +444,15 @@ class SceneRuntime {
   }
 
   private updateSelected(entry: Entry): void {
-    if (entry.hooks.emission?.() && entry.element.matches(activeStateSelector)) this.selected.add(entry);
+    const control = entry.element.closest('label')?.control;
+    const checked = control?.matches('input[type="checkbox"]:checked, input[type="radio"]:checked');
+    if (entry.hooks.emission?.() && (entry.element.matches(activeStateSelector) || checked)) this.selected.add(entry);
     else this.selected.delete(entry);
   }
 
   private refreshRoot(root: HTMLElement, measure = true): void {
     for (const entry of this.entries.values()) {
-      if (!root.contains(entry.element)) continue;
+      if (!root.contains(lightingOrigin(entry.element))) continue;
       if (measure) {
         entry.bounds = undefined;
         entry.lastLighting = undefined;
@@ -448,6 +469,8 @@ class SceneRuntime {
       childList: true,
       attributeFilter: [
         'aria-pressed',
+        'aria-checked',
+        'checked',
         'aria-selected',
         'aria-expanded',
         'aria-current',
@@ -480,6 +503,7 @@ class SceneRuntime {
     this.doc.addEventListener('pointerout', this.out, { passive: true });
     this.doc.addEventListener('focusin', this.focus);
     this.doc.addEventListener('focusout', this.unfocus);
+    this.doc.addEventListener('change', this.change);
     this.view.addEventListener('pointerup', this.up, { passive: true });
     this.view.addEventListener('pointercancel', this.up, { passive: true });
     this.doc.addEventListener('pointerleave', this.leave, { passive: true });
@@ -512,6 +536,7 @@ class SceneRuntime {
     this.doc.removeEventListener('pointerout', this.out);
     this.doc.removeEventListener('focusin', this.focus);
     this.doc.removeEventListener('focusout', this.unfocus);
+    this.doc.removeEventListener('change', this.change);
     this.view.removeEventListener('pointerup', this.up);
     this.view.removeEventListener('pointercancel', this.up);
     this.doc.removeEventListener('pointerleave', this.leave);
@@ -553,9 +578,9 @@ class SceneRuntime {
         .filter((entry) => entry.visible && entry.element.isConnected)
         .map((entry) => {
           entry.bounds ??= entry.element.getBoundingClientRect();
+          const origin = lightingOrigin(entry.element) as HTMLElement;
           let nearest: SceneEntry | undefined;
-          for (const candidate of this.scenes)
-            if (candidate.root.contains(entry.element) && (!nearest || nearest.root.contains(candidate.root))) nearest = candidate;
+          for (const candidate of this.scenes) if (candidate.root.contains(origin) && (!nearest || nearest.root.contains(candidate.root))) nearest = candidate;
           if (nearest && !sceneData.has(nearest)) {
             const scene = nearest;
             sceneData.set(scene, {
@@ -571,9 +596,9 @@ class SceneRuntime {
           for (const { emitter, light } of activeLights) {
             if (
               this.scope(emitter.element) === this.scope(entry.element) &&
-              visibility.layer(emitter.element) === visibility.layer(entry.element) &&
+              visibility.layer(lightingOrigin(emitter.element) as HTMLElement) === visibility.layer(origin) &&
               !emitter.element.contains(entry.element) &&
-              !entry.element.contains(emitter.element)
+              (!entry.element.contains(emitter.element) || entry.element.matches('[role="menu"]'))
             )
               lights.push(light);
           }

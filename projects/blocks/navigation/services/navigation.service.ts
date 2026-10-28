@@ -11,6 +11,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { INavContext } from '../interfaces/inav-context.interface';
 import { BX_I18N, isTextWithKey, ResolvableText } from '@filip.mazev/blocks/core';
 import { NavText } from '../types/navigation.types';
+import { INavigationGroup } from '../interfaces/inavigation-group.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -69,6 +70,27 @@ export class NavigationService {
   });
 
   public readonly menu = computed(() => this.buildMenu(this.routes()));
+
+  public readonly menuGroups = computed<INavigationGroup[]>(() => {
+    const sections = [...(this.config?.sections ?? [])].sort((a, b) => (a.order ?? Number.POSITIVE_INFINITY) - (b.order ?? Number.POSITIVE_INFINITY));
+    const groups = new Map<string, INavigationGroup>(
+      sections.map((section) => [section.id, { id: section.id, title: section.title ?? section.id, items: [] }])
+    );
+
+    for (const item of this.flattenRoutes(this.menu())) {
+      if (!item.visible || item.data?.menu === false) continue;
+
+      const id = item.section ?? '';
+      let group = groups.get(id);
+      if (!group) {
+        group = { id, title: id, items: [] };
+        groups.set(id, group);
+      }
+      group.items.push({ ...item, children: undefined });
+    }
+
+    return [...groups.values()].filter((group) => group.items.length > 0);
+  });
 
   public navigateBack(): void {
     const breadcrumbs = this.current().breadcrumbs;

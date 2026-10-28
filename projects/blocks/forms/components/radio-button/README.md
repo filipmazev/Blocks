@@ -27,6 +27,8 @@ The control implements Angular ControlValueAccessor. Use `[formControl]`, `formC
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
+Selected radios keep emitting the theme color after pointer release and blur. Hovering the circle or its label highlights the surface and emits color; disabled controls do neither.
+
 ```ts
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';

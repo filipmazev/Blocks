@@ -16,7 +16,7 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BxA11yService, BxPlacement, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
-import { createGlassTransition } from '@filip.mazev/blocks/effects/runtime';
+import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { Subscription } from 'rxjs';
 
 export type DropdownTransition = 'none' | 'fade' | 'emerge';
@@ -56,6 +56,7 @@ export class DropdownDirective {
   private subscriptions = new Subscription();
   private revision = 0;
   private disconnectTheme?: () => void;
+  private disconnectLighting?: () => void;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
@@ -178,6 +179,7 @@ export class DropdownDirective {
     this.overlayRef = overlay;
     this.overlayId.set(overlay.overlayElement.id || null);
     this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(this.elementRef.nativeElement, overlay.overlayElement));
+    this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, this.elementRef.nativeElement);
     this.subscriptions = new Subscription();
     this.subscriptions.add(overlay.backdropClick().subscribe(() => this.close()));
     this.subscriptions.add(
@@ -250,6 +252,8 @@ export class DropdownDirective {
     this.subscriptions.unsubscribe();
     this.overlayRef?.dispose();
     this.overlayRef = null;
+    this.disconnectLighting?.();
+    this.disconnectLighting = undefined;
     this.overlayId.set(null);
     this._isOpen.set(false);
     this._state.set('closed');

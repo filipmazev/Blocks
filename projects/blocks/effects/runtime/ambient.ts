@@ -322,6 +322,7 @@ export class AmbientSampler {
     const visibleY = Math.max(1, Math.min(this.view.innerHeight - 1, bounds.top + bounds.height / 2));
     if (!visibility.exposed(entry.element, visibleX, visibleY, bounds)) return [];
     const targetBoundary = visibility.ambientBoundary(entry.element);
+    const passiveTooltip = visibility.style(entry.element).pointerEvents === 'none' && !!entry.element.closest('bx-tooltip, [role="tooltip"]');
     // Cull once per receiver, rather than walking every media element at every edge probe.
     rasterSources = rasterSources.filter((source) => {
       const rect = this.rectFor(source, rects);
@@ -366,7 +367,7 @@ export class AmbientSampler {
           skipAncestors: false,
           skipRoot: false
         });
-      } else if (point.side === 'outside') {
+      } else if (point.side === 'outside' || (receiverIndex < 0 && passiveTooltip)) {
         source = this.findVisualSource(stack, entry, point.x, point.y, visibility, rasterSamples, rects, {
           skipAncestors: true,
           skipRoot: true

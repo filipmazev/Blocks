@@ -1,12 +1,12 @@
 import { IconData } from '@filip.mazev/blocks/icons';
 import { NavText } from '../types/navigation.types';
 
-export interface INavMeta {
+export interface INavMeta<TSection extends string = string> {
   label?: NavText;
   breadcrumb?: NavText;
 
   icon?: IconData;
-  section?: string;
+  section?: TSection;
   menu?: boolean;
   hidden?: boolean;
   order?: number;

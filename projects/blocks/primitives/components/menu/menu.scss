@@ -7,12 +7,14 @@
 .bx-menu-wrapper {
     background-color: var(--bx-bg-surface);
     border: 1px solid var(--bx-border-subtle);
-    border-radius: radius(sm);
+    border-radius: var(--bx-glass-radius, #{radius(lg)});
     box-shadow: shadow(sm);
     padding: spacing(1);
     display: flex;
     flex-direction: column;
     min-width: 12rem;
+
+    --bx-glass-shadow: #{shadow(sm)};
 
     &.bx-menu-animated {
         transition:
@@ -31,7 +33,7 @@
 
 // The shared material owns the backing; rows inherit it without nested blur.
 :host([data-bx-surface]) {
-    border-radius: var(--bx-glass-radius, #{radius(sm)});
+    border-radius: var(--bx-glass-radius, #{radius(lg)});
 
     --bx-glass-shadow: #{shadow(sm)};
 
@@ -43,8 +45,4 @@
         border-radius: inherit;
         box-shadow: none;
     }
-}
-
-[data-bx-surface] {
-    --bx-glass-min-opacity: 0.8;
 }

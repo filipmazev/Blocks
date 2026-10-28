@@ -9,7 +9,7 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
     for (let index = 0; index < styles.length; index++) {
       const property = styles.item(index);
       // Material settings remain inherited from the application root and update immediately.
-      if (property.startsWith('--bx-') && !property.startsWith('--bx-glass-')) {
+      if (property.startsWith('--bx-') && (!property.startsWith('--bx-glass-') || property === '--bx-glass-radius')) {
         pane.style.setProperty(property, styles.getPropertyValue(property));
         current.add(property);
       }

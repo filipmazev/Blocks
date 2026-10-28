@@ -31,7 +31,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   const doc = element.ownerDocument;
   const view = doc.defaultView;
   if (!view) throw new Error('Glass surfaces must be mounted in a browser document.');
-  const ownProperties = ['position', '--bx-glass-blur', '--bx-glass-opacity'];
+  const ownProperties = ['position', '--bx-glass-blur', '--bx-glass-opacity', '--bx-glass-lit-edge'];
   const restoreStyles = rememberStyles(element, ownProperties);
   const attributes = ['data-bx-surface', 'data-bx-reduced-transparency', 'data-bx-reduced-motion', 'data-bx-glass-renderer'];
   const originalAttributes = new Map(attributes.map((name) => [name, element.getAttribute(name)]));
@@ -80,6 +80,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   let disposed = false;
   let unsubscribe: (() => void) | undefined;
   let reducedMotion = false;
+  let unifiedLighting = false;
 
   const interactive = () => options.interactive ?? isActionSurface(element);
   let emitting = false;
@@ -196,6 +197,17 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     y.snap(value.y);
     strength.target = value.strength;
 
+    if (unifiedLighting) {
+      let edge = 'var(--bx-border-default, GrayText)';
+      // Compound silhouettes share one lit outline while retaining their neutral backing.
+      const sources = [...value.contributions].sort((a, b) => a.edgeStrength - b.edgeStrength).slice(-4);
+      for (const source of sources) {
+        const strength = finiteClamp(source.edgeStrength, 0, 0.85, 0);
+        edge = `color-mix(in srgb, ${source.color} ${(strength * 100).toFixed(2)}%, ${edge})`;
+      }
+      element.style.setProperty('--bx-glass-lit-edge', edge);
+    }
+
     const ambientImage =
       value.contributions
         .filter((contribution) => contribution.ambient)
@@ -260,6 +272,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     // host's real border so their inherited outer radius describes the same curve.
     // Borderless and one-sided surfaces must never grow beyond their border box.
     const style = view.getComputedStyle(element);
+    unifiedLighting = style.getPropertyValue('--bx-glass-unified-lighting').trim() === '1';
 
     for (const side of ['top', 'right', 'bottom', 'left']) {
       const width = style.getPropertyValue(`border-${side}-width`);

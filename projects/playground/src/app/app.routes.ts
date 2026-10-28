@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { withNav } from '../../../blocks/navigation/helpers/navigation-functions';
+import { APP_NAVIGATION } from './app.navigation';
 import { COMPONENT_EXAMPLES } from './components/screens/library-components/component-demo/component-catalog';
+
+const { withNav } = APP_NAVIGATION;
 
 const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
   withNav(

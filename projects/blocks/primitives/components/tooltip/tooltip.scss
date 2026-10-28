@@ -9,7 +9,7 @@
 .bx-tooltip-surface[data-bx-surface] {
     position: relative;
     padding: spacing(1) spacing(2);
-    border: 1px solid var(--bx-border-default);
+    border: 1px solid var(--bx-glass-edge);
     border-radius: radius(sm);
     font-size: 0.75rem;
     font-family: inherit;
@@ -17,13 +17,16 @@
     white-space: normal;
     overflow-wrap: anywhere;
 
+    --bx-glass-unified-lighting: 1;
     --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-edge: var(--bx-glass-lit-edge, var(--bx-border-default));
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-shadow: #{shadow(sm)};
     --bx-glass-min-opacity: 1;
 
     // The body and arrow share one opaque color, including with reduced motion.
     --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
 
     backdrop-filter: none;
 
@@ -36,9 +39,16 @@
         box-sizing: border-box;
         border-radius: radius(none);
         background: var(--bx-glass-surface);
-        border: 0 solid var(--bx-border-default);
+        border: 0 solid var(--bx-glass-edge);
         transform: translate(-50%, -50%) rotate(45deg);
         pointer-events: none;
+    }
+}
+
+@media (prefers-contrast: more) {
+    .bx-tooltip-surface[data-bx-surface] {
+        --bx-glass-surface: var(--bx-bg-surface);
+        --bx-glass-edge: currentcolor;
     }
 }
 

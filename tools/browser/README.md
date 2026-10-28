@@ -1,6 +1,6 @@
 # Browser regression scenarios
 
-`lighting.cjs` bundles the current framework-independent runtime in memory, serves a temporary local fixture and runs native browser regressions with Node's test runner. It covers spatial colors, proximity, ambient/semantic layering, canvas caching, mutation coalescing, source removal, overlay boundaries, teardown, reduced motion, failed readbacks, image positioning and shadow-root media.
+`lighting.cjs` bundles the current framework-independent runtime in memory, serves a temporary local fixture and runs native browser regressions with Node's test runner. It covers spatial colors, proximity, ambient/semantic layering, checked-control emission, label hover, disabled controls, canvas caching, mutation coalescing, source removal, overlay boundaries, teardown, reduced motion, failed readbacks, image positioning and shadow-root media.
 
 Use an existing Playwright installation (the repository does not add a browser dependency):
 

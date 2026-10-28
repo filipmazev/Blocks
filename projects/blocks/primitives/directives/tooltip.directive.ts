@@ -2,7 +2,7 @@ import { DestroyRef, Directive, ElementRef, HostListener, inject, input, NgZone 
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { BxA11yService, BxPlacement, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, uuidv4 } from '@filip.mazev/blocks/core';
-import { createGlassTransition } from '@filip.mazev/blocks/effects/runtime';
+import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { Tooltip } from '../components/tooltip/tooltip';
 
 @Directive({ selector: '[bxTooltip]' })
@@ -18,6 +18,7 @@ export class TooltipDirective {
   private overlayRef: OverlayRef | null = null;
   private transition?: ReturnType<typeof createGlassTransition>;
   private disconnectTheme?: () => void;
+  private disconnectLighting?: () => void;
   private positionSubscription?: { unsubscribe(): void };
   private keyboardSubscription?: { unsubscribe(): void };
   private revision = 0;
@@ -44,6 +45,7 @@ export class TooltipDirective {
       pane.id = this.id;
       pane.setAttribute('role', 'tooltip');
       this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(this.elementRef.nativeElement, pane));
+      this.disconnectLighting = inheritGlassLighting(pane, this.elementRef.nativeElement);
 
       const component = this.overlayRef.attach(new ComponentPortal(Tooltip));
       // CDK enables pane pointer events during attach. Reset afterwards so the
@@ -152,5 +154,7 @@ export class TooltipDirective {
     this.transition = undefined;
     this.overlayRef?.dispose();
     this.overlayRef = null;
+    this.disconnectLighting?.();
+    this.disconnectLighting = undefined;
   }
 }

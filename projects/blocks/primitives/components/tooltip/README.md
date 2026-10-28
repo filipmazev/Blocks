@@ -24,6 +24,8 @@ Add the standalone component or directive to your component's `imports`.
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; changing material, blur, tint updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
+Tooltips retain their neutral, opaque background while nearby emissive colors light the border. The arrow shares the body's background and border lighting so the bubble remains one continuous shape. Positioned tooltips receive light from their trigger's context, including inside dialogs, while remaining transparent to pointer events. The overview includes a persistent tooltip preview beside the light orb.
+
 ```ts
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';

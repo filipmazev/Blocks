@@ -9,15 +9,22 @@
     width: 100%;
     display: flex;
     align-items: center;
-    background: transparent;
+    background: transparent !important;
     border: none;
     padding: spacing(2) spacing(3);
     cursor: pointer;
     font-family: inherit;
     font-size: 0.875rem;
     text-align: left;
-    border-radius: radius(sm);
+    border-radius: max(0px, calc(var(--bx-glass-radius, #{radius(lg)}) - #{spacing(1)}));
     color: var(--bx-text-primary);
+
+    // Rows emit light into their containing menu without adding another material.
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+
+    backdrop-filter: none;
+    box-shadow: none;
 
     &:focus-visible {
         outline: 2px solid var(--bx-border-brand);
@@ -35,7 +42,7 @@
     }
 
     &:hover:not(.is-disabled) {
-        background-color: var(--bx-bg-element-hover);
+        background: var(--bx-bg-element-hover) !important;
 
         .bx-menu-item-shortcut {
             color: inherit;
@@ -44,7 +51,7 @@
     }
 
     &:active:not(.is-disabled) {
-        background-color: var(--bx-bg-element-active);
+        background: var(--bx-bg-element-active) !important;
 
         .bx-menu-item-shortcut {
             color: inherit;
@@ -61,11 +68,11 @@
         }
 
         &:hover:not(.is-disabled) {
-            background-color: var(--bx-bg-danger-hover);
+            background: var(--bx-bg-danger-hover) !important;
         }
 
         &:active:not(.is-disabled) {
-            background-color: var(--bx-bg-danger-active);
+            background: var(--bx-bg-danger-active) !important;
         }
     }
 
