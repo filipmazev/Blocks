@@ -11,6 +11,9 @@
   box-shadow: var(--bx-glass-shadow, 0 2px 6px rgb(0 0 0 / .08));
   color: var(--bx-glass-text, var(--bx-text-primary, CanvasText));
   border-color: var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
+}
+[data-bx-surface],
+.bx-btn {
   --bx-glass-material-blur: calc(4px + 24px * var(--bx-glassiness, .5) * var(--bx-glassiness, .5));
   --bx-glass-material-opacity: calc(.06 + 1.02 * var(--bx-glassiness, .5) - .28 * var(--bx-glassiness, .5) * var(--bx-glassiness, .5));
 }
@@ -3976,12 +3979,12 @@
       rgba(255, 255, 255, 0.24),
       transparent 65%),
     var(--bx-bg-surface);
-  border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) calc(var(--bx-slider-light-strength, 0.18) * 100%), var(--bx-border-strong));
+  border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) calc(var(--bx-slider-light-strength, 0.18) * 100%), var(--bx-border-strong));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) 30%, transparent),
+    inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) 30%, transparent),
     0 2px 5px rgba(0, 0, 0, 0.18);
   transition-property: border-color, box-shadow;
   transition-duration: calc(0.2s * (1 - var(--bx-reduced-motion, 0)));
@@ -4005,7 +4008,7 @@
   background:
     radial-gradient(
       circle at var(--bx-slider-light-x, 35%) var(--bx-slider-light-y, 0%),
-      var(--bx-slider-light-color, var(--bx-primary)),
+      var(--bx-slider-light-color, var(--bx-accent)),
       transparent 75%);
   opacity: var(--bx-slider-light-strength, 0.25);
   -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
@@ -4035,7 +4038,7 @@ input.bx-slider::-webkit-slider-runnable-track {
   background:
     linear-gradient(
       to right,
-      var(--bx-primary) 0 var(--bx-slider-progress, 50%),
+      var(--bx-accent) 0 var(--bx-slider-progress, 50%),
       var(--bx-bg-neutral) var(--bx-slider-progress, 50%) 100%);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16);
 }
@@ -4047,7 +4050,7 @@ input.bx-slider::-moz-range-track {
   background:
     linear-gradient(
       to right,
-      var(--bx-primary) 0 var(--bx-slider-progress, 50%),
+      var(--bx-accent) 0 var(--bx-slider-progress, 50%),
       var(--bx-bg-neutral) var(--bx-slider-progress, 50%) 100%);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16);
 }
@@ -4065,12 +4068,12 @@ input.bx-slider::-webkit-slider-thumb {
       rgba(255, 255, 255, 0.24),
       transparent 65%),
     var(--bx-bg-surface);
-  border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) calc(var(--bx-slider-light-strength, 0.18) * 100%), var(--bx-border-strong));
+  border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) calc(var(--bx-slider-light-strength, 0.18) * 100%), var(--bx-border-strong));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) 30%, transparent),
+    inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) 30%, transparent),
     0 2px 5px rgba(0, 0, 0, 0.18);
   margin-top: calc((0.5rem - 1.5rem) / 2 - 1px);
 }
@@ -4088,16 +4091,16 @@ input.bx-slider::-moz-range-thumb {
       rgba(255, 255, 255, 0.24),
       transparent 65%),
     var(--bx-bg-surface);
-  border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) calc(var(--bx-slider-light-strength, 0.18) * 100%), var(--bx-border-strong));
+  border-color: color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) calc(var(--bx-slider-light-strength, 0.18) * 100%), var(--bx-border-strong));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-primary)) 30%, transparent),
+    inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) 30%, transparent),
     0 2px 5px rgba(0, 0, 0, 0.18);
 }
 input.bx-slider:focus-visible {
-  outline: 2px solid var(--bx-border-brand);
+  outline: 2px solid var(--bx-border-accent);
   outline-offset: 3px;
   border-radius: 9999px;
 }
@@ -4222,15 +4225,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(1.9457254902%, 1.9457254902%, 1.9457254902%);
-  --bx-bg-surface: rgb(98.0241568627%, 98.0241568627%, 98.0241568627%);
-  --bx-bg-surface-alt: rgb(98.0241568627%, 98.0241568627%, 98.0241568627%);
-  --bx-bg-element: rgb(95.9940392157%, 95.9940392157%, 95.9940392157%);
-  --bx-bg-element-hover: rgb(89.8450196078%, 89.8450196078%, 89.8450196078%);
-  --bx-bg-element-active: rgb(83.3116862745%, 83.3116862745%, 83.3116862745%);
-  --bx-bg-neutral: rgb(96.1025882353%, 96.1025882353%, 96.1025882353%);
-  --bx-bg-neutral-hover: rgb(98.0241568627%, 98.0241568627%, 98.0241568627%);
-  --bx-bg-neutral-active: rgb(89.9535686275%, 89.9535686275%, 89.9535686275%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -4317,15 +4320,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.1543529412%, 0.1543529412%, 0.1543529412%);
-  --bx-bg-surface: rgb(4.3818039216%, 4.3818039216%, 4.3818039216%);
-  --bx-bg-surface-alt: rgb(8.9935686275%, 8.9935686275%, 8.9935686275%);
-  --bx-bg-element: rgb(14.7582745098%, 14.7582745098%, 14.7582745098%);
-  --bx-bg-element-hover: rgb(24.7504313725%, 24.7504313725%, 24.7504313725%);
-  --bx-bg-element-active: rgb(31.6680784314%, 31.6680784314%, 31.6680784314%);
-  --bx-bg-neutral: rgb(8.9935686275%, 8.9935686275%, 8.9935686275%);
-  --bx-bg-neutral-hover: rgb(14.7582745098%, 14.7582745098%, 14.7582745098%);
-  --bx-bg-neutral-active: rgb(31.6680784314%, 31.6680784314%, 31.6680784314%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -4412,15 +4415,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(1.9457254902%, 1.9457254902%, 1.9457254902%);
-  --bx-bg-surface: rgb(98.0241568627%, 98.0241568627%, 98.0241568627%);
-  --bx-bg-surface-alt: rgb(98.0241568627%, 98.0241568627%, 98.0241568627%);
-  --bx-bg-element: rgb(95.9940392157%, 95.9940392157%, 95.9940392157%);
-  --bx-bg-element-hover: rgb(89.8450196078%, 89.8450196078%, 89.8450196078%);
-  --bx-bg-element-active: rgb(83.3116862745%, 83.3116862745%, 83.3116862745%);
-  --bx-bg-neutral: rgb(96.1025882353%, 96.1025882353%, 96.1025882353%);
-  --bx-bg-neutral-hover: rgb(98.0241568627%, 98.0241568627%, 98.0241568627%);
-  --bx-bg-neutral-active: rgb(89.9535686275%, 89.9535686275%, 89.9535686275%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -4506,15 +4509,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.1543529412%, 0.1543529412%, 0.1543529412%);
-  --bx-bg-surface: rgb(4.3818039216%, 4.3818039216%, 4.3818039216%);
-  --bx-bg-surface-alt: rgb(8.9935686275%, 8.9935686275%, 8.9935686275%);
-  --bx-bg-element: rgb(14.7582745098%, 14.7582745098%, 14.7582745098%);
-  --bx-bg-element-hover: rgb(24.7504313725%, 24.7504313725%, 24.7504313725%);
-  --bx-bg-element-active: rgb(31.6680784314%, 31.6680784314%, 31.6680784314%);
-  --bx-bg-neutral: rgb(8.9935686275%, 8.9935686275%, 8.9935686275%);
-  --bx-bg-neutral-hover: rgb(14.7582745098%, 14.7582745098%, 14.7582745098%);
-  --bx-bg-neutral-active: rgb(31.6680784314%, 31.6680784314%, 31.6680784314%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -4600,15 +4603,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(1.8745098039%, 1.9294117647%, 2%);
-  --bx-bg-surface: rgb(97.9529411765%, 98.0078431373%, 98.0784313725%);
-  --bx-bg-surface-alt: rgb(97.9529411765%, 98.0078431373%, 98.0784313725%);
-  --bx-bg-element: rgb(95.8823529412%, 95.9921568627%, 96.1568627451%);
-  --bx-bg-element-hover: rgb(89.7333333333%, 89.8431372549%, 90.0078431373%);
-  --bx-bg-element-active: rgb(83.2%, 83.3098039216%, 83.4745098039%);
-  --bx-bg-neutral: rgb(96.031372549%, 96.0862745098%, 96.1568627451%);
-  --bx-bg-neutral-hover: rgb(97.9529411765%, 98.0078431373%, 98.0784313725%);
-  --bx-bg-neutral-active: rgb(89.8823529412%, 89.937254902%, 90.0078431373%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -4694,15 +4697,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.1725490196%, 0.4392156863%, 0.8705882353%);
-  --bx-bg-surface: rgb(4.4%, 4.6666666667%, 5.0980392157%);
-  --bx-bg-surface-alt: rgb(9.0117647059%, 9.2784313725%, 9.7098039216%);
-  --bx-bg-element: rgb(14.7764705882%, 15.0431372549%, 15.4745098039%);
-  --bx-bg-element-hover: rgb(24.768627451%, 25.0352941176%, 25.4666666667%);
-  --bx-bg-element-active: rgb(31.6862745098%, 31.9529411765%, 32.3843137255%);
-  --bx-bg-neutral: rgb(9.0117647059%, 9.2784313725%, 9.7098039216%);
-  --bx-bg-neutral-hover: rgb(14.7764705882%, 15.0431372549%, 15.4745098039%);
-  --bx-bg-neutral-active: rgb(31.6862745098%, 31.9529411765%, 32.3843137255%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -4788,15 +4791,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(1.9137254902%, 1.8431372549%, 2%);
-  --bx-bg-surface: rgb(97.9921568627%, 97.9215686275%, 98.0784313725%);
-  --bx-bg-surface-alt: rgb(97.9921568627%, 97.9215686275%, 98.0784313725%);
-  --bx-bg-element: rgb(95.9607843137%, 95.8196078431%, 96.1568627451%);
-  --bx-bg-element-hover: rgb(89.8117647059%, 89.6705882353%, 90.0078431373%);
-  --bx-bg-element-active: rgb(83.2784313725%, 83.137254902%, 83.4745098039%);
-  --bx-bg-neutral: rgb(96.0705882353%, 96%, 96.1568627451%);
-  --bx-bg-neutral-hover: rgb(97.9921568627%, 97.9215686275%, 98.0784313725%);
-  --bx-bg-neutral-active: rgb(89.9215686275%, 89.8509803922%, 90.0078431373%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -4882,15 +4885,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.1725490196%, 0%, 0.4%);
-  --bx-bg-surface: rgb(4.4%, 4.2274509804%, 4.6274509804%);
-  --bx-bg-surface-alt: rgb(9.0117647059%, 8.8392156863%, 9.2392156863%);
-  --bx-bg-element: rgb(14.7764705882%, 14.6039215686%, 15.0039215686%);
-  --bx-bg-element-hover: rgb(24.768627451%, 24.5960784314%, 24.9960784314%);
-  --bx-bg-element-active: rgb(31.6862745098%, 31.5137254902%, 31.9137254902%);
-  --bx-bg-neutral: rgb(9.0117647059%, 8.8392156863%, 9.2392156863%);
-  --bx-bg-neutral-hover: rgb(14.7764705882%, 14.6039215686%, 15.0039215686%);
-  --bx-bg-neutral-active: rgb(31.6862745098%, 31.5137254902%, 31.9137254902%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -4976,15 +4979,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(2%, 1.937254902%, 1.8588235294%);
-  --bx-bg-surface: rgb(98.0784313725%, 98.0156862745%, 97.937254902%);
-  --bx-bg-surface-alt: rgb(98.0784313725%, 98.0156862745%, 97.937254902%);
-  --bx-bg-element: rgb(96.1568627451%, 96.0156862745%, 95.8196078431%);
-  --bx-bg-element-hover: rgb(90.0078431373%, 89.8666666667%, 89.6705882353%);
-  --bx-bg-element-active: rgb(83.4745098039%, 83.3333333333%, 83.137254902%);
-  --bx-bg-neutral: rgb(96.1568627451%, 96.0941176471%, 96.0156862745%);
-  --bx-bg-neutral-hover: rgb(98.0784313725%, 98.0156862745%, 97.937254902%);
-  --bx-bg-neutral-active: rgb(90.0078431373%, 89.9450980392%, 89.8666666667%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -5070,15 +5073,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.6666666667%, 0.1333333333%, 0.1333333333%);
-  --bx-bg-surface: rgb(4.8941176471%, 4.3607843137%, 4.3607843137%);
-  --bx-bg-surface-alt: rgb(9.5058823529%, 8.9725490196%, 8.9725490196%);
-  --bx-bg-element: rgb(15.2705882353%, 14.737254902%, 14.737254902%);
-  --bx-bg-element-hover: rgb(25.262745098%, 24.7294117647%, 24.7294117647%);
-  --bx-bg-element-active: rgb(32.1803921569%, 31.6470588235%, 31.6470588235%);
-  --bx-bg-neutral: rgb(9.5058823529%, 8.9725490196%, 8.9725490196%);
-  --bx-bg-neutral-hover: rgb(15.2705882353%, 14.737254902%, 14.737254902%);
-  --bx-bg-neutral-active: rgb(32.1803921569%, 31.6470588235%, 31.6470588235%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -5164,15 +5167,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(1.9843137255%, 1.8901960784%, 1.8823529412%);
-  --bx-bg-surface: rgb(98.062745098%, 97.968627451%, 97.9607843137%);
-  --bx-bg-surface-alt: rgb(98.062745098%, 97.968627451%, 97.9607843137%);
-  --bx-bg-element: rgb(96.1176470588%, 95.8823529412%, 95.8666666667%);
-  --bx-bg-element-hover: rgb(89.968627451%, 89.7333333333%, 89.7176470588%);
-  --bx-bg-element-active: rgb(83.4352941176%, 83.2%, 83.1843137255%);
-  --bx-bg-neutral: rgb(96.1411764706%, 96.0470588235%, 96.0392156863%);
-  --bx-bg-neutral-hover: rgb(98.062745098%, 97.968627451%, 97.9607843137%);
-  --bx-bg-neutral-active: rgb(89.9921568627%, 89.8980392157%, 89.8901960784%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -5258,15 +5261,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.6431372549%, 0.031372549%, 0.0078431373%);
-  --bx-bg-surface: rgb(4.8705882353%, 4.2588235294%, 4.2352941176%);
-  --bx-bg-surface-alt: rgb(9.4823529412%, 8.8705882353%, 8.8470588235%);
-  --bx-bg-element: rgb(15.2470588235%, 14.6352941176%, 14.6117647059%);
-  --bx-bg-element-hover: rgb(25.2392156863%, 24.6274509804%, 24.6039215686%);
-  --bx-bg-element-active: rgb(32.1568627451%, 31.5450980392%, 31.5215686275%);
-  --bx-bg-neutral: rgb(9.4823529412%, 8.8705882353%, 8.8470588235%);
-  --bx-bg-neutral-hover: rgb(15.2470588235%, 14.6352941176%, 14.6117647059%);
-  --bx-bg-neutral-active: rgb(32.1568627451%, 31.5450980392%, 31.5215686275%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -5352,15 +5355,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(1.9814901961%, 1.9968627451%, 1.9391372549%);
-  --bx-bg-surface: rgb(98.0599215686%, 98.0752941176%, 98.0175686275%);
-  --bx-bg-surface-alt: rgb(98.0599215686%, 98.0752941176%, 98.0175686275%);
-  --bx-bg-element: rgb(96.1013333333%, 96.1474509804%, 95.9742745098%);
-  --bx-bg-element-hover: rgb(89.9523137255%, 89.9984313725%, 89.825254902%);
-  --bx-bg-element-active: rgb(83.4189803922%, 83.4650980392%, 83.2919215686%);
-  --bx-bg-neutral: rgb(96.1383529412%, 96.1537254902%, 96.096%);
-  --bx-bg-neutral-hover: rgb(98.0599215686%, 98.0752941176%, 98.0175686275%);
-  --bx-bg-neutral-active: rgb(89.9893333333%, 90.0047058824%, 89.9469803922%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -5446,15 +5449,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.3689411765%, 0.4611764706%, 0.1148235294%);
-  --bx-bg-surface: rgb(4.5963921569%, 4.688627451%, 4.3422745098%);
-  --bx-bg-surface-alt: rgb(9.2081568627%, 9.3003921569%, 8.9540392157%);
-  --bx-bg-element: rgb(14.9728627451%, 15.0650980392%, 14.718745098%);
-  --bx-bg-element-hover: rgb(24.9650196078%, 25.057254902%, 24.7109019608%);
-  --bx-bg-element-active: rgb(31.8826666667%, 31.9749019608%, 31.6285490196%);
-  --bx-bg-neutral: rgb(9.2081568627%, 9.3003921569%, 8.9540392157%);
-  --bx-bg-neutral-hover: rgb(14.9728627451%, 15.0650980392%, 14.718745098%);
-  --bx-bg-neutral-active: rgb(31.8826666667%, 31.9749019608%, 31.6285490196%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
@@ -5539,15 +5542,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(2%, 1.9921568627%, 1.8980392157%);
-  --bx-bg-surface: rgb(98.0784313725%, 98.0705882353%, 97.9764705882%);
-  --bx-bg-surface-alt: rgb(98.0784313725%, 98.0705882353%, 97.9764705882%);
-  --bx-bg-element: rgb(96.1568627451%, 96.1411764706%, 95.7960784314%);
-  --bx-bg-element-hover: rgb(90.0078431373%, 89.9921568627%, 89.6470588235%);
-  --bx-bg-element-active: rgb(83.4745098039%, 83.4588235294%, 83.1137254902%);
-  --bx-bg-neutral: rgb(96.1568627451%, 96.1490196078%, 96.0549019608%);
-  --bx-bg-neutral-hover: rgb(98.0784313725%, 98.0705882353%, 97.9764705882%);
-  --bx-bg-neutral-active: rgb(90.0078431373%, 90%, 89.9058823529%);
+  --bx-bg-canvas: #ffffff;
+  --bx-bg-surface: #fafafa;
+  --bx-bg-surface-alt: #fafafa;
+  --bx-bg-element: #f5f5f5;
+  --bx-bg-element-hover: #e5e5e5;
+  --bx-bg-element-active: #d4d4d4;
+  --bx-bg-neutral: #f5f5f5;
+  --bx-bg-neutral-hover: #fafafa;
+  --bx-bg-neutral-active: #e5e5e5;
   --bx-text-heading: #171717;
   --bx-text-primary: #404040;
   --bx-text-secondary: #525252;
@@ -5632,15 +5635,15 @@ input.bx-slider:disabled {
   --bx-glass-text: var(--bx-text-primary);
   --bx-glass-edge: var(--bx-border-default);
   --bx-glass-accent: var(--bx-primary);
-  --bx-bg-canvas: rgb(0.4%, 0.368627451%, 0%);
-  --bx-bg-surface: rgb(4.6274509804%, 4.5960784314%, 4.2274509804%);
-  --bx-bg-surface-alt: rgb(9.2392156863%, 9.2078431373%, 8.8392156863%);
-  --bx-bg-element: rgb(15.0039215686%, 14.9725490196%, 14.6039215686%);
-  --bx-bg-element-hover: rgb(24.9960784314%, 24.9647058824%, 24.5960784314%);
-  --bx-bg-element-active: rgb(31.9137254902%, 31.8823529412%, 31.5137254902%);
-  --bx-bg-neutral: rgb(9.2392156863%, 9.2078431373%, 8.8392156863%);
-  --bx-bg-neutral-hover: rgb(15.0039215686%, 14.9725490196%, 14.6039215686%);
-  --bx-bg-neutral-active: rgb(31.9137254902%, 31.8823529412%, 31.5137254902%);
+  --bx-bg-canvas: #000000;
+  --bx-bg-surface: #0b0b0b;
+  --bx-bg-surface-alt: #171717;
+  --bx-bg-element: #262626;
+  --bx-bg-element-hover: #404040;
+  --bx-bg-element-active: #525252;
+  --bx-bg-neutral: #171717;
+  --bx-bg-neutral-hover: #262626;
+  --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
   --bx-text-secondary: #a1a1a1;
