@@ -15,7 +15,7 @@ npm start
 
 Open <http://localhost:8080>. The component catalogue links each component to its own demonstration and README. `/appearance` provides application-wide material controls and spatial-lighting and fade demonstrations. `/icon-catalog` provides searchable, paginated icons.
 
-The playground defaults to Graphite / Sky Blue (`#525252` / `#38bdf8`) when no saved palette is present; Reset returns to Graphite / Sky Blue. Saved palette preferences remain available.
+The playground defaults to Carbon / Cobalt (`#292a2d` / `#356fe8`) when no valid saved palette is present; Reset returns to Carbon / Cobalt.
 
 The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.
 
@@ -34,11 +34,11 @@ Each palette combines two tonal families. Choose one under **Palettes** in Appea
 
 | Palette | Anchors | `ng add --theme` value |
 | --- | --- | --- |
-| Graphite / Sky Blue | `#525252` / `#38bdf8` | `graphite-sky-blue` |
-| Azure / Coral | `#217eff` / `#f87763` | `azure-coral` |
+| Carbon / Cobalt | `#292a2d` / `#356fe8` | `carbon-cobalt` |
+| Azure / Ember | `#217eff` / `#d85a1a` | `azure-ember` |
 | Violet / Teal | `#6d00ff` / `#0d9488` | `violet-teal` |
 | Tangerine / Indigo | `#ff6900` / `#4f78f5` | `tangerine-indigo` |
-| Scarlet / Cyan | `#e3241b` / `#0891b2` | `scarlet-cyan` |
+| Brick Rose / Cyan | `#b64a50` / `#0891b2` | `brick-rose-cyan` |
 | Lime / Violet | `#c4f53d` / `#6842a6` | `lime-violet` |
 | Cyberpunk | `#3e5669` / `#e6da00` | `cyberpunk` |
 
@@ -46,13 +46,15 @@ Primary roles identify main actions, links and field focus. Accent roles identif
 
 Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground's Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.
 
+Carbon / Cobalt combines a deep neutral charcoal with a saturated cobalt-blue accent. Its dark appearance uses neutral off-white primary actions instead of a pale colored tint. Azure / Ember pairs blue with burnt orange, while Brick Rose / Cyan pairs a muted rose-red with cyan. Their dark action shades are tuned individually: Cobalt provides a clear blue accent, Ember stays orange, and Brick Rose stays deeper and more muted than the danger red. Status colors are independent of these palette families.
+
 ```ts
 const theme = inject(ThemingService);
 theme.setPalette('violet-teal');
 theme.setApplicationTheme('dark');
 ```
 
-Previous palette IDs (`white`, `blue`, `purple`, `orange`, `red`, `green`) and Sass theme variables remain compatibility aliases. Stored selections migrate to the paired IDs. High contrast overrides both expressive roles with contrast-first black/white values.
+Use the palette IDs above in `ThemingService.setPalette()` and `ng add --theme`. Sass exports follow the same names, such as `$carbon-cobalt-light-theme` and `$carbon-cobalt-dark-theme`. High contrast overrides both expressive roles with contrast-first black/white values.
 
 ## Global configuration through Blocks
 

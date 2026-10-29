@@ -1,4 +1,4 @@
-import{Ct as Sa,E as Cn,Jn as zo,N as E,Un as x,Vn as vu,_n as nn,in as h,k as De,sn as ie,vt as Rp,wn as qe,y as B,z as Go}from"./main-NYZXUFEE.js";var k={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{C as De,E,Jn as zo,N as Go,On as qe,Un as x,en as gu,et as Np,g as B,gt as Sa,rn as ie,tn as h,x as Cn,yn as nn}from"./main-7DJU4RBM.js";var k={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -7,7 +7,7 @@ import{Ct as Sa,E as Cn,Jn as zo,N as E,Un as x,Vn as vu,_n as nn,in as h,k as D
 npm start
 </code></pre>
 <p>Open <a href="http://localhost:8080">http://localhost:8080</a>. The component catalogue links each component to its own demonstration and README. <code>/appearance</code> provides application-wide material controls and spatial-lighting and fade demonstrations. <code>/icon-catalog</code> provides searchable, paginated icons.</p>
-<p>The playground defaults to Graphite / Sky Blue (<code>#525252</code> / <code>#38bdf8</code>) when no saved palette is present; Reset returns to Graphite / Sky Blue. Saved palette preferences remain available.</p>
+<p>The playground defaults to Carbon / Cobalt (<code>#292a2d</code> / <code>#356fe8</code>) when no valid saved palette is present; Reset returns to Carbon / Cobalt.</p>
 <p>The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.</p>
 <pre><code class="language-sh">npm run build:playground
 npm run build:blocks
@@ -25,14 +25,14 @@ npm run build:blocks
 </tr>
 </thead>
 <tbody><tr>
-<td>Graphite / Sky Blue</td>
-<td><code>#525252</code> / <code>#38bdf8</code></td>
-<td><code>graphite-sky-blue</code></td>
+<td>Carbon / Cobalt</td>
+<td><code>#292a2d</code> / <code>#356fe8</code></td>
+<td><code>carbon-cobalt</code></td>
 </tr>
 <tr>
-<td>Azure / Coral</td>
-<td><code>#217eff</code> / <code>#f87763</code></td>
-<td><code>azure-coral</code></td>
+<td>Azure / Ember</td>
+<td><code>#217eff</code> / <code>#d85a1a</code></td>
+<td><code>azure-ember</code></td>
 </tr>
 <tr>
 <td>Violet / Teal</td>
@@ -45,9 +45,9 @@ npm run build:blocks
 <td><code>tangerine-indigo</code></td>
 </tr>
 <tr>
-<td>Scarlet / Cyan</td>
-<td><code>#e3241b</code> / <code>#0891b2</code></td>
-<td><code>scarlet-cyan</code></td>
+<td>Brick Rose / Cyan</td>
+<td><code>#b64a50</code> / <code>#0891b2</code></td>
+<td><code>brick-rose-cyan</code></td>
 </tr>
 <tr>
 <td>Lime / Violet</td>
@@ -62,11 +62,12 @@ npm run build:blocks
 </tbody></table>
 <p>Primary roles identify main actions, links and field focus. Accent roles identify checked checkboxes, radios and switches, slider progress, selected options and supporting actions. This follows Material&#39;s use of distinct color roles for emphasis while keeping broad surfaces neutral. For example, <code>color=&quot;accent&quot;</code> selects the second tone on buttons and tabs; <code>text-accent</code> follows it on icons. Documentation uses the primary role and Code Examples uses the accent role. Success, warning, danger and information retain their status meanings across palettes.</p>
 <p>Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground&#39;s Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.</p>
+<p>Carbon / Cobalt combines a deep neutral charcoal with a saturated cobalt-blue accent. Its dark appearance uses neutral off-white primary actions instead of a pale colored tint. Azure / Ember pairs blue with burnt orange, while Brick Rose / Cyan pairs a muted rose-red with cyan. Their dark action shades are tuned individually: Cobalt provides a clear blue accent, Ember stays orange, and Brick Rose stays deeper and more muted than the danger red. Status colors are independent of these palette families.</p>
 <pre><code class="language-ts">const theme = inject(ThemingService);
 theme.setPalette(&#39;violet-teal&#39;);
 theme.setApplicationTheme(&#39;dark&#39;);
 </code></pre>
-<p>Previous palette IDs (<code>white</code>, <code>blue</code>, <code>purple</code>, <code>orange</code>, <code>red</code>, <code>green</code>) and Sass theme variables remain compatibility aliases. Stored selections migrate to the paired IDs. High contrast overrides both expressive roles with contrast-first black/white values.</p>
+<p>Use the palette IDs above in <code>ThemingService.setPalette()</code> and <code>ng add --theme</code>. Sass exports follow the same names, such as <code>$carbon-cobalt-light-theme</code> and <code>$carbon-cobalt-dark-theme</code>. High contrast overrides both expressive roles with contrast-first black/white values.</p>
 <h2>Global configuration through Blocks</h2>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
@@ -730,7 +731,7 @@ export class MyFeatureComponent {
 <h2>What does ng add do?</h2>
 <p>When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:</p>
 <ul>
-<li>Palette selection: Graphite / Sky Blue is the CLI default. Azure / Coral, Violet / Teal, Tangerine / Indigo, Scarlet / Cyan, Lime / Violet, and Cyberpunk are also available. Use <code>--theme=azure-coral</code> to select Azure / Coral.</li>
+<li>Palette selection: Carbon / Cobalt is the CLI default. Azure / Ember, Violet / Teal, Tangerine / Indigo, Brick Rose / Cyan, Lime / Violet, and Cyberpunk are also available. Use <code>--theme=azure-ember</code> to select Azure / Ember.</li>
 <li>Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.</li>
 <li>SCSS Injection: Intelligently locates your project&#39;s global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.</li>
 </ul>
@@ -743,19 +744,19 @@ export class MyFeatureComponent {
 
 @layer base {
     :root {
-        @include bx-theme($graphite-sky-blue-light-theme);
+        @include bx-theme($carbon-cobalt-light-theme);
     }
 
     [data-theme=&#39;dark&#39;] {
-        @include bx-theme($graphite-sky-blue-dark-theme);
+        @include bx-theme($carbon-cobalt-dark-theme);
     }
 }
 </code></pre>
 <h2>Palettes</h2>
 <p>Use paired palette IDs consistently in the CLI and <code>ThemingService.setPalette()</code>. For example:</p>
-<pre><code class="language-sh">ng add @filip.mazev/blocks --theme=azure-coral
+<pre><code class="language-sh">ng add @filip.mazev/blocks --theme=azure-ember
 </code></pre>
-<p>The Sass exports use the same names: <code>$azure-coral-light-theme</code> and <code>$azure-coral-dark-theme</code>. Graphite / Sky Blue is the installer default; the playground starts with Graphite / Sky Blue. Previous IDs and Sass names remain aliases.</p>
+<p>The Sass exports use the same names: <code>$azure-ember-light-theme</code> and <code>$azure-ember-dark-theme</code>. Carbon / Cobalt is the installer default; the playground starts with Carbon / Cobalt. Only the current palette IDs and Sass names are supported.</p>
 <p>Buttons and tabs accept <code>color=&quot;accent&quot;</code> for the second tone. Icons and custom components can use semantic tokens such as <code>text-accent</code>, <code>accent-subtle</code>, <code>on-accent</code>, and <code>border-accent</code>. Canvas backgrounds stay neutral; status roles keep their meaning. See <a href="appearance#palettes">the palette reference</a> for all seven pairs.</p>
 <h2>Appearance</h2>
 <p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ glassiness: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
@@ -1976,7 +1977,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Write a concise message with a clear outcome. Use a modal or an inline message when acknowledgement or a long interaction is required. Simple toast content shares the parent toast glass surface.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/simple-toast</code> for a working example and its current value or action result.</p>
-`};var w={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
+`};var w={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var q={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
 
@@ -2190,11 +2191,11 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
 @import '@filip.mazev/blocks/effects/effects.css';
 
 :root {
-  @include bx.bx-theme(bx.$azure-coral-light-theme);
+  @include bx.bx-theme(bx.$azure-ember-light-theme);
 }
 
 [data-theme='dark'] {
-  @include bx.bx-theme(bx.$azure-coral-dark-theme);
+  @include bx.bx-theme(bx.$azure-ember-dark-theme);
 }
 
 // Modal and toast surfaces use the shared semantic theme.
@@ -2280,7 +2281,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var T=class r{document=h(B);router=h(Cn);readmeContent=x(()=>{let e=this.path().replace(/^\/+/,``);return k[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=E.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=De({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&qe(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(zo(0,`div`,0)(1,`div`,1)(2,`span`),nn(3,`Documentation`),Go()(),Sa(4,`article`,2),Go()),t&2&&(ie(4),vu(`innerHTML`,o.readmeContent(),Rp))},styles:[`
+`};var T=class r{document=h(B);router=h(Cn);readmeContent=x(()=>{let e=this.path().replace(/^\/+/,``);return k[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=E.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=De({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&qe(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(zo(0,`div`,0)(1,`div`,1)(2,`span`),nn(3,`Documentation`),Go()(),Sa(4,`article`,2),Go()),t&2&&(ie(4),gu(`innerHTML`,o.readmeContent(),Np))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
@@ -2373,4 +2374,4 @@ export class ToastExample {
   padding-left: 1rem;
   border-left: 3px solid var(--%NS%bx-border-brand);
   color: var(--%NS%bx-text-secondary);
-}`]})};export{T as n,S as t};
+}`]})};export{q as n,T as t};
