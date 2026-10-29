@@ -65,14 +65,12 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   rim.setAttribute('aria-hidden', 'true');
   element.append(rim);
 
-  const environment = [doc.createElement('span'), doc.createElement('span')];
-  for (const node of environment) {
-    node.className = 'bx-glass-contribution bx-glass-environment';
-    node.style.opacity = '0';
-    rim.append(node);
-  }
+  const environment = doc.createElement('span');
+  environment.className = 'bx-glass-contribution bx-glass-environment';
+  rim.append(environment);
   let environmentImage = 'none';
-  let environmentIndex = 0;
+  const environmentLayers = new Map<number, string>();
+  const environmentColors = new Map<number, string>();
 
   const ambient = doc.createElement('span');
   ambient.className = 'bx-glass-ambient';
@@ -224,26 +222,38 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       element.style.setProperty('--bx-glass-lit-edge-left', edgeAt(0, 50));
     }
 
-    const ambientImage =
-      value.contributions
-        .filter((contribution) => contribution.ambient)
-        .map(
-          (contribution) =>
-            `radial-gradient(circle ${contribution.spread}px at ${contribution.x.toFixed(2)}% ${contribution.y.toFixed(2)}%, color-mix(in srgb, ${contribution.color} ${(contribution.edgeStrength * 100).toFixed(2)}%, transparent), transparent 75%)`
-        )
-        .join(', ') || 'none';
+    const activeEnvironment = new Set<number>();
+    for (const contribution of value.contributions) {
+      if (!contribution.ambient) continue;
+      const slot = Number(contribution.key.split(':').pop());
+      if (!Number.isInteger(slot) || slot < 0 || slot >= 16) continue;
+      activeEnvironment.add(slot);
+      const property = `--bx-glass-environment-color-${slot}`;
+      const color = `color-mix(in srgb, ${contribution.color} ${(contribution.edgeStrength * 100).toFixed(2)}%, transparent)`;
+      if (environmentColors.get(slot) !== color) {
+        environment.style.setProperty(property, color);
+        environmentColors.set(slot, color);
+      }
+      environmentLayers.set(
+        slot,
+        `radial-gradient(circle ${contribution.spread}px at ${contribution.x.toFixed(2)}% ${contribution.y.toFixed(2)}%, var(${property}), transparent 75%)`
+      );
+    }
+    for (const slot of environmentColors.keys()) {
+      if (!activeEnvironment.has(slot) && environmentColors.get(slot) !== 'transparent') {
+        environment.style.setProperty(`--bx-glass-environment-color-${slot}`, 'transparent');
+        environmentColors.set(slot, 'transparent');
+      }
+    }
+    const ambientImage = [...environmentLayers.values()].join(', ') || 'none';
 
     if (ambientImage !== environmentImage) {
       environmentImage = ambientImage;
-
-      const previous = environment[environmentIndex];
-      environmentIndex = 1 - environmentIndex;
-
-      const next = environment[environmentIndex];
-      next.style.backgroundImage = ambientImage;
-      next.style.opacity = '1';
-      previous.style.opacity = '0';
+      environment.style.backgroundImage = ambientImage;
     }
+    // Finish only environmental transitions when an already-lit element returns.
+    // During motion, typed colors retarget continuously from their rendered value.
+    if (value.immediate || reducedMotion) for (const animation of environment.getAnimations()) animation.finish();
 
     const contributions = value.contributions.filter((contribution) => !contribution.ambient);
     const active = new Set(contributions.map((contribution) => contribution.key));

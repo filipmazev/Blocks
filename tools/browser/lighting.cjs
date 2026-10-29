@@ -76,6 +76,144 @@ async function pageFor(t, canvas = false, mount = false) {
 const ambient = (page) =>
   page.evaluate(() => lighting.contributions.filter((light) => light.ambient));
 
+test('scrolling updates image lighting within three frames even during the sampling cooldown', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(async () => {
+    document.body.style.height = '2400px';
+    document.getElementById('left').remove();
+    document.getElementById('right').remove();
+    receiver.style.position = 'fixed';
+    const canvas = document.createElement('canvas');
+    canvas.width = 1000;
+    canvas.height = 1800;
+    const context = canvas.getContext('2d');
+    context.fillStyle = '#ff0000';
+    context.fillRect(0, 0, 1000, 600);
+    context.fillStyle = '#0000ff';
+    context.fillRect(0, 600, 1000, 1200);
+    const image = new Image();
+    image.src = canvas.toDataURL();
+    image.style.cssText = 'position:absolute;inset:0;width:1000px;height:1800px;pointer-events:none';
+    await image.decode();
+    document.body.prepend(image);
+  });
+  await page.waitForFunction(() => lighting.contributions.some(light => light.color.startsWith('rgb(255 0 0')));
+  const colors = await page.evaluate(async () => {
+    const colors = [];
+    // Start a fresh sample so subsequent scrolls must bypass the cooldown.
+    runtime.refreshGlassLighting(receiver);
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+    for (const top of [700, 0, 700, 0]) {
+      scrollTo(0, top);
+      for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+      colors.push(lighting.contributions.filter(light => light.ambient).map(light => light.color));
+    }
+    return colors;
+  });
+  for (let index = 0; index < colors.length; index++) {
+    const expected = index % 2 === 0 ? 'rgb(0 0 255' : 'rgb(255 0 0';
+    assert.ok(colors[index].length && colors[index].every(color => color.startsWith(expected)), JSON.stringify(colors));
+  }
+});
+
+test('offscreen receivers retain their last paint and return with current lighting without a fade', async (t) => {
+  const page = await pageFor(t, false, true);
+  const result = await page.evaluate(async () => {
+    document.body.style.height = '2400px';
+    const environment = receiver.querySelector('.bx-glass-environment');
+    const colors = () => [...environment.style].filter(property => property.startsWith('--bx-glass-environment-color-')).map(property => environment.style.getPropertyValue(property));
+    const previous = colors();
+    // Fully outside the viewport but inside the observer's optimization margin.
+    scrollTo(0, 400);
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+    const outside = colors();
+    scrollTo(0, 1100);
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+    document.getElementById('left').style.backgroundColor = '#00ff00';
+    scrollTo(0, 0);
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+    return {
+      previous, outside, returned: colors().join(','),
+      opacity: getComputedStyle(environment).opacity,
+      animations: environment.getAnimations().length,
+    };
+  });
+  assert.ok(result.previous.length);
+  assert.deepEqual(result.outside, result.previous);
+  assert.match(result.returned, /rgb\(0,? 255,? 0\)/);
+  assert.equal(result.opacity, '1');
+  assert.equal(result.animations, 0);
+});
+
+test('image lighting interpolates smoothly between cached raster pixels while scrolling', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(async () => {
+    document.body.style.height = '2000px';
+    document.getElementById('left').remove();
+    document.getElementById('right').remove();
+    receiver.style.cssText = 'position:fixed;left:300px;top:180px;width:100px;height:40px';
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 1000;
+    const context = canvas.getContext('2d');
+    context.fillStyle = '#ff0000';
+    context.fillRect(0, 0, 1000, 500);
+    context.fillStyle = '#0000ff';
+    context.fillRect(0, 500, 1000, 500);
+    const image = new Image();
+    image.src = canvas.toDataURL();
+    image.style.cssText = 'position:absolute;inset:0;width:1000px;height:1000px;pointer-events:none';
+    await image.decode();
+    document.body.prepend(image);
+  });
+  const colors = await page.evaluate(async () => {
+    const colors = [];
+    for (let top = 278; top <= 300; top += 2) {
+      scrollTo(0, top);
+      for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+      colors.push(lighting.contributions.find(light => light.key.endsWith(':4'))?.color);
+    }
+    return colors;
+  });
+  assert.ok(new Set(colors).size >= 10, JSON.stringify(colors));
+  const red = colors.map(color => Number(color.match(/^rgb\((\d+)/)[1]));
+  for (let index = 1; index < red.length; index++) assert.ok(Math.abs(red[index] - red[index - 1]) < 32, JSON.stringify(colors));
+});
+
+test('changing canvases update lighting throughout animation without repeating hit tests', async (t) => {
+  const page = await pageFor(t, true);
+  const before = await page.evaluate(() => ({ ...metrics }));
+  await page.evaluate(async () => {
+    for (let frame = 0; frame < 72; frame++) {
+      context.fillStyle = `rgb(${frame * 3} 200 120)`;
+      context.fillRect(0, 0, 1000, 600);
+      await new Promise(requestAnimationFrame);
+    }
+  });
+  const after = await page.evaluate(() => ({ ...metrics }));
+  assert.ok(after.lights - before.lights >= 24, JSON.stringify({ before, after }));
+  assert.equal(after.hits, before.hits);
+});
+
+test('environmental colors blend continuously while visible and finish promptly', async (t) => {
+  const page = await pageFor(t, false, true);
+  const result = await page.evaluate(async () => {
+    const environment = receiver.querySelector('.bx-glass-environment');
+    const property = [...environment.style].find(property => environment.style.getPropertyValue(property).includes('255, 0, 0'));
+    const before = getComputedStyle(environment).getPropertyValue(property);
+    document.getElementById('left').style.backgroundColor = '#00ff00';
+    runtime.refreshGlassLighting(receiver);
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+    return {
+      property, before, rendered: getComputedStyle(environment).getPropertyValue(property),
+      transitions: environment.getAnimations().filter(animation => animation.transitionProperty === property).length,
+    };
+  });
+  assert.equal(result.transitions, 1, JSON.stringify(result));
+  assert.notEqual(result.rendered, result.before);
+  await page.waitForTimeout(100);
+  assert.equal(await page.evaluate(() => receiver.querySelector('.bx-glass-environment').getAnimations().length), 0);
+});
+
 test('overlay fades use native animation, reverse continuously and clean up without frame style writes', async (t) => {
   const page = await pageFor(t);
   const result = await page.evaluate(async () => {
@@ -176,7 +314,7 @@ test('canvas preserves spatial colors; unchanged media does no receiver resampli
   const end = await page.evaluate(() => ({ ...metrics }));
   assert.equal(end.hits, start.hits);
   assert.equal(end.lights, start.lights);
-  assert.ok(end.pixels - start.pixels <= 2, JSON.stringify({ start, end }));
+  assert.ok(end.pixels - start.pixels <= 8, JSON.stringify({ start, end }));
 });
 
 test('hover, focus and explicit sources coexist above bounded ambient layers', async (t) => {
@@ -204,8 +342,8 @@ test('hover, focus and explicit sources coexist above bounded ambient layers', a
       (node) => node.style.backgroundImage,
     ),
   }));
-  assert.equal(structure.ambientNodes, 2);
-  assert.deepEqual(structure.keys.slice(0, 2), ['ambient', 'ambient']);
+  assert.equal(structure.ambientNodes, 1);
+  assert.equal(structure.keys[0], 'ambient');
   assert.ok(structure.semantic.some((image) => image.includes('rgb(255, 51, 0)')));
   assert.ok(structure.semantic.some((image) => image.includes('rgb(51, 85, 255)')));
   const before = await page.evaluate(() => ({ ...metrics }));

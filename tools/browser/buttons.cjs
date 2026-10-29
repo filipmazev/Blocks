@@ -11,8 +11,8 @@ before(async () => {
 });
 after(async () => browser?.close());
 
-async function pageFor(t, mode = 'dark') {
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, colorScheme: mode, reducedMotion: 'reduce' });
+async function pageFor(t, mode = 'dark', reducedMotion = 'reduce') {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, colorScheme: mode, reducedMotion });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   t.after(async () => {
@@ -22,8 +22,6 @@ async function pageFor(t, mode = 'dark') {
   page.setDefaultTimeout(10000);
   await page.goto(origin + '/appearance');
   await page.locator('.preview-icon-button[data-bx-surface]').first().waitFor();
-  // Sample settled tint independently of the user's motion preference.
-  await page.addStyleTag({ content: '.bx-btn { transition: none !important; }' });
   return page;
 }
 
@@ -41,6 +39,72 @@ const alpha = color => {
   return match ? Number(match[1]) : 1;
 };
 const backgrounds = (page, selector) => page.locator(selector).evaluateAll(elements => elements.map(element => getComputedStyle(element).backgroundColor));
+
+test('glassiness updates every visible surface in the input frame with motion enabled', async t => {
+  const page = await pageFor(t, 'dark', 'no-preference');
+  const samples = await page.getByRole('slider', { name: 'Glassiness', exact: true }).evaluate(async input => {
+    const samples = [];
+    for (const value of [0, 1, 0.2, 0.8, 0]) {
+      input.value = String(value);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      samples.push([...document.querySelectorAll('[data-bx-surface]')].filter(element => {
+        const rect = element.getBoundingClientRect();
+        return rect.width && rect.height && rect.bottom > 0 && rect.top < innerHeight;
+      }).map(element => {
+        const actual = getComputedStyle(element).backgroundColor;
+        // An unanimated clone provides the target color for custom material curves too.
+        const clone = element.cloneNode(false);
+        clone.style.setProperty('transition', 'none', 'important');
+        element.parentElement.append(clone);
+        const expected = getComputedStyle(clone).backgroundColor;
+        clone.remove();
+        return { element: element.className, actual, expected };
+      }));
+      await new Promise(requestAnimationFrame);
+    }
+    return samples;
+  });
+  assert.ok(samples.every(sample => sample.length > 10));
+  for (const sample of samples) for (const surface of sample) {
+    assert.equal(surface.actual, surface.expected, JSON.stringify(surface));
+  }
+  for (const component of ['input-field', 'select', 'checkbox', 'radio', 'slide-toggle']) {
+    await page.goto(origin + '/components/' + component);
+    await page.locator('.demo-stage [data-bx-surface]').first().waitFor();
+    const transitions = await page.locator('.demo-stage [data-bx-surface]').evaluateAll(elements =>
+      elements.map(element => {
+        const style = getComputedStyle(element);
+        return { element: element.className, transition: style.transitionProperty, durations: style.transitionDuration };
+      }),
+    );
+    assert.ok(transitions.every(({ transition, durations }) => !/background|all/.test(transition) || durations.split(',').every(duration => parseFloat(duration) === 0)), JSON.stringify(transitions));
+  }
+});
+
+test('article controls keep receiving image colors during continuous nested scrolling', async t => {
+  const page = await pageFor(t, 'dark', 'no-preference');
+  await page.locator('.preview-reader').dispatchEvent('pointerdown');
+  await page.waitForTimeout(300);
+  const changes = await page.evaluate(async () => {
+    const reader = document.querySelector('.preview-reader');
+    const environments = [...document.querySelectorAll('.preview-tools .bx-glass-environment')];
+    const previous = environments.map(element => element.style.cssText);
+    const changes = environments.map(() => 0);
+    for (let frame = 0; frame < 90; frame++) {
+      reader.scrollTop = frame * 3;
+      await new Promise(requestAnimationFrame);
+      environments.forEach((element, index) => {
+        if (element.style.cssText !== previous[index]) {
+          changes[index]++;
+          previous[index] = element.style.cssText;
+        }
+      });
+    }
+    return changes;
+  });
+  assert.equal(changes.length, 4);
+  assert.ok(changes.every(count => count >= 20), JSON.stringify(changes));
+});
 
 test('circular and tonal glass buttons keep responding below 30% in light and dark modes', async t => {
   for (const mode of ['light', 'dark']) {

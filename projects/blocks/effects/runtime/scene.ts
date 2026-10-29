@@ -16,6 +16,8 @@ export interface LightContribution {
   spread?: number;
 }
 export interface Lighting {
+  /** First paint and viewport re-entry already have a current sample and must not fade in. */
+  immediate?: boolean;
   x: number;
   y: number;
   strength: number;
@@ -45,6 +47,8 @@ interface Entry {
   visible: boolean;
   bounds?: DOMRect;
   lastLighting?: Lighting;
+  resuming?: boolean;
+  painted?: boolean;
 }
 interface SceneEntry {
   id: number;
@@ -213,13 +217,31 @@ class SceneRuntime {
   };
 
   private refresh = () => {
-    this.ambient.invalidate();
-    for (const entry of this.entries.values()) {
-      entry.bounds = undefined;
-      entry.lastLighting = undefined;
-      if (entry.visible) this.queue.add(entry);
+    this.refreshEntries([...this.entries.values()]);
+  };
+
+  private scroll = (event: Event) => {
+    const root = event.target as HTMLElement | null;
+    if (root?.nodeType !== 1) {
+      this.refresh();
+      return;
     }
-    this.schedule();
+    const area = root.getBoundingClientRect();
+    const nearby: Entry[] = [];
+    this.refreshEntries(
+      [...this.entries.values()].filter((entry) => {
+        if (!entry.visible) return false;
+        if (root.contains(entry.element)) return true;
+        const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+        // Prioritize controls over the scrolling pixels. Nearby surfaces still
+        // refresh, but must not crowd those controls out of every sample batch.
+        if (bounds.right > area.left && bounds.left < area.right && bounds.bottom > area.top && bounds.top < area.bottom) return true;
+        if (bounds.right >= area.left - 160 && bounds.left <= area.right + 160 && bounds.bottom >= area.top - 160 && bounds.top <= area.bottom + 160)
+          nearby.push(entry);
+        return false;
+      })
+    );
+    this.ambient.invalidate(nearby);
   };
 
   constructor(private doc: Document) {
@@ -244,11 +266,11 @@ class SceneRuntime {
           for (const record of records) {
             const entry = this.entries.get(record.target as HTMLElement);
             if (!entry) continue;
+            if (record.isIntersecting && !entry.visible) entry.resuming = true;
             entry.visible = record.isIntersecting;
-            this.ambient.invalidate(entry);
+            this.ambient.invalidate(entry, true);
             if (entry.visible) {
               entry.bounds = undefined;
-              entry.lastLighting = undefined;
               this.queue.add(entry);
             }
           }
@@ -351,7 +373,7 @@ class SceneRuntime {
     if (entry) this.updateSelected(entry);
     this.updateEmitter();
     if (entry) {
-      this.ambient.invalidate(entry);
+      this.ambient.invalidate(entry, true);
       entry.bounds = undefined;
       entry.lastLighting = undefined;
       this.queue.add(entry);
@@ -386,6 +408,15 @@ class SceneRuntime {
         this.disconnectIfEmpty();
       }
     };
+  }
+
+  private refreshEntries(entries: Entry[]): void {
+    this.ambient.invalidate(entries, true);
+    for (const entry of entries) {
+      entry.bounds = undefined;
+      if (entry.visible) this.queue.add(entry);
+    }
+    this.schedule();
   }
 
   private isLightingDecoration(node: Node): boolean {
@@ -509,7 +540,7 @@ class SceneRuntime {
     this.doc.addEventListener('pointerleave', this.leave, { passive: true });
     this.view.addEventListener('blur', this.blur);
     this.view.addEventListener('resize', this.refresh, { passive: true });
-    this.doc.addEventListener('scroll', this.refresh, { passive: true, capture: true });
+    this.doc.addEventListener('scroll', this.scroll, { passive: true, capture: true });
     this.doc.addEventListener('load', this.assetLoad, true);
     this.doc.addEventListener('loadeddata', this.assetLoad, true);
     this.doc.addEventListener('play', this.assetLoad, true);
@@ -542,7 +573,7 @@ class SceneRuntime {
     this.doc.removeEventListener('pointerleave', this.leave);
     this.view.removeEventListener('blur', this.blur);
     this.view.removeEventListener('resize', this.refresh);
-    this.doc.removeEventListener('scroll', this.refresh, true);
+    this.doc.removeEventListener('scroll', this.scroll, true);
     this.doc.removeEventListener('load', this.assetLoad, true);
     this.doc.removeEventListener('loadeddata', this.assetLoad, true);
     this.doc.removeEventListener('play', this.assetLoad, true);
@@ -575,7 +606,13 @@ class SceneRuntime {
       const sceneData = new Map<SceneEntry, { lights: PointLight[]; reflections: Reflection[] }>();
       // Read only scenes used by this batch; avoid measuring offscreen or unrelated objects.
       const projections = batch
-        .filter((entry) => entry.visible && entry.element.isConnected)
+        .filter((entry) => {
+          if (!entry.visible || !entry.element.isConnected || (entry.resuming && this.ambient.isPending(entry))) return false;
+          const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+          const visible = bounds.bottom > 0 && bounds.right > 0 && bounds.top < this.view.innerHeight && bounds.left < this.view.innerWidth;
+          if (!visible) entry.resuming = true;
+          return visible;
+        })
         .map((entry) => {
           entry.bounds ??= entry.element.getBoundingClientRect();
           const origin = lightingOrigin(entry.element) as HTMLElement;
@@ -604,13 +641,17 @@ class SceneRuntime {
           }
           lights.push(...this.ambient.lights(entry));
           const reflections = (data?.reflections ?? []).filter((reflection) => visibility.boundary(reflection.source) === boundary);
-          return [entry, this.project(entry, lights, reflections, visibility)] as const;
+          const lighting = this.project(entry, lights, reflections, visibility);
+          lighting.immediate = entry.resuming || !entry.painted;
+          entry.resuming = false;
+          return [entry, lighting] as const;
         });
       for (const entry of batch) this.queue.delete(entry);
       for (const { emitter, color, exposed } of emissions) emitter.hooks.emit?.(exposed, color);
       for (const [entry, lighting] of projections) {
         if (this.sameLighting(entry.lastLighting, lighting)) continue;
         entry.lastLighting = lighting;
+        entry.painted = true;
         const before = entry.element.getAttribute('style');
         entry.hooks.light(lighting);
         const after = entry.element.getAttribute('style');

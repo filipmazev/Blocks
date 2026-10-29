@@ -14,6 +14,7 @@ interface VisualSource {
   color: string;
 }
 interface Sample {
+  bounds?: DOMRect;
   lights: PointLight[];
   media: Set<Element>;
   rects: Map<Element, DOMRect>;
@@ -24,14 +25,15 @@ interface RasterSample {
 }
 
 const sampleInterval = 180;
-const liveInterval = 500;
+const liveInterval = 16;
 const rasterSize = 32;
 
-/** Slow, shared environmental sampling stays independent of immediate semantic lighting. */
+/** Shared environmental sampling; geometry changes bypass the visual-source cooldown. */
 export class AmbientSampler {
   private samples = new Map<AmbientReceiver, Sample>();
   private dirty = new Set<AmbientReceiver>();
   private pending = new Set<AmbientReceiver>();
+  private urgent = new Set<AmbientReceiver>();
   private sources = new Set<Element>();
   private initialized = false;
   private media = new WeakMap<Element, RasterSample>();
@@ -72,18 +74,31 @@ export class AmbientSampler {
     this.samples.delete(entry);
     this.dirty.delete(entry);
     this.pending.delete(entry);
+    this.urgent.delete(entry);
     this.syncLive();
   }
 
   public lights(entry: AmbientReceiver): PointLight[] {
-    return this.samples.get(entry)?.lights ?? [];
+    const sample = this.samples.get(entry);
+    if (!sample) return [];
+    const dx = entry.bounds && sample.bounds ? entry.bounds.left - sample.bounds.left : 0;
+    const dy = entry.bounds && sample.bounds ? entry.bounds.top - sample.bounds.top : 0;
+    // Keep cached taps attached to a moving receiver until its next sample.
+    return dx || dy ? sample.lights.map((light) => ({ ...light, x: light.x + dx, y: light.y + dy })) : sample.lights;
   }
 
-  public invalidate(entry?: AmbientReceiver): void {
-    for (const receiver of entry ? [entry] : this.samples.keys()) {
-      if (receiver.visible && receiver.element.isConnected) this.dirty.add(receiver);
+  public invalidate(entry?: AmbientReceiver | AmbientReceiver[], immediate = false): void {
+    for (const receiver of entry ? (Array.isArray(entry) ? entry : [entry]) : this.samples.keys()) {
+      if (!receiver.visible || !receiver.element.isConnected) continue;
+      if (!this.pending.has(receiver)) this.dirty.add(receiver);
+      if (immediate) this.urgent.add(receiver);
     }
     this.resume();
+  }
+
+  /** Viewport re-entry waits for a current sample before replacing the cached paint. */
+  public isPending(entry: AmbientReceiver): boolean {
+    return this.urgent.has(entry);
   }
 
   public assetChanged(element: Element): void {
@@ -109,6 +124,13 @@ export class AmbientSampler {
       this.pending.clear();
       return;
     }
+    if (this.urgent.size) {
+      if (this.timer !== undefined) this.view.clearTimeout(this.timer);
+      this.timer = undefined;
+      for (const entry of this.dirty) this.pending.add(entry);
+      this.dirty.clear();
+      this.stopFrame ??= subscribeFrame(() => this.sampleBatch());
+    }
     if (this.dirty.size && this.timer === undefined && !this.stopFrame) {
       this.timer = this.view.setTimeout(
         () => {
@@ -133,6 +155,7 @@ export class AmbientSampler {
     this.samples.clear();
     this.dirty.clear();
     this.pending.clear();
+    this.urgent.clear();
     this.sources.clear();
     this.media = new WeakMap();
     this.initialized = false;
@@ -158,15 +181,22 @@ export class AmbientSampler {
     const rasterSamples = new Map<Element, ImageData | null>();
     const sources = [...this.sources];
     const completed: AmbientReceiver[] = [];
-    for (const entry of this.pending) {
+    // Scroll receivers stay ahead of deferred work even while new scroll events
+    // keep arriving. Set order rotates completed receivers behind waiting peers.
+    for (const entry of new Set([...this.urgent, ...this.pending])) {
       this.pending.delete(entry);
+      this.urgent.delete(entry);
       if (!entry.visible || !entry.element.isConnected || !this.samples.has(entry)) continue;
       entry.bounds = entry.element.getBoundingClientRect();
+      const bounds = entry.bounds;
+      // IntersectionObserver's margin keeps receivers warm, but hit tests outside
+      // the viewport have no pixels. Keep their last lighting until they return.
+      if (bounds.bottom <= 0 || bounds.right <= 0 || bounds.top >= this.view.innerHeight || bounds.left >= this.view.innerWidth) continue;
       this.dependencies = new Set();
       const lights = this.environmentLights(entry, sources, rasterSamples, rects, visibility);
       const mediaRects = new Map<Element, DOMRect>();
       for (const source of this.dependencies) mediaRects.set(source, this.rectFor(source, rects));
-      this.samples.set(entry, { lights, media: this.dependencies, rects: mediaRects });
+      this.samples.set(entry, { bounds, lights, media: this.dependencies, rects: mediaRects });
       completed.push(entry);
       // A receiver is atomic. Yield between receivers rather than block a frame with a whole page.
       if (completed.length >= 4 || this.view.performance.now() - start >= 4) break;
@@ -175,6 +205,7 @@ export class AmbientSampler {
     for (const entry of completed) this.changed(entry);
     if (this.pending.size) return true;
     this.stopFrame = undefined;
+    this.nextSample = this.view.performance.now() + sampleInterval;
     this.resume();
     return false;
   }
@@ -184,6 +215,8 @@ export class AmbientSampler {
     for (const [entry, sample] of this.samples) {
       const motion = inheritedAttribute(entry.element, 'data-bx-reduced-motion');
       if (!entry.visible || !entry.element.isConnected || (motion === null ? this.motion.matches : motion === 'true')) continue;
+      const bounds = entry.bounds;
+      if (bounds && (bounds.bottom <= 0 || bounds.right <= 0 || bounds.top >= this.view.innerHeight || bounds.left >= this.view.innerWidth)) continue;
       for (const source of sample.media) {
         if (!source.isConnected || !/^(CANVAS|VIDEO)$/.test(source.tagName) || this.media.get(source)?.data === null) continue;
         if (source.tagName === 'VIDEO' && (source as HTMLVideoElement).paused) continue;
@@ -219,6 +252,7 @@ export class AmbientSampler {
           const sample = this.samples.get(entry);
           if (!sample || coverageChanged || this.dirty.has(entry) || this.pending.has(entry)) {
             this.dirty.add(entry);
+            this.urgent.add(entry);
             continue;
           }
           // Animation changes pixels, not the hit-test stack. Reuse the source bindings and
@@ -234,14 +268,14 @@ export class AmbientSampler {
         }
       }
       for (const entry of recolored) this.changed(entry);
-      this.liveDelay = changed ? liveInterval : Math.min(2000, this.liveDelay * 2);
+      this.liveDelay = changed ? liveInterval : Math.min(250, this.liveDelay * 2);
       this.resume();
     }, this.liveDelay);
   }
 
   private samePixels(first: ImageData, second: ImageData, alphaOnly = false): boolean {
     for (let index = alphaOnly ? 3 : 0; index < first.data.length; index += alphaOnly ? 4 : 1) {
-      if (first.data[index] >> 3 !== second.data[index] >> 3) return false;
+      if (alphaOnly ? first.data[index] >> 3 !== second.data[index] >> 3 : Math.abs(first.data[index] - second.data[index]) >= 2) return false;
     }
     return true;
   }
@@ -543,12 +577,30 @@ export class AmbientSampler {
       // A letterbox is the element's CSS background, not a stretched image edge.
       if (u < 0 || u > 1 || v < 0 || v > 1) return undefined;
     }
-    const px = Math.max(0, Math.min(data.width - 1, Math.floor(u * data.width)));
-    const py = Math.max(0, Math.min(data.height - 1, Math.floor(v * data.height)));
-    const offset = (py * data.width + px) * 4;
-    const alpha = data.data[offset + 3] / 255;
+    // Interpolate between texel centers. Nearest-neighbor taps on the shared
+    // downsample jumped between whole color blocks as an image scrolled.
+    const px = Math.max(0, Math.min(data.width - 1, u * data.width - 0.5));
+    const py = Math.max(0, Math.min(data.height - 1, v * data.height - 0.5));
+    const left = Math.floor(px),
+      top = Math.floor(py);
+    const right = Math.min(data.width - 1, left + 1),
+      bottom = Math.min(data.height - 1, top + 1);
+    const taps = [
+      [left, top, (1 - (px - left)) * (1 - (py - top))],
+      [right, top, (px - left) * (1 - (py - top))],
+      [left, bottom, (1 - (px - left)) * (py - top)],
+      [right, bottom, (px - left) * (py - top)]
+    ];
+    const channels = [0, 0, 0];
+    let alpha = 0;
+    for (const [x, y, weight] of taps) {
+      const offset = (y * data.width + x) * 4;
+      const coverage = (data.data[offset + 3] / 255) * weight;
+      alpha += coverage;
+      for (let channel = 0; channel < 3; channel++) channels[channel] += data.data[offset + channel] * coverage;
+    }
     if (alpha < 0.08) return undefined;
-    return `rgb(${data.data[offset]} ${data.data[offset + 1]} ${data.data[offset + 2]} / ${alpha.toFixed(2)})`;
+    return `rgb(${channels.map((channel) => Math.round(channel / alpha)).join(' ')} / ${alpha.toFixed(2)})`;
   }
 
   private gradientColorAt(image: string, bounds: DOMRect, x: number, y: number): string | undefined {
@@ -586,7 +638,10 @@ export class AmbientSampler {
       const v = (y - (bounds.top + bounds.height / 2)) / Math.max(1, bounds.height / 2);
       amount = Math.max(0, Math.min(1, Math.hypot(u, v) / Math.SQRT2));
     }
-    return colors[Math.min(colors.length - 1, Math.round(amount * (colors.length - 1)))];
+    const position = amount * (colors.length - 1);
+    const index = Math.min(colors.length - 1, Math.floor(position));
+    if (index === colors.length - 1 || position === index) return colors[index];
+    return `color-mix(in srgb, ${colors[index]} ${((1 - (position - index)) * 100).toFixed(2)}%, ${colors[index + 1]})`;
   }
 
   private isTransparent(color: string): boolean {

@@ -76,6 +76,126 @@
     pointer-events: none;
 }
 
+@property --bx-glass-environment-color-0 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-1 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-2 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-3 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-4 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-5 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-6 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-7 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-8 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-9 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-10 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-11 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-12 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-13 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-14 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+@property --bx-glass-environment-color-15 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+}
+
+.bx-glass-environment {
+    transition:
+        --bx-glass-environment-color-0 64ms linear,
+        --bx-glass-environment-color-1 64ms linear,
+        --bx-glass-environment-color-2 64ms linear,
+        --bx-glass-environment-color-3 64ms linear,
+        --bx-glass-environment-color-4 64ms linear,
+        --bx-glass-environment-color-5 64ms linear,
+        --bx-glass-environment-color-6 64ms linear,
+        --bx-glass-environment-color-7 64ms linear,
+        --bx-glass-environment-color-8 64ms linear,
+        --bx-glass-environment-color-9 64ms linear,
+        --bx-glass-environment-color-10 64ms linear,
+        --bx-glass-environment-color-11 64ms linear,
+        --bx-glass-environment-color-12 64ms linear,
+        --bx-glass-environment-color-13 64ms linear,
+        --bx-glass-environment-color-14 64ms linear,
+        --bx-glass-environment-color-15 64ms linear;
+}
+
+[data-bx-reduced-motion="true"] > .bx-glass-rim > .bx-glass-environment {
+    transition: none;
+}
+
 .bx-glass-rim {
     position: absolute;
     /* The runtime aligns this box with the host's border, including asymmetric borders. */
@@ -87,14 +207,6 @@
     box-sizing: border-box;
     display: none;
     opacity: var(--bx-glass-rim-visibility, 1);
-}
-
-.bx-glass-environment {
-    transition: opacity 180ms ease-out;
-}
-
-[data-bx-reduced-motion="true"] > .bx-glass-rim > .bx-glass-environment {
-    transition: none;
 }
 
 @supports (-webkit-mask-composite: xor) {

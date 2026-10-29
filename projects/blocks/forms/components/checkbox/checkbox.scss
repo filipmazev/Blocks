@@ -55,9 +55,7 @@
     border: 1px solid var(--bx-border-strong);
     border-radius: var(--bx-rounded-sm);
     color: var(--bx-text-primary);
-    transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease;
+    transition: border-color 0.15s ease;
 
     &.is-invalid {
         border-color: var(--bx-border-danger);

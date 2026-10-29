@@ -14,7 +14,6 @@
     background-color: var(--bx-bg-neutral);
     border-radius: radius(sm) radius(sm) 0 0;
     border-bottom: 1px solid var(--bx-border-strong);
-    transition: background-color 0.15s ease;
 
     &:hover:not(.is-disabled) {
         background-color: var(--bx-bg-neutral-hover);

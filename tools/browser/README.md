@@ -1,6 +1,6 @@
 # Browser regression scenarios
 
-`lighting.cjs` bundles the current framework-independent runtime in memory, serves a temporary local fixture and runs native browser regressions with Node's test runner. It covers spatial colors, proximity, ambient/semantic layering, checked-control emission, label hover, disabled controls, canvas caching, mutation coalescing, source removal, overlay boundaries, teardown, reduced motion, failed readbacks, image positioning and shadow-root media.
+`lighting.cjs` bundles the current framework-independent runtime in memory, serves a temporary local fixture and runs native browser regressions with Node's test runner. It covers spatial colors, proximity, ambient/semantic layering, checked-control emission, label hover, disabled controls, canvas caching, mutation coalescing, source removal, overlay boundaries, teardown, reduced motion, failed readbacks, image positioning and shadow-root media. Scrolling checks cover prompt resampling, interpolated image pixels, continuously changing canvases, short environmental color blends and retained lighting on viewport re-entry.
 
 Use an existing Playwright installation (the repository does not add a browser dependency):
 
@@ -28,7 +28,7 @@ nested scrollers, backdrops and top-layer contexts retain their existing strateg
 Playwright viewport resizing does not reproduce iOS Safari's browser chrome,
 keyboard or rubber-band compositor behavior; confirm those on an iPhone.
 
-Button glassiness regressions cover the complete slider range (including values below 30%), light and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions:
+Button glassiness regressions cover the complete slider range (including values below 30%), light and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions. With motion enabled, they also check immediate material updates across visible surfaces and sustained image-color sampling on all four article controls during nested scrolling.
 
 ```sh
 BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/buttons.cjs
