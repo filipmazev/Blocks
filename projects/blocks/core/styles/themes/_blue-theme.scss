@@ -1,5 +1,0 @@
-// Compatibility aliases. New applications should use the paired palette name.
-@use 'azure-coral-theme' as paired;
-
-$blue-light-theme: paired.$azure-coral-light-theme;
-$blue-dark-theme: paired.$azure-coral-dark-theme;

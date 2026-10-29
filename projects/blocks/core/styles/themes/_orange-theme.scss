@@ -1,5 +1,0 @@
-// Compatibility aliases. New applications should use the paired palette name.
-@use 'tangerine-indigo-theme' as paired;
-
-$orange-light-theme: paired.$tangerine-indigo-light-theme;
-$orange-dark-theme: paired.$tangerine-indigo-dark-theme;

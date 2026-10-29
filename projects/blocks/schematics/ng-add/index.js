@@ -1,19 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ngAdd = ngAdd;
-const LEGACY_PALETTES = {
-    white: 'graphite-sky-blue',
-    blue: 'azure-coral',
-    purple: 'violet-teal',
-    orange: 'tangerine-indigo',
-    red: 'scarlet-cyan',
-    green: 'lime-violet',
-};
 function ngAdd(options) {
     return (tree, context) => {
         var _a;
-        const selected = (_a = options.theme) !== null && _a !== void 0 ? _a : 'graphite-sky-blue';
-        const theme = Object.prototype.hasOwnProperty.call(LEGACY_PALETTES, selected) ? LEGACY_PALETTES[selected] : selected;
+        const theme = (_a = options.theme) !== null && _a !== void 0 ? _a : 'carbon-cobalt';
         injectStyles(tree, context, { theme });
         return tree;
     };
@@ -70,8 +61,8 @@ function injectStyles(tree, context, options) {
         context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
         return;
     }
-    const lightThemeVar = `$${(_f = options.theme) !== null && _f !== void 0 ? _f : 'graphite-sky-blue'}-light-theme`;
-    const darkThemeVar = `$${(_g = options.theme) !== null && _g !== void 0 ? _g : 'graphite-sky-blue'}-dark-theme`;
+    const lightThemeVar = `$${(_f = options.theme) !== null && _f !== void 0 ? _f : 'carbon-cobalt'}-light-theme`;
+    const darkThemeVar = `$${(_g = options.theme) !== null && _g !== void 0 ? _g : 'carbon-cobalt'}-dark-theme`;
     const blocksThemeSnippet = `
 @use '@filip.mazev/blocks' as *;
 
@@ -86,5 +77,5 @@ function injectStyles(tree, context, options) {
 }
 `;
     tree.overwrite(targetStylePath, blocksThemeSnippet + '\n' + content);
-    context.logger.info(`Successfully injected the ${(_h = options.theme) !== null && _h !== void 0 ? _h : 'graphite-sky-blue'} Blocks theme configuration into ${targetStylePath}.`);
+    context.logger.info(`Successfully injected the ${(_h = options.theme) !== null && _h !== void 0 ? _h : 'carbon-cobalt'} Blocks theme configuration into ${targetStylePath}.`);
 }

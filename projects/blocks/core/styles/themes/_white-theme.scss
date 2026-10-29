@@ -1,5 +1,0 @@
-// Compatibility aliases. New applications should use the paired palette name.
-@use 'graphite-sky-blue-theme' as paired;
-
-$white-light-theme: paired.$graphite-sky-blue-light-theme;
-$white-dark-theme: paired.$graphite-sky-blue-dark-theme;

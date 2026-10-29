@@ -1,5 +1,0 @@
-// Compatibility aliases. New applications should use the paired palette name.
-@use 'violet-teal-theme' as paired;
-
-$purple-light-theme: paired.$violet-teal-light-theme;
-$purple-dark-theme: paired.$violet-teal-dark-theme;

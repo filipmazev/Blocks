@@ -1,23 +1,12 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 
-const LEGACY_PALETTES = {
-  white: 'graphite-sky-blue',
-  blue: 'azure-coral',
-  purple: 'violet-teal',
-  orange: 'tangerine-indigo',
-  red: 'scarlet-cyan',
-  green: 'lime-violet'
-} as const;
-
 export interface NgAddOptions {
-  theme?:
-    'graphite-sky-blue' | 'azure-coral' | 'violet-teal' | 'tangerine-indigo' | 'scarlet-cyan' | 'lime-violet' | 'cyberpunk' | keyof typeof LEGACY_PALETTES;
+  theme?: 'carbon-cobalt' | 'azure-ember' | 'violet-teal' | 'tangerine-indigo' | 'brick-rose-cyan' | 'lime-violet' | 'cyberpunk';
 }
 
 export function ngAdd(options: NgAddOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    const selected = options.theme ?? 'graphite-sky-blue';
-    const theme = Object.prototype.hasOwnProperty.call(LEGACY_PALETTES, selected) ? LEGACY_PALETTES[selected as keyof typeof LEGACY_PALETTES] : selected;
+    const theme = options.theme ?? 'carbon-cobalt';
     injectStyles(tree, context, { theme });
     return tree;
   };
@@ -87,8 +76,8 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
     return;
   }
 
-  const lightThemeVar = `$${options.theme ?? 'graphite-sky-blue'}-light-theme`;
-  const darkThemeVar = `$${options.theme ?? 'graphite-sky-blue'}-dark-theme`;
+  const lightThemeVar = `$${options.theme ?? 'carbon-cobalt'}-light-theme`;
+  const darkThemeVar = `$${options.theme ?? 'carbon-cobalt'}-dark-theme`;
 
   const blocksThemeSnippet = `
 @use '@filip.mazev/blocks' as *;
@@ -105,5 +94,5 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
 `;
 
   tree.overwrite(targetStylePath, blocksThemeSnippet + '\n' + content);
-  context.logger.info(`Successfully injected the ${options.theme ?? 'graphite-sky-blue'} Blocks theme configuration into ${targetStylePath}.`);
+  context.logger.info(`Successfully injected the ${options.theme ?? 'carbon-cobalt'} Blocks theme configuration into ${targetStylePath}.`);
 }

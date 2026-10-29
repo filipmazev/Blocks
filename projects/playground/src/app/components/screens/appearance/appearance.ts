@@ -53,7 +53,7 @@ theme.setAppearance({ reducedTransparency: true });
 
   protected reset(): void {
     this.theme.resetAppearance();
-    this.theme.setPalette('graphite-sky-blue');
+    this.theme.setPalette('carbon-cobalt');
     this.theme.setHighContrast(false);
     this.a11y.setReducedMotion(null);
   }

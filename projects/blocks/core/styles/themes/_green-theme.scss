@@ -1,5 +1,0 @@
-// Compatibility aliases. New applications should use the paired palette name.
-@use 'lime-violet-theme' as paired;
-
-$green-light-theme: paired.$lime-violet-light-theme;
-$green-dark-theme: paired.$lime-violet-dark-theme;

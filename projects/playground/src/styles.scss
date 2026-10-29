@@ -7,7 +7,7 @@
 }
 
 :root {
-    @include bx-theme($graphite-sky-blue-light-theme);
+    @include bx-theme($carbon-cobalt-light-theme);
 
     --mobile-header-height: 60px;
 
@@ -15,30 +15,27 @@
 }
 
 [data-theme='dark'] {
-    @include bx-theme($graphite-sky-blue-dark-theme);
+    @include bx-theme($carbon-cobalt-dark-theme);
 
     color-scheme: dark;
 }
 
-.theme-white,
-.theme-graphite-sky-blue {
-    @include bx-theme($graphite-sky-blue-light-theme);
+.theme-carbon-cobalt {
+    @include bx-theme($carbon-cobalt-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($graphite-sky-blue-dark-theme);
+        @include bx-theme($carbon-cobalt-dark-theme);
     }
 }
 
-.theme-blue,
-.theme-azure-coral {
-    @include bx-theme($azure-coral-light-theme);
+.theme-azure-ember {
+    @include bx-theme($azure-ember-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($azure-coral-dark-theme);
+        @include bx-theme($azure-ember-dark-theme);
     }
 }
 
-.theme-purple,
 .theme-violet-teal {
     @include bx-theme($violet-teal-light-theme);
 
@@ -47,7 +44,6 @@
     }
 }
 
-.theme-orange,
 .theme-tangerine-indigo {
     @include bx-theme($tangerine-indigo-light-theme);
 
@@ -56,16 +52,14 @@
     }
 }
 
-.theme-red,
-.theme-scarlet-cyan {
-    @include bx-theme($scarlet-cyan-light-theme);
+.theme-brick-rose-cyan {
+    @include bx-theme($brick-rose-cyan-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($scarlet-cyan-dark-theme);
+        @include bx-theme($brick-rose-cyan-dark-theme);
     }
 }
 
-.theme-green,
 .theme-lime-violet {
     @include bx-theme($lime-violet-light-theme);
 

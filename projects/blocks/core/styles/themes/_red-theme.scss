@@ -1,5 +1,0 @@
-// Compatibility aliases. New applications should use the paired palette name.
-@use 'scarlet-cyan-theme' as paired;
-
-$red-light-theme: paired.$scarlet-cyan-light-theme;
-$red-dark-theme: paired.$scarlet-cyan-dark-theme;

@@ -1,0 +1,4 @@
+@use '../theme-engine' as *;
+
+$azure-ember-light-theme: make-light-theme('azure', 'ember');
+$azure-ember-dark-theme: make-dark-theme('azure', 'ember');

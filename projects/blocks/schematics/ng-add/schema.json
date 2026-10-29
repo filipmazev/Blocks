@@ -8,31 +8,25 @@
             "type": "string",
             "description": "Select a Blocks palette for your UI.",
             "enum": [
-                "graphite-sky-blue",
-                "azure-coral",
+                "carbon-cobalt",
+                "azure-ember",
                 "violet-teal",
                 "tangerine-indigo",
-                "scarlet-cyan",
+                "brick-rose-cyan",
                 "lime-violet",
-                "cyberpunk",
-                "white",
-                "blue",
-                "purple",
-                "orange",
-                "red",
-                "green"
+                "cyberpunk"
             ],
             "x-prompt": {
                 "message": "Which palette would you like to use?",
                 "type": "list",
                 "items": [
                     {
-                        "value": "graphite-sky-blue",
-                        "label": "Graphite / Sky Blue"
+                        "value": "carbon-cobalt",
+                        "label": "Carbon / Cobalt"
                     },
                     {
-                        "value": "azure-coral",
-                        "label": "Azure / Coral"
+                        "value": "azure-ember",
+                        "label": "Azure / Ember"
                     },
                     {
                         "value": "violet-teal",
@@ -43,8 +37,8 @@
                         "label": "Tangerine / Indigo"
                     },
                     {
-                        "value": "scarlet-cyan",
-                        "label": "Scarlet / Cyan"
+                        "value": "brick-rose-cyan",
+                        "label": "Brick Rose / Cyan"
                     },
                     {
                         "value": "lime-violet",
@@ -56,7 +50,7 @@
                     }
                 ]
             },
-            "default": "graphite-sky-blue"
+            "default": "carbon-cobalt"
         }
     }
 }

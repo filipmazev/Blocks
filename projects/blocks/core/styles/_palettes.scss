@@ -180,28 +180,72 @@ $hc-yellow: #e4d500;
 $hc-cyan: #00f3f3;
 $hc-red: #ff0000;
 $hc-green: #00ff00;
-$graphite-palette: _tonal-palette(#525252) !default;
-$sky-blue-palette: _tonal-palette(#38bdf8) !default;
-$azure-palette: $blue-palette !default;
-$coral-palette: _tonal-palette(#f87763) !default;
+
+// Tune the upper tones explicitly so dark actions retain their color character.
+$carbon-palette: map.merge(
+    _tonal-palette(#292a2d),
+    (
+        50: #fdfdfc,
+        100: #f7f7f5,
+        200: #efefed,
+        300: #e2e2e0,
+        400: #77797d,
+    )
+) !default;
+$cobalt-palette: map.merge(
+    _tonal-palette(#356fe8),
+    (
+        200: #abc5ff,
+        300: #6d9aff,
+        400: #4c82f2,
+    )
+) !default;
+$ember-palette: map.merge(
+    _tonal-palette(#d85a1a),
+    (
+        200: #f5a365,
+        300: #f27b35,
+        400: #e96926,
+    )
+) !default;
+$brick-rose-palette: map.merge(
+    _tonal-palette(#b64a50),
+    (
+        200: #e69ba4,
+        300: #d36b77,
+        400: #c55964,
+    )
+) !default;
+$azure-palette: map.merge(
+    $blue-palette,
+    (
+        300: #72a7ff,
+    )
+) !default;
 $violet-palette: $purple-palette !default;
 $teal-palette: _tonal-palette(#0d9488) !default;
 $tangerine-palette: $orange-palette !default;
 $indigo-palette: _tonal-palette(#4f78f5) !default;
-$scarlet-palette: $red-palette !default;
-$cyan-palette: _tonal-palette(#0891b2) !default;
+$cyan-palette: map.merge(
+    _tonal-palette(#0891b2),
+    (
+        200: #78d8e6,
+        300: #22b8d0,
+        400: #12a4bf,
+    )
+) !default;
 $lime-palette: _tonal-palette(#c4f53d) !default;
 $cool-violet-palette: _tonal-palette(#6842a6) !default;
 $all-palettes: (
-    'graphite': $graphite-palette,
-    'sky-blue': $sky-blue-palette,
+    'carbon': $carbon-palette,
+    'cobalt': $cobalt-palette,
+    'ember': $ember-palette,
+    'brick-rose': $brick-rose-palette,
     'azure': $azure-palette,
-    'coral': $coral-palette,
     'violet': $violet-palette,
     'teal': $teal-palette,
     'tangerine': $tangerine-palette,
     'indigo': $indigo-palette,
-    'scarlet': $scarlet-palette,
     'cyan': $cyan-palette,
     'lime': $lime-palette,
     'cool-violet': $cool-violet-palette,

@@ -2,11 +2,11 @@
 @import '@filip.mazev/blocks/effects/effects.css';
 
 :root {
-  @include bx.bx-theme(bx.$azure-coral-light-theme);
+  @include bx.bx-theme(bx.$azure-ember-light-theme);
 }
 
 [data-theme='dark'] {
-  @include bx.bx-theme(bx.$azure-coral-dark-theme);
+  @include bx.bx-theme(bx.$azure-ember-dark-theme);
 }
 
 // Modal and toast surfaces use the shared semantic theme.
