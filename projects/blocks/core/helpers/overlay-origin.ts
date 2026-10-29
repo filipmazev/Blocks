@@ -8,11 +8,36 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
   if (!view || !(strategy instanceof FlexibleConnectedPositionStrategy)) return () => {};
 
   const host = overlay.hostElement;
+  host.classList.add('bx-overlay-tracked');
   const native = view.CSS?.supports('position-anchor', '--bx-origin') && !!(origin.compareDocumentPosition(host) & Node.DOCUMENT_POSITION_FOLLOWING);
   const anchor = native ? `--bx-overlay-origin-${++nextAnchor}` : null;
   const originalAnchor = origin.style.getPropertyValue('anchor-name');
   const originalPriority = origin.style.getPropertyPriority('anchor-name');
-  if (anchor) {
+  const parent = host.parentElement;
+  let documentLayer: HTMLElement | undefined;
+  if (anchor && !overlay.getConfig().usePopover && !overlay.getConfig().hasBackdrop && parent?.classList.contains('cdk-overlay-container')) {
+    let documentOrigin = true;
+    for (let element: HTMLElement | null = origin; element; element = element.parentElement) {
+      const style = view.getComputedStyle(element);
+      const nestedScroller = element !== origin && element !== origin.ownerDocument.body && /auto|scroll|hidden/.test(`${style.overflowX} ${style.overflowY}`);
+      if (style.position === 'fixed' || style.position === 'sticky' || nestedScroller) {
+        documentOrigin = false;
+        break;
+      }
+    }
+    if (documentOrigin) {
+      // Keep page menus in the document's scrolling layer. A fixed ancestor
+      // requires WebKit to counter-scroll the menu during iOS toolbar changes
+      // and rubber-banding, which can lag behind the trigger's scroll layer.
+      documentLayer = origin.ownerDocument.createElement('div');
+      documentLayer.className = parent.className;
+      documentLayer.classList.add('bx-overlay-document-layer');
+      documentLayer.style.setProperty('--bx-overlay-layer-z-index', view.getComputedStyle(parent).zIndex);
+      parent.after(documentLayer);
+      documentLayer.append(host);
+    }
+  }
+  if (anchor && !documentLayer) {
     const names = view.getComputedStyle(origin).getPropertyValue('anchor-name').trim();
     origin.style.setProperty('anchor-name', names && names !== 'none' ? `${names}, ${anchor}` : anchor);
     host.style.setProperty('position-anchor', anchor);
@@ -25,7 +50,33 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
       return;
     }
     host.classList.remove('bx-overlay-anchored');
+    // CDK measures in viewport coordinates. Temporarily use its fixed containing
+    // block without reparenting the pane (which would blur a focused search).
+    documentLayer?.classList.remove('bx-overlay-document-layer');
+    const display = parent?.style.getPropertyValue('display');
+    const displayPriority = parent?.style.getPropertyPriority('display');
+    // CDK still measures its original container, which may now match :empty.
+    // Keep that viewport measurement valid, including iOS fixed-layer offsets.
+    if (documentLayer) parent?.style.setProperty('display', 'block');
     overlay.updatePosition();
+    if (documentLayer && parent) {
+      if (display) parent.style.setProperty('display', display, displayPriority);
+      else parent.style.removeProperty('display');
+    }
+    if (documentLayer) {
+      const target = overlay.overlayElement.getBoundingClientRect();
+      documentLayer.classList.add('bx-overlay-document-layer');
+      host.style.setProperty('--bx-overlay-anchor-top', '0px');
+      host.style.setProperty('--bx-overlay-anchor-left', '0px');
+      host.classList.add('bx-overlay-anchored');
+      // Measure the absolute containing block, including positioned bodies and
+      // document scroll. No anchor counter-scroll or scroll-time writes are
+      // needed when the trigger and menu already share the root scroller.
+      const zero = host.getBoundingClientRect();
+      host.style.setProperty('--bx-overlay-anchor-top', `${target.top - zero.top}px`);
+      host.style.setProperty('--bx-overlay-anchor-left', `${target.left - zero.left}px`);
+      return;
+    }
     const source = origin.getBoundingClientRect();
     const target = host.getBoundingClientRect();
     host.style.setProperty('--bx-overlay-anchor-top', `calc(anchor(top) + ${target.top - source.top}px)`);
@@ -55,5 +106,11 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
       if (originalAnchor) origin.style.setProperty('anchor-name', originalAnchor, originalPriority);
       else origin.style.removeProperty('anchor-name');
     }
+    if (documentLayer) {
+      // Restore CDK's parent before detach so its cached host can reopen.
+      if (host.parentElement === documentLayer) parent?.append(host);
+      documentLayer.remove();
+    }
+    host.classList.remove('bx-overlay-tracked');
   };
 }

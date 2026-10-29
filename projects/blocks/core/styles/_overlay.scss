@@ -1,4 +1,27 @@
+.bx-overlay-tracked,
+.bx-overlay-tracked > .cdk-overlay-pane {
+    transition: none !important;
+}
+
 .cdk-overlay-connected-position-bounding-box.bx-overlay-anchored {
     position: fixed !important;
     inset: var(--bx-overlay-anchor-top) auto auto var(--bx-overlay-anchor-left) !important;
+}
+
+.cdk-overlay-container.bx-overlay-document-layer {
+    position: static;
+    height: 0;
+
+    > .bx-overlay-anchored {
+        position: absolute !important;
+        width: max-content !important;
+        height: max-content !important;
+        z-index: var(--bx-overlay-layer-z-index);
+
+        > .cdk-overlay-pane {
+            position: relative !important;
+            inset: 0 auto auto 0 !important;
+            transform: none !important;
+        }
+    }
 }

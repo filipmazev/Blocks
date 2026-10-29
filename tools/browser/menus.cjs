@@ -12,9 +12,15 @@ before(async () => {
 });
 after(async () => browser?.close());
 
-async function pageFor(t, component, { fallback = false, reducedMotion = false } = {}) {
+async function pageFor(
+  t,
+  component,
+  { fallback = false, reducedMotion = false, mobile = false } = {},
+) {
   const page = await browser.newPage({
-    viewport: { width: 1440, height: 1000 },
+    viewport: mobile ? { width: 393, height: 852 } : { width: 1440, height: 1000 },
+    isMobile: mobile,
+    hasTouch: mobile,
     colorScheme: 'dark',
     reducedMotion: reducedMotion ? 'reduce' : 'no-preference',
   });
@@ -128,7 +134,14 @@ test('select uses an opaque container and follows document scrolling without pan
   await page.locator('.bx-select-trigger').click();
   await page.locator('.bx-overlay-anchored').waitFor();
   await opaque(page, '.bx-select-panel');
-  assert.equal(await page.locator('.bx-select-menu-container [data-bx-surface], .bx-select-menu-container .bx-glass-decoration').count(), 0);
+  assert.equal(
+    await page
+      .locator(
+        '.bx-select-menu-container [data-bx-surface], .bx-select-menu-container .bx-glass-decoration',
+      )
+      .count(),
+    0,
+  );
   assert.equal(await page.getByRole('option', { name: 'Skopje', selected: true }).count(), 1);
   assert.equal(await page.locator('.bx-select-trigger > .bx-glass-decoration').count(), 1);
   assert.equal(
@@ -321,4 +334,97 @@ test('select anchors work inside a native top-layer popover', async (t) => {
   aligned(await scrollAndMeasure(page, '.bx-select-trigger', true));
   await page.locator('.bx-select-menu-container button').filter({ hasText: 'Ohrid' }).click();
   await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+});
+
+for (const component of ['select', 'dropdown']) {
+  test(`${component} shares the mobile document scroll layer across reversals and viewport changes`, async (t) => {
+    const page = await pageFor(t, component, { mobile: true, reducedMotion: true });
+    const selector =
+      component === 'select' ? '.bx-select-trigger' : '.demo-stage button[aria-haspopup="menu"]';
+    const trigger = page.locator(selector);
+    await trigger.evaluate((element) =>
+      window.scrollBy(0, element.getBoundingClientRect().top - 220),
+    );
+    const documentHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    await trigger.tap();
+    await page.locator('.bx-overlay-anchored').waitFor();
+    const layer = await page.locator('.bx-overlay-anchored').evaluate((host) => ({
+      host: getComputedStyle(host).position,
+      container: getComputedStyle(host.parentElement).position,
+      topLayer: host.matches(':popover-open'),
+    }));
+    assert.deepEqual(layer, { host: 'absolute', container: 'static', topLayer: false });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollHeight), documentHeight);
+    const result = await scrollAndMeasure(page, selector);
+    aligned(result);
+    assert.ok(Math.abs(result.expected.y - 4) < 1, JSON.stringify(result.expected));
+    assert.equal(result.mutations, 0);
+    for (const height of [720, 852, 680, 852]) {
+      await page.setViewportSize({ width: 393, height });
+      await page.waitForTimeout(300);
+      aligned(await scrollAndMeasure(page, selector));
+      if (component === 'select') {
+        assert.equal(
+          await page
+            .locator('.bx-select-panel input')
+            .evaluate((input) => input === document.activeElement),
+          true,
+        );
+      }
+    }
+    await page.keyboard.press('Escape');
+    await page.locator('.cdk-overlay-pane').waitFor({ state: 'detached' });
+    assert.equal(await page.locator('.bx-overlay-document-layer').count(), 0);
+    await trigger.tap();
+    await page.locator('.bx-overlay-document-layer').waitFor({ state: 'attached' });
+    aligned(await scrollAndMeasure(page, selector));
+  });
+}
+
+test('document menus can grow again after filtering without blurring the search', async (t) => {
+  const page = await pageFor(t, 'select');
+  await page.locator('.bx-select-trigger').click();
+  const search = page.locator('.bx-select-panel input');
+  await search.fill('Ohr');
+  await page.waitForFunction(
+    () => document.querySelectorAll('.bx-select-menu-container button').length === 1,
+  );
+  const filteredHeight = await page
+    .locator('.bx-select-panel')
+    .evaluate((panel) => panel.clientHeight);
+  await search.fill('');
+  await page.waitForFunction(
+    () => document.querySelectorAll('.bx-select-menu-container button').length > 1,
+  );
+  assert.ok(
+    (await page.locator('.bx-select-panel').evaluate((panel) => panel.clientHeight)) >
+      filteredHeight,
+  );
+  assert.equal(await search.evaluate((input) => input === document.activeElement), true);
+});
+
+test('fixed triggers retain a fixed overlay and follow document scrolling', async (t) => {
+  const page = await pageFor(t, 'select', { mobile: true, reducedMotion: true });
+  await page.locator('bx-select').evaluate((element) => {
+    element.style.cssText = 'position:fixed;top:200px;left:30px;width:300px;z-index:150';
+  });
+  await page.locator('.bx-select-trigger').tap();
+  await page.locator('.bx-overlay-anchored').waitFor();
+  assert.equal(await page.locator('.bx-overlay-document-layer').count(), 0);
+  aligned(await scrollAndMeasure(page, '.bx-select-trigger'));
+});
+
+test('document positioning accounts for fixed-layer offsets and positioned bodies', async (t) => {
+  const page = await pageFor(t, 'select', { reducedMotion: true });
+  await page.addStyleTag({
+    content:
+      '.cdk-overlay-container { top: -24px; left: -12px; } body { position: relative; margin: 16px; }',
+  });
+  await page.locator('.bx-select-trigger').click();
+  await page.locator('.bx-overlay-anchored').waitFor();
+  const result = await scrollAndMeasure(page, '.bx-select-trigger');
+  assert.ok(Math.abs(result.expected.x) < 1, JSON.stringify(result.expected));
+  assert.ok(Math.abs(result.expected.y - 4) < 1, JSON.stringify(result.expected));
+  aligned(result);
+  assert.equal(result.mutations, 0);
 });

@@ -20,6 +20,14 @@ BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright BLOCKS_BROWSER=webkit node -
 
 `BLOCKS_PLAYGROUND_URL` defaults to `http://localhost:8080`.
 
+The menu suite also uses a mobile touch viewport to check scroll reversals,
+height changes while menus are open, search focus, filtering growth and cleanup
+on reopen. Ordinary page menus use document coordinates so root scrolling needs
+no JavaScript repositioning or native anchor counter-scroll; fixed/sticky origins,
+nested scrollers, backdrops and top-layer contexts retain their existing strategy.
+Playwright viewport resizing does not reproduce iOS Safari's browser chrome,
+keyboard or rubber-band compositor behavior; confirm those on an iPhone.
+
 Button glassiness regressions cover the complete slider range (including values below 30%), light and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions:
 
 ```sh
