@@ -18,15 +18,21 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`variant`: text, filled, tonal, icon, fab, mini-fab, extended-fab. `color`: primary, success, danger, info, warn, grayscale. `outlined`, `elevated`, `disabled`, and `interactive` control presentation and availability.
+`variant`: text, filled, tonal, icon, fab, mini-fab, extended-fab. `color`: primary, accent, success, danger, info, warn, grayscale. `outlined`, `elevated`, `disabled`, and `interactive` control presentation and availability.
+
+Use the active palette's second tone for supporting actions:
+
+```html
+<button bx-button variant="tonal" color="accent">Explore</button>
+```
 
 ## Appearance
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
-Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for `aria-pressed="true"`, `aria-selected="true"`, `aria-expanded="true"`, or a current `aria-current` value. Primary and grayscale buttons use the application's accent; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.
+Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for `aria-pressed="true"`, `aria-selected="true"`, `aria-expanded="true"`, or a current `aria-current` value. Primary and grayscale buttons use the primary palette role; accent buttons use the second tone; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.
 
-Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Fills keep a minimum tint for readable text while retaining translucency and surface lighting. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.
+Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.
 
 ```ts
 import { inject } from '@angular/core';

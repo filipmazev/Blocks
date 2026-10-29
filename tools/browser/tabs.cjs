@@ -220,7 +220,7 @@ test('individual tab colors, highlight overrides, panel text and both icons are 
     probe.remove();
     return getComputedStyle(element).color === expected;
   };
-  assert.equal(await details.evaluate(matchesToken, 'text-success'), true);
+  assert.equal(await details.evaluate(matchesToken, 'text-accent'), true);
   await list.getByRole('tab', { name: 'Activity', exact: true }).click();
   await selected(list, 'Activity');
   const activity = list.getByRole('tab', { name: 'Activity', exact: true });

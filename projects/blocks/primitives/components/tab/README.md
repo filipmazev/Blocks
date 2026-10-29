@@ -19,7 +19,7 @@ import { Tabs, Tab, TabContentDirective } from '@filip.mazev/blocks/primitives';
 
 `label` is required and accepts `ResolvableText`. `value` identifies selection and must be unique within its group; an omitted value is generated. `disabled` removes the tab from selection and arrow-key navigation.
 
-`color` chooses a semantic tab color. `textColor`, `highlightColor` and `contentColor` accept Blocks color tokens for the label, selected highlight/light and panel text. `icon` and `endIcon` add leading and trailing Blocks icons.
+`color` chooses a semantic palette role: `primary`, `accent`, `success`, `danger`, `info`, `warn`, or `grayscale`. The `accent` role follows the second tone of the active palette. `textColor`, `highlightColor` and `contentColor` accept Blocks color tokens for the label, selected highlight/light and panel text. `icon` and `endIcon` add leading and trailing Blocks icons.
 
 Use direct content for simple panels, or `ng-template bxTabContent` to create the contents only while selected. The Tabs component renders the header and accessible panel; `bx-tab` is the projected declaration.
 

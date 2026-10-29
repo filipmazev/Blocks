@@ -27,7 +27,9 @@ export class Button {
       this.variant() !== 'text' && this.interactive() && !this.disabled()
         ? this.color() === 'primary' || this.color() === 'grayscale'
           ? 'var(--bx-primary)'
-          : `var(--bx-text-${this.color()})`
+          : this.color() === 'accent'
+            ? 'var(--bx-accent)'
+            : `var(--bx-text-${this.color()})`
         : undefined
   }));
 

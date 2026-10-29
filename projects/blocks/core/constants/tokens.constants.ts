@@ -1,6 +1,33 @@
 import { SemanticColorToken } from '../types/theme.types';
 
-export const PALETTE_NAMES = ['blue', 'orange', 'purple', 'red', 'green', 'danger', 'success', 'information', 'neutral'] as const;
+export const PALETTE_NAMES = [
+  'primary',
+  'accent',
+  'graphite',
+  'sky-blue',
+  'azure',
+  'coral',
+  'violet',
+  'teal',
+  'tangerine',
+  'indigo',
+  'scarlet',
+  'cyan',
+  'lime',
+  'cool-violet',
+  'cyber-yellow',
+  'cyber-slate',
+  'blue',
+  'orange',
+  'purple',
+  'red',
+  'green',
+  'danger',
+  'warn',
+  'success',
+  'information',
+  'neutral'
+] as const;
 export const SHADE_NUMBERS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000] as const;
 
 export const TOKEN_PREFIX = 'bx';
@@ -21,6 +48,18 @@ export const SEMANTIC_PAIRS: Partial<Record<SemanticColorToken, SemanticColorTok
   'text-brand': 'bg-surface',
   'text-inverse': 'primary',
   'on-primary': 'primary',
+  'on-primary-hover': 'primary-hover',
+  'on-primary-active': 'primary-active',
+
+  accent: 'accent-subtle',
+  'accent-hover': 'on-accent-hover',
+  'accent-active': 'on-accent-active',
+  'accent-subtle': 'text-accent',
+  'on-accent': 'accent',
+  'on-accent-hover': 'accent-hover',
+  'on-accent-active': 'accent-active',
+  'text-accent': 'accent-subtle',
+  'border-accent': 'bg-surface',
 
   primary: 'primary-subtle',
   'primary-hover': 'on-primary',

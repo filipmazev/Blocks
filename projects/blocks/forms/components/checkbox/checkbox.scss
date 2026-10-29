@@ -67,6 +67,7 @@
     &.is-checked {
         background-color: var(--bx-primary);
         border-color: var(--bx-primary);
+        color: var(--bx-on-primary);
 
         &.is-invalid {
             background-color: var(--bx-bg-danger);
@@ -92,9 +93,9 @@ input:focus-visible ~ .bx-checkbox-box {
 
     &.is-checked {
         --bx-glass-surface: var(--bx-primary);
-        --bx-glass-min-opacity: 0.55;
+        --bx-glass-min-opacity: 1;
         --bx-glass-edge: var(--bx-border-brand);
-        --bx-glass-text: var(--bx-text-primary);
+        --bx-glass-text: var(--bx-on-primary);
     }
 
     &.is-invalid {

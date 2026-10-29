@@ -8,12 +8,12 @@
   </header>
 
   <section class="demo-section" aria-labelledby="preview-heading">
-    <div class="section-heading"><h2 id="preview-heading">Interactive example</h2><span>Uses your active theme</span></div>
+    <div class="section-heading"><h2 id="preview-heading">Interactive example</h2><span>Uses your active palette</span></div>
     <div class="demo-stage" bxSurface>
       @switch (entry().id) {
         @case ('button') {
           <div class="demo-stack">
-            <div class="demo-row"><button bx-button variant="filled" (click)="activate('Primary action')">Primary action</button><button bx-button variant="tonal" (click)="activate('Tonal action')">Tonal</button><button bx-button (click)="activate('Text action')">Text</button><button bx-button variant="filled" [disabled]="true">Disabled</button></div>
+            <div class="demo-row"><button bx-button variant="filled" (click)="activate('Primary action')">Primary action</button><button bx-button variant="tonal" color="accent" (click)="activate('Tonal action')">Tonal</button><button bx-button (click)="activate('Text action')">Text</button><button bx-button variant="filled" [disabled]="true">Disabled</button></div>
             <div class="demo-row"><button bx-button variant="tonal" color="success" (click)="activate('Success')">Success</button><button bx-button variant="tonal" color="warn" (click)="activate('Warning')">Warning</button><button bx-button variant="tonal" color="danger" (click)="activate('Delete')">Delete</button><button bx-button variant="fab" aria-label="Add item" (click)="activate('Add item')"><bx-icon name="plus" /></button></div>
           </div>
         }
@@ -50,7 +50,7 @@
               <bx-tab label="Overview" value="overview" icon="book-open">
                 <ng-template bxTabContent><p>Keep related information together while showing one panel at a time.</p><bx-input-field label="Project note" [formControl]="tabNote" /></ng-template>
               </bx-tab>
-              <bx-tab label="Details" value="details" color="success" icon="badge-check" endIcon="chevron-right" [disabled]="detailsDisabled()">
+              <bx-tab label="Details" value="details" color="accent" icon="badge-check" endIcon="chevron-right" [disabled]="detailsDisabled()">
                 <ng-template bxTabContent><p>Headers support arrow keys, Home and End. Panel content is created only when selected.</p></ng-template>
               </bx-tab>
               @if (showActivity()) {
@@ -88,7 +88,7 @@
           <div class="demo-stack"><bx-breadcrumbs [minimumBreadcrumbs]="1" /><p>This trail comes from the current route metadata. Select Components to navigate back.</p><a routerLink="/components/button">Navigate to Button</a></div>
         }
         @case ('icon') {
-          <div class="demo-stack"><div class="demo-row icon-row"><bx-icon name="sparkles" size="32" color="text-primary" [decorative]="false" ariaLabel="Highlights" /><bx-icon name="check-circle" size="32" color="text-success" /><bx-icon name="info" size="32" color="text-info" bgColor="auto" /><bx-icon name="triangle-alert" size="32" color="text-warn" /><bx-icon name="heart" size="40" color="text-danger" /></div><a routerLink="/icon-catalog">Browse the searchable icon catalog</a></div>
+          <div class="demo-stack"><div class="demo-row icon-row"><bx-icon name="sparkles" size="32" color="text-accent" [decorative]="false" ariaLabel="Highlights" /><bx-icon name="check-circle" size="32" color="text-success" /><bx-icon name="info" size="32" color="text-info" bgColor="auto" /><bx-icon name="triangle-alert" size="32" color="text-warn" /><bx-icon name="heart" size="40" color="text-danger" /></div><a routerLink="/icon-catalog">Browse the searchable icon catalog</a></div>
         }
         @case ('modal-banner') {
           <div class="demo-stack banner-preview">@if (bannerVisible()) { <bx-modal-banner [header]="{ text: 'Project settings', icon: { name: 'settings' } }" [showCloseButton]="true" (close)="bannerVisible.set(false); activate('Banner dismissed')" /> } @else { <button bx-button variant="tonal" (click)="bannerVisible.set(true)">Restore banner</button> }<button bx-button variant="filled" (click)="openModal()">See banner in a dialog</button></div>

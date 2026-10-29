@@ -12,12 +12,22 @@ $high-contrast-light-theme: validate-theme(
         'bg-neutral': $hc-white,
         'bg-neutral-hover': get-color-from-palette('neutral', 50),
         'bg-neutral-active': get-color-from-palette('neutral', 100),
-
         'primary': $hc-black,
         'primary-hover': $hc-black,
         'primary-active': $hc-black,
         'primary-subtle': $hc-white,
         'on-primary': $hc-white,
+        'on-primary-hover': $hc-white,
+        'on-primary-active': $hc-white,
+        'accent': $hc-black,
+        'accent-hover': $hc-black,
+        'accent-active': $hc-black,
+        'accent-subtle': $hc-white,
+        'on-accent': $hc-white,
+        'on-accent-hover': $hc-white,
+        'on-accent-active': $hc-white,
+        'text-accent': $hc-black,
+        'border-accent': $hc-black,
 
         'text-heading': $hc-black,
         'text-primary': $hc-black,
@@ -28,7 +38,6 @@ $high-contrast-light-theme: validate-theme(
         'text-success': get-color-from-palette('success', 800),
         'text-warn': get-color-from-palette('warn', 800),
         'text-danger': get-color-from-palette('danger', 700),
-
         'border-subtle': $hc-black,
         'border-default': $hc-black,
         'border-strong': $hc-black,
@@ -65,8 +74,8 @@ $high-contrast-light-theme: validate-theme(
         'scroll-bg': $hc-white,
         'scroll-thumb': $hc-black,
         'scroll-thumb-hover': get-color-from-palette('neutral', 700),
-
         'meta-brand-palette': 'neutral',
+        'meta-accent-palette': 'neutral',
     ),
     'high-contrast-light'
 ) !default;
@@ -81,12 +90,22 @@ $high-contrast-dark-theme: validate-theme(
         'bg-neutral': $hc-black,
         'bg-neutral-hover': get-color-from-palette('neutral', 1000),
         'bg-neutral-active': get-color-from-palette('neutral', 1000),
-
         'primary': $hc-white,
         'primary-hover': $hc-white,
         'primary-active': $hc-white,
         'primary-subtle': $hc-black,
         'on-primary': $hc-black,
+        'on-primary-hover': $hc-black,
+        'on-primary-active': $hc-black,
+        'accent': $hc-white,
+        'accent-hover': $hc-white,
+        'accent-active': $hc-white,
+        'accent-subtle': $hc-black,
+        'on-accent': $hc-black,
+        'on-accent-hover': $hc-black,
+        'on-accent-active': $hc-black,
+        'text-accent': $hc-white,
+        'border-accent': $hc-white,
 
         'text-heading': $hc-white,
         'text-primary': $hc-white,
@@ -134,8 +153,8 @@ $high-contrast-dark-theme: validate-theme(
         'scroll-bg': $hc-black,
         'scroll-thumb': $hc-white,
         'scroll-thumb-hover': get-color-from-palette('neutral', 300),
-
         'meta-brand-palette': 'neutral',
+        'meta-accent-palette': 'neutral',
     ),
     'high-contrast-dark'
 ) !default;
@@ -153,6 +172,7 @@ $high-contrast-dark-theme: validate-theme(
     [data-bx-surface],
     .bx-glass-material {
         background: var(--bx-glass-surface, var(--bx-bg-surface)) !important;
+        /* stylelint-disable-next-line property-no-vendor-prefix -- Required to disable glass in older Safari. */
         -webkit-backdrop-filter: none !important;
         backdrop-filter: none !important;
         box-shadow: none !important;

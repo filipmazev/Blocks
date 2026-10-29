@@ -1,6 +1,8 @@
 @use 'sass:map';
 @use 'sass:list';
 @use 'sass:string';
+@use 'sass:color';
+@use 'sass:math';
 @use 'palettes' as *;
 
 $required-theme-keys: (
@@ -18,6 +20,17 @@ $required-theme-keys: (
     'primary-active',
     'primary-subtle',
     'on-primary',
+    'on-primary-hover',
+    'on-primary-active',
+    'accent',
+    'accent-hover',
+    'accent-active',
+    'accent-subtle',
+    'on-accent',
+    'on-accent-hover',
+    'on-accent-active',
+    'text-accent',
+    'border-accent',
     'text-heading',
     'text-primary',
     'text-secondary',
@@ -58,7 +71,8 @@ $required-theme-keys: (
     'scroll-bg',
     'scroll-thumb',
     'scroll-thumb-hover',
-    'meta-brand-palette'
+    'meta-brand-palette',
+    'meta-accent-palette'
 );
 
 @function validate-theme($theme, $theme-name) {
@@ -79,147 +93,148 @@ $required-theme-keys: (
     @return $theme;
 }
 
-@function make-light-theme($surface-brand, $accent: $surface-brand, $overrides: ()) {
-    $base: (
-        'bg-canvas': #ffffff,
-        'bg-surface': #ffffff,
-        'bg-surface-alt': get-color-from-palette($surface-brand, 50),
-        'bg-element': get-color-from-palette('neutral', 100),
-        'bg-element-hover': get-color-from-palette($surface-brand, 200),
-        'bg-element-active': get-color-from-palette($surface-brand, 300),
-        'bg-neutral': get-color-from-palette('neutral', 100),
-        'bg-neutral-hover': get-color-from-palette('neutral', 50),
-        'bg-neutral-active': get-color-from-palette('neutral', 200),
-        'primary': get-color-from-palette($accent, 500),
-        'primary-hover': get-color-from-palette($accent, 600),
-        'primary-active': get-color-from-palette($accent, 700),
-        'primary-subtle': rgba(get-color-from-palette($accent, 300), 0.6),
-        'on-primary': get-color-from-palette('neutral', 100),
-        'text-heading': get-color-from-palette('neutral', 900),
-        'text-primary': get-color-from-palette('neutral', 700),
-        'text-secondary': get-color-from-palette('neutral', 500),
-        'text-brand': get-color-from-palette($accent, 700),
-        'text-inverse': get-color-from-palette('neutral', 100),
-        'text-info': get-color-from-palette('information', 700),
-        'text-warn': get-color-from-palette('warn', 700),
-        'text-success': get-color-from-palette('success', 700),
-        'text-danger': get-color-from-palette('danger', 700),
-        'border-subtle': get-color-from-palette('neutral', 200),
-        'border-default': get-color-from-palette('neutral', 300),
-        'border-strong': get-color-from-palette('neutral', 400),
-        'border-brand': get-color-from-palette($accent, 400),
-        'border-info': get-color-from-palette('information', 400),
-        'border-success': get-color-from-palette('success', 400),
-        'border-warn': get-color-from-palette('warn', 400),
-        'border-danger': get-color-from-palette('danger', 400),
-        'bg-info': get-color-from-palette('information', 100),
-        'bg-info-hover': get-color-from-palette('information', 200),
-        'bg-info-active': get-color-from-palette('information', 300),
-        'bg-info-disabled': get-color-from-palette('information', 50),
-        'bg-info-subtle': rgb(get-color-from-palette('information', 50), 0.95),
-        'bg-success': get-color-from-palette('success', 100),
-        'bg-success-hover': get-color-from-palette('success', 200),
-        'bg-success-active': get-color-from-palette('success', 300),
-        'bg-success-disabled': get-color-from-palette('success', 50),
-        'bg-success-subtle': rgb(get-color-from-palette('success', 50), 0.95),
-        'bg-warn': get-color-from-palette('warn', 100),
-        'bg-warn-hover': get-color-from-palette('warn', 200),
-        'bg-warn-active': get-color-from-palette('warn', 300),
-        'bg-warn-disabled': get-color-from-palette('warn', 50),
-        'bg-warn-subtle': rgb(get-color-from-palette('warn', 50), 0.95),
-        'bg-danger': get-color-from-palette('danger', 100),
-        'bg-danger-hover': get-color-from-palette('danger', 200),
-        'bg-danger-active': get-color-from-palette('danger', 300),
-        'bg-danger-disabled': get-color-from-palette('danger', 50),
-        'bg-danger-subtle': rgb(get-color-from-palette('danger', 50), 0.95),
-        'scroll-bg': get-color-from-palette($surface-brand, 100),
-        'scroll-thumb': linear-gradient(
-                278deg,
-                get-color-from-palette($accent, 300) -10.44%,
-                get-color-from-palette($accent, 400) 100%
-            ),
-        'scroll-thumb-hover': linear-gradient(
-                278deg,
-                get-color-from-palette($accent, 400) -10.44%,
-                get-color-from-palette($accent, 700) 100%
-            ),
-        'meta-brand-palette': $accent,
+/* stylelint-disable scss/at-function-pattern -- Underscores keep the Sass helpers private. */
+@function _luminance($value) {
+    $result: 0;
+    $weights: (
+        'red': 0.2126,
+        'green': 0.7152,
+        'blue': 0.0722,
     );
-    $merged-theme: map.merge($base, $overrides);
 
-    @return validate-theme($merged-theme, '#{$surface-brand}-#{$accent}-light');
+    @each $channel, $weight in $weights {
+        $part: math.div(color.channel($value, $channel, $space: rgb), 255);
+        /* stylelint-disable-next-line number-max-precision -- Preserve the exact sRGB linearization threshold. */
+        @if $part <= 0.04045 {
+            $part: math.div($part, 12.92);
+        } @else {
+            $part: math.pow(math.div($part + 0.055, 1.055), 2.4);
+        }
+
+        $result: $result + $part * $weight;
+    }
+
+    @return $result;
 }
 
-@function make-dark-theme($surface-brand, $accent: $surface-brand, $overrides: ()) {
-    $base: (
-        'bg-canvas': #000000,
-        'bg-surface': get-color-from-palette('neutral', 1000),
-        'bg-surface-alt': get-color-from-palette('neutral', 900),
-        'bg-element': get-color-from-palette('neutral', 800),
-        'bg-element-hover': get-color-from-palette($surface-brand, 700),
-        'bg-element-active': get-color-from-palette($surface-brand, 800),
-        'bg-neutral': get-color-from-palette('neutral', 900),
-        'bg-neutral-hover': get-color-from-palette('neutral', 800),
-        'bg-neutral-active': get-color-from-palette('neutral', 600),
-        'primary': get-color-from-palette($accent, 500),
-        'primary-hover': get-color-from-palette($accent, 400),
-        'primary-active': get-color-from-palette($accent, 300),
-        'primary-subtle': rgba(get-color-from-palette($accent, 700), 0.6),
-        'on-primary': #ffffff,
+@function _contrast($first, $second) {
+    $a: _luminance($first);
+    $b: _luminance($second);
 
-        'text-heading': #ffffff,
-        'text-primary': get-color-from-palette('neutral', 200),
-        'text-secondary': get-color-from-palette('neutral', 400),
-        'text-brand': get-color-from-palette($accent, 300),
-        'text-inverse': get-color-from-palette('neutral', 900),
-        'text-info': get-color-from-palette('information', 400),
-        'text-success': get-color-from-palette('success', 400),
-        'text-warn': get-color-from-palette('warn', 400),
-        'text-danger': get-color-from-palette('danger', 400),
-        'border-subtle': get-color-from-palette('neutral', 900),
-        'border-default': get-color-from-palette('neutral', 800),
-        'border-strong': get-color-from-palette('neutral', 700),
-        'border-brand': get-color-from-palette($accent, 600),
-        'border-info': get-color-from-palette('information', 400),
-        'border-success': get-color-from-palette('success', 400),
-        'border-warn': get-color-from-palette('warn', 400),
-        'border-danger': get-color-from-palette('danger', 400),
-        'bg-info': get-color-from-palette('information', 900),
-        'bg-info-hover': get-color-from-palette('information', 800),
-        'bg-info-active': get-color-from-palette('information', 700),
-        'bg-info-disabled': get-color-from-palette('information', 1000),
-        'bg-info-subtle': rgb(get-color-from-palette('information', 1000), 0.95),
-        'bg-success': get-color-from-palette('success', 900),
-        'bg-success-hover': get-color-from-palette('success', 800),
-        'bg-success-active': get-color-from-palette('success', 700),
-        'bg-success-disabled': get-color-from-palette('success', 1000),
-        'bg-success-subtle': rgb(get-color-from-palette('success', 1000), 0.95),
-        'bg-warn': get-color-from-palette('warn', 900),
-        'bg-warn-hover': get-color-from-palette('warn', 800),
-        'bg-warn-active': get-color-from-palette('warn', 700),
-        'bg-warn-disabled': get-color-from-palette('warn', 1000),
-        'bg-warn-subtle': rgb(get-color-from-palette('warn', 1000), 0.95),
-        'bg-danger': get-color-from-palette('danger', 900),
-        'bg-danger-hover': get-color-from-palette('danger', 800),
-        'bg-danger-active': get-color-from-palette('danger', 700),
-        'bg-danger-disabled': get-color-from-palette('danger', 1000),
-        'bg-danger-subtle': rgb(get-color-from-palette('danger', 1000), 0.95),
-        'scroll-bg': get-color-from-palette($surface-brand, 900),
-        'scroll-thumb': linear-gradient(
-                278deg,
-                get-color-from-palette($accent, 700) -10.44%,
-                get-color-from-palette($accent, 500) 100%
-            ),
-        'scroll-thumb-hover': linear-gradient(
-                278deg,
-                get-color-from-palette($accent, 500) -10.44%,
-                get-color-from-palette($accent, 400) 100%
-            ),
-        'meta-brand-palette': $accent,
+    @return math.div(math.max($a, $b) + 0.05, math.min($a, $b) + 0.05);
+}
+
+@function _on-color($background) {
+    $dark: #0b0b0b;
+
+    @if _contrast($dark, $background) < 4.5 {
+        $dark: #000000;
+    }
+
+    @if _contrast($dark, $background) >= _contrast(#ffffff, $background) {
+        @return $dark;
+    }
+
+    @return #ffffff;
+}
+
+@function _mode($dark, $light-value, $dark-value) {
+    @if $dark {
+        @return $dark-value;
+    }
+
+    @return $light-value;
+}
+
+@function _color-roles($palette, $role, $dark) {
+    $base: get-color-from-palette($palette, _mode($dark, 500, 300));
+    $hover: get-color-from-palette($palette, _mode($dark, 600, 200));
+    $active: get-color-from-palette($palette, _mode($dark, 700, 100));
+    $subtle: get-color-from-palette($palette, _mode($dark, 100, 900));
+    $text: get-color-from-palette($palette, _mode($dark, 800, 200));
+
+    @if _contrast($text, $subtle) < 4.5 {
+        $text: _on-color($subtle);
+    }
+
+    $text-key: 'text-accent';
+    $border-key: 'border-accent';
+
+    @if $role == 'primary' {
+        $text-key: 'text-brand';
+        $border-key: 'border-brand';
+    }
+
+    @return (
+        $role: $base,
+        '#{$role}-hover': $hover,
+        '#{$role}-active': $active,
+        '#{$role}-subtle': $subtle,
+        'on-#{$role}': _on-color($base),
+        'on-#{$role}-hover': _on-color($hover),
+        'on-#{$role}-active': _on-color($active),
+        $text-key: $text,
+        $border-key: get-color-from-palette($palette, _mode($dark, 800, 300))
     );
-    $merged-theme: map.merge($base, $overrides);
+}
 
-    @return validate-theme($merged-theme, '#{$surface-brand}-#{$accent}-dark');
+@function _make-theme($brand, $accent, $dark, $overrides) {
+    $base: (
+        'bg-canvas': _mode($dark, #ffffff, #000000),
+        'bg-surface': _mode($dark, #ffffff, get-color-from-palette('neutral', 1000)),
+        'bg-surface-alt': get-color-from-palette('neutral', _mode($dark, 50, 900)),
+        'bg-element': get-color-from-palette('neutral', _mode($dark, 100, 800)),
+        'bg-element-hover': get-color-from-palette('neutral', _mode($dark, 200, 700)),
+        'bg-element-active': get-color-from-palette('neutral', _mode($dark, 300, 600)),
+        'bg-neutral': get-color-from-palette('neutral', _mode($dark, 100, 900)),
+        'bg-neutral-hover': get-color-from-palette('neutral', _mode($dark, 50, 800)),
+        'bg-neutral-active': get-color-from-palette('neutral', _mode($dark, 200, 600)),
+        'text-heading': _mode($dark, get-color-from-palette('neutral', 900), #ffffff),
+        'text-primary': get-color-from-palette('neutral', _mode($dark, 700, 200)),
+        'text-secondary': get-color-from-palette('neutral', _mode($dark, 600, 400)),
+        'text-inverse': get-color-from-palette('neutral', _mode($dark, 100, 900)),
+        'border-subtle': get-color-from-palette('neutral', _mode($dark, 200, 900)),
+        'border-default': get-color-from-palette('neutral', _mode($dark, 300, 800)),
+        'border-strong': get-color-from-palette('neutral', _mode($dark, 400, 700)),
+        'scroll-bg': get-color-from-palette('neutral', _mode($dark, 100, 900)),
+        'scroll-thumb': get-color-from-palette($brand, _mode($dark, 700, 400)),
+        'scroll-thumb-hover': get-color-from-palette($brand, _mode($dark, 800, 300)),
+        'meta-brand-palette': $brand,
+        'meta-accent-palette': $accent,
+    );
+
+    // Status palettes stay independent of the two expressive palettes.
+    @each $status,
+        $palette
+            in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger')
+    {
+        $base: map.merge(
+            $base,
+            (
+                'text-#{$status}': get-color-from-palette($palette, _mode($dark, 700, 400)),
+                'border-#{$status}': get-color-from-palette($palette, 400),
+                'bg-#{$status}': get-color-from-palette($palette, _mode($dark, 100, 900)),
+                'bg-#{$status}-hover': get-color-from-palette($palette, _mode($dark, 200, 800)),
+                'bg-#{$status}-active': get-color-from-palette($palette, _mode($dark, 300, 700)),
+                'bg-#{$status}-disabled': get-color-from-palette($palette, _mode($dark, 50, 1000)),
+                'bg-#{$status}-subtle': get-color-from-palette($palette, _mode($dark, 50, 1000)),
+            )
+        );
+    }
+
+    $base: map.merge($base, _color-roles($brand, 'primary', $dark));
+    $base: map.merge($base, _color-roles($accent, 'accent', $dark));
+
+    @return validate-theme(map.merge($base, $overrides), '#{$brand}-#{$accent}');
+}
+
+/* stylelint-enable scss/at-function-pattern */
+@function make-light-theme($brand, $accent: $brand, $overrides: ()) {
+    @return _make-theme($brand, $accent, false, $overrides);
+}
+
+@function make-dark-theme($brand, $accent: $brand, $overrides: ()) {
+    @return _make-theme($brand, $accent, true, $overrides);
 }
 
 @mixin bx-theme($config) {
@@ -230,16 +245,14 @@ $required-theme-keys: (
     --bx-glass-accent: var(--bx-primary);
 
     @each $key, $value in $config {
-        @if $key != 'meta-brand-palette' {
+        @if string.index($key, 'meta-') != 1 {
             --bx-#{$key}: #{$value};
         }
+    }
 
-        @if $key == 'meta-brand-palette' {
-            $brand-palette: get-palette($value);
-
-            @each $shade, $color in $brand-palette {
-                --bx-color-primary-#{$shade}: #{$color};
-            }
+    @each $role, $key in ('primary': 'meta-brand-palette', 'accent': 'meta-accent-palette') {
+        @each $shade, $color in get-palette(map.get($config, $key)) {
+            --bx-color-#{$role}-#{$shade}: #{$color};
         }
     }
 }
@@ -260,7 +273,7 @@ $required-theme-keys: (
             border-color: var(--bx-#{$key});
             transition: border-color 0.2s ease-in-out;
         }
-    } @else if not string.index($key, 'scroll-') {
+    } @else if not string.index($key, 'scroll-') and string.index($key, 'meta-') != 1 {
         .bx-bg-#{$key} {
             background-color: var(--bx-#{$key});
             transition: background-color 0.2s ease-in-out;

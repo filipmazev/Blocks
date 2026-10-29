@@ -3,7 +3,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { DeviceTheme } from '../types/core.types';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { configureAppearance } from '@filip.mazev/blocks/effects/runtime';
-import { BxAppearanceConfig, DEFAULT_APPEARANCE_CONFIG, THEME_PALETTES, BxThemeId } from '../types/appearance.types';
+import { BxAppearanceConfig, DEFAULT_APPEARANCE_CONFIG, THEME_PALETTES, BxThemeId, LEGACY_THEME_IDS, LegacyBxThemeId } from '../types/appearance.types';
+import { resolveThemeId } from '../helpers/theme-functions';
 import { BxA11yService } from './bx-a11y.service';
 
 @Injectable({
@@ -15,7 +16,7 @@ export class ThemingService implements OnDestroy {
   private readonly _appearance = signal<BxAppearanceConfig>({ ...DEFAULT_APPEARANCE_CONFIG });
   public readonly appearance = this._appearance.asReadonly();
   public readonly palettes = THEME_PALETTES;
-  private readonly _palette = signal<BxThemeId>('white');
+  private readonly _palette = signal<BxThemeId>('graphite-sky-blue');
   public readonly palette = this._palette.asReadonly();
   public readonly paletteLabel = computed(() => this.palettes.find((item) => item.id === this.palette())?.label ?? this.palettes[0].label);
   private readonly _highContrast = signal(false);
@@ -46,7 +47,7 @@ export class ThemingService implements OnDestroy {
       this.restoreAppearance();
       const palette = this.readStored('theme-palette');
       const storedHighContrast = this.readStored('theme-high-contrast');
-      this.setPalette(this.palettes.some((item) => item.id === palette) ? (palette as BxThemeId) : 'white');
+      this.setPalette(resolveThemeId(palette) ?? 'graphite-sky-blue');
       this.setHighContrast(storedHighContrast === null ? palette === 'high-contrast' : storedHighContrast === 'true');
       this.appearanceController = configureAppearance(this.document.documentElement, { ...this.appearance(), reducedMotion: this.a11y.isReducedMotion() });
       if (storedTheme === 'dark' || storedTheme === 'light') {
@@ -71,11 +72,13 @@ export class ThemingService implements OnDestroy {
     }
   }
 
-  public setPalette(palette: BxThemeId): void {
-    if (!this.palettes.some((item) => item.id === palette)) return;
-    this._palette.set(palette);
-    for (const item of this.palettes) this.document.documentElement.classList.toggle(item.className, item.id === palette);
-    if (this.isBrowser) this.writeStored('theme-palette', palette);
+  public setPalette(palette: BxThemeId | LegacyBxThemeId): void {
+    const id = resolveThemeId(palette);
+    if (!id) return;
+    this._palette.set(id);
+    for (const legacy of Object.keys(LEGACY_THEME_IDS)) this.document.documentElement.classList.remove(`theme-${legacy}`);
+    for (const item of this.palettes) this.document.documentElement.classList.toggle(item.className, item.id === id);
+    if (this.isBrowser) this.writeStored('theme-palette', id);
   }
 
   public setHighContrast(enabled: boolean): void {

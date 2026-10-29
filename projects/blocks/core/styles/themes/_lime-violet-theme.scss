@@ -1,0 +1,4 @@
+@use '../theme-engine' as *;
+
+$lime-violet-light-theme: make-light-theme('lime', 'cool-violet');
+$lime-violet-dark-theme: make-dark-theme('lime', 'cool-violet');

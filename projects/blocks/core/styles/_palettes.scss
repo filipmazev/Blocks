@@ -1,4 +1,22 @@
 @use 'sass:map';
+@use 'sass:color';
+
+/* stylelint-disable-next-line scss/at-function-pattern -- The underscore keeps this Sass helper private. */
+@function _tonal-palette($anchor) {
+    @return (
+        50: color.mix(#ffffff, $anchor, 96%),
+        100: color.mix(#ffffff, $anchor, 88%),
+        200: color.mix(#ffffff, $anchor, 72%),
+        300: color.mix(#ffffff, $anchor, 52%),
+        400: color.mix(#ffffff, $anchor, 25%),
+        500: $anchor,
+        600: color.mix(#000000, $anchor, 15%),
+        700: color.mix(#000000, $anchor, 32%),
+        800: color.mix(#000000, $anchor, 52%),
+        900: color.mix(#000000, $anchor, 76%),
+        1000: color.mix(#000000, $anchor, 92%)
+    );
+}
 
 $blue-palette: (
     50: #eff6ff,
@@ -162,7 +180,31 @@ $hc-yellow: #e4d500;
 $hc-cyan: #00f3f3;
 $hc-red: #ff0000;
 $hc-green: #00ff00;
+$graphite-palette: _tonal-palette(#525252) !default;
+$sky-blue-palette: _tonal-palette(#38bdf8) !default;
+$azure-palette: $blue-palette !default;
+$coral-palette: _tonal-palette(#f87763) !default;
+$violet-palette: $purple-palette !default;
+$teal-palette: _tonal-palette(#0d9488) !default;
+$tangerine-palette: $orange-palette !default;
+$indigo-palette: _tonal-palette(#4f78f5) !default;
+$scarlet-palette: $red-palette !default;
+$cyan-palette: _tonal-palette(#0891b2) !default;
+$lime-palette: _tonal-palette(#c4f53d) !default;
+$cool-violet-palette: _tonal-palette(#6842a6) !default;
 $all-palettes: (
+    'graphite': $graphite-palette,
+    'sky-blue': $sky-blue-palette,
+    'azure': $azure-palette,
+    'coral': $coral-palette,
+    'violet': $violet-palette,
+    'teal': $teal-palette,
+    'tangerine': $tangerine-palette,
+    'indigo': $indigo-palette,
+    'scarlet': $scarlet-palette,
+    'cyan': $cyan-palette,
+    'lime': $lime-palette,
+    'cool-violet': $cool-violet-palette,
     'blue': $blue-palette,
     'orange': $orange-palette,
     'purple': $purple-palette,

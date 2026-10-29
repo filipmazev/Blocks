@@ -18,7 +18,7 @@ ng add @filip.mazev/blocks
 
 When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:
 
-* Theme selection: White is the CLI default; Blue, Purple, Orange, Red, Green and Cyberpunk are also available. Use `--theme=blue` for the Blue palette based on `#217eff`.
+* Palette selection: Graphite / Sky Blue is the CLI default. Azure / Coral, Violet / Teal, Tangerine / Indigo, Scarlet / Cyan, Lime / Violet, and Cyberpunk are also available. Use `--theme=azure-coral` to select Azure / Coral.
 * Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
 * SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.
 
@@ -37,15 +37,27 @@ Then, manually configure your styles.scss:
 
 @layer base {
     :root {
-        @include bx-theme($white-light-theme);
+        @include bx-theme($graphite-sky-blue-light-theme);
     }
 
     [data-theme='dark'] {
-        @include bx-theme($white-dark-theme);
+        @include bx-theme($graphite-sky-blue-dark-theme);
     }
 }
 ```
 
+
+## Palettes
+
+Use paired palette IDs consistently in the CLI and `ThemingService.setPalette()`. For example:
+
+```sh
+ng add @filip.mazev/blocks --theme=azure-coral
+```
+
+The Sass exports use the same names: `$azure-coral-light-theme` and `$azure-coral-dark-theme`. Graphite / Sky Blue is the installer default; the playground starts with Graphite / Sky Blue. Previous IDs and Sass names remain aliases.
+
+Buttons and tabs accept `color="accent"` for the second tone. Icons and custom components can use semantic tokens such as `text-accent`, `accent-subtle`, `on-accent`, and `border-accent`. Canvas backgrounds stay neutral; status roles keep their meaning. See [the palette reference](../../documentation/appearance/README.md#palettes) for all seven pairs.
 
 ## Appearance
 

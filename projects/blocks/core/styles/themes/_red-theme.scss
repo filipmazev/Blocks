@@ -1,4 +1,5 @@
-@use '../theme-engine' as *;
+// Compatibility aliases. New applications should use the paired palette name.
+@use 'scarlet-cyan-theme' as paired;
 
-$red-light-theme: make-light-theme('red');
-$red-dark-theme: make-dark-theme('red');
+$red-light-theme: paired.$scarlet-cyan-light-theme;
+$red-dark-theme: paired.$scarlet-cyan-dark-theme;

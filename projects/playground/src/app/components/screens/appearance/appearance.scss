@@ -96,6 +96,23 @@ legend,
     padding-inline: spacing(3);
 }
 
+.palette-swatches {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+
+    > span {
+        width: 0.875rem;
+        height: 0.875rem;
+        border: 1px solid var(--bx-border-default);
+        border-radius: 50%;
+
+        + span {
+            margin-inline-start: -0.25rem;
+        }
+    }
+}
+
 .glassiness-range {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -208,11 +225,9 @@ input[type='range']:disabled {
     .glassiness-controls {
         padding: spacing(4);
     }
-
 }
 
 .lab-layout > *,
 .implementation > * {
     min-width: 0;
 }
-

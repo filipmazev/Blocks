@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BLOCKS_VERSION } from '@filip.mazev/blocks';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -27,6 +27,7 @@ export class Home {
   private readonly wakeHint = viewChild(TooltipDirective);
 
   private readonly themingService = inject(ThemingService);
+  private readonly document = inject(DOCUMENT);
 
   protected readonly features: { title: string; description: string; icon: IconName; route: string }[] = [
     {
@@ -36,8 +37,8 @@ export class Home {
       route: '/appearance'
     },
     {
-      title: 'Your Blocks theme',
-      description: 'Existing semantic colors, spacing, radii, and palettes carry through every surface.',
+      title: 'Your Blocks palette',
+      description: 'Paired palettes, semantic colors, spacing, and radii carry through every surface.',
       icon: 'palette',
       route: '/components/button'
     },
@@ -53,40 +54,43 @@ export class Home {
     this.themingService.palette();
     const theme = this.themingService.activeTheme();
 
-    const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
+    const primaryColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
+    const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-color-accent-500');
     const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas');
 
     return {
       fxOrder: 'Ggr',
       stops: [
-        { color: accentColor.replace('#', ''), pos: 0 },
-        { color: bgColor.replace('#', ''), pos: 57 },
+        { color: bgColor.replace('#', ''), pos: 0 },
+        { color: primaryColor.replace('#', ''), pos: 38 },
+        { color: accentColor.replace('#', ''), pos: 42 },
+        { color: bgColor.replace('#', ''), pos: 45 },
         { color: bgColor.replace('#', ''), pos: 100 }
       ],
-      seed: 511,
-      warp: 0.35,
+      seed: 519,
+      warp: 0.3,
       noiseScale: 1.36,
-      detail: 0,
-      contrast: 0.82,
-      angle: 180,
+      detail: 2,
+      contrast: 0.275,
+      angle: 145,
       centerX: 0.713,
       centerY: 0.271,
       lightMode: 0,
       lightAmount: 0,
-      lightSize: 0.27,
+      lightSize: 0,
       lightFollow: 1,
-      glassMode: theme === 'dark' ? 1 : 2,
-      glassAmount: 0.42,
-      glassCount: theme === 'dark' ? 50 : 90,
+      glassMode: 1,
+      glassAmount: 0.38,
+      glassCount: 13,
       glassAngle: 180,
       glassProfile: 2,
       glassBevel: 0.01,
-      glassShadow: 0.16,
+      glassShadow: theme === 'dark' ? 0.8 : 0.2,
       glassHighlight: 0.05,
       pointerMode: 2,
       pointerDamping: 1,
       pointerFlip: true,
-      animate: true
+      animate: !this.reducedMotion()
     };
   });
 

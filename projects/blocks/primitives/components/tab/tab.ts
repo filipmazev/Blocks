@@ -35,7 +35,9 @@ export class Tab {
   public readonly resolvedEmission = computed(() => `color-mix(in srgb, ${this.resolvedHighlight()} ${TAB_EMISSION_OPACITY * 100}%, transparent)`);
   public readonly resolvedTextColor = computed(() => resolveTabColor(this.textColor()));
   public readonly resolvedSelectedText = computed(
-    () => this.resolvedTextColor() ?? resolveTabColor(this.color() === 'primary' ? 'text-brand' : TAB_COLOR_TOKENS[this.color()])
+    () =>
+      this.resolvedTextColor() ??
+      resolveTabColor(this.color() === 'primary' ? 'text-brand' : this.color() === 'accent' ? 'text-accent' : TAB_COLOR_TOKENS[this.color()])
   );
 
   public readonly resolvedContentColor = computed(() => resolveTabColor(this.contentColor()));

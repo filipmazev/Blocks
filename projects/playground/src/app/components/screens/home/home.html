@@ -8,7 +8,7 @@
       <p class="hero-subtitle">A modular UI library with shared theming, accessible controls, and materials that feel at home throughout your application.</p>
       <div class="hero-actions">
         <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon name="arrow-right" size="20" /></a>
-        <a bx-button variant="filled" [outlined]="true" color="grayscale" routerLink="/components">Browse components</a>
+        <a bx-button variant="tonal" color="accent" routerLink="/components">Browse components</a>
       </div>
     </div>
   </header>
@@ -22,7 +22,7 @@
     </div>
     <div #featureGrid class="feature-grid">
       @for (feature of features; track feature.title) {
-        <a bxSurface class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" />
+        <a bxSurface class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" color="text-accent" />
           @if (feature.icon === 'palette') {
             <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
           }

@@ -33,6 +33,7 @@ export * from './types/theme.types';
 export * from './tokens/bx-i18n.token';
 export * from './helpers/core-functions';
 export * from './helpers/token-functions';
+export * from './helpers/theme-functions';
 export * from './helpers/uui4';
 export * from './types/appearance.types';
 export * from './helpers/overlay-theme';

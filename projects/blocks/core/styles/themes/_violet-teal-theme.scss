@@ -1,0 +1,4 @@
+@use '../theme-engine' as *;
+
+$violet-teal-light-theme: make-light-theme('violet', 'teal');
+$violet-teal-dark-theme: make-dark-theme('violet', 'teal');

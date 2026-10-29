@@ -8,6 +8,7 @@ export const DEFAULT_TAB_COLOR: TabColor = 'primary';
 export const TAB_EMISSION_OPACITY = 0.15;
 export const TAB_COLOR_TOKENS: Readonly<Record<TabColor, Color>> = {
   primary: 'primary',
+  accent: 'accent',
   success: 'text-success',
   danger: 'text-danger',
   info: 'text-info',

@@ -1,4 +1,5 @@
 @use '../theme-engine' as *;
 
-$cyberpunk-light-theme: make-light-theme('cyber-slate', 'cyber-yellow');
-$cyberpunk-dark-theme: make-dark-theme('cyber-slate', 'cyber-yellow');
+// Yellow actions and blue-slate supporting controls share neutral surfaces.
+$cyberpunk-light-theme: make-light-theme('cyber-yellow', 'cyber-slate');
+$cyberpunk-dark-theme: make-dark-theme('cyber-yellow', 'cyber-slate');

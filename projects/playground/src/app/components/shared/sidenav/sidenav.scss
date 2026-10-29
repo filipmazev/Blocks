@@ -272,20 +272,21 @@ nav a[data-bx-surface] {
 }
 
 nav a[data-bx-surface].active {
-    --bx-glass-surface: var(--bx-primary);
-    --bx-glass-text: var(--bx-on-primary);
-    --bx-glass-min-opacity: 0.88;
+    --bx-glass-surface: var(--bx-bg-neutral);
+    --bx-glass-text: var(--bx-text-brand);
+    --bx-glass-min-opacity: 0.75;
 
-    color: var(--bx-on-primary);
+    color: var(--bx-text-brand);
     font-weight: 600;
     border-color: var(--bx-border-default);
+    border-inline-start-color: var(--bx-border-brand);
 
     &:hover {
-        --bx-glass-surface: var(--bx-primary-hover);
+        --bx-glass-surface: var(--bx-bg-neutral-hover);
     }
 
     &:active {
-        --bx-glass-surface: var(--bx-primary-active);
+        --bx-glass-surface: var(--bx-bg-element);
     }
 }
 

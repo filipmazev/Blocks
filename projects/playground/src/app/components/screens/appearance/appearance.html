@@ -18,9 +18,9 @@
         <button bx-button type="button" variant="tonal" [color]="theme.activeTheme() === 'light' ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.activeTheme() === 'light'" (click)="theme.setApplicationTheme('light')"><bx-icon name="sun" size="16" />Light</button>
         <button bx-button type="button" variant="tonal" [color]="theme.activeTheme() === 'dark' ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.activeTheme() === 'dark'" (click)="theme.setApplicationTheme('dark')"><bx-icon name="moon" size="16" />Dark</button>
       </div></fieldset>
-      <fieldset><legend>Color</legend><div class="palette-picker">
+      <fieldset><legend>Palettes</legend><div class="palette-picker">
         @for (palette of theme.palettes; track palette.id) {
-          <button bx-button type="button" variant="tonal" [color]="theme.palette() === palette.id ? 'primary' : 'grayscale'" [attr.aria-pressed]="theme.palette() === palette.id" (click)="theme.setPalette(palette.id)">{{ palette.label }}</button>
+          <button bx-button type="button" variant="tonal" [color]="theme.palette() === palette.id ? 'accent' : 'grayscale'" [attr.aria-pressed]="theme.palette() === palette.id" (click)="theme.setPalette(palette.id)"><span class="palette-swatches" aria-hidden="true"><span [style.background-color]="palette.colors[0]"></span><span [style.background-color]="palette.colors[1]"></span></span>{{ palette.label }}</button>
         }
       </div></fieldset>
       <fieldset class="rendering-options"><legend>Rendering</legend><div class="quality-picker">@for (option of qualities; track option.value) {<bx-radio name="appearance-quality" [label]="option.label" [value]="option.value" [ngModel]="appearance().quality" (ngModelChange)="updateAppearance({quality: $event})" />}</div></fieldset>

@@ -24,7 +24,7 @@ async function overview(t, options = {}) {
     assert.deepEqual(errors, []);
   });
   await page.addInitScript(() => {
-    localStorage.setItem('theme-palette', 'orange');
+    localStorage.setItem('theme-palette', 'tangerine-indigo');
     window.orbMetrics = { paints: 0, hits: 0, impacts: 0, squash: 0 };
     const keyframes = KeyframeEffect.prototype.setKeyframes;
     KeyframeEffect.prototype.setKeyframes = function (...args) {

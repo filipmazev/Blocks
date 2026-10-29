@@ -1,0 +1,4 @@
+@use '../theme-engine' as *;
+
+$tangerine-indigo-light-theme: make-light-theme('tangerine', 'indigo');
+$tangerine-indigo-dark-theme: make-dark-theme('tangerine', 'indigo');

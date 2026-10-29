@@ -7,7 +7,7 @@
 }
 
 :root {
-    @include bx-theme($blue-light-theme);
+    @include bx-theme($graphite-sky-blue-light-theme);
 
     --mobile-header-height: 60px;
 
@@ -15,56 +15,62 @@
 }
 
 [data-theme='dark'] {
-    @include bx-theme($blue-dark-theme);
+    @include bx-theme($graphite-sky-blue-dark-theme);
 
     color-scheme: dark;
 }
 
-.theme-white {
-    @include bx-theme($white-light-theme);
+.theme-white,
+.theme-graphite-sky-blue {
+    @include bx-theme($graphite-sky-blue-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($white-dark-theme);
+        @include bx-theme($graphite-sky-blue-dark-theme);
     }
 }
 
-.theme-blue {
-    @include bx-theme($blue-light-theme);
+.theme-blue,
+.theme-azure-coral {
+    @include bx-theme($azure-coral-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($blue-dark-theme);
+        @include bx-theme($azure-coral-dark-theme);
     }
 }
 
-.theme-purple {
-    @include bx-theme($purple-light-theme);
+.theme-purple,
+.theme-violet-teal {
+    @include bx-theme($violet-teal-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($purple-dark-theme);
+        @include bx-theme($violet-teal-dark-theme);
     }
 }
 
-.theme-orange {
-    @include bx-theme($orange-light-theme);
+.theme-orange,
+.theme-tangerine-indigo {
+    @include bx-theme($tangerine-indigo-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($orange-dark-theme);
+        @include bx-theme($tangerine-indigo-dark-theme);
     }
 }
 
-.theme-red {
-    @include bx-theme($red-light-theme);
+.theme-red,
+.theme-scarlet-cyan {
+    @include bx-theme($scarlet-cyan-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($red-dark-theme);
+        @include bx-theme($scarlet-cyan-dark-theme);
     }
 }
 
-.theme-green {
-    @include bx-theme($green-light-theme);
+.theme-green,
+.theme-lime-violet {
+    @include bx-theme($lime-violet-light-theme);
 
     &[data-theme='dark'] {
-        @include bx-theme($green-dark-theme);
+        @include bx-theme($lime-violet-dark-theme);
     }
 }
 

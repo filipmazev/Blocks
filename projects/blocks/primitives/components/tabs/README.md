@@ -19,7 +19,7 @@ Add these standalone declarations to the consuming component's `imports`.
       <app-documentation />
     </ng-template>
   </bx-tab>
-  <bx-tab label="Code Examples" value="code">
+  <bx-tab label="Code Examples" value="code" color="accent">
     <ng-template bxTabContent>
       <app-examples />
     </ng-template>
@@ -43,7 +43,7 @@ Use `variant="underline"` for file tabs or a full-width navigation strip. The de
 | `Tab` | `label: ResolvableText` | Required visible and accessible label. |
 | `Tab` | `value: string` | Unique selection value. |
 | `Tab` | `disabled: boolean` | Removes the tab from selection and keyboard navigation. |
-| `Tab` | `color: TabColor` | `primary` (default), `success`, `danger`, `info`, `warn`, or `grayscale`. |
+| `Tab` | `color: TabColor` | `primary` (default), `accent`, `success`, `danger`, `info`, `warn`, or `grayscale`. |
 | `Tab` | `textColor: Color` | Optional theme token for the header label and its icons. |
 | `Tab` | `highlightColor: Color` | Overrides the selected tint, border, underline and emitted light. Defaults to the tab's color. |
 | `Tab` | `contentColor: Color` | Optional inherited text color for the panel's content. |
@@ -85,7 +85,7 @@ Angular constructs directly projected components eagerly. Use `ng-template bxTab
 
 ## Appearance
 
-Tabs use Blocks semantic colors, spacing, radius, focus and surface effects. The shared glass header remains transmissive, while the selected tab has a translucent tint and emits a restrained amount of its highlight color into nearby surfaces. The default highlight follows the primary color. The initial render uses the same glass styling before the runtime mounts, and transitions apply to later interactions. Appearance settings and reduced motion follow `ThemingService` and `BxA11yService`, like other primitives. Forced colors use a visible selected outline.
+Tabs use Blocks semantic colors, spacing, radius, focus and surface effects. The shared glass header remains transmissive, while the selected tab has a translucent tint and emits a restrained amount of its highlight color into nearby surfaces. The default highlight follows the primary palette role. Use `color="accent"` for the second tone, such as supporting Code Examples navigation. The initial render uses the same glass styling before the runtime mounts, and transitions apply to later interactions. Appearance settings and reduced motion follow `ThemingService` and `BxA11yService`, like other primitives. Forced colors use a visible selected outline.
 
 `--bx-tabs-panel-gap` customizes the space below the headers. `--bx-tabs-max-panel-height` limits the scrolling panel region. Constrain the group's height to keep its headers visible while panel content scrolls. Header labels scroll horizontally only when they exceed the available width; the glass decoration sits outside that scroll area.
 

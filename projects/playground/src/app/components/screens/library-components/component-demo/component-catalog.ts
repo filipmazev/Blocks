@@ -227,7 +227,7 @@ export const COMPONENT_EXAMPLES: readonly ComponentExample[] = [
     package: '@filip.mazev/blocks/icons',
     selector: 'bx-icon',
     description: 'An asynchronously loaded SVG icon using semantic foreground and background tokens.',
-    example: '<bx-icon name="sparkles" size="32" color="text-primary" [decorative]="false" ariaLabel="Highlights" />'
+    example: '<bx-icon name="sparkles" size="32" color="text-accent" [decorative]="false" ariaLabel="Highlights" />'
   },
   {
     id: 'modal-core',

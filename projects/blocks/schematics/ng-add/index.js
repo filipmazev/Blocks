@@ -1,9 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ngAdd = ngAdd;
+const LEGACY_PALETTES = {
+    white: 'graphite-sky-blue',
+    blue: 'azure-coral',
+    purple: 'violet-teal',
+    orange: 'tangerine-indigo',
+    red: 'scarlet-cyan',
+    green: 'lime-violet',
+};
 function ngAdd(options) {
     return (tree, context) => {
-        injectStyles(tree, context, options);
+        var _a;
+        const selected = (_a = options.theme) !== null && _a !== void 0 ? _a : 'graphite-sky-blue';
+        const theme = Object.prototype.hasOwnProperty.call(LEGACY_PALETTES, selected) ? LEGACY_PALETTES[selected] : selected;
+        injectStyles(tree, context, { theme });
         return tree;
     };
 }
@@ -18,8 +29,7 @@ function injectStyles(tree, context, options) {
     if (!workspaceConfigBuffer)
         return;
     const workspaceConfig = JSON.parse(workspaceConfigBuffer.toString('utf-8'));
-    const projectName = workspaceConfig.defaultProject || Object.keys((_a = workspaceConfig.projects) !== null && _a !== void 0 ? _a : {})
-        .find(name => workspaceConfig.projects[name].projectType === 'application');
+    const projectName = workspaceConfig.defaultProject || Object.keys((_a = workspaceConfig.projects) !== null && _a !== void 0 ? _a : {}).find((name) => workspaceConfig.projects[name].projectType === 'application');
     const project = workspaceConfig.projects[projectName];
     if (!project) {
         context.logger.warn('Could not find a valid project in angular.json.');
@@ -32,10 +42,7 @@ function injectStyles(tree, context, options) {
     }
     (_e = buildOptions.styles) !== null && _e !== void 0 ? _e : (buildOptions.styles = []);
     const effectsStyles = 'node_modules/@filip.mazev/blocks/effects/effects.css';
-    const legacyStyles = new Set([
-        'node_modules/@filip.mazev/blocks/glass/glass.css',
-        'node_modules/@filip.mazev/blocks-glass/glass.css'
-    ]);
+    const legacyStyles = new Set(['node_modules/@filip.mazev/blocks/glass/glass.css', 'node_modules/@filip.mazev/blocks-glass/glass.css']);
     buildOptions.styles = buildOptions.styles.filter((style) => !legacyStyles.has(typeof style === 'string' ? style : style.input));
     const hasEffectsStyles = buildOptions.styles.some((style) => (typeof style === 'string' ? style : style.input) === effectsStyles);
     if (!hasEffectsStyles)
@@ -54,14 +61,17 @@ function injectStyles(tree, context, options) {
         context.logger.warn('Could not locate a global .scss or .sass file. Please configure the Blocks theme manually.');
         return;
     }
-    const content = tree.read(targetStylePath).toString('utf-8');
+    const targetStyle = tree.read(targetStylePath);
+    if (!targetStyle)
+        return;
+    const content = targetStyle.toString('utf-8');
     // Existing themes still receive the effects stylesheet above.
     if (content.includes('@filip.mazev/blocks')) {
         context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
         return;
     }
-    const lightThemeVar = `$${(_f = options.theme) !== null && _f !== void 0 ? _f : 'white'}-light-theme`;
-    const darkThemeVar = `$${(_g = options.theme) !== null && _g !== void 0 ? _g : 'white'}-dark-theme`;
+    const lightThemeVar = `$${(_f = options.theme) !== null && _f !== void 0 ? _f : 'graphite-sky-blue'}-light-theme`;
+    const darkThemeVar = `$${(_g = options.theme) !== null && _g !== void 0 ? _g : 'graphite-sky-blue'}-dark-theme`;
     const blocksThemeSnippet = `
 @use '@filip.mazev/blocks' as *;
 
@@ -76,5 +86,5 @@ function injectStyles(tree, context, options) {
 }
 `;
     tree.overwrite(targetStylePath, blocksThemeSnippet + '\n' + content);
-    context.logger.info(`Successfully injected the ${(_h = options.theme) !== null && _h !== void 0 ? _h : 'white'} Blocks theme configuration into ${targetStylePath}.`);
+    context.logger.info(`Successfully injected the ${(_h = options.theme) !== null && _h !== void 0 ? _h : 'graphite-sky-blue'} Blocks theme configuration into ${targetStylePath}.`);
 }

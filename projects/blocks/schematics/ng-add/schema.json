@@ -6,43 +6,49 @@
     "properties": {
         "theme": {
             "type": "string",
-            "description": "Select the theme for your UI.",
+            "description": "Select a Blocks palette for your UI.",
             "enum": [
+                "graphite-sky-blue",
+                "azure-coral",
+                "violet-teal",
+                "tangerine-indigo",
+                "scarlet-cyan",
+                "lime-violet",
+                "cyberpunk",
                 "white",
                 "blue",
                 "purple",
                 "orange",
                 "red",
-                "green",
-                "cyberpunk"
+                "green"
             ],
             "x-prompt": {
-                "message": "Which theme would you like to use?",
+                "message": "Which palette would you like to use?",
                 "type": "list",
                 "items": [
                     {
-                        "value": "white",
-                        "label": "White Theme"
+                        "value": "graphite-sky-blue",
+                        "label": "Graphite / Sky Blue"
                     },
                     {
-                        "value": "blue",
-                        "label": "Blue Theme"
+                        "value": "azure-coral",
+                        "label": "Azure / Coral"
                     },
                     {
-                        "value": "purple",
-                        "label": "Purple Theme"
+                        "value": "violet-teal",
+                        "label": "Violet / Teal"
                     },
                     {
-                        "value": "orange",
-                        "label": "Orange Theme"
+                        "value": "tangerine-indigo",
+                        "label": "Tangerine / Indigo"
                     },
                     {
-                        "value": "red",
-                        "label": "Red Theme"
+                        "value": "scarlet-cyan",
+                        "label": "Scarlet / Cyan"
                     },
                     {
-                        "value": "green",
-                        "label": "Green Theme"
+                        "value": "lime-violet",
+                        "label": "Lime / Violet"
                     },
                     {
                         "value": "cyberpunk",
@@ -50,7 +56,7 @@
                     }
                 ]
             },
-            "default": "white"
+            "default": "graphite-sky-blue"
         }
     }
 }

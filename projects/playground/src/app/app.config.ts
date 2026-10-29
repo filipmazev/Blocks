@@ -3,7 +3,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { ROUTES } from '@playground/app.routes';
 import { provideHighlightOptions } from 'ngx-highlightjs';
 import { provideNavigation } from '@filip.mazev/blocks/navigation';
-import { ThemingService } from '@filip.mazev/blocks/core';
+import { resolveThemeId, ThemingService } from '@filip.mazev/blocks/core';
 import { APP_NAVIGATION } from './app.navigation';
 
 /* As demo for navigation i18n capabilities, you can use the following function to provide a translation adapter for your translation service. 
@@ -44,7 +44,7 @@ export const APP_CONFIG: ApplicationConfig = {
       }
       // Read the preference before the shared service initializes its library default.
       const theme = inject(ThemingService);
-      if (!theme.palettes.some((palette) => palette.id === savedPalette)) theme.setPalette('blue');
+      if (!resolveThemeId(savedPalette)) theme.setPalette('graphite-sky-blue');
       if (theme.appearance().quality === 'enhanced') theme.setAppearance({ quality: 'auto' });
     }),
     provideRouter(ROUTES, withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })),

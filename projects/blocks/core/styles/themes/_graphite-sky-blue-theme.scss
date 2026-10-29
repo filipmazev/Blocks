@@ -1,0 +1,19 @@
+@use '../theme-engine' as *;
+@use '../palettes' as *;
+
+$graphite-sky-blue-light-theme: make-light-theme('graphite', 'sky-blue');
+$graphite-sky-blue-dark-theme: make-dark-theme(
+    'graphite',
+    'sky-blue',
+    $overrides: (
+        'primary': #f5f5f5,
+        'primary-hover': #e5e5e5,
+        'primary-active': #d4d4d4,
+        'primary-subtle': get-color-from-palette('neutral', 800),
+        'on-primary': #0b0b0b,
+        'on-primary-hover': #0b0b0b,
+        'on-primary-active': #0b0b0b,
+        'text-brand': #f5f5f5,
+        'border-brand': #d4d4d4,
+    )
+);
