@@ -4,8 +4,6 @@
     display: block;
 }
 
-// Give the flex scroller a definite height: inset-only sizing can let Safari
-// lay out the navigation at its full content height and extend page overflow.
 .sidebar {
     position: fixed;
     inset: 0 auto auto 0;
@@ -110,7 +108,7 @@ nav a:hover {
     color: var(--bx-text-primary);
 
     --bx-glass-opacity: 0.5;
-    --bx-glass-surface: var(--bx-bg-neutral-hover);
+    --bx-glass-surface: var(--bx-bg-neutral);
     --bx-glass-text: var(--bx-text-primary);
 }
 

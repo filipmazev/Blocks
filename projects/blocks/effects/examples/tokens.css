@@ -1,4 +1,5 @@
 /* Generated from Blocks core tokens by tools/sync-effects-tokens.mjs. */
+/* stylelint-disable-next-line scss/at-function-pattern -- The underscore keeps this Sass helper private. */
 :root {
   --bx-rounded-none: 0;
   --bx-rounded-sm: 0.25rem;

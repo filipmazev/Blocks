@@ -11,6 +11,17 @@ import { BxA11yService } from '@core/services/bx-a11y.service';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 import { LightOrb } from './light-orb/light-orb';
 
+function rgbPercentToHex(rgbStr: string) {
+  const matches = rgbStr.match(/[\d.]+/g);
+  if (!matches || matches.length < 3) return null;
+
+  const r = Math.round((parseFloat(matches[0]) / 100) * 255);
+  const g = Math.round((parseFloat(matches[1]) / 100) * 255);
+  const b = Math.round((parseFloat(matches[2]) / 100) * 255);
+
+  return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
+}
+
 @Component({
   selector: 'app-home',
   imports: [RouterLink, Icon, Button, BxSurfaceDirective, OddityCanvas, LightOrb, TooltipDirective],
@@ -56,15 +67,15 @@ export class Home {
 
     const primaryColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
     const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-color-accent-500');
-    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas');
+    const bgColor = rgbPercentToHex(window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas')) ?? '';
 
     return {
       fxOrder: 'Ggr',
       stops: [
         { color: bgColor.replace('#', ''), pos: 0 },
-        { color: primaryColor.replace('#', ''), pos: 38 },
-        { color: accentColor.replace('#', ''), pos: 42 },
-        { color: bgColor.replace('#', ''), pos: 45 },
+        { color: primaryColor.replace('#', ''), pos: 40 },
+        { color: accentColor.replace('#', ''), pos: 43 },
+        { color: bgColor.replace('#', ''), pos: 48 },
         { color: bgColor.replace('#', ''), pos: 100 }
       ],
       seed: 519,

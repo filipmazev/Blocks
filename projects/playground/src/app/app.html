@@ -6,7 +6,7 @@
       <span class="toolbar-label">Component playground</span>
       <div class="toolbar-actions">
         <a bx-button class="appearance-button" variant="tonal" color="grayscale" routerLink="/appearance" aria-label="Configure appearance for the whole playground"><bx-icon name="sliders-horizontal" size="20" /><span>Appearance</span></a>
-        <button bx-button type="button" [bxDropdown]="themeMenu" bxTransition="fade" placement="bottom" variant="tonal" color="grayscale" aria-label="Choose theme palette">{{ selectedThemeLabel() }}<bx-icon name="chevron-down" size="16" /></button>
+        <button bx-button type="button" [bxDropdown]="themeMenu" bxTransition="fade" placement="bottom" variant="tonal" color="grayscale" aria-label="Choose theme palette"><span class="toolbar-palette-swatches" aria-hidden="true"><span [style.background-color]="selectedPalette().colors[0]"></span><span [style.background-color]="selectedPalette().colors[1]"></span></span>{{ selectedThemeLabel() }}<bx-icon name="chevron-down" size="16" /></button>
         <button bx-button type="button" (click)="toggleTheme()" variant="tonal" class="theme-mode-toggle" color="grayscale" [attr.aria-label]="isDarkMode() ? 'Switch to light theme' : 'Switch to dark theme'"><bx-icon [name]="isDarkMode() ? 'sun' : 'moon'" size="20" /></button>
       </div>
     </header>

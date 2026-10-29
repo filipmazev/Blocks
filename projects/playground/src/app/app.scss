@@ -51,6 +51,24 @@ app-sidenav {
     gap: spacing(2);
 }
 
+.toolbar-palette-swatches {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    margin-inline-end: spacing(2);
+
+    > span {
+        width: 0.7rem;
+        height: 0.7rem;
+        border: 1px solid var(--bx-border-default);
+        border-radius: 50%;
+
+        + span {
+            margin-inline-start: -0.2rem;
+        }
+    }
+}
+
 .toolbar-actions > .theme-mode-toggle {
     padding: 0;
     width: spacing(10);

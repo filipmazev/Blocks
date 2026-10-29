@@ -25,6 +25,7 @@ export class App {
   protected readonly availableThemes = this.theme.palettes;
   protected readonly selectedThemeId = this.theme.palette;
   protected readonly selectedThemeLabel = this.theme.paletteLabel;
+  protected readonly selectedPalette = computed(() => this.availableThemes.find((palette) => palette.id === this.selectedThemeId()) ?? this.availableThemes[0]);
   protected readonly isDarkMode = computed(() => this.theme.activeTheme() === 'dark');
 
   constructor() {
