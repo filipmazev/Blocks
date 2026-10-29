@@ -42,7 +42,7 @@ Each palette combines two tonal families. Choose one under **Palettes** in Appea
 | Lime / Violet | `#c4f53d` / `#6842a6` | `lime-violet` |
 | Cyberpunk | `#3e5669` / `#e6da00` | `cyberpunk` |
 
-Primary roles identify main actions, checked controls, links and focus. Accent roles provide the second tone for supporting actions, tabs, icons and interactive containers. For example, `color="accent"` selects the second tone on buttons and tabs; `text-accent` follows it on icons. Documentation uses the primary role and Code Examples uses the accent role. Success, warning, danger and information retain their status meanings across palettes.
+Primary roles identify main actions, links and field focus. Accent roles identify checked checkboxes, radios and switches, slider progress, selected options and supporting actions. This follows Material's use of distinct color roles for emphasis while keeping broad surfaces neutral. For example, `color="accent"` selects the second tone on buttons and tabs; `text-accent` follows it on icons. Documentation uses the primary role and Code Examples uses the accent role. Success, warning, danger and information retain their status meanings across palettes.
 
 Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground's Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.
 
@@ -72,7 +72,7 @@ export class Settings {
 }
 ```
 
-There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Floating surfaces enforce a minimum tint density for legibility.
+There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full glassiness range; fields and filled actions retain their own legibility constraints.
 
 `theme.appearance()` is the current typed configuration; `theme.resetAppearance()` restores defaults. Changes apply to existing components and open overlays. `glassiness` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint at 80% to retain a glassy appearance. There are no independent tint, blur, or material preset settings. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen glassiness for when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to glassiness, and a saved solid preference becomes reduced transparency.
 

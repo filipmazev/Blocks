@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BLOCKS_VERSION } from '@filip.mazev/blocks';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -10,17 +10,6 @@ import { ThemingService } from '@core/services/theming.service';
 import { BxA11yService } from '@core/services/bx-a11y.service';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 import { LightOrb } from './light-orb/light-orb';
-
-function rgbPercentToHex(rgbStr: string) {
-  const matches = rgbStr.match(/[\d.]+/g);
-  if (!matches || matches.length < 3) return null;
-
-  const r = Math.round((parseFloat(matches[0]) / 100) * 255);
-  const g = Math.round((parseFloat(matches[1]) / 100) * 255);
-  const b = Math.round((parseFloat(matches[2]) / 100) * 255);
-
-  return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
-}
 
 @Component({
   selector: 'app-home',
@@ -38,7 +27,6 @@ export class Home {
   private readonly wakeHint = viewChild(TooltipDirective);
 
   private readonly themingService = inject(ThemingService);
-  private readonly document = inject(DOCUMENT);
 
   protected readonly features: { title: string; description: string; icon: IconName; route: string }[] = [
     {
@@ -67,7 +55,7 @@ export class Home {
 
     const primaryColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');
     const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-color-accent-500');
-    const bgColor = rgbPercentToHex(window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas')) ?? '';
+    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas');
 
     return {
       fxOrder: 'Ggr',

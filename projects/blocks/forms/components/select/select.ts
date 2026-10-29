@@ -18,14 +18,14 @@ import { Icon } from '@filip.mazev/blocks/icons';
 import { FormField } from '../form-field/form-field';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { BX_OVERLAY_CONTEXT, MenuItem } from '@filip.mazev/blocks/primitives';
+import { BX_OVERLAY_CONTEXT } from '@filip.mazev/blocks/primitives';
 import { BxSelectOption } from '../../interfaces/ibx-select-option.interface';
 import { SearchInput } from '../search-input/search-input';
 
 @Component({
   selector: 'bx-select',
   standalone: true,
-  imports: [BxSurfaceDirective, CommonModule, OverlayModule, FormField, Icon, MenuItem, SearchInput],
+  imports: [BxSurfaceDirective, CommonModule, OverlayModule, FormField, Icon, SearchInput],
   templateUrl: './select.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './select.scss'

@@ -7,6 +7,7 @@
 
 .code-viewer {
     --bx-tabs-max-panel-height: 45rem;
+    --bx-tabs-panel-overflow: auto;
 
     background: var(--bx-bg-surface);
     border-radius: radius(md);
@@ -23,4 +24,7 @@
 :host ::ng-deep pre code.hljs {
     padding: spacing(4);
     min-width: 100%;
+
+    // The tab panel owns both axes; highlight.js must not add a second scroller.
+    overflow: visible;
 }

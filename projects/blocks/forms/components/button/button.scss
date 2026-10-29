@@ -173,7 +173,7 @@
     --bx-glass-surface: var(--bx-bg-neutral);
     --bx-glass-text: var(--btn-theme-tonal-text, var(--bx-text-primary));
     --bx-glass-edge: var(--bx-border-default);
-    --bx-glass-min-opacity: 0.35;
+    --bx-glass-min-opacity: 0;
 
     border-color: var(--bx-glass-edge);
 
@@ -185,7 +185,14 @@
     @supports (background: color-mix(in srgb, white, transparent)) {
         background: color-mix(
             in srgb,
-            var(--bx-glass-surface) calc(max(0.35, var(--bx-glass-opacity, 0.24)) * 100%),
+            var(--bx-glass-surface)
+                calc(
+                    max(
+                            var(--bx-glass-min-opacity, 0),
+                            var(--bx-glass-opacity, var(--bx-glass-material-opacity, 0.5))
+                        ) *
+                        100%
+                ),
             transparent
         );
     }

@@ -97,6 +97,7 @@ code {
     align-items: flex-start;
     gap: spacing(4);
     max-width: 100%;
+    min-width: 0;
 }
 
 .control-width {

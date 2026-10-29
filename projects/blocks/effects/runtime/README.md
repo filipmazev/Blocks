@@ -91,7 +91,7 @@ This is a bounded, stylized lighting model. The browser's backdrop filter still 
 
 ## Overlay fades
 
-Overlays fade in over 180 ms and out over 140 ms. Their dimensions, clipping and text size remain unchanged. The fade composites the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop root that cuts off the page behind the glass. Reversing an active fade continues from its current opacity; the interrupted promise resolves to `cancelled`.
+Overlays fade in over 180 ms and out over 140 ms using the Web Animations API. Their dimensions, clipping and text size remain unchanged. The fade composites the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop root that cuts off the page behind the glass. Native opacity interpolation avoids per-frame style mutations and lighting invalidation. Reversing an active fade continues from its current opacity; the interrupted promise resolves to `cancelled`.
 
 The transition temporarily owns the first material surface’s `opacity` and the target’s `visibility`. If no material is present, it fades the target. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. `refresh()` remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1’s `createLiquidTransition` and associated type names remain deprecated aliases for `createGlassTransition`.
 

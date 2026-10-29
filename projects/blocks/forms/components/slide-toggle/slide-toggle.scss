@@ -47,7 +47,7 @@
 
     &:hover,
     &:focus-visible {
-        color: var(--bx-text-brand);
+        color: var(--bx-text-accent);
     }
 
     bx-tooltip {
@@ -75,7 +75,7 @@
     }
 
     &.is-checked {
-        background-color: var(--bx-primary);
+        background-color: var(--bx-accent);
 
         &.is-invalid {
             background-color: var(--bx-bg-danger);
@@ -88,7 +88,7 @@
 }
 
 input:focus-visible ~ .bx-slide-toggle-track {
-    box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+    box-shadow: 0 0 0 3px var(--bx-accent-subtle);
 }
 
 .bx-slide-toggle-thumb {
@@ -106,8 +106,8 @@ input:focus-visible ~ .bx-slide-toggle-track {
 }
 
 .is-checked .bx-slide-toggle-thumb {
-    background: var(--bx-on-primary);
-    border-color: var(--bx-on-primary);
+    background: var(--bx-on-accent);
+    border-color: var(--bx-on-accent);
 }
 
 .bx-slide-toggle-track[data-bx-surface] {
@@ -122,10 +122,10 @@ input:focus-visible ~ .bx-slide-toggle-track {
     --bx-glass-text: var(--bx-text-primary);
 
     &.is-checked {
-        --bx-glass-surface: var(--bx-primary);
-        --bx-glass-min-opacity: 0.55;
-        --bx-glass-edge: var(--bx-border-brand);
-        --bx-glass-text: var(--bx-text-brand);
+        --bx-glass-surface: var(--bx-accent);
+        --bx-glass-min-opacity: 1;
+        --bx-glass-edge: var(--bx-border-accent);
+        --bx-glass-text: var(--bx-text-accent);
     }
 
     &.is-invalid {
@@ -138,11 +138,51 @@ input:focus-visible ~ .bx-slide-toggle-track {
 .bx-inline-wrapper:not(.is-disabled):hover
     .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid) {
     --bx-glass-surface: var(--bx-bg-neutral-hover);
-    --bx-glass-edge: var(--bx-border-brand);
+    --bx-glass-edge: var(--bx-border-accent);
 
     &.is-checked {
-        --bx-glass-surface: var(--bx-primary-hover);
+        --bx-glass-surface: var(--bx-accent-hover);
     }
+}
+
+// Match the slider's quiet highlight; the checked thumb follows the accent palette.
+.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid) {
+    --bx-glass-rim-visibility: 0.25;
+    --bx-toggle-thumb-surface: var(--bx-color-neutral-200);
+    --bx-toggle-thumb-edge: color-mix(in srgb, var(--bx-accent) 18%, var(--bx-border-strong));
+
+    background-image: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bx-color-accent-50) 6%, var(--bx-glass-surface)),
+        var(--bx-glass-surface) 55%,
+        color-mix(in srgb, var(--bx-border-strong) 6%, var(--bx-glass-surface))
+    ) !important;
+    border-color: var(--bx-glass-edge);
+
+    .bx-slide-toggle-thumb {
+        background:
+            radial-gradient(
+                circle at 35% 0%,
+                color-mix(in srgb, var(--bx-color-neutral-50) 24%, transparent),
+                transparent 65%
+            ),
+            var(--bx-toggle-thumb-surface);
+        border-color: var(--bx-toggle-thumb-edge);
+
+        @include choice-flat-accessibility;
+    }
+
+    &.is-checked {
+        --bx-toggle-thumb-surface: var(--bx-color-accent-100);
+        --bx-toggle-thumb-edge: var(--bx-color-accent-200);
+    }
+
+    @include choice-flat-accessibility;
+}
+
+:host-context(.high-contrast) .bx-slide-toggle-track.is-checked .bx-slide-toggle-thumb,
+:host-context(.bx-high-contrast-scope) .bx-slide-toggle-track.is-checked .bx-slide-toggle-thumb {
+    background-color: var(--bx-on-accent);
 }
 
 @media (forced-colors: active) {

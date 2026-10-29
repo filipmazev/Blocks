@@ -83,7 +83,7 @@ $required-theme-keys: (
     }
 
     @each $key, $value in $theme {
-        @if string.index($key, 'meta-') !=1 {
+        @if string.index($key, 'meta-') != 1 {
             @if not list.index($required-theme-keys, $key) {
                 @error "Strict Theme Error: '#{$theme-name}' contains an invalid key '#{$key}'. Remove or rename it.";
             }
@@ -102,22 +102,20 @@ $required-theme-keys: (
         'blue': 0.0722,
     );
 
-@each $channel, $weight in $weights {
-    $part: math.div(color.channel($value, $channel, $space: rgb), 255);
+    @each $channel, $weight in $weights {
+        $part: math.div(color.channel($value, $channel, $space: rgb), 255);
 
-    /* stylelint-disable-next-line number-max-precision -- Preserve the exact sRGB linearization threshold. */
-    @if $part <=0.04045 {
-        $part: math.div($part, 12.92);
+        /* stylelint-disable-next-line number-max-precision -- Preserve the exact sRGB linearization threshold. */
+        @if $part <= 0.04045 {
+            $part: math.div($part, 12.92);
+        } @else {
+            $part: math.pow(math.div($part + 0.055, 1.055), 2.4);
+        }
+
+        $result: $result + $part * $weight;
     }
 
-    @else {
-        $part: math.pow(math.div($part + 0.055, 1.055), 2.4);
-    }
-
-    $result: $result + $part * $weight;
-}
-
-@return $result;
+    @return $result;
 }
 
 @function _contrast($first, $second) {
@@ -134,7 +132,7 @@ $required-theme-keys: (
         $dark: #000000;
     }
 
-    @if _contrast($dark, $background)>=_contrast(#ffffff, $background) {
+    @if _contrast($dark, $background) >= _contrast(#ffffff, $background) {
         @return $dark;
     }
 
@@ -163,12 +161,13 @@ $required-theme-keys: (
     $text-key: 'text-accent';
     $border-key: 'border-accent';
 
-    @if $role =='primary' {
+    @if $role == 'primary' {
         $text-key: 'text-brand';
         $border-key: 'border-brand';
     }
 
-    @return ($role: $base,
+    @return (
+        $role: $base,
         '#{$role}-hover': $hover,
         '#{$role}-active': $active,
         '#{$role}-subtle': $subtle,
@@ -176,38 +175,21 @@ $required-theme-keys: (
         'on-#{$role}-hover': _on-color($hover),
         'on-#{$role}-active': _on-color($active),
         $text-key: $text,
-        $border-key: get-color-from-palette($palette, _mode($dark, 800, 300)));
+        $border-key: get-color-from-palette($palette, _mode($dark, 800, 300))
+    );
 }
 
 @function _make-theme($brand, $accent, $dark, $overrides) {
     $base: (
-        'bg-canvas': color.mix(get-color-from-palette($brand, _mode($dark, 50, 900)),
-            _mode($brand, #ffffff, #000000),
-            2%),
-        'bg-surface': color.mix(get-color-from-palette($brand, _mode($dark, 50, 900)),
-            get-color-from-palette('neutral', _mode($dark, 50, 1000)),
-            2%),
-        'bg-surface-alt': color.mix(get-color-from-palette($brand, _mode($dark, 50, 900)),
-            get-color-from-palette('neutral', _mode($dark, 50, 900)),
-            2%),
-        'bg-element': color.mix(get-color-from-palette($brand, _mode($dark, 100, 900)),
-            get-color-from-palette('neutral', _mode($dark, 100, 800)),
-            2%),
-        'bg-element-hover': color.mix(get-color-from-palette($brand, _mode($dark, 100, 900)),
-            get-color-from-palette('neutral', _mode($dark, 200, 700)),
-            2%),
-        'bg-element-active': color.mix(get-color-from-palette($brand, _mode($dark, 100, 900)),
-            get-color-from-palette('neutral', _mode($dark, 300, 600)),
-            2%),
-        'bg-neutral': color.mix(get-color-from-palette($brand, _mode($dark, 50, 900)),
-            get-color-from-palette('neutral', _mode($dark, 100, 900)),
-            2%),
-        'bg-neutral-hover': color.mix(get-color-from-palette($brand, _mode($dark, 50, 900)),
-            get-color-from-palette('neutral', _mode($dark, 50, 800)),
-            2%),
-        'bg-neutral-active': color.mix(get-color-from-palette($brand, _mode($dark, 50, 900)),
-            get-color-from-palette('neutral', _mode($dark, 200, 600)),
-            2%),
+        'bg-canvas': _mode($dark, #ffffff, #000000),
+        'bg-surface': get-color-from-palette('neutral', _mode($dark, 50, 1000)),
+        'bg-surface-alt': get-color-from-palette('neutral', _mode($dark, 50, 900)),
+        'bg-element': get-color-from-palette('neutral', _mode($dark, 100, 800)),
+        'bg-element-hover': get-color-from-palette('neutral', _mode($dark, 200, 700)),
+        'bg-element-active': get-color-from-palette('neutral', _mode($dark, 300, 600)),
+        'bg-neutral': get-color-from-palette('neutral', _mode($dark, 100, 900)),
+        'bg-neutral-hover': get-color-from-palette('neutral', _mode($dark, 50, 800)),
+        'bg-neutral-active': get-color-from-palette('neutral', _mode($dark, 200, 600)),
         'text-heading': _mode($dark, get-color-from-palette('neutral', 900), #ffffff),
         'text-primary': get-color-from-palette('neutral', _mode($dark, 700, 200)),
         'text-secondary': get-color-from-palette('neutral', _mode($dark, 600, 400)),
@@ -222,23 +204,28 @@ $required-theme-keys: (
         'meta-accent-palette': $accent,
     );
 
-@each $status,
-$palette in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger') {
-    $base: map.merge($base,
-            ('text-#{$status}': get-color-from-palette($palette, _mode($dark, 700, 400)),
+    @each $status,
+        $palette
+            in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger')
+    {
+        $base: map.merge(
+            $base,
+            (
+                'text-#{$status}': get-color-from-palette($palette, _mode($dark, 700, 400)),
                 'border-#{$status}': get-color-from-palette($palette, 400),
                 'bg-#{$status}': get-color-from-palette($palette, _mode($dark, 100, 900)),
                 'bg-#{$status}-hover': get-color-from-palette($palette, _mode($dark, 200, 800)),
                 'bg-#{$status}-active': get-color-from-palette($palette, _mode($dark, 300, 700)),
                 'bg-#{$status}-disabled': get-color-from-palette($palette, _mode($dark, 50, 1000)),
                 'bg-#{$status}-subtle': get-color-from-palette($palette, _mode($dark, 50, 1000)),
-            ));
-}
+            )
+        );
+    }
 
-$base: map.merge($base, _color-roles($brand, 'primary', $dark));
-$base: map.merge($base, _color-roles($accent, 'accent', $dark));
+    $base: map.merge($base, _color-roles($brand, 'primary', $dark));
+    $base: map.merge($base, _color-roles($accent, 'accent', $dark));
 
-@return validate-theme(map.merge($base, $overrides), '#{$brand}-#{$accent}');
+    @return validate-theme(map.merge($base, $overrides), '#{$brand}-#{$accent}');
 }
 
 /* stylelint-enable scss/at-function-pattern */
@@ -257,7 +244,7 @@ $base: map.merge($base, _color-roles($accent, 'accent', $dark));
     --bx-glass-accent: var(--bx-primary);
 
     @each $key, $value in $config {
-        @if string.index($key, 'meta-') !=1 {
+        @if string.index($key, 'meta-') != 1 {
             --bx-#{$key}: #{$value};
         }
     }
@@ -270,28 +257,22 @@ $base: map.merge($base, _color-roles($accent, 'accent', $dark));
 }
 
 @each $key in $required-theme-keys {
-    @if string.index($key, 'bg-')==1 {
+    @if string.index($key, 'bg-') == 1 {
         .bx-#{$key} {
             background-color: var(--bx-#{$key});
             transition: background-color 0.2s ease-in-out;
         }
-    }
-
-    @else if string.index($key, 'text-')==1 {
+    } @else if string.index($key, 'text-') == 1 {
         .bx-#{$key} {
             color: var(--bx-#{$key});
             transition: color 0.2s ease-in-out;
         }
-    }
-
-    @else if string.index($key, 'border-')==1 {
+    } @else if string.index($key, 'border-') == 1 {
         .bx-#{$key} {
             border-color: var(--bx-#{$key});
             transition: border-color 0.2s ease-in-out;
         }
-    }
-
-    @else if not string.index($key, 'scroll-') and string.index($key, 'meta-') !=1 {
+    } @else if not string.index($key, 'scroll-') and string.index($key, 'meta-') != 1 {
         .bx-bg-#{$key} {
             background-color: var(--bx-#{$key});
             transition: background-color 0.2s ease-in-out;

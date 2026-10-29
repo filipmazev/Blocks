@@ -11,7 +11,7 @@ BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright BLOCKS_BROWSER=webkit node -
 
 Chrome uses the installed `chrome` channel. WebKit uses Playwright's browser installation; set `PLAYWRIGHT_BROWSERS_PATH` if it lives outside the default cache. No playground server, package build, generated fixture or repository test-results directory is required.
 
-Menu regressions run against a running playground and cover opaque containers, document and nested scrolling without pane style writes, above placement, content resizing, reopening, keyboard focus, the CDK fallback, context actions and native top-layer popovers:
+Menu regressions run against a running playground and cover opaque containers, lightweight native select options, selected option semantics, document and nested scrolling without pane style writes, above placement, content resizing, reopening, keyboard focus, the CDK fallback, context actions and native top-layer popovers:
 
 ```sh
 BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/menus.cjs
@@ -20,7 +20,14 @@ BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright BLOCKS_BROWSER=webkit node -
 
 `BLOCKS_PLAYGROUND_URL` defaults to `http://localhost:8080`.
 
-Tabs and the overview's Bring home control have a separate playground suite covering keyboard navigation, disabled and removed tabs, lazy panels, nested source-file tabs, RTL, narrow layouts, header overflow, selected lighting and the Blocks button integration:
+Button glassiness regressions cover the complete slider range (including values below 30%), light and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions:
+
+```sh
+BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/buttons.cjs
+BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright BLOCKS_BROWSER=webkit node --test tools/browser/buttons.cjs
+```
+
+Tabs and the overview's Bring home control have a separate playground suite covering keyboard navigation, disabled and removed tabs, lazy panels, nested source-file tabs, RTL, narrow layouts, horizontal touch gestures in Chrome and wheel scrolling in WebKit, natural panel flow, code blocks without nested horizontal scrollers, selected lighting and the Blocks button integration:
 
 ```sh
 BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/tabs.cjs

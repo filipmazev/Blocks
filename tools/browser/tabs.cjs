@@ -239,6 +239,42 @@ test('individual tab colors, highlight overrides, panel text and both icons are 
   });
 });
 
+test('narrow tab headers scroll independently and unbounded panels stay in page flow', async (t) => {
+  const mobile = process.env.BLOCKS_BROWSER !== 'webkit';
+  const page = await pageFor(t, '/components/tabs', {
+    viewport: { width: 390, height: 844 },
+    hasTouch: true,
+    isMobile: mobile,
+  });
+  const list = page.locator('.demo-stage .bx-tab-list');
+  await list.scrollIntoViewIfNeeded();
+  const geometry = await list.evaluate((element) => ({
+    width: element.clientWidth,
+    content: element.scrollWidth,
+    panelOverflow: getComputedStyle(element.closest('bx-tabs').querySelector('.bx-tab-panels')).overflow,
+    pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  }));
+  assert.ok(geometry.content > geometry.width, JSON.stringify(geometry));
+  assert.equal(geometry.panelOverflow, 'visible');
+  assert.ok(geometry.pageOverflow <= 1, JSON.stringify(geometry));
+  if (mobile) {
+    const session = await page.context().newCDPSession(page);
+    const box = await list.boundingBox();
+    const start = box.x + box.width - 20;
+    const y = box.y + box.height / 2;
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: start, y }] });
+    for (let step = 1; step <= 8; step++) {
+      await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: start - step * 20, y }] });
+      await page.waitForTimeout(16);
+    }
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  } else {
+    await list.hover();
+    await page.mouse.wheel(250, 0);
+  }
+  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-list').scrollLeft > 50);
+});
+
 for (const route of ['/modal', '/toastr']) {
   test(`${route} uses independent lazy documentation and source-file tabs`, async (t) => {
     const page = await pageFor(t, route);
@@ -260,6 +296,7 @@ for (const route of ['/modal', '/toastr']) {
     await selected(files, first);
     await page.locator('app-code code.hljs').waitFor();
     assert.equal(await page.locator('app-code pre').count(), 1);
+    assert.equal(await page.locator('app-code code.hljs').evaluate(element => getComputedStyle(element).overflowX), 'visible');
     await checkRelationships(outer);
     await checkRelationships(files);
     const unique = await page

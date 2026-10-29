@@ -87,7 +87,7 @@ Angular constructs directly projected components eagerly. Use `ng-template bxTab
 
 Tabs use Blocks semantic colors, spacing, radius, focus and surface effects. The shared glass header remains transmissive, while the selected tab has a translucent tint and emits a restrained amount of its highlight color into nearby surfaces. The default highlight follows the primary palette role. Use `color="accent"` for the second tone, such as supporting Code Examples navigation. The initial render uses the same glass styling before the runtime mounts, and transitions apply to later interactions. Appearance settings and reduced motion follow `ThemingService` and `BxA11yService`, like other primitives. Forced colors use a visible selected outline.
 
-`--bx-tabs-panel-gap` customizes the space below the headers. `--bx-tabs-max-panel-height` limits the scrolling panel region. Constrain the group's height to keep its headers visible while panel content scrolls. Header labels scroll horizontally only when they exceed the available width; the glass decoration sits outside that scroll area.
+`--bx-tabs-panel-gap` customizes the space below the headers. Panels follow the page's natural scroll flow by default. For a bounded viewer, set `--bx-tabs-panel-overflow: auto` together with `--bx-tabs-max-panel-height` or a constrained group height to keep headers visible while content scrolls. Let the panel own scrolling instead of also adding scroll containers to nested code blocks. Header labels scroll horizontally only when they exceed the available width; the glass decoration sits outside that scroll area.
 
 ## Keyboard and accessibility
 

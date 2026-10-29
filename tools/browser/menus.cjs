@@ -128,6 +128,8 @@ test('select uses an opaque container and follows document scrolling without pan
   await page.locator('.bx-select-trigger').click();
   await page.locator('.bx-overlay-anchored').waitFor();
   await opaque(page, '.bx-select-panel');
+  assert.equal(await page.locator('.bx-select-menu-container [data-bx-surface], .bx-select-menu-container .bx-glass-decoration').count(), 0);
+  assert.equal(await page.getByRole('option', { name: 'Skopje', selected: true }).count(), 1);
   assert.equal(await page.locator('.bx-select-trigger > .bx-glass-decoration').count(), 1);
   assert.equal(
     await page

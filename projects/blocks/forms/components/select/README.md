@@ -24,7 +24,7 @@ The control implements Angular ControlValueAccessor. Use `[formControl]`, `formC
 
 ## Appearance
 
-The trigger inherits the application appearance from `ThemingService`. The options panel uses an opaque themed backing without container blur or live lighting. Colors, spacing, radius, elevation, focus states and row interactions still follow Blocks tokens.
+The trigger inherits the application appearance from `ThemingService`. The options panel uses an opaque themed backing without container blur or live lighting. Options are native buttons with listbox option semantics and no per-row glass runtime. Selected options use `accent-subtle` with `text-accent`. Colors, spacing, radius, elevation, focus states and row interactions still follow Blocks tokens.
 
 ```ts
 import { inject } from '@angular/core';

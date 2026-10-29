@@ -65,9 +65,9 @@
     }
 
     &.is-checked {
-        background-color: var(--bx-primary);
-        border-color: var(--bx-primary);
-        color: var(--bx-on-primary);
+        background-color: var(--bx-accent);
+        border-color: var(--bx-accent);
+        color: var(--bx-on-accent);
 
         &.is-invalid {
             background-color: var(--bx-bg-danger);
@@ -77,7 +77,7 @@
 }
 
 input:focus-visible ~ .bx-checkbox-box {
-    box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+    box-shadow: 0 0 0 3px var(--bx-accent-subtle);
 }
 
 .bx-checkbox-box[data-bx-surface] {
@@ -92,10 +92,10 @@ input:focus-visible ~ .bx-checkbox-box {
     --bx-glass-text: var(--bx-text-primary);
 
     &.is-checked {
-        --bx-glass-surface: var(--bx-primary);
+        --bx-glass-surface: var(--bx-accent);
         --bx-glass-min-opacity: 1;
-        --bx-glass-edge: var(--bx-border-brand);
-        --bx-glass-text: var(--bx-on-primary);
+        --bx-glass-edge: var(--bx-border-accent);
+        --bx-glass-text: var(--bx-on-accent);
     }
 
     &.is-invalid {
@@ -103,4 +103,14 @@ input:focus-visible ~ .bx-checkbox-box {
         --bx-glass-edge: var(--bx-border-danger);
         --bx-glass-text: var(--bx-text-danger);
     }
+}
+
+.bx-inline-wrapper:not(.is-disabled) .bx-checkbox-box[data-bx-surface]:not(.is-invalid) {
+    @include choice-well;
+
+    &.is-checked {
+        @include choice-accent-face;
+    }
+
+    @include choice-flat-accessibility;
 }

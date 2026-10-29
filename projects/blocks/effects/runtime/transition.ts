@@ -1,4 +1,4 @@
-import { rememberStyles, smoothstep } from './dom';
+import { rememberStyles } from './dom';
 import { configurationEvent, inheritedAttribute } from './configuration';
 import { subscribeFrame } from './scheduler';
 import type { GlassTransition, GlassTransitionOptions, MotionResult } from './types';
@@ -10,35 +10,28 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   if (!view) throw new Error('Glass transitions must be mounted in a browser document.');
   if (origin.ownerDocument !== doc) throw new Error('Glass transition endpoints must share a document.');
   const skin = target.matches('[data-bx-surface]') ? target : (target.querySelector<HTMLElement>('[data-bx-surface]') ?? target);
-  const restoreOpacity = rememberStyles(skin, ['opacity']);
   const restoreVisibility = rememberStyles(target, ['visibility']);
   const opacity = Number(view.getComputedStyle(skin).opacity);
+  const readOpacity = () => Number(view.getComputedStyle(skin).opacity);
   const preference = view.matchMedia('(prefers-reduced-motion: reduce)');
   let disposed = false;
   let active = false;
-  let value = 0,
-    from = 0,
-    destination = 0,
-    elapsed = 0;
+  let value = 0;
+  let destination = 0;
+  let animation: Animation | undefined;
   let unsubscribe: (() => void) | undefined;
   let resolvePending: ((result: MotionResult) => void) | undefined;
   const reduced = () => {
     const inherited = inheritedAttribute(origin, 'data-bx-reduced-motion');
     return options.reducedMotion ?? (inherited === null ? preference.matches : inherited === 'true');
   };
-  const paint = () => {
-    // Opacity on the CDK pane would create a backdrop root above the material,
-    // cutting off its view of the page for every intermediate animation frame.
-    // Composite the surface's own backdrop and content together instead.
-    skin.style.opacity = String(value * opacity);
-    options.onUpdate?.();
-  };
   function settle(): void {
     active = false;
     value = destination;
     unsubscribe?.();
     unsubscribe = undefined;
-    restoreOpacity();
+    animation?.cancel();
+    animation = undefined;
     restoreVisibility();
     if (destination === 0) target.style.visibility = 'hidden';
     const resolve = resolvePending;
@@ -47,12 +40,14 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   }
   function move(open: boolean): Promise<MotionResult> {
     if (disposed) return Promise.resolve('cancelled');
+    // Read the interpolated value only when reversing an in-flight fade.
+    const from = animation && opacity > 0 ? readOpacity() / opacity : value;
     resolvePending?.('cancelled');
+    animation?.cancel();
+    animation = undefined;
     unsubscribe?.();
     unsubscribe = undefined;
-    from = value;
     destination = open ? 1 : 0;
-    elapsed = 0;
     active = true;
     restoreVisibility();
     const finished = new Promise<MotionResult>((resolve) => {
@@ -60,19 +55,26 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     });
     if (reduced() || from === destination) settle();
     else {
-      paint();
-      const duration = (open ? 0.18 : 0.14) * Math.abs(destination - from);
-      unsubscribe = subscribeFrame((dt) => {
-        elapsed += dt;
-        value = from + (destination - from) * smoothstep(0, duration, elapsed);
-        paint();
-        if (disposed) return false;
-        if (elapsed >= duration) {
-          settle();
-          return false;
-        }
-        return true;
+      // Animate the surface itself to preserve backdrop-root behavior. Native
+      // animation avoids style mutations that invalidate scene lighting each frame.
+      const current = skin.animate([{ opacity: from * opacity }, { opacity: destination * opacity }], {
+        duration: (open ? 180 : 140) * Math.abs(destination - from),
+        easing: 'ease-in-out',
+        fill: 'both'
       });
+      animation = current;
+      void current.finished
+        .then(() => {
+          if (animation === current && !disposed) settle();
+        })
+        .catch(() => {
+          /* Reversing or destroying a fade cancels its animation. */
+        });
+      if (options.onUpdate)
+        unsubscribe = subscribeFrame(() => {
+          options.onUpdate?.();
+          return active && !disposed;
+        });
     }
     return finished;
   }
@@ -95,7 +97,8 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
       resolvePending = undefined;
       preference.removeEventListener('change', onPreference);
       doc.removeEventListener(configurationEvent, onPreference);
-      restoreOpacity();
+      animation?.cancel();
+      animation = undefined;
       restoreVisibility();
     }
   };

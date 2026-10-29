@@ -1,0 +1,49 @@
+@mixin choice-well {
+    background-image: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bx-border-strong) 24%, var(--bx-glass-surface)),
+        var(--bx-glass-surface) 55%,
+        color-mix(in srgb, var(--bx-border-strong) 10%, var(--bx-glass-surface))
+    ) !important;
+    border-top-color: var(--bx-border-strong);
+    border-bottom-color: var(--bx-border-default);
+}
+
+@mixin choice-accent-face {
+    background-image: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--bx-color-accent-50) 24%, var(--bx-accent)),
+        var(--bx-accent) 42%,
+        var(--bx-accent) 65%,
+        color-mix(in srgb, var(--bx-border-accent) 18%, var(--bx-accent))
+    ) !important;
+    border-top-color: color-mix(in srgb, var(--bx-color-accent-100) 60%, var(--bx-accent));
+    border-inline-color: var(--bx-accent);
+    border-bottom-color: var(--bx-border-accent);
+}
+
+@mixin choice-thumb {
+    background-image: radial-gradient(
+        circle at 32% 22%,
+        var(--bx-color-accent-50),
+        var(--bx-color-accent-100) 38%,
+        var(--bx-color-accent-300) 80%,
+        var(--bx-color-accent-400)
+    ) !important;
+    border-top-color: var(--bx-color-accent-50);
+    border-inline-color: var(--bx-color-accent-200);
+    border-bottom-color: var(--bx-color-accent-500);
+}
+
+@mixin choice-flat-accessibility {
+    :host-context(.high-contrast) &,
+    :host-context(.bx-high-contrast-scope) & {
+        background-image: none !important;
+        border-color: var(--bx-glass-edge);
+    }
+
+    @media (forced-colors: active) {
+        background-image: none !important;
+        border-color: ButtonText;
+    }
+}

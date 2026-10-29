@@ -4,7 +4,7 @@
             [attr.aria-label]="ariaLabel()" [disabled]="isDisabled()" [checked]="internalValue() === true"
             (change)="onToggle($event)" (blur)="onBlur()">
 
-        <div class="bx-checkbox-box" bxSurface [class.is-checked]="internalValue() === true" [class.is-invalid]="!!errorMessage">
+        <div class="bx-checkbox-box" bxSurface [bxSurfaceEmission]="errorMessage ? 'var(--bx-text-danger)' : 'var(--bx-accent)'" [class.is-checked]="internalValue() === true" [class.is-invalid]="!!errorMessage">
             @if (internalValue() === true) {
             <bx-icon name="check" size="16"></bx-icon>
             }

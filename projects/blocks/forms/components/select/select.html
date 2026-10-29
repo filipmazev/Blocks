@@ -46,7 +46,7 @@
             <div class="bx-select-menu-container">
                 @for (option of filteredOptions(); track option.value) {
 
-                <bx-menu-item role="option" [attr.aria-selected]="internalValue() === option.value" [disabled]="option.disabled ?? false" [wrapLabel]="true" (action)="selectOption(option)">
+                <button type="button" class="bx-select-option" role="option" [attr.aria-selected]="internalValue() === option.value" [disabled]="option.disabled ?? false" (click)="selectOption(option)">
                     <div class="bx-select-item-inner">
                         <div class="bx-select-check-placeholder">
                             @if (internalValue() === option.value) {
@@ -55,7 +55,7 @@
                         </div>
                         <span [title]="option.resolvedStr">{{ option.resolvedStr }}</span>
                     </div>
-                </bx-menu-item>
+                </button>
 
                 } @empty {
                 <div class="bx-select-empty">

@@ -163,6 +163,7 @@
 }
 
 .bx-select-menu-container {
+    min-height: 0;
     overflow: hidden auto;
     padding: spacing(1);
 
@@ -184,6 +185,45 @@
     }
 }
 
+.bx-select-option {
+    display: flex;
+    width: 100%;
+    padding: spacing(2) spacing(3);
+    border: 0;
+    border-radius: radius(sm);
+    background: transparent;
+    color: var(--bx-text-primary);
+    font: inherit;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    text-align: start;
+    cursor: pointer;
+
+    &[aria-selected='true'] {
+        background: var(--bx-accent-subtle);
+        color: var(--bx-text-accent);
+    }
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+        background: var(--bx-bg-element-hover);
+    }
+
+    &[aria-selected='true']:hover:not(:disabled) {
+        background: var(--bx-accent-subtle);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-accent);
+        outline-offset: -2px;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+}
+
 .bx-select-item-inner {
     display: flex;
     align-items: center;
@@ -198,12 +238,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--bx-primary);
-    transition: color 0.15s ease-in-out;
-}
-
-bx-menu-item:hover .bx-select-check-placeholder {
-    color: currentcolor;
+    color: var(--bx-text-accent);
 }
 
 .bx-select-empty {

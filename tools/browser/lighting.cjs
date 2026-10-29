@@ -76,6 +76,62 @@ async function pageFor(t, canvas = false, mount = false) {
 const ambient = (page) =>
   page.evaluate(() => lighting.contributions.filter((light) => light.ambient));
 
+test('overlay fades use native animation, reverse continuously and clean up without frame style writes', async (t) => {
+  const page = await pageFor(t);
+  const result = await page.evaluate(async () => {
+    const target = document.createElement('div');
+    target.style.cssText = 'position:fixed;inset:20px;width:200px;height:100px;opacity:.8';
+    document.body.append(target);
+    const transition = runtime.createGlassTransition(receiver, target);
+    const mutations = [];
+    const observer = new MutationObserver(records => mutations.push(...records));
+    observer.observe(target, { attributes:true, attributeFilter:['style'] });
+    const opening = transition.enter();
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const duringOpen = Number(getComputedStyle(target).opacity);
+    const closing = transition.exit();
+    const afterReverse = Number(getComputedStyle(target).opacity);
+    const cancelled = await opening;
+    const closed = await closing;
+    const hidden = getComputedStyle(target).visibility;
+    const reopened = await transition.enter();
+    const opacity = getComputedStyle(target).opacity;
+    // Only visibility changes at the settled boundaries may mutate inline styles.
+    const opacityWritten = target.style.opacity !== '0.8';
+    transition.destroy();
+    observer.disconnect();
+    return { duringOpen, afterReverse, cancelled, closed, hidden, reopened, opacity, opacityWritten, mutations:mutations.length, animations:target.getAnimations().length };
+  });
+  assert.ok(result.duringOpen > 0 && result.duringOpen < 0.8, JSON.stringify(result));
+  assert.ok(Math.abs(result.duringOpen - result.afterReverse) < 0.05, JSON.stringify(result));
+  assert.equal(result.cancelled, 'cancelled');
+  assert.equal(result.closed, 'finished');
+  assert.equal(result.hidden, 'hidden');
+  assert.equal(result.reopened, 'finished');
+  assert.equal(result.opacity, '0.8');
+  assert.equal(result.opacityWritten, false);
+  assert.ok(result.mutations <= 3, JSON.stringify(result));
+  assert.equal(result.animations, 0);
+});
+
+test('overlay fades settle for reduced motion and cancel safely on destroy', async (t) => {
+  const page = await pageFor(t);
+  const result = await page.evaluate(async () => {
+    const target = document.createElement('div');
+    document.body.append(target);
+    const reduced = runtime.createGlassTransition(receiver, target, { reducedMotion:true });
+    const opened = await reduced.enter();
+    const closed = await reduced.exit();
+    const hidden = target.style.visibility;
+    reduced.destroy();
+    const transition = runtime.createGlassTransition(receiver, target);
+    const pending = transition.enter();
+    transition.destroy();
+    return { opened, closed, hidden, pending:await pending, animations:target.getAnimations().length, visibility:target.style.visibility };
+  });
+  assert.deepEqual(result, { opened:'finished', closed:'finished', hidden:'hidden', pending:'cancelled', animations:0, visibility:'' });
+});
+
 test('nearby red and blue backgrounds light opposite edges with distance falloff', async (t) => {
   const page = await pageFor(t);
   let lights = await ambient(page);

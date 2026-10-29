@@ -12,6 +12,10 @@
     box-shadow: var(--bx-glass-shadow, 0 2px 6px rgb(0 0 0 / .08));
     color: var(--bx-glass-text, var(--bx-text-primary, CanvasText));
     border-color: var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
+}
+
+/* Buttons use the same curve before their runtime surface mounts. */
+[data-bx-surface], .bx-btn {
     --bx-glass-material-blur: calc(4px + 24px * var(--bx-glassiness, .5) * var(--bx-glassiness, .5));
     --bx-glass-material-opacity: calc(.06 + 1.02 * var(--bx-glassiness, .5) - .28 * var(--bx-glassiness, .5) * var(--bx-glassiness, .5));
 }

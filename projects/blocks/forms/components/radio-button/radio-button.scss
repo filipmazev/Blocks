@@ -61,7 +61,7 @@
     }
 
     &.is-checked {
-        border-color: var(--bx-primary);
+        border-color: var(--bx-accent);
 
         &.is-invalid {
             border-color: var(--bx-border-danger);
@@ -74,13 +74,13 @@
 }
 
 input:focus-visible ~ .bx-radio-circle {
-    box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+    box-shadow: 0 0 0 3px var(--bx-accent-subtle);
 }
 
 .bx-radio-inner {
     width: 0.5rem;
     height: 0.5rem;
-    background-color: var(--bx-primary);
+    background-color: var(--bx-on-accent);
     border-radius: radius(pill);
     transform: scale(0);
     transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -102,10 +102,10 @@ input:focus-visible ~ .bx-radio-circle {
     --bx-glass-text: var(--bx-text-primary);
 
     &.is-checked {
-        --bx-glass-surface: var(--bx-primary);
-        --bx-glass-min-opacity: 0.55;
-        --bx-glass-edge: var(--bx-border-brand);
-        --bx-glass-text: var(--bx-text-brand);
+        --bx-glass-surface: var(--bx-accent);
+        --bx-glass-min-opacity: 1;
+        --bx-glass-edge: var(--bx-border-accent);
+        --bx-glass-text: var(--bx-text-accent);
     }
 
     &.is-invalid {
@@ -117,9 +117,35 @@ input:focus-visible ~ .bx-radio-circle {
 
 .bx-inline-wrapper:not(.is-disabled):hover .bx-radio-circle[data-bx-surface]:not(.is-invalid) {
     --bx-glass-surface: var(--bx-bg-neutral-hover);
-    --bx-glass-edge: var(--bx-border-brand);
+    --bx-glass-edge: var(--bx-border-accent);
 
     &.is-checked {
-        --bx-glass-surface: var(--bx-primary-hover);
+        --bx-glass-surface: var(--bx-accent-hover);
+
+        .bx-radio-inner {
+            background-color: var(--bx-accent-hover);
+        }
     }
+}
+
+.bx-inline-wrapper:not(.is-disabled) .bx-radio-circle[data-bx-surface]:not(.is-invalid) {
+    @include choice-well;
+
+    &.is-checked {
+        --bx-glass-surface: var(--bx-accent-subtle);
+
+        border-top-color: var(--bx-accent);
+        border-inline-color: var(--bx-border-accent);
+        border-bottom-color: var(--bx-border-accent);
+
+        .bx-radio-inner {
+            @include choice-accent-face;
+
+            background-color: var(--bx-accent);
+
+            @include choice-flat-accessibility;
+        }
+    }
+
+    @include choice-flat-accessibility;
 }

@@ -4,7 +4,7 @@
             [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()" [disabled]="isDisabled()"
             [checked]="internalValue() === value()" (change)="onSelect()" (blur)="onBlur()">
 
-        <div class="bx-radio-circle" bxSurface [class.is-checked]="internalValue() === value()"
+        <div class="bx-radio-circle" bxSurface [bxSurfaceEmission]="errorMessage ? 'var(--bx-text-danger)' : 'var(--bx-accent)'" [class.is-checked]="internalValue() === value()"
             [class.is-invalid]="!!errorMessage">
             <div class="bx-radio-inner"></div>
         </div>
