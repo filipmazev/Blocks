@@ -44,6 +44,28 @@
         @case ('error') {
           <div class="demo-stack control-width"><bx-form-field label="Reference" forId="error-preview"><span bxSurface class="native-control-surface"><input class="native-control" id="error-preview" [value]="fieldValue()" (input)="updateField($event)" (blur)="showError.set(true)" [attr.aria-invalid]="!!fieldError()" [attr.aria-describedby]="fieldError() ? 'custom-error' : null" /></span>@if (fieldError()) { <bx-error id="custom-error">{{ fieldError() }}</bx-error> }</bx-form-field><button bx-button variant="tonal" (click)="showError.set(true)">Validate reference</button></div>
         }
+        @case ('tabs') {
+          <div class="demo-stack">
+            <bx-tabs ariaLabel="Project information" [variant]="tabsVariant()" [(selectedValue)]="selectedTab">
+              <bx-tab label="Overview" value="overview" icon="book-open">
+                <ng-template bxTabContent><p>Keep related information together while showing one panel at a time.</p><bx-input-field label="Project note" [formControl]="tabNote" /></ng-template>
+              </bx-tab>
+              <bx-tab label="Details" value="details" color="success" icon="badge-check" endIcon="chevron-right" [disabled]="detailsDisabled()">
+                <ng-template bxTabContent><p>Headers support arrow keys, Home and End. Panel content is created only when selected.</p></ng-template>
+              </bx-tab>
+              @if (showActivity()) {
+                <bx-tab label="Activity" value="activity" color="info" textColor="text-warn" highlightColor="text-warn" contentColor="text-info" icon="activity"><p>No recent project activity.</p></bx-tab>
+              }
+              <bx-tab label="Unavailable" value="unavailable" [disabled]="true" />
+            </bx-tabs>
+            <div class="demo-row">
+              <button bx-button variant="tonal" [attr.aria-pressed]="tabsVariant() === 'underline'" (click)="tabsVariant.set(tabsVariant() === 'segmented' ? 'underline' : 'segmented')">Underline appearance</button>
+              <button bx-button variant="tonal" [attr.aria-pressed]="detailsDisabled()" (click)="detailsDisabled.set(!detailsDisabled())">Disable details</button>
+              <button bx-button variant="tonal" [attr.aria-pressed]="showActivity()" (click)="showActivity.set(!showActivity())">Show activity</button>
+            </div>
+            <output>Selected: {{ selectedTab() }}</output>
+          </div>
+        }
         @case ('menu') {
           <bx-menu class="menu-preview"><bx-menu-item label="Duplicate project" icon="copy" (action)="activate('Project duplicated')" /><bx-menu-item label="Archive project" icon="archive" (action)="activate('Project archived')" /><bx-menu-item label="Unavailable action" [disabled]="true" /></bx-menu>
         }

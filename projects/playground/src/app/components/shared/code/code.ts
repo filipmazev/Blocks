@@ -1,26 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Tabs, Tab, TabContentDirective } from '@filip.mazev/blocks/primitives';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { Highlight } from 'ngx-highlightjs';
 import { CODE_SNIPPETS } from '../../../generated/documentation';
 
 @Component({
   selector: 'app-code',
-  imports: [Highlight],
+  imports: [Highlight, Tabs, Tab, TabContentDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './code.html',
   styleUrl: './code.scss'
 })
 export class Code {
-  private readonly selectedPath = signal<string | null>(null);
-  protected readonly activeFile = computed(() => this.files().find((file) => file.path === this.selectedPath()) ?? this.files()[0] ?? null);
-  protected readonly codeContent = computed(() => {
-    const file = this.activeFile();
-    return file ? (CODE_SNIPPETS[file.path.replace(/^\/+/, '')] ?? `This snippet is unavailable: ${file.title}`) : '';
-  });
+  public readonly files = input.required<ICodeFile[]>();
 
-  public files = input.required<ICodeFile[]>();
-
-  protected selectFile(file: ICodeFile) {
-    this.selectedPath.set(file.path);
+  protected codeContent(file: ICodeFile): string {
+    return CODE_SNIPPETS[file.path.replace(/^\/+/, '')] ?? `This snippet is unavailable: ${file.title}`;
   }
 }

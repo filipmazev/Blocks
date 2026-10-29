@@ -1,15 +1,9 @@
-<div class="code-viewer">
-    <div class="tabs">
-        @for(file of files(); track file) {
-        <button (click)="selectFile(file)" [class.active]="activeFile() === file" class="tab">
-
-            <span class="lang-dot" [class]="file.language"></span>
-            {{ file.title }}
-        </button>
-        }
-    </div>
-
-    <div class="content">
-        <pre><code [highlight]="codeContent()" [language]="activeFile() ? activeFile()!.language : ''"></code></pre>
-    </div>
-</div>
+<bx-tabs class="code-viewer" variant="underline" ariaLabel="Code files">
+    @for (file of files(); track file.path) {
+    <bx-tab [label]="file.title" [value]="file.path">
+        <ng-template bxTabContent>
+            <pre><code [highlight]="codeContent(file)" [language]="file.language"></code></pre>
+        </ng-template>
+    </bx-tab>
+    }
+</bx-tabs>

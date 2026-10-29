@@ -1,0 +1,156 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    gap: var(--bx-tabs-panel-gap, #{spacing(6)});
+}
+
+.bx-tab-header {
+    --bx-glass-surface: var(--bx-bg-surface-alt);
+    --bx-glass-edge: var(--bx-border-default);
+    --bx-glass-shadow: none;
+    --bx-glass-opacity: calc(0.1 + 0.25 * var(--bx-glassiness, 0.5));
+    --bx-glass-radius: #{radius(md)};
+
+    display: flex;
+    align-self: flex-start;
+    flex: none;
+    box-sizing: border-box;
+    width: fit-content;
+    max-width: 100%;
+    padding: spacing(1);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+}
+
+.bx-tab-list {
+    display: flex;
+    flex: 1 1 auto;
+    gap: spacing(1);
+    min-width: 0;
+    padding: 1px;
+    overflow: auto hidden;
+    scrollbar-width: thin;
+}
+
+.bx-tab-trigger {
+    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-tab-text, var(--bx-text-secondary));
+    --bx-glass-edge: transparent;
+    --bx-glass-radius: #{radius(sm)};
+    --bx-glass-opacity: 0;
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-shadow: none;
+
+    display: inline-flex;
+    align-items: center;
+    gap: spacing(2);
+    flex: none;
+    padding: spacing(2) spacing(3);
+    border: 1px solid transparent;
+    border-radius: radius(sm);
+    font: inherit;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover:not(:disabled, .is-selected) {
+        --bx-glass-text: var(--bx-tab-text, var(--bx-text-primary));
+        --bx-glass-opacity: 0.15;
+    }
+
+    &.is-selected {
+        --bx-glass-surface: color-mix(
+            in srgb,
+            var(--bx-tab-highlight, var(--bx-primary)) 35%,
+            var(--bx-bg-surface)
+        );
+        --bx-glass-text: var(--bx-tab-selected-text, var(--bx-text-brand));
+        --bx-glass-edge: color-mix(
+            in srgb,
+            var(--bx-tab-highlight, var(--bx-primary)) 35%,
+            transparent
+        );
+        --bx-glass-opacity: 0.45;
+        --bx-glass-decoration-opacity: 0.5;
+        --bx-glass-rim-visibility: 0.65;
+        --bx-glass-shadow: #{shadow(sm)};
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-tab-highlight, var(--bx-border-brand));
+        outline-offset: -2px;
+    }
+}
+
+.bx-tab-panels {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    max-height: var(--bx-tabs-max-panel-height, none);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.bx-tab-panel {
+    min-width: 0;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: -2px;
+    }
+}
+
+:host(.bx-tabs-animated) .bx-tab-trigger {
+    transition:
+        background-color 0.1s ease-in-out,
+        color 0.1s ease-in-out,
+        box-shadow 0.1s ease-in-out;
+}
+
+:host(.bx-tabs-underline) {
+    gap: var(--bx-tabs-panel-gap, 0);
+
+    .bx-tab-header {
+        align-self: stretch;
+        width: auto;
+        padding: 0;
+        border: 0;
+        border-bottom: 1px solid var(--bx-border-default);
+        border-radius: 0;
+    }
+
+    .bx-tab-list {
+        gap: 0;
+    }
+
+    .bx-tab-trigger {
+        padding: spacing(3) spacing(4);
+        border-inline-end: 1px solid var(--bx-border-default);
+        border-radius: 0;
+        font-size: 0.8rem;
+
+        &.is-selected {
+            --bx-glass-shadow: inset 0 -2px 0 var(--bx-tab-highlight, var(--bx-border-brand));
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    .bx-tab-trigger.is-selected {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+    }
+}

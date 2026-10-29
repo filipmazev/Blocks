@@ -140,7 +140,6 @@ $high-contrast-dark-theme: validate-theme(
     'high-contrast-dark'
 ) !default;
 
-// The Blocks high-contrast palette is an explicit accessibility choice, independent of OS media queries.
 :where(.high-contrast, .bx-high-contrast-scope) {
     [data-bx-surface] {
         color: var(--bx-glass-text, var(--bx-text-primary)) !important;

@@ -598,7 +598,7 @@ class SceneRuntime {
               this.scope(emitter.element) === this.scope(entry.element) &&
               visibility.layer(lightingOrigin(emitter.element) as HTMLElement) === visibility.layer(origin) &&
               !emitter.element.contains(entry.element) &&
-              (!entry.element.contains(emitter.element) || entry.element.matches('[role="menu"]'))
+              (!entry.element.contains(emitter.element) || entry.element.matches('[role="menu"], [role="tablist"]'))
             )
               lights.push(light);
           }

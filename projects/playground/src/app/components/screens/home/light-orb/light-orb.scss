@@ -48,26 +48,9 @@
     background: var(--bx-text-info);
 }
 
-.orb-home {
+.orb-home-action {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
     flex: none;
-    min-height: 1.85rem;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid var(--bx-border-default);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--bx-bg-surface) 60%, transparent);
-    color: var(--bx-text-secondary);
-    font: inherit;
-    font-size: 0.6875rem;
-    cursor: pointer;
-}
-
-.orb-home svg {
-    width: 0.85rem;
-    height: 0.85rem;
 }
 
 .orb-plane {
@@ -108,8 +91,7 @@
     cursor: grabbing;
 }
 
-.light-orb:focus-visible,
-.orb-home:focus-visible {
+.light-orb:focus-visible {
     outline: 2px solid var(--bx-text-primary);
     outline-offset: 5px;
 }
@@ -133,6 +115,7 @@
     box-shadow:
         inset 1px 1px 2px #ffffff66,
         inset -2px -2px 5px #00000018;
+    // stylelint-disable-next-line property-no-vendor-prefix -- Preserve the Safari material fallback.
     -webkit-backdrop-filter: blur(5px) saturate(1.2);
     backdrop-filter: blur(5px) saturate(1.2);
 }
@@ -252,6 +235,7 @@
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
     .orb-body {
         background: var(--bx-bg-surface);
+        // stylelint-disable-next-line property-no-vendor-prefix -- Clear the Safari material fallback.
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -272,9 +256,4 @@
             color-mix(in srgb, currentcolor 24%, transparent),
             transparent 62%
         );
-}
-
-.orb-home:disabled {
-    opacity: 0.4;
-    cursor: default;
 }

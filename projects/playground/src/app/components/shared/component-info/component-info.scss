@@ -17,38 +17,8 @@
     overflow: hidden;
 }
 
-.info-header {
-    flex: 0 0 auto;
-    margin-bottom: spacing(6);
-}
-
-.toggle-group {
-    display: inline-flex;
-    gap: spacing(1);
-    padding: spacing(1);
-    border: 1px solid var(--bx-border-default);
-    background: var(--bx-bg-surface-alt);
-    border-radius: radius(md);
-}
-
-.toggle-btn {
-    padding: spacing(2) spacing(3);
-    border: 0;
-    border-radius: radius(sm);
-    color: var(--bx-text-secondary);
-    background: transparent;
-    font-size: 0.875rem;
-}
-
-.toggle-btn.active {
-    background: var(--bx-bg-surface);
-    color: var(--bx-text-primary);
-    box-shadow: shadow(sm);
-}
-
-.info-content {
+.info-tabs {
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
-    overflow: auto;
-    overscroll-behavior: contain;
 }

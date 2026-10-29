@@ -178,17 +178,20 @@ async function checkedControlsFor(t) {
     }
     for (const id of ['radio-a', 'radio-b', 'toggle']) {
       const element = document.getElementById(id);
-      element.style.cssText = 'display:block;flex:none;width:20px;height:20px;border-radius:10px;background:#222';
+      element.style.cssText =
+        'display:block;flex:none;width:20px;height:20px;border-radius:10px;background:#222';
       handles.push(runtime.mountSurface(element, { emission: '#ff3300' }));
     }
   });
   return page;
 }
 
-const waitForEmission = (page, id, active) => page.waitForFunction(
-  ([id, active]) => !!document.querySelector(`#${id} .bx-glass-rim [data-bx-light-source="emitter"]`) === active,
-  [id, active],
-);
+const waitForEmission = (page, id, active) =>
+  page.waitForFunction(
+    ([id, active]) =>
+      !!document.querySelector(`#${id} .bx-glass-rim [data-bx-light-source="emitter"]`) === active,
+    [id, active],
+  );
 
 test('checked native radios and switches keep emitting after release and blur, and radio peers stop', async (t) => {
   const page = await checkedControlsFor(t);
@@ -222,11 +225,11 @@ test('form-style checked class updates and native disabled state update persiste
     visual.classList.add('is-checked');
   });
   await waitForEmission(page, 'toggle', true);
-  await page.evaluate(() => document.getElementById('toggle-label').control.disabled = true);
+  await page.evaluate(() => (document.getElementById('toggle-label').control.disabled = true));
   await waitForEmission(page, 'toggle', false);
   await page.locator('#toggle-label').hover();
   await waitForEmission(page, 'toggle', false);
-  await page.evaluate(() => document.getElementById('toggle-label').control.disabled = false);
+  await page.evaluate(() => (document.getElementById('toggle-label').control.disabled = false));
   await page.mouse.move(900, 600);
   await waitForEmission(page, 'toggle', true);
 });
@@ -288,6 +291,34 @@ test('solid/reduced-transparency and covered receivers reject ambient light', as
   });
   await page.waitForTimeout(300);
   assert.equal((await ambient(page)).length, 0);
+});
+
+test('selected child tabs illuminate their tablist without lighting ordinary ancestor cards', async (t) => {
+  const page = await pageFor(t, false, true);
+  await page.evaluate(() => {
+    receiver.setAttribute('role', 'tablist');
+    const tab = document.createElement('button');
+    tab.id = 'selected-tab';
+    tab.setAttribute('role', 'tab');
+    tab.setAttribute('aria-selected', 'true');
+    tab.textContent = 'Selected';
+    tab.style.cssText = 'position:absolute;left:20px;top:25px;width:100px;height:40px';
+    receiver.append(tab);
+    handles.push(runtime.mountSurface(tab, { emission: '#ff3300' }));
+  });
+  await page.waitForFunction(() =>
+    receiver.querySelector(':scope > .bx-glass-rim [data-bx-light-source^="hover:"]'),
+  );
+  await page.mouse.move(900, 650);
+  await page.evaluate(() => document.activeElement.blur());
+  assert.ok(await page.locator('#selected-tab [data-bx-light-source="emitter"]').count());
+  await page.evaluate(() => {
+    receiver.setAttribute('role', 'group');
+    runtime.refreshGlassLighting(receiver);
+  });
+  await page.waitForFunction(
+    () => !receiver.querySelector(':scope > .bx-glass-rim [data-bx-light-source^="hover:"]'),
+  );
 });
 
 test('lighting boundaries isolate overlays and removing sources clears their colors', async (t) => {

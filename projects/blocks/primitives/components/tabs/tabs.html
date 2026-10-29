@@ -1,0 +1,31 @@
+<ng-content select="bx-tab"></ng-content>
+
+<div bxSurface data-bx-surface="glass" class="bx-tab-header" role="tablist" [attr.aria-label]="resolvedLabel()" aria-orientation="horizontal">
+<div class="bx-tab-list">
+    @for (tab of tabs(); track tab) {
+    <button #trigger bxSurface data-bx-surface="glass" class="bx-tab-trigger" type="button" role="tab"
+        [bxSurfaceEmission]="tab.resolvedEmission()"
+        [style.--bx-tab-highlight]="tab.resolvedHighlight()" [style.--bx-tab-text]="tab.resolvedTextColor()"
+        [style.--bx-tab-selected-text]="tab.resolvedSelectedText()"
+        [id]="tab.triggerId" [attr.aria-controls]="tab.panelId" [attr.aria-selected]="tab === activeTab()"
+        [attr.tabindex]="tab === activeTab() ? 0 : -1" [disabled]="tab.disabled()"
+        [class.is-selected]="tab === activeTab()" (click)="select(tab.value())" (keydown)="onTabKey($event, tab)">
+        @if (tab.icon()) { <bx-icon [name]="tab.icon()!" size="16" /> }
+        <span>{{ tab.resolvedLabel() }}</span>
+        @if (tab.endIcon()) { <bx-icon [name]="tab.endIcon()!" size="16" /> }
+    </button>
+    }
+</div>
+</div>
+
+<div class="bx-tab-panels">
+    @for (tab of tabs(); track tab) {
+    <div class="bx-tab-panel" role="tabpanel" tabindex="0" [id]="tab.panelId"
+        [style.color]="tab.resolvedContentColor()"
+        [attr.aria-labelledby]="tab.triggerId" [hidden]="tab !== activeTab()">
+        @if (tab === activeTab()) {
+        <ng-container [ngTemplateOutlet]="tab.template()"></ng-container>
+        }
+    </div>
+    }
+</div>

@@ -33,7 +33,7 @@
         [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
         (overlayOutsideClick)="onOutsideClick($event)" (attach)="onPanelAttach()" (detach)="onPanelDetach()" (positionChange)="refreshPanel()">
 
-        <div class="bx-select-panel" bxSurface role="listbox" tabindex="0" [attr.aria-label]="resolvedLabel()" [id]="inputId() + '-options'" (keydown)="onPanelKey($event)">
+        <div class="bx-select-panel" data-bx-surface="solid" role="listbox" tabindex="0" [attr.aria-label]="resolvedLabel()" [id]="inputId() + '-options'" (keydown)="onPanelKey($event)">
 
             @if (isSearchable()) {
             <div class="bx-select-search-container">

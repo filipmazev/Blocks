@@ -7,6 +7,8 @@
 }
 
 .bx-tooltip-surface[data-bx-surface] {
+    --bx-glass-radius: var(--bx-rounded-sm, #{radius(sm)});
+
     position: relative;
     padding: spacing(1) spacing(2);
     border: 1px solid var(--bx-glass-edge);

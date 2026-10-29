@@ -1,22 +1,10 @@
 <div class="info-container">
-
-    <div class="info-header">
-        <div class="toggle-group">
-            <button type="button" class="toggle-btn" [class.active]="viewMode() === 'documentation'" [attr.aria-pressed]="viewMode() === 'documentation'"
-                (click)="viewMode.set('documentation')">
-                Documentation
-            </button>
-            <button type="button" class="toggle-btn" [class.active]="viewMode() === 'code'" [attr.aria-pressed]="viewMode() === 'code'" (click)="viewMode.set('code')">
-                Code Examples
-            </button>
-        </div>
-    </div>
-
-    <div class="info-content">
-        @if (viewMode() === 'documentation') {
-        <app-readme [path]="readmePath()"></app-readme>
-        } @else if (viewMode() === 'code') {
-        <app-code [files]="codeFiles()"></app-code>
-        }
-    </div>
+    <bx-tabs class="info-tabs" ariaLabel="Documentation and code examples">
+        <bx-tab label="Documentation" value="documentation" icon="file-braces">
+            <ng-template bxTabContent><app-readme [path]="readmePath()" /></ng-template>
+        </bx-tab>
+        <bx-tab label="Code Examples" value="code" icon="braces" color="success">
+            <ng-template bxTabContent><app-code [files]="codeFiles()" /></ng-template>
+        </bx-tab>
+    </bx-tabs>
 </div>

@@ -3,7 +3,18 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Button, Checkbox, FormField, InputField, Radio, SearchInput, Select, SliderDirective, SlideToggle, BxError } from '@filip.mazev/blocks/forms';
-import { Menu, MenuItem, Tooltip, DropdownDirective, ContextMenuDirective, TooltipDirective } from '@filip.mazev/blocks/primitives';
+import {
+  Menu,
+  MenuItem,
+  Tooltip,
+  DropdownDirective,
+  ContextMenuDirective,
+  TooltipDirective,
+  Tabs,
+  Tab,
+  TabContentDirective,
+  TabsVariant
+} from '@filip.mazev/blocks/primitives';
 import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -59,6 +70,9 @@ export class ComponentDialog extends ModalContent<{ title: string; description: 
     DropdownDirective,
     ContextMenuDirective,
     TooltipDirective,
+    Tabs,
+    Tab,
+    TabContentDirective,
     Breadcrumbs,
     Icon,
     BxSurfaceDirective,
@@ -92,6 +106,11 @@ export class ComponentDemo {
   protected readonly destination = new FormControl('skopje', { nonNullable: true });
   protected readonly enabled = new FormControl(true, { nonNullable: true });
   protected readonly bannerVisible = signal(true);
+  protected readonly selectedTab = signal<string | null>('overview');
+  protected readonly tabsVariant = signal<TabsVariant>('segmented');
+  protected readonly detailsDisabled = signal(false);
+  protected readonly showActivity = signal(true);
+  protected readonly tabNote = new FormControl('', { nonNullable: true });
   protected readonly options = [
     { label: 'Skopje', value: 'skopje' },
     { label: 'Ohrid', value: 'ohrid' },

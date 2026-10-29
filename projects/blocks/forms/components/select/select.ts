@@ -2,12 +2,13 @@ import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Component, computed, inject, input, output, signal, ViewChild, OnInit, OnDestroy, ElementRef, NgZone, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Overlay, OverlayModule, ConnectionPositionPair, CdkConnectedOverlay, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { Overlay, OverlayModule, ConnectionPositionPair, CdkConnectedOverlay } from '@angular/cdk/overlay';
 import {
   BX_I18N,
   BxBaseControl,
   BxA11yService,
   inheritOverlayTheme,
+  trackOverlayOrigin,
   DEFAULT_DEBOUNCE_TIME,
   isTextWithKey,
   ResolvableText,
@@ -112,7 +113,7 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
 
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
-  private disconnectScroll?: () => void;
+  private disconnectOrigin?: () => void;
 
   private transitionRevision = 0;
 
@@ -189,7 +190,8 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
     if (origin && overlay?.hasAttached()) {
       this.disconnectLighting?.();
       this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, origin);
-      this.trackPanelScroll(overlay, origin);
+      this.disconnectOrigin?.();
+      this.disconnectOrigin = this.zone.runOutsideAngular(() => trackOverlayOrigin(overlay, origin));
     }
     // Wait for the attached view's synchronous surface directives to finish mounting.
     queueMicrotask(() => {
@@ -228,8 +230,8 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
     this.disconnectTheme = undefined;
     this.disconnectLighting?.();
     this.disconnectLighting = undefined;
-    this.disconnectScroll?.();
-    this.disconnectScroll = undefined;
+    this.disconnectOrigin?.();
+    this.disconnectOrigin = undefined;
   }
 
   protected overlayPopoverLocation(origin: HTMLElement): CdkConnectedOverlay['usePopover'] {
@@ -305,23 +307,6 @@ export class Select<T> extends BxBaseControl<T> implements OnInit, OnDestroy {
 
   protected onSearchChange(value: string): void {
     this.searchSubject.next(value);
-  }
-
-  private trackPanelScroll(overlay: NonNullable<CdkConnectedOverlay['overlayRef']>, origin: HTMLElement): void {
-    const view = origin.ownerDocument.defaultView;
-    if (!view) return;
-    this.disconnectScroll?.();
-    this.zone.runOutsideAngular(() => {
-      const reposition = (event: Event) => {
-        const target = event.target;
-        if (!overlay.hasAttached() || !(target === view || (target instanceof Node && target.contains(origin)))) return;
-        const positionStrategy = overlay.getConfig().positionStrategy;
-        if (positionStrategy instanceof FlexibleConnectedPositionStrategy) positionStrategy.reapplyLastPosition();
-        else overlay.updatePosition();
-      };
-      view.addEventListener('scroll', reposition, { capture: true, passive: true });
-      this.disconnectScroll = () => view.removeEventListener('scroll', reposition, true);
-    });
   }
 
   private panelItems(): HTMLElement[] {

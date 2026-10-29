@@ -224,14 +224,16 @@ bx-menu-item:hover .bx-select-check-placeholder {
 }
 
 .bx-select-panel[data-bx-surface] {
+    --bx-glass-radius: var(--bx-rounded-lg, #{radius(lg)});
     --bx-glass-surface: var(--bx-bg-surface);
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: #{shadow(sm)};
-    --bx-glass-min-opacity: 0;
-    --bx-glass-decoration-opacity: 1;
-    --bx-glass-rim-visibility: 1;
-    --bx-glass-unified-lighting: 0;
+
+    background: var(--bx-glass-surface) !important;
+    // stylelint-disable-next-line property-no-vendor-prefix
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 .bx-select-trigger[data-bx-surface] {

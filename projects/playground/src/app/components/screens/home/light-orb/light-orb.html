@@ -1,9 +1,11 @@
 <div class="orb-controls" [attr.data-bx-reduced-motion]="reducedMotion()">
   <p id="orb-instructions" class="orb-message" role="status"><span class="mood-dot" [attr.data-mood]="mood()" aria-hidden="true"></span>{{ message() }}</p>
-  <button class="orb-home" type="button" (click)="bringHome()" [disabled]="mood() === 'danger'" [bxTooltip]="mood() === 'danger' ? 'The orb needs a moment to cool down before returning to its pod in the theme card.' : 'Bring the orb back to its pod in the theme card.'" placement="top" aria-label="Bring the light home">
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 7-6 7 6v8H3zM8 17v-6h4v6" /></svg>
+  <span class="orb-home-action" [bxTooltip]="mood() === 'danger' ? 'The orb needs a moment to cool down before returning to its pod in the theme card.' : 'Bring the orb back to its pod in the theme card.'" placement="top">
+  <button bx-button variant="tonal" color="grayscale" class="orb-home" type="button" (click)="bringHome()" [disabled]="mood() === 'danger'" aria-label="Bring the light home">
+    <bx-icon name="house" size="16" />
     <span>Bring home</span>
   </button>
+  </span>
 </div>
 <div #plane class="orb-plane" [class.orb-ready]="ready()">
   <span #impact class="orb-impact-layer" aria-hidden="true"><span class="orb-impact orb-impact-left"></span><span class="orb-impact orb-impact-right"></span><span class="orb-impact orb-impact-top"></span><span class="orb-impact orb-impact-bottom"></span></span>

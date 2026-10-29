@@ -35,23 +35,13 @@ Menus use the normal application overlay layer by default. To let a menu escape 
 
 Import `BxOverlayContextDirective` alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide `BX_OVERLAY_CONTEXT` with `{ useTopLayer: true }` to scope the behavior to their view.
 
+Where supported, native CSS anchors keep the menu attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.
+
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+The standard `bx-menu` container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Trigger and row effects retain their application appearance settings.
 
-```ts
-import { inject } from '@angular/core';
-import { ThemingService } from '@filip.mazev/blocks/core';
-
-private readonly theme = inject(ThemingService);
-
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-```
-
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; enabling it skips the opening and closing fade.
 
 ## Behavior and accessibility
 

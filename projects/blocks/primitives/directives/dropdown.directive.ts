@@ -13,9 +13,9 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import { FlexibleConnectedPositionStrategy, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { BxA11yService, BxPlacement, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
+import { BxA11yService, BxPlacement, BxOverlayPositionService, inheritOverlayTheme, trackOverlayOrigin } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { BX_OVERLAY_CONTEXT } from './overlay-context.token';
 import { Subscription } from 'rxjs';
@@ -186,7 +186,7 @@ export class DropdownDirective {
     this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(this.elementRef.nativeElement, overlay.overlayElement));
     this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, this.elementRef.nativeElement);
     this.subscriptions = new Subscription();
-    this.trackScroll(overlay, positionStrategy);
+    this.subscriptions.add(this.zone.runOutsideAngular(() => trackOverlayOrigin(overlay, this.elementRef.nativeElement)));
     this.subscriptions.add(overlay.backdropClick().subscribe(() => this.close()));
     this.subscriptions.add(
       overlay.outsidePointerEvents().subscribe((event) => {
@@ -212,20 +212,6 @@ export class DropdownDirective {
     const view = overlay.attach(new TemplatePortal(this.bxDropdown(), this.vcr));
     view.detectChanges();
     overlay.updatePosition();
-  }
-
-  private trackScroll(overlay: OverlayRef, positionStrategy: FlexibleConnectedPositionStrategy): void {
-    const source = this.elementRef.nativeElement;
-    const view = source.ownerDocument.defaultView;
-    if (!view) return;
-    this.zone.runOutsideAngular(() => {
-      const reposition = (event: Event) => {
-        const target = event.target;
-        if (overlay.hasAttached() && (target === view || (target instanceof Node && target.contains(source)))) positionStrategy.reapplyLastPosition();
-      };
-      view.addEventListener('scroll', reposition, { capture: true, passive: true });
-      this.subscriptions.add(() => view.removeEventListener('scroll', reposition, true));
-    });
   }
 
   private isDisabled(): boolean {

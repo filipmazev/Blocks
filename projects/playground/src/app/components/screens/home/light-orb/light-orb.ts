@@ -15,6 +15,8 @@ import {
 import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
 import { GlassScene, mountGlassScene } from '@filip.mazev/blocks/effects/runtime';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
+import { Button } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
 import { LightOrbPhysics, OrbMood, OrbState, orbReleaseMotion } from './light-orb-physics';
 
 type RGB = [number, number, number];
@@ -32,7 +34,7 @@ interface PointerSample {
 
 @Component({
   selector: 'app-light-orb',
-  imports: [TooltipDirective],
+  imports: [TooltipDirective, Button, Icon],
   templateUrl: './light-orb.html',
   styleUrl: './light-orb.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -24,7 +24,7 @@ The control implements Angular ControlValueAccessor. Use `[formControl]`, `formC
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+The trigger inherits the application appearance from `ThemingService`. The options panel uses an opaque themed backing without container blur or live lighting. Colors, spacing, radius, elevation, focus states and row interactions still follow Blocks tokens.
 
 ```ts
 import { inject } from '@angular/core';
@@ -55,6 +55,8 @@ The options panel follows `BX_OVERLAY_CONTEXT` and automatically enters the brow
 ```
 
 Import `BxOverlayContextDirective` where the context is declared. Select panels outside these contexts stay in the regular CDK overlay layer so sticky application chrome can remain above them.
+
+Where supported, native CSS anchors keep the panel attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.
 
 ## Playground
 

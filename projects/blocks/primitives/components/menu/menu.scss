@@ -5,15 +5,11 @@
 }
 
 .bx-menu-wrapper {
-    // Start a neutral material instead of inheriting a trigger's tint or hidden rim.
     --bx-glass-surface: var(--bx-bg-surface);
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
-    --bx-glass-min-opacity: 0;
-    --bx-glass-decoration-opacity: 1;
-    --bx-glass-rim-visibility: 1;
-    --bx-glass-unified-lighting: 0;
     --bx-glass-shadow: #{shadow(sm)};
+    --bx-glass-radius: var(--bx-rounded-lg, #{radius(lg)});
 
     background-color: var(--bx-glass-surface);
     border: 1px solid var(--bx-glass-edge);
@@ -24,8 +20,14 @@
     flex-direction: column;
     min-width: 12rem;
 
+    &[data-bx-surface='solid'] {
+        background: var(--bx-glass-surface) !important;
+        // stylelint-disable-next-line property-no-vendor-prefix
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
     &.bx-menu-animated {
-        // The overlay runtime owns opacity; a second CSS fade would lag its frames.
         transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
@@ -38,7 +40,6 @@
     }
 }
 
-// The shared material owns the backing; rows inherit it without nested blur.
 :host([data-bx-surface]) {
     border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, #{radius(lg)}));
 

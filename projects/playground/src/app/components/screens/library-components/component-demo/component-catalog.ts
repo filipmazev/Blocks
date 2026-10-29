@@ -127,6 +127,18 @@ export const COMPONENT_EXAMPLES: readonly ComponentExample[] = [
       '<bx-form-field label="Reference" forId="reference">\n  <input id="reference" aria-describedby="reference-error" />\n  <bx-error id="reference-error">Enter at least three characters.</bx-error>\n</bx-form-field>'
   },
   {
+    id: 'tabs',
+    title: 'Tabs',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/tabs/README.md',
+    symbol: 'Tabs, Tab, TabContentDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-tabs',
+    description: 'Related panels with segmented or underline headers, keyboard navigation and optional lazy content.',
+    example:
+      '<bx-tabs ariaLabel="Project information">\n  <bx-tab label="Documentation" value="docs">\n    <ng-template bxTabContent><app-documentation /></ng-template>\n  </bx-tab>\n  <bx-tab label="Code Examples" value="code">\n    <ng-template bxTabContent><app-examples /></ng-template>\n  </bx-tab>\n</bx-tabs>'
+  },
+  {
     id: 'menu',
     title: 'Menu',
     group: 'Primitives',
