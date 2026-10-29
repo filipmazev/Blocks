@@ -1,4 +1,4 @@
-import{Cn as on,D as Hc,F as K,J as P,Nt as at,Pn as ra,Ut as f,cn as ko,ct as V,d as Bc,in as jc,j as Jf,st as Ut,wn as ot}from"./chunk-D44OVyuP.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{H as Go,Hn as x,In as vn,Kt as en,N as Da,_ as Ap,b as B,en as h,j as D,jn as re,kt as Wo,wt as Ue,yn as mu,zn as we}from"./main-ERZQBNJW.js";var k={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -7,13 +7,66 @@ import{Cn as on,D as Hc,F as K,J as P,Nt as at,Pn as ra,Ut as f,cn as ko,ct as V
 npm start
 </code></pre>
 <p>Open <a href="http://localhost:8080">http://localhost:8080</a>. The component catalogue links each component to its own demonstration and README. <code>/appearance</code> provides application-wide material controls and spatial-lighting and fade demonstrations. <code>/icon-catalog</code> provides searchable, paginated icons.</p>
-<p>The playground defaults to Blue (<code>#217eff</code>) when no saved palette is present; Reset returns to Blue. Saved palette preferences remain available.</p>
+<p>The playground defaults to Graphite / Sky Blue (<code>#525252</code> / <code>#38bdf8</code>) when no saved palette is present; Reset returns to Graphite / Sky Blue. Saved palette preferences remain available.</p>
 <p>The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.</p>
 <pre><code class="language-sh">npm run build:playground
 npm run build:blocks
 </code></pre>
 <p>Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run <code>npm run tools:build-docs</code> to regenerate its bundled content. Runtime documentation does not fetch Markdown files.</p>
 <p>Keep Angular packages, CLI, builder and ng-packagr on major 22 with TypeScript 6. The checked-in lockfile preserves compatible versions. Runtime Markdown and Mermaid dependencies are no longer needed by the playground. Do not mix Angular 21 tooling with Angular 22.</p>
+<h2>Palettes</h2>
+<p>Each palette combines two tonal families. Choose one under <strong>Palettes</strong> in Appearance; the two swatches show its anchors. The same palette supplies both light and dark appearances.</p>
+<table>
+<thead>
+<tr>
+<th>Palette</th>
+<th>Anchors</th>
+<th><code>ng add --theme</code> value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Graphite / Sky Blue</td>
+<td><code>#525252</code> / <code>#38bdf8</code></td>
+<td><code>graphite-sky-blue</code></td>
+</tr>
+<tr>
+<td>Azure / Coral</td>
+<td><code>#217eff</code> / <code>#f87763</code></td>
+<td><code>azure-coral</code></td>
+</tr>
+<tr>
+<td>Violet / Teal</td>
+<td><code>#6d00ff</code> / <code>#0d9488</code></td>
+<td><code>violet-teal</code></td>
+</tr>
+<tr>
+<td>Tangerine / Indigo</td>
+<td><code>#ff6900</code> / <code>#4f78f5</code></td>
+<td><code>tangerine-indigo</code></td>
+</tr>
+<tr>
+<td>Scarlet / Cyan</td>
+<td><code>#e3241b</code> / <code>#0891b2</code></td>
+<td><code>scarlet-cyan</code></td>
+</tr>
+<tr>
+<td>Lime / Violet</td>
+<td><code>#c4f53d</code> / <code>#6842a6</code></td>
+<td><code>lime-violet</code></td>
+</tr>
+<tr>
+<td>Cyberpunk</td>
+<td><code>#3e5669</code> / <code>#e6da00</code></td>
+<td><code>cyberpunk</code></td>
+</tr>
+</tbody></table>
+<p>Primary roles identify main actions, checked controls, links and focus. Accent roles provide the second tone for supporting actions, tabs, icons and interactive containers. For example, <code>color=&quot;accent&quot;</code> selects the second tone on buttons and tabs; <code>text-accent</code> follows it on icons. Documentation uses the primary role and Code Examples uses the accent role. Success, warning, danger and information retain their status meanings across palettes.</p>
+<p>Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground&#39;s Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.</p>
+<pre><code class="language-ts">const theme = inject(ThemingService);
+theme.setPalette(&#39;violet-teal&#39;);
+theme.setApplicationTheme(&#39;dark&#39;);
+</code></pre>
+<p>Previous palette IDs (<code>white</code>, <code>blue</code>, <code>purple</code>, <code>orange</code>, <code>red</code>, <code>green</code>) and Sass theme variables remain compatibility aliases. Stored selections migrate to the paired IDs. High contrast overrides both expressive roles with contrast-first black/white values.</p>
 <h2>Global configuration through Blocks</h2>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
@@ -96,21 +149,21 @@ python3 -m http.server 8081
 </code></pre>
 <h2>Styles &amp; Theming</h2>
 <p>Blocks Core utilizes a robust SCSS architecture to manage design tokens and responsiveness.</p>
-<h3>1. Theme Provider</h3>
+<h3>1. Palette provider</h3>
 <p>The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the <code>bx-theme</code> mixin in your global styles.</p>
 <pre><code class="language-scss">@use &quot;@filip.mazev/blocks&quot; as *;
 
 :root {
   // Initialize default light theme
-  @include bx-theme(blocks.$purple-light-theme);
+  @include bx-theme($violet-teal-light-theme);
 }
 
 // Example: Switch to dark theme based on a class
 body.dark-theme {
-  @include bx-theme(blocks.$purple-dark-theme);
+  @include bx-theme($violet-teal-dark-theme);
 }
 </code></pre>
-<p>This generates CSS variables with the <code>--bx-</code> prefix (e.g.,<code>--bx-primary</code>, <code>--bx-bg-surface</code>, <code>--bx-bg-element</code>).</p>
+<p>This generates paired palette roles with the <code>--bx-</code> prefix: <code>--bx-primary</code>, <code>--bx-accent</code>, their <code>on-*</code> foregrounds, subtle containers, text and borders. <code>--bx-bg-canvas</code> stays neutral in light and dark appearances. See <a href="appearance#palettes">Palettes</a> for the available pairs, CLI IDs and usage.</p>
 <h3>2. Responsive Mixins</h3>
 <p>The library provides mixins that strictly align with the WindowDimensionsService breakpoints in TypeScript.</p>
 <p>Available Breakpoints:</p>
@@ -677,7 +730,7 @@ export class MyFeatureComponent {
 <h2>What does ng add do?</h2>
 <p>When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:</p>
 <ul>
-<li>Theme selection: White is the CLI default; Blue, Purple, Orange, Red, Green and Cyberpunk are also available. Use <code>--theme=blue</code> for the Blue palette based on <code>#217eff</code>.</li>
+<li>Palette selection: Graphite / Sky Blue is the CLI default. Azure / Coral, Violet / Teal, Tangerine / Indigo, Scarlet / Cyan, Lime / Violet, and Cyberpunk are also available. Use <code>--theme=azure-coral</code> to select Azure / Coral.</li>
 <li>Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.</li>
 <li>SCSS Injection: Intelligently locates your project&#39;s global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.</li>
 </ul>
@@ -690,14 +743,20 @@ export class MyFeatureComponent {
 
 @layer base {
     :root {
-        @include bx-theme($white-light-theme);
+        @include bx-theme($graphite-sky-blue-light-theme);
     }
 
     [data-theme=&#39;dark&#39;] {
-        @include bx-theme($white-dark-theme);
+        @include bx-theme($graphite-sky-blue-dark-theme);
     }
 }
 </code></pre>
+<h2>Palettes</h2>
+<p>Use paired palette IDs consistently in the CLI and <code>ThemingService.setPalette()</code>. For example:</p>
+<pre><code class="language-sh">ng add @filip.mazev/blocks --theme=azure-coral
+</code></pre>
+<p>The Sass exports use the same names: <code>$azure-coral-light-theme</code> and <code>$azure-coral-dark-theme</code>. Graphite / Sky Blue is the installer default; the playground starts with Graphite / Sky Blue. Previous IDs and Sass names remain aliases.</p>
+<p>Buttons and tabs accept <code>color=&quot;accent&quot;</code> for the second tone. Icons and custom components can use semantic tokens such as <code>text-accent</code>, <code>accent-subtle</code>, <code>on-accent</code>, and <code>border-accent</code>. Canvas backgrounds stay neutral; status roles keep their meaning. See <a href="appearance#palettes">the palette reference</a> for all seven pairs.</p>
 <h2>Appearance</h2>
 <p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ glassiness: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
 <p>Load <code>@filip.mazev/blocks/effects/effects.css</code> once globally alongside the Blocks Sass theme. <code>ng add</code> registers the stylesheet for new installations. <code>BxSurfaceDirective</code> from <code>@filip.mazev/blocks/effects</code> is available for custom containers and local overrides. The framework-independent engine is <code>@filip.mazev/blocks/effects/runtime</code>, included in the same package.</p>
@@ -916,11 +975,14 @@ scene.destroy();
 <pre><code class="language-html">&lt;button bx-button variant=&quot;filled&quot; (click)=&quot;save()&quot;&gt;Save changes&lt;/button&gt;
 </code></pre>
 <h2>API</h2>
-<p><code>variant</code>: text, filled, tonal, icon, fab, mini-fab, extended-fab. <code>color</code>: primary, success, danger, info, warn, grayscale. <code>outlined</code>, <code>elevated</code>, <code>disabled</code>, and <code>interactive</code> control presentation and availability.</p>
+<p><code>variant</code>: text, filled, tonal, icon, fab, mini-fab, extended-fab. <code>color</code>: primary, accent, success, danger, info, warn, grayscale. <code>outlined</code>, <code>elevated</code>, <code>disabled</code>, and <code>interactive</code> control presentation and availability.</p>
+<p>Use the active palette&#39;s second tone for supporting actions:</p>
+<pre><code class="language-html">&lt;button bx-button variant=&quot;tonal&quot; color=&quot;accent&quot;&gt;Explore&lt;/button&gt;
+</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, <code>aria-expanded=&quot;true&quot;</code>, or a current <code>aria-current</code> value. Primary and grayscale buttons use the application&#39;s accent; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.</p>
-<p>Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Fills keep a minimum tint for readable text while retaining translucency and surface lighting. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
+<p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, <code>aria-expanded=&quot;true&quot;</code>, or a current <code>aria-current</code> value. Primary and grayscale buttons use the primary palette role; accent buttons use the second tone; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.</p>
+<p>Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
@@ -1098,7 +1160,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
 <p><code>options</code> is required: <code>{ label, value, disabled? }[]</code>. <code>isSearchable</code>, <code>externalFiltering</code>, <code>searchPlaceholder</code>, <code>emptyMessage</code> configure search. <code>search</code> emits debounced external filter terms. <code>toggleOpen()</code> and <code>close()</code> control the panel.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>The trigger inherits the application appearance from <code>ThemingService</code>. The options panel uses an opaque themed backing without container blur or live lighting. Colors, spacing, radius, elevation, focus states and row interactions still follow Blocks tokens.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
@@ -1119,6 +1181,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 &lt;/header&gt;
 </code></pre>
 <p>Import <code>BxOverlayContextDirective</code> where the context is declared. Select panels outside these contexts stay in the regular CDK overlay layer so sticky application chrome can remain above them.</p>
+<p>Where supported, native CSS anchors keep the panel attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/select</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/forms/components/slide-toggle/README.md":`<h1>Slide toggle</h1>
@@ -1577,23 +1640,162 @@ this.theme.setAppearance({ reducedTransparency: true });
 <h2>API</h2>
 <p><code>Menu</code> projects its children and provides the menu surface. Use <code>MenuItem</code> for consistent action styling. Place it in <code>bxDropdown</code> for positioned dismissal and keyboard behavior.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<p>Dropdown and context menus follow the configured glass tint and radius, including after their opening fade. Nearby sources and active menu rows illuminate the outer border; rows share the containing material.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
-
-private readonly theme = inject(ThemingService);
-
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
-<p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
+<p>Menus use an opaque themed backing with no container blur, reflections, or live lighting. Colors, spacing, radius, elevation and row interactions still follow Blocks tokens. Trigger and row effects retain their application appearance settings.</p>
+<p><code>BxA11yService</code> controls reduced motion. Forced colors preserve native contrast and focus states.</p>
 <h2>Behavior and accessibility</h2>
-<p>Keep menu labels action-oriented. The container shares one glass backing with its items, avoiding stacked blur. Avoid nested interactive controls inside one item.</p>
+<p>Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/menu</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/components/tab/README.md":`<h1>Tab</h1>
+<p>Declares a labelled panel inside <a href="components/tabs"><code>Tabs</code></a>.</p>
+<pre><code class="language-ts">import { Tabs, Tab, TabContentDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Project details&quot;&gt;
+  &lt;bx-tab label=&quot;Overview&quot; value=&quot;overview&quot;&gt;
+    &lt;ng-template bxTabContent&gt;&lt;app-overview /&gt;&lt;/ng-template&gt;
+  &lt;/bx-tab&gt;
+  &lt;bx-tab label=&quot;Activity&quot; value=&quot;activity&quot; [disabled]=&quot;loading()&quot;&gt;
+    &lt;ng-template bxTabContent&gt;&lt;app-activity /&gt;&lt;/ng-template&gt;
+  &lt;/bx-tab&gt;
+&lt;/bx-tabs&gt;
+</code></pre>
+<p><code>label</code> is required and accepts <code>ResolvableText</code>. <code>value</code> identifies selection and must be unique within its group; an omitted value is generated. <code>disabled</code> removes the tab from selection and arrow-key navigation.</p>
+<p><code>color</code> chooses a semantic palette role: <code>primary</code>, <code>accent</code>, <code>success</code>, <code>danger</code>, <code>info</code>, <code>warn</code>, or <code>grayscale</code>. The <code>accent</code> role follows the second tone of the active palette. <code>textColor</code>, <code>highlightColor</code> and <code>contentColor</code> accept Blocks color tokens for the label, selected highlight/light and panel text. <code>icon</code> and <code>endIcon</code> add leading and trailing Blocks icons.</p>
+<p>Use direct content for simple panels, or <code>ng-template bxTabContent</code> to create the contents only while selected. The Tabs component renders the header and accessible panel; <code>bx-tab</code> is the projected declaration.</p>
+<p>See the Tabs documentation and <code>/components/tabs</code> for appearance, lifecycle, two-way selection and keyboard behavior.</p>
+`,"projects/blocks/primitives/components/tabs/README.md":`<h1>Tabs</h1>
+<p>Switch between related panels with themed segmented or underline tabs.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { Tabs, Tab, TabContentDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<p>Add these standalone declarations to the consuming component&#39;s <code>imports</code>.</p>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Project information&quot; [(selectedValue)]=&quot;selectedTab&quot;&gt;
+  &lt;bx-tab label=&quot;Documentation&quot; value=&quot;documentation&quot;&gt;
+    &lt;ng-template bxTabContent&gt;
+      &lt;app-documentation /&gt;
+    &lt;/ng-template&gt;
+  &lt;/bx-tab&gt;
+  &lt;bx-tab label=&quot;Code Examples&quot; value=&quot;code&quot; color=&quot;accent&quot;&gt;
+    &lt;ng-template bxTabContent&gt;
+      &lt;app-examples /&gt;
+    &lt;/ng-template&gt;
+  &lt;/bx-tab&gt;
+  &lt;bx-tab label=&quot;Unavailable&quot; value=&quot;unavailable&quot; [disabled]=&quot;true&quot; /&gt;
+&lt;/bx-tabs&gt;
+</code></pre>
+<p>Initialize <code>selectedTab</code> to a tab&#39;s value or <code>null</code> to select the first enabled tab. Values must be unique within a group. Omitted values receive generated identifiers.</p>
+<p>Use <code>variant=&quot;underline&quot;</code> for file tabs or a full-width navigation strip. The default <code>segmented</code> variant groups the controls in a compact material.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Declaration</th>
+<th>Input or method</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Tabs</code></td>
+<td><code>ariaLabel: ResolvableText</code></td>
+<td>Accessible group name; defaults to <code>Tabs</code>.</td>
+</tr>
+<tr>
+<td><code>Tabs</code></td>
+<td><code>variant: TabsVariant</code></td>
+<td><code>segmented</code> or <code>underline</code>.</td>
+</tr>
+<tr>
+<td><code>Tabs</code></td>
+<td><code>selectedValue: string | null</code></td>
+<td>Two-way selection model with <code>selectedValueChange</code>.</td>
+</tr>
+<tr>
+<td><code>Tabs</code></td>
+<td><code>select(value: string)</code></td>
+<td>Selects an enabled tab by value.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>label: ResolvableText</code></td>
+<td>Required visible and accessible label.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>value: string</code></td>
+<td>Unique selection value.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>disabled: boolean</code></td>
+<td>Removes the tab from selection and keyboard navigation.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>color: TabColor</code></td>
+<td><code>primary</code> (default), <code>accent</code>, <code>success</code>, <code>danger</code>, <code>info</code>, <code>warn</code>, or <code>grayscale</code>.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>textColor: Color</code></td>
+<td>Optional theme token for the header label and its icons.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>highlightColor: Color</code></td>
+<td>Overrides the selected tint, border, underline and emitted light. Defaults to the tab&#39;s color.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>contentColor: Color</code></td>
+<td>Optional inherited text color for the panel&#39;s content.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>icon: IconName</code></td>
+<td>Optional leading Blocks icon.</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td><code>endIcon: IconName</code></td>
+<td>Optional trailing Blocks icon.</td>
+</tr>
+<tr>
+<td><code>TabContentDirective</code></td>
+<td><code>ng-template[bxTabContent]</code></td>
+<td>Defers construction until selection and destroys the view when deselected.</td>
+</tr>
+</tbody></table>
+<p>Labels accept strings or <code>{ key: &#39;translation.key&#39; }</code> using <code>BX_I18N</code>. Removing or disabling the selected tab selects the first enabled tab. An empty or fully disabled group has no selected panel and a <code>null</code> model.</p>
+<h2>Per-tab colors and icons</h2>
+<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Workspace&quot;&gt;
+  &lt;bx-tab label=&quot;Overview&quot; icon=&quot;house&quot; color=&quot;primary&quot;&gt;Overview content.&lt;/bx-tab&gt;
+  &lt;bx-tab label=&quot;Checks&quot; icon=&quot;badge-check&quot; endIcon=&quot;chevron-right&quot; color=&quot;success&quot;&gt;
+    All checks passed.
+  &lt;/bx-tab&gt;
+  &lt;bx-tab label=&quot;Activity&quot; icon=&quot;activity&quot; color=&quot;info&quot;
+    textColor=&quot;text-warn&quot; highlightColor=&quot;text-warn&quot; contentColor=&quot;text-info&quot;&gt;
+    Recent activity.
+  &lt;/bx-tab&gt;
+&lt;/bx-tabs&gt;
+</code></pre>
+<p>Color overrides use the existing Blocks <code>Color</code> tokens, including semantic tokens such as <code>text-success</code> and palette tokens such as <code>purple-500</code>. Tokens follow the active theme. <code>textColor</code> styles the header in both selected and inactive states; <code>contentColor</code> supplies an inherited panel color without overriding projected components&#39; own semantic styles. Icons are decorative and inherit the header&#39;s text color. Their leading/trailing placement follows the text direction.</p>
+<h2>Content lifecycle</h2>
+<p>Direct content is supported for simple panels:</p>
+<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Project details&quot;&gt;
+  &lt;bx-tab label=&quot;Overview&quot;&gt;&lt;p&gt;Project overview.&lt;/p&gt;&lt;/bx-tab&gt;
+  &lt;bx-tab label=&quot;Activity&quot;&gt;&lt;p&gt;Recent updates.&lt;/p&gt;&lt;/bx-tab&gt;
+&lt;/bx-tabs&gt;
+</code></pre>
+<p>Angular constructs directly projected components eagerly. Use <code>ng-template bxTabContent</code> for lazy documentation, syntax highlighting or other work that should run only for the selected panel. Panel-local state is recreated when revisiting a lazy panel; keep persistent state in the consuming component or a service.</p>
+<h2>Appearance</h2>
+<p>Tabs use Blocks semantic colors, spacing, radius, focus and surface effects. The shared glass header remains transmissive, while the selected tab has a translucent tint and emits a restrained amount of its highlight color into nearby surfaces. The default highlight follows the primary palette role. Use <code>color=&quot;accent&quot;</code> for the second tone, such as supporting Code Examples navigation. The initial render uses the same glass styling before the runtime mounts, and transitions apply to later interactions. Appearance settings and reduced motion follow <code>ThemingService</code> and <code>BxA11yService</code>, like other primitives. Forced colors use a visible selected outline.</p>
+<p><code>--bx-tabs-panel-gap</code> customizes the space below the headers. <code>--bx-tabs-max-panel-height</code> limits the scrolling panel region. Constrain the group&#39;s height to keep its headers visible while panel content scrolls. Header labels scroll horizontally only when they exceed the available width; the glass decoration sits outside that scroll area.</p>
+<h2>Keyboard and accessibility</h2>
+<p>Tab enters the selected header; another Tab moves into its panel. Left and Right select and focus the next enabled header, wrapping at the ends and respecting right-to-left layout. Home and End select the first and last enabled tabs. Native Enter and Space activation also work.</p>
+<p>Each header has <code>role=&quot;tab&quot;</code>, roving <code>tabindex</code>, <code>aria-selected</code> and a matching <code>aria-controls</code>. Panels use <code>role=&quot;tabpanel&quot;</code>, a matching <code>aria-labelledby</code>, and unique generated IDs. Nested groups maintain independent selection and keyboard handling.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/tabs</code> for enabled and disabled tabs, dynamic selection, lazy content and both appearances. The modal and toast configurators also use Tabs for Documentation, Code Examples and source files.</p>
 `,"projects/blocks/primitives/components/tooltip/README.md":`<h1>Tooltip</h1>
 <p>A short descriptive surface for supplementary help.</p>
 <h2>Import</h2>
@@ -1645,18 +1847,8 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
-
-private readonly theme = inject(ThemingService);
-
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
-<p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
+<p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Row effects retain their application appearance settings.</p>
+<p><code>BxA11yService</code> controls reduced motion; enabling it skips the opening and closing fade.</p>
 <h2>Behavior and accessibility</h2>
 <p>Touch and hold for 500 ms to open the menu. Moving more than 10 CSS pixels, scrolling, adding another finger, releasing early, or cancelling the pointer cancels the pending hold. Normal scrolling and pinch gestures are preserved. The release after a successful hold does not activate the target or a menu action, and a browser-generated context menu does not reopen the menu.</p>
 <p>Long press follows touch input on devices with both touch and mouse support. Inputs, text areas, selects, editable content, disabled controls, and existing text selections keep their native touch behavior. Text selection is not disabled by the directive; dedicated non-selectable action targets can use <code>user-select: none</code> and <code>-webkit-touch-callout: none</code> in their own styles.</p>
@@ -1684,19 +1876,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 &lt;/header&gt;
 </code></pre>
 <p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
+<p>Where supported, native CSS anchors keep the menu attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
-
-private readonly theme = inject(ThemingService);
-
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
-<p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
+<p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Trigger and row effects retain their application appearance settings.</p>
+<p><code>BxA11yService</code> controls reduced motion; enabling it skips the opening and closing fade.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use a real button trigger. The fade interaction supports trigger arrow keys, menu arrows, Home, End and Escape; focus returns on dismissal. Reduced motion skips the fade. Content keeps its full dimensions and the overlay retains a solid backing throughout its lifetime.</p>
 <h2>Playground</h2>
@@ -2007,11 +2190,11 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
 @import '@filip.mazev/blocks/effects/effects.css';
 
 :root {
-  @include bx.bx-theme(bx.$blue-light-theme);
+  @include bx.bx-theme(bx.$azure-coral-light-theme);
 }
 
 [data-theme='dark'] {
-  @include bx.bx-theme(bx.$blue-dark-theme);
+  @include bx.bx-theme(bx.$azure-coral-dark-theme);
 }
 
 // Modal and toast surfaces use the shared semantic theme.
@@ -2097,7 +2280,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var A=class r{document=f(V);router=f(on);readmeContent=K(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=P.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let t=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(t.origin!==a.origin||!t.pathname.startsWith(a.pathname))return;let c=t.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${t.search}${t.hash}`))}static ɵfac=function(n){return new(n||r)};static ɵcmp=ot({type:r,selectors:[[`app-readme`]],hostBindings:function(n,o){n&1&&at(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,o){n&1&&(jc(0,`div`,0)(1,`div`,1)(2,`span`),ko(3,`Documentation`),Bc()(),ra(4,`article`,2),Bc()),n&2&&(Ut(4),Hc(`innerHTML`,o.readmeContent(),Jf))},styles:[`
+`};var T=class r{document=h(B);router=h(vn);readmeContent=x(()=>{let e=this.path().replace(/^\/+/,``);return k[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=D.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=we({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Ue(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(Go(0,`div`,0)(1,`div`,1)(2,`span`),en(3,`Documentation`),Wo()(),Da(4,`article`,2),Wo()),t&2&&(re(4),mu(`innerHTML`,o.readmeContent(),Ap))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
@@ -2190,4 +2373,4 @@ export class ToastExample {
   padding-left: 1rem;
   border-left: 3px solid var(--%NS%bx-border-brand);
   color: var(--%NS%bx-text-secondary);
-}`]})};export{S as n,A as t};
+}`]})};export{T as n,S as t};

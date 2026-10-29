@@ -15,7 +15,7 @@ npm start
 
 Open <http://localhost:8080>. The component catalogue links each component to its own demonstration and README. `/appearance` provides application-wide material controls and spatial-lighting and fade demonstrations. `/icon-catalog` provides searchable, paginated icons.
 
-The playground defaults to Blue (`#217eff`) when no saved palette is present; Reset returns to Blue. Saved palette preferences remain available.
+The playground defaults to Graphite / Sky Blue (`#525252` / `#38bdf8`) when no saved palette is present; Reset returns to Graphite / Sky Blue. Saved palette preferences remain available.
 
 The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.
 
@@ -27,6 +27,32 @@ npm run build:blocks
 Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run `npm run tools:build-docs` to regenerate its bundled content. Runtime documentation does not fetch Markdown files.
 
 Keep Angular packages, CLI, builder and ng-packagr on major 22 with TypeScript 6. The checked-in lockfile preserves compatible versions. Runtime Markdown and Mermaid dependencies are no longer needed by the playground. Do not mix Angular 21 tooling with Angular 22.
+
+## Palettes
+
+Each palette combines two tonal families. Choose one under **Palettes** in Appearance; the two swatches show its anchors. The same palette supplies both light and dark appearances.
+
+| Palette | Anchors | `ng add --theme` value |
+| --- | --- | --- |
+| Graphite / Sky Blue | `#525252` / `#38bdf8` | `graphite-sky-blue` |
+| Azure / Coral | `#217eff` / `#f87763` | `azure-coral` |
+| Violet / Teal | `#6d00ff` / `#0d9488` | `violet-teal` |
+| Tangerine / Indigo | `#ff6900` / `#4f78f5` | `tangerine-indigo` |
+| Scarlet / Cyan | `#e3241b` / `#0891b2` | `scarlet-cyan` |
+| Lime / Violet | `#c4f53d` / `#6842a6` | `lime-violet` |
+| Cyberpunk | `#3e5669` / `#e6da00` | `cyberpunk` |
+
+Primary roles identify main actions, checked controls, links and focus. Accent roles provide the second tone for supporting actions, tabs, icons and interactive containers. For example, `color="accent"` selects the second tone on buttons and tabs; `text-accent` follows it on icons. Documentation uses the primary role and Code Examples uses the accent role. Success, warning, danger and information retain their status meanings across palettes.
+
+Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground's Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.
+
+```ts
+const theme = inject(ThemingService);
+theme.setPalette('violet-teal');
+theme.setApplicationTheme('dark');
+```
+
+Previous palette IDs (`white`, `blue`, `purple`, `orange`, `red`, `green`) and Sass theme variables remain compatibility aliases. Stored selections migrate to the paired IDs. High contrast overrides both expressive roles with contrast-first black/white values.
 
 ## Global configuration through Blocks
 

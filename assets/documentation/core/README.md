@@ -20,7 +20,7 @@ ng add @filip.mazev/blocks@latest
 
 Blocks Core utilizes a robust SCSS architecture to manage design tokens and responsiveness.
 
-### 1. Theme Provider
+### 1. Palette provider
 
 The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the `bx-theme` mixin in your global styles.
 
@@ -29,16 +29,16 @@ The library uses a CSS Variable system generated via SCSS maps. To initialize th
 
 :root {
   // Initialize default light theme
-  @include bx-theme(blocks.$purple-light-theme);
+  @include bx-theme($violet-teal-light-theme);
 }
 
 // Example: Switch to dark theme based on a class
 body.dark-theme {
-  @include bx-theme(blocks.$purple-dark-theme);
+  @include bx-theme($violet-teal-dark-theme);
 }
 ```
 
-This generates CSS variables with the `--bx-` prefix (e.g.,`--bx-primary`, `--bx-bg-surface`, `--bx-bg-element`).
+This generates paired palette roles with the `--bx-` prefix: `--bx-primary`, `--bx-accent`, their `on-*` foregrounds, subtle containers, text and borders. `--bx-bg-canvas` stays neutral in light and dark appearances. See [Palettes](../appearance/README.md#palettes) for the available pairs, CLI IDs and usage.
 
 ### 2. Responsive Mixins
 
