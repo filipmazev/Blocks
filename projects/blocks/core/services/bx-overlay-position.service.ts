@@ -10,6 +10,19 @@ export class BxOverlayPositionService {
     return this.overlay.position().flexibleConnectedTo(element).withPositions(this.getPositions(placement, offset)).withPush(true).withViewportMargin(8);
   }
 
+  public getSubmenuStrategy(element: HTMLElement, side: 'left' | 'right', offset = 4): FlexibleConnectedPositionStrategy {
+    const left = new ConnectionPositionPair({ originX: 'start', originY: 'top' }, { overlayX: 'end', overlayY: 'top' }, -offset, 0);
+    const right = new ConnectionPositionPair({ originX: 'end', originY: 'top' }, { overlayX: 'start', overlayY: 'top' }, offset, 0);
+
+    return this.overlay
+      .position()
+      .flexibleConnectedTo(element)
+      .withPositions(side === 'left' ? [left, right] : [right, left])
+      .withFlexibleDimensions(false)
+      .withPush(true)
+      .withViewportMargin(8);
+  }
+
   public getCoordinateStrategy(x: number, y: number): FlexibleConnectedPositionStrategy {
     return this.overlay.position().flexibleConnectedTo({ x, y }).withPositions(this.getPositions('bottom', 2)).withPush(true).withViewportMargin(8);
   }

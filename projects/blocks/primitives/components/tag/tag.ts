@@ -60,6 +60,8 @@ export class Tag {
       !this.resolvedText() && !this.resolvedLeadingIcon() && !this.resolvedTrailingIcon() && !!this.resolvedLeadingNumber() !== !!this.resolvedTrailingNumber()
   );
 
+  /** Optional opaque surface; true removes translucency and blur. False or absent follows application appearance. */
+  public readonly opaque = input<boolean | undefined>(undefined);
   public readonly text = input<ResolvableText | undefined>(undefined);
   public readonly config = input<ITagConfig>({});
   public readonly color = input<TagColor | undefined>(undefined);

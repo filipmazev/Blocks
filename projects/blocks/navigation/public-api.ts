@@ -23,3 +23,14 @@ export * from './types/navigation.types';
 
 export * from './tokens/navigation-access-adapter.token';
 export * from './tokens/navigation-config.token';
+
+export * from './components/side-nav/side-nav';
+export * from './components/side-nav/directives/side-nav-header.directive';
+export * from './components/side-nav/directives/side-nav-footer.directive';
+export * from './components/side-nav/interfaces/iside-nav-config.interface';
+export * from './components/side-nav/interfaces/iside-nav-slot-context.interface';
+export * from './components/side-nav/interfaces/iside-nav-item-context.interface';
+export * from './components/side-nav/interfaces/iside-nav-layout.interface';
+export * from './components/side-nav/types/side-nav.types';
+export * from './interfaces/inav-tag.interface';
+export * from './interfaces/inavigation-tree-group.interface';

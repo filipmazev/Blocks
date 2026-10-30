@@ -1,15 +1,21 @@
 import { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
+import { OverlayOriginTracker } from '../types/overlay-origin.types';
+import { IOverlayOriginOptions } from '../interfaces/ioverlay-origin-options.interface';
+import { isOverlayOriginVisible } from './overlay-origin-visibility.helpers';
 
 let nextAnchor = 0;
 
-export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): () => void {
+export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement, options: IOverlayOriginOptions = {}): OverlayOriginTracker {
   const view = origin.ownerDocument.defaultView;
   const strategy = overlay.getConfig().positionStrategy;
-  if (!view || !(strategy instanceof FlexibleConnectedPositionStrategy)) return () => {};
+  if (!view || !(strategy instanceof FlexibleConnectedPositionStrategy)) return Object.assign(() => {}, { reposition: () => {} });
 
   const host = overlay.hostElement;
   host.classList.add('bx-overlay-tracked');
-  const native = view.CSS?.supports('position-anchor', '--bx-origin') && !!(origin.compareDocumentPosition(host) & Node.DOCUMENT_POSITION_FOLLOWING);
+  const native =
+    options.nativeAnchoring !== false &&
+    view.CSS?.supports('position-anchor', '--bx-origin') &&
+    !!(origin.compareDocumentPosition(host) & Node.DOCUMENT_POSITION_FOLLOWING);
   const anchor = native ? `--bx-overlay-origin-${++nextAnchor}` : null;
   const originalAnchor = origin.style.getPropertyValue('anchor-name');
   const originalPriority = origin.style.getPropertyPriority('anchor-name');
@@ -45,8 +51,15 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
 
   const reposition = () => {
     if (!overlay.hasAttached()) return;
+
+    if (options.onOriginHidden && !isOverlayOriginVisible(origin)) {
+      options.onOriginHidden();
+      return;
+    }
+
     if (!anchor) {
       strategy.reapplyLastPosition();
+      options.onPosition?.();
       return;
     }
     host.classList.remove('bx-overlay-anchored');
@@ -75,6 +88,7 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
       const zero = host.getBoundingClientRect();
       host.style.setProperty('--bx-overlay-anchor-top', `${target.top - zero.top}px`);
       host.style.setProperty('--bx-overlay-anchor-left', `${target.left - zero.left}px`);
+      options.onPosition?.();
       return;
     }
     const source = origin.getBoundingClientRect();
@@ -82,23 +96,28 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
     host.style.setProperty('--bx-overlay-anchor-top', `calc(anchor(top) + ${target.top - source.top}px)`);
     host.style.setProperty('--bx-overlay-anchor-left', `calc(anchor(left) + ${target.left - source.left}px)`);
     host.classList.add('bx-overlay-anchored');
+    options.onPosition?.();
   };
   const onScroll = (event: Event) => {
     const target = event.target;
-    if (target === view || (target instanceof Node && target.contains(origin))) reposition();
+    if (target !== view && !(target instanceof Node && target.contains(origin))) return;
+
+    if (!anchor) reposition();
+    else if (options.onOriginHidden && !isOverlayOriginVisible(origin)) options.onOriginHidden();
   };
-  if (!anchor) view.addEventListener('scroll', onScroll, { capture: true, passive: true });
+  const observeScroll = !anchor || !!options.onOriginHidden;
+  if (observeScroll) view.addEventListener('scroll', onScroll, { capture: true, passive: true });
   view.addEventListener('resize', reposition, { passive: true });
   const resize = new view.ResizeObserver(reposition);
   resize.observe(origin);
   resize.observe(overlay.overlayElement);
   reposition();
 
-  return () => {
+  const disconnect = () => {
     resize.disconnect();
     view.removeEventListener('resize', reposition);
-    if (!anchor) view.removeEventListener('scroll', onScroll, true);
-    else {
+    if (observeScroll) view.removeEventListener('scroll', onScroll, true);
+    if (anchor) {
       host.classList.remove('bx-overlay-anchored');
       host.style.removeProperty('position-anchor');
       host.style.removeProperty('--bx-overlay-anchor-top');
@@ -113,4 +132,5 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement): ()
     }
     host.classList.remove('bx-overlay-tracked');
   };
+  return Object.assign(disconnect, { reposition });
 }

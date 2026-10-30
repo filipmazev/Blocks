@@ -21,6 +21,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { ModalService, ModalBanner } from '@filip.mazev/blocks/modal';
 import { ToastrService } from '@filip.mazev/blocks/toastr';
 import { Readme } from '../../../shared/readme/readme';
+import { SideNavExamples } from '../side-nav-examples/side-nav-examples';
 import { TagExamples } from '../tag-examples/tag-examples';
 import { TruncationExamples } from '../truncation-examples/truncation-examples';
 import { FormExamples } from '../form-examples/form-examples';
@@ -36,6 +37,7 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
     FormExamples,
     SearchExamples,
     TagExamples,
+    SideNavExamples,
     TruncationExamples,
     ReactiveFormsModule,
     Button,

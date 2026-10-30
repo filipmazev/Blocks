@@ -1,0 +1,71 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-width: 0;
+    width: 100%;
+}
+
+.nav-demo-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+    margin-block-end: spacing(4);
+}
+
+.nav-demo-controls bx-input-field {
+    width: 12rem;
+}
+
+.nav-demo-frame {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    min-height: var(--bx-side-nav-height, 420px);
+    overflow: hidden;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    background: var(--bx-bg-canvas);
+}
+
+.nav-demo-content {
+    min-width: 0;
+    flex: 1;
+    padding: spacing(4);
+    overflow-wrap: anywhere;
+}
+
+.nav-demo-content h3 {
+    margin-top: 0;
+}
+
+.nav-demo-content output {
+    display: block;
+    padding-block: spacing(4);
+    color: var(--bx-text-brand);
+}
+
+.nav-route-example {
+    margin-top: spacing(4);
+}
+
+.nav-route-example pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    padding: spacing(3);
+    background: var(--bx-bg-surface);
+    border-radius: radius(md);
+}
+
+@include respond-down(sm) {
+    .nav-demo-frame {
+        flex-direction: column;
+    }
+
+    .nav-demo-frame bx-side-nav {
+        max-width: 100%;
+    }
+}

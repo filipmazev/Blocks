@@ -27,3 +27,7 @@ export * from './components/progress-bar/types/progress-bar.types';
 export * from './components/tag/tag';
 export * from './components/tag/interfaces/itag-config.interface';
 export * from './components/tag/types/tag.types';
+
+export * from './directives/menu-trigger/menu-trigger.directive';
+export * from './directives/menu-trigger/services/menu-cascade.service';
+export * from './directives/menu-trigger/helpers/menu-keyboard.helpers';

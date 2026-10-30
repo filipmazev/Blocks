@@ -1,4 +1,4 @@
-<span class="bx-tag" bxSurface [bxSurfaceInteractive]="false"
+<span class="bx-tag" bxSurface [bxSurfaceInteractive]="false" [bxReducedTransparency]="(opaque() ?? config().opaque) ? true : undefined"
     [class.is-filled]="resolvedVariant() === 'filled'" [class.is-outlined]="resolvedVariant() === 'outlined'"
     [class.is-small]="resolvedSize() === 'small'" [class.is-disabled]="disabled()" [class.is-number-only]="isNumberOnly()"
     [attr.aria-disabled]="disabled() ? 'true' : null" [attr.role]="resolvedAriaLabel() ? 'group' : null" [attr.aria-label]="resolvedAriaLabel() || null"

@@ -4,6 +4,8 @@ import { TagColor, TagSize, TagVariant } from '../types/tag.types';
 
 /** Reusable tag appearance; direct component inputs override these optional values. */
 export interface ITagConfig {
+  /** Optional opaque surface. True removes translucency and backdrop blur; otherwise follows application appearance. */
+  opaque?: boolean;
   /** Semantic color role. Defaults to accent. */
   color?: TagColor;
   /** Filled, tonal, or outlined treatment. Defaults to tonal. */

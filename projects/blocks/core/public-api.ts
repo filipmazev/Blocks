@@ -39,3 +39,7 @@ export * from './types/appearance.types';
 export * from './helpers/overlay-theme';
 export * from './helpers/overlay-origin';
 export * from './helpers/resolve-text.helpers';
+
+export * from './interfaces/ioverlay-origin-options.interface';
+export * from './helpers/overlay-origin-visibility.helpers';
+export * from './types/overlay-origin.types';

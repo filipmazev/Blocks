@@ -1,0 +1,51 @@
+<div #row class="bx-nav-row" role="none" [class.is-active]="active()" [class.is-ancestor]="ancestor()" [class.is-open]="submenuOpen()" [class.is-compact]="compact()" [class.is-highlighted]="highlighted()"
+  [class.is-animated]="animated()" [class.is-right]="state.config().side === 'right'" [class.is-disabled]="item().data?.disabled"
+  [attr.data-nav-id]="item().id" (pointerenter)="hover($event)" (pointerleave)="leave()">
+  @if (!(compact() && item().children?.length)) {
+    <a class="bx-nav-link" role="menuitem" [routerLink]="item().data?.disabled ? null : item().route"
+      [attr.aria-current]="current() ? 'page' : null"
+      [attr.aria-disabled]="item().data?.disabled || null" [attr.tabindex]="item().data?.disabled ? -1 : 0"
+      [attr.aria-label]="compact() ? item().label : null" [bxTooltip]="compact() ? item().label : ''"
+      [placement]="side()" (click)="select()" (keydown)="openOnArrow($event)">
+      @if (state.itemTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item(), active: active(), collapsed: compact() }" />
+      } @else {
+        <ng-container [ngTemplateOutlet]="label" />
+      }
+    </a>
+  }
+  @if (item().children?.length) {
+    <button type="button" role="menuitem" class="bx-nav-disclosure" [class.bx-nav-link]="compact()" [disabled]="item().data?.disabled"
+      [attr.aria-label]="state.text().submenuLabel + ': ' + item().label" [bxMenuTrigger]="flyout" #trigger="bxMenuTrigger"
+      [menuOrigin]="row" [menuParent]="parentTrigger()" [menuSide]="side()" [menuLabel]="item().label" [menuHover]="true" [menuPinned]="state.revealPath().includes(item().id)">
+      @if (compact()) { <ng-container [ngTemplateOutlet]="label" /> }
+      @else { <bx-icon [name]="side() === 'right' ? 'chevron-right' : 'chevron-left'" size="16" /> }
+    </button>
+    <ng-template #flyout>
+      <div class="bx-nav-flyout" [class.is-right]="state.config().side === 'right'">
+        <bx-menu>
+          @if (compact()) {
+            <a role="menuitem" class="bx-nav-parent-link" [class.is-active]="active()" [attr.aria-current]="current() ? 'page' : null" [routerLink]="item().route" (click)="select()">{{ item().label }}</a>
+          }
+          @for (child of item().children; track child.id) {
+            <bx-side-nav-branch [item]="child" [parentTrigger]="trigger" />
+          }
+        </bx-menu>
+      </div>
+    </ng-template>
+  }
+  @if (highlighted()) {
+    <span class="bx-nav-target" aria-hidden="true"><bx-icon [name]="side() === 'right' ? 'arrow-left' : 'arrow-right'" size="20" /></span>
+  }
+</div>
+<ng-template #label>
+  @if (compact() || state.config().showItemIcons !== false) {
+  <bx-icon class="bx-nav-icon" [name]="item().icon?.name ?? item().data?.icon?.name ?? 'circle'" [size]="item().icon?.size ?? item().data?.icon?.size ?? '20'" [color]="item().icon?.color ?? item().data?.icon?.color"
+    [bgColor]="item().icon?.bgColor ?? item().data?.icon?.bgColor" [strokeWidth]="item().icon?.strokeWidth ?? item().data?.icon?.strokeWidth" />
+  }
+  @if (!compact()) {
+    <span class="bx-nav-label">{{ item().label }}</span>
+    @for (tag of item().data?.tags; track $index) { <bx-tag [opaque]="true" [text]="tag.text" [config]="tag.config ?? {}" size="small" [focusable]="false" /> }
+    @if (item().data?.endIcon; as icon) { <bx-icon [name]="icon.name" [size]="icon.size ?? '16'" [color]="icon.color" [bgColor]="icon.bgColor" [strokeWidth]="icon.strokeWidth" /> }
+  }
+</ng-template>

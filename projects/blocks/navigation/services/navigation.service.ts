@@ -9,9 +9,10 @@ import { INavigationItem } from '../interfaces/inavigation-item.interface';
 import { NAVIGATION_ACCESS_ADAPTER } from '../tokens/navigation-access-adapter.token';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { INavContext } from '../interfaces/inav-context.interface';
-import { BX_I18N, isTextWithKey, ResolvableText } from '@filip.mazev/blocks/core';
+import { BX_I18N, isTextWithKey, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 import { NavText } from '../types/navigation.types';
 import { INavigationGroup } from '../interfaces/inavigation-group.interface';
+import { INavigationTreeGroup } from '../interfaces/inavigation-tree-group.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -33,6 +34,7 @@ export class NavigationService {
   });
 
   public readonly routes: Signal<INavigationItem[]> = computed(() => {
+    this.navEnd();
     this.i18n?.version?.();
     return this.extractRoutes(this.router.config);
   });
@@ -74,7 +76,7 @@ export class NavigationService {
   public readonly menuGroups = computed<INavigationGroup[]>(() => {
     const sections = [...(this.config?.sections ?? [])].sort((a, b) => (a.order ?? Number.POSITIVE_INFINITY) - (b.order ?? Number.POSITIVE_INFINITY));
     const groups = new Map<string, INavigationGroup>(
-      sections.map((section) => [section.id, { id: section.id, title: section.title ?? section.id, items: [] }])
+      sections.map((section) => [section.id, { id: section.id, title: resolveText(section.title ?? section.id, this.i18n), items: [] }])
     );
 
     for (const item of this.flattenRoutes(this.menu())) {
@@ -92,6 +94,25 @@ export class NavigationService {
     return [...groups.values()].filter((group) => group.items.length > 0);
   });
 
+  /** Hierarchical sections; menuGroups retains its existing flat contract. */
+  public readonly menuTreeGroups = computed<INavigationTreeGroup[]>(() => {
+    this.i18n?.version?.();
+    const sections = [...(this.config?.sections ?? [])].sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+    const groups = new Map<string, INavigationTreeGroup>(
+      sections.map((section) => [
+        section.id,
+        {
+          ...section,
+          title: resolveText(section.title ?? section.id, this.i18n),
+          items: []
+        }
+      ])
+    );
+
+    this.groupTree(this.menu(), groups);
+    return [...groups.values()].filter((group) => group.items.length > 0);
+  });
+
   public navigateBack(): void {
     const breadcrumbs = this.current().breadcrumbs;
 
@@ -105,7 +126,38 @@ export class NavigationService {
 
   //#region Helpers
 
-  private extractRoutes(routes: Routes, parentSegment: string[] = []): INavigationItem[] {
+  private groupTree(items: INavigationItem[], groups: Map<string, INavigationTreeGroup>, inheritedSection = '', parent?: INavigationItem): void {
+    for (const item of items) {
+      const section = item.section ?? inheritedSection;
+      let group = groups.get(section);
+
+      if (!group) {
+        group = { id: section, title: section, items: [] };
+        groups.set(section, group);
+      }
+
+      if (!item.visible || item.data?.hidden) continue;
+
+      if (item.data?.menu === false) {
+        this.groupTree(item.children ?? [], groups, section, section === inheritedSection ? parent : undefined);
+        continue;
+      }
+
+      const entry: INavigationItem = { ...item, section, children: [] };
+      const destination = parent && section === inheritedSection ? (parent.children ??= []) : group.items;
+      destination.push(entry);
+      this.groupTree(item.children ?? [], groups, section, entry);
+    }
+  }
+
+  private includeBreadcrumb(item: INavigationItem): boolean {
+    if (item.data?.hidden && !this.config?.includeHiddenInBreadcrumbs) return false;
+
+    const section = this.config?.sections?.find((candidate) => candidate.id === item.section);
+    return item.showInBreadcrumbs ?? item.data?.showInBreadcrumbs ?? section?.showInBreadcrumbs ?? true;
+  }
+
+  private extractRoutes(routes: Routes, parentSegment: string[] = [], parentSection?: string): INavigationItem[] {
     const items: INavigationItem[] = [];
 
     for (const route of routes) {
@@ -121,9 +173,8 @@ export class NavigationService {
 
       const fullRoute = '/' + fullSegments.filter(Boolean).join('/');
 
-      const children = route.children?.length ? this.extractRoutes(route.children, fullSegments) : [];
-
       const nav = route.data?.['nav'] as INavMeta | undefined;
+      const children = route.children?.length ? this.extractRoutes(route.children, fullSegments, nav?.section ?? parentSection) : [];
 
       if (!nav) {
         items.push(...children);
@@ -135,7 +186,8 @@ export class NavigationService {
         route: fullRoute,
         label: this.resolveNavText(nav.label, { snapshot: undefined }) ?? '',
         icon: nav.icon,
-        section: nav.section,
+        showInBreadcrumbs: nav.showInBreadcrumbs,
+        section: nav.section ?? parentSection,
         visible: nav.visible ? nav.visible() : true,
         data: nav,
         children
@@ -173,7 +225,7 @@ export class NavigationService {
 
       const matchingItem = this.matchRouteToUrl(allItems, currentUrl);
 
-      if (matchingItem && matchingItem.data && !matchingItem.data.hidden) {
+      if (matchingItem?.data && this.includeBreadcrumb(matchingItem)) {
         const ctx: INavContext = { snapshot: finalSnapshot };
 
         const label = this.resolveNavText(matchingItem.data.breadcrumb, ctx) ?? this.resolveNavText(matchingItem.data.label, ctx);
@@ -195,6 +247,7 @@ export class NavigationService {
         route: fullUrl,
         label: this.resolveNavText(leafNav.label, { snapshot: finalSnapshot }) ?? '',
         icon: leafNav.icon,
+        showInBreadcrumbs: leafNav.showInBreadcrumbs,
         section: leafNav.section,
         visible: leafNav.visible ? leafNav.visible() : true,
         data: leafNav
@@ -207,6 +260,8 @@ export class NavigationService {
   private buildMenu(items: INavigationItem[]): INavigationItem[] {
     return items
       .map((item): INavigationItem | null => {
+        if (!item.visible || item.data?.hidden) return null;
+
         const children = this.buildMenu(item.children ?? []);
         const includeSelf = item.visible && item.data?.menu !== false;
 
@@ -263,7 +318,7 @@ export class NavigationService {
     const text: ResolvableText = typeof textDef === 'function' ? textDef(ctx) : textDef;
 
     if (isTextWithKey(text)) {
-      return this.i18n?.translate(text.key, { route: ctx.snapshot });
+      return this.i18n?.translate(text.key, { route: ctx.snapshot }) ?? text.key;
     }
 
     return text;

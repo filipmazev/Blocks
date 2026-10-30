@@ -18,7 +18,10 @@
     padding: spacing(1);
     display: flex;
     flex-direction: column;
-    min-width: 12rem;
+    gap: var(--bx-menu-item-gap, 0);
+    box-sizing: border-box;
+    min-width: var(--bx-menu-min-width, 12rem);
+    max-width: 100%;
 
     &[data-bx-surface='solid'] {
         background: var(--bx-glass-surface) !important;

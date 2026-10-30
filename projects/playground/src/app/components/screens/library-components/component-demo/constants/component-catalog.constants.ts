@@ -2,6 +2,17 @@ import type { IComponentExample } from '../interfaces/icomponent-example.interfa
 
 export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   {
+    id: 'side-nav',
+    title: 'Side navigation',
+    group: 'Navigation',
+    readme: 'projects/blocks/navigation/components/side-nav/README.md',
+    symbol: 'SideNav, SideNavHeaderDirective, SideNavFooterDirective',
+    package: '@filip.mazev/blocks/navigation',
+    selector: 'bx-side-nav',
+    description: 'Route-driven sections, nested flyouts, fuzzy search and responsive icon rails.',
+    example: '<bx-side-nav />'
+  },
+  {
     id: 'truncate',
     title: 'Truncated text',
     group: 'Primitives',

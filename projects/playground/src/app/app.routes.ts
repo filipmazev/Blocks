@@ -9,11 +9,25 @@ const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
   withNav(
     {
       path: entry.id,
-      loadComponent: () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
+      loadComponent:
+        entry.id === 'side-nav'
+          ? undefined
+          : () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
+      children:
+        entry.id === 'side-nav'
+          ? [
+              { path: '', pathMatch: 'full', redirectTo: 'overview' },
+              {
+                path: ':navId',
+                loadComponent: () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
+                data: { componentId: 'side-nav' }
+              }
+            ]
+          : undefined,
       title: `${entry.title} · Blocks`,
       data: { componentId: entry.id }
     },
-    { label: entry.title, breadcrumb: entry.title, section: entry.group, menu: true, order: index }
+    { label: entry.title, breadcrumb: entry.title, section: entry.group, menu: true, order: index, icon: { name: 'box' } }
   )
 );
 
@@ -21,7 +35,7 @@ export const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
   withNav(
     { path: 'home', loadComponent: () => import('./components/screens/home/home').then((m) => m.Home), title: 'Blocks' },
-    { label: 'Overview', breadcrumb: 'Home', section: 'Start', menu: true, root: true, order: 1 }
+    { label: 'Overview', breadcrumb: 'Home', section: 'Start', icon: { name: 'house' }, menu: true, root: true, order: 1 }
   ),
   withNav(
     { path: 'appearance', loadComponent: () => import('./components/screens/appearance/appearance').then((m) => m.Appearance), title: 'Appearance · Blocks' },

@@ -11,13 +11,6 @@
     min-height: 100dvh;
 }
 
-app-sidenav {
-    flex: 0 0 15rem;
-    position: sticky;
-    top: 0;
-    z-index: z(fixed);
-}
-
 .app-main {
     min-width: 0;
     flex: 1;
@@ -99,21 +92,14 @@ app-sidenav {
 }
 
 @include respond-down(lg) {
-    app-sidenav {
-        flex-basis: 0;
-        min-width: 0;
-        width: 0;
-    }
-
     .app-main {
         width: 100%;
-        padding-top: var(--mobile-header-height);
     }
 
     .app-toolbar {
-        top: var(--mobile-header-height);
         min-height: 3.75rem;
         padding-inline: spacing(4);
+        padding-inline-start: spacing(12);
     }
 
     .toolbar-label {

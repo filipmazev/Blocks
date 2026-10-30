@@ -24,6 +24,7 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
     current.forEach((property) => copied.add(property));
     pane.classList.toggle('bx-high-contrast-scope', !!source.closest('.high-contrast, .bx-high-contrast-scope'));
     pane.style.fontFamily = styles.fontFamily;
+    pane.style.direction = styles.direction;
     pane.style.colorScheme = styles.colorScheme;
   };
   refresh();
