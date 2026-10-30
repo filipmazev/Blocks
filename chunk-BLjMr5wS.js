@@ -1,4 +1,4 @@
-import{C as De,E,Jn as zo,N as Go,On as qe,Un as x,en as gu,et as Np,g as B,gt as Sa,rn as ie,tn as h,x as Cn,yn as nn}from"./main-7DJU4RBM.js";var k={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{$n as fm,$t as U,B as Hn,Or as le,Rn as cs,Vn as ds,Yn as f,_r as je,ci as w$1,ft as Me,jr as ls,pi as xn,rr as g,ut as M}from"./chunk-DQTC9SUR.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -966,6 +966,56 @@ scene.destroy();
 <p>A surface can opt into semantic emission with <code>mountSurface(element, { emission: &#39;var(--bx-primary)&#39; })</code>. Hover or keyboard focus activates that element as a source; its visible border and declared color determine the facing edges and corners of nearby surfaces. Hover light has a 120 CSS-pixel falloff radius and stays within the nearest main, aside, nav, dialog or overlay. Add <code>data-bx-light-scope</code> to isolate a custom region. Modal panels, native dialogs, popovers, fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent hover animation loop.</p>
 <p>Backdrop behavior follows the browser\u2019s <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter">backdrop-root rules</a>. Visual treatment follows <a href="https://developer.apple.com/design/human-interface-guidelines/materials">Apple\u2019s material guidance</a>: restrained highlights and readable translucent layers.</p>
 <p>Use <code>focusEmission</code> for a field that should emit while its native control has focus. Focused fields remain active when a different button is hovered. Decorative native-control receivers can pass their hit target as the third argument to <code>observeGlassLighting</code>.</p>
+`,"projects/blocks/forms/README.md":`<h1>Forms</h1>
+<p>Blocks fields use Angular 22 native signal control contracts and support Signal Forms, Reactive Forms, Template-driven Forms and standalone models. The library supplies presentation, interaction and accessible feedback; Angular owns validation and submission.</p>
+<h2>Import and basic usage</h2>
+<pre><code class="language-ts">import { signal } from &#39;@angular/core&#39;;
+import { form, FormField as SignalFormField, FormRoot, required, email } from &#39;@angular/forms/signals&#39;;
+import { Button, InputField } from &#39;@filip.mazev/blocks/forms&#39;;
+
+readonly accountModel = signal({ email: &#39;&#39; });
+readonly account = form(this.accountModel, (p) =&gt; {
+  required(p.email, { message: &#39;Email is required.&#39; });
+  email(p.email, { message: &#39;Enter a valid email address.&#39; });
+}, {
+  submission: {
+    ignoreValidators: &#39;none&#39;,
+    action: async (field) =&gt; { await this.api.save(field().value()); }
+  }
+});
+</code></pre>
+<p>Import <code>SignalFormField</code>, <code>FormRoot</code>, and the used Blocks controls into the standalone component. Alias Angular&#39;s directive because Blocks also exports its frame component as <code>FormField</code>.</p>
+<pre><code class="language-html">&lt;form [formRoot]=&quot;account&quot;&gt;
+  &lt;bx-input-field label=&quot;Email&quot; type=&quot;email&quot; [formField]=&quot;account.email&quot; /&gt;
+  &lt;button bx-button type=&quot;submit&quot; [disabled]=&quot;!account().valid()&quot; [loading]=&quot;account().submitting()&quot;&gt;Save&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+<h2>Validation and state</h2>
+<p>Schema validation supplies <code>required</code>, numeric and length limits, pattern metadata, errors, pending, disabled and readonly state to compatible controls. <code>valid()</code> is false while asynchronous validation is pending; <code>!invalid()</code> alone does not guarantee readiness.</p>
+<p>Use <code>ignoreValidators: &#39;none&#39;</code> to gate the submission handler as well as the visible button while async validation is pending. Submission marks interactive fields touched, prevents duplicate submissions, and applies returned server errors to their target fields.</p>
+<p>Read field state through the Angular field tree. Derive UI with <code>computed()</code> and use <code>effect()</code> for side effects when validity or pending state changes. Cross-field validators belong in the schema and can read related values. Blocks does not implement a second validation engine.</p>
+<h2>Custom messages and visibility</h2>
+<p>Shared inputs include <code>errorMessages</code>, <code>errorPriority</code>, <code>errorMode</code> (<code>first</code> or <code>all</code>), and <code>errorPolicy</code> (<code>touched</code>, <code>dirty</code>, <code>submitted</code>, <code>always</code>, or a function receiving <code>IErrorState</code>). The default reveals invalid fields after touch or submission. A function can include custom group or application state. The submitted policy tracks native form submission; when invoking submission programmatically outside the form element, pass the shared <code>submitted</code> input from application state.</p>
+<p>Message resolution prefers projected <code>bx-error</code> content, then field message overrides, schema messages, and configured defaults. <code>minlength</code>/<code>maxlength</code> Reactive Forms keys and <code>minLength</code>/<code>maxLength</code> Signal Forms kinds are recognized. Resolvers receive the original error plus its parameter payload.</p>
+<pre><code class="language-ts">readonly messages: ValidationMessages = {
+  minLength: ({ params }) =&gt; \`Use at least \${params[&#39;minLength&#39;] ?? params[&#39;requiredLength&#39;]} characters.\`,
+  required: { key: &#39;validation.required&#39; }
+};
+</code></pre>
+<p>Put this declaration in the appropriate constants or types-supporting module according to the house rules. Translation-key overrides receive error parameters through the existing adapter. Default messages can be replaced application-wide using <code>FormSettingsService.update()</code>; instance inputs take precedence. No error-message map is mandatory when the schema supplies messages.</p>
+<p>Projected <code>bx-error</code> supports rich content. <code>bx-hint</code>, <code>hint</code>, <code>hintEnd</code>, <code>bxPrefix</code>, and <code>bxSuffix</code> provide composable support and adornments. Supporting text and errors are associated automatically through <code>aria-describedby</code>. Custom error regions announce changes politely.</p>
+<h2>Compatibility and migration</h2>
+<p>Existing <code>[formControl]</code>, <code>formControlName</code>, and <code>[(ngModel)]</code> component bindings remain supported. Text edits honor Reactive Forms blur and submit update strategies. <code>reset()</code> on the owning field/form clears component interaction and parse state. Standalone value controls expose <code>[(value)]</code>; checkbox-style controls expose <code>[(checked)]</code>.</p>
+<p><code>BxBaseControl</code> remains available for existing external CVA subclasses; repeated touch reporting and schema error-message handling are corrected. New Blocks controls use native signal contracts, without implementing CVA on the same component. The legacy individually bound radio remains available, while new forms should bind a <code>RadioGroup</code> once around its options.</p>
+<p>Native <code>input</code>, <code>textarea</code> and <code>select</code> elements can use <code>bxInput</code> inside <code>bx-form-field</code>. Consumer components can provide <code>BX_FORM_FIELD_CONTROL</code> with <code>IFormFieldControl</code> to integrate their own state and focus behavior.</p>
+<h2>Asynchronous options</h2>
+<p>Single select and multiselect support application-owned requests, comparison, templates, incremental loading and error/retry behavior. Their scroll wrappers use <code>LoadMoreDirective</code>, which can also be used by future paginated components. See the <a href="components/load-more">load-more guide</a> and <a href="components/multi-select">multiselect guide</a>.</p>
+<h2>Appearance and accessibility</h2>
+<p>Controls follow Blocks semantic tokens, global theme/appearance configuration, reduced motion through <code>BxA11yService</code>, and reactive text resolution through <code>BX_I18N</code>. Configuration supports filled/outlined appearance, label placement, required markers, floating-label behavior and supporting-text sizing. Readonly and disabled states remain distinct in form state. All applicable controls accept <code>readOnly</code> as well as Angular Signal Forms&#39; lowercase <code>readonly</code> contract. Either true value prevents edits while retaining focusability. Readonly controls use the default cursor and suppress pointer hover/click highlights and interactive glass lighting while preserving their static appearance and keyboard focus styling. Focus origin uses the shared Angular CDK focus monitor. Changes to readonly state update mounted surfaces, including projected native controls and grouped radios. Native select integration prevents interaction without binding a nonexistent native readOnly property.</p>
+<p>All existing form ellipsis and full-selection fit measurement use the public <code>TruncateDirective</code> from <code>@filip.mazev/blocks/primitives</code>. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> on an input, search, select, or multiselect to retain truncation while supplying your own tooltip. <code>FormSettingsService.update({ tooltipOnTruncate: false })</code> changes the application default; instance inputs take precedence. Tag and menu controls expose the same opt-out. The public <code>TruncatedTextPipe</code> (<code>bxTruncatedText</code>) and <code>truncatedText()</code> helper support custom feedback. See the <a href="components/truncate">shared truncation guide</a>.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/signal-forms</code> for multiple controls, sync/async/cross-field rules, pending state, custom messages, server errors, disabled submission, dynamic disabled/readonly, reset and reactive validation status. Use Fill valid data to exercise submission, or an email containing <code>server-error</code> to see a server rejection.</p>
+<p>The load-more and selection pages include fake APIs, failed requests, retry and small pages without scrollbars.</p>
 `,"projects/blocks/forms/components/button/README.md":`<h1>Button</h1>
 <p>An action control with Blocks intent colors, familiar variants and visible focus.</p>
 <h2>Import</h2>
@@ -997,8 +1047,20 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use the native <code>button[bx-button]</code> selector for actions and <code>a[bx-button]</code> with a real <code>href</code> for navigation. Give icon-only actions an accessible label. Disabled actions do not emit an action through a click listener.</p>
+<p><code>surfaceEffects</code> defaults to <code>true</code>. Set <code>[surfaceEffects]=&quot;false&quot;</code> for dense collections such as the icon catalog to retain Blocks button styling, theme updates, focus, loading and disabled behavior without mounting per-button runtime glass lighting or deformation. It can be changed while mounted. An explicitly applied <code>bxSurface</code> directive continues to own its surface independently.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/button</code> for a working example and its current value or action result.</p>
+<h2>Asynchronous actions</h2>
+<p><code>loading</code> enables a spinner, exposes <code>aria-busy</code>, and disables activation independently from the <code>disabled</code> input. When loading ends, the original disabled state is retained. The spinner appears before the text and replaces a projected Blocks icon at its original size, including under page zoom or surface transforms. An icon-only button retains its accessible name and dimensions.</p>
+<pre><code class="language-html">&lt;button bx-button type=&quot;button&quot; variant=&quot;filled&quot; [loading]=&quot;saving()&quot; (click)=&quot;save()&quot;&gt;
+  &lt;bx-icon name=&quot;save&quot; size=&quot;20&quot; /&gt;Save changes
+&lt;/button&gt;
+</code></pre>
+<p>For another icon implementation, import <code>ButtonIconDirective</code> and mark its element <code>bxButtonIcon</code>. Plain text buttons get an icon-sized spinner only during loading. Spinner colors inherit the button foreground; <code>BxA11yService</code> removes rotation in reduced-motion mode.</p>
+<p>Open <code>/components/button-loading</code> for fake asynchronous actions with and without icons. Application code owns the promise and loading state.</p>
+`,"projects/blocks/forms/components/button/directives/README.md":`<h1>Button icon slot</h1>
+<p>Import <code>ButtonIconDirective</code> from <code>@filip.mazev/blocks/forms</code> and mark a custom projected icon element with <code>bxButtonIcon</code>. The loading button replaces that element with a same-size spinner and restores it when the operation completes. Built-in <code>bx-icon</code> content is recognized automatically.</p>
+<p>Provide the action name as button text or an accessible label, and mark decorative custom icons appropriately. See the parent <a href="components/button">button guide</a> and <code>/components/button-loading</code> playground page.</p>
 `,"projects/blocks/forms/components/checkbox/README.md":`<h1>Checkbox</h1>
 <p>A boolean choice integrated with Angular forms.</p>
 <h2>Import</h2>
@@ -1009,7 +1071,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <pre><code class="language-html">&lt;bx-checkbox label=&quot;Receive updates&quot; [formControl]=&quot;updates&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
+<p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(checked)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1027,6 +1089,8 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Use a visible label. Space toggles the native input; focus and checked state remain visible in glass and solid modes. The control supports validation and touched state.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/checkbox</code> for a working example and its current value or action result.</p>
+<h2>Selection configuration</h2>
+<p><code>indeterminate</code> is a boolean model with <code>indeterminateChange</code>. <code>clickAction</code> supports <code>check-indeterminate</code> (default), <code>check</code>, and <code>noop</code>. <code>labelPosition</code> is <code>before</code> or <code>after</code>. Use <code>checkedChange</code> or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.</p>
 `,"projects/blocks/forms/components/form-field/README.md":`<h1>Form field</h1>
 <p>A shared label, help text, validation and loading frame for controls.</p>
 <h2>Import</h2>
@@ -1042,7 +1106,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>label</code>, <code>tooltip</code>, <code>error</code>: text or a translation key object. <code>forId</code>: the native input ID. <code>required</code>, <code>loading</code>: booleans. Projects the control and an optional <code>bx-error</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<p><code>--bx-field-padding-bottom</code> overrides the field wrapper\u2019s bottom padding (default: <code>1.5rem</code>). Set it on a group of controls when the group provides its own row spacing.</p>
+<p><code>--bx-field-padding-bottom</code> overrides the field wrapper\u2019s bottom padding (default: <code>0</code>). Set it on a group of controls when additional row spacing is needed.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
 import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
 
@@ -1059,6 +1123,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>The information button reveals short help on mouse hover or keyboard focus, and toggles it on touch tap. Tap elsewhere, scroll, or press Escape to dismiss it. Its description also remains available to screen readers when the visual help is hidden. Keep essential field instructions visible rather than relying on the help button.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/form-field</code> for a working example and its current value or action result.</p>
+<h2>Composable support and control registration</h2>
+<p><code>hint</code>, <code>hintEnd</code>, projected <code>bx-hint</code>, <code>bxPrefix</code>, and <code>bxSuffix</code> add support and adornments. <code>subscriptSizing</code> selects fixed or dynamic reserved space. Dynamic sizing collapses an empty supporting-text region and its gap, allowing controls to align with adjacent buttons and checkboxes. <code>hideRequiredMarker</code> hides decoration without changing validation. <code>tooltipLabel</code> provides translated accessible help-button text.</p>
+<p>A registered control supplies its state through <code>BX_FORM_FIELD_CONTROL</code> and <code>IFormFieldControl</code>, or the <code>control</code> input. The frame discovers projected registrations, resolves error visibility, associates its supporting-text region and native control, and announces errors politely. The <code>bxInput</code> directive supplies this registration for native controls.</p>
+<p>Built-in convenience controls forward projected rich errors and hints into their internal frame. See the <a href="components/signal-forms">forms guide</a> for global error policies, messages and form-system compatibility.</p>
 `,"projects/blocks/forms/components/input-field/README.md":`<h1>Input field</h1>
 <p>A text, date or numeric input with a floating label and validation feedback.</p>
 <h2>Import</h2>
@@ -1069,7 +1137,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <pre><code class="language-html">&lt;bx-input-field label=&quot;Project name&quot; [formControl]=&quot;name&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
+<p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <p><code>type</code>: text, password, email, number, date, time, datetime-local. Numeric controls accept <code>min</code>, <code>max</code>, and <code>step</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
@@ -1086,8 +1154,52 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use a label and an appropriate input type. Number input emits a number or null when empty. Validators should enforce application constraints, including minimum and maximum values.</p>
+<p>Labels stay on one line and truncate with an ellipsis when space is limited, without overlapping the value or trailing actions. A truncated label shows its full text through the Blocks tooltip on hover, keyboard focus within the input, or a long press on the label. Resizing and language changes update truncation automatically. The full label remains the input&#39;s accessible name, and required markers remain visible. Suffixes and numeric steppers share a trailing action container aligned to the inline end.</p>
+<p>Label ellipsis and measurement reuse the shared <a href="components/truncate">TruncateDirective</a>, including content, font, and viewport updates. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> to disable the automatic label tooltip without disabling ellipsis. Its default inherits <code>FormSettingsService.settings().tooltipOnTruncate</code>, then true.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/input-field</code> for a working example and its current value or action result.</p>
+<h2>Extended input API</h2>
+<p><code>autocomplete</code>, <code>inputmode</code>, <code>spellcheck</code>, <code>name</code>, length and pattern constraints, <code>ariaLabelledBy</code>, <code>ariaDescribedBy</code> and explicit <code>id</code> reach the native element. Supported text types include <code>tel</code>, <code>url</code> and <code>search</code>. <code>multiline</code> enables a textarea; <code>rows</code>, <code>autosize</code>, <code>minRows</code>, and <code>maxRows</code> configure it. Composition input and autofill maintain floating-label behavior.</p>
+<p>Number input preserves parse errors through Angular&#39;s <code>transformedValue</code>, keeps empty values as null, and supports keyboard-accessible steppers. <code>decreaseLabel</code> and <code>increaseLabel</code> are translatable. <code>appearance</code> (<code>fill</code> or <code>outline</code>), <code>floatLabel</code>, <code>hideRequiredMarker</code>, <code>subscriptSizing</code>, <code>hint</code> and <code>hintEnd</code> customize the frame. Prefix/suffix and rich errors can be projected directly into the convenience component.</p>
+<p>Prefix/suffix content uses <code>--bx-field-adornment-padding</code> and <code>--bx-field-adornment-gap</code>, so text such as # and ID remains inset from the field edges. Supporting text uses <code>--bx-field-support-padding</code>.</p>
+`,"projects/blocks/forms/components/multi-select/README.md":`<h1>Multiselect</h1>
+<p>Checkbox-style multiple selection with remote pagination and explicit select-all intent.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { MultiSelect, IBxSelectOption, ISelectAllChange } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-multi-select label=&quot;Workspaces&quot; [options]=&quot;options()&quot; [formField]=&quot;account.workspaces&quot;
+  [loading]=&quot;loading()&quot; [hasMore]=&quot;hasMore()&quot; [loadError]=&quot;loadError()&quot;
+  [isSearchable]=&quot;true&quot; [externalFiltering]=&quot;true&quot; [selectionScope]=&quot;query()&quot;
+  (search)=&quot;search($event)&quot; (loadMore)=&quot;loadNext($event)&quot;
+  (selectAllIntentChange)=&quot;handleSelectAll($event)&quot; /&gt;
+</code></pre>
+<h2>API</h2>
+<p>Shares single-select options, comparison, templates, field presentation and pagination inputs. Bind <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Form models should initialize the field with <code>[]</code>.</p>
+<p><code>showSelectAll</code> defaults to true. <code>selectAllLabel</code> is translatable. <code>selectAll</code> is a boolean model for intent; <code>selectAllChange</code> is its boolean model event. <code>selectAllIntentChange</code> emits the detailed <code>ISelectAllChange&lt;T&gt;</code> with selected intent, scope, loaded values and reason. <code>selectionScope</code> defaults to the current search term.</p>
+<p><code>selectionChange</code> emits <code>{ value, source }</code>; sources distinguish <code>user</code>, <code>select-all</code>, and automatic <code>page</code> selection. Standard value changes remain available through the chosen Angular form API or <code>valueChange</code>.</p>
+<h2>Select-all semantics</h2>
+<p>Enabling select all selects eligible loaded options. Future eligible options in the same scope are selected as pages arrive. Disabled options and disabled groups are excluded.</p>
+<p>Unchecking an option disables select-all intent, removes only that value, retains other selections, and emits an <code>item-deselected</code> intent event. Future pages are no longer automatically selected. Explicitly turning select all off removes eligible current-scope selections while retaining unrelated selections.</p>
+<p>A scope change ends select-all intent and emits <code>scope-change</code>, retaining explicit selections. Reset clears intent and emits <code>reset</code>. Loaded selected values are finite: the application uses intent plus scope when an API needs to select the entire remote result set. Do not send the loaded array as if it enumerated every remote record.</p>
+<h2>Behavior</h2>
+<p>The panel stays open while selecting. Arrow keys, Home/End, typeahead, Enter/Space, Escape and Tab support keyboard interaction. Visual checkboxes are non-interactive indicators inside listbox options, avoiding nested checkbox focus targets. <code>compareWith</code> supports stable object-value identity across API responses.</p>
+<p>Pagination and failure/retry use the shared <a href="components/load-more">load-more directive</a>. Existing items stay visible during incremental requests and after failed pages. The application owns request cancellation and page/cursor state.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/multi-select</code>. Enable select all, load another page, deselect one item and load again. Selection and intent events are shown separately. The page includes fake requests, failure/retry, page-size controls and live translation changes.</p>
+<h2>Selected-value summaries</h2>
+<p><code>allSelectedText</code> replaces the listed values while select-all intent is enabled, for example <code>All locations</code> or <code>{ key: &#39;locations.all&#39; }</code>. This is separate from <code>selectAllLabel</code>, which names the select-all action inside the panel.</p>
+<p><code>summaryThreshold</code> defaults to 2 and is clamped to a minimum of 2. More selections than the threshold use <code>selectedCountText</code>, whose default is <code>{count} selected</code>. Supply <code>{count} locations selected</code> or a translation key; the translation adapter receives <code>{ count }</code>.</p>
+<p>When at least two selected labels cannot fit the available width, the count summary is also used below the configured threshold. A tooltip on hover, keyboard focus, or touch-and-hold exposes the full loaded selection. A custom <code>triggerTemplate</code> remains available for completely custom presentation.</p>
+<p>The searchable playground includes 24 locations, tag-display controls and a summary-threshold control next to the page-size selector. Search terms remain visible and consistent with their results after closing and reopening the panel. The trigger&#39;s caret slot displays busy state without changing its dimensions.</p>
+<h2>Tags</h2>
+<p>Set <code>selectionDisplay=&quot;tags&quot;</code> to use the separate Blocks <code>Tag</code> component for selected values. <code>visibleTagCount</code> defaults to one; additional selections are represented by <code>tagOverflowText</code> (<code>+{count}</code> by default) with a tooltip listing their names. Customize ordinary tags with <code>tagConfig</code>, individual options with <code>option.tagConfig</code>, and the overflow tag with <code>overflowTagConfig</code>. Embedded tags have no separate tab stop; the combobox supplies the full selection description for keyboard access. <code>allSelectedText</code> remains the caption when select-all intent is active.</p>
+<p>An ordinary tag automatically shows its full label on hover or touch-and-hold only when that label is clipped. Explicit tooltip descriptions and overflow-tag lists remain available independently of clipping. The combobox retains the complete selection tooltip for keyboard users, including a single clipped tag. In tag mode, touch tooltips belong to the tags so they do not overlap a parent tooltip. Labels, plain values, and the full-selection fit test all reuse <code>TruncateDirective</code>. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables automatic selection/truncation tooltips while preserving clipping, summary behavior, and explicit overflow-tag descriptions. This setting inherits <code>FormSettingsService</code> defaults and also suppresses automatic tooltips on ordinary embedded tags.</p>
+<h2>Search loading</h2>
+<p>The debounce/request period hides pagination actions and old results. Provide <code>loadingLabel</code> for centered loading text; without it, a simple centered spinner is shown. <code>loadingAriaLabel</code> supplies a translatable accessible name. Once results arrive, filtered pages can be paginated normally.</p>
 `,"projects/blocks/forms/components/radio-button/README.md":`<h1>Radio</h1>
 <p>A single choice within a named group.</p>
 <h2>Import</h2>
@@ -1099,7 +1211,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 &lt;bx-radio label=&quot;Weekly&quot; name=&quot;frequency&quot; value=&quot;weekly&quot; [formControl]=&quot;frequency&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
+<p>Legacy individually bound radios support <code>[formControl]</code>, <code>formControlName</code>, and <code>[(ngModel)]</code>. For new forms, bind a <code>RadioGroup</code> with <code>[formField]</code> or an existing Angular form directive, and keep each radio value as its option value. See the <a href="components/radio-group">radio-group guide</a>.</p>
 <p><code>value</code> is required and identifies this option. <code>name</code> groups the native radio inputs.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
@@ -1119,8 +1231,48 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Use the same form control and name for mutually exclusive options, distinct values, and visible labels. A fieldset with a legend gives the group an accessible name.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/radio</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/forms/components/radio-group/README.md":`<h1>Radio group</h1>
+<p>Owns one typed form value, group labeling, validation and disabled/readonly state for radio options.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { RadioGroup, Radio } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-radio-group label=&quot;Plan&quot; [formField]=&quot;account.plan&quot;&gt;
+  &lt;bx-radio label=&quot;Personal&quot; value=&quot;personal&quot; /&gt;
+  &lt;bx-radio label=&quot;Team&quot; value=&quot;team&quot; /&gt;
+&lt;/bx-radio-group&gt;
+</code></pre>
+<h2>API</h2>
+<p>Bind the group through <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Individual options retain their option <code>value</code>; avoid binding both the group and its children to form controls.</p>
+<p>Shared field inputs configure labels, hints, errors, visibility policy, readonly and required state. The group generates a shared native name unless <code>name</code> is provided. Legacy individually bound radio controls remain supported.</p>
+<h2>Behavior</h2>
+<p>Native radio semantics provide arrow navigation and one selected option. A disabled group disables its children; readonly blocks changes. Validation is presented once at group level. Focus delegation targets an available native radio.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/radio-group</code>, where the group participates in the complete Signal Forms example.</p>
+`,"projects/blocks/forms/components/range-slider/README.md":`<h1>Range slider</h1>
+<p>Two constrained range thumbs bound to a <code>[number, number]</code> form value.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { RangeSlider } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-range-slider label=&quot;Budget&quot; [(value)]=&quot;range&quot; [min]=&quot;0&quot; [max]=&quot;100&quot;
+  [step]=&quot;10&quot; [discrete]=&quot;true&quot; [showTickMarks]=&quot;true&quot; /&gt;
+</code></pre>
+<h2>API</h2>
+<p>Supports Angular forms and standalone value binding. <code>min</code>, <code>max</code>, and <code>step</code> configure the range. <code>discrete</code> shows formatted values; <code>displayWith(value)</code> customizes display and accessible value text. <code>startLabel</code> and <code>endLabel</code> are translatable thumb names. <code>showTickMarks</code> shows bounded tick indicators.</p>
+<p>Ticks mark actual step values and are centered on the thumbs&#39; travel, including ranges where the step does not divide the span evenly. The selection fill uses the same thumb centers in LTR and RTL. Set <code>--bx-slider-thumb-size</code> to customize both native and decorative thumbs together; it defaults to the shared <code>spacing(6)</code> token, and the fill and tick insets follow that size.</p>
+<p>Each bordered glass thumb magnifies and blurs the rail below it, including both selection boundaries when the thumbs are close. <code>--bx-slider-magnification</code> controls the enlargement and defaults to <code>1.5</code>; <code>--bx-slider-lens-blur</code> sets the lens and backdrop blur and defaults to <code>1.5px</code>. The lens follows values, resizing, theme changes and RTL without per-frame pixel sampling. Reduced transparency and increased contrast use the opaque fallback; forced colors keeps the native thumbs.</p>
+<p>Thumbs cannot cross. Each thumb retains native keyboard input and an accessible name. Initialize form values with a pair of numbers. Shared hints, errors, readonly and disabled state are supported.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/range-slider</code> for a live pair, labels and ticks.</p>
 `,"projects/blocks/forms/components/search-input/README.md":`<h1>Search input</h1>
-<p>A searchable text control with a clear action.</p>
+<p>A searchable text control with one clear action, request loading feedback, and an explicit retry action. Requests and results remain application-owned.</p>
 <h2>Import</h2>
 <pre><code class="language-ts">import { SearchInput } from &#39;@filip.mazev/blocks/forms&#39;;
 </code></pre>
@@ -1129,8 +1281,106 @@ this.theme.setAppearance({ reducedTransparency: true });
 <pre><code class="language-html">&lt;bx-search-input label=&quot;Find a component&quot; [formControl]=&quot;query&quot; (search)=&quot;filter($event)&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
-<p><code>search</code> emits the current string on input and clear. Public methods <code>clear()</code> and <code>focus()</code> support integration.</p>
+<p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
+<p>Search value/placeholder ellipsis uses the shared <code>TruncateDirective</code>; its native-input measurement accounts for the current font and inline padding. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables automatic clipped-value tooltips while keeping ellipsis and measurement. The default inherits <code>FormSettingsService</code>, then true.</p>
+<p><code>search</code> emits the current string on input and clear. Public methods <code>clear()</code>, <code>focus()</code>, and <code>retrySearch()</code> support integration. <code>retrySearch()</code> emits <code>retry</code> only when a request error exists and the control is editable and idle.</p>
+<table>
+<thead>
+<tr>
+<th>Input/output</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>loading</code></td>
+<td><code>false</code></td>
+<td>Application-owned request state; replaces the search icon with the shared spinner.</td>
+</tr>
+<tr>
+<td><code>pending</code></td>
+<td><code>false</code></td>
+<td>Form validation pending state; also shows busy feedback.</td>
+</tr>
+<tr>
+<td><code>loadError</code></td>
+<td><code>undefined</code></td>
+<td><code>ResolvableText</code> request failure, independent of form validation. Reveals retry immediately.</td>
+</tr>
+<tr>
+<td><code>loadingLabel</code></td>
+<td><code>undefined</code></td>
+<td>Optional visible <code>ResolvableText</code> loading message.</td>
+</tr>
+<tr>
+<td><code>loadingAriaLabel</code></td>
+<td><code>&#39;Searching&#39;</code></td>
+<td><code>ResolvableText</code> announcement when no visible loading message is supplied.</td>
+</tr>
+<tr>
+<td><code>retryLabel</code></td>
+<td><code>&#39;Retry search&#39;</code></td>
+<td><code>ResolvableText</code> retry button text. Remains stable during loading.</td>
+</tr>
+<tr>
+<td><code>retryConfig</code></td>
+<td><code>{}</code></td>
+<td><code>ISearchRetryConfig</code>: optional accessible name, Blocks button variant/color, outline, and CSS classes.</td>
+</tr>
+<tr>
+<td><code>clearLabel</code></td>
+<td><code>&#39;Clear search&#39;</code></td>
+<td><code>ResolvableText</code> accessible clear action name.</td>
+</tr>
+<tr>
+<td><code>autocomplete</code></td>
+<td><code>&#39;off&#39;</code></td>
+<td>Native search autocomplete.</td>
+</tr>
+<tr>
+<td><code>retry</code></td>
+<td>\u2014</td>
+<td>Emits the current query as a string when retry is requested. Does not also emit <code>search</code>.</td>
+</tr>
+</tbody></table>
+<h3>Asynchronous requests</h3>
+<pre><code class="language-html">&lt;bx-search-input label=&quot;Find a component&quot; [(value)]=&quot;query&quot;
+    [loading]=&quot;loading()&quot; [loadError]=&quot;loadError()&quot;
+    loadingAriaLabel=&quot;Searching components&quot; retryLabel=&quot;Try again&quot;
+    [retryConfig]=&quot;{ variant: &#39;tonal&#39;, color: &#39;accent&#39; }&quot;
+    (search)=&quot;runSearch($event)&quot; (retry)=&quot;runSearch($event)&quot; /&gt;
+</code></pre>
+<p>For example, the application can coordinate a promise-returning API with cancellation:</p>
+<pre><code class="language-ts">private readonly destroyRef = inject(DestroyRef);
+protected readonly query = signal&lt;string | null&gt;(&#39;&#39;);
+protected readonly loading = signal(false);
+protected readonly loadError = signal&lt;string | undefined&gt;(undefined);
+protected readonly results = signal&lt;readonly string[]&gt;([]);
+private request?: AbortController;
+
+constructor() {
+  this.destroyRef.onDestroy(() =&gt; this.request?.abort());
+}
+
+protected async runSearch(query: string): Promise&lt;void&gt; {
+  this.request?.abort();
+  const request = new AbortController();
+  this.request = request;
+  this.loading.set(true);
+  this.loadError.set(undefined);
+
+  try {
+    const results = await this.api.search(query, request.signal);
+
+    if (!request.signal.aborted) this.results.set(results);
+  } catch {
+    if (!request.signal.aborted) this.loadError.set(&#39;Search failed. Try again.&#39;);
+  } finally {
+    if (this.request === request) this.loading.set(false);
+  }
+}
+</code></pre>
+<p>Import <code>DestroyRef</code>, <code>inject</code>, and <code>signal</code> from <code>@angular/core</code>. Supply your application API&#39;s <code>search(query, signal): Promise&lt;readonly string[]&gt;</code>. Add debouncing in the application when useful, and mark loading from the start of that debounce. Keep the previous results during a replacement request or failure; replace them only when the latest request succeeds. A successful empty response is distinct from a failure. Set <code>loading</code> synchronously in the event handler and clear <code>loadError</code> when starting a new attempt. The component makes no requests and has no pagination behavior.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1144,47 +1394,49 @@ this.theme.setAppearance({ glassiness: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
+<p>The retry action uses the same Blocks <code>Button</code> and <code>LoadingSpinner</code> as select request feedback. Import <code>ISearchRetryConfig</code> from <code>@filip.mazev/blocks/forms</code> for typed presentation settings. Native browser search decorations are suppressed so only the named Blocks clear action appears. Set <code>--bx-search-feedback-gap</code> to customize the space between the field and its visible status message; it defaults to the shared spacing-2 token and applies equally to initial loading, errors, and retry loading.</p>
 <h2>Behavior and accessibility</h2>
 <p>The output is immediate; debounce expensive network searches in the application. Keep a visible or accessible label instead of relying only on placeholder text.</p>
+<p>Busy feedback sets <code>aria-busy</code>, uses a polite status announcement, and preserves the input&#39;s dimensions. Feedback uses a status row followed by the retry action. On retry, the error is replaced by <code>loadingLabel</code> or, when absent, <code>loadingAriaLabel</code> as visible searching text. The status row reserves space for both messages so wrapping at narrow widths or zoom does not move the button. The retry button stays mounted in the same position and disabled during its request, displaying its own spinner without a second input spinner. Retry focuses the input so successful completion keeps focus predictable. Loading allows further editing and clearing to cancel or replace a request. Disabled and readonly state prevent clear and retry actions. Readonly mode hides the clear button while keeping the text focusable and selectable. API failures are described by the input without marking the query invalid. Text inputs accept translation keys and update with the active <code>BX_I18N</code> language.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/search-input</code> for a working example and its current value or action result.</p>
+<p>Open <code>/components/search-input</code> for cancellable, debounced fake API requests, loading text, empty results, retained results on failure, retry through to success, and readonly/disabled controls. Enabling Show loading text starts a preview request so the message is immediately observable.</p>
 `,"projects/blocks/forms/components/select/README.md":`<h1>Select</h1>
-<p>A single-value selection control with a positioned options panel and optional search.</p>
+<p>A typed single-value control with searchable, grouped options and remote pagination.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Select } from &#39;@filip.mazev/blocks/forms&#39;;
+<pre><code class="language-ts">import { Select, IBxSelectOption } from &#39;@filip.mazev/blocks/forms&#39;;
 </code></pre>
-<p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-select label=&quot;Destination&quot; [options]=&quot;options&quot; [isSearchable]=&quot;true&quot; [formControl]=&quot;destination&quot; /&gt;
+<pre><code class="language-html">&lt;bx-select label=&quot;Workspace&quot; [options]=&quot;options()&quot; [formField]=&quot;account.workspace&quot;
+  [isSearchable]=&quot;true&quot; [externalFiltering]=&quot;true&quot;
+  [loading]=&quot;loading()&quot; [hasMore]=&quot;hasMore()&quot; [loadError]=&quot;loadError()&quot;
+  [loadMoreConfig]=&quot;paginationAppearance&quot; (search)=&quot;search($event)&quot; (loadMore)=&quot;loadNext($event)&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
-<p><code>options</code> is required: <code>{ label, value, disabled? }[]</code>. <code>isSearchable</code>, <code>externalFiltering</code>, <code>searchPlaceholder</code>, <code>emptyMessage</code> configure search. <code>search</code> emits debounced external filter terms. <code>toggleOpen()</code> and <code>close()</code> control the panel.</p>
-<h2>Appearance</h2>
-<p>The trigger inherits the application appearance from <code>ThemingService</code>. The options panel uses an opaque themed backing without container blur or live lighting. Options are native buttons with listbox option semantics and no per-row glass runtime. Selected options use <code>accent-subtle</code> with <code>text-accent</code>. Colors, spacing, radius, elevation, focus states and row interactions still follow Blocks tokens.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
-
-private readonly theme = inject(ThemingService);
-
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
-<p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
+<p>Supports Signal Forms, Reactive Forms, Template-driven Forms, and standalone <code>[(value)]</code>. Existing <code>[formControl]</code> and <code>formControlName</code> bindings remain available. <code>BxSelectOption</code> remains as a compatibility alias for <code>IBxSelectOption</code>.</p>
+<p>Options provide <code>label</code>, <code>value</code>, optional <code>disabled</code>, <code>icon</code>, <code>group</code> and <code>groupDisabled</code>. Labels and group headings accept translation keys. <code>compareWith(a, b)</code> defaults to <code>Object.is</code>; supply a comparator for object values. Selected labels are retained when filtering replaces the visible results. <code>searchValue</code> is a string model: the term and matching results persist together across panel close/reopen. Bind it when application code needs to clear or replace a query.</p>
+<p><code>isSearchable</code>, <code>externalFiltering</code>, <code>searchPlaceholder</code>, <code>searchDebounce</code>, and <code>emptyMessage</code> configure search. <code>search</code> emits debounced terms; external filtering leaves request cancellation and results ownership with the application. <code>loadingLabel</code> names loading feedback.</p>
+<p><code>optionTemplate</code> receives <code>$implicit</code> (option), <code>selected</code>, and <code>index</code>. <code>triggerTemplate</code> receives <code>$implicit</code> (form value) and resolved <code>labels</code>. <code>panelClass</code> customizes the panel. <code>--bx-select-panel-background</code>, <code>--bx-select-panel-border</code>, and <code>--bx-select-panel-shadow</code> customize the opaque surface, contrast and elevation independently from the form container. <code>--bx-select-panel-height</code> changes the maximum panel height, which is also constrained to the viewport.</p>
+<p><code>selectionChange</code> emits <code>{ value, source: &#39;user&#39; }</code>. <code>openedChange</code> reports panel state. <code>open()</code>, <code>close()</code>, and <code>toggleOpen()</code> control the panel. Readonly state prevents value changes without changing the form&#39;s disabled state.</p>
+<h2>Pagination</h2>
+<p><code>hasMore</code>, <code>loading</code>, <code>loadError</code>, <code>loadMoreConfig</code>, and <code>loadMoreTemplate</code> feed the shared <a href="components/load-more">load-more directive</a>. <code>loadMore</code> distinguishes scroll, button and retry requests. Append pages rather than replacing previously loaded items during ordinary pagination. Retain items and the failed cursor on error.</p>
+<p>Small result pages expose a bottom-left action when no item scrollbar exists. A visible action stays present while loading. Errors show an explicit retry even with overflow. Applications need not know the viewport size or reproduce fallback behavior.</p>
 <h2>Behavior and accessibility</h2>
-<p>Use stable option values. For external filtering, update the options in response to <code>search</code>; the application owns request cancellation and loading state. Disabled options cannot be selected.</p>
-<h2>Overlay stacking</h2>
-<p>The options panel follows <code>BX_OVERLAY_CONTEXT</code> and automatically enters the browser top layer inside native dialogs and popovers. For custom application chrome that also needs the top layer, provide the context around the select:</p>
-<pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
-  &lt;bx-select label=&quot;Destination&quot; [options]=&quot;options&quot; /&gt;
-&lt;/header&gt;
-</code></pre>
-<p>Import <code>BxOverlayContextDirective</code> where the context is declared. Select panels outside these contexts stay in the regular CDK overlay layer so sticky application chrome can remain above them.</p>
-<p>Where supported, native CSS anchors keep the panel attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.</p>
+<p>Arrow keys, Home/End, typeahead, Enter/Space, Escape, Alt+ArrowUp and Tab support panel interaction. Focus returns appropriately when the panel closes. Field error/hint descriptions and invalid/required states are connected automatically.</p>
+<p>Panels retain the shared overlay positioning, theme inheritance and top-layer context behavior. Provide <code>BX_OVERLAY_CONTEXT</code> through the existing overlay-context directive for custom top-layer containers.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/select</code> for a working example and its current value or action result.</p>
+<p>Open <code>/components/select</code> for mock pagination, external filtering, loading, failed requests and retry. Switch page sizes to exercise the scroll and fallback-action states.</p>
+<h2>Busy presentation</h2>
+<p>The trigger replaces its caret with a same-size spinner, preserving width. When a visible load-more or retry button starts a request, that button stays mounted and shows its own spinner. The panel uses a row-aligned loading indicator only when no footer button is visible; the two loading presentations are mutually exclusive.</p>
+<h2>Tags and search feedback</h2>
+<p><code>selectionDisplay=&quot;tags&quot;</code> renders the selected value through the standalone Blocks <code>Tag</code> component. <code>tagConfig</code> controls common appearance and <code>option.tagConfig</code> provides per-option overrides. See the <a href="components/tag">tag guide</a>.</p>
+<p>Clipped tag labels automatically expose their full text in a tooltip; fitting labels do not. Explicit option/tag tooltip descriptions retain their existing behavior. The parent combobox supplies keyboard access to the complete selection without adding nested tab stops. Labels and plain values also use the shared truncation directive. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> to disable automatic truncation tooltips, including ordinary selected tags, while retaining ellipsis and custom templates. Per-tag configuration can disable the tag tooltip when the owner is enabled. The component inherits the shared <code>FormSettingsService</code> default.</p>
+<p>While searching (including debounce and the external request), old results and load-more actions are suppressed. <code>loadingLabel</code> provides centered loading text; without it, the panel displays a simple centered spinner named by <code>loadingAriaLabel</code>. Pagination becomes available for the filtered result set after the request completes.</p>
+`,"projects/blocks/forms/components/shared/load-more/README.md":`<h1>Load-more footer</h1>
+<p>Internal presentation used by <code>LoadMoreDirective</code>. Applications configure it through <code>ILoadMoreConfig</code> and <code>ILoadMoreContext</code>; it is not a separate public construction API.</p>
+<p>See the <a href="components/load-more">load-more directive</a> for imports, request ownership, error/retry behavior, templates, appearance and accessibility. Its live page is <code>/components/load-more</code>.</p>
 `,"projects/blocks/forms/components/slide-toggle/README.md":`<h1>Slide toggle</h1>
 <p>A boolean preference that takes effect immediately.</p>
 <h2>Import</h2>
@@ -1195,7 +1447,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <pre><code class="language-html">&lt;bx-slide-toggle label=&quot;Enable notifications&quot; [formControl]=&quot;notifications&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p>The control implements Angular ControlValueAccessor. Use <code>[formControl]</code>, <code>formControlName</code>, or <code>[(ngModel)]</code>; do not bind a separate value input. Shared inputs: <code>label</code>, <code>placeholder</code>, <code>tooltip</code>, <code>required</code>, <code>loading</code>, <code>disabled</code>, <code>ariaLabel</code>, <code>dataTestId</code>, and <code>errorMessages</code>. Disable reactive controls through <code>control.disable()</code> to keep form state consistent.</p>
+<p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(checked)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Toggles keep emitting the theme color while switched on, including values set through Angular forms. Hovering the track or its label highlights the surface and emits color; disabled controls do neither.</p>
@@ -1214,6 +1466,8 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Use for immediate settings, with a label describing the enabled state. The native checkbox retains keyboard behavior and checked state.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/slide-toggle</code> for a working example and its current value or action result.</p>
+<h2>Switch semantics</h2>
+<p>The internal checkbox exposes switch semantics. <code>labelPosition</code> supports before/after placement, and projected label content is supported. <code>checkedChange</code> is available for standalone interaction. Readonly preserves the value while disabled state blocks interaction.</p>
 `,"projects/blocks/forms/directives/error/README.md":`<h1>Error message</h1>
 <p>A projected custom error message inside a form-field.</p>
 <h2>Import</h2>
@@ -1245,6 +1499,99 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Render only when validation should be shown. Tie the input to the error ID with <code>aria-describedby</code> and update <code>aria-invalid</code> as needed. This component does not run validation.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/error</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/forms/directives/hint/README.md":`<h1>Field hint</h1>
+<p>Composable content and native integration for the shared field frame.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { BxHint } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-input-field label=&quot;Reference&quot;&gt;&lt;bx-hint&gt;Public identifier&lt;/bx-hint&gt;&lt;/bx-input-field&gt;
+</code></pre>
+<h2>API and behavior</h2>
+<p>Use <code>align=&quot;start&quot;</code> or <code>align=&quot;end&quot;</code> for projected supporting content. Convenience fields also accept <code>hint</code> and <code>hintEnd</code> as translated text. Descriptions are connected automatically and replaced by visible errors.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/hint</code> for working field composition and compatibility examples.</p>
+`,"projects/blocks/forms/directives/load-more/README.md":`<h1>Load more</h1>
+<p>Shared incremental loading for a scroll container. The directive appends a footer at the bottom-left, inside the container&#39;s padding. Use it for paginated option panels and future data tables or lists; attach it to their scroll wrapper rather than a native <code>table</code>, <code>tbody</code>, <code>ul</code> or <code>select</code> element.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { LoadMoreDirective, ILoadMoreRequest, ILoadMoreConfig } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;div bxLoadMore #pager=&quot;bxLoadMore&quot; role=&quot;region&quot; aria-label=&quot;Workspaces&quot; tabindex=&quot;0&quot;
+  [loadMoreHasMore]=&quot;hasMore()&quot;
+  [loadMoreLoading]=&quot;loading()&quot;
+  [loadMoreError]=&quot;loadError()&quot;
+  [loadMoreRevision]=&quot;items()&quot;
+  [loadMoreConfig]=&quot;paginationAppearance&quot;
+  (loadMore)=&quot;loadNext($event)&quot;&gt;
+  @for (item of items(); track item.id) { &lt;div&gt;{{ item.name }}&lt;/div&gt; }
+&lt;/div&gt;
+</code></pre>
+<p>Give the wrapper a constrained maximum height and <code>overflow: auto</code>. Applications own API calls, cursors, cancellation and data accumulation. The directive never fetches data itself.</p>
+<h2>API</h2>
+<ul>
+<li><code>loadMoreHasMore</code>: whether another page exists; defaults to false.</li>
+<li><code>loadMoreLoading</code>: application request state; defaults to false.</li>
+<li><code>loadMoreError</code>: optional text or translation key describing a failed request. Failure reveals a retry action even when the container overflows. Without a resolved retry label, it uses a retry icon with the supplied load-more text.</li>
+<li><code>loadMoreSuppressed</code>: temporarily hides the footer and blocks page requests, for example during a search request.</li>
+<li><code>loadMoreDisabled</code>: blocks requests without removing content.</li>
+<li><code>loadMoreRevision</code>: pass the items array or a page revision to acknowledge new data.</li>
+<li><code>loadMoreConfig</code>: <code>ILoadMoreConfig</code> controls action text, busy/retry text, accessible label, button variant/color/outline, custom button/footer classes, scroll threshold and <code>buttonMode</code> (<code>auto</code> or <code>always</code>).</li>
+<li><code>loadMoreTemplate</code>: optional <code>TemplateRef&lt;ILoadMoreContext&gt;</code> for a custom action. Its context includes the resolved label (<code>$implicit</code>), <code>loading</code>, <code>disabled</code>, and guarded <code>request()</code> callback.</li>
+<li><code>loadMore</code>: emits <code>{ source: &#39;scroll&#39; | &#39;button&#39; | &#39;retry&#39; }</code>.</li>
+<li><code>complete()</code>: acknowledges completion when no loading-state cycle or items revision is available.</li>
+<li><code>actionVisible()</code>: indicates whether the footer action is visible, allowing an owning component to avoid rendering a second loading indicator.</li>
+<li><code>request(source?)</code>: invokes the same request guard from application code.</li>
+</ul>
+<h2>Loading, failure and retry</h2>
+<p>Set loading before starting the promise. Append data only on success. On failure retain the previous data and page/cursor, set <code>loadMoreError</code>, and clear loading in <code>finally</code>. Retry the same page; advance its cursor only after success. Clear the error when a retry begins.</p>
+<p>The button shows its loading spinner and becomes disabled while loading. A button visible before a request stays visible during it, including when newly appended items create overflow. The error and retry remain reachable after failure, and scroll events cannot automatically retry a failing request. Request guards prevent duplicates until a loading cycle completes, the revision changes, or <code>complete()</code> is called.</p>
+<p>When more data exists without usable item overflow, auto mode displays the footer action. Container resizing, viewport/zoom resizing, and data changes re-evaluate overflow. The footer itself does not count as item overflow, preventing show/hide oscillation. Always mode retains an explicit action even with a scrollbar. There is no automatic fetch loop to fill the viewport.</p>
+<h2>Custom action</h2>
+<pre><code class="language-html">&lt;ng-template #customAction let-label let-loading=&quot;loading&quot; let-disabled=&quot;disabled&quot; let-request=&quot;request&quot;&gt;
+  &lt;button bx-button type=&quot;button&quot; variant=&quot;tonal&quot; color=&quot;accent&quot;
+    [loading]=&quot;loading&quot; [disabled]=&quot;disabled&quot; (click)=&quot;request()&quot;&gt;{{ label }}&lt;/button&gt;
+&lt;/ng-template&gt;
+</code></pre>
+<p>Pass the template through <code>loadMoreTemplate</code>. Keep the action keyboard-accessible and represent its busy/disabled states. <code>--bx-load-more-padding</code> changes footer padding; the default has no additional horizontal inset. Button classes and semantic theme variables customize appearance without DOM access.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/load-more</code>. Fake API requests take 800ms. Use small pages for the no-scrollbar action, <strong>Fail next page now</strong> for a failed request, then <strong>Retry request</strong>. The event log distinguishes loading, failed, retry and successful states.</p>
+`,"projects/blocks/forms/directives/native-control/README.md":`<h1>Native control</h1>
+<p>Composable content and native integration for the shared field frame.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { NativeControlDirective } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-form-field label=&quot;Notes&quot;&gt;&lt;textarea bxInput label=&quot;Notes&quot; [formField]=&quot;account.note&quot;&gt;&lt;/textarea&gt;&lt;/bx-form-field&gt;
+</code></pre>
+<h2>API and behavior</h2>
+<p>Registers a native input, textarea or select with the field frame. Import the desired Angular forms directives separately. Native attributes and third-party directives remain available. <code>BX_FORM_FIELD_CONTROL</code> and <code>IFormFieldControl</code> allow consumer controls to register their own state and focus contract.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/native-control</code> for working field composition and compatibility examples.</p>
+`,"projects/blocks/forms/directives/prefix/README.md":`<h1>Field prefix</h1>
+<p>Composable content and native integration for the shared field frame.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { PrefixDirective } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-input-field label=&quot;Amount&quot;&gt;&lt;span bxPrefix aria-hidden=&quot;true&quot;&gt;$&lt;/span&gt;&lt;/bx-input-field&gt;
+</code></pre>
+<h2>API and behavior</h2>
+<p>Projects custom content before the input. Keep decorative prefixes hidden from assistive technology; express meaningful units in the label or description.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/prefix</code> for working field composition and compatibility examples.</p>
 `,"projects/blocks/forms/directives/slider/README.md":`<h1>Slider</h1>
 <p><code>SliderDirective</code> gives a native range input a glass thumb, a recessed track, and a value fill. Native keyboard, touch, disabled, minimum, maximum, step, and Angular forms behavior are preserved.</p>
 <pre><code class="language-ts">import { SliderDirective } from &#39;@filip.mazev/blocks/forms&#39;;
@@ -1254,6 +1601,25 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <p>Import the directive into your component and include the existing Blocks core stylesheet. The directive also supports <code>ngModel</code> or native <code>[value]</code> and <code>(input)</code> bindings. It reads programmatic value changes after Angular renders, so resetting a form updates the fill too.</p>
 <p>The slider inherits semantic theme colors. Solid material, reduced transparency, increased contrast, and unsupported backdrop filtering use an opaque thumb. WebKit/Blink and Firefox have separate native thumb and track rules. Provide an associated label or <code>aria-label</code> for every slider.</p>
+<p><code>--bx-slider-thumb-size</code> sets the native and decorative thumb diameter together, defaulting to <code>spacing(6)</code> from the shared tokens. The decorative thumb&#39;s position follows the same travel distance as the native thumb.</p>
+<p>The bordered glass thumb magnifies and blurs the rail beneath it. Set <code>--bx-slider-magnification</code> to adjust the enlargement from its default <code>1.5</code>, and <code>--bx-slider-lens-blur</code> to adjust the lens and backdrop blur from <code>1.5px</code>. It uses the current rail colors and value, including RTL, without reading screen pixels. Reduced transparency, increased contrast and unsupported backdrop filtering use an opaque thumb; forced colors retains the native thumb.</p>
+<h2>Labels and ticks</h2>
+<p>Native <code>[formField]</code> binding is supported alongside existing Angular form directives. <code>discrete</code> adds a formatted visible value; <code>displayWith(value)</code> controls that label. <code>showTickMarks</code> adds bounded native tick metadata. For a pair of values use <a href="components/range-slider">RangeSlider</a>.</p>
+`,"projects/blocks/forms/directives/suffix/README.md":`<h1>Field suffix</h1>
+<p>Composable content and native integration for the shared field frame.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { SuffixDirective } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-input-field label=&quot;Weight&quot;&gt;&lt;span bxSuffix aria-hidden=&quot;true&quot;&gt;kg&lt;/span&gt;&lt;/bx-input-field&gt;
+</code></pre>
+<h2>API and behavior</h2>
+<p>Projects custom content after the input. Custom interactive suffix actions need accessible names and native button semantics.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/suffix</code> for working field composition and compatibility examples.</p>
 `,"projects/blocks/icons/components/README.md":`<h1>Icon</h1>
 <p>An asynchronously loaded SVG icon using semantic foreground and background tokens.</p>
 <h2>Import</h2>
@@ -1598,6 +1964,36 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Register metadata with <code>withNav</code> and provide navigation in application configuration. Breadcrumbs navigate using the router and update after navigation. This demo lives under Components so the trail has a real parent route.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/breadcrumbs</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/components/loading-indicator/README.md":`<h1>Loading indicator</h1>
+<p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { LoadingIndicator } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-loading-indicator label=&quot;Fetching results&quot; /&gt;
+</code></pre>
+<h2>API</h2>
+<p><code>label</code> accepts translated text; <code>size</code> controls its decorative spinner. The host is a polite busy status region. Project optional supporting content after the status text. CSS variables: <code>--bx-loading-color</code>, <code>--bx-loading-gap</code>.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/loading-indicator</code>. Fake asynchronous requests demonstrate progress and loading buttons. Reduced-motion preferences remove continuous animation while preserving status feedback.</p>
+`,"projects/blocks/primitives/components/loading-spinner/README.md":`<h1>Loading spinner</h1>
+<p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { LoadingSpinner } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-loading-spinner label=&quot;Fetching results&quot; [size]=&quot;24&quot; /&gt;
+</code></pre>
+<h2>API</h2>
+<p><code>size</code> is the diameter in pixels (20 by default). <code>label</code> is translatable. <code>decorative</code> defaults to false; set it to true when surrounding content already names the operation. CSS variables: <code>--bx-spinner-color</code>, <code>--bx-spinner-stroke</code>, <code>--bx-spinner-size</code>.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/loading-spinner</code>. Fake asynchronous requests demonstrate progress and loading buttons. Reduced-motion preferences remove continuous animation while preserving status feedback.</p>
 `,"projects/blocks/primitives/components/menu-item/README.md":`<h1>Menu item</h1>
 <p>A menu action with optional icons, a shortcut hint, and destructive intent.</p>
 <h2>Import</h2>
@@ -1608,7 +2004,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <pre><code class="language-html">&lt;bx-menu-item label=&quot;Delete&quot; icon=&quot;trash-2&quot; [danger]=&quot;true&quot; (action)=&quot;remove()&quot; /&gt;
 </code></pre>
 <h2>API</h2>
-<p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, <code>danger</code>, and <code>wrapLabel</code>. Set <code>wrapLabel</code> to <code>true</code> when a menu item should wrap long content instead of truncating it. <code>action</code> emits the mouse event for enabled items.</p>
+<p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, <code>danger</code>, and <code>wrapLabel</code>. Set <code>wrapLabel</code> to <code>true</code> when a menu item should wrap long content instead of truncating it. <code>action</code> emits the mouse event for enabled items. Clipped labels and projected text use the shared <code>TruncateDirective</code> and receive an automatic tooltip. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables that tooltip while retaining ellipsis, allowing application-owned feedback. <code>wrapLabel</code> disables truncation itself.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
@@ -1647,6 +2043,21 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/menu</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/components/progress-bar/README.md":`<h1>Progress bar</h1>
+<p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { ProgressBar } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-progress-bar label=&quot;Upload progress&quot; [value]=&quot;progress()&quot; /&gt;
+</code></pre>
+<h2>API</h2>
+<p><code>mode</code> supports <code>determinate</code>, <code>indeterminate</code>, <code>buffer</code>, and <code>query</code>. <code>value</code> and <code>bufferValue</code> are clamped to 0\u2013100. Unknown progress omits <code>aria-valuenow</code>. <code>label</code> accepts translations. CSS variables: <code>--bx-progress-color</code>, <code>--bx-progress-track</code>, <code>--bx-progress-height</code>, <code>--bx-progress-radius</code>.</p>
+<h2>Appearance and accessibility</h2>
+<p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
+<p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/progress-bar</code>. Fake asynchronous requests demonstrate progress and loading buttons. Reduced-motion preferences remove continuous animation while preserving status feedback.</p>
 `,"projects/blocks/primitives/components/tab/README.md":`<h1>Tab</h1>
 <p>Declares a labelled panel inside <a href="components/tabs"><code>Tabs</code></a>.</p>
 <pre><code class="language-ts">import { Tabs, Tab, TabContentDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
@@ -1797,6 +2208,35 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Each header has <code>role=&quot;tab&quot;</code>, roving <code>tabindex</code>, <code>aria-selected</code> and a matching <code>aria-controls</code>. Panels use <code>role=&quot;tabpanel&quot;</code>, a matching <code>aria-labelledby</code>, and unique generated IDs. Nested groups maintain independent selection and keyboard handling.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/tabs</code> for enabled and disabled tabs, dynamic selection, lazy content and both appearances. The modal and toast configurators also use Tabs for Documentation, Code Examples and source files.</p>
+`,"projects/blocks/primitives/components/tag/README.md":`<h1>Tag</h1>
+<p>Informational labels with semantic colors, tonal/filled/outlined variants, optional icons and counts, disabled presentation, and accessible tooltips. Tags do not imply a button or selection action.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { Tag, ITagConfig, TagColor, TagVariant } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;bx-tag [text]=&quot;{ key: &#39;locations.skopje&#39; }&quot; color=&quot;accent&quot; variant=&quot;tonal&quot;
+  leadingIcon=&quot;map-pin&quot; trailingIcon=&quot;chevron-right&quot; [trailingNumber]=&quot;12&quot;
+  [tooltip]=&quot;{ key: &#39;locations.description&#39; }&quot; /&gt;
+
+&lt;bx-tag [leadingNumber]=&quot;42&quot; color=&quot;info&quot; variant=&quot;filled&quot; ariaLabel=&quot;42 locations&quot; /&gt;
+&lt;bx-tag text=&quot;Skopje&quot; /&gt;&lt;bx-tag text=&quot;+2&quot; tooltip=&quot;Ohrid, Bitola&quot; /&gt;
+</code></pre>
+<h2>API</h2>
+<p><code>text</code>, <code>tooltip</code>, and <code>ariaLabel</code> accept <code>ResolvableText</code>. <code>color</code> selects primary, accent, success, danger, info, warn or neutral. <code>variant</code> is tonal (default), filled or outlined. <code>size</code> is small or medium. <code>disabled</code> changes the visual/accessible presentation without inventing an action.</p>
+<p><code>leadingIcon</code>, <code>trailingIcon</code>, and <code>iconSize</code> configure decorative icons. <code>leadingNumber</code> and <code>trailingNumber</code> accept numbers, strings such as <code>+2</code>, or null to hide a count. Omit text for a number-only tag. Numeric values use <code>Intl.NumberFormat</code> with the optional <code>locale</code>; strings retain their prefixes.</p>
+<p><code>config</code> accepts reusable <code>ITagConfig</code> appearance, icon, count and tooltip defaults. Direct inputs take precedence. Consumer CSS variables can override the semantic palette without changing the component.</p>
+<p>Without an explicit <code>tooltip</code>, a tag automatically shows its complete label only when its rendered text is truncated. Resizing, content/translation changes, and loaded fonts update this condition through the shared <a href="components/truncate">TruncateDirective</a>. An explicit tooltip still describes the tag even when its label fits, including overflow tags listing hidden selections. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> to retain truncation while supplying custom feedback. <code>ITagConfig.tooltipOnTruncate</code> provides the reusable default, with the direct input taking precedence. <code>tooltip=&quot;&quot;</code> also suppresses the automatic tooltip. The public <code>TruncateDirective</code>, <code>TruncatedTextPipe</code> (<code>bxTruncatedText</code>), and <code>truncatedText()</code> helper are available for application-owned text.</p>
+<h2>Appearance</h2>
+<p>Uses Blocks semantic theme colors and the shared glass surface. Tags inherit application glassiness, receive surrounding emitted light, and follow opaque/reduced-transparency preferences. They have no hover illumination or press effect because they are informational. Tooltip motion follows <code>BxA11yService</code>.</p>
+<p>Text tags use small rounded corners. A single number without text or icons uses a circle that grows for longer counts. Override <code>--bx-tag-background</code>, <code>--bx-tag-color</code>, <code>--bx-tag-border</code>, <code>--bx-tag-radius</code>, <code>--bx-tag-padding</code>, <code>--bx-tag-gap</code>, <code>--bx-tag-font-size</code>, <code>--bx-tag-shadow</code>, <code>--bx-tag-counter-background</code>, <code>--bx-tag-counter-radius</code>, and <code>--bx-tag-disabled-opacity</code> as needed. <code>--bx-tag-number-size</code> and <code>--bx-tag-number-padding</code> configure number-only circles; <code>--bx-tag-fill-opacity</code> and <code>--bx-tag-outline-opacity</code> tune the variant tints. Forced colors retain a visible boundary.</p>
+<h2>Accessibility and translations</h2>
+<p>Visible text remains available to assistive technology; decorative icons are hidden. An explicit <code>ariaLabel</code> names the tag group when the visible numbers need context. Tooltip tags support hover, keyboard focus and touch-and-hold. <code>focusable</code> defaults to true for a tooltip-bearing standalone tag; set it false when a surrounding interactive control supplies keyboard access to the same description.</p>
+<p>Text resolves through <code>BX_I18N</code>, tracks its optional version signal, and falls back to keys without an adapter. Plain text works directly.</p>
+<h2>Selected values</h2>
+<p>Select and multiselect support <code>selectionDisplay=&quot;tags&quot;</code>. <code>tagConfig</code> sets shared tag appearance, and option <code>tagConfig</code> provides per-value overrides. <code>visibleTagCount</code> defaults to one and is clamped to at least one. Remaining values become an overflow tag such as <code>+2</code>, with their translated names in its tooltip. <code>tagOverflowText</code> and <code>overflowTagConfig</code> customize that tag.</p>
+<p>The parent combobox exposes the complete selection for keyboard users; embedded tags do not introduce nested tab stops or actions. Multiselect&#39;s <code>allSelectedText</code> still takes precedence when select-all intent is active.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/tag</code> for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, translations, and resizable conditional tooltips. <code>/components/truncate</code> demonstrates the shared directive directly. <code>/components/multi-select</code> includes selected-tag mode, visible-tag limits, and a Skopje +2 style overflow example.</p>
 `,"projects/blocks/primitives/components/tooltip/README.md":`<h1>Tooltip</h1>
 <p>A short descriptive surface for supplementary help.</p>
 <h2>Import</h2>
@@ -1896,6 +2336,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 </code></pre>
 <h2>API</h2>
 <p><code>bxTooltip</code>: required text or translation key. <code>placement</code>: top, bottom, left, right, and supported aligned placements. <code>show()</code> and <code>hide()</code> expose explicit lifecycle control.</p>
+<p>Changing the text updates an open tooltip. Empty text dismisses it; restoring text while hovered or keyboard-focused reveals it again. This supports labels that only need a tooltip while truncated.</p>
+<p>Use the shared <a href="components/truncate">TruncateDirective</a> for ellipsis and reactive truncation detection instead of duplicating element-size observers. Pass <code>resolvedText | bxTruncatedText: overflow.truncated()</code> to <code>bxTooltip</code> using the public <code>TruncatedTextPipe</code>; the owner supplies an appropriate focus target and visible focus styling.</p>
+<p><code>bxTooltipHover</code> defaults to <code>true</code>. Set it to <code>false</code> to keep the keyboard description while nested content supplies its own pointer tooltip, such as an overflow tag within a select trigger.</p>
 <p><code>bxTooltipTouch</code> defaults to <code>&#39;none&#39;</code>: normal touch taps activate the control without showing its tooltip. Set it to <code>&#39;longpress&#39;</code> for an optional touch-and-hold hint, or <code>&#39;tap&#39;</code> on a dedicated information button that has no other action.</p>
 <pre><code class="language-html">&lt;button type=&quot;button&quot; bxTooltip=&quot;Appearance settings apply to all components&quot; bxTooltipTouch=&quot;tap&quot; aria-label=&quot;More information&quot;&gt;\u24D8&lt;/button&gt;
 &lt;button type=&quot;button&quot; bxTooltip=&quot;Optional extra context&quot; bxTooltipTouch=&quot;longpress&quot;&gt;Hold for a hint&lt;/button&gt;
@@ -1921,6 +2364,119 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Tap mode is intended for dedicated help buttons, including the built-in form-field information buttons. Tap again, tap elsewhere, scroll, or press Escape to dismiss the help. Use a separate popover or dialog for interactive or essential explanations rather than hiding them in a tooltip.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/tooltip-directive</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/directives/truncate/README.md":`<h1>Truncated text</h1>
+<p>Shared single-line ellipsis styling, reactive overflow detection, and conditional text selection. <code>TruncateDirective</code> measures the rendered element. <code>TruncatedTextPipe</code> and <code>truncatedText()</code> use that measured state for tooltips or application-owned feedback. The pure pipe does not poll the DOM or own observers.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { TruncateDirective, TruncatedTextPipe, TooltipDirective, truncatedText } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<p>Add the standalone directive, pipe, and tooltip directive to the component&#39;s <code>imports</code> when composing a conditional tooltip. Include Blocks&#39; established <code>core/styles/index</code> global entry once; it supplies the shared <code>.bx-truncate</code> utility used by the directive.</p>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;div class=&quot;label-container&quot;&gt;
+  &lt;span bxTruncate #overflow=&quot;bxTruncate&quot;
+      [bxTooltip]=&quot;label() | bxTruncatedText: overflow.truncated()&quot;
+      [attr.tabindex]=&quot;overflow.truncated() ? 0 : null&quot;
+      bxTooltipTouch=&quot;longpress&quot; placement=&quot;top&quot;&gt;{{ label() }}&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+<pre><code class="language-ts">import { signal } from &#39;@angular/core&#39;;
+
+protected readonly label = signal(&#39;A long location name that may not fit&#39;);
+</code></pre>
+<p>Constrain the available width so overflow can occur:</p>
+<pre><code class="language-scss">.label-container {
+    inline-size: 14rem;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+</code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[bxTruncate]</code></td>
+<td><code>true</code></td>
+<td>Enables block display and the shared ellipsis utility. False removes the directive&#39;s styling/class and reports no truncation.</td>
+</tr>
+<tr>
+<td><code>#overflow=&quot;bxTruncate&quot;</code></td>
+<td>\u2014</td>
+<td>Exports the directive for template access.</td>
+</tr>
+<tr>
+<td><code>truncated()</code></td>
+<td><code>false</code></td>
+<td>Readonly signal indicating overflow of the rendered content box. Remains false during server rendering.</td>
+</tr>
+<tr>
+<td><code>text()</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Readonly signal with current DOM text or a native input&#39;s value/placeholder, refreshed after rendering. Useful for projected content.</td>
+</tr>
+<tr>
+<td><code>truncatedChange</code></td>
+<td>\u2014</td>
+<td>Boolean event emitted when the measured state changes.</td>
+</tr>
+<tr>
+<td><code>refresh()</code></td>
+<td>\u2014</td>
+<td>Immediately rechecks after an application-owned style or layout change outside normal Angular rendering. Safe before rendering or after destruction.</td>
+</tr>
+</tbody></table>
+<h3>Public pipe and helper</h3>
+<pre><code class="language-html">&lt;!-- Empty text disables the existing tooltip when content fits or the feature is off. --&gt;
+&lt;span bxTruncate #overflow=&quot;bxTruncate&quot;
+    [bxTooltip]=&quot;label() | bxTruncatedText: overflow.truncated(): automaticTooltips()&quot;&gt;{{ label() }}&lt;/span&gt;
+</code></pre>
+<p><code>bxTruncatedText</code> accepts text, the measured boolean, and an optional enabled boolean (default true). It returns the original string or translation-key object when both booleans are true, otherwise an empty string. Null and undefined text become empty strings. It preserves <code>ResolvableText</code> for the existing translation adapter.</p>
+<p>The exported <code>truncatedText(text, truncated, enabled = true)</code> helper provides the same behavior in TypeScript. Read the directive signals directly when custom behavior is more useful:</p>
+<pre><code class="language-ts">import { computed, signal, viewChild } from &#39;@angular/core&#39;;
+import { TruncateDirective, truncatedText } from &#39;@filip.mazev/blocks/primitives&#39;;
+
+protected readonly overflow = viewChild(TruncateDirective);
+protected readonly label = signal(&#39;A long label&#39;);
+protected readonly automaticTooltips = signal(true);
+protected readonly customFeedback = computed(() =&gt;
+  truncatedText(this.label(), this.overflow()?.truncated() ?? false, this.automaticTooltips())
+);
+</code></pre>
+<p>The pipe is pure: pass the current <code>truncated()</code> boolean rather than an element or directive object. This lets Angular update its result when measurement changes.</p>
+<h3>Disable automatic tooltips without disabling truncation</h3>
+<pre><code class="language-html">&lt;bx-tag [text]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; tooltip=&quot;My application description&quot; /&gt;
+&lt;bx-menu-item [label]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
+&lt;bx-input-field [label]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
+&lt;bx-search-input [value]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
+&lt;bx-select label=&quot;Location&quot; [options]=&quot;options()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
+&lt;bx-multi-select label=&quot;Locations&quot; [options]=&quot;options()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
+</code></pre>
+<p><code>tooltipOnTruncate</code> defaults to true. False suppresses the component&#39;s automatic ellipsis tooltip while retaining ellipsis and measurement, so an application can attach its own tooltip. Explicit tag tooltip descriptions and overflow-tag lists are independent; they retain their existing contract. <code>ITagConfig.tooltipOnTruncate</code> supplies a reusable tag default, and a direct tag input takes precedence.</p>
+<p>Forms resolve the instance input, then shared application settings, then true:</p>
+<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
+import { FormSettingsService } from &#39;@filip.mazev/blocks/forms&#39;;
+
+private readonly formSettings = inject(FormSettingsService);
+
+// For example, in application initialization:
+this.formSettings.update({ tooltipOnTruncate: false });
+</code></pre>
+<p><code>[bxTruncate]=&quot;false&quot;</code> is a separate choice: it disables ellipsis itself on a custom text element. <code>tooltipOnTruncate</code> only disables automatic tooltips on an owning component.</p>
+<h2>Appearance and customization</h2>
+<p>The directive supplies ellipsis mechanics rather than a theme or a tooltip. Keep widths, typography, colors, borders, and focus styling on the owning control or container using Blocks tokens. Apply it to the text element rather than a wrapper containing icons, counters, or actions. The shared <code>truncate-text</code> Sass mixin is available through <code>core/styles/helpers</code> for stylesheet-only integrations; the directive and existing components use that same utility.</p>
+<p>All existing library ellipsis sites use the shared implementation: tag labels, menu-item content, floating input labels, search values/placeholders, select/multiselect captions and values, and multiselect&#39;s full-selection measurement. Menu <code>wrapLabel</code> disables ellipsis through the same directive. The appearance preview&#39;s clipped status text also uses it. Custom select trigger templates keep application-owned presentation.</p>
+<h2>Behavior and accessibility</h2>
+<p>Resize and content observers, Angular render callbacks, viewport changes, and font loading refresh measurement. Checks are coalesced into animation frames. Observers, listeners, and pending frames are cleaned up on destruction; asynchronous font completion is guarded. Browser measurement starts after rendering.</p>
+<p>Native single-line input values are measured with their current font and inline padding, since their rendered values are not DOM text nodes. Regular text uses its content-box overflow metrics. Full-selection summary measurement uses a constrained, visually hidden copy of the text and the same directive.</p>
+<p>The complete text stays in the DOM for assistive technology. The directive does not add focusability, roles, action semantics, or text of its own. The owner provides keyboard access and a visible focus indicator when a tooltip needs an independent focus target. Use the existing <code>TooltipDirective</code> for hover, keyboard focus, touch-and-hold, overlay theming, positioning, and reduced-motion behavior. Passing an empty tooltip while text fits also removes its description and dismisses an open tooltip.</p>
+<p>Translation stays in the caller: resolve <code>ResolvableText</code> through <code>BX_I18N</code> in a computation that reads the adapter&#39;s version, then render and pass that same resolved string to the tooltip. Rendered language changes trigger new measurements.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/truncate</code> for the short pipe example, helper/custom logic, application defaults, opt-out examples, and interactive previews across tags, menus, input fields, search, select and multiselect. Edit text, adjust width, enlarge typography, disable automatic tooltips, or supply a custom tag/text tooltip. <code>/components/tag</code> includes the same demo alongside tag customization.</p>
+<p>Previews use an aligned responsive card grid. Width changes affect each example inside its card; preview areas and caption space stay reserved. Wrapped content scrolls inside its preview rather than moving later examples.</p>
 `,"projects/blocks/toastr/components/README.md":`<h1>Toast core</h1>
 <p>The toast lifecycle host with progress, dismissal and content composition.</p>
 <h2>Import</h2>
@@ -1977,7 +2533,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Write a concise message with a clear outcome. Use a modal or an inline message when acknowledgement or a long interaction is required. Simple toast content shares the parent toast glass surface.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/simple-toast</code> for a working example and its current value or action result.</p>
-`};var w={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var q={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
+`};var k={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var T={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
 
@@ -2281,7 +2837,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var T=class r{document=h(B);router=h(Cn);readmeContent=x(()=>{let e=this.path().replace(/^\/+/,``);return k[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=E.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=De({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&qe(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(zo(0,`div`,0)(1,`div`,1)(2,`span`),nn(3,`Documentation`),Go()(),Sa(4,`article`,2),Go()),t&2&&(ie(4),gu(`innerHTML`,o.readmeContent(),Np))},styles:[`
+`};var q=class r{document=f(U);router=f(xn);readmeContent=w$1(()=>{let e=this.path().replace(/^\/+/,``);return w[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=le({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Me(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(ls(0,`div`,0)(1,`div`,1)(2,`span`),je(3,`Documentation`),cs()(),Hn(4,`article`,2),cs()),t&2&&(M(4),ds(`innerHTML`,o.readmeContent(),fm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
