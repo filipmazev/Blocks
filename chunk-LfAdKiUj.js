@@ -1,4 +1,4 @@
-import{Kn as g,Ln as ds,Vn as f,_r as le,bi as z,cr as je,ct as M,ei as um,en as Un,er as hs,fn as Xn,gi as y,jn as be,ri as us}from"./chunk-tIcWR06h.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Jn as g,Mn as be,Rn as ds,Si as z,Un as f,ai as us,ct as M,ni as um,nr as hs,pn as Xn,tn as Un,ur as je,vi as y,yr as le}from"./chunk-o3QKG9oV.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -2055,7 +2055,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <h2>Playground</h2>
 <p>Open <code>/components/breadcrumbs</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/navigation/components/side-nav/README.md":`<h1>Side navigation</h1>
-<p>A route-driven application rail with collapsible sections, a compact icon rail, recursive opaque menu flyouts, fuzzy search, and a responsive mobile drawer. It shares <code>NavigationService</code> with breadcrumbs and uses Blocks menu, overlay, theme, surface, search, tag, and accessibility facilities.</p>
+<p>A route-driven application rail with collapsible sections, a compact icon rail, one shared submenu panel, contextual fuzzy search, and a responsive mobile drawer. It shares <code>NavigationService</code> with breadcrumbs and uses Blocks menu, overlay, theme, surface, search, tag, and accessibility facilities.</p>
 <h2>Public import</h2>
 <pre><code class="language-ts">import {
   SideNav, SideNavHeaderDirective, SideNavFooterDirective,
@@ -2095,7 +2095,7 @@ export const routes: Routes = [
 // In application providers:
 // provideRouter(routes), ...provideNavigation(navigation.config)
 </code></pre>
-<p>A route that only groups children can omit a component. Provide an empty child route if that group&#39;s own URL should render a page. Parent labels remain links; their adjacent disclosure opens the child menu. In the compact rail, the parent icon opens its menu and the first link inside navigates to the parent&#39;s route.</p>
+<p>A route that only groups children can omit a component. Provide an empty child route if that group&#39;s own URL should render a page. Parent labels remain links; their adjacent disclosure opens the child menu. In the compact rail, the parent icon opens its menu and the heading link inside navigates to the parent&#39;s route.</p>
 <pre><code class="language-html">&lt;div class=&quot;application-shell&quot;&gt;
   &lt;bx-side-nav #navigation [config]=&quot;{ side: &#39;left&#39; }&quot; [(collapsed)]=&quot;collapsed&quot;&gt;
     &lt;ng-template bxSideNavHeader let-compact let-mobile=&quot;mobile&quot;&gt;
@@ -2112,7 +2112,7 @@ export const routes: Routes = [
   &lt;main&gt;&lt;!-- router outlet --&gt;&lt;/main&gt;
 &lt;/div&gt;
 </code></pre>
-<p>Use <code>display: flex; min-width: 0</code> on your shell and <code>flex: 1; min-width: 0</code> on its content. The component reserves its own desktop width; the host adjusts its flex order for the configured physical side, including RTL layouts. Mobile drawers reserve zero horizontal space. The built-in Blocks tonal hamburger is fixed at the configured edge and hides while the drawer is open, leaving one close action in its header; reserve room for it in your toolbar. A custom trigger can call <code>navigation.open($event)</code>, <code>close()</code>, or <code>toggle($event)</code> with <code>showMobileTrigger: false</code>. Passing the click event or opening button ensures focus returns to it even in browsers that do not focus buttons on pointer activation.</p>
+<p>Use <code>display: flex; min-width: 0</code> on your shell and <code>flex: 1; min-width: 0</code> on its content. The component reserves its own desktop width; the host adjusts its flex order for the configured physical side, including RTL layouts. Mobile drawers reserve zero horizontal space. The built-in Blocks tonal hamburger is fixed at the configured edge and hides while the drawer is open, leaving one close action in its header; reserve room for it in your toolbar. For exact alignment with other toolbar actions, put an application-owned trigger in that toolbar\u2019s flex layout and disable the built-in trigger; bind its <code>aria-controls</code> to <code>navigation.panelId</code>. A custom trigger can call <code>navigation.open($event)</code>, <code>close()</code>, or <code>toggle($event)</code> with <code>showMobileTrigger: false</code>. Passing the click event or opening button ensures focus returns to it even in browsers that do not focus buttons on pointer activation.</p>
 <p>Header/footer slots use the modal pattern: directives register <code>ng-template</code> references with their containing component. <code>$implicit</code> and <code>collapsed</code> contain the effective compact presentation state; <code>mobile</code> identifies drawer presentation. Keep interactive projected content accessible and avoid fixed widths inside compact slots.</p>
 <h2>API</h2>
 <table>
@@ -2151,11 +2151,15 @@ export const routes: Routes = [
 <td><code>ISideNavLayout</code>: physical side, current content offset, compact/mobile/open flags</td>
 </tr>
 <tr>
+<td><code>panelId</code></td>
+<td>Stable drawer ID for an application-owned trigger\u2019s <code>aria-controls</code></td>
+</tr>
+<tr>
 <td><code>layout()</code></td>
 <td>Readonly computed layout state for application shells</td>
 </tr>
 <tr>
-<td><code>isMobile()</code>, <code>isCollapsed()</code>, <code>query()</code></td>
+<td><code>isMobile()</code>, <code>isCollapsed()</code>, <code>isInlineSubmenus()</code>, <code>query()</code></td>
 <td>Readonly current presentation and query state</td>
 </tr>
 <tr>
@@ -2210,7 +2214,23 @@ export const routes: Routes = [
 </tr>
 <tr>
 <td><code>mobileBreakpoint</code></td>
-<td><code>&#39;lg&#39;</code>, from <code>WindowDimensionsService.breakpoints</code></td>
+<td><code>&#39;lg&#39;</code>, from <code>WindowDimensionsService.breakpoints</code>; controls the drawer independently of submenu presentation</td>
+</tr>
+<tr>
+<td><code>submenuBreakpoint</code></td>
+<td><code>&#39;xl&#39;</code>; automatic mode uses inline submenu levels at or below this shared breakpoint</td>
+</tr>
+<tr>
+<td><code>submenuMode</code></td>
+<td><code>&#39;auto&#39;</code>; <code>&#39;inline&#39;</code> keeps levels inside the rail, <code>&#39;flyout&#39;</code> explicitly uses one adjacent panel; mobile always uses inline levels</td>
+</tr>
+<tr>
+<td><code>showSearchGuide</code></td>
+<td><code>true</code>; external monochrome arrow for the best nested result only; reduced motion disables animation</td>
+</tr>
+<tr>
+<td><code>backLabel</code>, <code>pathLabel</code></td>
+<td><code>&#39;Back&#39;</code>, <code>&#39;Navigation path&#39;</code>; both accept <code>ResolvableText</code></td>
 </tr>
 <tr>
 <td><code>mobile</code></td>
@@ -2279,8 +2299,20 @@ export const routes: Routes = [
 <td>Transparent, over the shared panel/menu surface</td>
 </tr>
 <tr>
-<td><code>--bx-side-nav-item-hover-background</code>, <code>--bx-side-nav-item-active-background</code>, <code>--bx-side-nav-item-highlight-background</code></td>
-<td>Shared accent tonal surface; active routes have a solid accent border, search targets a dashed outline and pointer</td>
+<td><code>--bx-side-nav-item-hover-background</code>, <code>--bx-side-nav-item-active-background</code></td>
+<td>Shared accent tonal surfaces; only the active route has the selected border</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-guide-color</code>, <code>--bx-side-nav-guide-background</code></td>
+<td>Theme text/surface tokens; monochrome by default</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-guide-width</code></td>
+<td><code>4rem</code>, constrained to the available space outside the panel</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-guide-duration</code></td>
+<td><code>2400ms</code>; reduced motion disables the pointing animation</td>
 </tr>
 <tr>
 <td><code>--bx-side-nav-item-gap</code></td>
@@ -2303,9 +2335,9 @@ export const routes: Routes = [
 <td>Shared backdrop color with a neutral scrim fallback</td>
 </tr>
 </tbody></table>
-<p>Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and fragments do not clear selection. Only the most specific matching item receives the selected tonal background and border. For example, <code>/components/side-nav/overview</code> selects Side navigation rather than also selecting <code>/components</code>. Its ancestor branches and owning section use accent text without a second selected box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives <code>aria-current=&quot;page&quot;</code>.</p>
+<p>Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and fragments do not clear selection. Only the most specific matching item receives the selected tonal background and border. For example, <code>/components/side-nav/overview</code> selects Side navigation rather than also selecting <code>/components</code>. Its owning section uses accent text without a second selected box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives <code>aria-current=&quot;page&quot;</code>.</p>
 <p>The navigation region is the panel&#39;s sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining space, aligned with header, search, and footer controls. Its scrollbar gutter and the flyouts&#39; gutters remain reserved when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.</p>
-<p>The background and search use Blocks surfaces. Rows reuse their containing surface; nested menus are opaque, without backdrop filters. Theme inheritance keeps open overlays synchronized with their source. Standard semantic colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks.</p>
+<p>The background and search use Blocks surfaces. Rows reuse their containing surface; the adjacent submenu panel is opaque, without backdrop filters. Theme inheritance keeps open overlays synchronized with their source. Standard semantic colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks.</p>
 <pre><code class="language-html">&lt;ng-template #item let-entry let-active=&quot;active&quot; let-compact=&quot;collapsed&quot;&gt;
   &lt;bx-icon [name]=&quot;entry.icon?.name ?? &#39;circle&#39;&quot; /&gt;
   @if (!compact) { &lt;span&gt;{{ entry.label }}&lt;/span&gt; }
@@ -2314,17 +2346,29 @@ export const routes: Routes = [
 </code></pre>
 <p>Item templates should contain presentation only. The surrounding control owns the accessible interaction; avoid nested links/buttons. Application-owned <code>groups</code> use stable unique item IDs and resolved section titles; item <code>data.label</code> and <code>data.keywords</code> may retain translation definitions. Update the groups input when application-owned data changes. The route access adapter applies to service-generated groups; callers supplying groups own their visibility decisions.</p>
 <h2>Behavior and accessibility</h2>
-<p>Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It filters to matching base branches, opens the best nested path, and points at the target. The indicator persists until the query changes/clears or an item is selected; reduced motion keeps a static pointer. Search temporarily expands a collapsed rail and collapsed sections without changing their saved states. After selecting a result and clearing the query, its ancestor menus reopen and their scroll containers move immediately to the selected item. Search covers the currently supplied route tree, not unloaded or remote results.</p>
-<p>Menus have <code>menu</code>/<code>menuitem</code> semantics, accessible names, native links, and separate parent disclosure buttons. Hover, click/touch, Enter/Space, and arrow keys can open descendants. Up/Down and Home/End move focus within a menu. The arrow towards the flyout opens it; the opposite arrow or Escape closes that layer and restores focus. Tab cycles inside flyouts. Parent menus stay open while interacting with descendants. Cascades reuse the native CSS anchoring used by Blocks dropdowns, with coordinated descendant refreshes on geometry changes and a measured fallback for browsers without anchoring. Scrolling does not write overlay positions when native anchoring is available. A branch closes when its origin leaves its clipping container or the viewport, so detached flyouts do not remain floating. Search-revealed paths remain open during pointer movement. An outside click closes the entire expanded path, and Escape dismisses a layer. Menu triggers honor <code>bxOverlayContext</code>, matching dropdowns, context menus, and selects; menus opened from dialogs or top-layer overlays inherit that layer.</p>
+<p>Every label remains a native route link. Its separate chevron opens children without navigating. The whole navigation chooses one submenu presentation, independent of branch depth:</p>
+<ul>
+<li>At <code>xl</code> and below, children replace the current list inside the rail. Inline layouts also measure their containing shell, so a narrow embedded preview uses this behavior on a wide viewport.</li>
+<li>Above that threshold, one opaque adjacent panel opens. All deeper levels replace the list in that same panel; further overlays never accumulate or overlap.</li>
+<li>Mobile drawers always browse inside the panel. <code>submenuMode: &#39;inline&#39;</code> forces this on desktop too; <code>submenuMode: &#39;flyout&#39;</code> is an explicit desktop override for previews or application layouts.</li>
+</ul>
+<p>Back and the parent path stay above the scrolling list. The current parent&#39;s heading is also a link to its own page. Returning to a level restores its scroll position and disclosure focus. Changing the available width preserves the browsing path; a compact rail temporarily expands when it needs to display inline levels without changing its saved collapse preference. Levels slide briefly on explicit browsing changes; reduced motion disables the slide. Opening a submenu requires a disclosure click, touch, or keyboard action; hovering a label no longer opens menus.</p>
+<p>Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It renders a flat list of direct matches with translated parent paths in the main navigation, with identical behavior in both presentations. Searching never opens submenus. Labels navigate directly; result disclosures leave search and browse the chosen item&#39;s children. Clearing search restores the previous browsing level and its scroll position. Search temporarily expands a compact rail without changing its saved preference. Search covers the currently supplied tree, not unloaded or remote results.</p>
+<p>The best nested result may show one elongated monochrome arrow beside the navigation surface, with its tip slightly overlapping the edge towards its row. It floats gently while pointing towards the item; reduced motion keeps it static. Top-level results never show a guide. Search and expanded ancestors do not add selection colors or outlines. The page link and its separate disclosure have independent hover and focus surfaces; selection belongs to the page link. <code>showSearchGuide: false</code> removes the arrow. The older <code>--bx-side-nav-item-highlight-background</code> has no effect now that search does not color rows.</p>
+<p>Menus retain <code>menu</code>/<code>menuitem</code> semantics, accessible names, native links, and separate disclosure buttons. Enter/Space or the arrow towards the submenu opens children. Up/Down and Home/End move within the current menu. Back, Escape, or the opposite arrow returns one level, restoring scroll and focus; Escape at the root can dismiss the mobile drawer. Tab cycles inside the adjacent panel or mobile drawer. Clicking outside closes the adjacent panel.</p>
+<p>The adjacent panel reuses <code>MenuTriggerDirective</code>, native CSS anchoring, origin visibility tracking, theme inheritance, and the measured fallback used by Blocks dropdowns. Scrolling does not write overlay positions when native anchoring is available. The panel closes when its origin leaves its clipping container or the viewport. It honors <code>bxOverlayContext</code>; menus opened from dialogs or top-layer overlays retain that layer.</p>
+<pre><code class="language-html">&lt;!-- App-wide defaults can set the same options through defineNavigation(). --&gt;
+&lt;bx-side-nav [config]=&quot;{ submenuBreakpoint: &#39;xl&#39;, submenuMode: &#39;auto&#39;, backLabel: { key: &#39;nav.back&#39; } }&quot; /&gt;
+</code></pre>
 <p>Fixed mobile navigation uses a labelled modal drawer with focus capture/trapping, scroll locking, a click-to-close scrim, a Blocks icon-only close button with hover feedback, and Escape dismissal. Closing restores the opening control&#39;s focus. A submenu consumes Escape before the drawer does. Resizing out of mobile mode closes the drawer and releases its lock. Browser-only persistence and measurement are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key changes, without cross-tab synchronization.</p>
 <p>For an inline mobile preview, use a positioned shell (<code>position: relative</code>) with a minimum height and <code>overflow: hidden</code>. Its drawer and scrim stay inside that shell and do not lock page scrolling. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested glass. Presentation changes establish the closed layout immediately; explicit open/close actions animate the slide. Reduced motion disables that animation.</p>
 <h2>Playground</h2>
-<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withNav</code> routes, an expanded text-only menu, its Blocks brand, and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional search, and a live English/Macedonian adapter covering every menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive navigation. Try <code>dsgn tkns</code>, <code>palette</code>, or <code>\u0442\u043E\u043A\u0435\u043D\u0438</code>, select the highlighted result, then clear the search.</p>
+<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withNav</code> routes, an expanded text-only menu, its Blocks brand, and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional search, and a live English/Macedonian adapter covering every menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive navigation. Use the adjacent-panel control to compare the two desktop presentations. Try <code>dsgn tkns</code>, <code>palette</code>, or <code>\u0442\u043E\u043A\u0435\u043D\u0438</code> for flat contextual results, clear the search, and use the disclosures and Back control through all four levels.</p>
 `,"projects/blocks/navigation/components/side-nav/components/side-nav-branch/README.md":`<h1>Side-nav branch</h1>
-<p>Internal recursive item presentation for <a href="components/side-nav">SideNav</a>. Applications import <code>SideNav</code> from <code>@filip.mazev/blocks/navigation</code>; this implementation component is intentionally absent from the public barrel.</p>
-<p>The owning side-nav supplies item data, configuration, translated text, and optional item templates through its scoped state service. Each branch renders the native route link, optional Blocks tags, a separate submenu disclosure, and a recursive <code>bx-menu</code> template. The shared menu trigger handles hover, keyboard focus, nesting, positioning, and live overlay theme inheritance.</p>
-<p>Search reveals only the selected path and immediately scrolls the branch&#39;s own container to keep it visible. The pointer animates while motion is allowed and remains static with reduced motion. Rows reuse the shared panel/menu surface with semantic tonal interaction states and accept <code>--bx-side-nav-item-radius</code>, <code>--bx-side-nav-item-background</code>, <code>--bx-side-nav-menu-width</code>, and <code>--bx-side-nav-menu-max-height</code> from the owner.</p>
-<p>The four-level demo at <code>/components/side-nav</code> exercises this component through its public owner, including custom templates, compact presentation, mobile, RTL, and translated target labels.</p>
+<p>Internal item presentation for <a href="components/side-nav">SideNav</a>. Consumers import <code>SideNav</code> from <code>@filip.mazev/blocks/navigation</code>; this implementation component is intentionally absent from the public barrel.</p>
+<p>The owning side-nav supplies translated item data, active-route state, and an optional item template through its scoped state service. Each row renders a native route link, Blocks tags, and a separate disclosure button. Click/touch, Enter/Space, or the forward arrow requests children from the owner. The owner chooses inline browsing or its one shared adjacent panel; rows never create recursive overlays.</p>
+<p>Search results include a muted parent path even with custom item templates. Only the best nested result may have an external elongated monochrome arrow, using the shared overlay origin tracker and a gentle floating animation. Reduced motion keeps it static. Root results have no guide, and search does not add selected colors or outlines. The page link and disclosure button have separate hover and focus surfaces; only the page link receives route selection. Compact alignment and disabled semantics remain independent.</p>
+<p>See <code>/components/side-nav</code> for the four-level fixture, compact presentation, inline/adjacent levels, mobile drawer, RTL, custom item content, and English/Macedonian labels.</p>
 `,"projects/blocks/primitives/components/loading-indicator/README.md":`<h1>Loading indicator</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
@@ -2699,10 +2743,11 @@ this.theme.setAppearance({ reducedTransparency: true });
 &lt;/ng-template&gt;
 &lt;ng-template #children&gt;&lt;bx-menu&gt;&lt;bx-menu-item label=&quot;Tokens&quot; /&gt;&lt;/bx-menu&gt;&lt;/ng-template&gt;
 </code></pre>
-<p><code>bxMenuTrigger</code> is required. Optional inputs are <code>menuOrigin</code> (the full row when the trigger is a separate disclosure), <code>menuParent</code>, physical <code>menuSide</code> (<code>right</code> by default), <code>menuHover</code> (true), <code>menuLabel</code> (trigger label fallback), and <code>menuPinned</code> (false; keeps a search-revealed path open during pointer movement). <code>menuOpened</code>/<code>menuClosed</code> report transitions. <code>isOpen()</code>, <code>open(focus?)</code>, <code>close(restoreFocus?)</code> and <code>toggle(event)</code> expose explicit controls. Selection owners call <code>MenuCascadeService.closeAll()</code> after activating an action; this preserves parent disclosure clicks in recursive menus.</p>
+<p><code>bxMenuTrigger</code> is required. Optional inputs are <code>menuOrigin</code> (the full row when the trigger is a separate disclosure), <code>menuParent</code>, physical <code>menuSide</code> (<code>right</code> by default), <code>menuHover</code> (true), <code>menuManual</code> (false), <code>menuLabel</code> (trigger label fallback), and <code>menuPinned</code> (false; keeps a search-revealed path open during pointer movement). <code>menuOpened</code>/<code>menuClosed</code> report transitions. <code>isOpen()</code>, <code>open(focus?, origin?)</code>, <code>close(restoreFocus?)</code> and <code>toggle(event)</code> expose explicit controls. Selection owners call <code>MenuCascadeService.closeAll()</code> after activating an action; this preserves parent disclosure clicks in recursive menus.</p>
 <p>Native trigger semantics supply Enter/Space. Arrow towards the menu and Up/Down open it with focus. Up/Down/Home/End navigate within an open menu; Escape/opposite arrow dismiss one layer, and Tab is trapped inside its surface. Click outside dismisses the entire path, including search-pinned menus. Hover close has a short pointer-crossing delay and retains focused descendants. Cascades reuse the shared origin tracker&#39;s native CSS anchoring, refreshing dependent descendants on geometry changes and using measured positions only as a fallback. Clipped or offscreen origins close their branch. Overlays, traps, listeners, subscriptions, and timers are cleaned up on destruction. The trigger honors <code>bxOverlayContext</code> for top-layer positioning, as dropdowns and context menus do; origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes siblings, and nested menus inherit live theme state. Surfaces use the ordinary opaque <code>bx-menu</code> appearance, without added motion or glass effects.</p>
 <p>The side-navigation demo at <code>/components/side-nav</code> demonstrates nested hover, keyboard, and search-driven opening. Menu width and scroll constraints belong to the owner; the side-nav exposes <code>--bx-side-nav-menu-width</code>.</p>
 <p><code>bx-menu</code> accepts <code>--bx-menu-min-width</code> (default <code>12rem</code>). Constrained submenu owners set it to <code>0</code>, use border-box sizing, and reserve their vertical scrollbar gutter.</p>
+<p><code>menuManual: true</code> lets an owner coordinate one overlay for several disclosure controls. Automatic click, pointer, and trigger-key handling and the directive&#39;s host ARIA attributes are omitted; the owner supplies its visible controls and accessible semantics and calls <code>open()</code>/<code>close()</code>. <code>open(focus?, origin?)</code> optionally supplies the actual positioning origin for that opening, defaulting to <code>menuOrigin</code> and then the host. Overlay keyboard dismissal, focus trapping, outside-click handling, theme inheritance, and origin tracking remain shared. Side navigation uses this mode for its single adjacent panel.</p>
 `,"projects/blocks/primitives/directives/tooltip/README.md":`<h1>Tooltip trigger</h1>
 <p>Connects a help surface to a trigger using the overlay positioning system.</p>
 <h2>Import</h2>
