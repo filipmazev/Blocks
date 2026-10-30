@@ -1,4 +1,4 @@
-import{$n as fm,$t as U,B as Hn,Or as le,Rn as cs,Vn as ds,Yn as f,_r as je,ci as w$1,ft as Me,jr as ls,pi as xn,rr as g,ut as M}from"./chunk-CjnVhMKk.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Kn as g,Ln as ds,Vn as f,_r as le,bi as z,cr as je,ct as M,ei as um,en as Un,er as hs,fn as Xn,gi as y,jn as be,ri as us}from"./chunk-tIcWR06h.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -2054,6 +2054,277 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Register metadata with <code>withNav</code> and provide navigation in application configuration. Breadcrumbs navigate using the router and update after navigation. This demo lives under Components so the trail has a real parent route.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/breadcrumbs</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/navigation/components/side-nav/README.md":`<h1>Side navigation</h1>
+<p>A route-driven application rail with collapsible sections, a compact icon rail, recursive opaque menu flyouts, fuzzy search, and a responsive mobile drawer. It shares <code>NavigationService</code> with breadcrumbs and uses Blocks menu, overlay, theme, surface, search, tag, and accessibility facilities.</p>
+<h2>Public import</h2>
+<pre><code class="language-ts">import {
+  SideNav, SideNavHeaderDirective, SideNavFooterDirective,
+  defineNavigation, provideNavigation,
+  ISideNavConfig, ISideNavItemContext, ISideNavLayout,
+  INavigationTreeGroup, INavigationItem
+} from &#39;@filip.mazev/blocks/navigation&#39;;
+</code></pre>
+<p><code>SideNavConfig</code> aliases <code>ISideNavConfig</code>; <code>NavItem</code> aliases the resolved <code>INavigationItem</code> contract. Interfaces follow the library&#39;s <code>I</code> naming convention. Import all three components/directives in the shell&#39;s Angular <code>imports</code>.</p>
+<h2>Working usage and withNav</h2>
+<p>Declare sections once, attach metadata to Angular routes, and provide the same configuration to navigation. Nested routes inherit the parent&#39;s section; assigning another section moves that branch to the named section. No component-specific copy of your routing configuration is required.</p>
+<pre><code class="language-ts">import { Routes, provideRouter } from &#39;@angular/router&#39;;
+import { defineNavigation, provideNavigation } from &#39;@filip.mazev/blocks/navigation&#39;;
+
+export const navigation = defineNavigation({
+  sections: [
+    { id: &#39;workspace&#39;, title: &#39;Workspace&#39;, icon: { name: &#39;building-2&#39; },
+      collapsible: true, showInBreadcrumbs: true },
+    { id: &#39;admin&#39;, title: { key: &#39;sections.admin&#39; }, icon: { name: &#39;settings&#39; },
+      collapsible: true, collapsed: true, showInBreadcrumbs: false }
+  ],
+  sideNav: { side: &#39;left&#39;, persistenceKey: &#39;studio.navigation.v1&#39; }
+});
+const { withNav } = navigation;
+
+export const routes: Routes = [
+  withNav({ path: &#39;projects&#39;, children: [
+    withNav({ path: &#39;tokens&#39;, loadComponent: () =&gt; import(&#39;./tokens&#39;).then(m =&gt; m.Tokens) }, {
+      label: { key: &#39;nav.tokens&#39; }, icon: { name: &#39;swatch-book&#39; },
+      endIcon: { name: &#39;sparkles&#39; }, keywords: [&#39;palette&#39;, &#39;variables&#39;],
+      tags: [{ text: { key: &#39;nav.new&#39; }, config: { color: &#39;success&#39; } }],
+      showInBreadcrumbs: false
+    })
+  ] }, { label: &#39;Projects&#39;, section: &#39;workspace&#39;, icon: { name: &#39;folder&#39; } })
+];
+
+// In application providers:
+// provideRouter(routes), ...provideNavigation(navigation.config)
+</code></pre>
+<p>A route that only groups children can omit a component. Provide an empty child route if that group&#39;s own URL should render a page. Parent labels remain links; their adjacent disclosure opens the child menu. In the compact rail, the parent icon opens its menu and the first link inside navigates to the parent&#39;s route.</p>
+<pre><code class="language-html">&lt;div class=&quot;application-shell&quot;&gt;
+  &lt;bx-side-nav #navigation [config]=&quot;{ side: &#39;left&#39; }&quot; [(collapsed)]=&quot;collapsed&quot;&gt;
+    &lt;ng-template bxSideNavHeader let-compact let-mobile=&quot;mobile&quot;&gt;
+      &lt;a routerLink=&quot;/home&quot; aria-label=&quot;Studio home&quot;&gt;
+        &lt;bx-icon name=&quot;blocks&quot; /&gt;
+        @if (!compact) { &lt;strong&gt;Studio&lt;/strong&gt; }
+      &lt;/a&gt;
+    &lt;/ng-template&gt;
+    &lt;ng-template bxSideNavFooter let-compact&gt;
+      &lt;bx-icon name=&quot;circle-user-round&quot; /&gt;
+      @if (!compact) { &lt;span&gt;Alex \xB7 Workspace admin&lt;/span&gt; }
+    &lt;/ng-template&gt;
+  &lt;/bx-side-nav&gt;
+  &lt;main&gt;&lt;!-- router outlet --&gt;&lt;/main&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Use <code>display: flex; min-width: 0</code> on your shell and <code>flex: 1; min-width: 0</code> on its content. The component reserves its own desktop width; the host adjusts its flex order for the configured physical side, including RTL layouts. Mobile drawers reserve zero horizontal space. The built-in Blocks tonal hamburger is fixed at the configured edge and hides while the drawer is open, leaving one close action in its header; reserve room for it in your toolbar. A custom trigger can call <code>navigation.open($event)</code>, <code>close()</code>, or <code>toggle($event)</code> with <code>showMobileTrigger: false</code>. Passing the click event or opening button ensures focus returns to it even in browsers that do not focus buttons on pointer activation.</p>
+<p>Header/footer slots use the modal pattern: directives register <code>ng-template</code> references with their containing component. <code>$implicit</code> and <code>collapsed</code> contain the effective compact presentation state; <code>mobile</code> identifies drawer presentation. Keep interactive projected content accessible and avoid fixed widths inside compact slots.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input/model/output</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>config</code></td>
+<td><code>ISideNavConfig</code>, optional per-instance overrides of <code>provideNavigation</code> defaults</td>
+</tr>
+<tr>
+<td><code>groups</code></td>
+<td>Optional readonly <code>INavigationTreeGroup[]</code>; otherwise <code>NavigationService.menuTreeGroups()</code></td>
+</tr>
+<tr>
+<td><code>itemTemplate</code></td>
+<td>Optional <code>TemplateRef&lt;ISideNavItemContext&gt;</code> for content inside the managed link/button</td>
+</tr>
+<tr>
+<td><code>collapsed</code> / <code>collapsedChange</code></td>
+<td>Optional controlled desktop state; defaults to persisted state, then configuration</td>
+</tr>
+<tr>
+<td><code>mobileOpen</code> / <code>mobileOpenChange</code></td>
+<td>Mobile openness, initially false; never persisted</td>
+</tr>
+<tr>
+<td><code>itemSelected</code></td>
+<td>Resolved <code>INavigationItem</code> selected by the user</td>
+</tr>
+<tr>
+<td><code>layoutChange</code></td>
+<td><code>ISideNavLayout</code>: physical side, current content offset, compact/mobile/open flags</td>
+</tr>
+<tr>
+<td><code>layout()</code></td>
+<td>Readonly computed layout state for application shells</td>
+</tr>
+<tr>
+<td><code>isMobile()</code>, <code>isCollapsed()</code>, <code>query()</code></td>
+<td>Readonly current presentation and query state</td>
+</tr>
+<tr>
+<td><code>search(query)</code></td>
+<td>Set or clear search programmatically</td>
+</tr>
+<tr>
+<td><code>toggleCollapsed()</code></td>
+<td>Change the desktop state and update persistence</td>
+</tr>
+<tr>
+<td><code>open(origin?)</code>, <code>close()</code>, <code>toggle(origin?)</code></td>
+<td>Mobile drawer controls; pass a click event or opening element for reliable focus return</td>
+</tr>
+</tbody></table>
+<p><code>collapsedChange</code> always emits a boolean, so <code>[(collapsed)]</code> works with an ordinary <code>signal(false)</code>. Omitting the input lets persistence/configuration own the state; a bound value takes precedence.</p>
+<p><code>config</code> options (all optional):</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default / behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>side</code></td>
+<td><code>&#39;left&#39;</code>; physical <code>&#39;right&#39;</code> changes drawer edge, hamburger placement, and preferred flyout side</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td><code>&#39;fixed&#39;</code>; <code>&#39;inline&#39;</code> participates in local layout, useful for previews</td>
+</tr>
+<tr>
+<td><code>width</code>, <code>collapsedWidth</code></td>
+<td><code>&#39;17rem&#39;</code>, <code>&#39;4.5rem&#39;</code>; viewport constrained</td>
+</tr>
+<tr>
+<td><code>searchable</code>, <code>collapsible</code></td>
+<td><code>true</code>, <code>true</code></td>
+</tr>
+<tr>
+<td><code>showItemIcons</code>, <code>showSectionIcons</code></td>
+<td><code>true</code>, <code>true</code>; hide leading icons in expanded rows/headings while compact triggers retain their icons</td>
+</tr>
+<tr>
+<td><code>collapsed</code></td>
+<td><code>false</code>; initial state, used when neither saved nor controlled state exists</td>
+</tr>
+<tr>
+<td><code>persistenceKey</code></td>
+<td>Unset; enables localStorage persistence for panel and section states</td>
+</tr>
+<tr>
+<td><code>mobileBreakpoint</code></td>
+<td><code>&#39;lg&#39;</code>, from <code>WindowDimensionsService.breakpoints</code></td>
+</tr>
+<tr>
+<td><code>mobile</code></td>
+<td>Unset; optional responsive override for embedded shells</td>
+</tr>
+<tr>
+<td><code>showMobileTrigger</code></td>
+<td><code>true</code>; disabling it requires an application trigger</td>
+</tr>
+<tr>
+<td><code>ariaLabel</code></td>
+<td><code>&#39;Main navigation&#39;</code></td>
+</tr>
+<tr>
+<td><code>searchPlaceholder</code>, <code>searchLabel</code>, <code>clearSearchLabel</code></td>
+<td><code>&#39;Search navigation\u2026&#39;</code>, <code>&#39;Search navigation&#39;</code>, <code>&#39;Clear search&#39;</code></td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>&#39;No matching pages.&#39;</code></td>
+</tr>
+<tr>
+<td><code>openLabel</code>, <code>closeLabel</code></td>
+<td><code>&#39;Open navigation&#39;</code>, <code>&#39;Close navigation&#39;</code></td>
+</tr>
+<tr>
+<td><code>collapseLabel</code>, <code>expandLabel</code></td>
+<td><code>&#39;Collapse navigation&#39;</code>, <code>&#39;Expand navigation&#39;</code></td>
+</tr>
+<tr>
+<td><code>submenuLabel</code>, <code>resultLabel</code></td>
+<td><code>&#39;Open submenu&#39;</code>, <code>&#39;Search result&#39;</code>; the resolved item label is appended</td>
+</tr>
+</tbody></table>
+<p>Every configurable text accepts <code>ResolvableText</code>. Plain strings work without <code>BX_I18N</code>; keys fall back to their key when no adapter exists. Language changes reactively update mounted labels, badges, search keywords, and action names when the adapter exposes its version signal. Function-valued <code>NavText</code> receives the existing navigation context contract.</p>
+<p>Section configuration supports <code>id</code>, translated <code>title</code>, <code>icon</code>, <code>order</code>, <code>collapsible</code>, initial <code>collapsed</code>, and <code>showInBreadcrumbs</code>. Route metadata supports translated <code>label</code>/<code>breadcrumb</code>, <code>icon</code>, <code>endIcon</code>, <code>tags</code>, translated <code>keywords</code>, <code>disabled</code>, <code>section</code>, <code>order</code>, <code>root</code>, <code>menu</code>, <code>hidden</code>, <code>visible</code>, and <code>showInBreadcrumbs</code>. A route&#39;s explicit breadcrumb setting overrides its section&#39;s setting; otherwise inclusion defaults to true. Breadcrumb suppression does not prevent the route from being current or active.</p>
+<p><code>hidden</code> now consistently prunes menu branches as well as suppressing breadcrumbs. If an application previously used <code>hidden</code> only to omit a breadcrumb, migrate to <code>showInBreadcrumbs: false</code> to keep that menu item visible.</p>
+<p><code>menu: false</code> promotes visible descendants; <code>hidden: true</code>, failed access checks, or <code>visible: () =&gt; false</code> hide the whole branch. The legacy flat <code>menuGroups()</code> API remains available. <code>menuTreeGroups()</code> is the hierarchical API. Dynamic path parameters still need application-owned concrete route entries or deliberate <code>menu: false</code>; the side-nav does not invent parameter values. Declare navigation-bearing routes in the eager route tree; unloaded <code>loadChildren</code> configurations are not enumerated.</p>
+<h2>Appearance and customization</h2>
+<p>Use application-wide <code>sideNav</code> defaults in <code>defineNavigation</code>, then instance overrides. Nested configuration updates should preserve unrelated keys, e.g. <code>config.update(value =&gt; ({ ...value, side: &#39;right&#39; }))</code>.</p>
+<table>
+<thead>
+<tr>
+<th>CSS variable</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bx-side-nav-width</code></td>
+<td>Resolved <code>width</code> configuration</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-collapsed-width</code></td>
+<td>Resolved <code>collapsedWidth</code> configuration</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-height</code></td>
+<td><code>38rem</code> for inline panels</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-item-radius</code></td>
+<td>Shared medium radius</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-item-background</code></td>
+<td>Transparent, over the shared panel/menu surface</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-item-hover-background</code>, <code>--bx-side-nav-item-active-background</code>, <code>--bx-side-nav-item-highlight-background</code></td>
+<td>Shared accent tonal surface; active routes have a solid accent border, search targets a dashed outline and pointer</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-item-gap</code></td>
+<td>Shared spacing 2 (<code>0.5rem</code>) between adjacent items</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-menu-width</code></td>
+<td><code>17rem</code></td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-menu-max-height</code></td>
+<td><code>32rem</code>, constrained to the viewport</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-duration</code>, <code>--bx-side-nav-easing</code></td>
+<td><code>250ms</code>, <code>ease</code>; reduced motion takes precedence</td>
+</tr>
+<tr>
+<td><code>--bx-side-nav-backdrop</code></td>
+<td>Shared backdrop color with a neutral scrim fallback</td>
+</tr>
+</tbody></table>
+<p>Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and fragments do not clear selection. Only the most specific matching item receives the selected tonal background and border. For example, <code>/components/side-nav/overview</code> selects Side navigation rather than also selecting <code>/components</code>. Its ancestor branches and owning section use accent text without a second selected box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives <code>aria-current=&quot;page&quot;</code>.</p>
+<p>The navigation region is the panel&#39;s sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining space, aligned with header, search, and footer controls. Its scrollbar gutter and the flyouts&#39; gutters remain reserved when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.</p>
+<p>The background and search use Blocks surfaces. Rows reuse their containing surface; nested menus are opaque, without backdrop filters. Theme inheritance keeps open overlays synchronized with their source. Standard semantic colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks.</p>
+<pre><code class="language-html">&lt;ng-template #item let-entry let-active=&quot;active&quot; let-compact=&quot;collapsed&quot;&gt;
+  &lt;bx-icon [name]=&quot;entry.icon?.name ?? &#39;circle&#39;&quot; /&gt;
+  @if (!compact) { &lt;span&gt;{{ entry.label }}&lt;/span&gt; }
+&lt;/ng-template&gt;
+&lt;bx-side-nav [itemTemplate]=&quot;item&quot; /&gt;
+</code></pre>
+<p>Item templates should contain presentation only. The surrounding control owns the accessible interaction; avoid nested links/buttons. Application-owned <code>groups</code> use stable unique item IDs and resolved section titles; item <code>data.label</code> and <code>data.keywords</code> may retain translation definitions. Update the groups input when application-owned data changes. The route access adapter applies to service-generated groups; callers supplying groups own their visibility decisions.</p>
+<h2>Behavior and accessibility</h2>
+<p>Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It filters to matching base branches, opens the best nested path, and points at the target. The indicator persists until the query changes/clears or an item is selected; reduced motion keeps a static pointer. Search temporarily expands a collapsed rail and collapsed sections without changing their saved states. After selecting a result and clearing the query, its ancestor menus reopen and their scroll containers move immediately to the selected item. Search covers the currently supplied route tree, not unloaded or remote results.</p>
+<p>Menus have <code>menu</code>/<code>menuitem</code> semantics, accessible names, native links, and separate parent disclosure buttons. Hover, click/touch, Enter/Space, and arrow keys can open descendants. Up/Down and Home/End move focus within a menu. The arrow towards the flyout opens it; the opposite arrow or Escape closes that layer and restores focus. Tab cycles inside flyouts. Parent menus stay open while interacting with descendants. Cascades reuse the native CSS anchoring used by Blocks dropdowns, with coordinated descendant refreshes on geometry changes and a measured fallback for browsers without anchoring. Scrolling does not write overlay positions when native anchoring is available. A branch closes when its origin leaves its clipping container or the viewport, so detached flyouts do not remain floating. Search-revealed paths remain open during pointer movement. An outside click closes the entire expanded path, and Escape dismisses a layer. Menu triggers honor <code>bxOverlayContext</code>, matching dropdowns, context menus, and selects; menus opened from dialogs or top-layer overlays inherit that layer.</p>
+<p>Fixed mobile navigation uses a labelled modal drawer with focus capture/trapping, scroll locking, a click-to-close scrim, a Blocks icon-only close button with hover feedback, and Escape dismissal. Closing restores the opening control&#39;s focus. A submenu consumes Escape before the drawer does. Resizing out of mobile mode closes the drawer and releases its lock. Browser-only persistence and measurement are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key changes, without cross-tab synchronization.</p>
+<p>For an inline mobile preview, use a positioned shell (<code>position: relative</code>) with a minimum height and <code>overflow: hidden</code>. Its drawer and scrim stay inside that shell and do not lock page scrolling. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested glass. Presentation changes establish the closed layout immediately; explicit open/close actions animate the slide. Reduced motion disables that animation.</p>
+<h2>Playground</h2>
+<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withNav</code> routes, an expanded text-only menu, its Blocks brand, and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional search, and a live English/Macedonian adapter covering every menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive navigation. Try <code>dsgn tkns</code>, <code>palette</code>, or <code>\u0442\u043E\u043A\u0435\u043D\u0438</code>, select the highlighted result, then clear the search.</p>
+`,"projects/blocks/navigation/components/side-nav/components/side-nav-branch/README.md":`<h1>Side-nav branch</h1>
+<p>Internal recursive item presentation for <a href="components/side-nav">SideNav</a>. Applications import <code>SideNav</code> from <code>@filip.mazev/blocks/navigation</code>; this implementation component is intentionally absent from the public barrel.</p>
+<p>The owning side-nav supplies item data, configuration, translated text, and optional item templates through its scoped state service. Each branch renders the native route link, optional Blocks tags, a separate submenu disclosure, and a recursive <code>bx-menu</code> template. The shared menu trigger handles hover, keyboard focus, nesting, positioning, and live overlay theme inheritance.</p>
+<p>Search reveals only the selected path and immediately scrolls the branch&#39;s own container to keep it visible. The pointer animates while motion is allowed and remains static with reduced motion. Rows reuse the shared panel/menu surface with semantic tonal interaction states and accept <code>--bx-side-nav-item-radius</code>, <code>--bx-side-nav-item-background</code>, <code>--bx-side-nav-menu-width</code>, and <code>--bx-side-nav-menu-max-height</code> from the owner.</p>
+<p>The four-level demo at <code>/components/side-nav</code> exercises this component through its public owner, including custom templates, compact presentation, mobile, RTL, and translated target labels.</p>
 `,"projects/blocks/primitives/components/loading-indicator/README.md":`<h1>Loading indicator</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
@@ -2314,7 +2585,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <h2>API</h2>
 <p><code>text</code>, <code>tooltip</code>, and <code>ariaLabel</code> accept <code>ResolvableText</code>. <code>color</code> selects primary, accent, success, danger, info, warn or neutral. <code>variant</code> is tonal (default), filled or outlined. <code>size</code> is small or medium. <code>disabled</code> changes the visual/accessible presentation without inventing an action.</p>
 <p><code>leadingIcon</code>, <code>trailingIcon</code>, and <code>iconSize</code> configure decorative icons. <code>leadingNumber</code> and <code>trailingNumber</code> accept numbers, strings such as <code>+2</code>, or null to hide a count. Omit text for a number-only tag. Numeric values use <code>Intl.NumberFormat</code> with the optional <code>locale</code>; strings retain their prefixes.</p>
-<p><code>config</code> accepts reusable <code>ITagConfig</code> appearance, icon, count and tooltip defaults. Direct inputs take precedence. Consumer CSS variables can override the semantic palette without changing the component.</p>
+<p><code>config</code> accepts reusable <code>ITagConfig</code> appearance, icon, count and tooltip defaults. Direct inputs take precedence. <code>opaque</code> (also in <code>ITagConfig</code>) removes translucency and backdrop blur when true; false or absent follows application appearance and accessibility preferences. Navigation badges use it to keep their rows opaque. Consumer CSS variables can override the semantic palette without changing the component.</p>
 <p>Without an explicit <code>tooltip</code>, a tag automatically shows its complete label only when its rendered text is truncated. Resizing, content/translation changes, and loaded fonts update this condition through the shared <a href="components/truncate">TruncateDirective</a>. An explicit tooltip still describes the tag even when its label fits, including overflow tags listing hidden selections. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> to retain truncation while supplying custom feedback. <code>ITagConfig.tooltipOnTruncate</code> provides the reusable default, with the direct input taking precedence. <code>tooltip=&quot;&quot;</code> also suppresses the automatic tooltip. The public <code>TruncateDirective</code>, <code>TruncatedTextPipe</code> (<code>bxTruncatedText</code>), and <code>truncatedText()</code> helper are available for application-owned text.</p>
 <h2>Appearance</h2>
 <p>Uses Blocks semantic theme colors and the shared glass surface. Tags inherit application glassiness, receive surrounding emitted light, and follow opaque/reduced-transparency preferences. They have no hover illumination or press effect because they are informational. Tooltip motion follows <code>BxA11yService</code>.</p>
@@ -2415,6 +2686,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Use a real button trigger. The fade interaction supports trigger arrow keys, menu arrows, Home, End and Escape; focus returns on dismissal. Reduced motion skips the fade. Content keeps its full dimensions and the overlay retains a solid backing throughout its lifetime.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/dropdown</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/directives/menu-trigger/README.md":`<h1>Nested menu trigger</h1>
+<p><code>MenuTriggerDirective</code> opens a <code>bx-menu</code> template using Blocks&#39; overlay positioning and theme inheritance. Use it for arbitrary-depth opaque submenus; each descendant receives the containing trigger through <code>menuParent</code>.</p>
+<pre><code class="language-ts">import { Menu, MenuItem, MenuTriggerDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
+</code></pre>
+<pre><code class="language-html">&lt;button [bxMenuTrigger]=&quot;menu&quot; menuLabel=&quot;Projects&quot; #projects=&quot;bxMenuTrigger&quot;&gt;Projects&lt;/button&gt;
+&lt;ng-template #menu&gt;
+  &lt;bx-menu&gt;
+    &lt;bx-menu-item label=&quot;Overview&quot; /&gt;
+    &lt;button role=&quot;menuitem&quot; [bxMenuTrigger]=&quot;children&quot; [menuParent]=&quot;projects&quot; menuLabel=&quot;Design&quot;&gt;Design&lt;/button&gt;
+  &lt;/bx-menu&gt;
+&lt;/ng-template&gt;
+&lt;ng-template #children&gt;&lt;bx-menu&gt;&lt;bx-menu-item label=&quot;Tokens&quot; /&gt;&lt;/bx-menu&gt;&lt;/ng-template&gt;
+</code></pre>
+<p><code>bxMenuTrigger</code> is required. Optional inputs are <code>menuOrigin</code> (the full row when the trigger is a separate disclosure), <code>menuParent</code>, physical <code>menuSide</code> (<code>right</code> by default), <code>menuHover</code> (true), <code>menuLabel</code> (trigger label fallback), and <code>menuPinned</code> (false; keeps a search-revealed path open during pointer movement). <code>menuOpened</code>/<code>menuClosed</code> report transitions. <code>isOpen()</code>, <code>open(focus?)</code>, <code>close(restoreFocus?)</code> and <code>toggle(event)</code> expose explicit controls. Selection owners call <code>MenuCascadeService.closeAll()</code> after activating an action; this preserves parent disclosure clicks in recursive menus.</p>
+<p>Native trigger semantics supply Enter/Space. Arrow towards the menu and Up/Down open it with focus. Up/Down/Home/End navigate within an open menu; Escape/opposite arrow dismiss one layer, and Tab is trapped inside its surface. Click outside dismisses the entire path, including search-pinned menus. Hover close has a short pointer-crossing delay and retains focused descendants. Cascades reuse the shared origin tracker&#39;s native CSS anchoring, refreshing dependent descendants on geometry changes and using measured positions only as a fallback. Clipped or offscreen origins close their branch. Overlays, traps, listeners, subscriptions, and timers are cleaned up on destruction. The trigger honors <code>bxOverlayContext</code> for top-layer positioning, as dropdowns and context menus do; origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes siblings, and nested menus inherit live theme state. Surfaces use the ordinary opaque <code>bx-menu</code> appearance, without added motion or glass effects.</p>
+<p>The side-navigation demo at <code>/components/side-nav</code> demonstrates nested hover, keyboard, and search-driven opening. Menu width and scroll constraints belong to the owner; the side-nav exposes <code>--bx-side-nav-menu-width</code>.</p>
+<p><code>bx-menu</code> accepts <code>--bx-menu-min-width</code> (default <code>12rem</code>). Constrained submenu owners set it to <code>0</code>, use border-box sizing, and reserve their vertical scrollbar gutter.</p>
 `,"projects/blocks/primitives/directives/tooltip/README.md":`<h1>Tooltip trigger</h1>
 <p>Connects a help surface to a trigger using the overlay positioning system.</p>
 <h2>Import</h2>
@@ -2927,7 +3215,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var q=class r{document=f(U);router=f(xn);readmeContent=w$1(()=>{let e=this.path().replace(/^\/+/,``);return w[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=le({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&Me(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(ls(0,`div`,0)(1,`div`,1)(2,`span`),je(3,`Documentation`),cs()(),Hn(4,`article`,2),cs()),t&2&&(M(4),ds(`innerHTML`,o.readmeContent(),fm))},styles:[`
+`};var q=class r{document=f(z);router=f(Xn);readmeContent=y(()=>{let e=this.path().replace(/^\/+/,``);return w[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=le({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&be(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(us(0,`div`,0)(1,`div`,1)(2,`span`),je(3,`Documentation`),ds()(),Un(4,`article`,2),ds()),t&2&&(M(4),hs(`innerHTML`,o.readmeContent(),um))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
