@@ -51,3 +51,5 @@ export * from './directives/native-control.directive';
 export * from './components/range-slider/range-slider';
 
 export * from './components/multi-select/types/multi-select.types';
+
+export * from './components/checkbox-indicator/checkbox-indicator';

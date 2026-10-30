@@ -42,6 +42,10 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   private readonly debouncing = signal(false);
   private readonly searchRequest = signal(false);
   private readonly knownOptions = signal<readonly IResolvedSelectOption<TOption>[]>([]);
+  protected readonly hasSelection = computed(() => this.internalValue() !== null && this.internalValue() !== undefined);
+  protected readonly showClear = computed(() => this.clearable() && this.hasSelection() && !this.isReadonly());
+  protected readonly resolvedClearLabel = computed(() => resolveText(this.clearLabel(), this.i18n));
+  protected readonly resolvedClearTooltip = computed(() => resolveText(this.clearTooltip() ?? this.clearLabel(), this.i18n));
   protected readonly panelScrollStrategy = this.overlay.scrollStrategies.noop();
   protected readonly isPanelAttached = signal(false);
   protected readonly searchTerm = computed(() => this.searchValue());
@@ -110,6 +114,12 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
 
   protected readonly resolvedLoadingAriaLabel = computed(() => resolveText(this.loadingAriaLabel(), this.i18n));
   protected readonly resolvedLoadingLabel = computed(() => resolveText(this.loadingLabel(), this.i18n));
+  /** Shows a clear action when a value is selected. Defaults to true; hidden while readonly. */
+  public readonly clearable = input(true);
+  /** Accessible name of the clear action. Accepts translation keys; defaults to 'Clear selection'. */
+  public readonly clearLabel = input<ResolvableText>('Clear selection');
+  /** Optional clear-action tooltip. Defaults to clearLabel; an empty string hides it. Accepts translation keys. */
+  public readonly clearTooltip = input<ResolvableText | undefined>(undefined);
   public readonly selectionDisplay = input<SelectionDisplay>('text');
 
   public readonly tagConfig = input<ITagConfig>({});
@@ -361,6 +371,17 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
       return;
     }
     this.close();
+  }
+
+  protected clearSelectedValue(value: TValue | null): boolean {
+    if (this.disabled() || this.isReadonly()) return false;
+
+    this.updateValue(value);
+    this.close();
+    this.markAsTouched();
+    this.focus({ preventScroll: true });
+
+    return true;
   }
 
   protected abstract selectOption(option: IBxSelectOption<TOption>): void;

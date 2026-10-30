@@ -12,7 +12,7 @@
             <div class="form-section">
                 <h3>General Style</h3>
 
-                <bx-select label="Default Layout" [errorMessages]="{ required: 'Choose a layout.' }" formControlName="layout" [options]="layoutSelectOptions">
+                <bx-select [clearable]="false" label="Default Layout" [errorMessages]="{ required: 'Choose a layout.' }" formControlName="layout" [options]="layoutSelectOptions">
                 </bx-select>
 
                 <bx-input-field label="Header Text" formControlName="headerText"></bx-input-field>
@@ -50,7 +50,7 @@
 
                 <div class="breakpoints-grid">
                     @for(breakpoint of breakpointKeys; track breakpoint) {
-                    <bx-select [label]="breakpoint" [formControlName]="breakpoint" [options]="breakpointSelectOptions">
+                    <bx-select [clearable]="false" [label]="breakpoint" [formControlName]="breakpoint" [options]="breakpointSelectOptions">
                     </bx-select>
                     }
                 </div>

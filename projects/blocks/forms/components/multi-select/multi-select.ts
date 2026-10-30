@@ -5,6 +5,8 @@ import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingIndicator, LoadingSpinner, Tag, TooltipDirective, TruncateDirective } from '@filip.mazev/blocks/primitives';
+import { CheckboxIndicator } from '../checkbox-indicator/checkbox-indicator';
+import { Button } from '../button/button';
 import { FormField } from '../form-field/form-field';
 import { SearchInput } from '../search-input/search-input';
 import { LoadMoreDirective } from '../../directives/load-more.directive';
@@ -20,6 +22,8 @@ import { ISelectAllChange } from './interfaces/iselect-all-change.interface';
     BxSurfaceDirective,
     OverlayModule,
     FormField,
+    Button,
+    CheckboxIndicator,
     Icon,
     SearchInput,
     LoadMoreDirective,
@@ -37,8 +41,17 @@ import { ISelectAllChange } from './interfaces/iselect-all-change.interface';
 export class MultiSelect<T> extends BxSelectBase<T[], T> {
   private readonly summaryOverflow = viewChild<TruncateDirective>('summaryOverflow');
   private readonly labelsAdapter = inject(BX_I18N, { optional: true });
+  protected override readonly hasSelection = computed(() => !!this.internalValue()?.length || this.selectAll());
   protected readonly resolvedSelectAllLabel = computed(() => resolveText(this.selectAllLabel(), this.labelsAdapter));
-  protected readonly someSelected = computed(() => this.filteredOptions().some((option) => this.isSelected(option.value)));
+  protected readonly selectableOptions = computed(() => this.filteredOptions().filter((option) => !option.disabled && !option.groupDisabled));
+  protected readonly allLoadedSelected = computed(() => {
+    const options = this.selectableOptions();
+
+    return options.length > 0 && options.every((option) => this.isSelected(option.value));
+  });
+
+  protected readonly selectAllChecked = computed(() => this.selectAll() || this.allLoadedSelected());
+  protected readonly someSelected = computed(() => this.selectableOptions().some((option) => this.isSelected(option.value)));
 
   protected readonly usesSummary = computed(() => {
     const count = this.internalValue()?.length ?? 0;
@@ -60,12 +73,25 @@ export class MultiSelect<T> extends BxSelectBase<T[], T> {
     return resolveText(this.selectedCountText(), this.labelsAdapter, { count }).replaceAll('{count}', String(count));
   });
 
+  protected readonly resolvedAllSelectedTooltip = computed(() => {
+    const text = this.allSelectedTooltip();
+
+    if (text === false) return '';
+    if (text === undefined) return this.resolvedTooltipOnTruncate() ? this.selectedOptionLabel() : '';
+
+    return resolveText(text, this.labelsAdapter);
+  });
+
   protected readonly selectionTooltip = computed(() => {
-    if (!this.resolvedTooltipOnTruncate() || this.isOpen()) return '';
+    if (this.isOpen()) return '';
+    if (this.selectAll()) return this.resolvedAllSelectedTooltip();
+    if (!this.resolvedTooltipOnTruncate()) return '';
 
     return this.selectionDisplay() === 'tags' || this.usesSummary() ? this.selectedOptionLabel() : this.truncatedSelectionTooltip();
   });
 
+  /** Select-all intent tooltip: undefined preserves loaded-label feedback; false or empty text disables it. Accepts translation keys. */
+  public readonly allSelectedTooltip = input<ResolvableText | false | undefined>(undefined);
   public readonly allSelectedText = input<ResolvableText | undefined>(undefined);
   public readonly selectedCountText = input<ResolvableText>('{count} selected');
   public readonly summaryThreshold = input(2, { transform: summaryThreshold });
@@ -105,6 +131,17 @@ export class MultiSelect<T> extends BxSelectBase<T[], T> {
     });
   }
 
+  public clearSelection(): void {
+    if (this.disabled() || this.isReadonly()) return;
+
+    const hadIntent = this.selectAll();
+    this.selectAll.set(false);
+    this.clearSelectedValue([]);
+    this.selectionChange.emit({ value: [], source: 'clear' });
+
+    if (hadIntent) this.emitIntent(false, 'clear');
+  }
+
   public isSelected(value: T): boolean {
     return (this.internalValue() ?? []).some((item) => this.compareWith()(item, value));
   }
@@ -112,8 +149,8 @@ export class MultiSelect<T> extends BxSelectBase<T[], T> {
   public toggleSelectAll(): void {
     if (this.disabled() || this.isReadonly()) return;
 
-    const enabled = !this.selectAll();
-    const eligible = this.filteredOptions().filter((option) => !option.disabled && !option.groupDisabled);
+    const enabled = !this.selectAllChecked();
+    const eligible = this.selectableOptions();
     const current = this.internalValue() ?? [];
     const values = enabled
       ? [...current, ...eligible.filter((option) => !this.isSelected(option.value)).map((option) => option.value)]

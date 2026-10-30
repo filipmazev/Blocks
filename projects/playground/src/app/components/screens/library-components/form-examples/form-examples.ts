@@ -39,10 +39,16 @@ import {
   SuffixDirective
 } from '@filip.mazev/blocks/forms';
 import { LoadingIndicator, LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
-import { BX_I18N } from '@filip.mazev/blocks/core';
+import { BX_I18N, ResolvableText } from '@filip.mazev/blocks/core';
 import { DemoI18nService } from './services/demo-i18n.service';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { INITIAL_REGISTRATION, DEMO_DESTINATIONS, DEMO_PROJECT_MESSAGES, DEMO_PAGE_SIZES } from './constants/form-examples.constants';
+import {
+  INITIAL_REGISTRATION,
+  DEMO_DESTINATIONS,
+  DEMO_PROJECT_MESSAGES,
+  DEMO_PAGE_SIZES,
+  DEMO_ALL_SELECTED_TOOLTIP_OPTIONS
+} from './constants/form-examples.constants';
 import { IRegistrationData } from './interfaces/iregistration-data.interface';
 import { MockFormsApi } from './services/mock-forms-api.service';
 import { MockOptionsStore } from './services/mock-options-store.service';
@@ -84,6 +90,7 @@ import { MockOptionsStore } from './services/mock-options-store.service';
 })
 export class FormExamples {
   private readonly api = inject(MockFormsApi);
+  private readonly translations = inject(DemoI18nService);
   protected readonly remote = inject(MockOptionsStore);
   protected readonly model = signal<IRegistrationData>({ ...INITIAL_REGISTRATION, categories: [] });
   protected readonly locked = signal(false);
@@ -94,6 +101,22 @@ export class FormExamples {
   protected readonly selected = signal<string[] | null>([]);
   protected readonly destination = signal<string | null>(null);
   protected readonly useTags = signal(false);
+  protected readonly allowClearing = signal(true);
+  protected readonly allSelectedTooltipMode = signal<string | null>('total');
+  protected readonly allSelectedTooltipText = signal('All matching locations');
+  protected readonly allSelectedTooltipOptions = DEMO_ALL_SELECTED_TOOLTIP_OPTIONS;
+  protected readonly allSelectedTooltip = computed<ResolvableText | false | undefined>(() => {
+    const mode = this.allSelectedTooltipMode();
+
+    if (mode === 'custom') return this.allSelectedTooltipText();
+    if (mode === 'loaded') return undefined;
+    if (mode === 'disabled' || this.remote.selectableTotal() === undefined) return false;
+
+    this.translations.version();
+
+    return this.translations.translate('allLocationsTooltip', { total: this.remote.selectableTotal() });
+  });
+
   protected readonly visibleTagLimit = signal(1);
   protected readonly searchLoadingText = signal(false);
   protected readonly summaryLimit = signal(2);

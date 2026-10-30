@@ -12,7 +12,7 @@
             <div class="form-section">
                 <h3>General Style & Data</h3>
 
-                <bx-select label="Position" [errorMessages]="{ required: 'Choose a position.' }" formControlName="position" [options]="positionSelectOptions">
+                <bx-select [clearable]="false" label="Position" [errorMessages]="{ required: 'Choose a position.' }" formControlName="position" [options]="positionSelectOptions">
                 </bx-select>
 
                 <bx-input-field label="Title for demo toast" formControlName="title">

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild, computed, inject, signal
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Button, Checkbox, FormField, InputField, Radio, SliderDirective, SlideToggle, BxError } from '@filip.mazev/blocks/forms';
+import { Button, Checkbox, CheckboxIndicator, FormField, InputField, Radio, SliderDirective, SlideToggle, BxError } from '@filip.mazev/blocks/forms';
 import {
   Menu,
   MenuItem,
@@ -40,6 +40,7 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
     ReactiveFormsModule,
     Button,
     Checkbox,
+    CheckboxIndicator,
     FormField,
     InputField,
     Radio,

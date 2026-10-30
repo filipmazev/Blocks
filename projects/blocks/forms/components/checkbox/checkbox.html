@@ -5,10 +5,7 @@
             [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="describedBy()"
             [attr.aria-invalid]="showError()" [attr.aria-readonly]="isReadonly()" [disabled]="disabled()" [required]="effectiveRequired()" [checked]="displayedChecked()" [indeterminate]="indeterminate()"
             (click)="onReadonlyClick($event)" (change)="onToggle($event)" (blur)="onBlur()">
-        <div class="bx-checkbox-box" bxSurface [bxSurfaceEmission]="showError() ? 'var(--bx-text-danger)' : 'var(--bx-accent)'"
-            [class.is-checked]="displayedChecked() || indeterminate()" [class.is-invalid]="showError()">
-            @if (indeterminate()) { <bx-icon name="minus" size="16" /> } @else if (displayedChecked()) { <bx-icon name="check" size="16" /> }
-        </div>
+        <bx-checkbox-indicator [checked]="displayedChecked()" [indeterminate]="indeterminate()" [invalid]="showError()" [disabled]="disabled()" />
         <span class="bx-inline-label"><ng-content />{{ resolvedLabel() }}
             @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-inline-required" aria-hidden="true">*</span> }
         </span>

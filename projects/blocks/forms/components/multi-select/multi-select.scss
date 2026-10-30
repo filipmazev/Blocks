@@ -15,18 +15,6 @@
     cursor: pointer;
 }
 
-.bx-multi-checkbox {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    inline-size: 1rem;
-    block-size: 1rem;
-    flex: 0 0 auto;
-    border: 1px solid var(--bx-border-strong);
-    border-radius: radius(xs);
-    color: var(--bx-text-accent);
-}
-
 .bx-select-all:focus-visible {
     outline: 2px solid var(--bx-border-brand);
     outline-offset: -2px;

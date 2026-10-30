@@ -1,6 +1,7 @@
 <bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [showLoadingIndicator]="false"
     [hint]="hint()" [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
-    <button type="button" role="combobox" aria-haspopup="listbox" [bxTooltip]="selectionTooltip()" [bxTooltipHover]="selectionDisplay() !== 'tags'" [bxTooltipTouch]="selectionDisplay() === 'tags' ? 'none' : 'longpress'" cdkOverlayOrigin bxSurface #origin="cdkOverlayOrigin" class="bx-select-trigger"
+    <div class="bx-select-control" [class.has-clear]="showClear()">
+    <button type="button" role="combobox" aria-haspopup="listbox" [bxTooltip]="selectionTooltip()" [bxTooltipHover]="selectionDisplay() !== 'tags' || (selectAll() && !!allSelectedText())" [bxTooltipTouch]="selectionDisplay() === 'tags' && !(selectAll() && allSelectedText()) ? 'none' : 'longpress'" cdkOverlayOrigin bxSurface #origin="cdkOverlayOrigin" class="bx-select-trigger"
         [class.is-invalid]="showError()" [class.is-outline]="resolvedAppearance() === 'outline'" [class.is-open]="isOpen()" [class.is-floating]="isFloating()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()"
         [id]="controlId()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [attr.aria-labelledby]="ariaLabelledBy()"
         [attr.aria-describedby]="describedBy()" [attr.aria-invalid]="showError()" [attr.aria-required]="required()" [attr.aria-readonly]="isReadonly()" [attr.aria-busy]="loading() || pending() || isSearching()"
@@ -18,7 +19,7 @@
                 } @else if (selectionDisplay() === 'tags' && selectedOptions().length) {
                 <span class="bx-selected-tags">
                     @if (selectAll() && allSelectedText()) {
-                    <bx-tag [text]="allSelectedText()" [config]="tagConfig()" [focusable]="false" [tooltipOnTruncate]="resolvedTooltipOnTruncate() ? undefined : false" />
+                    <bx-tag [text]="allSelectedText()" [config]="tagConfig()" [focusable]="false" [tooltip]="''" [tooltipOnTruncate]="false" />
                     } @else {
                     @for (option of visibleTags(); track option.value) {
                     <bx-tag [text]="option.label" [config]="selectionTagConfig(option)" [disabled]="disabled() || !!option.disabled" [focusable]="false" [tooltipOnTruncate]="resolvedTooltipOnTruncate() ? undefined : false" />
@@ -38,6 +39,13 @@
             @else { <bx-icon name="chevron-down" size="16" /> }
         </span>
     </button>
+    @if (showClear()) {
+    <button bx-button type="button" variant="text" class="bx-select-clear" [surfaceEffects]="false" [disabled]="disabled()"
+        [attr.aria-label]="resolvedClearLabel()" [bxTooltip]="resolvedClearTooltip()" (click)="clearSelection()">
+        <bx-icon name="x" size="16" />
+    </button>
+    }
+    </div>
     <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isPanelAttached()"
         [cdkConnectedOverlayPositions]="overlayPositions" [cdkConnectedOverlayHasBackdrop]="false"
         [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy" [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
@@ -51,9 +59,9 @@
             </div>
             }
             @if (showSelectAll()) {
-            <button type="button" class="bx-select-all" role="checkbox" [attr.aria-checked]="selectAll() ? 'true' : someSelected() ? 'mixed' : 'false'"
+            <button type="button" class="bx-select-all" role="checkbox" [attr.aria-checked]="selectAllChecked() ? 'true' : someSelected() ? 'mixed' : 'false'"
                 [disabled]="disabled() || isReadonly()" (click)="toggleSelectAll()">
-                <span class="bx-multi-checkbox" aria-hidden="true">@if (selectAll()) { <bx-icon name="check" size="16" /> } @else if (someSelected()) { <bx-icon name="minus" size="16" /> }</span>
+                <bx-checkbox-indicator [checked]="selectAllChecked()" [indeterminate]="!selectAllChecked() && someSelected()" [disabled]="disabled()" />
                 {{ resolvedSelectAllLabel() }}
             </button>
             }
@@ -67,9 +75,7 @@
                     }
                     <button type="button" class="bx-select-option" role="option" tabindex="-1" [attr.aria-selected]="isSelected(option.value)"
                         [disabled]="option.disabled || option.groupDisabled || false" (click)="selectOption(option)">
-                        <span class="bx-select-check-placeholder bx-multi-checkbox" aria-hidden="true">
-                            @if (isSelected(option.value)) { <bx-icon name="check" size="16" /> }
-                        </span>
+                        <bx-checkbox-indicator [checked]="isSelected(option.value)" [disabled]="disabled() || !!option.disabled || !!option.groupDisabled" />
                         @if (option.icon) { <bx-icon [name]="option.icon" size="16" /> }
                         @if (optionTemplate(); as template) {
                         <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }" />

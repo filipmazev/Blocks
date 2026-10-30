@@ -2,8 +2,8 @@
   <header class="page-heading"><p class="eyebrow">Foundations</p><h1 id="icon-title">Icons</h1><p>Find a Lucide icon, tune its proportions, and select it for the usage example.</p></header>
   <div class="filter-bar">
     <bx-search-input label="Search icons" placeholder="Search by name…" [ngModel]="searchTerm()" (ngModelChange)="search($event)" />
-    <bx-select label="Size" [options]="sizeSelectOptions" [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)" />
-    <bx-select label="Stroke" [options]="strokeSelectOptions" [ngModel]="selectedStrokeWidth()" (ngModelChange)="selectedStrokeWidth.set($event)" />
+    <bx-select [clearable]="false" label="Size" [options]="sizeSelectOptions" [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)" />
+    <bx-select [clearable]="false" label="Stroke" [options]="strokeSelectOptions" [ngModel]="selectedStrokeWidth()" (ngModelChange)="selectedStrokeWidth.set($event)" />
   </div>
   <div class="catalog-summary"><p role="status">{{ rangeStart() }}–{{ rangeEnd() }} of {{ filteredIcons().length }} icons</p><span>48 per page</span></div>
   @if (selectedIcon()) {

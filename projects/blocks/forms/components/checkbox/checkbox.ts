@@ -1,13 +1,12 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
-import { Icon } from '@filip.mazev/blocks/icons';
+import { CheckboxIndicator } from '../checkbox-indicator/checkbox-indicator';
 import { FormField } from '../form-field/form-field';
 import { BxCheckedControl } from '../shared/classes/bx-checked-control';
 import { CheckboxClickAction } from './types/checkbox.types';
 
 @Component({
   selector: 'bx-checkbox',
-  imports: [BxSurfaceDirective, FormField, Icon],
+  imports: [FormField, CheckboxIndicator],
   templateUrl: './checkbox.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './checkbox.scss'

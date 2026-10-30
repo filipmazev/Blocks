@@ -62,3 +62,26 @@ The trigger replaces its caret with a same-size spinner, preserving width. When 
 Clipped tag labels automatically expose their full text in a tooltip; fitting labels do not. Explicit option/tag tooltip descriptions retain their existing behavior. The parent combobox supplies keyboard access to the complete selection without adding nested tab stops. Labels and plain values also use the shared truncation directive. Set `[tooltipOnTruncate]="false"` to disable automatic truncation tooltips, including ordinary selected tags, while retaining ellipsis and custom templates. Per-tag configuration can disable the tag tooltip when the owner is enabled. The component inherits the shared `FormSettingsService` default.
 
 While searching (including debounce and the external request), old results and load-more actions are suppressed. `loadingLabel` provides centered loading text; without it, the panel displays a simple centered spinner named by `loadingAriaLabel`. Pagination becomes available for the filtered result set after the request completes.
+
+## Option spacing
+
+Rounded option rows have a small gap, shared by select and multiselect. Set `--bx-select-option-gap` on the control to customize it (default: Blocks `spacing(1)`). All built-in selection and caret icons use Blocks `Icon`; searching uses Blocks `SearchInput`.
+
+## Clearing selection
+
+A Blocks × icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set `[clearable]="false"` to hide it, or use `clearLabel` (`ResolvableText`, default `'Clear selection'`) to customize its accessible name. `clearTooltip` accepts its own `ResolvableText`, defaults to the resolved `clearLabel` when omitted, and can be set to an empty string to hide the tooltip.
+
+`clearSelection()` performs the same guarded action programmatically. Clearing closes the panel, marks the control touched and returns focus to the combobox; it preserves Angular's blur/submit update policy. The action is hidden while readonly and disabled when the control is disabled. Keyboard users can Tab to the action and activate it with Enter or Space.
+
+Clearing writes `null` and emits `selectionChange` with `{ value: null, source: 'clear' }`. Required controls report validation through the existing error policy.
+
+```html
+<bx-select [options]="locations" [clearLabel]="{ key: 'locations.clearAction' }"
+  [clearTooltip]="{ key: 'locations.clearTooltip' }" />
+```
+
+Use `[clearable]="false"` for required selections that must retain a value or for lists with an explicit “None” option. This input controls the clear action independently of validation; `required` continues to enforce form validity. The select/multiselect playground includes an “Allow clearing selection” switch; configuration controls such as page size deliberately hide the clear action.
+
+```html
+<bx-select [options]="options" [clearable]="false" />
+```

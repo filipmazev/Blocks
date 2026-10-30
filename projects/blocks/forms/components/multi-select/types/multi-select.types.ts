@@ -1,1 +1,1 @@
-export type SelectAllChangeReason = 'toggle' | 'item-deselected' | 'scope-change' | 'reset';
+export type SelectAllChangeReason = 'toggle' | 'item-deselected' | 'scope-change' | 'reset' | 'clear';

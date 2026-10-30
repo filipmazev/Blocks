@@ -8,6 +8,8 @@ export class MockOptionsStore {
   public readonly options = signal<readonly IBxSelectOption<string>[]>([]);
   public readonly loading = signal(false);
   public readonly hasMore = signal(true);
+  public readonly total = signal<number | undefined>(undefined);
+  public readonly selectableTotal = signal<number | undefined>(undefined);
   public readonly error = signal<string | undefined>(undefined);
   public readonly query = signal('');
   public readonly pageSize = signal(3);
@@ -50,6 +52,8 @@ export class MockOptionsStore {
 
       this.options.update((items) => [...items, ...page.items]);
       this.hasMore.set(page.hasMore);
+      this.total.set(page.total);
+      this.selectableTotal.set(page.selectableTotal);
       this.record(`success: ${page.items.length} items received`);
     } catch (error) {
       if (id !== this.requestId || controller.signal.aborted) return;
@@ -67,6 +71,8 @@ export class MockOptionsStore {
     this.loading.set(false);
     this.query.set(query);
     this.options.set([]);
+    this.total.set(undefined);
+    this.selectableTotal.set(undefined);
     this.hasMore.set(true);
     this.error.set(undefined);
     void this.load({ source: 'button' });

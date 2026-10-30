@@ -1,0 +1,36 @@
+@use 'mixins' as *;
+@use 'motion' as *;
+
+// Shared clear action for search and selection controls.
+@mixin field-clear-action {
+    @include bx-transition(color, 0.15s, ease);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    padding: spacing(1);
+    inline-size: spacing(6);
+    block-size: spacing(6);
+    border-radius: radius(sm);
+    color: var(--bx-text-secondary);
+    cursor: pointer;
+    flex-shrink: 0;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 0;
+    }
+
+    &:hover:not(:disabled) {
+        color: var(--bx-text-primary);
+        background: var(--bx-bg-element-hover);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}

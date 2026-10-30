@@ -53,3 +53,10 @@ export const DEMO_PAGE_SIZES: readonly IBxSelectOption<number>[] = [
   { label: '12 locations', value: 12 },
   { label: 'All 24 locations', value: 24 }
 ];
+
+export const DEMO_ALL_SELECTED_TOOLTIP_OPTIONS: readonly IBxSelectOption<string>[] = [
+  { label: 'Remote total', value: 'total' },
+  { label: 'Custom text', value: 'custom' },
+  { label: 'Loaded selections', value: 'loaded' },
+  { label: 'Disabled', value: 'disabled' }
+];

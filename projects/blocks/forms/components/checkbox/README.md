@@ -49,3 +49,5 @@ Open `/components/checkbox` for a working example and its current value or actio
 ## Selection configuration
 
 `indeterminate` is a boolean model with `indeterminateChange`. `clickAction` supports `check-indeterminate` (default), `check`, and `noop`. `labelPosition` is `before` or `after`. Use `checkedChange` or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.
+
+The checkbox face is shared with multiselect through the public [CheckboxIndicator](../checkbox-indicator/README.md) component. `--bx-checkbox-size` changes its dimensions (default `1.125rem`).

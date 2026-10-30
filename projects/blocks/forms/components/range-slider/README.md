@@ -34,3 +34,5 @@ Text inputs accept `ResolvableText`: plain text or `{ key: 'translation.key' }`.
 ## Playground
 
 Open `/components/range-slider` for a live pair, labels and ticks.
+
+The rail shares the normal slider's border, inset shadow, neutral background and pill radius, with the selected interval filled between the two thumb centers.

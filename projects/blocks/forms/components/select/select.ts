@@ -4,6 +4,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingIndicator, LoadingSpinner, Tag, TooltipDirective, TruncateDirective } from '@filip.mazev/blocks/primitives';
+import { Button } from '../button/button';
 import { FormField } from '../form-field/form-field';
 import { SearchInput } from '../search-input/search-input';
 import { LoadMoreDirective } from '../../directives/load-more.directive';
@@ -17,6 +18,7 @@ import { ISelectionChange } from './interfaces/iselection-change.interface';
     BxSurfaceDirective,
     OverlayModule,
     FormField,
+    Button,
     Icon,
     SearchInput,
     LoadMoreDirective,
@@ -33,6 +35,12 @@ import { ISelectionChange } from './interfaces/iselection-change.interface';
 })
 export class Select<T> extends BxSelectBase<T, T> {
   public readonly selectionChange = output<ISelectionChange<T | null>>();
+
+  public clearSelection(): void {
+    if (!this.clearSelectedValue(null)) return;
+
+    this.selectionChange.emit({ value: null, source: 'clear' });
+  }
 
   public isSelected(value: T): boolean {
     const selected = this.internalValue();

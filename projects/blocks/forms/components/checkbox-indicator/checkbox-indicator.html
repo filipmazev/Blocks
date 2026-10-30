@@ -1,0 +1,4 @@
+<span class="bx-checkbox-box" bxSurface [bxSurfaceEmission]="invalid() ? 'var(--bx-text-danger)' : 'var(--bx-accent)'"
+    [class.is-checked]="checked() || indeterminate()" [class.is-invalid]="invalid()" [class.is-disabled]="disabled()">
+    @if (indeterminate()) { <bx-icon name="minus" size="16" /> } @else if (checked()) { <bx-icon name="check" size="16" /> }
+</span>

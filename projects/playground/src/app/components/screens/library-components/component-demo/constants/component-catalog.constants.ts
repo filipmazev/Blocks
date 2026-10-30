@@ -178,6 +178,17 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<button bx-button variant="filled" (click)="save()">Save changes</button>'
   },
   {
+    id: 'checkbox-indicator',
+    title: 'Checkbox indicator',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/checkbox-indicator/README.md',
+    symbol: 'CheckboxIndicator',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-checkbox-indicator',
+    description: 'A shared decorative checkbox face for checked, unchecked and partial selection.',
+    example: '<bx-checkbox-indicator [checked]="selected()" [indeterminate]="partial()" />'
+  },
+  {
     id: 'checkbox',
     title: 'Checkbox',
     group: 'Forms',

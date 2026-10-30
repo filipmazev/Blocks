@@ -11,8 +11,8 @@
     </div>
     <div class="tag-controls">
         <bx-input-field label="Tag text" [(value)]="label" />
-        <bx-select label="Color" [options]="colors" [(value)]="color" />
-        <bx-select label="Appearance" [options]="variants" [(value)]="variant" />
+        <bx-select [clearable]="false" label="Color" [options]="colors" [(value)]="color" />
+        <bx-select [clearable]="false" label="Appearance" [options]="variants" [(value)]="variant" />
         <bx-input-field label="Leading number" type="number" [(value)]="leftNumber" />
         <bx-input-field label="Trailing number" type="number" [(value)]="rightNumber" />
         <bx-checkbox label="Leading icon" [(checked)]="leadingIcon" />

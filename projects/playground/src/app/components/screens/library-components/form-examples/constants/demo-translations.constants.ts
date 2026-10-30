@@ -12,8 +12,11 @@ export const DEMO_TRANSLATIONS: Readonly<Record<string, Readonly<Record<string, 
     searchEmpty: 'No components match your search.',
     searchError: 'The search request failed. Retry to search again.',
     project: 'Project name',
+    clearSelection: 'Clear selection',
+    clearSelectionTooltip: 'Remove the current selection',
     selectAll: 'Select all locations',
     allLocations: 'All locations',
+    allLocationsTooltip: 'All {total} selectable locations',
     locationsSelected: '{count} locations selected'
   },
   mk: {
@@ -29,8 +32,11 @@ export const DEMO_TRANSLATIONS: Readonly<Record<string, Readonly<Record<string, 
     searchEmpty: 'Нема компоненти за ова пребарување.',
     searchError: 'Пребарувањето не успеа. Обиди се повторно.',
     project: 'Име на проект',
+    clearSelection: 'Исчисти избор',
+    clearSelectionTooltip: 'Отстрани го тековниот избор',
     selectAll: 'Избери ги сите локации',
     allLocations: 'Сите локации',
+    allLocationsTooltip: 'Сите {total} локации достапни за избор',
     locationsSelected: '{count} избрани локации'
   }
 };

@@ -16,7 +16,12 @@ export class MockFormsApi {
     const filtered = all.filter((item) => String(item.label).toLocaleLowerCase().includes(query.toLocaleLowerCase()));
     const items = filtered.slice(offset, offset + pageSize);
 
-    return { items, hasMore: offset + items.length < filtered.length, total: filtered.length };
+    return {
+      items,
+      hasMore: offset + items.length < filtered.length,
+      total: filtered.length,
+      selectableTotal: filtered.filter((option) => !option.disabled && !option.groupDisabled).length
+    };
   }
 
   public async available(name: string, signal: AbortSignal): Promise<boolean> {

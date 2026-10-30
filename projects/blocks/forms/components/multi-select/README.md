@@ -69,3 +69,50 @@ An ordinary tag automatically shows its full label on hover or touch-and-hold on
 ## Search loading
 
 The debounce/request period hides pagination actions and old results. Provide `loadingLabel` for centered loading text; without it, a simple centered spinner is shown. `loadingAriaLabel` supplies a translatable accessible name. Once results arrive, filtered pages can be paginated normally.
+
+## Option spacing
+
+Rounded option rows have a small gap, shared by select and multiselect. Set `--bx-select-option-gap` on the control to customize it (default: Blocks `spacing(1)`). All built-in selection and caret icons use Blocks `Icon`; searching uses Blocks `SearchInput`.
+
+Option and select-all checkboxes reuse the public `CheckboxIndicator` component, including its indeterminate state and themed finish. The option button remains the interactive target. `--bx-checkbox-size` customizes indicator dimensions without changing keyboard behavior.
+
+The select-all checkbox also shows checked when every selectable loaded row is individually selected, including deselecting and reselecting the last missing row. Disabled rows and disabled groups do not contribute to this state. Clicking a checked header clears the eligible loaded rows. This finite visual state does not activate remote select-all intent: future pages remain unselected unless the explicit select-all action enabled intent.
+
+## Clearing selection
+
+A Blocks × icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set `[clearable]="false"` to hide it, or use `clearLabel` (`ResolvableText`, default `'Clear selection'`) to customize its accessible name. `clearTooltip` accepts its own `ResolvableText`, defaults to the resolved `clearLabel` when omitted, and can be set to an empty string to hide the tooltip.
+
+`clearSelection()` performs the same guarded action programmatically. Clearing closes the panel, marks the control touched and returns focus to the combobox; it preserves Angular's blur/submit update policy. The action is hidden while readonly and disabled when the control is disabled. Keyboard users can Tab to the action and activate it with Enter or Space.
+
+Clearing writes `[]`, disables future-page select-all intent and emits `selectionChange` with `{ value: [], source: 'clear' }`. If intent was enabled, `selectAllIntentChange` also emits with `selected: false` and `reason: 'clear'`. Required controls continue to use the existing validation policy.
+
+```html
+<bx-multi-select [options]="locations" [clearLabel]="{ key: 'locations.clearAction' }"
+  [clearTooltip]="{ key: 'locations.clearTooltip' }" />
+```
+
+Use `[clearable]="false"` for required selections that must retain a value or for lists with an explicit “None” option. This input controls the clear action independently of validation; `required` continues to enforce form validity. The select/multiselect playground includes an “Allow clearing selection” switch; configuration controls such as page size deliberately hide the clear action.
+
+```html
+<bx-multi-select [options]="options" [clearable]="false" />
+```
+
+## Select-all tooltip
+
+`allSelectedTooltip` accepts the tooltip text for active `selectAll` intent, including the trigger's keyboard tooltip and the “all selected” tag's hover/touch tooltip. Pass `false` or an empty string to disable both. This also prevents the tag's automatic clipped-label tooltip or `tagConfig.tooltip` from replacing disabled feedback. Ordinary finite selections keep their existing tooltip behavior when intent ends.
+
+Omitting the input preserves the list of loaded selected labels, subject to `tooltipOnTruncate`. Those labels describe only loaded items. For remote “ALL” selection, disable that feedback or supply application-owned text representing the full selectable scope:
+
+```html
+<bx-multi-select [options]="loadedLocations" [(value)]="selected" [(selectAll)]="allSelected"
+  allSelectedText="All locations" [allSelectedTooltip]="false" />
+
+<bx-multi-select [options]="loadedLocations" [(value)]="selected" [(selectAll)]="allSelected"
+  allSelectedText="All locations" [allSelectedTooltip]="allLocationsTooltip()" />
+```
+
+Compute `allLocationsTooltip` in the application using its API's total of selectable results. For example, return `'All ' + pagination.selectableTotal + ' locations'` or call the application's translation service with the total. Exclude disabled options and disabled groups across the whole result set, including unloaded pages. Do not subtract only the disabled items on the current page or substitute the loaded selected count for a remote total. If the API does not provide enough information, disable the tooltip or use a general description such as “All matching locations”.
+
+The component accepts `ResolvableText`, so simple translation keys also work and react to `BX_I18N` version changes. Interpolation, pluralization, total calculation and any more complex translation logic belong to the application; the component has no tooltip-parameters or pagination-total API. Updating the supplied text refreshes mounted tooltips. Explicit custom tooltips work independently of automatic `tooltipOnTruncate` feedback; `false` disables only select-all feedback.
+
+The playground defaults to application-formatted text using the fake API's `selectableTotal`: 23 selectable locations across 24 results, excluding disabled Vienna even before its page loads. The total follows search scope. **Select-all tooltip** also demonstrates custom finished text, disabled feedback and the optional loaded-label compatibility behavior, in text and tag display.

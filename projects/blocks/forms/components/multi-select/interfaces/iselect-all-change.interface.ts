@@ -8,6 +8,6 @@ export interface ISelectAllChange<T> {
   scope: string;
   /** Loaded selected values; does not claim to enumerate the remote result set. */
   values: readonly T[];
-  /** User toggle, individual deselection, scope change, or programmatic reset. */
+  /** User toggle, individual deselection, scope change, clear action, or programmatic reset. */
   reason: SelectAllChangeReason;
 }

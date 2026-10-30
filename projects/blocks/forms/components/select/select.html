@@ -1,5 +1,6 @@
 <bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [showLoadingIndicator]="false"
     [hint]="hint()" [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <div class="bx-select-control" [class.has-clear]="showClear()">
     <button type="button" role="combobox" aria-haspopup="listbox" [bxTooltip]="resolvedTooltipOnTruncate() ? (selectionDisplay() === 'tags' ? selectedOptionLabel() : truncatedSelectionTooltip()) : ''" [bxTooltipHover]="selectionDisplay() !== 'tags'" [bxTooltipTouch]="selectionDisplay() === 'tags' ? 'none' : 'longpress'" cdkOverlayOrigin bxSurface #origin="cdkOverlayOrigin" class="bx-select-trigger"
         [class.is-invalid]="showError()" [class.is-outline]="resolvedAppearance() === 'outline'" [class.is-open]="isOpen()" [class.is-floating]="isFloating()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()"
         [id]="controlId()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [attr.aria-labelledby]="ariaLabelledBy()"
@@ -33,6 +34,13 @@
             @else { <bx-icon name="chevron-down" size="16" /> }
         </span>
     </button>
+    @if (showClear()) {
+    <button bx-button type="button" variant="text" class="bx-select-clear" [surfaceEffects]="false" [disabled]="disabled()"
+        [attr.aria-label]="resolvedClearLabel()" [bxTooltip]="resolvedClearTooltip()" (click)="clearSelection()">
+        <bx-icon name="x" size="16" />
+    </button>
+    }
+    </div>
     <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isPanelAttached()"
         [cdkConnectedOverlayPositions]="overlayPositions" [cdkConnectedOverlayHasBackdrop]="false"
         [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy" [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"

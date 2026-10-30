@@ -7,7 +7,7 @@
 .bx-range-slider {
     --bx-slider-lens-start: var(--bx-range-start);
     --bx-slider-lens-end: var(--bx-range-end);
-    --bx-slider-lens-track-color: var(--bx-bg-element);
+    --bx-slider-lens-track-color: var(--bx-bg-neutral);
     --bx-slider-fill-display: none;
 
     position: relative;
@@ -16,25 +16,24 @@
 }
 
 .bx-range-track {
+    @include slider-rail;
+
     position: absolute;
     inset-block-start: 50%;
     inset-inline: 0;
-    block-size: spacing(2);
     transform: translateY(-50%);
-    border-radius: radius(pill);
-    background: var(--bx-bg-element);
 
     &::after {
         content: '';
         position: absolute;
         inset-block: 0;
         inset-inline: calc(
-                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 + var(--bx-range-start) *
-                    (100% - var(--bx-slider-thumb-size, #{spacing(6)}))
+                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 - 1px + var(--bx-range-start) *
+                    (100% + 2px - var(--bx-slider-thumb-size, #{spacing(6)}))
             )
             calc(
-                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 + (1 - var(--bx-range-end)) *
-                    (100% - var(--bx-slider-thumb-size, #{spacing(6)}))
+                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 - 1px + (1 - var(--bx-range-end)) *
+                    (100% + 2px - var(--bx-slider-thumb-size, #{spacing(6)}))
             );
         background: var(--bx-accent);
         border-radius: inherit;

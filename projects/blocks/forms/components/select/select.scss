@@ -15,7 +15,8 @@
     border-radius: radius(sm) radius(sm) 0 0;
     border: none;
     border-bottom: 1px solid var(--bx-border-strong);
-    padding: 0 spacing(3) 0 0;
+    padding: 0;
+    padding-inline-end: spacing(3);
     cursor: pointer;
     text-align: left;
     font-family: inherit;
@@ -133,7 +134,7 @@
     flex-shrink: 0;
     color: var(--bx-text-secondary);
     transition: transform 0.2s ease;
-    margin-left: spacing(2);
+    margin-inline-start: spacing(2);
     transform-origin: center;
 
     .is-open & {
@@ -395,4 +396,43 @@
 
 .bx-selected-tags > .bx-overflow-tag {
     flex: 0 0 auto;
+}
+
+// Keep rounded selection surfaces distinct, including adjacent selected options.
+[role='listbox'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--bx-select-option-gap, #{spacing(1)});
+}
+
+.bx-select-option > span:last-child {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.bx-select-control {
+    position: relative;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.bx-select-control.has-clear .bx-select-container {
+    padding-inline-end: spacing(8);
+}
+
+.bx-select-control.has-clear .bx-select-measure {
+    inset-inline-end: spacing(8);
+}
+
+// A sibling of the combobox avoids nesting interactive controls inside a button.
+.bx-select-clear.bx-btn {
+    @include field-clear-action;
+
+    position: absolute;
+    inset-block-start: 50%;
+
+    // Account for the trigger border, trailing padding, caret width and icon gap.
+    inset-inline-end: calc(1px + #{spacing(3)} + #{spacing(4)} + #{spacing(2)});
+    transform: translateY(-50%);
+    z-index: 3;
 }

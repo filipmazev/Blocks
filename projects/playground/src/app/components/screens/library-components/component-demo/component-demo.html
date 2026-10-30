@@ -32,6 +32,14 @@
             <div class="demo-row"><button bx-button variant="tonal" color="success" (click)="activate('Success')">Success</button><button bx-button variant="tonal" color="warn" (click)="activate('Warning')">Warning</button><button bx-button variant="tonal" color="danger" (click)="activate('Delete')">Delete</button><button bx-button variant="fab" aria-label="Add item" (click)="activate('Add item')"><bx-icon name="plus" /></button></div>
           </div>
         }
+        @case ('checkbox-indicator') {
+          <div class="demo-stack">
+            <bx-checkbox label="Checked state" [formControl]="checked" />
+            <bx-checkbox label="Partial state" [formControl]="secondChecked" />
+            <div class="demo-row"><bx-checkbox-indicator [checked]="checked.value" [indeterminate]="secondChecked.value" /><span>Selection: {{ secondChecked.value ? 'partial' : checked.value ? 'checked' : 'unchecked' }}</span></div>
+            <div class="demo-row"><bx-checkbox-indicator /><span>Unchecked</span><bx-checkbox-indicator [checked]="true" /><span>Checked</span><bx-checkbox-indicator [indeterminate]="true" /><span>Partial</span></div>
+          </div>
+        }
         @case ('checkbox') {
           <div class="demo-stack"><bx-checkbox label="Receive product updates" [formControl]="checked" /><bx-checkbox label="Include preview features" [formControl]="secondChecked" /><bx-checkbox label="Unavailable setting" [formControl]="disabledCheck" /><output>Updates: {{ checked.value ? 'on' : 'off' }} · Previews: {{ secondChecked.value ? 'on' : 'off' }}</output></div>
         }

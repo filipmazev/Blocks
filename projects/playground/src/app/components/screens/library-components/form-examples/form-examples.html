@@ -12,8 +12,8 @@
         <bx-input-field label="Team size" type="number" [formField]="registration.teamSize" hint="Between 1 and 20." [errorPolicy]="policy()">
             <span bxSuffix aria-hidden="true">people</span>
         </bx-input-field>
-        <bx-select [readOnly]="readOnly()" label="Destination" [options]="options" [isSearchable]="true" [formField]="registration.destination" [errorPolicy]="policy()" />
-        <bx-multi-select [readOnly]="readOnly()" label="Related locations" [isSearchable]="true" [allSelectedText]="{ key: 'allLocations' }" [selectedCountText]="{ key: 'locationsSelected' }" [options]="options" [formField]="registration.categories" [errorPolicy]="policy()" />
+        <bx-select [clearable]="false" [readOnly]="readOnly()" label="Destination" [options]="options" [isSearchable]="true" [formField]="registration.destination" [errorPolicy]="policy()" />
+        <bx-multi-select [clearable]="false" [readOnly]="readOnly()" label="Related locations" [isSearchable]="true" [allSelectedText]="{ key: 'allLocations' }" [selectedCountText]="{ key: 'locationsSelected' }" [options]="options" [formField]="registration.categories" [errorPolicy]="policy()" />
         <bx-radio-group label="Plan" [formField]="registration.plan" [errorPolicy]="policy()">
             <bx-radio label="Personal" value="personal" /><bx-radio label="Team" value="team" />
         </bx-radio-group>
@@ -44,18 +44,21 @@
 <div class="async-demo">
     @if (example() === 'select') {
     <div class="selection-row">
-    <bx-select label="Location" [selectionDisplay]="useTags() ? 'tags' : 'text'" [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined" [searchValue]="remote.query()" [options]="remote.options()" [isSearchable]="true" [externalFiltering]="true" [loading]="remote.loading()"
+    <bx-select [clearable]="allowClearing()" [clearLabel]="{ key: 'clearSelection' }" [clearTooltip]="{ key: 'clearSelectionTooltip' }" label="Location" [selectionDisplay]="useTags() ? 'tags' : 'text'" [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined" [searchValue]="remote.query()" [options]="remote.options()" [isSearchable]="true" [externalFiltering]="true" [loading]="remote.loading()"
         [hasMore]="remote.hasMore()" [loadError]="remote.error()" [loadMoreConfig]="remote.config()" [(value)]="destination"
         subscriptSizing="dynamic" (loadMore)="remote.load($event)" (search)="remote.search($event)" />
     <bx-checkbox label="Show selected tag" [(checked)]="useTags" subscriptSizing="dynamic" />
+    <bx-checkbox label="Allow clearing selection" [(checked)]="allowClearing" subscriptSizing="dynamic" />
     </div>
     } @else if (example() === 'multi-select') {
     <div class="selection-row">
-    <bx-multi-select label="Locations" [selectionDisplay]="useTags() ? 'tags' : 'text'" [visibleTagCount]="visibleTagLimit()" [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined" [searchValue]="remote.query()" [summaryThreshold]="summaryLimit()" [allSelectedText]="{ key: 'allLocations' }" [selectedCountText]="{ key: 'locationsSelected' }" [options]="remote.options()" [isSearchable]="true" [externalFiltering]="true" [loading]="remote.loading()"
+    <bx-multi-select [clearable]="allowClearing()" [clearLabel]="{ key: 'clearSelection' }" [clearTooltip]="{ key: 'clearSelectionTooltip' }" label="Locations" [selectionDisplay]="useTags() ? 'tags' : 'text'" [visibleTagCount]="visibleTagLimit()" [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined" [searchValue]="remote.query()" [summaryThreshold]="summaryLimit()" [allSelectedText]="{ key: 'allLocations' }" [selectedCountText]="{ key: 'locationsSelected' }" [options]="remote.options()" [isSearchable]="true" [externalFiltering]="true" [loading]="remote.loading()"
         [hasMore]="remote.hasMore()" [loadError]="remote.error()" [loadMoreConfig]="remote.config()" [(value)]="selected" subscriptSizing="dynamic"
+        [allSelectedTooltip]="allSelectedTooltip()"
         [selectAllLabel]="{ key: 'selectAll' }" [selectionScope]="remote.query()" (loadMore)="remote.load($event)" (search)="remote.search($event)"
         (selectAllIntentChange)="recordIntent($event)" (selectionChange)="recordSelection($event)" />
     <bx-checkbox label="Show selected tags" [(checked)]="useTags" subscriptSizing="dynamic" />
+    <bx-checkbox label="Allow clearing selection" [(checked)]="allowClearing" subscriptSizing="dynamic" />
     </div>
     } @else {
     <div class="paged-collection" role="region" aria-label="Paginated locations" tabindex="0" bxLoadMore #standalonePagination="bxLoadMore"
@@ -73,15 +76,20 @@
         </div>
         <div class="pagination-options">
         @if (example() === 'multi-select') {
+        <bx-select label="Select-all tooltip" [clearable]="false" [options]="allSelectedTooltipOptions" [(value)]="allSelectedTooltipMode" subscriptSizing="dynamic" />
+        @if (allSelectedTooltipMode() === 'custom') {
+        <bx-input-field label="Select-all tooltip text" [(value)]="allSelectedTooltipText" subscriptSizing="dynamic" />
+        }
         <bx-input-field class="visible-tag-control" label="Visible tags" type="number" [min]="1" [value]="visibleTagLimit()" (valueChange)="changeVisibleTags($event)" subscriptSizing="dynamic" />
         <bx-input-field class="summary-threshold-control" label="Summary threshold" type="number" [min]="2" [value]="summaryLimit()" (valueChange)="changeSummaryLimit($event)" subscriptSizing="dynamic" />
         }
-        <bx-select class="page-size-control" label="Page size" [options]="pageSizes" [value]="remote.pageSize()" (selectionChange)="changePageSize($event.value)" subscriptSizing="dynamic" />
+        <bx-select [clearable]="false" class="page-size-control" label="Page size" [options]="pageSizes" [value]="remote.pageSize()" (selectionChange)="changePageSize($event.value)" subscriptSizing="dynamic" />
         </div>
     </div>
     <p role="status">{{ remote.loading() ? 'Loading: the request takes 800ms.' : remote.error() ? 'Failed: use Retry request at the bottom.' : remote.hasMore() ? 'Ready to load more.' : 'All pages loaded.' }}</p>
     <p>Small pages show the button without a scrollbar. More items enable scrolling. Failure retains existing items and reveals Retry request.</p>
     <ul class="event-log" aria-label="Request events">@for (event of remote.requests(); track $index) { <li>{{ event }}</li> }</ul>
+    @if (example() === 'multi-select') { <output>Selectable locations: {{ remote.selectableTotal() ?? '…' }} of {{ remote.total() ?? '…' }} results. Disabled options and groups are excluded.</output> }
     @if (example() === 'multi-select') { <ul class="event-log" aria-label="Selection events">@for (event of events(); track $index) { <li>{{ event }}</li> }</ul> }
 </div>
 } @else if (example() === 'loading-spinner' || example() === 'loading-indicator' || example() === 'progress-bar' || example() === 'button-loading') {
