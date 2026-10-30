@@ -1,18 +1,34 @@
-<bx-form-field [label]="label()" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()"
-    [required]="required()" [forId]="inputId()">
-
-    <div class="bx-search-input-wrapper" bxSurface [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()">
-        <bx-icon class="bx-search-icon-left" name="search" size="16"></bx-icon>
-
-        <input #inputElement class="bx-native-search-input" type="text" [attr.id]="inputId()"
-            [attr.placeholder]="resolvedPlaceholder()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()"
-            [disabled]="isDisabled()" [value]="internalValue() || ''" (input)="onInput($event)" (blur)="onBlur()">
-
-        @if (internalValue()) {
-        <button type="button" class="bx-search-clear-btn" aria-label="Clear search" [disabled]="isDisabled()" (click)="clear()">
-            <bx-icon name="x" size="16"></bx-icon>
-        </button>
+<bx-form-field [control]="fieldControl" [label]="label()" [tooltip]="tooltip()" [showLoadingIndicator]="false"
+    [hint]="hint()" [hintEnd]="hintEnd()" [hideRequiredMarker]="resolvedHideRequiredMarker()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <div class="bx-search-input-wrapper" bxSurface [class.is-invalid]="showError()" [class.is-disabled]="disabled()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()"
+        [bxTooltip]="searchOverflow.text() | bxTruncatedText: searchOverflow.truncated(): resolvedTooltipOnTruncate()" bxTooltipTouch="longpress" placement="top">
+        <span class="bx-search-icon-left" aria-hidden="true">
+            @if (isBusy() && !showRetry()) { <bx-loading-spinner [size]="16" [decorative]="true" /> }
+            @else { <bx-icon name="search" size="16" /> }
+        </span>
+        <input class="bx-native-search-input" type="search" bxTruncate #searchOverflow="bxTruncate" [id]="controlId()" [attr.name]="name() || null"
+            [placeholder]="resolvedPlaceholder()" [attr.data-testid]="dataTestId()" [attr.autocomplete]="autocomplete()"
+            [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="searchDescribedBy()" [attr.aria-busy]="isBusy()"
+            [attr.aria-invalid]="showError()" [required]="effectiveRequired()" [readOnly]="isReadonly()" [disabled]="disabled()"
+            [value]="internalValue() ?? ''" (input)="onInput($event)" (blur)="onBlur()"
+            (compositionstart)="onCompositionStart()" (compositionend)="onCompositionEnd($event)">
+        @if (internalValue() && !isReadonly()) {
+        <button type="button" class="bx-search-clear-btn" [attr.aria-label]="resolvedClearLabel()" [disabled]="disabled() || isReadonly()" (click)="clear()"><bx-icon name="x" size="16" /></button>
         }
     </div>
-
+    <div class="bx-search-feedback" [class.has-status]="showStatus()">
+        <div class="bx-search-status" [class.cdk-visually-hidden]="!showStatus()">
+            @if (showRetry()) {
+            <span class="bx-search-status-reserve" aria-hidden="true">{{ resolvedRetainedError() }}</span>
+            <span class="bx-search-status-reserve" aria-hidden="true">{{ resolvedLoadingLabel() || resolvedLoadingAriaLabel() }}</span>
+            }
+            <span [id]="controlId() + '-search-status'" role="status" [class.bx-search-error]="!isBusy() && !!resolvedLoadError()">{{ isBusy() ? (resolvedLoadingLabel() || resolvedLoadingAriaLabel()) : resolvedLoadError() }}</span>
+        </div>
+        @if (showRetry()) {
+        <button bx-button type="button" [variant]="retryConfig().variant ?? 'text'" [color]="retryConfig().color ?? 'primary'"
+            [outlined]="retryConfig().outlined ?? false" [class]="retryConfig().buttonClass ?? ''" [attr.aria-label]="resolvedRetryAriaLabel()"
+            [disabled]="disabled() || isReadonly()" [loading]="isBusy()" (click)="retrySearch()"><bx-icon name="rotate-cw" size="16" />{{ resolvedRetryLabel() }}</button>
+        }
+    </div>
+    <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
 </bx-form-field>

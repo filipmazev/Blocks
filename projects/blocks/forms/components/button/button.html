@@ -1,3 +1,6 @@
 <span class="bx-btn-content-wrapper">
+    @if (loading()) {
+    <bx-loading-spinner [size]="spinnerSize()" [decorative]="true" />
+    }
     <ng-content></ng-content>
 </span>

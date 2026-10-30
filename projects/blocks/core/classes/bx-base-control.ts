@@ -1,19 +1,31 @@
-import { Directive, inject, input, signal, OnInit, isDevMode, computed } from '@angular/core';
+import {
+  afterNextRender,
+  DestroyRef,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  signal,
+  OnInit,
+  isDevMode,
+  effect,
+  computed,
+  booleanAttribute
+} from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { ResolvableText, ValidatorKey } from '../types/core.types';
 
-@Directive()
+@Directive({ host: { '[class.bx-readonly]': 'isReadonly()', '(pointerdown)': 'onControlPointerDown()' } })
 export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
-  protected readonly isFieldRequired = computed(() => {
-    if (this.required && this.required()) return true;
-
-    const control = this.ngControl?.control;
-    return control?.hasValidator ? control.hasValidator(Validators.required) : false;
-  });
-
+  private readonly focusMonitor = inject(FocusMonitor);
+  private readonly focusElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly internalValue = signal<T | null>(null);
   protected readonly isTouched = signal<boolean>(false);
   protected readonly isDisabled = signal<boolean>(false);
+  protected readonly keyboardFocused = signal(false);
   public readonly ngControl = inject(NgControl, { optional: true, self: true });
 
   public readonly label = input<ResolvableText | undefined>(undefined);
@@ -27,6 +39,9 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   public readonly errorMessages = input<Partial<Record<ValidatorKey, ResolvableText>>>({});
 
   public readonly required = input<boolean>(false);
+  public readonly readonly = input(false, { transform: booleanAttribute });
+  public readonly readOnly = input(false, { transform: booleanAttribute });
+  public readonly isReadonly = computed(() => this.readonly() || this.readOnly());
   public readonly loading = input<boolean>(false);
   public readonly disabled = input<boolean>(false);
 
@@ -34,6 +49,16 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   protected onTouched: () => void = () => {};
 
   constructor() {
+    afterNextRender(() => {
+      this.focusMonitor
+        .monitor(this.focusElement, true)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((origin) => this.keyboardFocused.set(origin === 'keyboard'));
+      this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.focusElement));
+    });
+    effect(() => {
+      this.isDisabled.set(this.disabled() || this.ngControl?.disabled === true);
+    });
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
@@ -42,15 +67,6 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   public ngOnInit(): void {
     // Forms may call setDisabledState before ngOnInit. Preserve that state.
     this.isDisabled.set(this.disabled() || this.ngControl?.disabled === true);
-
-    if (isDevMode() && this.ngControl?.control?.validator) {
-      const hasMessages = Object.keys(this.errorMessages()).length > 0;
-      if (!hasMessages) {
-        console.error(
-          `[Blocks UI Strict Mode] The form control for this field has validators, but the [errorMessages] input is empty. You must provide error messages for all applied validators.`
-        );
-      }
-    }
   }
 
   public writeValue(value: T | null): void {
@@ -70,17 +86,27 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   }
 
   protected updateValue(value: T | null): void {
-    if (this.isDisabled()) return;
+    if (this.isDisabled() || this.isReadonly()) return;
     this.internalValue.set(value);
     this.onChange(value);
   }
 
   protected markAsTouched(): void {
-    if (!this.isTouched()) {
-      this.isTouched.set(true);
-      this.onTouched();
-    }
+    this.isTouched.set(true);
+    this.onTouched();
   }
+
+  protected onControlPointerDown(): void {
+    if (this.isReadonly()) this.keyboardFocused.set(false);
+  }
+
+  protected isFieldRequired(): boolean {
+    const control = this.ngControl?.control;
+
+    return this.required() || !!control?.hasValidator?.(Validators.required) || !!control?.hasValidator?.(Validators.requiredTrue);
+  }
+
+  //#region Helpers
 
   protected get errorMessage(): ResolvableText | undefined {
     if (this.ngControl?.invalid && (this.ngControl.touched || this.ngControl.dirty)) {
@@ -94,9 +120,10 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
         return customErrorMap[firstKey];
       }
 
-      if (typeof errors[firstKey as string] === 'string') {
-        return errors[firstKey as string];
-      }
+      const error: unknown = errors[firstKey as string];
+
+      if (typeof error === 'string') return error;
+      if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') return error.message;
 
       if (isDevMode()) {
         console.error(`[Blocks UI Strict Mode] Validation failed for key '${firstKey}', but no message was provided in [errorMessages].`);
@@ -106,4 +133,5 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
     }
     return undefined;
   }
+  //#endregion
 }

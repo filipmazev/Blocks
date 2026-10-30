@@ -202,7 +202,7 @@
     max-width: none;
     min-height: calc(100dvh - 7rem);
     padding: spacing(6);
-    border: 1px solid var(--bx-border-strong);
+    border: 1px solid var(--bx-border-subtle);
     border-bottom-width: 3px;
     border-radius: var(--orb-garden-radius);
     background: color-mix(in srgb, var(--bx-bg-canvas) 14%, transparent);

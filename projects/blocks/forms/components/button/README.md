@@ -52,6 +52,22 @@ this.theme.setAppearance({ reducedTransparency: true });
 
 Use the native `button[bx-button]` selector for actions and `a[bx-button]` with a real `href` for navigation. Give icon-only actions an accessible label. Disabled actions do not emit an action through a click listener.
 
+`surfaceEffects` defaults to `true`. Set `[surfaceEffects]="false"` for dense collections such as the icon catalog to retain Blocks button styling, theme updates, focus, loading and disabled behavior without mounting per-button runtime glass lighting or deformation. It can be changed while mounted. An explicitly applied `bxSurface` directive continues to own its surface independently.
+
 ## Playground
 
 Open `/components/button` for a working example and its current value or action result.
+
+## Asynchronous actions
+
+`loading` enables a spinner, exposes `aria-busy`, and disables activation independently from the `disabled` input. When loading ends, the original disabled state is retained. The spinner appears before the text and replaces a projected Blocks icon at its original size, including under page zoom or surface transforms. An icon-only button retains its accessible name and dimensions.
+
+```html
+<button bx-button type="button" variant="filled" [loading]="saving()" (click)="save()">
+  <bx-icon name="save" size="20" />Save changes
+</button>
+```
+
+For another icon implementation, import `ButtonIconDirective` and mark its element `bxButtonIcon`. Plain text buttons get an icon-sized spinner only during loading. Spinner colors inherit the button foreground; `BxA11yService` removes rotation in reduced-motion mode.
+
+Open `/components/button-loading` for fake asynchronous actions with and without icons. Application code owns the promise and loading state.

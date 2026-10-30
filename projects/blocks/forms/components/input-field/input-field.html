@@ -1,40 +1,52 @@
-<bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
-
-    <div class="bx-input-wrapper" bxSurface [class.is-invalid]="!!errorMessage" [class.is-disabled]="isDisabled()"
-        [class.has-spinners]="type() === 'number'" [class.is-floating]="isFloating()">
-
-        <div class="bx-input-container">
+<bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [loading]="loading()"
+    [hint]="hint()" [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <div class="bx-input-wrapper" bxSurface [class.is-invalid]="showError()" [class.is-outline]="resolvedAppearance() === 'outline'" [class.is-disabled]="disabled()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()"
+        [class.has-spinners]="type() === 'number' && !multiline()" [class.is-floating]="isFloating()">
+        <ng-content select="[bxPrefix]" />
+        <div class="bx-input-container" [bxTooltip]="resolvedLabel() | bxTruncatedText: labelTruncated(): resolvedTooltipOnTruncate()" bxTooltipTouch="longpress" placement="top">
             @if (label()) {
-            <label class="bx-floating-label" [attr.for]="inputId()">
-                {{ resolvedLabel() }}
-                @if (isFieldRequired()) { <span class="bx-field-required">*</span> }
+            <label class="bx-floating-label" [attr.for]="controlId()"><span class="bx-input-label-text" bxTruncate>{{ resolvedLabel() }}</span>
+                @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-field-required" aria-hidden="true">*</span> }
             </label>
             }
-
-            <input class="bx-native-input" [attr.id]="inputId()" [attr.type]="type()"
-                [attr.placeholder]="isFloating() ? resolvedPlaceholder() : ''" [attr.data-testid]="dataTestId()"
-                [attr.aria-label]="ariaLabel()" [attr.min]="min()" [attr.max]="max()" [attr.step]="step()"
-                [disabled]="isDisabled()" [value]="internalValue() ?? ''" (input)="onInput($event)" (focus)="onFocus()"
-                (blur)="onBlur()">
+            @if (multiline()) {
+            <textarea class="bx-native-input" [attr.id]="controlId()" [attr.name]="name() || null" [attr.data-testid]="dataTestId()"
+                [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="describedBy()"
+                [attr.aria-invalid]="showError()" [attr.aria-busy]="pending() || loading()" [required]="effectiveRequired()"
+                [disabled]="disabled()" [readOnly]="isReadonly()" [value]="displayedValue()"
+                [attr.autocomplete]="autocomplete()" [attr.inputmode]="inputmode()" [spellcheck]="spellcheck()"
+                [attr.minlength]="minLength()" [attr.maxlength]="maxLength()"
+                [attr.placeholder]="isFloating() || !label() ? resolvedPlaceholder() : ''"
+                (input)="onInput($event)" (focus)="onFocus()" (blur)="onBlur()"
+                (compositionstart)="onCompositionStart()" (compositionend)="onCompositionEnd($event)"
+                cdkAutofill (cdkAutofill)="autofilled.set($event.isAutofilled)" [rows]="rows()" [cdkTextareaAutosize]="autosize()" [cdkAutosizeMinRows]="minRows()" [cdkAutosizeMaxRows]="maxRows()"></textarea>
+            } @else {
+            <input class="bx-native-input" [attr.id]="controlId()" [attr.name]="name() || null" [attr.data-testid]="dataTestId()"
+                [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="describedBy()"
+                [attr.aria-invalid]="showError()" [attr.aria-busy]="pending() || loading()" [required]="effectiveRequired()"
+                [disabled]="disabled()" [readOnly]="isReadonly()" [value]="displayedValue()"
+                [attr.autocomplete]="autocomplete()" [attr.inputmode]="inputmode()" [spellcheck]="spellcheck()"
+                [attr.minlength]="minLength()" [attr.maxlength]="maxLength()"
+                [attr.placeholder]="isFloating() || !label() ? resolvedPlaceholder() : ''"
+                (input)="onInput($event)" (focus)="onFocus()" (blur)="onBlur()"
+                (compositionstart)="onCompositionStart()" (compositionend)="onCompositionEnd($event)"
+                cdkAutofill (cdkAutofill)="autofilled.set($event.isAutofilled)" [type]="type()" [attr.min]="min()" [attr.max]="max()" [attr.step]="step()" [attr.pattern]="pattern()[0]?.source">
+            }
         </div>
-
-        @if (type() === 'number') {
+        <div class="bx-input-actions">
+        <ng-content select="[bxSuffix]" />
+        @if (type() === 'number' && !multiline()) {
         <div class="bx-spinners-group">
-            <button type="button" class="bx-spin-btn" tabindex="-1"
-                [disabled]="isSpinDownDisabled()"
-                (mousedown)="startSpin(-1, $event)" (touchstart)="startSpin(-1, $event)" (mouseup)="stopSpin()"
-                (mouseleave)="stopSpin()" (touchend)="stopSpin()">
-                <bx-icon name="minus" size="16"></bx-icon>
-            </button>
-
-            <button type="button" class="bx-spin-btn" tabindex="-1"
-                [disabled]="isSpinUpDisabled()"
-                (mousedown)="startSpin(1, $event)" (touchstart)="startSpin(1, $event)" (mouseup)="stopSpin()"
-                (mouseleave)="stopSpin()" (touchend)="stopSpin()">
-                <bx-icon name="plus" size="16"></bx-icon>
-            </button>
+            <button type="button" class="bx-spin-btn" [attr.aria-label]="resolvedDecreaseLabel()" [disabled]="isSpinDownDisabled()"
+                (pointerdown)="startSpin(-1, $event)" (pointerup)="stopSpin()" (pointercancel)="stopSpin()" (pointerleave)="stopSpin()"
+                (click)="$event.detail === 0 && startSpin(-1, $event); stopSpin()"><bx-icon name="minus" size="16" /></button>
+            <button type="button" class="bx-spin-btn" [attr.aria-label]="resolvedIncreaseLabel()" [disabled]="isSpinUpDisabled()"
+                (pointerdown)="startSpin(1, $event)" (pointerup)="stopSpin()" (pointercancel)="stopSpin()" (pointerleave)="stopSpin()"
+                (click)="$event.detail === 0 && startSpin(1, $event); stopSpin()"><bx-icon name="plus" size="16" /></button>
         </div>
         }
-
+        </div>
     </div>
+    <ng-content select="bx-error" ngProjectAs="bx-error" />
+    <ng-content select="bx-hint" ngProjectAs="bx-hint" />
 </bx-form-field>

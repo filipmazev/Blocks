@@ -26,7 +26,7 @@ Add the standalone component or directive to your component's `imports`.
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
-`--bx-field-padding-bottom` overrides the field wrapper’s bottom padding (default: `1.5rem`). Set it on a group of controls when the group provides its own row spacing.
+`--bx-field-padding-bottom` overrides the field wrapper’s bottom padding (default: `0`). Set it on a group of controls when additional row spacing is needed.
 
 ```ts
 import { inject } from '@angular/core';
@@ -51,3 +51,11 @@ The information button reveals short help on mouse hover or keyboard focus, and 
 ## Playground
 
 Open `/components/form-field` for a working example and its current value or action result.
+
+## Composable support and control registration
+
+`hint`, `hintEnd`, projected `bx-hint`, `bxPrefix`, and `bxSuffix` add support and adornments. `subscriptSizing` selects fixed or dynamic reserved space. Dynamic sizing collapses an empty supporting-text region and its gap, allowing controls to align with adjacent buttons and checkboxes. `hideRequiredMarker` hides decoration without changing validation. `tooltipLabel` provides translated accessible help-button text.
+
+A registered control supplies its state through `BX_FORM_FIELD_CONTROL` and `IFormFieldControl`, or the `control` input. The frame discovers projected registrations, resolves error visibility, associates its supporting-text region and native control, and announces errors politely. The `bxInput` directive supplies this registration for native controls.
+
+Built-in convenience controls forward projected rich errors and hints into their internal frame. See the [forms guide](../../README.md) for global error policies, messages and form-system compatibility.

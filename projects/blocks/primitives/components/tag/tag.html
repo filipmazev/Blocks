@@ -1,0 +1,11 @@
+<span class="bx-tag" bxSurface [bxSurfaceInteractive]="false"
+    [class.is-filled]="resolvedVariant() === 'filled'" [class.is-outlined]="resolvedVariant() === 'outlined'"
+    [class.is-small]="resolvedSize() === 'small'" [class.is-disabled]="disabled()" [class.is-number-only]="isNumberOnly()"
+    [attr.aria-disabled]="disabled() ? 'true' : null" [attr.role]="resolvedAriaLabel() ? 'group' : null" [attr.aria-label]="resolvedAriaLabel() || null"
+    [attr.tabindex]="resolvedTooltip() && focusable() ? 0 : null" [bxTooltip]="resolvedTooltip()" [placement]="tooltipPlacement()" bxTooltipTouch="longpress">
+    @if (resolvedLeadingIcon(); as icon) { <bx-icon [name]="icon" [size]="resolvedIconSize()" /> }
+    @if (resolvedLeadingNumber()) { <span class="bx-tag-number">{{ resolvedLeadingNumber() }}</span> }
+    @if (resolvedText()) { <span class="bx-tag-text" bxTruncate>{{ resolvedText() }}</span> }
+    @if (resolvedTrailingNumber()) { <span class="bx-tag-number">{{ resolvedTrailingNumber() }}</span> }
+    @if (resolvedTrailingIcon(); as icon) { <bx-icon [name]="icon" [size]="resolvedIconSize()" /> }
+</span>

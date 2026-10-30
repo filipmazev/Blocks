@@ -1,0 +1,6 @@
+<bx-form-field [control]="fieldControl" [label]="label()" [hint]="hint()" [hintEnd]="hintEnd()" [tooltip]="tooltip()"
+    [hideRequiredMarker]="resolvedHideRequiredMarker()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <div role="radiogroup" [id]="controlId()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [attr.aria-labelledby]="ariaLabelledBy()"
+        [attr.aria-describedby]="describedBy()" [attr.aria-invalid]="showError()" [attr.aria-required]="effectiveRequired()"><ng-content /></div>
+    <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
+</bx-form-field>

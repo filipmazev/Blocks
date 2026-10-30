@@ -1,0 +1,10 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--bx-loading-gap, #{spacing(2)});
+    color: var(--bx-loading-color, var(--bx-text-secondary));
+    font: inherit;
+    overflow-wrap: anywhere;
+}

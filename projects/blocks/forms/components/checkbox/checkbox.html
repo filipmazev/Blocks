@@ -1,20 +1,17 @@
-<bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
-    <label class="bx-inline-wrapper" [class.is-disabled]="isDisabled()">
-        <input type="checkbox" class="bx-visually-hidden" [attr.id]="inputId()" [attr.data-testid]="dataTestId()"
-            [attr.aria-label]="ariaLabel()" [disabled]="isDisabled()" [checked]="internalValue() === true"
-            (change)="onToggle($event)" (blur)="onBlur()">
-
-        <div class="bx-checkbox-box" bxSurface [bxSurfaceEmission]="errorMessage ? 'var(--bx-text-danger)' : 'var(--bx-accent)'" [class.is-checked]="internalValue() === true" [class.is-invalid]="!!errorMessage">
-            @if (internalValue() === true) {
-            <bx-icon name="check" size="16"></bx-icon>
-            }
+<bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [loading]="loading()"
+    [hint]="hint()" [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <label class="bx-inline-wrapper" [class.is-disabled]="disabled()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()" [class.label-before]="labelPosition() === 'before'">
+        <input type="checkbox" class="bx-visually-hidden" [id]="controlId()" [attr.name]="name() || null" [attr.data-testid]="dataTestId()"
+            [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="describedBy()"
+            [attr.aria-invalid]="showError()" [attr.aria-readonly]="isReadonly()" [disabled]="disabled()" [required]="effectiveRequired()" [checked]="displayedChecked()" [indeterminate]="indeterminate()"
+            (click)="onReadonlyClick($event)" (change)="onToggle($event)" (blur)="onBlur()">
+        <div class="bx-checkbox-box" bxSurface [bxSurfaceEmission]="showError() ? 'var(--bx-text-danger)' : 'var(--bx-accent)'"
+            [class.is-checked]="displayedChecked() || indeterminate()" [class.is-invalid]="showError()">
+            @if (indeterminate()) { <bx-icon name="minus" size="16" /> } @else if (displayedChecked()) { <bx-icon name="check" size="16" /> }
         </div>
-
-        @if (resolvedLabel()) {
-        <span class="bx-inline-label">
-            {{ resolvedLabel() }}
-            @if (required()) { <span class="bx-inline-required">*</span> }
+        <span class="bx-inline-label"><ng-content />{{ resolvedLabel() }}
+            @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-inline-required" aria-hidden="true">*</span> }
         </span>
-        }
     </label>
+    <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
 </bx-form-field>

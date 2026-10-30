@@ -60,6 +60,9 @@ export class Sidenav {
   }
 
   protected closeMobileMenu(): void {
+    const wasOpen = this.isHamburgerMenuOpen();
     this.isHamburgerMenuOpen.set(false);
+
+    if (wasOpen) this.menuToggle()?.nativeElement.focus({ preventScroll: true });
   }
 }

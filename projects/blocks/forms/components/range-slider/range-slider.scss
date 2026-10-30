@@ -1,0 +1,103 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+}
+
+.bx-range-slider {
+    --bx-slider-lens-start: var(--bx-range-start);
+    --bx-slider-lens-end: var(--bx-range-end);
+    --bx-slider-lens-track-color: var(--bx-bg-element);
+    --bx-slider-fill-display: none;
+
+    position: relative;
+    block-size: spacing(10);
+    inline-size: 100%;
+}
+
+.bx-range-track {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline: 0;
+    block-size: spacing(2);
+    transform: translateY(-50%);
+    border-radius: radius(pill);
+    background: var(--bx-bg-element);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: calc(
+                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 + var(--bx-range-start) *
+                    (100% - var(--bx-slider-thumb-size, #{spacing(6)}))
+            )
+            calc(
+                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 + (1 - var(--bx-range-end)) *
+                    (100% - var(--bx-slider-thumb-size, #{spacing(6)}))
+            );
+        background: var(--bx-accent);
+        border-radius: inherit;
+    }
+}
+
+.bx-range-input {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.bx-range-input input {
+    pointer-events: none;
+}
+
+.bx-range-slider.is-readonly input:disabled {
+    cursor: default;
+}
+
+.bx-range-input input::-webkit-slider-runnable-track {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.bx-range-input input::-moz-range-track {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.bx-range-input input::-webkit-slider-thumb {
+    pointer-events: auto;
+}
+
+.bx-range-input input::-moz-range-thumb {
+    pointer-events: auto;
+}
+
+.bx-range-ticks {
+    position: absolute;
+    inset-inline: calc(var(--bx-slider-thumb-size, #{spacing(6)}) / 2);
+    inset-block-start: 50%;
+    pointer-events: none;
+
+    // Keep interval markers visible at the selected values, above the glass lenses.
+    z-index: 3;
+}
+
+.bx-range-ticks span {
+    position: absolute;
+    inline-size: 2px;
+    block-size: 4px;
+    background: var(--bx-text-primary);
+    transform: translate(-50%, -50%);
+
+    &:dir(rtl) {
+        transform: translate(50%, -50%);
+    }
+}
+
+.bx-range-values {
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}

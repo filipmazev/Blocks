@@ -2,4 +2,4 @@
  * This file is auto-generated. Do not edit directly.
  */
 
-export const BLOCKS_VERSION = '1.4.15';
+export const BLOCKS_VERSION = '1.4.16';

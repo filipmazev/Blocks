@@ -1,4 +1,5 @@
 @use 'field-state' as *;
+@use 'mixins' as *;
 
 // A projected surface inside a form field receives the complete field material,
 // including its valid focus state, without application-specific effects CSS.
@@ -19,4 +20,51 @@
         border-color: Mark;
         outline-color: Mark;
     }
+}
+
+.bx-native-control {
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding: spacing(3);
+    border: 1px solid var(--bx-border-strong);
+    border-radius: radius(sm);
+    background: var(--bx-bg-neutral);
+    color: var(--bx-text-primary);
+    font: inherit;
+
+    &:focus-visible:not([readonly], [aria-readonly='true']),
+    &.is-keyboard-focused:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &[readonly]:not(:disabled) {
+        cursor: default;
+    }
+
+    &[aria-invalid='true'] {
+        border-color: var(--bx-border-danger);
+    }
+}
+
+.bx-field-prefix,
+.bx-field-suffix {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.bx-field-prefix {
+    padding-inline: var(--bx-field-adornment-padding, #{spacing(3)})
+        var(--bx-field-adornment-gap, #{spacing(2)});
+}
+
+.bx-field-suffix {
+    padding-inline: var(--bx-field-adornment-gap, #{spacing(2)})
+        var(--bx-field-adornment-padding, #{spacing(3)});
 }

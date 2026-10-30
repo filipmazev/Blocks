@@ -3,12 +3,12 @@ import { BxA11yService } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+import { DropdownDirective, Menu, MenuItem, TruncateDirective } from '@filip.mazev/blocks/primitives';
 import { PARK_ARTICLES } from './appearance-preview.data';
 
 @Component({
   selector: 'app-appearance-preview',
-  imports: [BxSurfaceDirective, Button, Icon, DropdownDirective, Menu, MenuItem],
+  imports: [BxSurfaceDirective, Button, Icon, DropdownDirective, Menu, MenuItem, TruncateDirective],
   templateUrl: './appearance-preview.html',
   styleUrl: './appearance-preview.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

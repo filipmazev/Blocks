@@ -1,0 +1,11 @@
+:host {
+    display: block;
+}
+
+[role='radiogroup'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--bx-radio-group-gap, 0.5rem);
+
+    --bx-field-subscript-height: 0;
+}

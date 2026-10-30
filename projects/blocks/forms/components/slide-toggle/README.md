@@ -18,7 +18,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-The control implements Angular ControlValueAccessor. Use `[formControl]`, `formControlName`, or `[(ngModel)]`; do not bind a separate value input. Shared inputs: `label`, `placeholder`, `tooltip`, `required`, `loading`, `disabled`, `ariaLabel`, `dataTestId`, and `errorMessages`. Disable reactive controls through `control.disable()` to keep form state consistent.
+The control uses Angular 22 native signal control contracts. Use `[formField]`, `[formControl]`, `formControlName`, `[(ngModel)]`, or standalone `[(checked)]`. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the [forms guide](../../README.md) for validation, submission, translations and compatibility.
 
 ## Appearance
 
@@ -47,3 +47,7 @@ Use for immediate settings, with a label describing the enabled state. The nativ
 ## Playground
 
 Open `/components/slide-toggle` for a working example and its current value or action result.
+
+## Switch semantics
+
+The internal checkbox exposes switch semantics. `labelPosition` supports before/after placement, and projected label content is supported. `checkedChange` is available for standalone interaction. Readonly preserves the value while disabled state blocks interaction.

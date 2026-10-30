@@ -1,0 +1,170 @@
+@use '../../../../../../../blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.form-demo-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.7fr);
+    gap: spacing(6);
+    inline-size: 100%;
+}
+
+.registration-form,
+.async-demo {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(4);
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: spacing(3);
+}
+
+.actions,
+.pagination-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+}
+
+.state-panel {
+    padding: spacing(4);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    background: var(--bx-bg-surface);
+    min-inline-size: 0;
+}
+
+.state-panel dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: spacing(1);
+}
+
+.state-panel dd {
+    margin: 0;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.75rem;
+}
+
+.paged-collection {
+    max-block-size: 15rem;
+    overflow: auto;
+    padding: spacing(4);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+}
+
+.paged-collection ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.paged-collection li {
+    padding: spacing(2);
+    border-bottom: 1px solid var(--bx-border-subtle);
+}
+
+.event-log {
+    font-size: 0.75rem;
+    color: var(--bx-text-secondary);
+    overflow-wrap: anywhere;
+    padding-inline-start: spacing(4);
+}
+
+textarea,
+select {
+    background: var(--bx-bg-surface);
+    color: var(--bx-text-primary);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(sm);
+    font: inherit;
+    padding: spacing(2);
+}
+
+@include respond-down(md) {
+    .form-demo-layout,
+    .form-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.selection-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: spacing(4);
+}
+
+.pagination-options {
+    display: flex;
+    flex: 1 1 28rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: spacing(2);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    margin-inline-start: auto;
+
+    > * {
+        flex: none;
+        max-inline-size: 100%;
+    }
+}
+
+.pagination-actions {
+    justify-content: flex-end;
+}
+
+.pagination-buttons {
+    min-inline-size: 0;
+    margin-inline-end: auto;
+}
+
+.visible-tag-control {
+    inline-size: 10.5rem;
+}
+
+.summary-threshold-control {
+    inline-size: 12.25rem;
+}
+
+.page-size-control {
+    inline-size: 10rem;
+}
+
+@include respond-down(md) {
+    .selection-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@include respond-down(sm) {
+    .pagination-options {
+        inline-size: 100%;
+        margin-inline-start: 0;
+
+        > * {
+            inline-size: 100%;
+        }
+    }
+}
+
+.collection-loading {
+    padding: spacing(2);
+}

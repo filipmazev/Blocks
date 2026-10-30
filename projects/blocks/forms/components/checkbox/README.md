@@ -18,7 +18,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-The control implements Angular ControlValueAccessor. Use `[formControl]`, `formControlName`, or `[(ngModel)]`; do not bind a separate value input. Shared inputs: `label`, `placeholder`, `tooltip`, `required`, `loading`, `disabled`, `ariaLabel`, `dataTestId`, and `errorMessages`. Disable reactive controls through `control.disable()` to keep form state consistent.
+The control uses Angular 22 native signal control contracts. Use `[formField]`, `[formControl]`, `formControlName`, `[(ngModel)]`, or standalone `[(checked)]`. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the [forms guide](../../README.md) for validation, submission, translations and compatibility.
 
 ## Appearance
 
@@ -45,3 +45,7 @@ Use a visible label. Space toggles the native input; focus and checked state rem
 ## Playground
 
 Open `/components/checkbox` for a working example and its current value or action result.
+
+## Selection configuration
+
+`indeterminate` is a boolean model with `indeterminateChange`. `clickAction` supports `check-indeterminate` (default), `check`, and `noop`. `labelPosition` is `before` or `after`. Use `checkedChange` or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.

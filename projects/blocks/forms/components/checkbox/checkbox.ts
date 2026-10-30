@@ -1,37 +1,32 @@
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { FormField } from '../form-field/form-field';
+import { BxCheckedControl } from '../shared/classes/bx-checked-control';
+import { CheckboxClickAction } from './types/checkbox.types';
 
 @Component({
   selector: 'bx-checkbox',
-  standalone: true,
-  imports: [BxSurfaceDirective, CommonModule, FormField, Icon],
+  imports: [BxSurfaceDirective, FormField, Icon],
   templateUrl: './checkbox.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './checkbox.scss'
 })
-export class Checkbox extends BxBaseControl<boolean> {
-  private readonly i18n = inject(BX_I18N, { optional: true });
+export class Checkbox extends BxCheckedControl {
+  public readonly indeterminate = model(false);
+  public readonly clickAction = input<CheckboxClickAction>('check-indeterminate');
 
-  protected readonly inputId = computed(() => `bx-checkbox-${uuidv4()}`);
-  protected readonly resolvedLabel = computed(() => {
-    this.i18n?.version?.();
-    const l = this.label();
-    if (!l) return undefined;
-    return isTextWithKey(l) ? (this.i18n?.translate(l.key) ?? l.key) : l;
-  });
+  protected override onToggle(event: Event): void {
+    if (this.clickAction() === 'noop') {
+      (event.target as HTMLInputElement).checked = this.displayedChecked();
+      (event.target as HTMLInputElement).indeterminate = this.indeterminate();
+      return;
+    }
 
-  protected showTooltip = false;
+    super.onToggle(event);
 
-  protected onToggle(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.updateValue(target.checked);
-  }
+    if (this.clickAction() === 'check') (event.target as HTMLInputElement).indeterminate = this.indeterminate();
 
-  protected onBlur(): void {
-    this.markAsTouched();
+    if (!this.disabled() && !this.isReadonly() && this.clickAction() === 'check-indeterminate') this.indeterminate.set(false);
   }
 }

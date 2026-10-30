@@ -1,18 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IconName, IconSize, IconStrokeWidth } from '@icons/types/icon.types';
-import { Icon } from '@icons/components/icon';
-import { lucideNames } from '@icons/assets/lucide/names';
-import { SearchInput } from '@forms/components/search-input/search-input';
-import { Select } from '@forms/components/select/select';
-import { Button } from '@forms/components/button/button';
-import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import { Icon, IconName, IconSize, IconStrokeWidth, lucideNames } from '@filip.mazev/blocks/icons';
+import { Button, BxSelectOption, SearchInput, Select } from '@filip.mazev/blocks/forms';
 import { Readme } from '../../shared/readme/readme';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 @Component({
   selector: 'app-icon-catalog',
-  imports: [Icon, FormsModule, SearchInput, Select, Button, Readme, BxSurfaceDirective],
+  imports: [Icon, FormsModule, SearchInput, Select, Button, Readme],
   templateUrl: './icon-catalog.html',
   styleUrl: './icon-catalog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

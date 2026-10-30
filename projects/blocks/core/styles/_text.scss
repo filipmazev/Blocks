@@ -1,0 +1,5 @@
+@use 'text-overflow' as *;
+
+.bx-truncate {
+    @include truncate-text;
+}

@@ -1,0 +1,36 @@
+@use '../../../../../../../blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.tag-demo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: spacing(4);
+    inline-size: 100%;
+}
+
+.tag-previews {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: spacing(2);
+    min-block-size: 3rem;
+}
+
+.tag-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: spacing(3);
+    inline-size: 100%;
+}
+
+@include respond-down(sm) {
+    .tag-controls {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

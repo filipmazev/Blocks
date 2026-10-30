@@ -29,6 +29,10 @@
         opacity: 0.5;
         cursor: not-allowed;
     }
+
+    &.is-readonly:not(.is-disabled) {
+        cursor: default;
+    }
 }
 
 .bx-inline-label {
@@ -74,7 +78,8 @@
     }
 }
 
-input:focus-visible ~ .bx-checkbox-box {
+.bx-inline-wrapper:not(.is-readonly) input:focus-visible ~ .bx-checkbox-box,
+.bx-inline-wrapper.is-readonly.is-keyboard-focused input:focus-visible ~ .bx-checkbox-box {
     box-shadow: 0 0 0 3px var(--bx-accent-subtle);
 }
 
@@ -111,4 +116,8 @@ input:focus-visible ~ .bx-checkbox-box {
     }
 
     @include choice-flat-accessibility;
+}
+
+.bx-inline-wrapper.label-before .bx-inline-label {
+    order: -1;
 }

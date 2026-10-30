@@ -1,18 +1,18 @@
 <bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
-    <label class="bx-inline-wrapper" [class.is-disabled]="isDisabled()">
-        <input type="radio" class="bx-visually-hidden" [attr.id]="inputId()" [attr.name]="name() || null"
-            [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()" [disabled]="isDisabled()"
-            [checked]="internalValue() === value()" (change)="onSelect()" (blur)="onBlur()">
+    <label class="bx-inline-wrapper" [class.is-disabled]="effectiveDisabled()" [class.is-readonly]="isReadonly() || !!group?.isReadonly()" [class.is-keyboard-focused]="keyboardFocused()" [class.label-before]="labelPosition() === 'before'">
+        <input type="radio" class="bx-visually-hidden" [attr.id]="inputId()" [attr.name]="effectiveName() || null"
+            [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()" [attr.aria-readonly]="isReadonly() || !!group?.isReadonly()" [attr.aria-describedby]="group?.describedBy()" [required]="required() || !!group?.required()" [disabled]="effectiveDisabled()"
+            [checked]="selected()" (click)="onReadonlyClick($event)" (change)="onSelect()" (blur)="onBlur()">
 
-        <div class="bx-radio-circle" bxSurface [bxSurfaceEmission]="errorMessage ? 'var(--bx-text-danger)' : 'var(--bx-accent)'" [class.is-checked]="internalValue() === value()"
+        <div class="bx-radio-circle" bxSurface [bxSurfaceEmission]="errorMessage ? 'var(--bx-text-danger)' : 'var(--bx-accent)'" [class.is-checked]="selected()"
             [class.is-invalid]="!!errorMessage">
             <div class="bx-radio-inner"></div>
         </div>
 
         @if (resolvedLabel()) {
         <span class="bx-inline-label">
-            {{ resolvedLabel() }}
-            @if (required()) { <span class="bx-inline-required">*</span> }
+            <ng-content />{{ resolvedLabel() }}
+            @if (isFieldRequired() || group?.required()) { <span class="bx-inline-required">*</span> }
         </span>
         }
     </label>

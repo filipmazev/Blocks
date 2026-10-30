@@ -10,10 +10,12 @@
     <div class="selected-example" role="status"><span>Selected: {{ selectedIcon() }}</span><code [textContent]="selectedCode()"></code></div>
   }
   <div class="icon-grid" aria-label="Icon results">
-    @for (name of visibleIcons(); track name) {
-      <button type="button" class="icon-card" bxSurface [class.selected]="selectedIcon() === name" [attr.aria-pressed]="selectedIcon() === name" (click)="selectedIcon.set(name)">
+    @for (name of visibleIcons(); track $index) {
+      <button bx-button type="button" variant="tonal" color="grayscale" class="icon-card" [surfaceEffects]="false" [class.selected]="selectedIcon() === name" [attr.aria-pressed]="selectedIcon() === name" (click)="selectedIcon.set(name)">
+        <span class="icon-card-content">
         <span class="icon-wrapper"><bx-icon [name]="name" [size]="selectedSize()" [strokeWidth]="selectedStrokeWidth()" color="primary" bgColor="auto" /></span>
         <span class="icon-name">{{ name }}</span>
+        </span>
       </button>
     } @empty { <p class="no-results">No icons match “{{ searchTerm() }}”. Try a shorter name.</p> }
   </div>

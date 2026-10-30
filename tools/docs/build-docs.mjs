@@ -21,7 +21,7 @@ await collect('projects/blocks');
 await collect('documentation');
 files.sort();
 const documents = {};
-const catalogSource = await readFile(path.join(root, 'projects/playground/src/app/components/screens/library-components/component-demo/component-catalog.ts'), 'utf8');
+const catalogSource = await readFile(path.join(root, 'projects/playground/src/app/components/screens/library-components/component-demo/constants/component-catalog.constants.ts'), 'utf8');
 // Read the TypeScript literal without executing it. Quotes, comments, property
 // formatting and trailing commas must not affect documentation generation.
 const catalogFile = ts.createSourceFile('component-catalog.ts', catalogSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);

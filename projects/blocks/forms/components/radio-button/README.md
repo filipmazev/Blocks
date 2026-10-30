@@ -19,7 +19,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-The control implements Angular ControlValueAccessor. Use `[formControl]`, `formControlName`, or `[(ngModel)]`; do not bind a separate value input. Shared inputs: `label`, `placeholder`, `tooltip`, `required`, `loading`, `disabled`, `ariaLabel`, `dataTestId`, and `errorMessages`. Disable reactive controls through `control.disable()` to keep form state consistent.
+Legacy individually bound radios support `[formControl]`, `formControlName`, and `[(ngModel)]`. For new forms, bind a `RadioGroup` with `[formField]` or an existing Angular form directive, and keep each radio value as its option value. See the [radio-group guide](../radio-group/README.md).
 
 `value` is required and identifies this option. `name` groups the native radio inputs.
 

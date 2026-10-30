@@ -18,8 +18,8 @@
 @mixin thumb {
     appearance: none;
     box-sizing: border-box;
-    width: spacing(6);
-    height: spacing(6);
+    width: var(--bx-slider-thumb-size, #{spacing(6)});
+    height: var(--bx-slider-thumb-size, #{spacing(6)});
     border-radius: radius(pill);
     border: 1px solid var(--bx-border-strong);
     background: var(--bx-bg-surface);
@@ -50,7 +50,38 @@
         display: block;
     }
 
-    // The native thumb remains the hit target; the opaque decorative thumb reflects nearby colors.
+    &::before {
+        content: '';
+        display: var(--bx-slider-fill-display, block);
+        position: absolute;
+        top: var(--bx-slider-center-y, 50%);
+        left: var(--bx-slider-track-start, 0);
+        width: calc(
+            var(--bx-slider-thumb-size, #{spacing(6)}) / 2 + var(--bx-slider-position, 0.5) *
+                (var(--bx-slider-track-width, 100%) - var(--bx-slider-thumb-size, #{spacing(6)}))
+        );
+        height: spacing(2);
+        transform: translateY(-50%);
+        border-radius: radius(pill);
+        background: var(--bx-accent);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    &:dir(rtl)::before {
+        left: auto;
+        right: var(--bx-slider-track-start, 0);
+    }
+
+    input.bx-slider::-webkit-slider-runnable-track {
+        background: var(--bx-bg-neutral);
+    }
+
+    input.bx-slider::-moz-range-track {
+        background: var(--bx-bg-neutral);
+    }
+
+    // The native thumb remains the hit target; the decorative lens paints over it.
     input.bx-slider::-webkit-slider-thumb {
         background: transparent;
         border-color: transparent;
@@ -73,11 +104,41 @@
     position: absolute;
     top: var(--bx-slider-center-y, 50%);
     left: calc(
-        var(--bx-slider-track-start, 0px) + var(--bx-slider-position, 0.5) *
-            (var(--bx-slider-track-width, 100%) - #{spacing(6)})
+        var(--bx-slider-track-start, 0px) +
+            var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) *
+            (var(--bx-slider-track-width, 100%) - var(--bx-slider-thumb-size, #{spacing(6)}))
     );
     transform: translateY(-50%);
     pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 35% 0%, rgb(255 255 255 / 45%), transparent 65%),
+        color-mix(in srgb, var(--bx-bg-surface) 24%, transparent);
+    border-color: color-mix(in srgb, var(--bx-text-primary) 35%, var(--bx-border-strong));
+    backdrop-filter: blur(var(--bx-slider-lens-blur, 1.5px));
+
+    --bx-slider-lens-width: calc(
+        var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5)
+    );
+    --bx-slider-lens-inset: calc(
+        var(--bx-slider-thumb-size, #{spacing(6)}) / 2 * var(--bx-slider-magnification, 1.5)
+    );
+    --bx-slider-lens-travel: calc(
+        (var(--bx-slider-track-width) - var(--bx-slider-thumb-size, #{spacing(6)})) *
+            var(--bx-slider-magnification, 1.5)
+    );
+    --bx-slider-lens-start-offset: calc(
+        var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel)
+    );
+    --bx-slider-lens-end-offset: calc(
+        var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) *
+            var(--bx-slider-lens-travel)
+    );
+
+    &:dir(rtl) {
+        --bx-slider-physical-position: calc(1 - var(--bx-slider-position, 0.5));
+    }
 
     &::after {
         @include bx-transition(opacity, 0.2s, ease-out);
@@ -98,6 +159,38 @@
             linear-gradient(#ffffff 0 0) content-box,
             linear-gradient(#ffffff 0 0);
         mask-composite: exclude;
+    }
+}
+
+// Reuse the rail geometry in CSS instead of sampling screen pixels on drag.
+// A separate rounded fill keeps the magnified selection's end caps curved.
+.bx-slider-lens {
+    display: var(--bx-slider-lens-display, block);
+    position: absolute;
+    top: 50%;
+    left: calc(
+        var(--bx-slider-thumb-size, #{spacing(6)}) / 2 -
+            1px - var(--bx-slider-lens-inset) - var(
+                --bx-slider-physical-position,
+                var(--bx-slider-position, 0.5)
+            ) *
+            var(--bx-slider-lens-travel)
+    );
+    width: var(--bx-slider-lens-width);
+    height: calc(#{spacing(2)} * var(--bx-slider-magnification, 1.5));
+    transform: translateY(-50%);
+    border-radius: radius(pill);
+    background: var(--bx-slider-lens-track-color, var(--bx-bg-neutral));
+    filter: blur(var(--bx-slider-lens-blur, 1.5px));
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: var(--bx-slider-lens-start-offset)
+            calc(var(--bx-slider-lens-width) - var(--bx-slider-lens-end-offset));
+        background: var(--bx-accent);
+        border-radius: inherit;
     }
 }
 
@@ -127,7 +220,7 @@ input.bx-slider {
     &::-webkit-slider-thumb {
         @include thumb;
 
-        margin-top: calc((#{spacing(2)} - #{spacing(6)}) / 2 - 1px);
+        margin-top: calc((#{spacing(2)} - var(--bx-slider-thumb-size, #{spacing(6)})) / 2 - 1px);
     }
 
     &::-moz-range-thumb {
@@ -140,6 +233,10 @@ input.bx-slider {
         border-radius: radius(pill);
     }
 
+    &[readonly] {
+        cursor: default;
+    }
+
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -147,6 +244,8 @@ input.bx-slider {
 }
 
 @mixin opaque-thumb {
+    --bx-slider-lens-display: none;
+
     background: var(--bx-bg-surface);
     backdrop-filter: none;
 }
@@ -216,4 +315,15 @@ input.bx-slider {
         border-color: ButtonText;
         box-shadow: none;
     }
+}
+
+.bx-slider-value-label {
+    display: block;
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.bx-slider-value-label[hidden] {
+    display: none;
 }

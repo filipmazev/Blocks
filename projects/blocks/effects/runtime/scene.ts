@@ -208,7 +208,15 @@ class SceneRuntime {
   };
 
   private sync = () => {
-    for (const entry of this.entries.values()) {
+    // Children inherit resolved material preferences from their nearest surface.
+    // Angular mounts child surfaces first, so registration order is insufficient.
+    const ordered = [...this.entries.values()].sort((a, b) => {
+      const position = a.element.compareDocumentPosition(b.element);
+
+      return position === 0 ? 0 : position & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+    });
+
+    for (const entry of ordered) {
       entry.hooks.sync();
       this.updateSelected(entry);
     }
@@ -303,6 +311,8 @@ class SceneRuntime {
             record.attributeName === 'class' ||
             record.attributeName === 'style' ||
             record.attributeName === 'hidden' ||
+            record.attributeName === 'readonly' ||
+            record.attributeName === 'aria-readonly' ||
             /^(role|data-bx-light-scope|data-bx-surface|data-bx-reduced-transparency|data-bx-reduced-motion|src|srcset|width|height)$/.test(
               record.attributeName ?? ''
             )
@@ -507,6 +517,8 @@ class SceneRuntime {
         'aria-current',
         'disabled',
         'aria-disabled',
+        'readonly',
+        'aria-readonly',
         'aria-invalid',
         'data-bx-field-invalid',
         'class',

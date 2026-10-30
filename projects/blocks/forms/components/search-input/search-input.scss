@@ -3,6 +3,7 @@
 :host {
     display: block;
     width: 100%;
+    min-inline-size: 0;
 }
 
 .bx-search-input-wrapper {
@@ -20,11 +21,11 @@
     padding: spacing(1) spacing(2) spacing(1) spacing(3);
     gap: spacing(2);
 
-    &:hover:not(.is-disabled) {
+    &:hover:not(.is-disabled, .is-readonly) {
         border-color: var(--bx-border-strong);
     }
 
-    &:focus-within:not(.is-disabled) {
+    &:focus-within:not(.is-disabled, .is-readonly) {
         border-color: var(--bx-border-brand);
         box-shadow: 0 0 0 3px var(--bx-primary-subtle);
     }
@@ -32,7 +33,7 @@
     &.is-invalid {
         border-color: var(--bx-border-danger);
 
-        &:focus-within {
+        &:focus-within:not(.is-readonly) {
             box-shadow: 0 0 0 3px var(--bx-bg-danger-subtle);
         }
     }
@@ -45,6 +46,11 @@
 }
 
 .bx-search-icon-left {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1rem;
+    block-size: 1rem;
     color: var(--bx-text-secondary);
     flex-shrink: 0;
 }
@@ -53,15 +59,22 @@
     flex: 1 1 0;
     min-width: 0;
     width: 0;
-    text-overflow: ellipsis;
     box-sizing: border-box;
     padding: spacing(2) 0;
     background: transparent;
     border: none;
     outline: none;
+    appearance: none;
     font-family: inherit;
     font-size: 0.875rem;
     color: var(--bx-text-heading);
+
+    // Blocks owns the clear action; WebKit and Chromium also supply a native one for search inputs.
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration {
+        appearance: none;
+        display: none;
+    }
 
     &::placeholder {
         color: var(--bx-text-secondary);
@@ -70,6 +83,10 @@
     &:disabled {
         color: var(--bx-text-secondary);
         cursor: not-allowed;
+    }
+
+    &[readonly]:not(:disabled) {
+        cursor: default;
     }
 }
 
@@ -94,9 +111,14 @@
 
     transition: color 0.15s ease;
 
-    &:hover {
+    &:hover:not(:disabled) {
         color: var(--bx-text-primary);
         background: var(--bx-bg-element-hover);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
     }
 
     &.hidden {
@@ -104,6 +126,44 @@
         pointer-events: none;
         user-select: none;
     }
+}
+
+.bx-search-feedback {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: spacing(2);
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+
+    &.has-status {
+        padding-block-start: var(--bx-search-feedback-gap, #{spacing(2)});
+    }
+}
+
+:host(.bx-readonly):not(:has(input:disabled)) button:disabled {
+    cursor: default;
+}
+
+.bx-search-status {
+    display: grid;
+    inline-size: 100%;
+    min-inline-size: 0;
+    line-height: 1.5;
+
+    > span {
+        grid-area: 1 / 1;
+        overflow-wrap: anywhere;
+    }
+}
+
+// Size the row for both messages, including wrapped translations, before a retry starts.
+.bx-search-status-reserve {
+    visibility: hidden;
+}
+
+.bx-search-error {
+    color: var(--bx-text-danger);
 }
 
 .bx-search-input-wrapper[data-bx-surface] {

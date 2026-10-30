@@ -1,0 +1,18 @@
+<bx-form-field [control]="fieldControl" [label]="label()" [hint]="hint()" [hintEnd]="hintEnd()" [tooltip]="tooltip()" [forId]="controlId()">
+    <div class="bx-range-slider" role="group" [class.is-readonly]="isReadonly() && !disabled()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [style.--bx-range-start]="startPercent() / 100" [style.--bx-range-end]="endPercent() / 100">
+        <div class="bx-range-track" aria-hidden="true"></div>
+        <div class="bx-range-input">
+            <input bxSlider type="range" [id]="controlId()" [min]="min()" [max]="max()" [attr.aria-valuemax]="end()" [step]="step()" [value]="start()"
+                [disabled]="disabled() || isReadonly()" [attr.aria-label]="resolvedStartLabel()" [attr.aria-valuetext]="displayWith()(start())"
+                [attr.aria-describedby]="describedBy()" (input)="onRangeInput($event, 'start')" (blur)="onBlur()">
+        </div>
+        <div class="bx-range-input">
+            <input bxSlider type="range" [min]="min()" [max]="max()" [attr.aria-valuemin]="start()" [step]="step()" [value]="end()"
+                [disabled]="disabled() || isReadonly()" [attr.aria-label]="resolvedEndLabel()" [attr.aria-valuetext]="displayWith()(end())"
+                [attr.aria-describedby]="describedBy()" (input)="onRangeInput($event, 'end')" (blur)="onBlur()">
+        </div>
+        <div class="bx-range-ticks" aria-hidden="true">@for (tick of ticks(); track tick) { <span [style.inset-inline-start.%]="tick"></span> }</div>
+    </div>
+    @if (discrete()) { <output class="bx-range-values">{{ displayWith()(start()) }} – {{ displayWith()(end()) }}</output> }
+    <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
+</bx-form-field>

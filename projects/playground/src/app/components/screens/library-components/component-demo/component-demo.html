@@ -11,6 +11,21 @@
     <div class="section-heading"><h2 id="preview-heading">Interactive example</h2><span>Uses your active palette</span></div>
     <div class="demo-stage" bxSurface>
       @switch (entry().id) {
+        @case ('tag') { <app-tag-examples /> }
+        @case ('truncate') { <app-truncation-examples /> }
+        @case ('signal-forms') { <app-form-examples example="signal-forms" /> }
+        @case ('radio-group') { <app-form-examples example="radio-group" /> }
+        @case ('multi-select') { <app-form-examples example="multi-select" /> }
+        @case ('load-more') { <app-form-examples example="load-more" /> }
+        @case ('loading-spinner') { <app-form-examples example="loading-spinner" /> }
+        @case ('loading-indicator') { <app-form-examples example="loading-indicator" /> }
+        @case ('progress-bar') { <app-form-examples example="progress-bar" /> }
+        @case ('button-loading') { <app-form-examples example="button-loading" /> }
+        @case ('range-slider') { <app-form-examples example="range-slider" /> }
+        @case ('hint') { <app-form-examples example="hint" /> }
+        @case ('prefix') { <app-form-examples example="prefix" /> }
+        @case ('suffix') { <app-form-examples example="suffix" /> }
+        @case ('native-control') { <app-form-examples example="native-control" /> }
         @case ('button') {
           <div class="demo-stack">
             <div class="demo-row"><button bx-button variant="filled" (click)="activate('Primary action')">Primary action</button><button bx-button variant="tonal" color="accent" (click)="activate('Tonal action')">Tonal</button><button bx-button (click)="activate('Text action')">Text</button><button bx-button variant="filled" [disabled]="true">Disabled</button></div>
@@ -30,11 +45,9 @@
           <fieldset class="demo-stack"><legend>Notification frequency</legend><bx-radio label="Daily summary" name="frequency-demo" value="daily" [formControl]="frequency" /><bx-radio label="Weekly summary" name="frequency-demo" value="weekly" [formControl]="frequency" /><bx-radio label="Only important updates" name="frequency-demo" value="important" [formControl]="frequency" /><output>Selected: {{ frequency.value }}</output><button bx-button (click)="frequency.reset()">Reset frequency</button></fieldset>
         }
         @case ('search-input') {
-          <div class="demo-stack control-width"><bx-search-input label="Find a component" placeholder="Try menu" [formControl]="query" (search)="searchTerm.set($event)" /><ul class="search-results">@for (name of searchResults(); track name) { <li>{{ name }}</li> } @empty { <li>No components match your search.</li> }</ul><output>{{ searchResults().length }} results</output></div>
+          <app-search-examples />
         }
-        @case ('select') {
-          <div class="demo-stack control-width"><bx-select label="Destination" [options]="options" [isSearchable]="true" [formControl]="destination" /><output>Selected: {{ destination.value }}</output></div>
-        }
+        @case ('select') { <app-form-examples example="select" /> }
         @case ('slider') {
           <div class="demo-stack control-width"><label for="volume-demo">Volume</label><input bxSlider id="volume-demo" type="range" min="0" max="100" [formControl]="volume" /><output>{{ volume.value }}%</output><button bx-button (click)="volume.setValue(50)">Reset volume</button><label for="disabled-volume">Unavailable range</label><input bxSlider id="disabled-volume" type="range" value="30" disabled /></div>
         }

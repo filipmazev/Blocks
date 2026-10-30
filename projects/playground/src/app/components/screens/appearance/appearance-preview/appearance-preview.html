@@ -46,7 +46,7 @@
 </div>
 
 <nav bxSurface class="preview-navigation" aria-label="Places in this article">
-  <span class="preview-saved-status" role="status">{{ saved() ? 'Saved to your places' : 'Explore Macedonia' }}</span>
+  <span class="preview-saved-status" bxTruncate role="status">{{ saved() ? 'Saved to your places' : 'Explore Macedonia' }}</span>
   @for (park of parks(); track park.id) {
     <button type="button" (click)="scrollTo(reader, park.id)"><bx-icon name="mountain" size="16" /><span>{{ park.shortTitle }}</span></button>
   }

@@ -1,4 +1,5 @@
 import { rememberAttributes, rememberStyles, finiteClamp } from './dom';
+import { isSurfaceInteractionBlocked } from './helpers/surface-interaction.helpers';
 import { inheritedAttribute } from './configuration';
 import { registerSurface, refreshGlassLighting } from './scene';
 import type { Lighting, LightContribution } from './scene';
@@ -87,7 +88,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   let reducedMotion = false;
   let unifiedLighting = false;
 
-  const interactive = () => options.interactive ?? isActionSurface(element);
+  const interactive = () => (options.interactive ?? isActionSurface(element)) && !isSurfaceInteractionBlocked(element);
   let emitting = false;
   let emittingColor: string | undefined;
 

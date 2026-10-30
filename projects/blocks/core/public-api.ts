@@ -38,3 +38,4 @@ export * from './helpers/uui4';
 export * from './types/appearance.types';
 export * from './helpers/overlay-theme';
 export * from './helpers/overlay-origin';
+export * from './helpers/resolve-text.helpers';

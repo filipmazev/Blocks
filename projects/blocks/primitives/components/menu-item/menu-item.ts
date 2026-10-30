@@ -1,11 +1,14 @@
 import { BX_I18N, BxA11yService, BxShortcutService, isTextWithKey, ResolvableShortcut, ResolvableText } from '@filip.mazev/blocks/core';
-import { Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { booleanAttribute, Component, computed, inject, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { Icon, IconName } from '@filip.mazev/blocks/icons';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { TooltipDirective } from '../../directives/tooltip.directive';
+import { TruncateDirective } from '../../directives/truncate.directive';
+import { TruncatedTextPipe } from '../../pipes/truncated-text.pipe';
 
 @Component({
   selector: 'bx-menu-item',
-  imports: [Icon, BxSurfaceDirective],
+  imports: [Icon, BxSurfaceDirective, TooltipDirective, TruncateDirective, TruncatedTextPipe],
   templateUrl: './menu-item.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './menu-item.scss'
@@ -37,6 +40,8 @@ export class MenuItem {
   public readonly endIcon = input<IconName | undefined>(undefined);
   public readonly label = input<ResolvableText | undefined>(undefined);
   public readonly wrapLabel = input(false);
+  /** Whether clipped labels receive an automatic tooltip. Defaults to true; ellipsis remains when false. */
+  public readonly tooltipOnTruncate = input(true, { transform: booleanAttribute });
   public readonly disabled = input(false);
   public readonly danger = input(false);
 

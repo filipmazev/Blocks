@@ -1,4 +1,9 @@
+@use '@angular/cdk' as cdk;
+
 @forward 'motion';
+
+// Emit the CDK utility once through the shared global accessibility entry point.
+@include cdk.a11y-visually-hidden;
 
 :root {
     --bx-reduced-motion: 0;

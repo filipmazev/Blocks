@@ -1,0 +1,4 @@
+@if (mode() === 'buffer') {
+<span class="bx-progress-buffer" [style.width.%]="buffer()"></span>
+}
+<span class="bx-progress-value" [style.width.%]="indeterminate() ? 40 : progress()"></span>

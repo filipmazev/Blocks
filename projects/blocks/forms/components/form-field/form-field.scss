@@ -10,7 +10,7 @@
     flex-direction: column;
     gap: spacing(1);
     position: relative;
-    padding-bottom: var(--bx-field-padding-bottom, #{spacing(6)});
+    padding-bottom: var(--bx-field-padding-bottom, 0);
 }
 
 .bx-field-header {
@@ -136,4 +136,35 @@
 
 .bx-field-error {
     align-items: flex-start;
+}
+
+.bx-field-subscript {
+    min-block-size: var(--bx-field-subscript-height, #{spacing(6)});
+}
+
+.dynamic-subscript .bx-field-subscript {
+    min-block-size: 0;
+}
+
+.bx-field-hints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(1);
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+}
+
+.bx-field-hint-end {
+    margin-inline-start: auto;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.bx-field-hints,
+.bx-field-error,
+.bx-field-error-projected {
+    padding-inline: var(--bx-field-support-padding, #{spacing(3)});
 }

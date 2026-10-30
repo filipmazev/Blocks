@@ -1,0 +1,29 @@
+:host {
+    display: inline-flex;
+    flex: 0 0 auto;
+    inline-size: var(--bx-spinner-size, 20px);
+    block-size: var(--bx-spinner-size, 20px);
+    color: var(--bx-spinner-color, currentColor);
+    vertical-align: middle;
+}
+
+.bx-spinner-ring {
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    border: var(--bx-spinner-stroke, 2px) solid currentcolor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    animation: bx-spinner-turn 0.75s linear infinite;
+}
+
+:host(.is-reduced-motion) .bx-spinner-ring {
+    animation: none;
+    border-style: dotted;
+}
+
+@keyframes bx-spinner-turn {
+    to {
+        transform: rotate(360deg);
+    }
+}

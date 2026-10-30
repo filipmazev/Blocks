@@ -1,0 +1,62 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    position: relative;
+    inline-size: 100%;
+    block-size: var(--bx-progress-height, 4px);
+    overflow: hidden;
+    border-radius: var(--bx-progress-radius, #{radius(pill)});
+    background: var(--bx-progress-track, var(--bx-bg-element));
+}
+
+.bx-progress-value,
+.bx-progress-buffer {
+    display: block;
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    background: var(--bx-progress-color, var(--bx-accent));
+}
+
+.bx-progress-buffer {
+    opacity: 0.3;
+}
+
+:host(.is-indeterminate) .bx-progress-value {
+    animation: bx-progress-travel 1.3s ease-in-out infinite;
+}
+
+:host(.is-query) {
+    transform: scaleX(-1);
+}
+
+:host(:dir(rtl)) .bx-progress-value {
+    animation-direction: reverse;
+}
+
+:host(.is-reduced-motion) .bx-progress-value {
+    animation: none;
+}
+
+@media (forced-colors: active) {
+    :host {
+        background: Canvas;
+        outline: 1px solid CanvasText;
+    }
+
+    .bx-progress-value,
+    .bx-progress-buffer {
+        background: Highlight;
+    }
+}
+
+@keyframes bx-progress-travel {
+    from {
+        inset-inline-start: -40%;
+    }
+
+    to {
+        inset-inline-start: 100%;
+    }
+}

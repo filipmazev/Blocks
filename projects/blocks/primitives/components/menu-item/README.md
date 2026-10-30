@@ -18,7 +18,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`label`, `icon`, `endIcon`, `shortcut`, `disabled`, `danger`, and `wrapLabel`. Set `wrapLabel` to `true` when a menu item should wrap long content instead of truncating it. `action` emits the mouse event for enabled items.
+`label`, `icon`, `endIcon`, `shortcut`, `disabled`, `danger`, and `wrapLabel`. Set `wrapLabel` to `true` when a menu item should wrap long content instead of truncating it. `action` emits the mouse event for enabled items. Clipped labels and projected text use the shared `TruncateDirective` and receive an automatic tooltip. `[tooltipOnTruncate]="false"` disables that tooltip while retaining ellipsis, allowing application-owned feedback. `wrapLabel` disables truncation itself.
 
 ## Appearance
 

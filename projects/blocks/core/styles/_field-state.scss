@@ -14,9 +14,18 @@
         display: none;
     }
 
-    &:focus-within:not(.is-disabled, :disabled),
-    &:focus-visible:not(:disabled),
-    &.is-open:not(:disabled) {
+    &:focus-within:not(
+            .is-disabled,
+            :disabled,
+            .is-readonly,
+            [readonly],
+            [aria-readonly='true'],
+            :has([readonly], [aria-readonly='true'])
+        ),
+    &:focus-visible:not(:disabled, [readonly], [aria-readonly='true']),
+    &.is-open:not(:disabled),
+    &.is-readonly.is-keyboard-focused:focus-within,
+    &:has(.bx-readonly.is-keyboard-focused):focus-within {
         --bx-glass-edge: var(--bx-border-brand);
 
         outline: 2px solid var(--bx-border-brand);

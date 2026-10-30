@@ -1,0 +1,45 @@
+@use '../../../../../../../blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.search-demo {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(4);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.search-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+}
+
+.search-results {
+    padding: spacing(3);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+
+    ul {
+        columns: 2;
+        padding-inline-start: spacing(4);
+    }
+}
+
+.search-events {
+    padding-inline-start: spacing(4);
+    font-size: 0.75rem;
+    color: var(--bx-text-secondary);
+}
+
+@include respond-down(sm) {
+    .search-results ul {
+        columns: 1;
+    }
+}

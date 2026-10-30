@@ -1,11 +1,12 @@
 <button bxSurface [bxSurfaceEmission]="danger() ? 'var(--bx-text-danger)' : 'var(--bx-primary)'" type="button" role="menuitem" [disabled]="disabled()" class="bx-menu-item-btn" [class.is-disabled]="disabled()" [class.is-danger]="danger()"
-    [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)">
+    [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)"
+    [bxTooltip]="(resolvedLabel() ?? menuText.text().trim()) | bxTruncatedText: menuText.truncated(): tooltipOnTruncate()" bxTooltipTouch="longpress">
 
     @if (icon()) {
     <bx-icon class="bx-icon-pos-start" [name]="icon()!" size="20" />
     }
 
-    <span class="bx-menu-item-content" [class.bx-menu-item-content-wrapped]="wrapLabel()">
+    <span class="bx-menu-item-content" [bxTruncate]="!wrapLabel()" #menuText="bxTruncate" [class.bx-menu-item-content-wrapped]="wrapLabel()">
         @if (resolvedLabel()) {
         {{ resolvedLabel() }}
         } @else {

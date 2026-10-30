@@ -1,0 +1,125 @@
+@use '../../../../../../../blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.truncation-demo {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(3);
+    inline-size: 100%;
+    min-inline-size: 0;
+
+    h3,
+    h4,
+    p {
+        margin: 0;
+    }
+}
+
+.truncation-controls,
+.truncation-switches {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: spacing(3);
+    inline-size: 100%;
+
+    @include respond-up(md) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.text-example,
+.example-width {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+.text-example {
+    padding: spacing(2);
+    box-sizing: border-box;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(sm);
+
+    > span:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}
+
+.large-text {
+    font-size: 1.5em;
+}
+
+.component-examples {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: spacing(4);
+    inline-size: 100%;
+    min-inline-size: 0;
+
+    @include respond-up(md) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.preview-card {
+    display: grid;
+    grid-template-rows: max-content 12rem 1fr;
+    gap: spacing(3);
+    min-inline-size: 0;
+    padding: spacing(3);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+
+    h4 {
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+}
+
+.text-preview-card {
+    grid-column: 1 / -1;
+}
+
+.preview-stage {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    place-items: safe center start;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: auto;
+    padding: spacing(2);
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: -2px;
+        border-radius: radius(sm);
+    }
+}
+
+.preview-caption {
+    min-inline-size: 0;
+    min-block-size: 3lh;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--bx-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+pre {
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    margin: 0;
+    padding: spacing(3);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(sm);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.75rem;
+}

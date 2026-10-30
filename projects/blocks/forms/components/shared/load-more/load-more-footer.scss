@@ -1,0 +1,27 @@
+@use '../../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    inline-size: 100%;
+    box-sizing: border-box;
+}
+
+:host([hidden]) {
+    display: none;
+}
+
+.bx-load-more-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+    gap: spacing(2);
+    padding: var(--bx-load-more-padding, #{spacing(2)} 0);
+}
+
+.bx-load-more-error {
+    flex-basis: 100%;
+    color: var(--bx-text-danger);
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+}

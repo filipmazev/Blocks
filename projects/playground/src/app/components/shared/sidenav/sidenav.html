@@ -1,5 +1,5 @@
 @if (isHamburgerMenu()) {
-    <header bxSurface class="mobile-header">
+    <header bxSurface [bxSurfaceInteractive]="false" class="mobile-header">
         <a class="brand" routerLink="/home" (click)="closeMobileMenu()">
             <app-blocks-logo class="brand-logo" />
             <span>{{ title() }}</span>
@@ -35,6 +35,7 @@
 
 <aside
     bxSurface
+    [bxSurfaceInteractive]="false"
     [cdkTrapFocus]="isHamburgerMenu() && isHamburgerMenuOpen()"
     [cdkTrapFocusAutoCapture]="isHamburgerMenu() && isHamburgerMenuOpen()"
     id="component-navigation"
@@ -55,12 +56,7 @@
             <span>Component library</span>
         </div>
     }
-    <bx-search-input
-        class="navigation-search"
-        placeholder="Search pages..."
-        [ngModel]="query()"
-        (ngModelChange)="query.set($event)"
-    />
+    <bx-search-input class="navigation-search" ariaLabel="Search pages" placeholder="Search pages..." [ngModel]="query()" (ngModelChange)="query.set($event)" />
     <div class="sidebar-scroll">
         <nav aria-label="Component documentation">
             @for (group of groups(); track group.id) {
@@ -68,7 +64,6 @@
                     <h2>{{ group.title }}</h2>
                     @for (item of group.items; track item.route) {
                         <a
-                            bxSurface
                             [routerLink]="item.route"
                             routerLinkActive="active"
                             ariaCurrentWhenActive="page"

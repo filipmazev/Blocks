@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
+import { ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -31,7 +31,9 @@ export class TooltipDirective {
   public readonly bxTooltip = input.required<ResolvableText>();
   public readonly placement = input<BxPlacement>('bottom');
   public readonly bxTooltipTouch = input<'none' | 'longpress' | 'tap'>('none');
+  public readonly bxTooltipHover = input(true);
   private overlayRef: OverlayRef | null = null;
+  private tooltipComponent?: ComponentRef<Tooltip>;
   private transition?: ReturnType<typeof createGlassTransition>;
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
@@ -64,7 +66,15 @@ export class TooltipDirective {
       this.i18n?.version?.();
       const text = this.bxTooltip();
       const description = isTextWithKey(text) ? (this.i18n?.translate(text.key) ?? text.key) : text;
-      if (!description) return;
+      if (!description) {
+        if (this.overlayRef) this.hide();
+        return;
+      }
+
+      this.tooltipComponent?.setInput('text', text);
+
+      if (this.hovered || this.focused) this.show();
+
       this.describer.describe(source, description, 'tooltip');
       onCleanup(() => this.describer.removeDescription(source, description, 'tooltip'));
     });
@@ -98,6 +108,7 @@ export class TooltipDirective {
       this.disconnectLighting = inheritGlassLighting(pane, this.elementRef.nativeElement);
 
       const component = this.overlayRef.attach(new ComponentPortal(Tooltip));
+      this.tooltipComponent = component;
       // CDK enables pane pointer events during attach. Reset afterwards so the
       // emerging tooltip cannot steal hover from small or nested triggers.
       pane.style.pointerEvents = 'none';
@@ -147,7 +158,7 @@ export class TooltipDirective {
 
   @HostListener('pointerenter', ['$event'])
   protected onEnter(event: PointerEvent): void {
-    if (event.pointerType !== 'mouse') return;
+    if (event.pointerType !== 'mouse' || !this.bxTooltipHover()) return;
     this.clearTouchInteraction();
     this.hovered = true;
     this.show();
@@ -191,6 +202,8 @@ export class TooltipDirective {
       this.hide();
     }
   }
+
+  //#region Helpers
 
   private canUseTouch(event: Event): boolean {
     if (this.contextMenu && this.bxTooltipTouch() === 'longpress') return false;
@@ -317,7 +330,10 @@ export class TooltipDirective {
     this.transition = undefined;
     this.overlayRef?.dispose();
     this.overlayRef = null;
+    this.tooltipComponent = undefined;
     this.disconnectLighting?.();
     this.disconnectLighting = undefined;
   }
+
+  //#endregion
 }

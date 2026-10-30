@@ -1,0 +1,92 @@
+<section class="truncation-demo" aria-label="Conditional truncation tooltips">
+    <h3>Shared truncation, optional tooltips</h3>
+    <p><code>TruncateDirective</code> owns ellipsis and rendered measurement. The pure <code>bxTruncatedText</code> pipe selects text for a conditional tooltip.
+        Use the exported directive signals or <code>truncatedText()</code> helper in your own logic.</p>
+    <div class="truncation-controls">
+        <bx-input-field label="Text" [(value)]="text" subscriptSizing="dynamic" />
+        <bx-input-field label="Available width (rem)" type="number" [min]="4" [max]="64" [(value)]="width" subscriptSizing="dynamic" />
+    </div>
+    <div class="truncation-switches" role="group" aria-label="Preview options">
+        <bx-checkbox label="Enable text truncation" [(checked)]="enabled" subscriptSizing="dynamic" />
+        <bx-checkbox label="Larger text preview" [(checked)]="largeText" subscriptSizing="dynamic" />
+        <bx-checkbox label="Automatic tooltips" [(checked)]="automaticTooltips" subscriptSizing="dynamic" />
+        <bx-checkbox label="Custom tooltip" [(checked)]="customTooltip" subscriptSizing="dynamic" />
+    </div>
+    <div class="component-examples">
+        <section class="preview-card text-preview-card">
+            <h4>Text preview</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Text preview">
+                <div class="text-example example-width" [style.inline-size.rem]="previewWidth()" [class.large-text]="largeText()">
+                    <span [bxTruncate]="enabled()" #overflow="bxTruncate" [bxTooltip]="customTooltip() ? 'My application tooltip' : (label() | bxTruncatedText: overflow.truncated(): automaticTooltips())"
+                        [attr.tabindex]="customTooltip() || (automaticTooltips() && overflow.truncated()) ? 0 : null" bxTooltipTouch="longpress" placement="top">{{ label() }}</span>
+                </div>
+            </div>
+            <output class="preview-caption">Text {{ overflow.truncated() ? 'is truncated' : 'fits without truncation' }}.</output>
+        </section>
+        <section class="preview-card">
+            <h4>Tag</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Tag preview">
+                <div class="example-width" [style.inline-size.rem]="previewWidth()">
+                    <bx-tag [text]="label()" leadingIcon="map-pin" [tooltipOnTruncate]="automaticTooltips()" [tooltip]="customTooltip() ? 'My application tooltip' : undefined" />
+                </div>
+            </div>
+            <p class="preview-caption">Clipped labels use an automatic or application-owned tooltip.</p>
+        </section>
+        <section class="preview-card">
+            <h4>Input field</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Input field preview">
+                <div class="example-width" [style.inline-size.rem]="previewWidth()">
+                    <bx-input-field [label]="label()" placeholder="Editable value" [tooltipOnTruncate]="automaticTooltips()" subscriptSizing="dynamic" />
+                </div>
+            </div>
+            <p class="preview-caption">The floating label shares the truncation measurement.</p>
+        </section>
+        <section class="preview-card">
+            <h4>Search value</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Search value preview">
+                <div class="example-width" [style.inline-size.rem]="previewWidth()">
+                    <bx-search-input ariaLabel="Search value" [value]="label()" (search)="text.set($event)" [tooltipOnTruncate]="automaticTooltips()" subscriptSizing="dynamic" />
+                </div>
+            </div>
+            <p class="preview-caption">Editing the search updates the shared example text.</p>
+        </section>
+        <section class="preview-card">
+            <h4>Select</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Select preview">
+                <div class="example-width" [style.inline-size.rem]="previewWidth()">
+                    <bx-select [label]="label()" [options]="options()" [value]="0" [tooltipOnTruncate]="automaticTooltips()" subscriptSizing="dynamic" />
+                </div>
+            </div>
+            <p class="preview-caption">Selected values and captions share the same available width.</p>
+        </section>
+        <section class="preview-card">
+            <h4>Multiselect</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Multiselect preview">
+                <div class="example-width" [style.inline-size.rem]="previewWidth()">
+                    <bx-multi-select label="Selected tag" selectionDisplay="tags" [options]="options()" [value]="[0]" [tooltipOnTruncate]="automaticTooltips()" subscriptSizing="dynamic" />
+                </div>
+            </div>
+            <p class="preview-caption">The selected tag follows the owning control's tooltip setting.</p>
+        </section>
+        <section class="preview-card">
+            <h4>Menu item</h4>
+            <div class="preview-stage" tabindex="0" role="region" aria-label="Menu item preview">
+                <div class="example-width" [style.inline-size.rem]="previewWidth()">
+                    <bx-menu><bx-menu-item [label]="label()" [wrapLabel]="!enabled()" [tooltipOnTruncate]="automaticTooltips()"
+                        (action)="menuActions.set(menuActions() + 1)" /></bx-menu>
+                </div>
+            </div>
+            <output class="preview-caption">Menu activations: {{ menuActions() }}</output>
+        </section>
+    </div>
+    <p>Change the text or width to switch between clipped and fitting labels. Turn automatic tooltips off to retain ellipsis and measurement for custom feedback.
+        Hover, keyboard focus, and touch-and-hold use the existing tooltip mechanism. Explicit tag descriptions still take precedence.
+        Custom tooltip applies to the text and tag examples. Preview panels keep their size; long wrapped content scrolls inside them.
+        Example widths are capped by the available space in each card.</p>
+    <h3>Short conditional tooltip</h3>
+    <pre><code [textContent]="pipeExample"></code></pre>
+    <h3>Disable automatic tooltips</h3>
+    <pre><code [textContent]="customExample"></code></pre>
+    <h3>Use the public API in your application</h3>
+    <pre><code [textContent]="logicExample"></code></pre>
+</section>

@@ -1,70 +1,81 @@
-<bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()">
-
-    <button type="button" role="combobox" aria-haspopup="listbox" cdkOverlayOrigin bxSurface #origin="cdkOverlayOrigin" class="bx-select-trigger"
-        [class.is-invalid]="!!errorMessage" [class.is-open]="isOpen()" [class.is-floating]="isFloating()"
-        [attr.id]="inputId()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel() || resolvedLabel()"
-        [disabled]="isDisabled() || loading()" (click)="toggleOpen()" (keydown)="onTriggerKey($event)"
-        [attr.aria-expanded]="isOpen()" [attr.aria-controls]="isPanelAttached() ? inputId() + '-options' : null">
-
+<bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [showLoadingIndicator]="false"
+    [hint]="hint()" [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <button type="button" role="combobox" aria-haspopup="listbox" [bxTooltip]="resolvedTooltipOnTruncate() ? (selectionDisplay() === 'tags' ? selectedOptionLabel() : truncatedSelectionTooltip()) : ''" [bxTooltipHover]="selectionDisplay() !== 'tags'" [bxTooltipTouch]="selectionDisplay() === 'tags' ? 'none' : 'longpress'" cdkOverlayOrigin bxSurface #origin="cdkOverlayOrigin" class="bx-select-trigger"
+        [class.is-invalid]="showError()" [class.is-outline]="resolvedAppearance() === 'outline'" [class.is-open]="isOpen()" [class.is-floating]="isFloating()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()"
+        [id]="controlId()" [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [attr.aria-labelledby]="ariaLabelledBy()"
+        [attr.aria-describedby]="describedBy()" [attr.aria-invalid]="showError()" [attr.aria-required]="required()" [attr.aria-readonly]="isReadonly()" [attr.aria-busy]="loading() || pending() || isSearching()"
+        [disabled]="disabled()" (click)="toggleOpen()" (keydown)="onTriggerKey($event)" (blur)="onTriggerBlur()"
+        [attr.aria-expanded]="isOpen()" [attr.aria-controls]="isPanelAttached() ? controlId() + '-options' : null">
         <div class="bx-select-container">
             @if (label()) {
-            <span class="bx-floating-label">
-                {{ resolvedLabel() }}
-                @if (isFieldRequired()) { <span class="bx-field-required">*</span> }
+            <span class="bx-floating-label"><span [bxTruncate]="!isFloating()" #labelOverflow="bxTruncate">{{ resolvedLabel() }}</span>
+                @if (required() && !resolvedHideRequiredMarker()) { <span class="bx-field-required" aria-hidden="true">*</span> }
             </span>
             }
-
-            <span class="bx-select-value" [attr.title]="selectedOptionLabel() || resolvedPlaceholder()" [class.is-placeholder]="internalValue() === null">
-                @if (internalValue() === null && isFloating()) {
-                {{ resolvedPlaceholder() }}
-                } @else {
-                {{ selectedOptionLabel() }}
-                }
+            <span class="bx-select-value" [class.is-placeholder]="!selectedOptionLabel()" [bxTruncate]="!(selectionDisplay() === 'tags' && selectedOptions().length) && !triggerTemplate()" #valueOverflow="bxTruncate">
+                @if (triggerTemplate(); as template) {
+                <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="triggerContext()" />
+                } @else if (selectionDisplay() === 'tags' && selectedOptions().length) {
+                <span class="bx-selected-tags">
+                    @for (option of visibleTags(); track option.value) {
+                    <bx-tag [text]="option.label" [config]="selectionTagConfig(option)" [disabled]="disabled() || !!option.disabled" [focusable]="false" [tooltipOnTruncate]="resolvedTooltipOnTruncate() ? undefined : false" />
+                    }
+                    @if (selectedOptions().length > visibleTagCount()) {
+                    <bx-tag class="bx-overflow-tag" [text]="overflowTagLabel()" [config]="overflowTagConfig()" [tooltip]="overflowTagTooltip()" [focusable]="false" [tooltipOnTruncate]="resolvedTooltipOnTruncate() ? undefined : false" />
+                    }
+                </span>
+                } @else { {{ selectedOptionLabel() || (isFloating() || !label() ? resolvedPlaceholder() : '') }} }
             </span>
         </div>
-
-        <bx-icon class="bx-select-caret" name="chevron-down" size="16"></bx-icon>
+        <ng-content select="[bxSuffix]" />
+        <span class="bx-select-caret" aria-hidden="true">
+            @if (loading() || pending() || isSearching()) { <bx-loading-spinner [size]="16" [decorative]="true" /> }
+            @else { <bx-icon name="chevron-down" size="16" /> }
+        </span>
     </button>
-
     <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="origin" [cdkConnectedOverlayOpen]="isPanelAttached()"
         [cdkConnectedOverlayPositions]="overlayPositions" [cdkConnectedOverlayHasBackdrop]="false"
-        [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy"
-        [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
+        [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy" [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
         [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
         (overlayOutsideClick)="onOutsideClick($event)" (attach)="onPanelAttach()" (detach)="onPanelDetach()" (positionChange)="refreshPanel()">
-
-        <div class="bx-select-panel" data-bx-surface="solid" role="listbox" tabindex="0" [attr.aria-label]="resolvedLabel()" [id]="inputId() + '-options'" (keydown)="onPanelKey($event)">
-
+        <div class="bx-select-panel" [class]="panelClass()" data-bx-surface="solid" tabindex="-1" (keydown)="onPanelKey($event)">
             @if (isSearchable()) {
             <div class="bx-select-search-container">
-                <bx-search-input #searchInput [placeholder]="resolvedSearchPlaceholder()"
-                    (search)="onSearchChange($event)" (keydown.enter)="$event.preventDefault()">
-                </bx-search-input>
+                <bx-search-input #searchInput [value]="searchValue()" [placeholder]="resolvedSearchPlaceholder()" [ariaLabel]="resolvedSearchPlaceholder()"
+                    (search)="onSearchChange($event)" (keydown.enter)="$event.preventDefault()" />
             </div>
             }
 
-            <div class="bx-select-menu-container">
-                @for (option of filteredOptions(); track option.value) {
-
-                <button type="button" class="bx-select-option" role="option" [attr.aria-selected]="internalValue() === option.value" [disabled]="option.disabled ?? false" (click)="selectOption(option)">
-                    <div class="bx-select-item-inner">
-                        <div class="bx-select-check-placeholder">
-                            @if (internalValue() === option.value) {
-                            <bx-icon name="check" size="16"></bx-icon>
-                            }
-                        </div>
-                        <span [title]="option.resolvedStr">{{ option.resolvedStr }}</span>
-                    </div>
-                </button>
-
-                } @empty {
-                <div class="bx-select-empty">
-                    <span class="bx-empty-text">{{ resolvedEmptyMessage() }}</span>
+            <div class="bx-select-menu-container" bxLoadMore #pagination="bxLoadMore" [loadMoreHasMore]="hasMore()" [loadMoreSuppressed]="isSearching()" [loadMoreLoading]="loading()"
+                [loadMoreDisabled]="disabled() || isReadonly()" [loadMoreError]="loadError()" [loadMoreConfig]="loadMoreConfig()"
+                [loadMoreTemplate]="loadMoreTemplate()" [loadMoreRevision]="options()" (loadMore)="requestMore($event)">
+                <div role="listbox" [hidden]="isSearching()"  [attr.aria-label]="ariaLabel() || resolvedLabel()" [id]="controlId() + '-options'">
+                    @for (option of filteredOptions(); track option.value; let index = $index) {
+                    @if (option.resolvedGroup && (index === 0 || filteredOptions()[index - 1].resolvedGroup !== option.resolvedGroup)) {
+                    <div class="bx-select-group" [id]="controlId() + '-group-' + index">{{ option.resolvedGroup }}</div>
+                    }
+                    <button type="button" class="bx-select-option" role="option" tabindex="-1" [attr.aria-selected]="isSelected(option.value)"
+                        [disabled]="option.disabled || option.groupDisabled || false" (click)="selectOption(option)">
+                        <span class="bx-select-check-placeholder"  aria-hidden="true">
+                            @if (isSelected(option.value)) { <bx-icon name="check" size="16" /> }
+                        </span>
+                        @if (option.icon) { <bx-icon [name]="option.icon" size="16" /> }
+                        @if (optionTemplate(); as template) {
+                        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }" />
+                        } @else { <span>{{ option.resolvedStr }}</span> }
+                    </button>
+                    } @empty {
+                    @if (!loading()) { <div class="bx-select-empty" role="status">{{ resolvedEmptyMessage() }}</div> }
+                    }
                 </div>
-                }
+                @if (isSearching()) {
+                <div class="bx-select-search-state" role="status" [attr.aria-label]="resolvedLoadingLabel() || resolvedLoadingAriaLabel()">
+                    @if (resolvedLoadingLabel()) { <span>{{ resolvedLoadingLabel() }}</span> }
+                    @else { <bx-loading-spinner [size]="20" [decorative]="true" /> }
+                </div>
+                } @else if (loading() && !pagination.actionVisible()) { <div class="bx-select-loading"><bx-loading-indicator [size]="16" [label]="loadingLabel() ?? loadingAriaLabel()" /></div> }
             </div>
-
         </div>
     </ng-template>
-
+    <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
 </bx-form-field>

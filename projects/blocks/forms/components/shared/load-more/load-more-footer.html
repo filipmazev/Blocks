@@ -1,0 +1,12 @@
+<div class="bx-load-more-footer" [class]="config().footerClass ?? ''">
+    @if (errorText()) {
+    <span class="bx-load-more-error" role="status">{{ errorText() }}</span>
+    }
+    @if (buttonTemplate(); as template) {
+    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context()" />
+    } @else {
+    <button bx-button type="button" [variant]="config().variant ?? 'text'" [color]="config().color ?? 'primary'"
+        [outlined]="config().outlined ?? false" [class]="config().buttonClass ?? ''" [disabled]="disabled()"
+        [loading]="loading()" [attr.aria-label]="accessibleLabel()" (click)="request.emit()">@if (retry()) { <bx-icon name="rotate-cw" size="16" /> }{{ text() }}</button>
+    }
+</div>

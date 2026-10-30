@@ -1,0 +1,23 @@
+<div class="search-demo">
+    <bx-search-input [label]="{ key: 'searchLabel' }" [placeholder]="{ key: 'searchPlaceholder' }" [value]="remote.query()"
+        [loading]="remote.loading()" [loadError]="remote.error()" [loadingLabel]="showLoadingText() ? { key: 'searchLoading' } : undefined"
+        [loadingAriaLabel]="{ key: 'searchLoading' }" [clearLabel]="{ key: 'searchClear' }" [retryLabel]="{ key: 'retry' }"
+        [retryConfig]="retryConfig" [readOnly]="readOnly()" [disabled]="disabled()" subscriptSizing="dynamic"
+        (search)="remote.search($event)" (retry)="remote.search($event)" />
+    <div class="search-actions">
+        <button bx-button type="button" variant="tonal" color="danger" [disabled]="remote.loading() || disabled() || readOnly()"
+            (click)="remote.search(remote.query(), true)">Fail this search</button>
+        <bx-checkbox label="Show loading text" [checked]="showLoadingText()" (checkedChange)="changeLoadingText($event)" subscriptSizing="dynamic" />
+        <bx-checkbox label="Readonly" [(checked)]="readOnly" subscriptSizing="dynamic" />
+        <bx-checkbox label="Disabled" [(checked)]="disabled" subscriptSizing="dynamic" />
+    </div>
+    <p>Requests debounce for 250ms and take 800ms. Type quickly to cancel older requests, or enter an unmatched term for empty results.
+        Failure keeps the last successful results. Use Retry request to try the same query again. Enabling Show loading text previews another request.</p>
+    <section class="search-results" aria-label="Search results" [attr.aria-busy]="remote.loading()">
+        <p>Last completed search: {{ remote.completedQuery() || 'all components' }} · {{ remote.results().length }} results</p>
+        <ul>@for (name of remote.results(); track name) { <li>{{ name }}</li> } @empty {
+            @if (!remote.loading() && !remote.error()) { <li role="status">{{ emptyText() }}</li> }
+        }</ul>
+    </section>
+    <ul class="search-events" aria-label="Request events">@for (event of remote.requests(); track $index) { <li>{{ event }}</li> }</ul>
+</div>

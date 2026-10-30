@@ -1,0 +1,97 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: inline-flex;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    vertical-align: middle;
+}
+
+.bx-tag {
+    --bx-glass-surface: var(--bx-tag-background, var(--bx-tag-role-tonal));
+    --bx-glass-text: var(--bx-tag-color, var(--bx-tag-role-text));
+    --bx-glass-edge: var(--bx-tag-border, var(--bx-tag-role-border));
+    --bx-glass-radius: var(--bx-tag-radius, #{radius(sm)});
+    --bx-glass-shadow: var(--bx-tag-shadow, none);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    box-sizing: border-box;
+    gap: var(--bx-tag-gap, #{spacing(1)});
+    padding: var(--bx-tag-padding, #{spacing(1)} #{spacing(2)});
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    background: var(--bx-glass-surface);
+    color: var(--bx-glass-text);
+    font: inherit;
+    font-size: var(--bx-tag-font-size, 0.8125rem);
+    line-height: 1.4;
+    white-space: nowrap;
+
+    &.is-filled {
+        --bx-glass-surface: var(--bx-tag-background, var(--bx-tag-role-fill));
+        --bx-glass-text: var(--bx-tag-color, var(--bx-tag-role-on-fill));
+        --bx-glass-min-opacity: var(--bx-tag-fill-opacity, 0.85);
+    }
+
+    &.is-outlined {
+        --bx-glass-surface: var(--bx-tag-background, var(--bx-bg-surface));
+        --bx-glass-opacity: var(--bx-tag-outline-opacity, 0.12);
+    }
+
+    &.is-small {
+        font-size: var(--bx-tag-font-size, 0.75rem);
+        padding-block: 0.125rem;
+    }
+
+    &.is-disabled {
+        opacity: var(--bx-tag-disabled-opacity, 0.5);
+    }
+
+    &.is-number-only {
+        --bx-glass-radius: 50%;
+
+        inline-size: max-content;
+        min-inline-size: var(--bx-tag-number-size, 1.875rem);
+        aspect-ratio: 1;
+        padding: var(--bx-tag-number-padding, 0.35em);
+
+        &.is-small {
+            min-inline-size: var(--bx-tag-number-size, 1.5rem);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}
+
+.bx-tag-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-inline-size: 1.1em;
+    padding-inline: 0.25em;
+    border-radius: var(--bx-tag-counter-radius, #{radius(sm)});
+    background: var(--bx-tag-counter-background, color-mix(in srgb, currentcolor 12%, transparent));
+    font-variant-numeric: tabular-nums;
+}
+
+.is-number-only .bx-tag-number {
+    background: transparent;
+    padding: 0;
+}
+
+@media (forced-colors: active) {
+    .bx-tag.is-disabled {
+        color: GrayText;
+        border-color: GrayText;
+        opacity: 1;
+    }
+}

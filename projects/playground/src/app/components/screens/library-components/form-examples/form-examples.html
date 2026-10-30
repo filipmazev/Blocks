@@ -1,0 +1,113 @@
+@if (example() === 'signal-forms' || example() === 'radio-group') {
+<div class="form-demo-layout">
+    <form [formRoot]="registration" class="registration-form">
+        <bx-input-field [label]="{ key: 'project' }" [formField]="registration.project" hint="Try blocks or taken to see the async validator." [errorMessages]="projectMessages" [errorPolicy]="policy()" />
+        <bx-input-field label="Email" type="email" [formField]="registration.email" hint="Use server-error@example.com to simulate a rejected submission." [errorPolicy]="policy()" />
+        <div class="form-row">
+            <bx-input-field label="Password" type="password" autocomplete="new-password" [formField]="registration.password" [errorPolicy]="policy()" />
+            <bx-input-field label="Confirm password" type="password" autocomplete="new-password" [formField]="registration.confirmation" [errorPolicy]="policy()">
+                <bx-error>{{ registration.confirmation().errors()[0]?.message || 'Please confirm your password.' }}</bx-error>
+            </bx-input-field>
+        </div>
+        <bx-input-field label="Team size" type="number" [formField]="registration.teamSize" hint="Between 1 and 20." [errorPolicy]="policy()">
+            <span bxSuffix aria-hidden="true">people</span>
+        </bx-input-field>
+        <bx-select [readOnly]="readOnly()" label="Destination" [options]="options" [isSearchable]="true" [formField]="registration.destination" [errorPolicy]="policy()" />
+        <bx-multi-select [readOnly]="readOnly()" label="Related locations" [isSearchable]="true" [allSelectedText]="{ key: 'allLocations' }" [selectedCountText]="{ key: 'locationsSelected' }" [options]="options" [formField]="registration.categories" [errorPolicy]="policy()" />
+        <bx-radio-group label="Plan" [formField]="registration.plan" [errorPolicy]="policy()">
+            <bx-radio label="Personal" value="personal" /><bx-radio label="Team" value="team" />
+        </bx-radio-group>
+        <bx-checkbox label="Accept the terms" [formField]="registration.terms" [errorPolicy]="policy()" />
+        <bx-slide-toggle label="Enable notifications" [formField]="registration.notifications" />
+        <bx-input-field label="Notification note" [multiline]="true" [formField]="registration.note" hint="Required with notifications. Model updates on blur." [errorPolicy]="policy()" />
+        <label for="budget-example">Budget</label><input bxSlider id="budget-example" type="range" [discrete]="true" [formField]="registration.budget" />
+        <div class="actions">
+            <button bx-button type="submit" variant="filled" [disabled]="!canSubmit()" [loading]="registration().submitting()"><bx-icon name="save" size="20" />Save project</button>
+            <button bx-button type="button" (click)="validateAll()">Validate all</button>
+            <button bx-button type="button" (click)="resetForm()">Reset form</button>
+            <button bx-button type="button" (click)="populate()">Fill valid data</button>
+        </div>
+        <div class="actions">
+            <button bx-button type="button" [attr.aria-pressed]="locked()" (click)="locked.set(!locked())">Toggle disabled form</button>
+            <button bx-button type="button" [attr.aria-pressed]="readOnly()" (click)="readOnly.set(!readOnly())">Toggle readonly fields</button>
+            <button bx-button type="button" (click)="policy.set(policy() === 'touched' ? 'always' : 'touched')">Errors: {{ policy() }}</button>
+        </div>
+    </form>
+    <aside class="state-panel" aria-label="Form state">
+        <p role="status">{{ status() }}</p>
+        <dl><dt>Valid</dt><dd>{{ registration().valid() }}</dd><dt>Invalid</dt><dd>{{ registration().invalid() }}</dd><dt>Pending</dt><dd>{{ registration().pending() }}</dd><dt>Submitting</dt><dd>{{ registration().submitting() }}</dd><dt>Touched</dt><dd>{{ registration().touched() }}</dd><dt>Dirty</dt><dd>{{ registration().dirty() }}</dd></dl>
+        <pre>{{ model() | json }}</pre>
+        <ul>@for (error of registration().errorSummary(); track $index) { <li>{{ error.kind }}: {{ error.message || 'Uses the field message resolver' }}</li> }</ul>
+    </aside>
+</div>
+} @else if (example() === 'select' || example() === 'multi-select' || example() === 'load-more') {
+<div class="async-demo">
+    @if (example() === 'select') {
+    <div class="selection-row">
+    <bx-select label="Location" [selectionDisplay]="useTags() ? 'tags' : 'text'" [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined" [searchValue]="remote.query()" [options]="remote.options()" [isSearchable]="true" [externalFiltering]="true" [loading]="remote.loading()"
+        [hasMore]="remote.hasMore()" [loadError]="remote.error()" [loadMoreConfig]="remote.config()" [(value)]="destination"
+        subscriptSizing="dynamic" (loadMore)="remote.load($event)" (search)="remote.search($event)" />
+    <bx-checkbox label="Show selected tag" [(checked)]="useTags" subscriptSizing="dynamic" />
+    </div>
+    } @else if (example() === 'multi-select') {
+    <div class="selection-row">
+    <bx-multi-select label="Locations" [selectionDisplay]="useTags() ? 'tags' : 'text'" [visibleTagCount]="visibleTagLimit()" [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined" [searchValue]="remote.query()" [summaryThreshold]="summaryLimit()" [allSelectedText]="{ key: 'allLocations' }" [selectedCountText]="{ key: 'locationsSelected' }" [options]="remote.options()" [isSearchable]="true" [externalFiltering]="true" [loading]="remote.loading()"
+        [hasMore]="remote.hasMore()" [loadError]="remote.error()" [loadMoreConfig]="remote.config()" [(value)]="selected" subscriptSizing="dynamic"
+        [selectAllLabel]="{ key: 'selectAll' }" [selectionScope]="remote.query()" (loadMore)="remote.load($event)" (search)="remote.search($event)"
+        (selectAllIntentChange)="recordIntent($event)" (selectionChange)="recordSelection($event)" />
+    <bx-checkbox label="Show selected tags" [(checked)]="useTags" subscriptSizing="dynamic" />
+    </div>
+    } @else {
+    <div class="paged-collection" role="region" aria-label="Paginated locations" tabindex="0" bxLoadMore #standalonePagination="bxLoadMore"
+        [loadMoreHasMore]="remote.hasMore()" [loadMoreLoading]="remote.loading()" [loadMoreError]="remote.error()"
+        [loadMoreConfig]="remote.config()" [loadMoreRevision]="remote.options()" (loadMore)="remote.load($event)">
+        <ul>@for (option of remote.options(); track option.value) { <li>{{ option.label }}</li> }</ul>
+        @if (remote.loading() && !standalonePagination.actionVisible()) { <div class="collection-loading"><bx-loading-indicator [size]="16" [label]="{ key: 'loading' }" /></div> }
+        @if (!remote.loading() && !remote.options().length && !remote.error()) { <p>No locations match.</p> }
+    </div>
+    }
+    <div class="actions pagination-actions">
+        <div class="pagination-buttons">
+        <button bx-button type="button" variant="tonal" color="danger" [disabled]="remote.loading() || !remote.hasMore()" (click)="remote.fail()">Fail next page now</button>
+        <button bx-button type="button" [disabled]="remote.loading()" (click)="remote.search('')">Reset pages</button>
+        </div>
+        <div class="pagination-options">
+        @if (example() === 'multi-select') {
+        <bx-input-field class="visible-tag-control" label="Visible tags" type="number" [min]="1" [value]="visibleTagLimit()" (valueChange)="changeVisibleTags($event)" subscriptSizing="dynamic" />
+        <bx-input-field class="summary-threshold-control" label="Summary threshold" type="number" [min]="2" [value]="summaryLimit()" (valueChange)="changeSummaryLimit($event)" subscriptSizing="dynamic" />
+        }
+        <bx-select class="page-size-control" label="Page size" [options]="pageSizes" [value]="remote.pageSize()" (selectionChange)="changePageSize($event.value)" subscriptSizing="dynamic" />
+        </div>
+    </div>
+    <p role="status">{{ remote.loading() ? 'Loading: the request takes 800ms.' : remote.error() ? 'Failed: use Retry request at the bottom.' : remote.hasMore() ? 'Ready to load more.' : 'All pages loaded.' }}</p>
+    <p>Small pages show the button without a scrollbar. More items enable scrolling. Failure retains existing items and reveals Retry request.</p>
+    <ul class="event-log" aria-label="Request events">@for (event of remote.requests(); track $index) { <li>{{ event }}</li> }</ul>
+    @if (example() === 'multi-select') { <ul class="event-log" aria-label="Selection events">@for (event of events(); track $index) { <li>{{ event }}</li> }</ul> }
+</div>
+} @else if (example() === 'loading-spinner' || example() === 'loading-indicator' || example() === 'progress-bar' || example() === 'button-loading') {
+<div class="async-demo">
+    <div class="actions"><bx-loading-spinner label="Loading preview" /><bx-loading-spinner [size]="32" label="Larger loading preview" /><bx-loading-indicator label="Fetching workspaces" /></div>
+    <bx-progress-bar [value]="progress()" label="Save progress" />
+    @if (loadingAction()) { <bx-progress-bar mode="indeterminate" label="Saving project" /> }
+    <div class="actions">
+        <button bx-button type="button" variant="filled" [loading]="loadingAction()" (click)="runAction()"><bx-icon name="save" size="24" />Save with icon</button>
+        <button bx-button type="button" variant="tonal" [loading]="loadingAction()" (click)="runAction()">Save without icon</button>
+        <button bx-button type="button" variant="icon" aria-label="Save project" [loading]="loadingAction()" (click)="runAction()"><bx-icon name="save" size="20" /></button>
+    </div>
+    <p role="status">{{ loadingAction() ? 'Saving with fake API requests…' : 'Ready. Buttons restore their original icons after loading.' }}</p>
+</div>
+} @else if (example() === 'range-slider') {
+<div class="async-demo"><bx-range-slider label="Budget range" [(value)]="range" [discrete]="true" [showTickMarks]="true" [step]="10" /><output>{{ range() | json }}</output></div>
+} @else {
+<div class="async-demo">
+    <bx-input-field label="Reference" appearance="outline" hint="A visible hint" hintEnd="Optional"><span bxPrefix aria-hidden="true">#</span><span bxSuffix aria-hidden="true">ID</span></bx-input-field>
+    <bx-form-field label="Native multiline field"><textarea bxInput label="Native multiline field" rows="3" [(ngModel)]="templateValue"></textarea><bx-hint>Native controls share the accessible frame.</bx-hint></bx-form-field>
+    <bx-input-field label="Reactive blur update" [formControl]="blurControl" hint="Edit and blur repeatedly; every edit reaches the model." /><output>Reactive model: {{ blurControl.value }}</output>
+    <form [formGroup]="submitForm" (ngSubmit)="captureSubmit()">
+        <bx-input-field label="Reactive submit update" formControlName="name" />
+        <button bx-button type="submit">Commit reactive form</button>
+        <output>Submitted: {{ submitSnapshot() }}</output>
+    </form>
+    <bx-input-field label="Template-driven field" [(ngModel)]="templateValue" /><output>Template model: {{ templateValue() }}</output>
+</div>
+}
