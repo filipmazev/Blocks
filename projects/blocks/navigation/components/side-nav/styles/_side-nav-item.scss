@@ -7,7 +7,7 @@
     background: var(--bx-side-nav-item-background, transparent);
     color: var(--bx-text-primary);
 
-    &:not(.is-disabled):is(:hover, :focus-within, .is-open) {
+    &:not(.is-disabled, :disabled, [aria-disabled='true']):is(:hover, :focus-within) {
         background: var(--bx-side-nav-item-hover-background, var(--bx-accent-subtle));
         color: var(--bx-text-accent);
     }
@@ -16,13 +16,6 @@
         background: var(--bx-side-nav-item-active-background, var(--bx-accent-subtle));
         border-color: var(--bx-border-accent);
         color: var(--bx-text-accent);
-    }
-
-    &.is-highlighted:not(.is-disabled) {
-        background: var(--bx-side-nav-item-highlight-background, var(--bx-accent-subtle));
-        color: var(--bx-text-accent);
-        outline: 2px dashed var(--bx-border-accent);
-        outline-offset: -2px;
     }
 
     &:has(:focus-visible),
@@ -34,10 +27,6 @@
     @media (forced-colors: active) {
         &.is-active {
             border-color: Highlight;
-        }
-
-        &.is-highlighted {
-            outline-color: Highlight;
         }
     }
 }

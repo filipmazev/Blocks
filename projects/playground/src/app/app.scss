@@ -33,6 +33,18 @@
     border-bottom: 1px solid var(--bx-border-default);
 }
 
+.navigation-toggle {
+    flex: none;
+    width: spacing(10);
+    height: spacing(10);
+    padding: 0;
+
+    &.is-open {
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
 .toolbar-label {
     font-size: 0.875rem;
     color: var(--bx-text-secondary);
@@ -99,7 +111,7 @@
     .app-toolbar {
         min-height: 3.75rem;
         padding-inline: spacing(4);
-        padding-inline-start: spacing(12);
+        gap: spacing(2);
     }
 
     .toolbar-label {
@@ -107,7 +119,9 @@
     }
 
     .toolbar-actions {
-        width: 100%;
+        flex: 1;
+        min-width: 0;
+        flex-wrap: wrap;
         justify-content: flex-end;
     }
 }

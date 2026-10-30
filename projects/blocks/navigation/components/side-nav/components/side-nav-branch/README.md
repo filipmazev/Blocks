@@ -1,9 +1,9 @@
 # Side-nav branch
 
-Internal recursive item presentation for [SideNav](../../README.md). Applications import `SideNav` from `@filip.mazev/blocks/navigation`; this implementation component is intentionally absent from the public barrel.
+Internal item presentation for [SideNav](../../README.md). Consumers import `SideNav` from `@filip.mazev/blocks/navigation`; this implementation component is intentionally absent from the public barrel.
 
-The owning side-nav supplies item data, configuration, translated text, and optional item templates through its scoped state service. Each branch renders the native route link, optional Blocks tags, a separate submenu disclosure, and a recursive `bx-menu` template. The shared menu trigger handles hover, keyboard focus, nesting, positioning, and live overlay theme inheritance.
+The owning side-nav supplies translated item data, active-route state, and an optional item template through its scoped state service. Each row renders a native route link, Blocks tags, and a separate disclosure button. Click/touch, Enter/Space, or the forward arrow requests children from the owner. The owner chooses inline browsing or its one shared adjacent panel; rows never create recursive overlays.
 
-Search reveals only the selected path and immediately scrolls the branch's own container to keep it visible. The pointer animates while motion is allowed and remains static with reduced motion. Rows reuse the shared panel/menu surface with semantic tonal interaction states and accept `--bx-side-nav-item-radius`, `--bx-side-nav-item-background`, `--bx-side-nav-menu-width`, and `--bx-side-nav-menu-max-height` from the owner.
+Search results include a muted parent path even with custom item templates. Only the best nested result may have an external elongated monochrome arrow, using the shared overlay origin tracker and a gentle floating animation. Reduced motion keeps it static. Root results have no guide, and search does not add selected colors or outlines. The page link and disclosure button have separate hover and focus surfaces; only the page link receives route selection. Compact alignment and disabled semantics remain independent.
 
-The four-level demo at `/components/side-nav` exercises this component through its public owner, including custom templates, compact presentation, mobile, RTL, and translated target labels.
+See `/components/side-nav` for the four-level fixture, compact presentation, inline/adjacent levels, mobile drawer, RTL, custom item content, and English/Macedonian labels.

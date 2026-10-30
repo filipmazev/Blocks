@@ -1,13 +1,15 @@
 @if (isMobile() && resolvedConfig().showMobileTrigger) {
   <button #mobileToggle bx-button variant="tonal" color="grayscale" class="bx-nav-hamburger" type="button" [class.is-open]="mobileOpen()"
     [attr.aria-label]="state.text().openLabel" [attr.aria-hidden]="mobileOpen() ? true : null" [attr.inert]="mobileOpen() ? '' : null" [attr.aria-expanded]="mobileOpen()" [attr.aria-controls]="id" (click)="toggle($event)">
-    <bx-icon name="menu" size="20" />
+    <bx-icon name="menu" size="16" />
   </button>
 }
 @if (isMobile() && mobileOpen()) {
   <button class="bx-nav-backdrop" type="button" tabindex="-1" [attr.aria-label]="state.text().closeLabel" (click)="closeFromControl($event)"></button>
 }
-<aside tabindex="-1" bxSurface [bxSurfaceInteractive]="false" class="bx-nav-panel" [id]="id" [class.is-open]="!isMobile() || mobileOpen()"
+<aside #panel [bxMenuTrigger]="submenuPanel" #submenuTrigger="bxMenuTrigger" [menuManual]="true" [menuHover]="false" [menuPinned]="true"
+  [menuSide]="resolvedConfig().side === 'right' ? 'left' : 'right'" [menuLabel]="state.parent()?.label ?? state.currentGroup()?.title ?? state.text().ariaLabel"
+  (menuOpened)="state.submenuVisible.set(true)" (menuClosed)="state.submenuVisible.set(false)" tabindex="-1" bxSurface [bxSurfaceInteractive]="false" class="bx-nav-panel" [id]="id" [class.is-open]="!isMobile() || mobileOpen()"
   [attr.role]="isMobile() ? 'dialog' : null" [attr.aria-modal]="isMobile() && mobileOpen() ? true : null" [attr.aria-label]="state.text().ariaLabel"
   [attr.inert]="isMobile() && !mobileOpen() ? '' : null" [attr.aria-hidden]="isMobile() && !mobileOpen() ? true : null"
   [cdkTrapFocus]="isMobile() && mobileOpen()" [cdkTrapFocusAutoCapture]="isMobile() && mobileOpen()" (keydown)="panelKey($event)">
@@ -31,38 +33,77 @@
         [ngModel]="query()" (ngModelChange)="search($event)" />
     }
   }
-  <div class="bx-side-nav-scroll">
-    <nav [attr.aria-label]="state.text().ariaLabel">
-      @for (group of visibleGroups(); track group.id) {
-        <section class="bx-nav-section" [attr.aria-label]="group.title || state.text().ariaLabel">
-          @if (group.title) {
-            @if (isCollapsed()) {
-              <button type="button" class="bx-nav-section-toggle is-compact" [class.is-active]="sectionActive(group)" [class.is-highlighted]="sectionHighlighted(group)" [class.is-open]="sectionTrigger.isOpen()" [attr.aria-label]="group.title" [bxMenuTrigger]="sectionMenu" #sectionTrigger="bxMenuTrigger"
-                [menuSide]="resolvedConfig().side === 'left' ? 'right' : 'left'" [menuLabel]="group.title">
-                <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" />
-              </button>
-              <ng-template #sectionMenu>
-                <div class="bx-nav-section-flyout">
-                  <bx-menu>
-                    @for (item of group.items; track item.id) { <bx-side-nav-branch [item]="item" [parentTrigger]="sectionTrigger" /> }
-                  </bx-menu>
-                </div>
-              </ng-template>
-            } @else if (group.collapsible) {
-              <button type="button" class="bx-nav-section-toggle" [class.is-active]="sectionActive(group)" [class.is-highlighted]="sectionHighlighted(group)" [attr.aria-expanded]="!sectionCollapsed(group)" [attr.aria-controls]="id + '-section-' + $index" (click)="toggleSection(group)">
-                @if (resolvedConfig().showSectionIcons) { <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" /> }<span>{{ group.title }}</span><bx-icon [name]="sectionCollapsed(group) ? 'chevron-right' : 'chevron-down'" size="16" />
-              </button>
-            } @else {
-              <h2 class="bx-nav-section-heading" [class.is-active]="sectionActive(group)" [class.is-highlighted]="sectionHighlighted(group)">@if (resolvedConfig().showSectionIcons) { <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" /> }<span>{{ group.title }}</span></h2>
-            }
-          }
-          <div class="bx-nav-items" role="menu" [attr.aria-label]="group.title || state.text().ariaLabel" [id]="id + '-section-' + $index" [hidden]="sectionCollapsed(group)" tabindex="-1" (keydown)="menuKey($event)">
-            @for (item of group.items; track item.id) { <bx-side-nav-branch [item]="item" [compact]="isCollapsed()" /> }
+  @if (!query().trim() && isInlineSubmenus() && state.hasLevel()) {
+    <ng-container [ngTemplateOutlet]="level" />
+  } @else {
+    <div class="bx-side-nav-scroll" [id]="id + '-root-scroll'">
+      <nav [attr.aria-label]="state.text().ariaLabel">
+        @if (query().trim()) {
+          <div class="bx-nav-items" role="menu" tabindex="-1" [attr.aria-label]="state.text().resultLabel" (keydown)="menuKey($event)">
+            @for (entry of state.searchResult().entries; track entry.item.id) {
+              <bx-side-nav-branch [item]="entry.item" [context]="entry.context" />
+            } @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
           </div>
-        </section>
-      } @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
-    </nav>
-  </div>
+        } @else {
+          @for (group of visibleGroups(); track group.id) {
+            <section class="bx-nav-section" [attr.aria-label]="group.title || state.text().ariaLabel">
+              @if (group.title) {
+                @if (isCollapsed()) {
+                  <button type="button" class="bx-nav-section-toggle is-compact" [class.is-active]="sectionActive(group)" [attr.aria-label]="group.title"
+                    [attr.data-section-id]="group.id" [attr.aria-expanded]="state.submenuVisible() && state.currentGroup()?.id === group.id"
+                    [attr.aria-controls]="state.submenuVisible() ? state.levelId : null" (click)="openSection(group, $event)">
+                    <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" />
+                  </button>
+                } @else if (group.collapsible) {
+                  <button type="button" class="bx-nav-section-toggle" [class.is-active]="sectionActive(group)" [attr.aria-expanded]="!sectionCollapsed(group)"
+                    [attr.aria-controls]="id + '-section-' + $index" (click)="toggleSection(group)">
+                    @if (resolvedConfig().showSectionIcons) { <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" /> }
+                    <span>{{ group.title }}</span><bx-icon [name]="sectionCollapsed(group) ? 'chevron-down' : 'chevron-up'" size="16" />
+                  </button>
+                } @else {
+                  <h2 class="bx-nav-section-heading" [class.is-active]="sectionActive(group)">
+                    @if (resolvedConfig().showSectionIcons) { <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" /> }<span>{{ group.title }}</span>
+                  </h2>
+                }
+              }
+              <div class="bx-nav-items" role="menu" [attr.aria-label]="group.title || state.text().ariaLabel" [id]="id + '-section-' + $index"
+                [hidden]="sectionCollapsed(group)" tabindex="-1" (keydown)="menuKey($event)">
+                @for (item of group.items; track item.id) { <bx-side-nav-branch [item]="item" [compact]="isCollapsed()" /> }
+              </div>
+            </section>
+          } @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
+        }
+      </nav>
+    </div>
+  }
   @if (footerTemplate(); as template) { <footer class="bx-nav-footer"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></footer> }
   <span class="cdk-visually-hidden" role="status" aria-live="polite">@if (state.target()) { {{ state.text().resultLabel }}: {{ state.searchResult().label }} }</span>
 </aside>
+
+<ng-template #submenuPanel>
+  <div class="bx-nav-flyout"><ng-container [ngTemplateOutlet]="level" /></div>
+</ng-template>
+<ng-template #level>
+  <div class="bx-nav-level" tabindex="-1" (keydown)="levelKey($event)">
+    <div class="bx-nav-level-header">
+      <button bx-button variant="icon" color="grayscale" class="bx-nav-back" type="button" [attr.aria-label]="state.text().backLabel" (click)="back($event)">
+        <bx-icon [name]="resolvedConfig().side === 'right' ? 'arrow-right' : 'arrow-left'" size="16" />
+      </button>
+      <div class="bx-nav-level-heading">
+        @if (state.breadcrumb()) { <nav class="bx-nav-path" [attr.aria-label]="state.text().pathLabel">{{ state.breadcrumb() }}</nav> }
+        @if (state.parent(); as parent) {
+          <a class="bx-nav-parent-link" [routerLink]="parent.route" [attr.aria-current]="state.isCurrent(parent) ? 'page' : null" (click)="state.select(parent)">{{ parent.label }}</a>
+        } @else { <strong>{{ state.currentGroup()?.title }}</strong> }
+      </div>
+    </div>
+    <div class="bx-side-nav-scroll" [id]="state.levelId + '-scroll'">
+      @for (key of levelFrames(); track key) {
+        <div class="bx-nav-items bx-nav-level-items" role="menu" tabindex="-1" [id]="state.levelId" [attr.aria-label]="state.parent()?.label ?? state.currentGroup()?.title"
+          [class.is-animated]="!reducedMotion()" [class.is-backward]="state.backward()" (keydown)="menuKey($event)">
+          @for (item of state.levelItems(); track item.id) { <bx-side-nav-branch [item]="item" [inLevel]="true" /> }
+          @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>

@@ -1,5 +1,5 @@
 import { ResolvableText, WindowDimensionsService } from '@filip.mazev/blocks/core';
-import { SideNavSide } from '../types/side-nav.types';
+import { SideNavSide, SideNavSubmenuMode } from '../types/side-nav.types';
 
 /** Shared or per-instance side-nav configuration. Instance values override application defaults. */
 export interface ISideNavConfig {
@@ -25,6 +25,16 @@ export interface ISideNavConfig {
   persistenceKey?: string;
   /** Automatic mobile breakpoint from Blocks dimensions. Defaults to lg. */
   mobileBreakpoint?: keyof WindowDimensionsService['breakpoints'];
+  /** Submenu layout breakpoint from Blocks dimensions. Defaults to xl; automatic mode uses inline levels at or below it. */
+  submenuBreakpoint?: keyof WindowDimensionsService['breakpoints'];
+  /** Optional submenu presentation. Defaults to auto, measuring the viewport and an inline panel's containing layout. Mobile always uses inline levels. */
+  submenuMode?: SideNavSubmenuMode;
+  /** Show an external monochrome pointer beside the best nested search result; reduced motion disables its animation. Defaults to true; top-level results never get a pointer. */
+  showSearchGuide?: boolean;
+  /** Optional translated back action for nested navigation. Defaults to Back. */
+  backLabel?: ResolvableText;
+  /** Optional accessible label for a nested item's parent path. Defaults to Navigation path. */
+  pathLabel?: ResolvableText;
   /** Optional mobile override for embedded layouts and demos. Omit for automatic viewport detection. */
   mobile?: boolean;
   /** Show the built-in mobile hamburger. Defaults to true; false requires an application trigger calling open/toggle. */

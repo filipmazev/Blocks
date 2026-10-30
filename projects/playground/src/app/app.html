@@ -1,8 +1,15 @@
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="app-container">
-  <app-sidenav title="Blocks" />
+  <app-sidenav #navigation title="Blocks" />
   <div class="app-main">
-    <header class="app-toolbar" [bxOverlayContext]="{ useTopLayer: true }" data-bx-light-scope bxSurface aria-label="Playground appearance">
+    <header class="app-toolbar" [bxOverlayContext]="{ useTopLayer: true }" data-bx-light-scope bxSurface aria-label="Playground controls">
+      @if (navigation.mobile()) {
+        <button bx-button type="button" variant="tonal" color="grayscale" class="navigation-toggle" [class.is-open]="navigation.open()"
+          aria-label="Open navigation" [attr.aria-expanded]="navigation.open()" [attr.aria-controls]="navigation.panelId()"
+          [attr.aria-hidden]="navigation.open() ? true : null" [attr.inert]="navigation.open() ? '' : null" (click)="navigation.toggle($event)">
+          <bx-icon name="menu" size="16" />
+        </button>
+      }
       <span class="toolbar-label">Component playground</span>
       <div class="toolbar-actions">
         <a bx-button class="appearance-button" variant="tonal" color="grayscale" routerLink="/appearance" aria-label="Configure appearance for the whole playground"><bx-icon name="sliders-horizontal" size="20" /><span>Appearance</span></a>

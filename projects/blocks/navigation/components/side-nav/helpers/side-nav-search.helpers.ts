@@ -1,5 +1,6 @@
 import { INavigationTreeGroup } from '../../../interfaces/inavigation-tree-group.interface';
 import { INavigationItem } from '../../../interfaces/inavigation-item.interface';
+import { ISideNavSearchEntry } from '../interfaces/iside-nav-search-entry.interface';
 import { ISideNavSearchResult } from '../interfaces/iside-nav-search-result.interface';
 
 /** Accent-insensitive normalization shared by fuzzy labels and keywords. */
@@ -46,29 +47,34 @@ export function navMatchScore(label: string, query: string): number {
   return -1;
 }
 
-/** Keeps matching branches and their ancestors, choosing one best target to reveal automatically. */
+/** Ranks direct matches without opening menus or dropping the context of nested results. */
 export function searchNavigation(groups: readonly INavigationTreeGroup[], query: string): ISideNavSearchResult {
-  if (!query.trim()) return { groups, path: [] };
-  let bestScore = -1;
-  let bestPath: string[] = [];
-  let bestLabel: string | undefined;
-  const filter = (items: INavigationItem[], path: string[], sectionTitle: string): INavigationItem[] =>
-    items.flatMap((item) => {
-      const nextPath = [...path, item.id];
-      const children = item.data?.disabled ? [] : filter(item.children ?? [], nextPath, sectionTitle);
+  if (!query.trim()) return { entries: [] };
+  const entries: ISideNavSearchEntry[] = [];
+  const visit = (items: INavigationItem[], ancestors: INavigationItem[], sectionTitle: string): void => {
+    for (const item of items) {
       const keywords = item.data?.keywords?.filter((keyword): keyword is string => typeof keyword === 'string') ?? [];
       const score = Math.max(navMatchScore(item.label, query), ...keywords.map((term) => navMatchScore(term, query)), navMatchScore(sectionTitle, query) - 100);
 
-      if (score > bestScore && !item.data?.disabled) {
-        bestScore = score;
-        bestPath = nextPath;
-        bestLabel = item.label;
+      if (score >= 0) {
+        entries.push({
+          item,
+          path: [...ancestors.map((ancestor) => ancestor.id), item.id],
+          context: [sectionTitle, ...ancestors.map((ancestor) => ancestor.label)].filter(Boolean).join(' › '),
+          score
+        });
       }
 
-      return score >= 0 || children.length ? [{ ...item, children: score >= 0 && !children.length ? item.children : children }] : [];
-    });
-  const filtered = groups.map((group) => ({ ...group, items: filter(group.items, [], group.title) })).filter((group) => group.items.length);
-  return { groups: filtered, path: bestPath, target: bestPath.at(-1), label: bestLabel };
+      if (!item.data?.disabled) visit(item.children ?? [], [...ancestors, item], sectionTitle);
+    }
+  };
+
+  for (const group of groups) visit(group.items, [], group.title);
+
+  entries.sort((a, b) => b.score - a.score);
+  const best = entries.find((entry) => !entry.item.data?.disabled);
+
+  return { entries, target: best && best.path.length > 1 ? best.item.id : undefined, label: best?.item.label };
 }
 
 /** Finds an item's ancestors without imposing a maximum menu depth. */

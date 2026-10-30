@@ -29,6 +29,9 @@ export class SideNavExamples {
     right: this.translations.translate('demo.right'),
     rail: this.translations.translate('demo.rail'),
     mobile: this.translations.translate('demo.mobile'),
+    adjacent: this.translations.translate('demo.adjacent'),
+    inlineMode: this.translations.translate('demo.inlineMode'),
+    flyoutMode: this.translations.translate('demo.flyoutMode'),
     search: this.translations.translate('demo.search'),
     rtl: this.translations.translate('demo.rtl'),
     custom: this.translations.translate('demo.custom'),
@@ -48,6 +51,7 @@ export class SideNavExamples {
   protected readonly right = signal(false);
   protected readonly collapsed = signal(false);
   protected readonly mobile = signal(false);
+  protected readonly adjacent = signal(false);
   protected readonly searchable = signal(true);
   protected readonly rtl = signal(false);
   protected readonly custom = signal(false);
@@ -64,6 +68,7 @@ export class SideNavExamples {
     showMobileTrigger: false,
     side: this.right() ? 'right' : 'left',
     mobile: this.mobile(),
+    submenuMode: this.adjacent() ? 'flyout' : 'auto',
     searchable: this.searchable(),
     persistenceKey: 'blocks.side-nav.demo.v1',
     ariaLabel: { key: 'nav.name' },
@@ -76,7 +81,9 @@ export class SideNavExamples {
     collapseLabel: { key: 'nav.collapse' },
     expandLabel: { key: 'nav.expand' },
     submenuLabel: { key: 'nav.submenu' },
-    resultLabel: { key: 'nav.result' }
+    resultLabel: { key: 'nav.result' },
+    backLabel: { key: 'nav.back' },
+    pathLabel: { key: 'nav.path' }
   }));
 
   protected select(item: INavigationItem): void {

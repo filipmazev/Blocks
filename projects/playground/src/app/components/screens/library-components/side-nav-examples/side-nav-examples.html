@@ -2,6 +2,7 @@
   <bx-checkbox [label]="text().right" [(checked)]="right" />
   <bx-checkbox [label]="text().rail" [checked]="collapsed() ?? false" (checkedChange)="collapsed.set($event)" />
   <bx-checkbox [label]="text().mobile" [(checked)]="mobile" />
+  <bx-checkbox [label]="text().adjacent" [(checked)]="adjacent" />
   <bx-checkbox [label]="text().search" [(checked)]="searchable" />
   <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
   <bx-checkbox [label]="text().custom" [(checked)]="custom" />
@@ -19,6 +20,7 @@
     @if (nav.isMobile()) { <button bx-button variant="tonal" (click)="nav.open($event)">{{ text().open }}</button> }
     <output aria-live="polite">{{ selection() }}</output>
     <p>{{ text().keyboard }}</p>
+    <p>{{ nav.isInlineSubmenus() ? text().inlineMode : text().flyoutMode }}</p>
   </div>
 </div>
 <ng-template #customItem let-item let-compact="collapsed"><bx-icon [name]="item.icon?.name ?? 'circle'" size="20" />@if (!compact) { <span>{{ item.label }}</span><small aria-hidden="true">↗</small> }</ng-template>

@@ -1,9 +1,8 @@
-import { INavigationTreeGroup } from '../../../interfaces/inavigation-tree-group.interface';
+import { ISideNavSearchEntry } from './iside-nav-search-entry.interface';
 
-/** Internal search derivation; all paths contain stable navigation item IDs. */
+/** Internal flat search derivation; paths contain stable navigation item IDs. */
 export interface ISideNavSearchResult {
-  groups: readonly INavigationTreeGroup[];
-  path: readonly string[];
+  entries: readonly ISideNavSearchEntry[];
   target?: string;
   label?: string;
 }

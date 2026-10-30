@@ -27,9 +27,9 @@ import { navigateMenuKey } from './helpers/menu-keyboard.helpers';
   selector: '[bxMenuTrigger]',
   exportAs: 'bxMenuTrigger',
   host: {
-    '[attr.aria-haspopup]': '"menu"',
-    '[attr.aria-expanded]': 'isOpen()',
-    '[attr.aria-controls]': 'overlayId()'
+    '[attr.aria-haspopup]': 'menuManual() ? null : "menu"',
+    '[attr.aria-expanded]': 'menuManual() ? null : isOpen()',
+    '[attr.aria-controls]': 'menuManual() ? null : overlayId()'
   }
 })
 export class MenuTriggerDirective {
@@ -53,6 +53,8 @@ export class MenuTriggerDirective {
   public readonly menuSide = input<'left' | 'right'>('right');
   /** Allows hover opening. Click and keyboard access always remain available. Defaults to true. */
   public readonly menuHover = input(true);
+  /** Let the owner call open/close and supply trigger semantics. Defaults to false; automatic event handling and host ARIA are omitted when true. */
+  public readonly menuManual = input(false);
   /** Accessible menu name, normally the trigger's resolved label. */
   public readonly menuLabel = input('');
   /** Keep a revealed search path open during pointer movement; Escape still dismisses it. */
@@ -82,13 +84,14 @@ export class MenuTriggerDirective {
 
   @HostListener('click', ['$event'])
   public toggle(event: MouseEvent): void {
+    if (this.menuManual()) return;
     event.preventDefault();
     event.stopPropagation();
     if (this.isOpen()) this.close(true);
     else this.open(true);
   }
 
-  public open(focus = false): void {
+  public open(focus = false, origin = this.menuOrigin() ?? this.source): void {
     this.cancelClose();
     if (this.isOpen()) {
       if (focus) this.focusFirst();
@@ -99,7 +102,7 @@ export class MenuTriggerDirective {
 
     this.cascade.activate(this);
     const overlay = this.overlay.create({
-      positionStrategy: this.positions.getSubmenuStrategy(this.menuOrigin() ?? this.source, this.menuSide()),
+      positionStrategy: this.positions.getSubmenuStrategy(origin, this.menuSide()),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
       usePopover:
         !!this.overlayContext?.useTopLayer || !!this.source.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]'),
@@ -120,7 +123,7 @@ export class MenuTriggerDirective {
 
     this.trap = this.traps.create(overlay.overlayElement);
     const tracker = this.zone.runOutsideAngular(() =>
-      trackOverlayOrigin(overlay, this.menuOrigin() ?? this.source, {
+      trackOverlayOrigin(overlay, origin, {
         onPosition: () => this.cascade.repositionChildren(this),
         onOriginHidden: () => this.zone.run(() => this.close())
       })
@@ -182,7 +185,7 @@ export class MenuTriggerDirective {
 
   @HostListener('pointerleave')
   public scheduleClose(): void {
-    if (this.menuPinned()) return;
+    if (this.menuManual() || this.menuPinned()) return;
     this.cancelClose();
     this.hoverTimer = this.source.ownerDocument.defaultView?.setTimeout(() => {
       const focused = this.source.ownerDocument.activeElement;
@@ -193,11 +196,12 @@ export class MenuTriggerDirective {
 
   @HostListener('pointerenter', ['$event'])
   protected onPointerEnter(event: PointerEvent): void {
-    if (this.menuHover() && event.pointerType !== 'touch') this.open();
+    if (!this.menuManual() && this.menuHover() && event.pointerType !== 'touch') this.open();
   }
 
   @HostListener('keydown', ['$event'])
   protected onKey(event: KeyboardEvent): void {
+    if (this.menuManual()) return;
     const forward = this.menuSide() === 'right' ? 'ArrowRight' : 'ArrowLeft';
 
     if (![forward, 'ArrowDown', 'ArrowUp'].includes(event.key)) return;

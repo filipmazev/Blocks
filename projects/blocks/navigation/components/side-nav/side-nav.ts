@@ -20,13 +20,13 @@ import {
   untracked,
   viewChild
 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BxA11yService, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
 import { Button, SearchInput } from '@filip.mazev/blocks/forms';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { Menu, MenuTriggerDirective, MenuCascadeService, navigateMenuKey } from '@filip.mazev/blocks/primitives';
+import { MenuTriggerDirective, MenuCascadeService, navigateMenuKey } from '@filip.mazev/blocks/primitives';
 import { INavigationItem } from '../../interfaces/inavigation-item.interface';
 import { INavigationTreeGroup } from '../../interfaces/inavigation-tree-group.interface';
 import { NAVIGATION_CONFIG } from '../../tokens/navigation-config.token';
@@ -39,12 +39,14 @@ import { ISideNavSavedState } from './interfaces/iside-nav-saved-state.interface
 import { SideNavStateService } from './services/side-nav-state.service';
 import { SideNavBranch } from './components/side-nav-branch/side-nav-branch';
 import { definedSideNavConfig } from './helpers/side-nav-config.helpers';
+import { ISideNavExpandRequest } from './interfaces/iside-nav-expand-request.interface';
+import { ISideNavLevelPosition } from './interfaces/iside-nav-level-position.interface';
 import { SIDE_NAV_DEFAULTS } from './constants/side-nav.constants';
 
 @Component({
   selector: 'bx-side-nav',
   exportAs: 'bxSideNav',
-  imports: [NgTemplateOutlet, A11yModule, FormsModule, SearchInput, Button, BxSurfaceDirective, Icon, SideNavBranch, MenuTriggerDirective, Menu],
+  imports: [RouterLink, NgTemplateOutlet, A11yModule, FormsModule, SearchInput, Button, BxSurfaceDirective, Icon, SideNavBranch, MenuTriggerDirective],
   providers: [SideNavStateService],
   templateUrl: './side-nav.html',
   styleUrl: './side-nav.scss',
@@ -61,6 +63,7 @@ import { SIDE_NAV_DEFAULTS } from './constants/side-nav.constants';
   }
 })
 export class SideNav {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -73,6 +76,11 @@ export class SideNav {
   private readonly injector = inject(Injector);
   private readonly focusMonitor = inject(FocusMonitor);
   private readonly toggleElement = viewChild('mobileToggle', { read: ElementRef<HTMLButtonElement> });
+  private readonly submenu = viewChild<MenuTriggerDirective>('submenuTrigger');
+  private readonly panel = viewChild('panel', { read: ElementRef<HTMLElement> });
+  private readonly availableWidth = signal<number | undefined>(undefined);
+  private readonly positions = new Map<string, ISideNavLevelPosition>();
+  private readonly flyoutOrigin = signal<HTMLElement | undefined>(undefined);
   private readonly saved = signal<ISideNavSavedState>({ sections: {} });
   private readonly loadedKey = signal<string | undefined>(undefined);
   private readonly lockId = uuidv4();
@@ -83,13 +91,16 @@ export class SideNav {
   protected readonly headerTemplate = signal<TemplateRef<ISideNavSlotContext> | null>(null);
   protected readonly footerTemplate = signal<TemplateRef<ISideNavSlotContext> | null>(null);
   protected readonly reducedMotion = this.a11y.isReducedMotion;
-  protected readonly visibleGroups = computed(() => this.state.searchResult().groups);
+  protected readonly visibleGroups = this.state.groups;
+  protected readonly levelFrames = computed(() => [this.state.levelKey()]);
   protected readonly slotContext = computed<ISideNavSlotContext>(() => ({
     $implicit: this.isCollapsed(),
     collapsed: this.isCollapsed(),
     mobile: this.isMobile()
   }));
 
+  /** Stable drawer ID for an application-owned trigger's aria-controls. */
+  public readonly panelId = this.id;
   public readonly config = input<ISideNavConfig>({});
   /** Omit to use NavigationService's hierarchical route sections. */
   public readonly groups = input<readonly INavigationTreeGroup[] | undefined>(undefined);
@@ -112,8 +123,24 @@ export class SideNav {
   );
 
   public readonly isCollapsed = computed(
-    () => !this.isMobile() && !this.state.query().trim() && (this.collapsed() ?? this.saved().collapsed ?? this.resolvedConfig().collapsed)
+    () =>
+      !this.isMobile() &&
+      !this.state.query().trim() &&
+      !(this.isInlineSubmenus() && this.state.hasLevel()) &&
+      (this.collapsed() ?? this.saved().collapsed ?? this.resolvedConfig().collapsed)
   );
+
+  /** Resolved submenu presentation, independent of the drawer breakpoint and nesting depth. */
+  public readonly isInlineSubmenus = computed(() => {
+    const config = this.resolvedConfig();
+
+    if (this.isMobile() || config.submenuMode === 'inline') return true;
+    if (config.submenuMode === 'flyout') return false;
+    const viewport = this.dimensions.dimensions().width;
+    const width = config.position === 'inline' ? Math.min(viewport, this.availableWidth() ?? viewport) : viewport;
+
+    return width <= this.dimensions.breakpoints[config.submenuBreakpoint];
+  });
 
   public readonly query = this.state.query.asReadonly();
   public readonly layout = computed<ISideNavLayout>(() => ({
@@ -127,6 +154,7 @@ export class SideNav {
   private restoreFocus?: HTMLElement;
   private focusReturnOrigin: FocusOrigin = 'program';
   private focusRevision = 0;
+  private renderRevision = 0;
 
   constructor() {
     effect(() => {
@@ -170,14 +198,44 @@ export class SideNav {
         if (this.mobileOpen()) this.close();
       });
     });
+    effect(() => {
+      const inline = this.isInlineSubmenus();
+
+      untracked(() => {
+        const focused = this.dimensions.isBrowser ? this.document.activeElement : null;
+        const focus = !!focused?.closest('.bx-nav-level');
+        this.rememberPosition();
+        this.state.inlineLevels.set(inline);
+        this.submenu()?.close();
+        if (this.state.hasLevel()) this.renderLevel(true, false, focus);
+      });
+    });
+    effect(() => {
+      const hasLevel = this.state.hasLevel();
+
+      if (!hasLevel) untracked(() => this.submenu()?.close());
+    });
     effect(() => this.layoutChange.emit(this.layout()));
+    this.state.expansionRequested.pipe(takeUntilDestroyed()).subscribe((request) => this.openChildren(request));
+    afterNextRender(() => {
+      const view = this.document.defaultView;
+      const parent = this.host.parentElement;
+
+      if (!view?.ResizeObserver || !parent) return;
+      this.availableWidth.set(parent.getBoundingClientRect().width);
+      const observer = new view.ResizeObserver(([entry]) => this.availableWidth.set(entry.contentRect.width));
+      observer.observe(parent);
+      this.destroyRef.onDestroy(() => observer.disconnect());
+    });
     this.state.activated.pipe(takeUntilDestroyed()).subscribe((item) => {
+      ++this.renderRevision;
       this.itemSelected.emit(item);
       this.cascade.closeAll();
       if (this.isMobile()) this.close();
     });
     this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        ++this.renderRevision;
         this.cascade.closeAll();
         if (this.mobileOpen()) this.close();
       }
@@ -240,14 +298,58 @@ export class SideNav {
   }
 
   public toggleCollapsed(): void {
-    const next = !(this.collapsed() ?? this.saved().collapsed ?? this.resolvedConfig().collapsed);
+    const next = !this.isCollapsed();
+
+    if (next) {
+      ++this.renderRevision;
+      this.submenu()?.close();
+      this.state.search('');
+      this.state.path.set([]);
+      this.state.section.set(undefined);
+    }
+
     this.saved.update((saved) => ({ ...saved, collapsed: next }));
     this.collapsedChange.emit(next);
   }
 
   public search(query: string): void {
-    this.cascade.closeAll();
+    const wasSearching = !!this.query().trim();
+
+    if (!wasSearching) this.rememberPosition();
+    this.submenu()?.close();
     this.state.search(query);
+    this.renderLevel(wasSearching && !query.trim(), false, false);
+  }
+
+  protected back(event: MouseEvent | KeyboardEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.rememberPosition();
+    this.state.back();
+    this.renderLevel(true, event instanceof KeyboardEvent || event.detail === 0, true);
+  }
+
+  protected openSection(group: INavigationTreeGroup, event: MouseEvent): void {
+    const origin = event.currentTarget as HTMLElement;
+
+    if (this.submenu()?.isOpen() && this.state.section() === group.id) {
+      this.submenu()?.close();
+      this.focusMonitor.focusVia(origin, event.detail === 0 ? 'keyboard' : 'program', { preventScroll: true });
+      return;
+    }
+
+    this.rememberPosition(origin);
+    this.submenu()?.close();
+    this.flyoutOrigin.set(origin);
+    this.state.enterSection(group);
+    this.renderLevel(false, event.detail === 0, true);
+  }
+
+  protected levelKey(event: KeyboardEvent): void {
+    if (event.defaultPrevented) return;
+    const backKey = this.resolvedConfig().side === 'right' ? 'ArrowRight' : 'ArrowLeft';
+
+    if (event.key === 'Escape' || event.key === backKey) this.back(event);
   }
 
   protected closeFromControl(event: MouseEvent): void {
@@ -259,14 +361,7 @@ export class SideNav {
     return group.items.some((item) => this.state.activeIds().has(item.id));
   }
 
-  protected sectionHighlighted(group: INavigationTreeGroup): boolean {
-    return group.items.some((item) => this.state.revealPath().includes(item.id));
-  }
-
   protected sectionCollapsed(group: INavigationTreeGroup): boolean {
-    const revealing = this.state.revealPath();
-
-    if (this.query().trim() || group.items.some((item) => revealing.includes(item.id))) return false;
     return !this.isCollapsed() && !!group.collapsible && (this.saved().sections[group.id] ?? group.collapsed ?? false);
   }
 
@@ -291,6 +386,92 @@ export class SideNav {
   }
 
   //#region Helpers
+  private openChildren(request: ISideNavExpandRequest): void {
+    if (!request.inLevel && !this.query().trim() && this.submenu()?.isOpen() && this.state.path()[0] === request.item.id) {
+      this.submenu()?.close();
+      this.focusMonitor.focusVia(request.origin, request.keyboard ? 'keyboard' : 'program', { preventScroll: true });
+      return;
+    }
+
+    this.rememberPosition(request.origin);
+
+    if (!request.inLevel) {
+      this.submenu()?.close();
+      this.flyoutOrigin.set(request.origin.closest<HTMLElement>('.bx-nav-row') ?? request.origin);
+    }
+
+    this.state.enter(request.item);
+    this.renderLevel(false, request.keyboard, true);
+  }
+
+  private activeScroller(): HTMLElement | undefined {
+    const level = !this.query().trim() && this.state.hasLevel() ? this.document.getElementById(`${this.state.levelId}-scroll`) : null;
+
+    return level ?? this.document.getElementById(`${this.id}-root-scroll`) ?? undefined;
+  }
+
+  private positionKey(scroller: HTMLElement): string {
+    if (this.query().trim()) return `search:${this.query()}`;
+    return scroller.id === `${this.id}-root-scroll` ? JSON.stringify([undefined, []]) : this.state.levelKey();
+  }
+
+  private rememberPosition(origin?: HTMLElement): void {
+    const scroller = origin?.closest<HTMLElement>('.bx-side-nav-scroll') ?? this.activeScroller();
+
+    if (!scroller) return;
+    const element = origin ?? (this.document.activeElement as HTMLElement | null);
+    const row = element?.closest<HTMLElement>('[data-nav-id]');
+    const section = element?.closest<HTMLElement>('[data-section-id]');
+
+    this.positions.set(this.positionKey(scroller), {
+      scrollTop: scroller.scrollTop,
+      itemId: row?.getAttribute('data-nav-id') ?? undefined,
+      sectionId: section?.getAttribute('data-section-id') ?? undefined,
+      disclosure: !!element?.closest('.bx-nav-disclosure') || (!!row && !element?.closest('.bx-nav-link'))
+    });
+  }
+
+  private renderLevel(restore: boolean, keyboard: boolean, focus: boolean): void {
+    const revision = ++this.renderRevision;
+
+    afterNextRender(
+      () => {
+        if (this.destroyRef.destroyed || revision !== this.renderRevision) return;
+        const trigger = this.submenu();
+
+        if (!this.query().trim() && this.state.hasLevel() && !this.isInlineSubmenus()) {
+          const origin = this.flyoutOrigin()?.isConnected ? this.flyoutOrigin() : this.panel()?.nativeElement;
+          trigger?.open(false, origin);
+        } else trigger?.close();
+
+        const scroller = this.activeScroller();
+
+        if (!scroller) return;
+        const position = restore ? this.positions.get(this.positionKey(scroller)) : undefined;
+        scroller.scrollTop = position?.scrollTop ?? 0;
+
+        if (focus) {
+          const row = Array.from(scroller.querySelectorAll<HTMLElement>('[data-nav-id]')).find(
+            (element) => element.getAttribute('data-nav-id') === position?.itemId
+          );
+          const section = Array.from(scroller.querySelectorAll<HTMLElement>('[data-section-id]')).find(
+            (element) => element.getAttribute('data-section-id') === position?.sectionId
+          );
+          const target =
+            row?.querySelector<HTMLElement>(position?.disclosure ? '.bx-nav-disclosure' : '.bx-nav-link') ??
+            section ??
+            scroller.querySelector<HTMLElement>('[role="menuitem"]:not(:disabled, [aria-disabled="true"])') ??
+            scroller.closest('.bx-nav-level')?.querySelector<HTMLElement>('.bx-nav-back');
+
+          if (target) this.focusMonitor.focusVia(target, keyboard ? 'keyboard' : 'program', { preventScroll: true });
+        }
+
+        trigger?.reposition();
+      },
+      { injector: this.injector }
+    );
+  }
+
   private readSavedState(key: string | undefined): ISideNavSavedState {
     if (!key || !this.document.defaultView) return { sections: {} };
     try {

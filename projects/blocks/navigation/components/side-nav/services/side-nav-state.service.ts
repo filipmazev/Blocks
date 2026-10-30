@@ -1,5 +1,5 @@
 import { computed, DestroyRef, inject, Injectable, signal, TemplateRef } from '@angular/core';
-import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
+import { BX_I18N, resolveText, uuidv4 } from '@filip.mazev/blocks/core';
 import { filter, Subject } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,19 +7,25 @@ import { SIDE_NAV_ACTIVE_OPTIONS, SIDE_NAV_CURRENT_OPTIONS, SIDE_NAV_DEFAULTS } 
 import { INavigationItem } from '../../../interfaces/inavigation-item.interface';
 import { INavigationTreeGroup } from '../../../interfaces/inavigation-tree-group.interface';
 import { ISideNavConfig } from '../interfaces/iside-nav-config.interface';
+import { ISideNavExpandRequest } from '../interfaces/iside-nav-expand-request.interface';
 import { ISideNavItemContext } from '../interfaces/iside-nav-item-context.interface';
 import { findNavigationPath, searchNavigation } from '../helpers/side-nav-search.helpers';
 import { NavText } from '../../../types/navigation.types';
 
-/** One instance per side-nav; coordinates its recursive branch presentations. */
+/** One instance per side-nav; coordinates browsing levels, search, and shared route state. */
 @Injectable()
 export class SideNavStateService {
   private readonly router = inject(Router);
   private readonly activeRoute = toSignal(this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)));
   private readonly i18n = inject(BX_I18N, { optional: true });
-  private readonly lastSelected = signal<string | undefined>(undefined);
-  private readonly rememberedPath = signal<readonly string[]>([]);
   private readonly searchSelected = signal(false);
+  public readonly levelId = `bx-side-nav-level-${uuidv4()}`;
+  public readonly path = signal<readonly string[]>([]);
+  public readonly section = signal<string | undefined>(undefined);
+  public readonly backward = signal(false);
+  public readonly inlineLevels = signal(true);
+  public readonly submenuVisible = signal(false);
+  public readonly expansionRequested = new Subject<ISideNavExpandRequest>();
   public readonly config = signal<ISideNavConfig>({});
   public readonly sourceGroups = signal<readonly INavigationTreeGroup[]>([]);
   public readonly query = signal('');
@@ -52,8 +58,45 @@ export class SideNavStateService {
   });
 
   public readonly searchResult = computed(() => searchNavigation(this.groups(), this.query()));
-  public readonly revealPath = computed(() => (this.query().trim() ? (this.searchSelected() ? [] : this.searchResult().path) : this.rememberedPath()));
-  public readonly target = computed(() => (this.query().trim() && !this.searchSelected() ? this.searchResult().target : undefined));
+  public readonly target = computed(() => (this.config().showSearchGuide !== false && !this.searchSelected() ? this.searchResult().target : undefined));
+  public readonly currentGroup = computed(() => {
+    const root = this.path()[0];
+
+    return this.groups().find((group) => group.id === this.section() || group.items.some((item) => item.id === root));
+  });
+
+  public readonly trail = computed(() => {
+    const trail: INavigationItem[] = [];
+    let items = this.currentGroup()?.items ?? [];
+
+    for (const id of this.path()) {
+      const item = items.find((entry) => entry.id === id && !entry.data?.disabled);
+
+      if (!item) break;
+      trail.push(item);
+      items = item.children ?? [];
+    }
+
+    return trail;
+  });
+
+  public readonly parent = computed(() => this.trail().at(-1));
+  public readonly hasLevel = computed(() => !!this.parent() || !!(this.section() && this.currentGroup()));
+  public readonly levelItems = computed(() => this.parent()?.children ?? (this.section() ? this.currentGroup()?.items : []) ?? []);
+  public readonly levelKey = computed(() => JSON.stringify([this.section(), this.trail().map((item) => item.id)]));
+  public readonly breadcrumb = computed(() =>
+    this.parent()
+      ? [
+          this.currentGroup()?.title,
+          ...this.trail()
+            .slice(0, -1)
+            .map((item) => item.label)
+        ]
+          .filter(Boolean)
+          .join(' › ')
+      : ''
+  );
+
   public readonly text = computed(() => {
     this.i18n?.version?.();
     const config = this.config();
@@ -68,12 +111,17 @@ export class SideNavStateService {
       collapseLabel: resolveText(config.collapseLabel ?? SIDE_NAV_DEFAULTS.collapseLabel, this.i18n),
       expandLabel: resolveText(config.expandLabel ?? SIDE_NAV_DEFAULTS.expandLabel, this.i18n),
       submenuLabel: resolveText(config.submenuLabel ?? SIDE_NAV_DEFAULTS.submenuLabel, this.i18n),
+      backLabel: resolveText(config.backLabel ?? SIDE_NAV_DEFAULTS.backLabel, this.i18n),
+      pathLabel: resolveText(config.pathLabel ?? SIDE_NAV_DEFAULTS.pathLabel, this.i18n),
       resultLabel: resolveText(config.resultLabel ?? SIDE_NAV_DEFAULTS.resultLabel, this.i18n)
     };
   });
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.activated.complete());
+    inject(DestroyRef).onDestroy(() => {
+      this.activated.complete();
+      this.expansionRequested.complete();
+    });
   }
 
   public isCurrent(item: INavigationItem): boolean {
@@ -82,20 +130,38 @@ export class SideNavStateService {
   }
 
   public search(query: string): void {
-    const wasSearching = !!this.query().trim();
     this.searchSelected.set(false);
     this.query.set(query);
-    if (wasSearching && !query.trim()) {
-      const selected = this.lastSelected();
-      this.rememberedPath.set(selected ? findNavigationPath(this.groups(), selected) : []);
-    } else this.rememberedPath.set([]);
+  }
+
+  public enter(item: INavigationItem): void {
+    if (item.data?.disabled || !item.children?.length) return;
+    this.backward.set(false);
+    this.query.set('');
+    const path = findNavigationPath(this.groups(), item.id);
+    const group = this.groups().find((entry) => entry.items.some((root) => root.id === path[0]));
+
+    if (group?.id !== this.section()) this.section.set(undefined);
+    this.path.set(path);
+  }
+
+  public enterSection(group: INavigationTreeGroup): void {
+    this.backward.set(false);
+    this.section.set(group.id);
+    this.path.set([]);
+  }
+
+  public back(): void {
+    this.backward.set(true);
+    const path = this.trail().map((item) => item.id);
+
+    if (path.length) this.path.set(path.slice(0, -1));
+    else this.section.set(undefined);
   }
 
   public select(item: INavigationItem): void {
     if (item.data?.disabled) return;
-    this.lastSelected.set(item.id);
     this.searchSelected.set(true);
-    this.rememberedPath.set([]);
     this.activated.next(item);
   }
 
