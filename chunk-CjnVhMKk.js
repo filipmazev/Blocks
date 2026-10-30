@@ -1177,14 +1177,18 @@ ${n.map((r,i)=>`${i+1}) ${r.toString()}`).join(`
   cursor: default;
 }
 .bx-search-clear-btn[_ngcontent-%COMP%] {
+  transition-property: color;
+  transition-duration: calc(0.15s * (1 - var(--%NS%bx-reduced-motion, 0)));
+  transition-timing-function: ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   background: transparent;
   border: none;
   padding: 0.25rem;
-  width: 1.5rem;
-  height: 1.5rem;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
   border-radius: 0.25rem;
   color: var(--%NS%bx-text-secondary);
   cursor: pointer;
@@ -1193,9 +1197,6 @@ ${n.map((r,i)=>`${i+1}) ${r.toString()}`).join(`
 .bx-search-clear-btn[_ngcontent-%COMP%]:focus-visible {
   outline: 2px solid var(--%NS%bx-border-brand);
   outline-offset: 0;
-}
-.bx-search-clear-btn[_ngcontent-%COMP%] {
-  transition: color 0.15s ease;
 }
 .bx-search-clear-btn[_ngcontent-%COMP%]:hover:not(:disabled) {
   color: var(--%NS%bx-text-primary);

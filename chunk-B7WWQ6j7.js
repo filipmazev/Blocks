@@ -1,4 +1,4 @@
-import{$n as fm,$t as U,B as Hn,Or as le,Rn as cs,Vn as ds,Yn as f,_r as je,ci as w$1,ft as Me,jr as ls,pi as xn,rr as g,ut as M}from"./chunk-DQTC9SUR.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{$n as fm,$t as U,B as Hn,Or as le,Rn as cs,Vn as ds,Yn as f,_r as je,ci as w$1,ft as Me,jr as ls,pi as xn,rr as g,ut as M}from"./chunk-CjnVhMKk.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -1061,6 +1061,56 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/button/directives/README.md":`<h1>Button icon slot</h1>
 <p>Import <code>ButtonIconDirective</code> from <code>@filip.mazev/blocks/forms</code> and mark a custom projected icon element with <code>bxButtonIcon</code>. The loading button replaces that element with a same-size spinner and restores it when the operation completes. Built-in <code>bx-icon</code> content is recognized automatically.</p>
 <p>Provide the action name as button text or an accessible label, and mark decorative custom icons appropriately. See the parent <a href="components/button">button guide</a> and <code>/components/button-loading</code> playground page.</p>
+`,"projects/blocks/forms/components/checkbox-indicator/README.md":`<h1>Checkbox indicator</h1>
+<p>The reusable, decorative checkbox face used by Blocks checkbox controls and multiselect options. Supports unchecked, checked and partial selection using Blocks surfaces and icons.</p>
+<h2>Import</h2>
+<pre><code class="language-ts">import { CheckboxIndicator } from &#39;@filip.mazev/blocks/forms&#39;;
+</code></pre>
+<p>Add <code>CheckboxIndicator</code> to the standalone component&#39;s <code>imports</code>.</p>
+<h2>Usage</h2>
+<pre><code class="language-html">&lt;button type=&quot;button&quot; role=&quot;checkbox&quot; [attr.aria-checked]=&quot;partial() ? &#39;mixed&#39; : selected()&quot;
+  (click)=&quot;toggleSelection()&quot;&gt;
+  &lt;bx-checkbox-indicator [checked]=&quot;selected()&quot; [indeterminate]=&quot;partial()&quot; /&gt;
+  Select all locations
+&lt;/button&gt;
+</code></pre>
+<p>Use <code>Checkbox</code> for a standalone form control. Use this indicator inside an existing interactive control whose semantics and events are already managed.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>checked</code></td>
+<td><code>false</code></td>
+<td>Shows the Blocks check icon and accent face.</td>
+</tr>
+<tr>
+<td><code>indeterminate</code></td>
+<td><code>false</code></td>
+<td>Shows the Blocks minus icon and accent face; takes precedence over checked.</td>
+</tr>
+<tr>
+<td><code>invalid</code></td>
+<td><code>false</code></td>
+<td>Uses validation colors from the theme.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>false</code></td>
+<td>Suppresses the active surface finish; the owner provides disabled semantics and opacity.</td>
+</tr>
+</tbody></table>
+<h2>Appearance and customization</h2>
+<p>Uses the same shared surface and choice finish as <code>Checkbox</code>. <code>--bx-checkbox-size</code> customizes its dimensions (default <code>1.125rem</code>). Semantic tokens control colors and radius; theme and appearance changes update mounted indicators. Motion follows the shared accessibility styles. Forced colors and high contrast flatten the decorative finish.</p>
+<h2>Behavior and accessibility</h2>
+<p>The indicator is always hidden from assistive technology, has no tab stop and does not handle pointer or keyboard input. The owner must supply an accessible label, visible focus, checked/mixed state, readonly/disabled handling and keyboard interaction. Multiselect uses listbox option semantics for each row and checkbox semantics for the select-all action without nested interactive elements.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/checkbox-indicator</code> for live unchecked, checked and partial states controlled by Blocks checkboxes. <code>/components/checkbox</code> and <code>/components/multi-select</code> demonstrate its integration.</p>
 `,"projects/blocks/forms/components/checkbox/README.md":`<h1>Checkbox</h1>
 <p>A boolean choice integrated with Angular forms.</p>
 <h2>Import</h2>
@@ -1091,6 +1141,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Open <code>/components/checkbox</code> for a working example and its current value or action result.</p>
 <h2>Selection configuration</h2>
 <p><code>indeterminate</code> is a boolean model with <code>indeterminateChange</code>. <code>clickAction</code> supports <code>check-indeterminate</code> (default), <code>check</code>, and <code>noop</code>. <code>labelPosition</code> is <code>before</code> or <code>after</code>. Use <code>checkedChange</code> or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.</p>
+<p>The checkbox face is shared with multiselect through the public <a href="components/checkbox-indicator">CheckboxIndicator</a> component. <code>--bx-checkbox-size</code> changes its dimensions (default <code>1.125rem</code>).</p>
 `,"projects/blocks/forms/components/form-field/README.md":`<h1>Form field</h1>
 <p>A shared label, help text, validation and loading frame for controls.</p>
 <h2>Import</h2>
@@ -1200,6 +1251,32 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>An ordinary tag automatically shows its full label on hover or touch-and-hold only when that label is clipped. Explicit tooltip descriptions and overflow-tag lists remain available independently of clipping. The combobox retains the complete selection tooltip for keyboard users, including a single clipped tag. In tag mode, touch tooltips belong to the tags so they do not overlap a parent tooltip. Labels, plain values, and the full-selection fit test all reuse <code>TruncateDirective</code>. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables automatic selection/truncation tooltips while preserving clipping, summary behavior, and explicit overflow-tag descriptions. This setting inherits <code>FormSettingsService</code> defaults and also suppresses automatic tooltips on ordinary embedded tags.</p>
 <h2>Search loading</h2>
 <p>The debounce/request period hides pagination actions and old results. Provide <code>loadingLabel</code> for centered loading text; without it, a simple centered spinner is shown. <code>loadingAriaLabel</code> supplies a translatable accessible name. Once results arrive, filtered pages can be paginated normally.</p>
+<h2>Option spacing</h2>
+<p>Rounded option rows have a small gap, shared by select and multiselect. Set <code>--bx-select-option-gap</code> on the control to customize it (default: Blocks <code>spacing(1)</code>). All built-in selection and caret icons use Blocks <code>Icon</code>; searching uses Blocks <code>SearchInput</code>.</p>
+<p>Option and select-all checkboxes reuse the public <code>CheckboxIndicator</code> component, including its indeterminate state and themed finish. The option button remains the interactive target. <code>--bx-checkbox-size</code> customizes indicator dimensions without changing keyboard behavior.</p>
+<p>The select-all checkbox also shows checked when every selectable loaded row is individually selected, including deselecting and reselecting the last missing row. Disabled rows and disabled groups do not contribute to this state. Clicking a checked header clears the eligible loaded rows. This finite visual state does not activate remote select-all intent: future pages remain unselected unless the explicit select-all action enabled intent.</p>
+<h2>Clearing selection</h2>
+<p>A Blocks \xD7 icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set <code>[clearable]=&quot;false&quot;</code> to hide it, or use <code>clearLabel</code> (<code>ResolvableText</code>, default <code>&#39;Clear selection&#39;</code>) to customize its accessible name. <code>clearTooltip</code> accepts its own <code>ResolvableText</code>, defaults to the resolved <code>clearLabel</code> when omitted, and can be set to an empty string to hide the tooltip.</p>
+<p><code>clearSelection()</code> performs the same guarded action programmatically. Clearing closes the panel, marks the control touched and returns focus to the combobox; it preserves Angular&#39;s blur/submit update policy. The action is hidden while readonly and disabled when the control is disabled. Keyboard users can Tab to the action and activate it with Enter or Space.</p>
+<p>Clearing writes <code>[]</code>, disables future-page select-all intent and emits <code>selectionChange</code> with <code>{ value: [], source: &#39;clear&#39; }</code>. If intent was enabled, <code>selectAllIntentChange</code> also emits with <code>selected: false</code> and <code>reason: &#39;clear&#39;</code>. Required controls continue to use the existing validation policy.</p>
+<pre><code class="language-html">&lt;bx-multi-select [options]=&quot;locations&quot; [clearLabel]=&quot;{ key: &#39;locations.clearAction&#39; }&quot;
+  [clearTooltip]=&quot;{ key: &#39;locations.clearTooltip&#39; }&quot; /&gt;
+</code></pre>
+<p>Use <code>[clearable]=&quot;false&quot;</code> for required selections that must retain a value or for lists with an explicit \u201CNone\u201D option. This input controls the clear action independently of validation; <code>required</code> continues to enforce form validity. The select/multiselect playground includes an \u201CAllow clearing selection\u201D switch; configuration controls such as page size deliberately hide the clear action.</p>
+<pre><code class="language-html">&lt;bx-multi-select [options]=&quot;options&quot; [clearable]=&quot;false&quot; /&gt;
+</code></pre>
+<h2>Select-all tooltip</h2>
+<p><code>allSelectedTooltip</code> accepts the tooltip text for active <code>selectAll</code> intent, including the trigger&#39;s keyboard tooltip and the \u201Call selected\u201D tag&#39;s hover/touch tooltip. Pass <code>false</code> or an empty string to disable both. This also prevents the tag&#39;s automatic clipped-label tooltip or <code>tagConfig.tooltip</code> from replacing disabled feedback. Ordinary finite selections keep their existing tooltip behavior when intent ends.</p>
+<p>Omitting the input preserves the list of loaded selected labels, subject to <code>tooltipOnTruncate</code>. Those labels describe only loaded items. For remote \u201CALL\u201D selection, disable that feedback or supply application-owned text representing the full selectable scope:</p>
+<pre><code class="language-html">&lt;bx-multi-select [options]=&quot;loadedLocations&quot; [(value)]=&quot;selected&quot; [(selectAll)]=&quot;allSelected&quot;
+  allSelectedText=&quot;All locations&quot; [allSelectedTooltip]=&quot;false&quot; /&gt;
+
+&lt;bx-multi-select [options]=&quot;loadedLocations&quot; [(value)]=&quot;selected&quot; [(selectAll)]=&quot;allSelected&quot;
+  allSelectedText=&quot;All locations&quot; [allSelectedTooltip]=&quot;allLocationsTooltip()&quot; /&gt;
+</code></pre>
+<p>Compute <code>allLocationsTooltip</code> in the application using its API&#39;s total of selectable results. For example, return <code>&#39;All &#39; + pagination.selectableTotal + &#39; locations&#39;</code> or call the application&#39;s translation service with the total. Exclude disabled options and disabled groups across the whole result set, including unloaded pages. Do not subtract only the disabled items on the current page or substitute the loaded selected count for a remote total. If the API does not provide enough information, disable the tooltip or use a general description such as \u201CAll matching locations\u201D.</p>
+<p>The component accepts <code>ResolvableText</code>, so simple translation keys also work and react to <code>BX_I18N</code> version changes. Interpolation, pluralization, total calculation and any more complex translation logic belong to the application; the component has no tooltip-parameters or pagination-total API. Updating the supplied text refreshes mounted tooltips. Explicit custom tooltips work independently of automatic <code>tooltipOnTruncate</code> feedback; <code>false</code> disables only select-all feedback.</p>
+<p>The playground defaults to application-formatted text using the fake API&#39;s <code>selectableTotal</code>: 23 selectable locations across 24 results, excluding disabled Vienna even before its page loads. The total follows search scope. <strong>Select-all tooltip</strong> also demonstrates custom finished text, disabled feedback and the optional loaded-label compatibility behavior, in text and tag display.</p>
 `,"projects/blocks/forms/components/radio-button/README.md":`<h1>Radio</h1>
 <p>A single choice within a named group.</p>
 <h2>Import</h2>
@@ -1271,6 +1348,7 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/range-slider</code> for a live pair, labels and ticks.</p>
+<p>The rail shares the normal slider&#39;s border, inset shadow, neutral background and pill radius, with the selected interval filled between the two thumb centers.</p>
 `,"projects/blocks/forms/components/search-input/README.md":`<h1>Search input</h1>
 <p>A searchable text control with one clear action, request loading feedback, and an explicit retry action. Requests and results remain application-owned.</p>
 <h2>Import</h2>
@@ -1434,6 +1512,18 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p><code>selectionDisplay=&quot;tags&quot;</code> renders the selected value through the standalone Blocks <code>Tag</code> component. <code>tagConfig</code> controls common appearance and <code>option.tagConfig</code> provides per-option overrides. See the <a href="components/tag">tag guide</a>.</p>
 <p>Clipped tag labels automatically expose their full text in a tooltip; fitting labels do not. Explicit option/tag tooltip descriptions retain their existing behavior. The parent combobox supplies keyboard access to the complete selection without adding nested tab stops. Labels and plain values also use the shared truncation directive. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> to disable automatic truncation tooltips, including ordinary selected tags, while retaining ellipsis and custom templates. Per-tag configuration can disable the tag tooltip when the owner is enabled. The component inherits the shared <code>FormSettingsService</code> default.</p>
 <p>While searching (including debounce and the external request), old results and load-more actions are suppressed. <code>loadingLabel</code> provides centered loading text; without it, the panel displays a simple centered spinner named by <code>loadingAriaLabel</code>. Pagination becomes available for the filtered result set after the request completes.</p>
+<h2>Option spacing</h2>
+<p>Rounded option rows have a small gap, shared by select and multiselect. Set <code>--bx-select-option-gap</code> on the control to customize it (default: Blocks <code>spacing(1)</code>). All built-in selection and caret icons use Blocks <code>Icon</code>; searching uses Blocks <code>SearchInput</code>.</p>
+<h2>Clearing selection</h2>
+<p>A Blocks \xD7 icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set <code>[clearable]=&quot;false&quot;</code> to hide it, or use <code>clearLabel</code> (<code>ResolvableText</code>, default <code>&#39;Clear selection&#39;</code>) to customize its accessible name. <code>clearTooltip</code> accepts its own <code>ResolvableText</code>, defaults to the resolved <code>clearLabel</code> when omitted, and can be set to an empty string to hide the tooltip.</p>
+<p><code>clearSelection()</code> performs the same guarded action programmatically. Clearing closes the panel, marks the control touched and returns focus to the combobox; it preserves Angular&#39;s blur/submit update policy. The action is hidden while readonly and disabled when the control is disabled. Keyboard users can Tab to the action and activate it with Enter or Space.</p>
+<p>Clearing writes <code>null</code> and emits <code>selectionChange</code> with <code>{ value: null, source: &#39;clear&#39; }</code>. Required controls report validation through the existing error policy.</p>
+<pre><code class="language-html">&lt;bx-select [options]=&quot;locations&quot; [clearLabel]=&quot;{ key: &#39;locations.clearAction&#39; }&quot;
+  [clearTooltip]=&quot;{ key: &#39;locations.clearTooltip&#39; }&quot; /&gt;
+</code></pre>
+<p>Use <code>[clearable]=&quot;false&quot;</code> for required selections that must retain a value or for lists with an explicit \u201CNone\u201D option. This input controls the clear action independently of validation; <code>required</code> continues to enforce form validity. The select/multiselect playground includes an \u201CAllow clearing selection\u201D switch; configuration controls such as page size deliberately hide the clear action.</p>
+<pre><code class="language-html">&lt;bx-select [options]=&quot;options&quot; [clearable]=&quot;false&quot; /&gt;
+</code></pre>
 `,"projects/blocks/forms/components/shared/load-more/README.md":`<h1>Load-more footer</h1>
 <p>Internal presentation used by <code>LoadMoreDirective</code>. Applications configure it through <code>ILoadMoreConfig</code> and <code>ILoadMoreContext</code>; it is not a separate public construction API.</p>
 <p>See the <a href="components/load-more">load-more directive</a> for imports, request ownership, error/retry behavior, templates, appearance and accessibility. Its live page is <code>/components/load-more</code>.</p>
