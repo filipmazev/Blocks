@@ -1,0 +1,14 @@
+<span class="bx-chip" bxSurface [bxSurfaceInteractive]="false" [class.is-selected]="selected()" [class.is-disabled]="disabled()"
+    [class.is-filled]="settings().variant === 'filled'" [class.is-outlined]="settings().variant === 'outlined'" [class.is-small]="settings().size === 'small'">
+    <button type="button" class="bx-chip-action" [disabled]="disabled()" [attr.aria-disabled]="isReadonly() ? 'true' : null"
+        [attr.aria-pressed]="selectable() ? selected() : null" (click)="activate()" (keydown)="onKeydown($event)">
+        @if (selectable() && selected()) { <bx-icon name="check" size="16" /> }
+        @else if (settings().icon; as icon) { <bx-icon [name]="icon" size="16" /> }
+        <span>{{ resolvedLabel() }}</span>
+    </button>
+    @if (removable()) {
+        <button type="button" class="bx-chip-remove" [disabled]="disabled()" [attr.aria-disabled]="isReadonly() ? 'true' : null"
+            [attr.aria-label]="resolvedRemoveLabel()" (click)="remove()"><bx-icon name="x" size="16" /></button>
+    }
+</span>
+

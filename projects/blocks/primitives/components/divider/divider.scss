@@ -1,0 +1,42 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: flex;
+    align-items: center;
+    gap: var(--bx-divider-gap, #{spacing(3)});
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin-block: var(--bx-divider-margin, #{spacing(4)});
+    color: var(--bx-divider-text, var(--bx-text-secondary));
+
+    &::before,
+    &.has-label::after {
+        content: '';
+        flex: 1 1 0;
+        border-block-start: var(--bx-divider-thickness, 1px) var(--bx-divider-style, solid)
+            var(--bx-divider-color, var(--bx-border-default));
+    }
+}
+
+:host(.is-vertical) {
+    flex-direction: column;
+    align-self: stretch;
+    inline-size: auto;
+    min-block-size: var(--bx-divider-min-height, #{spacing(6)});
+    margin-block: 0;
+    margin-inline: var(--bx-divider-margin, #{spacing(3)});
+
+    &::before,
+    &.has-label::after {
+        border-block-start: 0;
+        border-inline-start: var(--bx-divider-thickness, 1px) var(--bx-divider-style, solid)
+            var(--bx-divider-color, var(--bx-border-default));
+    }
+}
+
+.bx-divider-label {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--bx-divider-font-size, 0.8125rem);
+}

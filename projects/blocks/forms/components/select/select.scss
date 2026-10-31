@@ -1,4 +1,5 @@
 @use '../../../core/styles/helpers' as *;
+@use '../shared/styles/option-panel' as *;
 
 :host {
     display: block;
@@ -131,10 +132,9 @@
 }
 
 .bx-select-caret {
-    flex-shrink: 0;
-    color: var(--bx-text-secondary);
+    @include field-caret;
+
     transition: transform 0.2s ease;
-    margin-inline-start: spacing(2);
     transform-origin: center;
 
     .is-open & {
@@ -268,10 +268,7 @@
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: #{shadow(sm)};
 
-    background: var(--bx-glass-surface) !important;
-    // stylelint-disable-next-line property-no-vendor-prefix
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+    @include opaque-option-panel;
 }
 
 .bx-select-trigger[data-bx-surface] {
@@ -350,14 +347,6 @@
     padding-inline-start: spacing(3);
     font: inherit;
     font-size: 1rem;
-}
-
-.bx-select-caret {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    inline-size: 1rem;
-    block-size: 1rem;
 }
 
 .bx-select-loading {

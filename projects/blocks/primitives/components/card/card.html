@@ -1,0 +1,9 @@
+<div class="bx-card-media"><ng-content select="[bxCardMedia]" /></div>
+<div class="bx-card-header">
+    @if (resolvedTitle()) { <div class="bx-card-title" role="heading" [attr.aria-level]="level()">{{ resolvedTitle() }}</div> }
+    @if (resolvedSubtitle()) { <div class="bx-card-subtitle">{{ resolvedSubtitle() }}</div> }
+    <ng-content select="[bxCardHeader]" />
+</div>
+<div class="bx-card-content"><ng-content /></div>
+<div class="bx-card-footer"><ng-content select="[bxCardFooter]" /></div>
+

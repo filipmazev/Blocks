@@ -2,6 +2,127 @@ import type { IComponentExample } from '../interfaces/icomponent-example.interfa
 
 export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   {
+    id: 'divider',
+    title: 'Divider',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/divider/README.md',
+    symbol: 'Divider',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-divider',
+    description: 'Horizontal, vertical and labelled separators using shared border tokens.',
+    example: '<bx-divider label="Continue" />'
+  },
+  {
+    id: 'popover',
+    title: 'Popover',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/popover/README.md',
+    symbol: 'Popover, PopoverDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: '[bxPopover]',
+    description: 'General interactive overlays with positioning, focus handling and theme inheritance.',
+    example: '<button [bxPopover]="details">Details</button>\n<ng-template #details><bx-popover>Project information</bx-popover></ng-template>'
+  },
+  {
+    id: 'skeleton',
+    title: 'Skeleton',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/skeleton/README.md',
+    symbol: 'Skeleton',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-skeleton',
+    description: 'Text, rectangular and circular placeholders with reduced-motion support.',
+    example: '<bx-skeleton [lines]="3" />'
+  },
+  {
+    id: 'chip',
+    title: 'Interactive chip',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/chip/README.md',
+    symbol: 'Chip',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-chip',
+    description: 'Selectable actions and removable tokens with native keyboard interaction.',
+    example: '<bx-chip label="Design" [(selected)]="designSelected" [removable]="true" (removed)="removeDesign()" />'
+  },
+  {
+    id: 'accordion',
+    title: 'Accordion',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/accordion/README.md',
+    symbol: 'Accordion, Collapsible',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-accordion',
+    description: 'Single or multiple expanded sections with keyboard heading navigation.',
+    example: '<bx-accordion><bx-accordion-item title="Details">Project content</bx-accordion-item></bx-accordion>'
+  },
+  {
+    id: 'collapsible',
+    title: 'Collapsible',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/collapsible/README.md',
+    symbol: 'Collapsible',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-collapsible',
+    description: 'An independently controlled disclosure with persistent or lazy content.',
+    example: '<bx-collapsible title="Details" [(expanded)]="expanded">Project content</bx-collapsible>'
+  },
+  {
+    id: 'alert',
+    title: 'Inline alert / banner',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/alert/README.md',
+    symbol: 'Alert',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-alert',
+    description: 'Semantic informational, danger, warning, success and neutral banners.',
+    example: '<bx-alert tone="success" title="Saved" message="Your changes are ready." />'
+  },
+  {
+    id: 'card',
+    title: 'Card',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/card/README.md',
+    symbol: 'Card',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-card',
+    description: 'Themed content surfaces with media, header and footer slots.',
+    example: '<bx-card title="Project"><p>Project content</p><button bxCardFooter>Open project</button></bx-card>'
+  },
+  {
+    id: 'container',
+    title: 'Content container',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/container/README.md',
+    symbol: 'Container',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-container',
+    description: 'Centered page content, shared width presets and optional named landmarks.',
+    example: '<bx-container size="lg" landmark="main">Page content</bx-container>'
+  },
+  {
+    id: 'stack',
+    title: 'Stack layout',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/stack/README.md',
+    symbol: 'Stack',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-stack',
+    description: 'Responsive horizontal or vertical layout using the shared spacing scale.',
+    example: '<bx-stack direction="responsive" [gap]="4">Related content</bx-stack>'
+  },
+  {
+    id: 'grid',
+    title: 'Grid layout',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/grid/README.md',
+    symbol: 'Grid',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-grid',
+    description: 'Responsive auto-fit or fixed-column layout for content and cards.',
+    example: '<bx-grid minColumnWidth="16rem"><bx-card title="Project" /></bx-grid>'
+  },
+  {
     id: 'side-nav',
     title: 'Side navigation',
     group: 'Navigation',
@@ -312,6 +433,17 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     description: 'A projected custom error message inside a form-field.',
     example:
       '<bx-form-field label="Reference" forId="reference">\n  <input id="reference" aria-describedby="reference-error" />\n  <bx-error id="reference-error">Enter at least three characters.</bx-error>\n</bx-form-field>'
+  },
+  {
+    id: 'autocomplete',
+    title: 'Editable autocomplete',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/autocomplete/README.md',
+    symbol: 'Autocomplete',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-autocomplete',
+    description: 'Free text and application-owned suggestions with keyboard navigation, async search and pagination.',
+    example: '<bx-autocomplete label="Destination" [options]="suggestions()" [(value)]="destination" />'
   },
   {
     id: 'tabs',

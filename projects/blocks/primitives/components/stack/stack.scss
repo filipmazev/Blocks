@@ -1,0 +1,25 @@
+@use '../../../core/styles/helpers' as *;
+@use '../shared/styles/layout' as *;
+
+@include layout-gaps;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    gap: var(--bx-stack-gap, var(--bx-layout-gap, #{spacing(4)}));
+}
+
+:host([data-direction='horizontal']) {
+    flex-direction: row;
+}
+
+:host(.is-wrapping) {
+    flex-wrap: wrap;
+}
+
+@include respond-up(sm) {
+    :host([data-direction='responsive']) {
+        flex-direction: row;
+    }
+}

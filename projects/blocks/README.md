@@ -1,8 +1,8 @@
 # @filip.mazev/blocks
 
-This package is used to provide the Angular Schematic for adding the blocks libraries.
+Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship in one package, alongside the installation schematic.
 
-The **Blocks** umbrella package is the official entry point and Angular Schematic for the Blocks UI ecosystem. It provides a seamless, zero-config installation experience, allowing you to integrate our core tools, modals, and toast notifications into your Angular workspace with a single command.
+Use the playground's generated component catalog for the current API reference and runnable examples. This guide covers installation and application-wide setup.
 
 ## Installation
 

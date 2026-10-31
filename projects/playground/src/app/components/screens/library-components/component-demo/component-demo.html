@@ -16,6 +16,18 @@
     } @else {
     <div class="demo-stage" bxSurface>
       @switch (entry().id) {
+        @case ('divider') { <app-essentials-examples example="divider" /> }
+        @case ('popover') { <app-essentials-examples example="popover" /> }
+        @case ('skeleton') { <app-essentials-examples example="skeleton" /> }
+        @case ('autocomplete') { <app-essentials-examples example="autocomplete" /> }
+        @case ('chip') { <app-essentials-examples example="chip" /> }
+        @case ('accordion') { <app-essentials-examples example="accordion" /> }
+        @case ('collapsible') { <app-essentials-examples example="collapsible" /> }
+        @case ('alert') { <app-essentials-examples example="alert" /> }
+        @case ('card') { <app-essentials-examples example="card" /> }
+        @case ('container') { <app-essentials-examples example="container" /> }
+        @case ('stack') { <app-essentials-examples example="stack" /> }
+        @case ('grid') { <app-essentials-examples example="grid" /> }
         @case ('tag') { <app-tag-examples /> }
         @case ('truncate') { <app-truncation-examples /> }
         @case ('signal-forms') { <app-form-examples example="signal-forms" /> }

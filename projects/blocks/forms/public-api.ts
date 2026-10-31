@@ -53,3 +53,7 @@ export * from './components/range-slider/range-slider';
 export * from './components/multi-select/types/multi-select.types';
 
 export * from './components/checkbox-indicator/checkbox-indicator';
+
+export * from './components/autocomplete/autocomplete';
+export * from './components/autocomplete/interfaces/iautocomplete-option.interface';
+export * from './components/autocomplete/interfaces/iautocomplete-option-context.interface';

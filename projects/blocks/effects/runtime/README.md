@@ -60,6 +60,8 @@ For example, a success toast can set `--bx-glass-surface: var(--bx-bg-success)` 
 
 ## Spatial lighting and reflections
 
+`getGlassLightRoot(element)` resolves the existing overlay or `data-bx-light-scope` boundary for passive emitters. Angular integrations can register and update their emitters through `BxGlassLightingService`.
+
 ```ts
 import { mountGlassScene } from '@filip.mazev/blocks/effects/runtime';
 
@@ -104,7 +106,7 @@ Pointer cancellation, matching key release, focus loss during a keyboard press, 
 ## Performance and accessibility
 
 - One lazy animation clock and delegated press, hover-boundary and focus handling per document. Moving the pointer within an element does not change lighting. Settled scenes schedule no animation frames.
-- At most four explicit lights and four reflectors per scene, and 24 visible surface lighting updates per frame. Interaction and active-state emitters share one delegated event stream and semantic-attribute observer; there is no observer per control.
+- Each receiver evaluates at most four explicit scene lights, chosen from all registered sources by visible contribution after exclusions, intensity and distance falloff. Registration order does not discard nearby sources. Each scene retains a maximum of four reflectors, and at most 24 visible surfaces update per frame. Interaction and active-state emitters share one delegated event stream and semantic-attribute observer; there is no observer per control.
 - Ambient geometry/style invalidations coalesce over 180 ms. A sampling frame handles at most four receivers, yielding after about 4 ms between receivers; a single receiver/readback remains atomic. Sixteen perimeter probes discover nearby colors, and media inventories update on insertion rather than on each frame.
 - Static images and failed readbacks are cached until their assets change. Only media used by visible receivers is polled: live canvas/video checks begin at 500 ms and back off to 2 seconds while unchanged. Color-only changes reuse source bindings and geometry without hit testing; coverage or layout changes rediscover the layers. Unchanged samples do not repaint. Image/video samples respect object fit and position.
 - Each surface uses two shared ambient edge layers for a 180 ms crossfade, instead of a DOM layer and animation per sample. Semantic lighting retains its independent contributions and immediate interaction updates. Hidden documents, reduced-motion receivers and unused media stop live polling; removing the last receiver tears down sampling. Static scenes schedule no polling or animation frames.

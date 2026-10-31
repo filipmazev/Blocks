@@ -1,0 +1,7 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: grid;
+    gap: var(--bx-accordion-gap, #{spacing(2)});
+    min-inline-size: 0;
+}

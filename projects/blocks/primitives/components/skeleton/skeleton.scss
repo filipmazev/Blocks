@@ -1,0 +1,47 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: grid;
+    gap: var(--bx-skeleton-gap, #{spacing(2)});
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.bx-skeleton-line {
+    display: block;
+    block-size: var(--bx-skeleton-height, 1rem);
+    border-radius: var(--bx-skeleton-radius, #{radius(sm)});
+    background: var(--bx-skeleton-background, var(--bx-bg-element-active));
+    animation: bx-skeleton-pulse var(--bx-skeleton-duration, 1.6s) ease-in-out infinite;
+}
+
+:host(.is-text) .bx-skeleton-line:last-child:not(:first-child) {
+    inline-size: var(--bx-skeleton-last-line-width, 70%);
+}
+
+:host(.is-circle) {
+    inline-size: var(--bx-skeleton-height, #{spacing(10)});
+
+    .bx-skeleton-line {
+        block-size: auto;
+        aspect-ratio: 1;
+        border-radius: 50%;
+    }
+}
+
+:host(.is-static) .bx-skeleton-line {
+    animation: none;
+}
+
+@keyframes bx-skeleton-pulse {
+    50% {
+        opacity: 0.45;
+    }
+}
+
+@media (forced-colors: active) {
+    .bx-skeleton-line {
+        background: GrayText;
+        animation: none;
+    }
+}

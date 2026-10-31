@@ -1,0 +1,15 @@
+<div #surface class="bx-alert" bxSurface [bxSurfaceInteractive]="false" [class.has-emission]="emissive()">
+    <bx-icon class="bx-alert-icon" [name]="icon()" size="20" />
+    <div class="bx-alert-content">
+        <div [attr.role]="announcement() === 'off' ? null : announcement() === 'assertive' ? 'alert' : 'status'" [attr.aria-atomic]="announcement() === 'off' ? null : 'true'">
+            @if (resolvedTitle()) { <div class="bx-alert-title">{{ resolvedTitle() }}</div> }
+            @if (resolvedMessage()) { <div>{{ resolvedMessage() }}</div> }
+            <ng-content />
+        </div>
+        <div class="bx-alert-actions"><ng-content select="[bxAlertActions]" /></div>
+    </div>
+    @if (dismissible()) {
+        <button type="button" class="bx-alert-dismiss" [attr.aria-label]="resolvedDismissLabel()" (click)="dismiss()"><bx-icon name="x" size="20" /></button>
+    }
+</div>
+

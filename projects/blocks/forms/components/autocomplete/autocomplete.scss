@@ -1,0 +1,146 @@
+@use '../input-field/input-field';
+@use '../../../core/styles/helpers' as *;
+@use '../shared/styles/option-panel' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+.bx-autocomplete-control input {
+    position: relative;
+    letter-spacing: inherit;
+}
+
+.bx-autocomplete-control .bx-native-input {
+    padding-inline-end: 0;
+}
+
+.bx-autocomplete-control.has-clear .bx-native-input {
+    padding-inline-end: spacing(2);
+}
+
+.bx-autocomplete-control .bx-input-actions {
+    padding-inline-end: spacing(3);
+}
+
+.bx-autocomplete-caret {
+    @include field-caret;
+
+    flex: 0 0 auto;
+
+    bx-icon {
+        @include bx-transition(transform, 0.2s, ease);
+    }
+}
+
+.is-open .bx-autocomplete-caret bx-icon {
+    transform: rotate(180deg);
+}
+
+.bx-autocomplete-clear.bx-btn {
+    @include field-clear-action;
+}
+
+.bx-autocomplete-text {
+    position: relative;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    overflow: hidden;
+}
+
+.bx-autocomplete-completion {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    color: var(--bx-autocomplete-completion-color, var(--bx-text-secondary));
+    letter-spacing: inherit;
+    white-space: pre;
+    pointer-events: none;
+}
+
+.bx-autocomplete-prefix {
+    visibility: hidden;
+}
+
+.bx-autocomplete-panel {
+    --bx-glass-surface: var(--bx-autocomplete-background, var(--bx-bg-surface));
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-edge: var(--bx-border-default);
+    --bx-glass-radius: var(--bx-autocomplete-radius, var(--bx-rounded-lg, #{radius(lg)}));
+    --bx-glass-shadow: #{shadow(lg)};
+
+    inline-size: 100%;
+    min-inline-size: 0;
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    background: var(--bx-glass-surface);
+    color: var(--bx-glass-text);
+    box-shadow: var(--bx-glass-shadow);
+    overflow: hidden;
+}
+
+.bx-autocomplete-panel[data-bx-surface] {
+    @include opaque-option-panel;
+}
+
+.bx-autocomplete-scroll {
+    --bx-load-more-padding: #{spacing(2)} #{spacing(3)};
+
+    box-sizing: border-box;
+    max-block-size: min(var(--bx-autocomplete-panel-height, 18rem), 50dvh);
+    padding: var(--bx-autocomplete-panel-padding, #{spacing(1)});
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.bx-autocomplete-option {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: spacing(10);
+    padding: spacing(2) spacing(3);
+    border: 0;
+    border-radius: radius(sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+
+    &:hover:not(:disabled),
+    &.is-active {
+        background: var(--bx-bg-element-hover);
+        outline: 1px solid var(--bx-border-strong);
+        outline-offset: -1px;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.bx-autocomplete-feedback {
+    min-block-size: spacing(10);
+    padding: spacing(2) spacing(3);
+    box-sizing: border-box;
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+}
+
+@media (forced-colors: active) {
+    .bx-autocomplete-control:focus-within,
+    .bx-autocomplete-option.is-active {
+        outline: 2px solid Highlight;
+    }
+
+    .bx-autocomplete-option:disabled {
+        color: GrayText;
+        opacity: 1;
+    }
+}

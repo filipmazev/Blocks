@@ -116,6 +116,7 @@ These rules apply throughout this repository, including the library, playground,
 - Use Blocks components and directives throughout the playground wherever an equivalent exists, including supporting demo controls such as actions, selection, numeric inputs, and range sliders. Native semantic content is appropriate where no Blocks equivalent exists or when explicitly demonstrating the native-control integration. Do not introduce a parallel set of native demo controls for features already provided by Blocks.
 - Use the package's public entry points in consumer examples. Keep examples typed, runnable, and consistent with the implemented API.
 - Register pages in the existing catalog/navigation flow and provide working examples with observable state or action results. Asynchronous features need mock requests demonstrating loading, empty/error states, and incremental data where applicable.
+- Add language-switching demos only for complex components with many nested text-bearing elements where they meaningfully demonstrate translation behavior. Use English, Spanish, French, and German for those demos; do not use Macedonian. Keep simple component demos in English without language controls. Library APIs must still support translation as described above.
 - Keep supporting playground interfaces, constants, services, and helpers separated by the same rules as library code.
 - Generate documentation through `npm run tools:build-docs`; do not hand-edit generated documentation. Update the generator when changing the source structure it reads.
 

@@ -1,0 +1,20 @@
+@use '../../../core/styles/helpers' as *;
+@use '../shared/styles/layout' as *;
+
+@include layout-gaps;
+
+:host {
+    display: grid;
+    grid-template-columns: var(
+        --bx-grid-columns,
+        repeat(auto-fit, minmax(min(100%, var(--bx-grid-min-column, 16rem)), 1fr))
+    );
+    min-inline-size: 0;
+    gap: var(--bx-grid-gap, var(--bx-layout-gap, #{spacing(4)}));
+}
+
+@include respond-down(sm) {
+    :host {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

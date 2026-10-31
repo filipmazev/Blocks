@@ -1,0 +1,9 @@
+@use '../../../../core/styles/helpers' as *;
+
+@mixin layout-gaps {
+    @each $key, $value in $spacing {
+        :host([data-gap='#{$key}']) {
+            --bx-layout-gap: var(--bx-space-#{$key}, #{$value});
+        }
+    }
+}

@@ -1,0 +1,149 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: inline-flex;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+.bx-chip {
+    --bx-glass-surface: var(--bx-chip-background, var(--bx-chip-role-background));
+    --bx-glass-text: var(--bx-chip-color, var(--bx-chip-role-text));
+    --bx-glass-edge: var(--bx-chip-border, var(--bx-chip-role-border));
+    --bx-glass-radius: var(--bx-chip-radius, #{radius(pill)});
+    --bx-glass-shadow: none;
+    --bx-chip-action-size: var(--bx-chip-min-height, #{spacing(10)});
+
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    background: var(--bx-glass-surface);
+    color: var(--bx-glass-text);
+
+    &.is-filled {
+        --bx-glass-surface: var(--bx-chip-background, var(--bx-chip-role-fill));
+        --bx-glass-text: var(--bx-chip-color, var(--bx-chip-role-on-fill));
+    }
+
+    &.is-outlined {
+        --bx-glass-surface: var(--bx-chip-background, var(--bx-bg-surface));
+    }
+
+    &.is-selected {
+        border-color: currentcolor;
+        box-shadow: inset 0 0 0 1px currentcolor;
+    }
+
+    &.is-disabled {
+        opacity: 0.6;
+    }
+
+    &.is-small button {
+        min-block-size: var(--bx-chip-min-height, #{spacing(8)});
+        padding-block: spacing(1);
+        font-size: 0.8125rem;
+    }
+
+    &.is-small {
+        --bx-chip-action-size: var(--bx-chip-min-height, #{spacing(8)});
+    }
+}
+
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: spacing(1);
+    min-inline-size: 0;
+    min-block-size: var(--bx-chip-min-height, #{spacing(10)});
+    padding: spacing(2) spacing(3);
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: start;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+
+    &[aria-disabled='true'] {
+        cursor: default;
+    }
+}
+
+.bx-chip-action {
+    position: static;
+    flex: 1 1 auto;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true'])::before {
+        background: var(
+            --bx-chip-hover-background,
+            color-mix(in srgb, currentcolor 10%, transparent)
+        );
+    }
+
+    > * {
+        position: relative;
+    }
+
+    span {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+.bx-chip-remove {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    align-self: center;
+    inline-size: var(--bx-chip-action-size);
+    block-size: var(--bx-chip-action-size);
+    min-inline-size: var(--bx-chip-action-size);
+    margin: -1px;
+    margin-inline-start: 0;
+    padding: 0;
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: 50%;
+    background: var(--bx-chip-remove-background, var(--bx-glass-surface));
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+        background: color-mix(
+            in srgb,
+            currentcolor 10%,
+            var(--bx-chip-remove-background, var(--bx-glass-surface))
+        );
+    }
+}
+
+@media (forced-colors: active) {
+    .bx-chip.is-selected {
+        border: 2px solid Highlight;
+    }
+
+    .bx-chip.is-disabled {
+        color: GrayText;
+        opacity: 1;
+    }
+}

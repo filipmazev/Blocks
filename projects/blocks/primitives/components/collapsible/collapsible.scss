@@ -1,0 +1,71 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.bx-collapsible {
+    --bx-glass-surface: var(--bx-collapsible-background, var(--bx-bg-surface));
+    --bx-glass-edge: var(--bx-collapsible-border, var(--bx-border-default));
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-radius: var(--bx-collapsible-radius, #{radius(md)});
+    --bx-glass-shadow: none;
+
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    background: var(--bx-glass-surface);
+    color: var(--bx-glass-text);
+}
+
+.bx-collapsible-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: spacing(3);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: spacing(12);
+    padding: var(--bx-collapsible-padding, #{spacing(3)} #{spacing(4)});
+    border: 0;
+    border-radius: var(--bx-glass-radius);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    text-align: start;
+    cursor: pointer;
+
+    span {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    bx-icon {
+        flex: 0 0 auto;
+    }
+
+    &:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--bx-bg-element-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        color: var(--bx-text-secondary);
+        cursor: not-allowed;
+    }
+
+    &[aria-disabled='true'] {
+        cursor: default;
+    }
+}
+
+.bx-collapsible-content {
+    padding: var(--bx-collapsible-content-padding, #{spacing(4)});
+    border-block-start: 1px solid var(--bx-glass-edge);
+    overflow-wrap: anywhere;
+}

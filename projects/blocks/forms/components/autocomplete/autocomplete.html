@@ -1,0 +1,64 @@
+<bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [hint]="hint()" [hintEnd]="hintEnd()"
+    [hideRequiredMarker]="resolvedHideRequiredMarker()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()" [showLoadingIndicator]="false">
+    <div #anchor class="bx-input-wrapper bx-autocomplete-control" bxSurface [class.is-invalid]="showError()" [class.is-disabled]="effectiveDisabled()"
+        [class.is-readonly]="isReadonly()" [class.is-outline]="resolvedAppearance() === 'outline'" [class.is-floating]="isFloating()" [class.is-keyboard-focused]="keyboardFocused()" [class.is-open]="isOpen()" [class.has-clear]="showClear()">
+        <div class="bx-input-container bx-autocomplete-text" [bxTooltip]="resolvedLabel() | bxTruncatedText: labelTruncated(): resolvedTooltipOnTruncate()" bxTooltipTouch="longpress" placement="top">
+        @if (label()) {
+            <label class="bx-floating-label" [attr.for]="controlId()"><span class="bx-input-label-text" bxTruncate>{{ resolvedLabel() }}</span>
+                @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-field-required" aria-hidden="true">*</span> }
+            </label>
+        }
+        @if (completionSuffix()) {
+            <span class="bx-native-input bx-autocomplete-completion" aria-hidden="true" [style.transform]="'translateX(' + -inputScroll() + 'px)'"><span class="bx-autocomplete-prefix">{{ internalValue() }}</span><span>{{ completionSuffix() }}</span></span>
+        }
+        <input #nativeInput class="bx-native-input" type="text" role="combobox" [attr.aria-autocomplete]="inlineCompletion() ? 'both' : 'list'" aria-haspopup="listbox" [id]="controlId()"
+            [attr.name]="name() || null" [attr.autocomplete]="autocomplete()" [attr.data-testid]="dataTestId()"
+            [placeholder]="isFloating() || !label() ? resolvedPlaceholder() : ''" [value]="internalValue() ?? ''" [disabled]="effectiveDisabled()" [readOnly]="isReadonly()" [required]="effectiveRequired()"
+            [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="describedBy()" [attr.aria-invalid]="showError()"
+            [attr.aria-expanded]="isOpen()" [attr.aria-controls]="isOpen() ? controlId() + '-listbox' : null" [attr.aria-activedescendant]="activeId()"
+            [attr.aria-busy]="isBusy()" (input)="onInput($event)" (focus)="onFocus()" (click)="open(); updateCompletionPosition()" (blur)="onBlur($event)"
+            (select)="updateCompletionPosition()" (scroll)="updateCompletionPosition()" (keyup)="updateCompletionPosition()"
+            cdkAutofill (cdkAutofill)="autofilled.set($event.isAutofilled)"
+            (keydown)="onInputKey($event)" (compositionstart)="onCompositionStart()" (compositionend)="onCompositionEnd($event)" />
+        </div>
+        <div class="bx-input-actions">
+            @if (showClear()) {
+                <button bx-button type="button" variant="text" class="bx-autocomplete-clear" [surfaceEffects]="false" [disabled]="effectiveDisabled()"
+                    [attr.aria-label]="resolvedClearLabel()" [bxTooltip]="resolvedClearTooltip()" (click)="clear()" (keydown)="onClearKey($event)" (blur)="onBlur($event)"><bx-icon name="x" size="16" /></button>
+            }
+            <span class="bx-autocomplete-caret" aria-hidden="true">
+                @if (isBusy()) { <bx-loading-spinner [size]="16" [decorative]="true" /> }
+                @else { <bx-icon name="chevron-down" size="16" /> }
+            </span>
+        </div>
+    </div>
+    <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
+</bx-form-field>
+<ng-template #panelTemplate>
+    <div class="bx-autocomplete-panel" data-bx-surface="solid">
+        <div class="bx-autocomplete-scroll" bxLoadMore #pagination="bxLoadMore" tabindex="-1" (focusout)="onBlur($event)"
+            [loadMoreHasMore]="hasMore()" [loadMoreLoading]="loading()" [loadMoreError]="loadError()" [loadMoreSuppressed]="searching()"
+            [loadMoreDisabled]="effectiveDisabled() || isReadonly()" [loadMoreConfig]="loadMoreConfig()" [loadMoreTemplate]="loadMoreTemplate()"
+            [loadMoreRevision]="loadMoreRevision() ?? options()" (loadMore)="requestMore($event)">
+            <div role="listbox" [id]="controlId() + '-listbox'" [attr.aria-label]="ariaLabel() || resolvedLabel() || resolvedPlaceholder()" [attr.aria-busy]="searching() || loading()">
+                @if (!searching()) {
+                    @for (option of filteredOptions(); track option.value; let index = $index) {
+                        <button type="button" role="option" tabindex="-1" class="bx-autocomplete-option" [id]="controlId() + '-option-' + index"
+                            [class.is-active]="activeIndex() === index" [attr.aria-selected]="activeIndex() === index" [disabled]="option.disabled ?? false"
+                            (mousedown)="$event.preventDefault()" (click)="selectOption(option)">
+                            @if (optionTemplate(); as template) {
+                                <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: option, label: option.labelText, active: activeIndex() === index, index: index }" />
+                            } @else { {{ option.labelText }} }
+                        </button>
+                    }
+                }
+            </div>
+            @if (searching() || (loading() && !pagination.actionVisible())) {
+                <div class="bx-autocomplete-feedback"><bx-loading-indicator [size]="16" [label]="loadingText()" /></div>
+            } @else if (!loading() && !loadError() && !filteredOptions().length) {
+                <div class="bx-autocomplete-feedback" role="status">{{ resolvedEmptyText() }}</div>
+            }
+        </div>
+    </div>
+</ng-template>
+

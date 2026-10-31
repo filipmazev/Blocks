@@ -34,3 +34,15 @@
         opacity: 0.5;
     }
 }
+
+// Shared caret size and separation for selection and editable suggestion controls.
+@mixin field-caret {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: spacing(4);
+    block-size: spacing(4);
+    margin-inline-start: spacing(2);
+    color: var(--bx-text-secondary);
+}

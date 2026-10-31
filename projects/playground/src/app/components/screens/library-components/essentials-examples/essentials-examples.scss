@@ -1,0 +1,36 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+p,
+h3 {
+    margin: 0;
+}
+
+output {
+    color: var(--bx-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.container-demo {
+    --bx-container-padding: 0;
+}
+
+.autocomplete-page-size {
+    flex: 0 0 10rem;
+    inline-size: 10rem;
+    max-inline-size: 100%;
+    margin-inline-start: auto;
+}
+
+@include respond-down(sm) {
+    .autocomplete-page-size {
+        flex-basis: 100%;
+        inline-size: 100%;
+        margin-inline-start: 0;
+    }
+}

@@ -7,6 +7,7 @@ import type { GlassLight, GlassReflector, GlassScene, GlassSceneOptions } from '
 import { ACTIVE_SURFACE_STATE_SELECTOR } from './constants/surface-interaction.constants';
 import { isSurfaceActivationKey } from './helpers/surface-interaction.helpers';
 import { SURFACE_RENDERED_STYLES } from './constants/surface-style.constants';
+import { projectLight } from './helpers/light-projection.helpers';
 
 export interface LightContribution {
   key: string;
@@ -680,7 +681,7 @@ class SceneRuntime {
           if (nearest && !sceneData.has(nearest)) {
             const scene = nearest;
             sceneData.set(scene, {
-              lights: (scene.options.lights ?? []).slice(0, 4).map((light, index) => this.lightPoint(light, `${scene.id}:${index}`)),
+              lights: (scene.options.lights ?? []).map((light, index) => this.lightPoint(light, `${scene.id}:${index}`)),
               reflections: (scene.options.reflectors ?? []).slice(0, 4).map((reflection) => this.reflectionPoint(reflection))
             });
           }
@@ -688,7 +689,8 @@ class SceneRuntime {
           const sceneRoot = nearest?.root ?? entry.element;
           // Explicit scene lights and an active semantic element share the same spatial model.
           const boundary = visibility.boundary(entry.element);
-          const lights = (data?.lights ?? []).filter((light) => visibility.boundary(light.source ?? sceneRoot) === boundary);
+          const candidates = (data?.lights ?? []).filter((light) => visibility.boundary(light.source ?? sceneRoot) === boundary);
+          const lights = this.selectSceneLights(entry, candidates, visibility);
           for (const { emitter, light } of activeLights) {
             if (
               this.scope(emitter.element) === this.scope(entry.element) &&
@@ -786,6 +788,36 @@ class SceneRuntime {
     };
   }
 
+  //#region Helpers
+
+  private selectSceneLights(entry: Entry, lights: PointLight[], visibility: ReturnType<typeof lightingVisibility>): PointLight[] {
+    const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+    const ranked = lights
+      .filter((light) => !(light.excludeSource && light.source === entry.element) && light.excludeElement !== entry.element)
+      .map((light) => ({ light, projection: projectLight(light, bounds) }))
+      .filter(({ projection }) => projection.edgeWeight > 0.01 || projection.weight > 0.001)
+      .sort((a, b) => Math.max(b.projection.weight, b.projection.edgeWeight) - Math.max(a.projection.weight, a.projection.edgeWeight));
+    const selected: PointLight[] = [];
+
+    for (const { light, projection } of ranked) {
+      if (!visibility.exposed(entry.hooks.hitTarget ?? entry.element, projection.x, projection.y, bounds)) continue;
+
+      if (light.source) {
+        const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
+
+        if (!visibility.exposed(source, projection.x, projection.y, source.getBoundingClientRect())) continue;
+      }
+
+      selected.push(light);
+
+      if (selected.length === 4) break;
+    }
+
+    return selected;
+  }
+
+  //#endregion
+
   private project(entry: Entry, lights: PointLight[], reflectors: Reflection[], visibility: ReturnType<typeof lightingVisibility>): Lighting {
     const b = (entry.bounds ??= entry.element.getBoundingClientRect());
     const cx = b.left + b.width / 2,
@@ -803,17 +835,10 @@ class SceneRuntime {
     for (const light of lights) {
       if ((light.excludeSource && light.source === entry.element) || light.excludeElement === entry.element) continue;
       // Semantic borders emit from their closest edge, so large buttons still have a short reach.
-      const lx = light.bounds ? Math.max(light.bounds.left, Math.min(cx, light.bounds.right)) : light.x;
-      const ly = light.bounds ? Math.max(light.bounds.top, Math.min(cy, light.bounds.bottom)) : light.y;
-      const dx = lx - cx,
-        dy = ly - cy;
-      const distance = Math.hypot(dx, dy, light.z);
-      const weight = light.intensity * Math.pow(Math.max(0, 1 - distance / light.radius), 2) * (light.z / distance);
+      const { x: lx, y: ly, weight, edgeWeight } = projectLight(light, b);
       // Project actual viewport coordinates into this surface, without a perspective speed-up.
       const localX = Math.max(0, Math.min(100, ((lx - b.left) / Math.max(1, b.width)) * 100));
       const localY = Math.max(0, Math.min(100, ((ly - b.top) / Math.max(1, b.height)) * 100));
-      const edgeDistance = Math.hypot(Math.max(b.left - lx, 0, lx - b.right), Math.max(b.top - ly, 0, ly - b.bottom), light.z);
-      const edgeWeight = Math.min(0.85, light.intensity * Math.pow(Math.max(0, 1 - edgeDistance / light.radius), 2));
       if (edgeWeight <= 0.01 && weight <= 0.001) continue;
       if (!light.ambient && !visibility.exposed(entry.hooks.hitTarget ?? entry.element, lx, ly, b)) continue;
       if (!light.ambient && light.source) {

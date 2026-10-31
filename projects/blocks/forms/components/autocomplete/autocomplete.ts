@@ -1,0 +1,425 @@
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { CdkAutofill } from '@angular/cdk/text-field';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  NgZone,
+  output,
+  PLATFORM_ID,
+  signal,
+  TemplateRef,
+  untracked,
+  viewChild,
+  ViewContainerRef
+} from '@angular/core';
+import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { BX_OVERLAY_CONTEXT, LoadingIndicator, LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
+import { Subscription } from 'rxjs';
+import { LoadMoreDirective } from '../../directives/load-more.directive';
+import { FormField } from '../form-field/form-field';
+import { Button } from '../button/button';
+import { BxValueControl } from '../shared/classes/bx-value-control';
+import { ILoadMoreConfig } from '../shared/load-more/interfaces/iload-more-config.interface';
+import { ILoadMoreContext } from '../shared/load-more/interfaces/iload-more-context.interface';
+import { ILoadMoreRequest } from '../shared/load-more/interfaces/iload-more-request.interface';
+import { IAutocompleteOption } from './interfaces/iautocomplete-option.interface';
+import { IAutocompleteOptionContext } from './interfaces/iautocomplete-option-context.interface';
+
+@Component({
+  selector: 'bx-autocomplete',
+  imports: [
+    FormField,
+    BxSurfaceDirective,
+    Icon,
+    LoadingIndicator,
+    LoadingSpinner,
+    Button,
+    LoadMoreDirective,
+    NgTemplateOutlet,
+    CdkAutofill,
+    TooltipDirective,
+    TruncateDirective,
+    TruncatedTextPipe
+  ],
+  templateUrl: './autocomplete.html',
+  styleUrl: './autocomplete.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Autocomplete extends BxValueControl<string> {
+  private readonly i18n = inject(BX_I18N, { optional: true });
+  private readonly overlay = inject(Overlay);
+  private readonly positions = inject(BxOverlayPositionService);
+  private readonly vcr = inject(ViewContainerRef);
+  private readonly zone = inject(NgZone);
+  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
+  private readonly destroy = inject(DestroyRef);
+  private readonly panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
+  private readonly anchor = viewChild.required<ElementRef<HTMLElement>>('anchor');
+  private readonly nativeInput = viewChild.required<ElementRef<HTMLInputElement>>('nativeInput');
+  private readonly pagination = viewChild(LoadMoreDirective);
+  private readonly labelText = viewChild(TruncateDirective);
+  private readonly opened = signal(false);
+  private readonly inputFocused = signal(false);
+  private readonly composing = signal(false);
+  private readonly caretAtEnd = signal(false);
+  protected readonly activeIndex = signal(-1);
+  protected readonly autofilled = signal(false);
+  protected readonly labelTruncated = computed(() => this.labelText()?.truncated() ?? false);
+  protected readonly isBusy = computed(() => this.searching() || this.loading() || this.pending());
+  protected readonly showClear = computed(() => this.clearable() && !!this.internalValue() && !this.isReadonly());
+  protected readonly resolvedClearLabel = computed(() => resolveText(this.clearLabel(), this.i18n));
+  protected readonly resolvedClearTooltip = computed(() => resolveText(this.clearTooltip() ?? this.clearLabel(), this.i18n));
+  protected readonly isFloating = computed(
+    () => this.resolvedFloatLabel() === 'always' || this.inputFocused() || this.isOpen() || this.autofilled() || !!this.internalValue()
+  );
+
+  protected readonly inputScroll = signal(0);
+  protected readonly resolvedEmptyText = computed(() => resolveText(this.emptyText(), this.i18n));
+  protected readonly resolvedOptions = computed(() =>
+    this.options().map((option) => ({
+      ...option,
+      labelText: resolveText(option.label ?? option.value, this.i18n)
+    }))
+  );
+
+  protected readonly filteredOptions = computed(() => {
+    const query = (this.internalValue() ?? '').toLocaleLowerCase();
+
+    return this.externalFiltering() || !query
+      ? this.resolvedOptions()
+      : this.resolvedOptions().filter((option) => option.labelText.toLocaleLowerCase().includes(query) || option.value.toLocaleLowerCase().includes(query));
+  });
+
+  protected readonly activeId = computed(() =>
+    this.isOpen() && !this.searching() && this.filteredOptions()[this.activeIndex()] && !this.filteredOptions()[this.activeIndex()].disabled
+      ? this.controlId() + '-option-' + this.activeIndex()
+      : null
+  );
+
+  protected readonly completionOption = computed(() => {
+    const value = this.internalValue() ?? '';
+
+    if (
+      !this.inlineCompletion() ||
+      !this.isOpen() ||
+      !this.inputFocused() ||
+      !this.caretAtEnd() ||
+      this.composing() ||
+      this.searching() ||
+      this.effectiveDisabled() ||
+      this.isReadonly() ||
+      !value
+    )
+      return undefined;
+
+    const options = this.filteredOptions();
+    const candidate =
+      this.activeIndex() >= 0
+        ? options[this.activeIndex()]
+        : options.find(
+            (option) => !option.disabled && option.value.length > value.length && option.value.toLocaleLowerCase().startsWith(value.toLocaleLowerCase())
+          );
+
+    return candidate &&
+      !candidate.disabled &&
+      candidate.value.length > value.length &&
+      candidate.value.toLocaleLowerCase().startsWith(value.toLocaleLowerCase())
+      ? candidate
+      : undefined;
+  });
+
+  protected readonly completionSuffix = computed(() => this.completionOption()?.value.slice((this.internalValue() ?? '').length) ?? '');
+
+  public readonly options = input<readonly IAutocompleteOption[]>([]);
+  /** Show a muted, uncommitted suffix for a matching suggestion. Accept with the forward arrow, End or Enter. Defaults to true. */
+  public readonly inlineCompletion = input(true);
+  /** Shows the shared clear action for nonempty editable text. Defaults to true; hidden while readonly. */
+  public readonly clearable = input(true);
+  /** Translated accessible name for the clear action. Defaults to Clear selection. */
+  public readonly clearLabel = input<ResolvableText>('Clear selection');
+  /** Optional translated tooltip; defaults to clearLabel. An empty string suppresses the tooltip. */
+  public readonly clearTooltip = input<ResolvableText | undefined>(undefined);
+  /** True when the application supplies filtered options, including remote search. Defaults to false. */
+  public readonly externalFiltering = input(false);
+  /** Suppresses stale results and pagination while a replacement query is pending. */
+  public readonly searching = input(false);
+  public readonly hasMore = input(false);
+  public readonly loadError = input<ResolvableText | undefined>(undefined);
+  public readonly loadMoreConfig = input<ILoadMoreConfig>({});
+  public readonly loadMoreTemplate = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
+  public readonly loadMoreRevision = input<unknown>(undefined);
+  public readonly optionTemplate = input<TemplateRef<IAutocompleteOptionContext> | undefined>(undefined);
+  public readonly emptyText = input<ResolvableText>('No suggestions. You can enter your own value.');
+  public readonly loadingText = input<ResolvableText>('Loading suggestions');
+  public readonly autocomplete = input('off');
+  public readonly isOpen = this.opened.asReadonly();
+  /** Emitted for user text edits. The application owns debounce, cancellation and remote requests. */
+  public readonly queryChange = output<string>();
+  /** Emitted only when the user chooses a suggestion. Free text remains a valid value. */
+  public readonly optionSelected = output<IAutocompleteOption>();
+  public readonly loadMore = output<ILoadMoreRequest>();
+  public readonly openedChange = output<boolean>();
+  private overlayRef?: OverlayRef;
+  private subscriptions = new Subscription();
+  private disconnectTheme?: () => void;
+  private disconnectLighting?: () => void;
+
+  constructor() {
+    super();
+    this.destroy.onDestroy(() => this.dispose());
+    effect(() => {
+      if ((this.effectiveDisabled() || this.isReadonly()) && this.isOpen()) this.close();
+    });
+    effect(() => {
+      this.options();
+      this.searching();
+      untracked(() => this.activeIndex.set(-1));
+    });
+  }
+
+  public open(): void {
+    if (!this.browser || this.isOpen() || this.effectiveDisabled() || this.isReadonly()) return;
+
+    const origin = this.anchor().nativeElement;
+    const overlay = this.overlay.create({
+      width: origin.getBoundingClientRect().width,
+      maxWidth: 'calc(100vw - 16px)',
+      positionStrategy: this.positions.getElementStrategy(origin, 'bottom', 4),
+      scrollStrategy: this.overlay.scrollStrategies.noop(),
+      usePopover: !!this.context?.useTopLayer || !!origin.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]')
+    });
+    this.overlayRef = overlay;
+    this.opened.set(true);
+    this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(origin, overlay.overlayElement));
+    this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, origin);
+    this.subscriptions.add(
+      this.zone.runOutsideAngular(() =>
+        trackOverlayOrigin(overlay, origin, {
+          onOriginHidden: () => this.zone.run(() => this.close()),
+          onPosition: () => {
+            const width = origin.getBoundingClientRect().width;
+
+            if (overlay.getConfig().width !== width) overlay.updateSize({ width });
+          }
+        })
+      )
+    );
+    this.subscriptions.add(
+      overlay.outsidePointerEvents().subscribe((event) => {
+        if (!origin.contains(event.target as Node)) this.close();
+      })
+    );
+    this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onPanelKey(event)));
+    const view = overlay.attach(new TemplatePortal(this.panelTemplate(), this.vcr));
+    view.detectChanges();
+    overlay.updatePosition();
+    this.openedChange.emit(true);
+  }
+
+  public close(): void {
+    if (!this.isOpen()) return;
+
+    const pane = this.overlayRef?.overlayElement;
+
+    if (pane?.contains(pane.ownerDocument.activeElement)) this.focus({ preventScroll: true });
+
+    this.dispose();
+    this.openedChange.emit(false);
+  }
+
+  /** Release the shared request guard after completion without a loading cycle or changed revision. */
+  public completeLoadMore(): void {
+    this.pagination()?.complete();
+  }
+
+  /** Clears editable text, marks the field touched and requests suggestions for the empty query. */
+  public clear(): void {
+    if (this.effectiveDisabled() || this.isReadonly()) return;
+
+    this.composing.set(false);
+    this.updateValue('');
+    this.activeIndex.set(-1);
+    this.markAsTouched();
+    this.focus({ preventScroll: true });
+    this.queryChange.emit('');
+  }
+
+  protected onInput(event: Event): void {
+    if (this.composing() || this.effectiveDisabled() || this.isReadonly()) return;
+
+    const value = (event.target as HTMLInputElement).value;
+    this.updateValue(value);
+    this.activeIndex.set(-1);
+    this.updateCompletionPosition();
+    this.open();
+    this.queryChange.emit(value);
+  }
+
+  protected onCompositionStart(): void {
+    this.composing.set(true);
+  }
+
+  protected onCompositionEnd(event: Event): void {
+    this.composing.set(false);
+    this.onInput(event);
+  }
+
+  protected onFocus(): void {
+    this.inputFocused.set(true);
+    this.updateCompletionPosition();
+    this.open();
+  }
+
+  protected updateCompletionPosition(): void {
+    const input = this.nativeInput().nativeElement;
+    this.caretAtEnd.set(input.selectionStart === input.value.length && input.selectionEnd === input.value.length);
+    this.inputScroll.set(input.scrollLeft);
+  }
+
+  protected onBlur(event: FocusEvent): void {
+    if (event.target === this.nativeInput().nativeElement) this.inputFocused.set(false);
+
+    const destination = event.relatedTarget as Node | null;
+
+    if (destination && (this.hostElement.contains(destination) || this.overlayRef?.overlayElement.contains(destination))) return;
+
+    queueMicrotask(() => {
+      if (this.destroy.destroyed) return;
+
+      const active = this.hostElement.ownerDocument.activeElement;
+
+      if (this.hostElement.contains(active) || this.overlayRef?.overlayElement.contains(active)) return;
+
+      this.close();
+      this.markAsTouched();
+    });
+  }
+
+  protected onInputKey(event: KeyboardEvent): void {
+    if (this.composing() || event.isComposing || this.effectiveDisabled() || this.isReadonly()) return;
+
+    this.updateCompletionPosition();
+    const completion = this.completionOption();
+    const direction = this.nativeInput().nativeElement.ownerDocument.defaultView?.getComputedStyle(this.nativeInput().nativeElement).direction;
+    const forwardKey = direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+
+    if (
+      completion &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.shiftKey &&
+      (event.key === forwardKey || event.key === 'End' || (event.key === 'Enter' && !this.activeId()))
+    ) {
+      event.preventDefault();
+      this.selectOption(completion);
+    } else if (event.key === 'Escape' && this.isOpen()) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close();
+    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.open();
+
+      if (this.searching()) return;
+
+      const options = this.filteredOptions();
+      const enabled = options.map((option, index) => (option.disabled ? -1 : index)).filter((index) => index >= 0);
+      const current = enabled.indexOf(this.activeIndex());
+      const next =
+        event.key === 'ArrowDown' ? (current + 1) % enabled.length : current < 0 ? enabled.length - 1 : (current - 1 + enabled.length) % enabled.length;
+      this.activeIndex.set(enabled[next] ?? -1);
+      this.overlayRef?.overlayElement.querySelector<HTMLElement>('#' + this.activeId())?.scrollIntoView({ block: 'nearest' });
+    } else if (event.key === 'Enter' && this.isOpen() && this.activeId()) {
+      event.preventDefault();
+      this.selectOption(this.filteredOptions()[this.activeIndex()]);
+    } else if (event.key === 'Tab' && this.isOpen()) {
+      if (!event.shiftKey && this.showClear()) return;
+
+      this.tabToPanel(event);
+    }
+  }
+
+  protected onClearKey(event: KeyboardEvent): void {
+    if (event.key === 'Tab' && !event.shiftKey && this.isOpen()) this.tabToPanel(event);
+  }
+
+  protected selectOption(option: IAutocompleteOption): void {
+    if (option.disabled || this.searching() || this.effectiveDisabled() || this.isReadonly()) return;
+
+    this.updateValue(option.value);
+    this.optionSelected.emit(option);
+    this.close();
+    this.focus({ preventScroll: true });
+  }
+
+  protected requestMore(request: ILoadMoreRequest): void {
+    // A busy native footer button becomes disabled; keep focus within the control before that happens.
+    const pane = this.overlayRef?.overlayElement;
+
+    if (pane?.contains(pane.ownerDocument.activeElement)) this.focus({ preventScroll: true });
+
+    this.loadMore.emit(request);
+  }
+
+  //#region Helpers
+
+  private onPanelKey(event: KeyboardEvent): void {
+    const target = event.target as Node | null;
+
+    if (event.defaultPrevented || !target || !this.overlayRef?.overlayElement.contains(target)) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close();
+    } else if (event.key === 'Tab') {
+      if (event.shiftKey) {
+        event.preventDefault();
+        this.focus({ preventScroll: true });
+      } else this.close();
+    }
+  }
+
+  private panelAction(): HTMLButtonElement | undefined {
+    return Array.from(this.overlayRef?.overlayElement.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? []).find(
+      (button) => button.tabIndex >= 0 && button.getClientRects().length > 0
+    );
+  }
+
+  private tabToPanel(event: KeyboardEvent): void {
+    const action = this.panelAction();
+
+    if (!event.shiftKey && action) {
+      event.preventDefault();
+      action.focus();
+    } else this.close();
+  }
+
+  private dispose(): void {
+    this.opened.set(false);
+    this.activeIndex.set(-1);
+    this.subscriptions.unsubscribe();
+    this.subscriptions = new Subscription();
+    this.disconnectTheme?.();
+    this.disconnectTheme = undefined;
+    this.disconnectLighting?.();
+    this.disconnectLighting = undefined;
+    this.overlayRef?.dispose();
+    this.overlayRef = undefined;
+  }
+
+  //#endregion
+}

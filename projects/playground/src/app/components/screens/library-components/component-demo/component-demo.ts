@@ -29,6 +29,7 @@ import { TruncationExamples } from '../truncation-examples/truncation-examples';
 import { FormExamples } from '../form-examples/form-examples';
 import { MenuShortcutExamples } from '../menu-shortcut-examples/menu-shortcut-examples';
 import { SearchExamples } from '../search-examples/search-examples';
+import { EssentialsExamples } from '../essentials-examples/essentials-examples';
 import { ComponentDialog } from './component-dialog';
 import { IComponentDialogData } from './interfaces/icomponent-dialog-data.interface';
 import { COMPONENT_EXAMPLES } from './component-catalog';
@@ -40,6 +41,7 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
     RouterLink,
     FormExamples,
     SearchExamples,
+    EssentialsExamples,
     MenuShortcutExamples,
     TagExamples,
     SideNavExamples,

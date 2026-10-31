@@ -1,83 +1,46 @@
 # Blocks
 
-**Blocks** is a comprehensive, modular UI ecosystem for Angular. It bridges the gap between TypeScript logic and SCSS styling to create highly responsive, theme-aware, and interactive applications.
+Blocks is a modular Angular UI library for responsive, accessible applications. Its components share semantic themes, runtime appearance settings, translations, form behavior and overlay infrastructure. Import the features you need through the package's public entry points.
 
-The library consists of a foundational Core package that handles the "physics" of the application (dimensions, scrolling, theming) and a suite of feature-rich Components (like Modals) built on top of that foundation.
+See the [installation and setup guide](projects/blocks/README.md), [appearance guide](documentation/appearance/README.md), and [live component catalog](https://filipmazev.github.io/Blocks/components). The catalog and its documentation are built from the repository's component registry and colocated READMEs, so this overview needs no component list.
 
-## Key Philosophy
+## Getting started
 
-### 1. Unified Responsiveness
+For an Angular application:
 
-Blocks treats responsiveness as a shared contract between TypeScript and CSS.
+```sh
+ng add @filip.mazev/blocks
+```
 
-* **In TypeScript**: The WindowDimensionsService provides reactive streams for window size.
-
-* **In SCSS: Mixins** like @include respond-down(sm) map perfectly to the TypeScript thresholds, ensuring your logic and layout never desync.
-
-### 2. Deep Theming
-
-Theming is not an afterthought; it is built into the core.
-
-* Uses a CSS Variable system generated via SCSS maps.
-* Supports distinct palettes through a robust token system.
-* Easily switch between light, dark, or high-contrast brand themes at runtime.
-
-### 3. Mobile-First Interaction
-
-Components are designed with mobile fidelity in mind.
-
-* Scroll Locking: The ScrollLockService handles complex edge cases (iOS touch chaining, scrollbar layout shifts) automatically when overlays are open.
-* Gestures: Modals transform into bottom-sheets on mobile with native-feeling swipe-to-close physics.
-
-## Appearance
-
-Blocks 1.4.0 applies glass through the existing component and theme system. Configure materials, blur, tint and rendering quality application-wide through `ThemingService`. Components preserve their semantic colours, layout, accessibility and native interaction. The independent `@filip.mazev/blocks/effects/runtime` engine also works without Angular.
+For local development:
 
 ```sh
 npm ci
 npm start
 ```
 
-Open http://localhost:8080 for the playground and component catalogue, or `/appearance` for global controls, color, light/dark mode, material and lighting controls. Documentation is rendered at build time and bundled with the playground. The icon catalogue renders a bounded page of results.
+Open http://localhost:8080 for the playground, `/components` for the catalog, and `/appearance` for shared theme and accessibility controls. This workspace uses Angular 22 and TypeScript 6.
+
+## Development
 
 ```sh
-npm run build:playground
 npm run build:blocks
-```
-
-Bundled documentation is generated before serving/building. Keep Angular framework, CLI and builder on major 22; this workspace uses TypeScript 6 and its lockfile records compatible dependencies. See [the appearance guide](documentation/appearance/README.md), [delivery plan](documentation/appearance/DELIVERY-PLAN.md), and [validation record](documentation/appearance/VALIDATION.md) for setup, coverage and verification limits.
-
-Run ESLint across all TypeScript and Angular templates in both Blocks and the playground:
-
-```sh
+npm run build:playground
 npm run lint
 ```
 
-Use `npm run lint:blocks` or `npm run lint:playground` to check one project.
+Documentation is generated before playground builds and serving. After changing component READMEs during development, run `npm run tools:build-docs`. Follow [AGENTS.md](AGENTS.md) for repository conventions.
 
-
-## Publish
-
-From the workspace root, publish the library to npm with:
+## Publishing
 
 ```sh
 bash publish.sh
 ```
 
-The script prompts privately for your npm token and checks authentication and account write access before incrementing the patch version. It then builds the complete Blocks package (including effects, Sass themes and the installer) and publishes it with public access. The token must also grant **Read and write (publish and stage)** access to `@filip.mazev/blocks` (or its scope), with **Bypass two-factor authentication** enabled. Account write access alone does not verify these token restrictions.
+The script checks npm authentication, increments the patch version, builds the package and publishes it. If publishing fails after the version increment, correct the authentication issue and use `bash publish.sh --retry` to rebuild and retry the same version. The npm token needs publish access to `@filip.mazev/blocks` and permission to bypass two-factor authentication.
 
-If a publish failed after the version was bumped, correct the token permissions and retry the same version:
-
-```bash
-bash publish.sh --retry
-```
-
-The retry rebuilds the package without another version bump and stops if that version is already published. If the package's publishing policy disallows tokens, use an interactive npm login and publish from `dist/blocks` instead.
-
-Build and deploy the playground to the existing GitHub Pages target:
+To build and deploy the playground to the existing GitHub Pages target:
 
 ```sh
 npm run deploy:playground
 ```
-
-This generates the documentation, builds with `/Blocks/` as the base path, and pushes the output to the `gh-pages` branch of `origin`. Git authentication is required. The deployed site is `https://filipmazev.github.io/Blocks/`.

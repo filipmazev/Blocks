@@ -1,0 +1,21 @@
+@use 'sass:map';
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin-inline: auto;
+    padding-inline: var(--bx-container-padding, #{spacing(4)});
+}
+
+@each $size in (sm, md, lg, xl) {
+    :host([data-size='#{$size}']) {
+        max-inline-size: var(--bx-container-max-width, #{map.get($breakpoints, $size)});
+    }
+}
+
+:host([data-size='full']) {
+    max-inline-size: var(--bx-container-max-width, none);
+}

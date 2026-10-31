@@ -1,0 +1,37 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+.bx-popover-surface {
+    --bx-glass-surface: var(--bx-popover-background, var(--bx-bg-surface));
+    --bx-glass-text: var(--bx-popover-color, var(--bx-text-primary));
+    --bx-glass-edge: var(--bx-popover-border, var(--bx-border-default));
+    --bx-glass-radius: var(--bx-popover-radius, #{radius(lg)});
+    --bx-glass-shadow: var(--bx-popover-shadow, #{shadow(lg)});
+
+    box-sizing: border-box;
+    inline-size: var(--bx-popover-width, max-content);
+    max-inline-size: min(var(--bx-popover-max-width, 24rem), calc(100vw - #{spacing(4)}));
+    overflow: clip;
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    background: var(--bx-glass-surface);
+    color: var(--bx-glass-text);
+    box-shadow: var(--bx-glass-shadow);
+    overflow-wrap: anywhere;
+}
+
+// Keep material decorations outside the scroller so their border insets cannot create scrollbars.
+.bx-popover-content {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    max-block-size: calc(100dvh - #{spacing(4)} - 2px);
+    padding: var(--bx-popover-padding, #{spacing(4)});
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+}
