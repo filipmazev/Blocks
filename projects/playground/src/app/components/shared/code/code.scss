@@ -15,16 +15,11 @@
     overflow: hidden;
 }
 
-:host ::ng-deep pre {
+.playground-code-block {
     margin: 0;
-    font-size: 0.8rem;
-    line-height: 1.7;
-}
+    border: 0;
+    border-radius: 0;
 
-:host ::ng-deep pre code.hljs {
-    padding: spacing(4);
-    min-width: 100%;
-
-    // The tab panel owns both axes; highlight.js must not add a second scroller.
+    // The tab panel owns both axes; keep only one scroll region for file examples.
     overflow: visible;
 }

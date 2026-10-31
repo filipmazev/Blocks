@@ -7,7 +7,7 @@ export interface SurfaceOptions {
   interactive?: boolean;
   /** Override the default theme accent/error color emitted on interaction or an active ARIA state. */
   emission?: string;
-  /** Override the interaction color while the surface or its associated native control contains focus. */
+  /** Override illumination for any focus. Omitted: editable fields illuminate on focus; actions illuminate only on keyboard focus. */
   focusEmission?: string;
   reducedMotion?: boolean;
   reducedTransparency?: boolean;

@@ -1,0 +1,75 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-width: 0;
+    width: 100%;
+}
+
+.demo-language-row {
+    display: flex;
+    justify-content: flex-end;
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin-block-end: spacing(4);
+
+    bx-select {
+        inline-size: 12rem;
+        max-inline-size: 100%;
+    }
+}
+
+.top-nav-demo-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+    margin-block-end: spacing(4);
+
+    bx-input-field {
+        inline-size: 12rem;
+        max-inline-size: 100%;
+    }
+}
+
+.top-nav-demo-frame {
+    position: relative;
+    isolation: isolate;
+    max-height: 28rem;
+    overflow: auto;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 20rem;
+    background: var(--bx-bg-canvas);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+}
+
+.top-nav-demo-brand {
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    color: var(--bx-text-primary);
+    text-decoration: none;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}
+
+.top-nav-demo-content {
+    min-height: 28rem;
+    padding: spacing(4);
+    overflow-wrap: anywhere;
+
+    h3 {
+        margin-block-start: 0;
+    }
+
+    output {
+        display: block;
+        padding-block: spacing(3);
+        color: var(--bx-text-secondary);
+    }
+}

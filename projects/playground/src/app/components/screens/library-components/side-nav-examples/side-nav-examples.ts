@@ -1,14 +1,16 @@
+import { Highlight } from 'ngx-highlightjs';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BX_I18N } from '@filip.mazev/blocks/core';
-import { Button, Checkbox, InputField } from '@filip.mazev/blocks/forms';
+import { Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { SideNav, SideNavHeaderDirective, SideNavFooterDirective, ISideNavConfig, INavigationItem } from '@filip.mazev/blocks/navigation';
-import { SIDE_NAV_DEMO_GROUPS, SIDE_NAV_ROUTE_EXAMPLE } from './constants/side-nav-examples.constants';
+import { SIDE_NAV_ROUTE_EXAMPLE } from './constants/side-nav-examples.constants';
+import { navigationDemoGroups } from '../shared/navigation-examples/helpers/navigation-examples.helpers';
 import { SideNavDemoI18nService } from './services/side-nav-demo-i18n.service';
 
 @Component({
   selector: 'app-side-nav-examples',
-  imports: [SideNav, SideNavHeaderDirective, SideNavFooterDirective, Button, Checkbox, InputField, Icon],
+  imports: [Highlight, SideNav, SideNavHeaderDirective, SideNavFooterDirective, Button, Checkbox, InputField, Select, Icon],
   providers: [SideNavDemoI18nService, { provide: BX_I18N, useExisting: SideNavDemoI18nService }],
   templateUrl: './side-nav-examples.html',
   styleUrl: './side-nav-examples.scss',
@@ -16,14 +18,7 @@ import { SideNavDemoI18nService } from './services/side-nav-demo-i18n.service';
 })
 export class SideNavExamples {
   protected readonly translations = inject(SideNavDemoI18nService);
-  protected readonly groups = computed(() => {
-    this.translations.version();
-    return SIDE_NAV_DEMO_GROUPS.map((group) => ({
-      ...group,
-      title: this.translations.translate(`nav.${group.id}`),
-      items: this.resolveDemoItems(group.items)
-    }));
-  });
+  protected readonly groups = computed(() => navigationDemoGroups('/components/side-nav', this.translations));
 
   protected readonly text = computed(() => ({
     right: this.translations.translate('demo.right'),
@@ -89,20 +84,4 @@ export class SideNavExamples {
   protected select(item: INavigationItem): void {
     this.selected.set(item);
   }
-
-  //#region Helpers
-  private resolveDemoItems(items: INavigationItem[]): INavigationItem[] {
-    return items.map((item) => ({
-      ...item,
-      label: this.translations.translate(`nav.${item.id}`),
-      data: {
-        ...item.data,
-        label: { key: `nav.${item.id}` },
-        // Keep the documented English search example usable when switching languages.
-        keywords: [...(item.data?.keywords ?? []), item.label]
-      },
-      children: this.resolveDemoItems(item.children ?? [])
-    }));
-  }
-  //#endregion
 }

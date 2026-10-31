@@ -1,0 +1,26 @@
+<div class="demo-language-row">
+  <bx-select [label]="text().language" [clearable]="false" [options]="translations.languages" [value]="translations.language()" (selectionChange)="translations.setLanguage($event.value)" subscriptSizing="dynamic" />
+</div>
+<div class="top-nav-demo-controls">
+  <bx-checkbox [label]="text().compact" [(checked)]="compact" />
+  <bx-checkbox [label]="text().search" [(checked)]="searchable" />
+  <bx-checkbox [label]="text().icons" [(checked)]="icons" />
+  <bx-checkbox [label]="text().sticky" [(checked)]="sticky" />
+  <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
+  <bx-checkbox [label]="text().custom" [(checked)]="custom" />
+  <bx-checkbox [label]="text().actions" [(checked)]="actions" />
+  <bx-input-field [label]="text().width" type="number" [min]="280" [max]="1600" [(value)]="width" />
+</div>
+<div class="top-nav-demo-frame" [attr.dir]="rtl() ? 'rtl' : 'ltr'" [style.width]="width() + 'px'">
+  <bx-top-nav #nav [config]="config()" [groups]="groups()" [itemTemplate]="custom() ? customItem : undefined" (itemSelected)="select($event)">
+    <ng-template bxTopNavBrand let-compact><a class="top-nav-demo-brand" routerLink="/components/top-nav/overview" [attr.aria-label]="text().brand"><bx-icon name="blocks" size="24" />@if (!compact) { <strong>{{ text().brand }}</strong> }</a></ng-template>
+    <ng-template bxTopNavActions>
+      @if (actions()) {
+        <button bx-button variant="tonal" color="grayscale" type="button" (click)="action.set('top.actionDone')"><bx-icon name="settings" size="20" />{{ text().settings }}</button>
+        <button bx-button variant="tonal" color="grayscale" type="button" (click)="action.set('top.helpDone')"><bx-icon name="circle-help" size="20" />{{ text().help }}</button>
+      }
+    </ng-template>
+  </bx-top-nav>
+  <div class="top-nav-demo-content"><h3>{{ text().title }}</h3><p>{{ text().description }}</p><p>{{ nav.isCompact() ? text().compactMode : text().expandedMode }}</p><output aria-live="polite">{{ selection() }}</output></div>
+</div>
+<ng-template #customItem let-item><bx-icon [name]="item.icon?.name ?? 'circle'" size="20" /><span>{{ item.label }}</span><small aria-hidden="true">↗</small></ng-template>

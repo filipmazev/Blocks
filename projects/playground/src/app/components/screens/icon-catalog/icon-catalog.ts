@@ -1,3 +1,4 @@
+import { Highlight } from 'ngx-highlightjs';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Icon, IconName, IconSize, IconStrokeWidth, lucideNames } from '@filip.mazev/blocks/icons';
@@ -6,7 +7,7 @@ import { Readme } from '../../shared/readme/readme';
 
 @Component({
   selector: 'app-icon-catalog',
-  imports: [Icon, FormsModule, SearchInput, Select, Button, Readme],
+  imports: [Highlight, Icon, FormsModule, SearchInput, Select, Button, Readme],
   templateUrl: './icon-catalog.html',
   styleUrl: './icon-catalog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

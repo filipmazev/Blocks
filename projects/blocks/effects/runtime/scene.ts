@@ -4,6 +4,9 @@ import { finiteClamp } from './dom';
 import { subscribeFrame } from './scheduler';
 import { lightBoundarySelector, lightingOrigin, lightingVisibility } from './visibility';
 import type { GlassLight, GlassReflector, GlassScene, GlassSceneOptions } from './types';
+import { ACTIVE_SURFACE_STATE_SELECTOR } from './constants/surface-interaction.constants';
+import { isSurfaceActivationKey } from './helpers/surface-interaction.helpers';
+import { SURFACE_RENDERED_STYLES } from './constants/surface-style.constants';
 
 export interface LightContribution {
   key: string;
@@ -80,8 +83,6 @@ interface Reflection {
   radius: number;
 }
 const runtimes = new WeakMap<Document, SceneRuntime>();
-const activeStateSelector =
-  ':checked, [aria-checked="true"], [aria-pressed="true"], [aria-selected="true"], [aria-expanded="true"], [aria-current]:not([aria-current="false"]):not([aria-current=""])';
 const disabledSelector = ':disabled, [aria-disabled="true"], .is-disabled, [inert]';
 
 function runtimeFor(doc: Document): SceneRuntime {
@@ -114,12 +115,15 @@ export function mountGlassScene(root: HTMLElement, options: GlassSceneOptions = 
 }
 
 class SceneRuntime {
+  private readonly renderedStyles = SURFACE_RENDERED_STYLES;
   private entries = new Map<HTMLElement, Entry>();
   private scenes = new Set<SceneEntry>();
   private observer?: IntersectionObserver;
   private stateObserver?: MutationObserver;
   private selected = new Set<Entry>();
   private pressed?: Entry;
+  private pressedPointer?: number;
+  private pressedKey?: string;
   private hovered?: Entry;
   private focused?: Entry;
   private focusedTarget?: Element;
@@ -133,7 +137,7 @@ class SceneRuntime {
   private transparency: MediaQueryList;
   private view: Window;
   private ambient: AmbientSampler;
-  private renderedStyles = new WeakMap<HTMLElement, string | null>();
+
   private assetLoad = (event: Event) => {
     const target = event.target as Element | null;
     if (target && /^(IMG|VIDEO)$/.test(target.tagName)) this.ambient.assetChanged(target);
@@ -141,23 +145,59 @@ class SceneRuntime {
 
   private visibilityChange = () => {
     if (!this.doc.hidden) this.refresh();
+    else this.blur();
     this.ambient.resume();
   };
 
   private down = (event: PointerEvent) => {
+    if (event.button !== 0 || !event.isPrimary) return;
+    this.up();
+    if (event.pointerType === 'touch') this.hovered = undefined;
+    this.pressedPointer = event.pointerId;
     this.pressed = this.find(event);
     this.pressed?.hooks.press();
     this.updateEmitter();
   };
 
-  private up = () => {
+  private up = (event?: PointerEvent) => {
+    if (event && event.pointerId !== this.pressedPointer) return;
     this.pressed?.hooks.release();
     this.pressed = undefined;
+    this.pressedPointer = undefined;
+    this.pressedKey = undefined;
     this.updateEmitter();
   };
 
-  private leave = () => {
+  private keydown = (event: KeyboardEvent) => {
+    const target = event.target as Element | null;
+
+    if (
+      !target ||
+      target.nodeType !== 1 ||
+      event.defaultPrevented ||
+      event.repeat ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      !isSurfaceActivationKey(target, event.key)
+    )
+      return;
+    const entry = this.find(event);
+
+    if (!entry) return;
     this.up();
+    this.pressed = entry;
+    this.pressedKey = event.key;
+    entry.hooks.press();
+    this.updateEmitter();
+  };
+
+  private keyup = (event: KeyboardEvent) => {
+    if (event.key === this.pressedKey) this.up();
+  };
+
+  private leave = () => {
+    if (this.pressedPointer !== undefined) this.up();
     this.hovered = undefined;
     this.updateEmitter();
   };
@@ -169,7 +209,8 @@ class SceneRuntime {
     this.updateEmitter();
   };
 
-  private over = (event: Event) => {
+  private over = (event: PointerEvent) => {
+    if (event.pointerType === 'touch') return;
     const found = this.find(event);
     const next = found?.hooks.emission?.() ? found : undefined;
     if (next !== this.hovered) {
@@ -197,6 +238,7 @@ class SceneRuntime {
   };
 
   private unfocus = () => {
+    if (this.pressedKey !== undefined) this.up();
     this.focused = undefined;
     this.focusedTarget = undefined;
     this.updateEmitter();
@@ -367,7 +409,7 @@ class SceneRuntime {
       this.ambient.remove(entry);
       this.queue.delete(entry);
       this.selected.delete(entry);
-      if (this.pressed === entry) this.pressed = undefined;
+      if (this.pressed === entry) this.up();
       if (this.hovered === entry || this.focused === entry || this.emitting.has(entry)) {
         if (this.hovered === entry) this.hovered = undefined;
         if (this.focused === entry) this.focused = undefined;
@@ -487,7 +529,7 @@ class SceneRuntime {
   private updateSelected(entry: Entry): void {
     const control = entry.element.closest('label')?.control;
     const checked = control?.matches('input[type="checkbox"]:checked, input[type="radio"]:checked');
-    if (entry.hooks.emission?.() && (entry.element.matches(activeStateSelector) || checked)) this.selected.add(entry);
+    if (entry.hooks.emission?.() && (entry.element.matches(ACTIVE_SURFACE_STATE_SELECTOR) || checked)) this.selected.add(entry);
     else this.selected.delete(entry);
   }
 
@@ -514,6 +556,7 @@ class SceneRuntime {
         'checked',
         'aria-selected',
         'aria-expanded',
+        'aria-haspopup',
         'aria-current',
         'disabled',
         'aria-disabled',
@@ -541,14 +584,16 @@ class SceneRuntime {
     if (this.connected) return;
     this.connected = true;
     this.observeState(this.doc.documentElement);
-    this.doc.addEventListener('pointerdown', this.down, { passive: true });
+    this.doc.addEventListener('pointerdown', this.down, { passive: true, capture: true });
     this.doc.addEventListener('pointerover', this.over, { passive: true });
     this.doc.addEventListener('pointerout', this.out, { passive: true });
     this.doc.addEventListener('focusin', this.focus);
     this.doc.addEventListener('focusout', this.unfocus);
+    this.doc.addEventListener('keydown', this.keydown, true);
+    this.view.addEventListener('keyup', this.keyup, true);
     this.doc.addEventListener('change', this.change);
-    this.view.addEventListener('pointerup', this.up, { passive: true });
-    this.view.addEventListener('pointercancel', this.up, { passive: true });
+    this.view.addEventListener('pointerup', this.up, { passive: true, capture: true });
+    this.view.addEventListener('pointercancel', this.up, { passive: true, capture: true });
     this.doc.addEventListener('pointerleave', this.leave, { passive: true });
     this.view.addEventListener('blur', this.blur);
     this.view.addEventListener('resize', this.refresh, { passive: true });
@@ -574,14 +619,16 @@ class SceneRuntime {
     this.connected = false;
     this.stateObserver?.disconnect();
     this.selected.clear();
-    this.doc.removeEventListener('pointerdown', this.down);
+    this.doc.removeEventListener('pointerdown', this.down, true);
     this.doc.removeEventListener('pointerover', this.over);
     this.doc.removeEventListener('pointerout', this.out);
     this.doc.removeEventListener('focusin', this.focus);
     this.doc.removeEventListener('focusout', this.unfocus);
+    this.doc.removeEventListener('keydown', this.keydown, true);
+    this.view.removeEventListener('keyup', this.keyup, true);
     this.doc.removeEventListener('change', this.change);
-    this.view.removeEventListener('pointerup', this.up);
-    this.view.removeEventListener('pointercancel', this.up);
+    this.view.removeEventListener('pointerup', this.up, true);
+    this.view.removeEventListener('pointercancel', this.up, true);
     this.doc.removeEventListener('pointerleave', this.leave);
     this.view.removeEventListener('blur', this.blur);
     this.view.removeEventListener('resize', this.refresh);

@@ -1,3 +1,4 @@
+import { Highlight } from 'ngx-highlightjs';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { BxA11yService, BxAppearanceConfig, ThemingService } from '@filip.mazev/blocks/core';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +11,7 @@ import { AppearancePreview } from './appearance-preview/appearance-preview';
 
 @Component({
   selector: 'app-appearance',
-  imports: [FormsModule, Radio, SlideToggle, SliderDirective, Button, BxSurfaceDirective, Icon, TooltipDirective, Readme, AppearancePreview],
+  imports: [Highlight, FormsModule, Radio, SlideToggle, SliderDirective, Button, BxSurfaceDirective, Icon, TooltipDirective, Readme, AppearancePreview],
   templateUrl: './appearance.html',
   styleUrl: './appearance.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

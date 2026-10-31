@@ -5,6 +5,8 @@
 }
 
 [data-bx-surface] {
+    --bx-glass-press: 0;
+
     isolation: isolate;
     background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
     -webkit-backdrop-filter: blur(var(--bx-glass-blur, var(--bx-glass-material-blur, 10px))) saturate(1.15);
@@ -69,11 +71,24 @@
 }
 
 .bx-glass-ambient,
+.bx-glass-pressure,
 .bx-glass-contribution {
     position: absolute;
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
+}
+
+/* Pressure deepens the material and gathers a soft sheen inside its fixed silhouette. */
+.bx-glass-pressure {
+    opacity: calc(var(--bx-glass-press, 0) * var(--bx-glass-press-opacity, .6));
+    box-shadow: inset 0 2px 5px var(--bx-border-default, GrayText);
+}
+
+@supports (background: color-mix(in srgb, white, transparent)) {
+    .bx-glass-pressure {
+        background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--bx-glass-text, var(--bx-text-primary, CanvasText)) 28%, transparent), transparent 75%);
+    }
 }
 
 @property --bx-glass-environment-color-0 {
@@ -313,6 +328,7 @@
     .bx-glass-rim,
     .bx-glass-light,
     .bx-glass-ambient,
+    .bx-glass-pressure,
     .bx-glass-decoration::before,
     .bx-glass-decoration::after {
         display: none;
@@ -335,6 +351,7 @@
     .bx-glass-rim,
     .bx-glass-light,
     .bx-glass-ambient,
+    .bx-glass-pressure,
     .bx-glass-decoration::before,
     .bx-glass-decoration::after {
         display: none;

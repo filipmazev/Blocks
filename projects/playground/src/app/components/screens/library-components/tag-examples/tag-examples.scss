@@ -29,8 +29,18 @@
     inline-size: 100%;
 }
 
+.tag-controls-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    inline-size: 100%;
+}
+
 @include respond-down(sm) {
     .tag-controls {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tag-controls-checkboxes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }

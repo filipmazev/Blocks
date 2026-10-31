@@ -1,0 +1,32 @@
+  <div class="bx-nav-level" tabindex="-1" (keydown)="levelKey($event)">
+    <div class="bx-nav-level-header">
+      <button bx-button variant="icon" color="grayscale" class="bx-nav-back" type="button" [attr.aria-label]="state.text().backLabel" (click)="requestBack($event)">
+        <bx-icon [name]="state.config().side === 'right' ? 'arrow-right' : 'arrow-left'" size="16" />
+      </button>
+      <div class="bx-nav-level-heading">
+        @if (state.breadcrumbs().length) {
+          <nav class="bx-nav-path" [attr.aria-label]="state.text().pathLabel">
+            <ol>
+              @for (crumb of state.breadcrumbs(); track $index; let last = $last) {
+                <li><button bx-button variant="text" color="grayscale" class="bx-nav-path-action" type="button" (click)="requestLevel(crumb, $event)">{{ crumb.label }}</button>
+                  @if (!last) { <bx-icon class="bx-nav-path-divider" name="chevron-right" size="16" aria-hidden="true" /> }
+                </li>
+              }
+            </ol>
+          </nav>
+        }
+        @if (state.parent(); as parent) {
+          <a class="bx-nav-parent-link" [routerLink]="parent.route" [attr.aria-current]="state.isCurrent(parent) ? 'page' : null" (click)="state.select(parent)">{{ parent.label }}</a>
+        } @else { <strong>{{ state.currentGroup()?.title }}</strong> }
+      </div>
+    </div>
+    <div class="bx-nav-scroll" data-bx-nav-scroll [id]="state.levelId + '-scroll'">
+      @for (key of frames(); track key) {
+        <div class="bx-nav-items bx-nav-level-items" role="menu" tabindex="-1" [id]="state.levelId" [attr.aria-label]="state.parent()?.label ?? state.currentGroup()?.title"
+          [attr.data-nav-level-key]="key" [class.is-animated]="animated()" [class.is-backward]="state.backward()" (keydown)="menuKey($event)">
+          @for (item of state.levelItems(); track item.id) { <bx-navigation-item [item]="item" [inLevel]="true" /> }
+          @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
+        </div>
+      }
+    </div>
+  </div>

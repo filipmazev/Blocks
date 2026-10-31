@@ -1,3 +1,4 @@
+import { Highlight } from 'ngx-highlightjs';
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, resource, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -56,6 +57,7 @@ import { MockOptionsStore } from './services/mock-options-store.service';
 @Component({
   selector: 'app-form-examples',
   imports: [
+    Highlight,
     JsonPipe,
     FormsModule,
     ReactiveFormsModule,

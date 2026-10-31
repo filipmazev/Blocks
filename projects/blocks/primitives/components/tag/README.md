@@ -49,4 +49,4 @@ The parent combobox exposes the complete selection for keyboard users; embedded 
 
 ## Playground
 
-Open `/components/tag` for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, translations, and resizable conditional tooltips. `/components/truncate` demonstrates the shared directive directly. `/components/multi-select` includes selected-tag mode, visible-tag limits, and a Skopje +2 style overflow example.
+Open `/components/tag` for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, an English/Spanish/French/German translation dropdown, and resizable conditional tooltips. `/components/truncate` demonstrates the shared directive directly. `/components/multi-select` includes selected-tag mode, visible-tag limits, and a Skopje +2 style overflow example.

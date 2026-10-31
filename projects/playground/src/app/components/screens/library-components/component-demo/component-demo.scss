@@ -195,17 +195,6 @@ output {
     margin-bottom: spacing(4);
 }
 
-pre {
-    padding: spacing(4);
-    background: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(md);
-    overflow: auto;
-    white-space: pre;
-    font-size: 0.8125rem;
-    line-height: 1.7;
-}
-
 .search-results {
     margin: 0;
     padding-left: spacing(5);

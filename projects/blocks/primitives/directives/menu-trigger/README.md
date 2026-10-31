@@ -26,3 +26,10 @@ The side-navigation demo at `/components/side-nav` demonstrates nested hover, ke
 `bx-menu` accepts `--bx-menu-min-width` (default `12rem`). Constrained submenu owners set it to `0`, use border-box sizing, and reserve their vertical scrollbar gutter.
 
 `menuManual: true` lets an owner coordinate one overlay for several disclosure controls. Automatic click, pointer, and trigger-key handling and the directive's host ARIA attributes are omitted; the owner supplies its visible controls and accessible semantics and calls `open()`/`close()`. `open(focus?, origin?)` optionally supplies the actual positioning origin for that opening, defaulting to `menuOrigin` and then the host. Overlay keyboard dismissal, focus trapping, outside-click handling, theme inheritance, and origin tracking remain shared. Side navigation uses this mode for its single adjacent panel.
+
+
+`menuPlacement` optionally selects the existing dropdown placement strategy (`top`, `bottom`, `left`, or `right`). Omitting it retains physical side-aligned submenu positioning. `TopNav` uses `bottom` for its one panel while `SideNav` retains its side placement. The shared tracker, top-layer context, focus handling, outside-click dismissal, and clipping behavior are unchanged.
+
+`navigateMenuKey(event, menu, options?)` also accepts `IMenuKeyboardOptions`: vertical Up/Down navigation remains the default; horizontal orientation uses Left/Right with optional RTL direction and a roving tab stop. This supports the top navigation menubar without introducing a separate keyboard implementation.
+
+`menuClosing` fires before DOM detachment (after the overlay enters its closing path), allowing owners to retain current scroll/focus context. `menuClosed` still fires after cleanup.

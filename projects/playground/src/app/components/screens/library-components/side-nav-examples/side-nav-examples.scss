@@ -6,6 +6,19 @@
     width: 100%;
 }
 
+.demo-language-row {
+    display: flex;
+    justify-content: flex-end;
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin-block-end: spacing(4);
+
+    bx-select {
+        inline-size: 12rem;
+        max-inline-size: 100%;
+    }
+}
+
 .nav-demo-controls {
     display: flex;
     flex-wrap: wrap;
@@ -15,7 +28,8 @@
 }
 
 .nav-demo-controls bx-input-field {
-    width: 12rem;
+    inline-size: 12rem;
+    max-inline-size: 100%;
 }
 
 .nav-demo-frame {
@@ -50,14 +64,6 @@
 
 .nav-route-example {
     margin-top: spacing(4);
-}
-
-.nav-route-example pre {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    padding: spacing(3);
-    background: var(--bx-bg-surface);
-    border-radius: radius(md);
 }
 
 @include respond-down(sm) {

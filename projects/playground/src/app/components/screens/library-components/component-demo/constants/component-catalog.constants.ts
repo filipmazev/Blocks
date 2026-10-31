@@ -13,6 +13,17 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-side-nav />'
   },
   {
+    id: 'top-nav',
+    title: 'Top navigation',
+    group: 'Navigation',
+    readme: 'projects/blocks/navigation/components/top-nav/README.md',
+    symbol: 'TopNav, TopNavBrandDirective, TopNavActionsDirective',
+    package: '@filip.mazev/blocks/navigation',
+    selector: 'bx-top-nav',
+    description: 'Responsive horizontal navigation with one dropdown panel, contextual search, and shared nested browsing.',
+    example: '<bx-top-nav><ng-template bxTopNavBrand>Studio</ng-template><ng-template bxTopNavActions><!-- application actions --></ng-template></bx-top-nav>'
+  },
+  {
     id: 'truncate',
     title: 'Truncated text',
     group: 'Primitives',

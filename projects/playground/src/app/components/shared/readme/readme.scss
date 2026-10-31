@@ -82,27 +82,11 @@
         background: var(--bx-bg-surface-alt);
     }
 
-    code {
+    code:not(.hljs) {
         padding: 0.15em 0.35em;
         border-radius: radius(sm);
         background: var(--bx-bg-surface-alt);
         font-size: 0.85em;
-    }
-
-    pre {
-        max-width: 100%;
-        overflow-x: auto;
-        border: 1px solid var(--bx-border-default);
-        background: var(--bx-bg-surface);
-        border-radius: radius(md);
-        padding: spacing(4);
-        line-height: 1.6;
-    }
-
-    pre code {
-        background: transparent;
-        padding: 0;
-        white-space: pre;
     }
 
     blockquote {

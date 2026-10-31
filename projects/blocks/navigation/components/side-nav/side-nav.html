@@ -12,7 +12,7 @@
   (menuOpened)="state.submenuVisible.set(true)" (menuClosed)="state.submenuVisible.set(false)" tabindex="-1" bxSurface [bxSurfaceInteractive]="false" class="bx-nav-panel" [id]="id" [class.is-open]="!isMobile() || mobileOpen()"
   [attr.role]="isMobile() ? 'dialog' : null" [attr.aria-modal]="isMobile() && mobileOpen() ? true : null" [attr.aria-label]="state.text().ariaLabel"
   [attr.inert]="isMobile() && !mobileOpen() ? '' : null" [attr.aria-hidden]="isMobile() && !mobileOpen() ? true : null"
-  [cdkTrapFocus]="isMobile() && mobileOpen()" [cdkTrapFocusAutoCapture]="isMobile() && mobileOpen()" (keydown)="panelKey($event)">
+  [cdkTrapFocus]="isMobile() && mobileOpen()" (keydown)="panelKey($event)">
   <div class="bx-nav-header">
     @if (headerTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /> }
     @else if (!isCollapsed()) { <strong>{{ state.text().ariaLabel }}</strong> }
@@ -27,21 +27,21 @@
   </div>
   @if (resolvedConfig().searchable) {
     @if (isCollapsed()) {
-      <button bx-button variant="icon" color="grayscale" type="button" class="bx-nav-search-toggle" [attr.aria-label]="state.text().searchLabel" (click)="toggleCollapsed()"><bx-icon name="search" size="20" /></button>
+      <button bx-button variant="icon" color="grayscale" type="button" class="bx-nav-search-toggle" [attr.aria-label]="state.text().searchLabel" (click)="expandSearch()"><bx-icon name="search" size="20" /></button>
     } @else {
-      <bx-search-input class="bx-nav-search" [placeholder]="state.text().searchPlaceholder" [ariaLabel]="state.text().searchLabel" [clearLabel]="state.text().clearSearchLabel"
+      <bx-search-input class="bx-nav-search" subscriptSizing="dynamic" [placeholder]="state.text().searchPlaceholder" [ariaLabel]="state.text().searchLabel" [clearLabel]="state.text().clearSearchLabel"
         [ngModel]="query()" (ngModelChange)="search($event)" />
     }
   }
   @if (!query().trim() && isInlineSubmenus() && state.hasLevel()) {
-    <ng-container [ngTemplateOutlet]="level" />
+    <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
   } @else {
-    <div class="bx-side-nav-scroll" [id]="id + '-root-scroll'">
+    <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="focusState.rootScrollId">
       <nav [attr.aria-label]="state.text().ariaLabel">
         @if (query().trim()) {
           <div class="bx-nav-items" role="menu" tabindex="-1" [attr.aria-label]="state.text().resultLabel" (keydown)="menuKey($event)">
             @for (entry of state.searchResult().entries; track entry.item.id) {
-              <bx-side-nav-branch [item]="entry.item" [context]="entry.context" />
+              <bx-navigation-item [item]="entry.item" [context]="entry.context" />
             } @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
           </div>
         } @else {
@@ -68,7 +68,7 @@
               }
               <div class="bx-nav-items" role="menu" [attr.aria-label]="group.title || state.text().ariaLabel" [id]="id + '-section-' + $index"
                 [hidden]="sectionCollapsed(group)" tabindex="-1" (keydown)="menuKey($event)">
-                @for (item of group.items; track item.id) { <bx-side-nav-branch [item]="item" [compact]="isCollapsed()" /> }
+                @for (item of group.items; track item.id) { <bx-navigation-item [item]="item" [compact]="isCollapsed()" /> }
               </div>
             </section>
           } @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
@@ -77,33 +77,9 @@
     </div>
   }
   @if (footerTemplate(); as template) { <footer class="bx-nav-footer"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></footer> }
-  <span class="cdk-visually-hidden" role="status" aria-live="polite">@if (state.target()) { {{ state.text().resultLabel }}: {{ state.searchResult().label }} }</span>
+  <span class="cdk-visually-hidden" role="status" aria-live="polite">@if (state.searchResult().label) { {{ state.text().resultLabel }}: {{ state.searchResult().label }} }</span>
 </aside>
 
 <ng-template #submenuPanel>
-  <div class="bx-nav-flyout"><ng-container [ngTemplateOutlet]="level" /></div>
-</ng-template>
-<ng-template #level>
-  <div class="bx-nav-level" tabindex="-1" (keydown)="levelKey($event)">
-    <div class="bx-nav-level-header">
-      <button bx-button variant="icon" color="grayscale" class="bx-nav-back" type="button" [attr.aria-label]="state.text().backLabel" (click)="back($event)">
-        <bx-icon [name]="resolvedConfig().side === 'right' ? 'arrow-right' : 'arrow-left'" size="16" />
-      </button>
-      <div class="bx-nav-level-heading">
-        @if (state.breadcrumb()) { <nav class="bx-nav-path" [attr.aria-label]="state.text().pathLabel">{{ state.breadcrumb() }}</nav> }
-        @if (state.parent(); as parent) {
-          <a class="bx-nav-parent-link" [routerLink]="parent.route" [attr.aria-current]="state.isCurrent(parent) ? 'page' : null" (click)="state.select(parent)">{{ parent.label }}</a>
-        } @else { <strong>{{ state.currentGroup()?.title }}</strong> }
-      </div>
-    </div>
-    <div class="bx-side-nav-scroll" [id]="state.levelId + '-scroll'">
-      @for (key of levelFrames(); track key) {
-        <div class="bx-nav-items bx-nav-level-items" role="menu" tabindex="-1" [id]="state.levelId" [attr.aria-label]="state.parent()?.label ?? state.currentGroup()?.title"
-          [class.is-animated]="!reducedMotion()" [class.is-backward]="state.backward()" (keydown)="menuKey($event)">
-          @for (item of state.levelItems(); track item.id) { <bx-side-nav-branch [item]="item" [inLevel]="true" /> }
-          @empty { <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p> }
-        </div>
-      }
-    </div>
-  </div>
+  <div class="bx-nav-flyout"><bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" /></div>
 </ng-template>

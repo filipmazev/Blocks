@@ -1,0 +1,41 @@
+@use 'core/styles/helpers' as *;
+
+// Shared by live examples, generated README fences, and the configurator file tabs.
+.playground-code-block {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    margin-block: spacing(4);
+    padding: spacing(4);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    background: var(--bx-bg-surface);
+    overflow: auto;
+    white-space: pre;
+    overflow-wrap: normal;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+
+    > code.hljs {
+        display: block;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        overflow: visible;
+        white-space: inherit;
+        overflow-wrap: inherit;
+        font-size: inherit;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 3px;
+    }
+}
+
+@media (forced-colors: active) {
+    .playground-code-block .hljs,
+    .playground-code-block .hljs span {
+        color: CanvasText;
+        background: Canvas;
+    }
+}

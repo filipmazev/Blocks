@@ -11,6 +11,8 @@
     <div class="section-heading"><h2 id="preview-heading">Interactive example</h2><span>Uses your active palette</span></div>
     @if (entry().id === 'side-nav') {
       <div class="demo-stage"><app-side-nav-examples /></div>
+    } @else if (entry().id === 'top-nav') {
+      <div class="demo-stage"><app-top-nav-examples /></div>
     } @else {
     <div class="demo-stage" bxSurface>
       @switch (entry().id) {
@@ -33,6 +35,7 @@
           <div class="demo-stack">
             <div class="demo-row"><button bx-button variant="filled" (click)="activate('Primary action')">Primary action</button><button bx-button variant="tonal" color="accent" (click)="activate('Tonal action')">Tonal</button><button bx-button (click)="activate('Text action')">Text</button><button bx-button variant="filled" [disabled]="true">Disabled</button></div>
             <div class="demo-row"><button bx-button variant="tonal" color="success" (click)="activate('Success')">Success</button><button bx-button variant="tonal" color="warn" (click)="activate('Warning')">Warning</button><button bx-button variant="tonal" color="danger" (click)="activate('Delete')">Delete</button><button bx-button variant="fab" aria-label="Add item" (click)="activate('Add item')"><bx-icon name="plus" /></button></div>
+            <div class="demo-row"><button bx-button variant="icon" color="grayscale" aria-label="Close example" (click)="activate('Close example')"><bx-icon name="x" size="20" /></button><button bx-button variant="tonal" [outlined]="true" (click)="activate('Outlined action')">Outlined</button><button bx-button variant="tonal" [surfaceEffects]="false" (click)="activate('Action without runtime effects')">Without runtime effects</button></div>
           </div>
         }
         @case ('checkbox-indicator') {
@@ -135,6 +138,6 @@
     <p class="action-status" role="status" aria-live="polite">{{ status() }}</p>
   </section>
 
-  <section class="usage-section" aria-labelledby="usage-heading"><h2 id="usage-heading">Quick usage</h2><pre><code [textContent]="'import { ' + entry().symbol + ' } from \'' + entry().package + '\';'"></code></pre><pre><code [textContent]="entry().example"></code></pre></section>
+  <section class="usage-section" aria-labelledby="usage-heading"><h2 id="usage-heading">Quick usage</h2><pre class="playground-code-block" tabindex="0" aria-label="TypeScript import example"><code language="typescript" [highlight]="'import { ' + entry().symbol + ' } from \'' + entry().package + '\';'"></code></pre><pre class="playground-code-block" tabindex="0" aria-label="HTML usage example"><code language="xml" [highlight]="entry().example"></code></pre></section>
   <section class="documentation-section" aria-label="Component documentation"><app-readme [path]="entry().readme" /></section>
 </article>

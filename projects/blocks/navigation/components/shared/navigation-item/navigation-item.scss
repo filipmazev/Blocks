@@ -1,0 +1,123 @@
+@use '../../../../core/styles/helpers' as *;
+@use '../styles/navigation-item' as *;
+
+:host {
+    display: block;
+    min-width: 0;
+}
+
+.bx-nav-row {
+    display: flex;
+    position: relative;
+    align-items: stretch;
+    gap: spacing(1);
+    color: var(--bx-text-primary);
+
+    &.is-disabled {
+        opacity: 0.5;
+    }
+}
+
+.bx-nav-link,
+.bx-nav-disclosure {
+    @include navigation-item;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: spacing(2);
+    min-height: 2.75rem;
+    padding: spacing(2) spacing(3);
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &[aria-disabled='true'],
+    &:disabled {
+        cursor: default;
+    }
+}
+
+.bx-nav-link {
+    flex: 1;
+    min-width: 0;
+
+    &.is-ancestor {
+        color: var(--bx-text-accent);
+    }
+}
+
+.bx-nav-presentation {
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    width: 100%;
+    min-width: 0;
+}
+
+.bx-nav-link.has-context {
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(1);
+}
+
+.bx-nav-label {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.bx-nav-icon {
+    flex: none;
+}
+
+.bx-nav-disclosure {
+    flex: none;
+    min-width: 2.75rem;
+    justify-content: center;
+    padding-inline: spacing(2);
+}
+
+.is-compact {
+    justify-content: center;
+
+    .bx-nav-presentation {
+        justify-content: center;
+    }
+
+    .bx-nav-link {
+        flex: 1;
+        justify-content: center;
+        min-width: 0;
+        padding-inline: 0;
+    }
+}
+
+.bx-nav-result-path {
+    display: block;
+    margin-block-start: spacing(1);
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    font-weight: normal;
+}
+
+@media (forced-colors: active) {
+    .bx-nav-link.is-active {
+        text-decoration: underline;
+    }
+}
+
+.is-horizontal {
+    .bx-nav-link,
+    .bx-nav-disclosure {
+        min-height: 2.5rem;
+    }
+
+    .bx-nav-label {
+        white-space: nowrap;
+    }
+}

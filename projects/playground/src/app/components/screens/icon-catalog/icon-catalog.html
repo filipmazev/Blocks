@@ -7,7 +7,7 @@
   </div>
   <div class="catalog-summary"><p role="status">{{ rangeStart() }}–{{ rangeEnd() }} of {{ filteredIcons().length }} icons</p><span>48 per page</span></div>
   @if (selectedIcon()) {
-    <div class="selected-example" role="status"><span>Selected: {{ selectedIcon() }}</span><code [textContent]="selectedCode()"></code></div>
+    <div class="selected-example" role="status"><span>Selected: {{ selectedIcon() }}</span><pre class="playground-code-block" tabindex="0" aria-label="Selected icon HTML example"><code language="xml" [highlight]="selectedCode()"></code></pre></div>
   }
   <div class="icon-grid" aria-label="Icon results">
     @for (name of visibleIcons(); track $index) {

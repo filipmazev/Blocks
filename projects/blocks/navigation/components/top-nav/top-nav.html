@@ -1,0 +1,63 @@
+<nav #bar class="bx-top-nav-bar" tabindex="-1" bxSurface [bxSurfaceInteractive]="false" [bxOverlayContext]="{ useTopLayer: true }"
+  [attr.aria-label]="state.text().ariaLabel" [bxMenuTrigger]="panel" #panelTrigger="bxMenuTrigger" [menuManual]="true" [menuHover]="false" [menuPinned]="true"
+  menuPlacement="bottom" [menuSide]="state.config().side === 'right' ? 'left' : 'right'" [menuLabel]="state.parent()?.label ?? state.text().ariaLabel" (menuOpened)="panelOpened()" (menuClosing)="focusState.remember()" (menuClosed)="panelClosed()">
+  @if (brandTemplate(); as template) {
+    <div class="bx-top-nav-brand"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></div>
+  }
+  <div #space class="bx-top-nav-links" [class.is-empty]="!rootItems().length">
+    <button #menuButton bx-button variant="tonal" color="grayscale" type="button" class="bx-top-nav-toggle" [style.display]="isCompact() && rootItems().length ? null : 'none'"
+      [attr.aria-label]="state.text().openLabel" aria-haspopup="dialog" [attr.aria-expanded]="opened()" [attr.aria-controls]="opened() ? panelId : null" (click)="toggle($event)">
+      <bx-icon name="menu" size="16" />
+    </button>
+    <div #primary class="bx-top-nav-primary" [attr.role]="rootItems().length ? 'menubar' : null" tabindex="-1" [attr.aria-label]="state.text().ariaLabel" [class.is-hidden]="isCompact()"
+      [attr.aria-hidden]="isCompact() ? true : null" [attr.inert]="isCompact() ? '' : null" (keydown)="rootKey($event)" (focusin)="rootFocus($event)">
+      @for (item of rootItems(); track item.id) { <bx-navigation-item [item]="item" [horizontal]="true" /> }
+    </div>
+  </div>
+  @if (resolvedConfig().searchable) {
+    <button bx-button type="button" variant="icon" color="grayscale" class="bx-top-nav-search-toggle" [attr.aria-label]="state.text().searchLabel"
+      aria-haspopup="dialog" [attr.aria-expanded]="opened()" [attr.aria-controls]="opened() ? panelId : null"
+      [bxTooltip]="state.text().searchLabel" (click)="open($event, true)"><bx-icon name="search" size="20" /></button>
+  }
+  @if (actionsTemplate(); as template) {
+    <div class="bx-top-nav-actions"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></div>
+  }
+</nav>
+<ng-template #panel>
+  <section class="bx-top-nav-panel" data-bx-navigation-surface role="dialog" tabindex="-1" [id]="panelId" [attr.aria-label]="state.text().ariaLabel"
+    [style.--bx-top-nav-available-height]="availablePanelHeight()" (keydown)="panelKey($event)">
+    <div class="bx-top-nav-panel-header"><strong>{{ state.text().ariaLabel }}</strong>
+      <button bx-button type="button" variant="icon" color="grayscale" class="bx-top-nav-close" [attr.aria-label]="state.text().closeLabel" (click)="closeFromControl($event)"><bx-icon name="x" size="20" /></button>
+    </div>
+    @if (resolvedConfig().searchable) {
+      <bx-search-input class="bx-top-nav-search" subscriptSizing="dynamic" [placeholder]="state.text().searchPlaceholder" [ariaLabel]="state.text().searchLabel"
+        [clearLabel]="state.text().clearSearchLabel" [ngModel]="query()" (ngModelChange)="search($event)" />
+    }
+    @if (!query().trim() && state.hasLevel()) {
+      <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
+    } @else {
+      <div class="bx-top-nav-scroll" data-bx-nav-scroll [id]="focusState.rootScrollId">
+        @if (query().trim()) {
+          <div role="menu" class="bx-top-nav-items" tabindex="-1" [attr.aria-label]="state.text().resultLabel" (keydown)="menuKey($event)">
+            @for (entry of state.searchResult().entries; track entry.item.id) { <bx-navigation-item [item]="entry.item" [context]="entry.context" /> }
+            @empty { <p class="bx-top-nav-empty" role="status">{{ state.text().emptyText }}</p> }
+          </div>
+        } @else {
+          @for (group of state.groups(); track group.id) {
+            <section class="bx-top-nav-section" [attr.aria-label]="group.title || state.text().ariaLabel">
+              @if (group.title) {
+                <h2 class="bx-top-nav-heading" [class.is-active]="sectionActive(group)">
+                  @if (resolvedConfig().showSectionIcons) { <bx-icon [name]="group.icon?.name ?? 'folder'" size="20" /> }<span>{{ group.title }}</span>
+                </h2>
+              }
+              <div role="menu" class="bx-top-nav-items" tabindex="-1" [attr.aria-label]="group.title || state.text().ariaLabel" (keydown)="menuKey($event)">
+                @for (item of group.items; track item.id) { <bx-navigation-item [item]="item" /> }
+              </div>
+            </section>
+          } @empty { <p class="bx-top-nav-empty" role="status">{{ state.text().emptyText }}</p> }
+        }
+      </div>
+    }
+    <span class="cdk-visually-hidden" role="status" aria-live="polite">@if (state.searchResult().label) { {{ state.text().resultLabel }}: {{ state.searchResult().label }} }</span>
+  </section>
+</ng-template>

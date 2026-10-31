@@ -1,3 +1,4 @@
+import { Highlight } from 'ngx-highlightjs';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { Checkbox, IBxSelectOption, InputField, MultiSelect, SearchInput, Select } from '@filip.mazev/blocks/forms';
 import { Menu, MenuItem, Tag, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
@@ -5,7 +6,7 @@ import { TRUNCATION_CUSTOM_EXAMPLE, TRUNCATION_LOGIC_EXAMPLE, TRUNCATION_PIPE_EX
 
 @Component({
   selector: 'app-truncation-examples',
-  imports: [Checkbox, InputField, MultiSelect, SearchInput, Select, Menu, MenuItem, Tag, TooltipDirective, TruncateDirective, TruncatedTextPipe],
+  imports: [Highlight, Checkbox, InputField, MultiSelect, SearchInput, Select, Menu, MenuItem, Tag, TooltipDirective, TruncateDirective, TruncatedTextPipe],
   templateUrl: './truncation-examples.html',
   styleUrl: './truncation-examples.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

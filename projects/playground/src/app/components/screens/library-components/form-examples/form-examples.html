@@ -36,7 +36,7 @@
     <aside class="state-panel" aria-label="Form state">
         <p role="status">{{ status() }}</p>
         <dl><dt>Valid</dt><dd>{{ registration().valid() }}</dd><dt>Invalid</dt><dd>{{ registration().invalid() }}</dd><dt>Pending</dt><dd>{{ registration().pending() }}</dd><dt>Submitting</dt><dd>{{ registration().submitting() }}</dd><dt>Touched</dt><dd>{{ registration().touched() }}</dd><dt>Dirty</dt><dd>{{ registration().dirty() }}</dd></dl>
-        <pre>{{ model() | json }}</pre>
+        <pre class="playground-code-block" tabindex="0" aria-label="Current form data as JSON"><code language="json" [highlight]="model() | json"></code></pre>
         <ul>@for (error of registration().errorSummary(); track $index) { <li>{{ error.kind }}: {{ error.message || 'Uses the field message resolver' }}</li> }</ul>
     </aside>
 </div>

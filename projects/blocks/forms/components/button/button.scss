@@ -1,6 +1,8 @@
 @use '../../../core/styles/helpers' as *;
 
 :host {
+    --bx-button-pressure: var(--bx-glass-press, 0);
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -165,6 +167,38 @@
     color: inherit;
 }
 
+// Animate the content inside a stationary hit area, using the shared glass pressure spring.
+:host(
+    .bx-btn-animated:not(
+        .bx-btn-non-interactive,
+        [disabled],
+        [aria-disabled='true'],
+        [data-bx-reduced-motion='true']
+    )
+) {
+    .bx-btn-content-wrapper {
+        transform: translateY(calc(var(--bx-button-pressure) * var(--bx-button-press-offset, 1px)))
+            scale(calc(1 - var(--bx-button-pressure) * var(--bx-button-press-compression, 0.035)));
+    }
+}
+
+:host([data-bx-reduced-motion='true']) .bx-btn-content-wrapper {
+    transform: none;
+    transition: none;
+}
+
+// Text actions and buttons with runtime effects disabled retain native press feedback.
+:host(:not([data-bx-surface])),
+:host(.bx-btn-text) {
+    &.bx-btn-animated .bx-btn-content-wrapper {
+        transition: transform 140ms ease-out;
+    }
+
+    &:active:not(.bx-btn-non-interactive, [disabled], [aria-disabled='true']) {
+        --bx-button-pressure: 1;
+    }
+}
+
 :host([data-bx-surface]),
 :host(:not([data-bx-surface])) {
     border-radius: var(--bx-glass-radius, #{radius(md)});
@@ -239,13 +273,17 @@
     }
 }
 
-:host([data-bx-surface]):hover:not(.bx-btn-non-interactive) {
-    --bx-glass-surface: var(--bx-bg-neutral-hover);
-    --bx-glass-edge: var(--bx-border-strong);
+@media (hover: hover) {
+    :host([data-bx-surface]):hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
+        --bx-glass-surface: var(--bx-bg-neutral-hover);
+        --bx-glass-edge: var(--bx-border-strong);
+    }
 }
 
-:host([data-bx-surface]):active:not(.bx-btn-non-interactive) {
-    --bx-glass-shadow: inset 0 1px 3px rgb(0 0 0 / 12%);
+:host(:active:not(.bx-btn-non-interactive, [disabled], [aria-disabled='true'])) {
+    --bx-glass-shadow: var(--bx-button-press-shadow, inset 0 2px 4px var(--bx-border-default));
+
+    box-shadow: var(--bx-glass-shadow);
 }
 
 // Standard control state drives the shared material and emitted border light.
@@ -253,7 +291,7 @@
     :is(
         [aria-pressed='true'],
         [aria-selected='true'],
-        [aria-expanded='true'],
+        [aria-expanded='true'][aria-haspopup]:not([aria-haspopup='false']),
         [aria-current]:not([aria-current='false'], [aria-current=''])
     ):not(.bx-btn-non-interactive, [aria-disabled='true'])
 ) {
@@ -265,7 +303,12 @@
     --bx-glass-surface: var(--btn-theme-tonal-bg);
     --btn-selected-surface: var(--btn-theme-tonal-bg);
 
-    &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']),
+    @media (hover: hover) {
+        &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
+            --bx-glass-surface: var(--btn-theme-tonal-bg);
+        }
+    }
+
     &:active:not(.bx-btn-non-interactive, [aria-disabled='true']) {
         --bx-glass-surface: var(--btn-theme-tonal-bg);
     }
@@ -283,10 +326,16 @@
     --bx-glass-text: var(--btn-theme-text);
     --bx-glass-min-opacity: 1;
 
-    &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
-        --bx-glass-surface: var(--btn-theme-hover);
-        --btn-selected-surface: var(--btn-theme-hover);
-        --bx-glass-text: var(--btn-theme-hover-text, var(--btn-theme-text));
+    // Opaque intent fills use their pressed color, without a glass wash or inset ring.
+    --bx-glass-press-opacity: 0;
+    --bx-button-press-shadow: none;
+
+    @media (hover: hover) {
+        &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
+            --bx-glass-surface: var(--btn-theme-hover);
+            --btn-selected-surface: var(--btn-theme-hover);
+            --bx-glass-text: var(--btn-theme-hover-text, var(--btn-theme-text));
+        }
     }
 
     &:active:not(.bx-btn-non-interactive, [aria-disabled='true']) {
@@ -307,8 +356,22 @@
     --bx-glass-decoration-opacity: 0;
     --bx-glass-rim-visibility: 0;
 
-    &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
+    &:active:not(.bx-btn-non-interactive, [aria-disabled='true']) {
         text-decoration: underline;
         text-underline-offset: 0.2em;
+    }
+
+    @media (hover: hover) {
+        &:hover:not(.bx-btn-non-interactive, [aria-disabled='true']) {
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    :host(:active:not(.bx-btn-non-interactive, [disabled], [aria-disabled='true'])) {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
     }
 }

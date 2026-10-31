@@ -10,17 +10,17 @@ const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
     {
       path: entry.id,
       loadComponent:
-        entry.id === 'side-nav'
+        entry.id === 'side-nav' || entry.id === 'top-nav'
           ? undefined
           : () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
       children:
-        entry.id === 'side-nav'
+        entry.id === 'side-nav' || entry.id === 'top-nav'
           ? [
               { path: '', pathMatch: 'full', redirectTo: 'overview' },
               {
                 path: ':navId',
                 loadComponent: () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
-                data: { componentId: 'side-nav' }
+                data: { componentId: entry.id }
               }
             ]
           : undefined,

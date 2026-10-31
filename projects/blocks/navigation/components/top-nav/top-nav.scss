@@ -1,0 +1,192 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    --bx-nav-item-radius: var(--bx-top-nav-item-radius, #{radius(md)});
+    --bx-nav-item-gap: var(--bx-top-nav-item-gap, #{spacing(2)});
+    --bx-nav-item-background: var(--bx-top-nav-item-background, transparent);
+    --bx-nav-item-hover-background: var(
+        --bx-top-nav-item-hover-background,
+        var(--bx-accent-subtle)
+    );
+    --bx-nav-item-active-background: var(
+        --bx-top-nav-item-active-background,
+        var(--bx-accent-subtle)
+    );
+
+    display: block;
+    min-width: 0;
+    width: 100%;
+    font-family: inherit;
+    color: var(--bx-text-primary);
+}
+
+:host(.is-sticky) {
+    position: sticky;
+    inset-block-start: var(--bx-top-nav-top, 0);
+    z-index: z(sticky);
+}
+
+.bx-top-nav-bar {
+    --bx-glass-min-opacity: 0.72;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--bx-top-nav-gap, #{spacing(2)});
+    box-sizing: border-box;
+    min-height: var(--bx-top-nav-height, 3.75rem);
+    padding-block: var(--bx-top-nav-padding-block, #{spacing(2)});
+    padding-inline: var(--bx-top-nav-padding-inline, #{spacing(3)});
+    border-radius: var(--bx-top-nav-radius, #{radius(md)});
+}
+
+.bx-top-nav-brand,
+.bx-top-nav-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.bx-top-nav-brand {
+    flex: 0 1 auto;
+}
+
+.bx-top-nav-actions {
+    flex: 0 1 auto;
+    justify-content: flex-end;
+}
+
+.bx-top-nav-links {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    overflow: hidden;
+
+    &.is-empty {
+        min-width: 0;
+        min-height: 0;
+    }
+}
+
+.bx-top-nav-primary {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--bx-nav-item-gap);
+    width: max-content;
+
+    &.is-hidden {
+        position: absolute;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+.bx-top-nav-toggle,
+.bx-top-nav-search-toggle,
+.bx-top-nav-close {
+    flex: none;
+    width: spacing(10);
+    height: spacing(10);
+    padding: 0;
+}
+
+.bx-top-nav-search-toggle,
+.bx-top-nav-close {
+    --bx-glass-radius: #{radius(pill)};
+}
+
+.bx-top-nav-panel {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 0;
+    width: var(--bx-top-nav-panel-width, 24rem);
+    max-width: calc(100dvw - #{spacing(4)});
+    max-height: min(
+        var(--bx-top-nav-panel-max-height, 32rem),
+        var(--bx-top-nav-available-height, calc(100dvh - #{spacing(4)}))
+    );
+    overflow: hidden;
+    background: var(--bx-bg-surface);
+    color: var(--bx-text-primary);
+    border: 1px solid var(--bx-border-default);
+    border-radius: var(--bx-top-nav-radius, #{radius(md)});
+    box-shadow: shadow(lg);
+}
+
+.bx-top-nav-panel-header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: spacing(2);
+    padding: spacing(2) spacing(3);
+
+    strong {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+.bx-top-nav-search {
+    display: block;
+    flex: none;
+    padding-inline: spacing(2);
+    padding-block-end: spacing(1);
+}
+
+.bx-top-nav-scroll {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: spacing(2);
+    overflow: hidden auto;
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+    scroll-behavior: auto;
+}
+
+.bx-top-nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--bx-nav-item-gap);
+}
+
+.bx-top-nav-section + .bx-top-nav-section {
+    margin-block-start: spacing(4);
+}
+
+.bx-top-nav-heading {
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    margin: 0 0 spacing(1);
+    padding: spacing(2);
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+
+    &.is-active {
+        color: var(--bx-text-accent);
+    }
+}
+
+.bx-top-nav-empty {
+    padding: spacing(3);
+    color: var(--bx-text-secondary);
+}
+
+@media (forced-colors: active) {
+    .bx-top-nav-panel {
+        border-color: CanvasText;
+    }
+}

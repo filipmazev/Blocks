@@ -1,3 +1,4 @@
+import { Highlight } from 'ngx-highlightjs';
 import { ChangeDetectionStrategy, Component, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -21,6 +22,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { ModalService, ModalBanner } from '@filip.mazev/blocks/modal';
 import { ToastrService } from '@filip.mazev/blocks/toastr';
 import { Readme } from '../../../shared/readme/readme';
+import { TopNavExamples } from '../top-nav-examples/top-nav-examples';
 import { SideNavExamples } from '../side-nav-examples/side-nav-examples';
 import { TagExamples } from '../tag-examples/tag-examples';
 import { TruncationExamples } from '../truncation-examples/truncation-examples';
@@ -33,11 +35,13 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
 @Component({
   selector: 'app-component-demo',
   imports: [
+    Highlight,
     RouterLink,
     FormExamples,
     SearchExamples,
     TagExamples,
     SideNavExamples,
+    TopNavExamples,
     TruncationExamples,
     ReactiveFormsModule,
     Button,

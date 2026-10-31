@@ -1,11 +1,7 @@
-import { INavigationItem } from '../../../interfaces/inavigation-item.interface';
+import { INavigationItemContext } from '../../shared/interfaces/inavigation-item-context.interface';
 
-/** Item presentation context. The surrounding link/button retains routing, semantics and keyboard behavior. */
-export interface ISideNavItemContext {
-  /** Resolved navigation item. */
-  $implicit: INavigationItem;
-  /** Whether this is the active Angular route. */
-  active: boolean;
-  /** Whether only the item's icon should be displayed. */
+/** Side-nav item context; retains the public interface while sharing navigation presentation contracts. */
+export interface ISideNavItemContext extends INavigationItemContext {
+  /** True in the effective desktop icon rail; search or inline nested browsing can temporarily expand it. */
   collapsed: boolean;
 }

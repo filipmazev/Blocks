@@ -2,9 +2,34 @@ import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { marked } from 'marked';
+import hljs from 'highlight.js/lib/core';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
+import scss from 'highlight.js/lib/languages/scss';
+import bash from 'highlight.js/lib/languages/bash';
+import json from 'highlight.js/lib/languages/json';
 import prettier from 'prettier';
 import ts from 'typescript';
 import { typescriptFormatOptions } from '../typescript-format-options.mjs';
+
+for (const [language, grammar] of Object.entries({ typescript, xml, scss, bash, json })) hljs.registerLanguage(language, grammar);
+
+// Highlight fences during generation so README content needs no browser DOM pass.
+// Unknown or unlabelled languages remain escaped text; code never becomes markup.
+marked.use({
+  renderer: {
+    code({ text, lang }) {
+      const language = lang?.trim().split(/\s+/)[0]?.toLowerCase() ?? 'plaintext';
+      const supported = hljs.getLanguage(language);
+      const content = supported
+        ? hljs.highlight(text, { language, ignoreIllegals: true }).value
+        : text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+      const label = supported ? `${language} code example` : 'Code example';
+      const codeLanguage = supported ? language : 'plaintext';
+      return `<pre class="playground-code-block" tabindex="0" aria-label="${label}"><code class="hljs language-${codeLanguage}">${content}</code></pre>\n`;
+    }
+  }
+});
 
 // Documentation ships as rendered HTML in the application bundle. No README
 // requests, markdown parsing or external documentation service at runtime.

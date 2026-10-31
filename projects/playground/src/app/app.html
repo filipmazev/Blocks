@@ -2,21 +2,25 @@
 <div class="app-container">
   <app-sidenav #navigation title="Blocks" />
   <div class="app-main">
-    <header class="app-toolbar" [bxOverlayContext]="{ useTopLayer: true }" data-bx-light-scope bxSurface aria-label="Playground controls">
-      @if (navigation.mobile()) {
-        <button bx-button type="button" variant="tonal" color="grayscale" class="navigation-toggle" [class.is-open]="navigation.open()"
-          aria-label="Open navigation" [attr.aria-expanded]="navigation.open()" [attr.aria-controls]="navigation.panelId()"
-          [attr.aria-hidden]="navigation.open() ? true : null" [attr.inert]="navigation.open() ? '' : null" (click)="navigation.toggle($event)">
-          <bx-icon name="menu" size="16" />
-        </button>
-      }
-      <span class="toolbar-label">Component playground</span>
-      <div class="toolbar-actions">
-        <a bx-button class="appearance-button" variant="tonal" color="grayscale" routerLink="/appearance" aria-label="Configure appearance for the whole playground"><bx-icon name="sliders-horizontal" size="20" /><span>Appearance</span></a>
-        <button bx-button type="button" [bxDropdown]="themeMenu" bxTransition="fade" placement="bottom" variant="tonal" color="grayscale" aria-label="Choose theme palette"><span class="toolbar-palette-swatches" aria-hidden="true"><span [style.background-color]="selectedPalette().colors[0]"></span><span [style.background-color]="selectedPalette().colors[1]"></span></span>{{ selectedThemeLabel() }}<bx-icon name="chevron-down" size="16" /></button>
-        <button bx-button type="button" (click)="toggleTheme()" variant="tonal" class="theme-mode-toggle" color="grayscale" [attr.aria-label]="isDarkMode() ? 'Switch to light theme' : 'Switch to dark theme'"><bx-icon [name]="isDarkMode() ? 'sun' : 'moon'" size="20" /></button>
-      </div>
-    </header>
+    <bx-top-nav class="app-toolbar" [config]="toolbarConfig" [groups]="toolbarGroups" data-bx-light-scope>
+      <ng-template bxTopNavBrand>
+        @if (navigation.mobile()) {
+          <button bx-button type="button" variant="tonal" color="grayscale" class="navigation-toggle" [class.is-open]="navigation.open()"
+            aria-label="Open navigation" [attr.aria-expanded]="navigation.open()" [attr.aria-controls]="navigation.panelId()"
+            [attr.aria-hidden]="navigation.open() ? true : null" [attr.inert]="navigation.open() ? '' : null" (click)="navigation.toggle($event)">
+            <bx-icon name="menu" size="16" />
+          </button>
+        }
+        <span class="toolbar-label">Component playground</span>
+      </ng-template>
+      <ng-template bxTopNavActions>
+        <div class="toolbar-actions" [bxOverlayContext]="{ useTopLayer: true }">
+          <a bx-button class="appearance-button" variant="tonal" color="grayscale" routerLink="/appearance" aria-label="Configure appearance for the whole playground"><bx-icon name="sliders-horizontal" size="20" /><span>Appearance</span></a>
+          <button bx-button type="button" [bxDropdown]="themeMenu" bxTransition="fade" placement="bottom" variant="tonal" color="grayscale" aria-label="Choose theme palette"><span class="toolbar-palette-swatches" aria-hidden="true"><span [style.background-color]="selectedPalette().colors[0]"></span><span [style.background-color]="selectedPalette().colors[1]"></span></span>{{ selectedThemeLabel() }}<bx-icon name="chevron-down" size="16" /></button>
+          <button bx-button type="button" (click)="toggleTheme()" variant="tonal" class="theme-mode-toggle" color="grayscale" [attr.aria-label]="isDarkMode() ? 'Switch to light theme' : 'Switch to dark theme'"><bx-icon [name]="isDarkMode() ? 'sun' : 'moon'" size="20" /></button>
+        </div>
+      </ng-template>
+    </bx-top-nav>
     <main class="app-content-container" id="main-content" tabindex="-1"><router-outlet /></main>
   </div>
 </div>

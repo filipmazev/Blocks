@@ -34,3 +34,11 @@ export * from './components/side-nav/interfaces/iside-nav-layout.interface';
 export * from './components/side-nav/types/side-nav.types';
 export * from './interfaces/inav-tag.interface';
 export * from './interfaces/inavigation-tree-group.interface';
+
+export * from './components/top-nav/top-nav';
+export * from './components/top-nav/directives/top-nav-brand.directive';
+export * from './components/top-nav/directives/top-nav-actions.directive';
+export * from './components/top-nav/interfaces/itop-nav-config.interface';
+export * from './components/top-nav/interfaces/itop-nav-slot-context.interface';
+export * from './components/shared/interfaces/inavigation-item-context.interface';
+export * from './components/shared/interfaces/inavigation-view-config.interface';

@@ -3,7 +3,7 @@
         <bx-tag [text]="text()" [color]="color() ?? 'accent'" [variant]="variant() ?? 'tonal'" [disabled]="disabled()"
             [leadingIcon]="leadingIcon() ? 'map-pin' : undefined" [trailingIcon]="trailingIcon() ? 'chevron-right' : undefined"
             [leadingNumber]="leadingCount() ? leftNumber() : null" [trailingNumber]="trailingCount() ? rightNumber() : null"
-            [locale]="translations.language()" [tooltip]="{ key: 'tagTooltip' }" />
+            [tooltip]="'A location tag tooltip'" />
         <bx-tag [leadingNumber]="42" color="info" variant="filled" ariaLabel="42 locations" tooltip="Number-only tag" />
         <bx-tag [text]="{ key: 'tagLabel' }" leadingIcon="map-pin" color="success" />
         <bx-tag text="Unavailable" color="neutral" [disabled]="true" />
@@ -15,13 +15,14 @@
         <bx-select [clearable]="false" label="Appearance" [options]="variants" [(value)]="variant" />
         <bx-input-field label="Leading number" type="number" [(value)]="leftNumber" />
         <bx-input-field label="Trailing number" type="number" [(value)]="rightNumber" />
+    </div>
+    <div class="tag-controls-checkboxes">
         <bx-checkbox label="Leading icon" [(checked)]="leadingIcon" />
         <bx-checkbox label="Trailing icon" [(checked)]="trailingIcon" />
         <bx-checkbox label="Leading number" [(checked)]="leadingCount" />
         <bx-checkbox label="Trailing number" [(checked)]="trailingCount" />
         <bx-checkbox label="Disabled appearance" [(checked)]="disabled" />
     </div>
-    <button bx-button type="button" (click)="translations.toggle()">Language: {{ translations.language() }}</button>
     <p>Hover or keyboard-focus a tooltip tag. In a select trigger, the parent control exposes the complete selection while overflow tags show the remaining names on hover.</p>
     <app-truncation-examples />
 </div>

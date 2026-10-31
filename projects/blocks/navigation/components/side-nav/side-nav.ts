@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { A11yModule, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { A11yModule, CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { FormsModule } from '@angular/forms';
 import {
   afterNextRender,
@@ -20,7 +20,7 @@ import {
   untracked,
   viewChild
 } from '@angular/core';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BxA11yService, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
 import { Button, SearchInput } from '@filip.mazev/blocks/forms';
@@ -36,18 +36,20 @@ import { ISideNavSlotContext } from './interfaces/iside-nav-slot-context.interfa
 import { ISideNavItemContext } from './interfaces/iside-nav-item-context.interface';
 import { ISideNavLayout } from './interfaces/iside-nav-layout.interface';
 import { ISideNavSavedState } from './interfaces/iside-nav-saved-state.interface';
-import { SideNavStateService } from './services/side-nav-state.service';
-import { SideNavBranch } from './components/side-nav-branch/side-nav-branch';
-import { definedSideNavConfig } from './helpers/side-nav-config.helpers';
-import { ISideNavExpandRequest } from './interfaces/iside-nav-expand-request.interface';
-import { ISideNavLevelPosition } from './interfaces/iside-nav-level-position.interface';
+import { NavigationStateService } from '../shared/services/navigation-state.service';
+import { NavigationItem } from '../shared/navigation-item/navigation-item';
+import { definedNavigationConfig } from '../shared/helpers/navigation-config.helpers';
+import { INavigationExpandRequest } from '../shared/interfaces/inavigation-expand-request.interface';
+import { NavigationFocusService } from '../shared/services/navigation-focus.service';
+import { NavigationLevel } from '../shared/navigation-level/navigation-level';
+import { INavigationLevelRequest } from '../shared/interfaces/inavigation-level-request.interface';
 import { SIDE_NAV_DEFAULTS } from './constants/side-nav.constants';
 
 @Component({
   selector: 'bx-side-nav',
   exportAs: 'bxSideNav',
-  imports: [RouterLink, NgTemplateOutlet, A11yModule, FormsModule, SearchInput, Button, BxSurfaceDirective, Icon, SideNavBranch, MenuTriggerDirective],
-  providers: [SideNavStateService],
+  imports: [NgTemplateOutlet, A11yModule, FormsModule, SearchInput, Button, BxSurfaceDirective, Icon, NavigationItem, NavigationLevel, MenuTriggerDirective],
+  providers: [NavigationStateService, NavigationFocusService],
   templateUrl: './side-nav.html',
   styleUrl: './side-nav.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,22 +79,23 @@ export class SideNav {
   private readonly focusMonitor = inject(FocusMonitor);
   private readonly toggleElement = viewChild('mobileToggle', { read: ElementRef<HTMLButtonElement> });
   private readonly submenu = viewChild<MenuTriggerDirective>('submenuTrigger');
-  private readonly panel = viewChild('panel', { read: ElementRef<HTMLElement> });
+  private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly searchInput = viewChild(SearchInput);
+  private readonly focusTrap = viewChild(CdkTrapFocus);
   private readonly availableWidth = signal<number | undefined>(undefined);
-  private readonly positions = new Map<string, ISideNavLevelPosition>();
   private readonly flyoutOrigin = signal<HTMLElement | undefined>(undefined);
   private readonly saved = signal<ISideNavSavedState>({ sections: {} });
   private readonly loadedKey = signal<string | undefined>(undefined);
   private readonly lockId = uuidv4();
   private readonly presentation = computed(() => `${this.isMobile()}:${this.resolvedConfig().position}:${this.resolvedConfig().side}`);
   protected readonly drawerAnimated = signal(false);
-  protected readonly state = inject(SideNavStateService);
+  protected readonly state = inject(NavigationStateService);
   protected readonly id = `bx-side-nav-${this.lockId}`;
   protected readonly headerTemplate = signal<TemplateRef<ISideNavSlotContext> | null>(null);
   protected readonly footerTemplate = signal<TemplateRef<ISideNavSlotContext> | null>(null);
   protected readonly reducedMotion = this.a11y.isReducedMotion;
   protected readonly visibleGroups = this.state.groups;
-  protected readonly levelFrames = computed(() => [this.state.levelKey()]);
+  protected readonly focusState = inject(NavigationFocusService);
   protected readonly slotContext = computed<ISideNavSlotContext>(() => ({
     $implicit: this.isCollapsed(),
     collapsed: this.isCollapsed(),
@@ -114,8 +117,8 @@ export class SideNav {
   public readonly layoutChange = output<ISideNavLayout>();
   public readonly resolvedConfig = computed(() => ({
     ...SIDE_NAV_DEFAULTS,
-    ...definedSideNavConfig(this.defaults?.sideNav),
-    ...definedSideNavConfig(this.config())
+    ...definedNavigationConfig(this.defaults?.sideNav),
+    ...definedNavigationConfig(this.config())
   }));
 
   public readonly isMobile = computed(
@@ -188,6 +191,19 @@ export class SideNav {
       if (open) this.scrollLock.disableScroll(this.lockId, { handleTouchInput: false });
       else this.scrollLock.enableScroll(this.lockId);
     });
+    effect((onCleanup) => {
+      if (!this.isMobile() || !this.mobileOpen()) return;
+      const capture = afterNextRender(
+        () => {
+          if (this.destroyRef.destroyed || !this.isMobile() || !this.mobileOpen()) return;
+          if (this.state.revealItemId()) this.focusState.restore(true, false, false);
+          // CDK's automatic capture scrolls clipped ancestors to an off-screen right drawer during its slide.
+          this.focusTrap()?.focusTrap.focusInitialElement({ preventScroll: true });
+        },
+        { injector: this.injector }
+      );
+      onCleanup(() => capture.destroy());
+    });
     effect(() => {
       this.presentation();
 
@@ -204,7 +220,7 @@ export class SideNav {
       untracked(() => {
         const focused = this.dimensions.isBrowser ? this.document.activeElement : null;
         const focus = !!focused?.closest('.bx-nav-level');
-        this.rememberPosition();
+        this.focusState.remember();
         this.state.inlineLevels.set(inline);
         this.submenu()?.close();
         if (this.state.hasLevel()) this.renderLevel(true, false, focus);
@@ -315,18 +331,44 @@ export class SideNav {
   public search(query: string): void {
     const wasSearching = !!this.query().trim();
 
-    if (!wasSearching) this.rememberPosition();
+    if (!wasSearching) this.focusState.remember();
     this.submenu()?.close();
     this.state.search(query);
+    const revealId = this.state.revealItemId();
+
+    if (revealId) {
+      this.flyoutOrigin.set(undefined);
+      const group = this.state.currentGroup() ?? this.visibleGroups().find((entry) => entry.items.some((item) => item.id === revealId));
+
+      if (group && this.sectionCollapsed(group)) this.saved.update((saved) => ({ ...saved, sections: { ...saved.sections, [group.id]: false } }));
+    }
+
     this.renderLevel(wasSearching && !query.trim(), false, false);
+  }
+
+  protected expandSearch(): void {
+    this.toggleCollapsed();
+    afterNextRender(
+      () => {
+        if (this.destroyRef.destroyed || this.isCollapsed() || !this.resolvedConfig().searchable) return;
+        this.searchInput()?.focus({ preventScroll: true });
+      },
+      { injector: this.injector }
+    );
   }
 
   protected back(event: MouseEvent | KeyboardEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.rememberPosition();
+    this.focusState.remember();
     this.state.back();
     this.renderLevel(true, event instanceof KeyboardEvent || event.detail === 0, true);
+  }
+
+  protected navigateLevel(request: INavigationLevelRequest): void {
+    this.focusState.remember();
+    this.state.navigateLevel(request.breadcrumb);
+    this.renderLevel(true, request.keyboard, true);
   }
 
   protected openSection(group: INavigationTreeGroup, event: MouseEvent): void {
@@ -338,18 +380,11 @@ export class SideNav {
       return;
     }
 
-    this.rememberPosition(origin);
+    this.focusState.remember(origin);
     this.submenu()?.close();
     this.flyoutOrigin.set(origin);
     this.state.enterSection(group);
     this.renderLevel(false, event.detail === 0, true);
-  }
-
-  protected levelKey(event: KeyboardEvent): void {
-    if (event.defaultPrevented) return;
-    const backKey = this.resolvedConfig().side === 'right' ? 'ArrowRight' : 'ArrowLeft';
-
-    if (event.key === 'Escape' || event.key === backKey) this.back(event);
   }
 
   protected closeFromControl(event: MouseEvent): void {
@@ -386,14 +421,14 @@ export class SideNav {
   }
 
   //#region Helpers
-  private openChildren(request: ISideNavExpandRequest): void {
+  private openChildren(request: INavigationExpandRequest): void {
     if (!request.inLevel && !this.query().trim() && this.submenu()?.isOpen() && this.state.path()[0] === request.item.id) {
       this.submenu()?.close();
       this.focusMonitor.focusVia(request.origin, request.keyboard ? 'keyboard' : 'program', { preventScroll: true });
       return;
     }
 
-    this.rememberPosition(request.origin);
+    this.focusState.remember(request.origin);
 
     if (!request.inLevel) {
       this.submenu()?.close();
@@ -402,33 +437,6 @@ export class SideNav {
 
     this.state.enter(request.item);
     this.renderLevel(false, request.keyboard, true);
-  }
-
-  private activeScroller(): HTMLElement | undefined {
-    const level = !this.query().trim() && this.state.hasLevel() ? this.document.getElementById(`${this.state.levelId}-scroll`) : null;
-
-    return level ?? this.document.getElementById(`${this.id}-root-scroll`) ?? undefined;
-  }
-
-  private positionKey(scroller: HTMLElement): string {
-    if (this.query().trim()) return `search:${this.query()}`;
-    return scroller.id === `${this.id}-root-scroll` ? JSON.stringify([undefined, []]) : this.state.levelKey();
-  }
-
-  private rememberPosition(origin?: HTMLElement): void {
-    const scroller = origin?.closest<HTMLElement>('.bx-side-nav-scroll') ?? this.activeScroller();
-
-    if (!scroller) return;
-    const element = origin ?? (this.document.activeElement as HTMLElement | null);
-    const row = element?.closest<HTMLElement>('[data-nav-id]');
-    const section = element?.closest<HTMLElement>('[data-section-id]');
-
-    this.positions.set(this.positionKey(scroller), {
-      scrollTop: scroller.scrollTop,
-      itemId: row?.getAttribute('data-nav-id') ?? undefined,
-      sectionId: section?.getAttribute('data-section-id') ?? undefined,
-      disclosure: !!element?.closest('.bx-nav-disclosure') || (!!row && !element?.closest('.bx-nav-link'))
-    });
   }
 
   private renderLevel(restore: boolean, keyboard: boolean, focus: boolean): void {
@@ -440,31 +448,15 @@ export class SideNav {
         const trigger = this.submenu();
 
         if (!this.query().trim() && this.state.hasLevel() && !this.isInlineSubmenus()) {
-          const origin = this.flyoutOrigin()?.isConnected ? this.flyoutOrigin() : this.panel()?.nativeElement;
+          const panel = this.panel()?.nativeElement;
+          const root = Array.from(panel?.querySelectorAll<HTMLElement>('[data-nav-id]') ?? []).find(
+            (row) => row.getAttribute('data-nav-id') === this.state.path()[0]
+          );
+          const origin = this.flyoutOrigin()?.isConnected ? this.flyoutOrigin() : (root ?? panel);
           trigger?.open(false, origin);
         } else trigger?.close();
 
-        const scroller = this.activeScroller();
-
-        if (!scroller) return;
-        const position = restore ? this.positions.get(this.positionKey(scroller)) : undefined;
-        scroller.scrollTop = position?.scrollTop ?? 0;
-
-        if (focus) {
-          const row = Array.from(scroller.querySelectorAll<HTMLElement>('[data-nav-id]')).find(
-            (element) => element.getAttribute('data-nav-id') === position?.itemId
-          );
-          const section = Array.from(scroller.querySelectorAll<HTMLElement>('[data-section-id]')).find(
-            (element) => element.getAttribute('data-section-id') === position?.sectionId
-          );
-          const target =
-            row?.querySelector<HTMLElement>(position?.disclosure ? '.bx-nav-disclosure' : '.bx-nav-link') ??
-            section ??
-            scroller.querySelector<HTMLElement>('[role="menuitem"]:not(:disabled, [aria-disabled="true"])') ??
-            scroller.closest('.bx-nav-level')?.querySelector<HTMLElement>('.bx-nav-back');
-
-          if (target) this.focusMonitor.focusVia(target, keyboard ? 'keyboard' : 'program', { preventScroll: true });
-        }
+        this.focusState.restore(restore, keyboard, focus);
 
         trigger?.reposition();
       },

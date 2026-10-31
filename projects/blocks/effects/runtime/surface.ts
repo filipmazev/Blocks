@@ -1,5 +1,6 @@
 import { rememberAttributes, rememberStyles, finiteClamp } from './dom';
-import { isSurfaceInteractionBlocked } from './helpers/surface-interaction.helpers';
+import { isFieldSurface, isSurfaceInteractionBlocked } from './helpers/surface-interaction.helpers';
+import { rememberRenderedSurfaceStyles } from './helpers/surface-style.helpers';
 import { inheritedAttribute } from './configuration';
 import { registerSurface, refreshGlassLighting } from './scene';
 import type { Lighting, LightContribution } from './scene';
@@ -33,6 +34,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   if (!view) throw new Error('Glass surfaces must be mounted in a browser document.');
   const ownProperties = [
     'position',
+    '--bx-glass-press',
     '--bx-glassiness',
     '--bx-glass-lit-edge',
     '--bx-glass-lit-edge-top',
@@ -75,9 +77,11 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
 
   const ambient = doc.createElement('span');
   ambient.className = 'bx-glass-ambient';
+  const compression = doc.createElement('span');
+  compression.className = 'bx-glass-pressure';
   decoration.append(light);
   element.append(decoration);
-  decoration.append(ambient);
+  decoration.append(ambient, compression);
 
   const motion = view.matchMedia('(prefers-reduced-motion: reduce)');
   const transparency = view.matchMedia('(prefers-reduced-transparency: reduce)');
@@ -87,6 +91,8 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   let unsubscribe: (() => void) | undefined;
   let reducedMotion = false;
   let unifiedLighting = false;
+  let pressed = false;
+  let paintedPressure: string | undefined;
 
   const interactive = () => (options.interactive ?? isActionSurface(element)) && !isSurfaceInteractionBlocked(element);
   let emitting = false;
@@ -176,7 +182,13 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     decoration.style.setProperty('--bx-glass-light-x', `${x.value.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-light-y', `${y.value.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-light-strength', strength.value.toFixed(3));
-    decoration.style.setProperty('--bx-glass-press', pressure.value.toFixed(4));
+    const value = finiteClamp(pressure.value, 0, 1.1, 0).toFixed(4);
+
+    if (value !== paintedPressure) {
+      element.style.setProperty('--bx-glass-press', value);
+      rememberRenderedSurfaceStyles(element);
+      paintedPressure = value;
+    }
   };
 
   const animate = () => {
@@ -185,7 +197,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       x.snap(x.target);
       y.snap(y.target);
       strength.snap(strength.target);
-      pressure.snap(0);
+      pressure.snap(pressed && interactive() ? 1 : 0);
       paint();
       return;
     }
@@ -304,13 +316,14 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
         if (layer.style.getPropertyValue(side) !== inset) layer.style.setProperty(side, inset);
       }
     }
+    if (!interactive()) pressed = false;
     if (reducedMotion || !interactive()) {
       unsubscribe?.();
       unsubscribe = undefined;
       x.snap(x.target);
       y.snap(y.target);
       strength.snap(strength.target);
-      pressure.snap(0);
+      pressure.snap(pressed ? 1 : 0);
       paint();
     }
     if (reducedMotion)
@@ -325,6 +338,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     if (original?.value) element.style.setProperty(property, original.value, original.priority);
     else element.style.removeProperty(property);
   }
+  paint();
   sync();
   // Apply the material before the first style read to avoid transitioning from legacy colors.
   if (view.getComputedStyle(element).position === 'static') element.style.position = 'relative';
@@ -333,15 +347,19 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     sync,
     interactive,
     emission: emissionColor,
-    focusEmission: () => options.focusEmission ?? emissionColor(),
+    focusEmission: () => options.focusEmission ?? (isFieldSurface(element) ? emissionColor() : undefined),
     emit,
     press() {
-      if (interactive() && !reducedMotion) {
-        pressure.target = 1;
-        animate();
-      }
+      if (!interactive()) return;
+      pressed = true;
+      // Give even a quick tap visible compression before the shared spring returns to rest.
+      pressure.snap(reducedMotion ? 1 : Math.max(0.4, pressure.value));
+      pressure.target = 1;
+      paint();
+      animate();
     },
     release() {
+      pressed = false;
       pressure.target = 0;
       animate();
     }

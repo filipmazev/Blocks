@@ -26,12 +26,14 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
     pane.style.fontFamily = styles.fontFamily;
     pane.style.direction = styles.direction;
     pane.style.colorScheme = styles.colorScheme;
+
+    if (pane.dir !== styles.direction) pane.dir = styles.direction;
   };
   refresh();
   const observer = new MutationObserver(refresh);
-  observer.observe(source, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+  observer.observe(source, { attributes: true, attributeFilter: ['class', 'dir', 'data-theme'] });
   for (let scope = source.parentElement; scope; scope = scope.parentElement) {
-    observer.observe(scope, { attributes: true, attributeFilter: ['class', 'style', 'data-theme'] });
+    observer.observe(scope, { attributes: true, attributeFilter: ['class', 'style', 'dir', 'data-theme'] });
   }
   return () => observer.disconnect();
 }

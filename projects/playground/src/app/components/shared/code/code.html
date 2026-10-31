@@ -2,7 +2,7 @@
     @for (file of files(); track file.path) {
     <bx-tab [label]="file.title" [value]="file.path">
         <ng-template bxTabContent>
-            <pre><code [highlight]="codeContent(file)" [language]="file.language"></code></pre>
+            <pre class="playground-code-block" tabindex="0" [attr.aria-label]="file.title"><code [highlight]="codeContent(file)" [language]="file.language"></code></pre>
         </ng-template>
     </bx-tab>
     }

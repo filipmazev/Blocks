@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BX_I18N } from '@filip.mazev/blocks/core';
-import { Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
+import { Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Tag, TagColor, TagVariant } from '@filip.mazev/blocks/primitives';
 import { TAG_COLOR_OPTIONS, TAG_VARIANT_OPTIONS } from './constants/tag-examples.constants';
 import { DemoI18nService } from '../form-examples/services/demo-i18n.service';
@@ -8,7 +8,7 @@ import { TruncationExamples } from '../truncation-examples/truncation-examples';
 
 @Component({
   selector: 'app-tag-examples',
-  imports: [Tag, Button, Checkbox, InputField, Select, TruncationExamples],
+  imports: [Tag, Checkbox, InputField, Select, TruncationExamples],
   providers: [DemoI18nService, { provide: BX_I18N, useExisting: DemoI18nService }],
   templateUrl: './tag-examples.html',
   styleUrl: './tag-examples.scss',

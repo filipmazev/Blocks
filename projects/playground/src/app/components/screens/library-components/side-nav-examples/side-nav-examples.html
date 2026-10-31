@@ -1,3 +1,6 @@
+<div class="demo-language-row">
+  <bx-select [label]="text().language" [clearable]="false" [options]="translations.languages" [value]="translations.language()" (selectionChange)="translations.setLanguage($event.value)" subscriptSizing="dynamic" />
+</div>
 <div class="nav-demo-controls">
   <bx-checkbox [label]="text().right" [(checked)]="right" />
   <bx-checkbox [label]="text().rail" [checked]="collapsed() ?? false" (checkedChange)="collapsed.set($event)" />
@@ -7,7 +10,6 @@
   <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
   <bx-checkbox [label]="text().custom" [(checked)]="custom" />
   <bx-input-field [label]="text().height" type="number" [min]="200" [max]="700" [(value)]="height" />
-  <button bx-button variant="tonal" (click)="translations.toggle()">{{ text().language }}: {{ translations.language() }}</button>
 </div>
 <p>{{ text().instructions }}</p>
 <div class="nav-demo-frame" [class.right]="right()" [attr.dir]="rtl() ? 'rtl' : 'ltr'" [style.--bx-side-nav-height]="height() + 'px'">
@@ -24,4 +26,4 @@
   </div>
 </div>
 <ng-template #customItem let-item let-compact="collapsed"><bx-icon [name]="item.icon?.name ?? 'circle'" size="20" />@if (!compact) { <span>{{ item.label }}</span><small aria-hidden="true">↗</small> }</ng-template>
-<details class="nav-route-example"><summary>{{ text().routes }}</summary><pre><code>{{ routeExample }}</code></pre></details>
+<details class="nav-route-example"><summary>{{ text().routes }}</summary><pre class="playground-code-block" tabindex="0" aria-label="TypeScript navigation configuration"><code language="typescript" [highlight]="routeExample"></code></pre></details>

@@ -189,17 +189,6 @@ input[type='range']:disabled {
     border-top: 1px solid var(--bx-border-default);
 }
 
-.implementation pre {
-    margin: 0;
-    padding: spacing(6);
-    background: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(lg);
-    overflow-x: auto;
-    font-size: 0.8rem;
-    line-height: 1.7;
-}
-
 .appearance-documentation {
     border-top: 1px solid var(--bx-border-default);
     padding-block: spacing(6);
@@ -230,4 +219,8 @@ input[type='range']:disabled {
 .lab-layout > *,
 .implementation > * {
     min-width: 0;
+}
+
+.implementation .playground-code-block {
+    margin: 0;
 }

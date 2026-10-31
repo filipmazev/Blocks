@@ -93,10 +93,6 @@
     background: var(--bx-bg-surface);
 }
 
-.selected-example code {
-    overflow-wrap: anywhere;
-}
-
 .pagination {
     display: flex;
     justify-content: center;
@@ -139,4 +135,9 @@
         gap: spacing(2);
         font-size: 0.8rem;
     }
+}
+
+.selected-example .playground-code-block {
+    flex: 1 1 100%;
+    margin: 0;
 }

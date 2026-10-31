@@ -17,20 +17,12 @@
 }
 
 .app-toolbar {
-    --bx-glass-min-opacity: 0.72;
+    --bx-top-nav-radius: #{radius(none)};
+    --bx-top-nav-height: 4rem;
+    --bx-top-nav-padding-inline: #{spacing(6)};
+    --bx-top-nav-gap: #{spacing(4)};
 
-    min-height: 4rem;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: spacing(4);
-    padding: spacing(2) spacing(6);
-    position: sticky;
-    top: 0;
-    z-index: z(sticky);
-    border-radius: radius(none);
-    border-bottom: 1px solid var(--bx-border-default);
+    border-block-end: 1px solid var(--bx-border-default);
 }
 
 .navigation-toggle {
@@ -52,7 +44,9 @@
 
 .toolbar-actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    min-width: 0;
     gap: spacing(2);
 }
 
@@ -109,9 +103,9 @@
     }
 
     .app-toolbar {
-        min-height: 3.75rem;
-        padding-inline: spacing(4);
-        gap: spacing(2);
+        --bx-top-nav-height: 3.75rem;
+        --bx-top-nav-padding-inline: #{spacing(4)};
+        --bx-top-nav-gap: #{spacing(2)};
     }
 
     .toolbar-label {
@@ -119,9 +113,6 @@
     }
 
     .toolbar-actions {
-        flex: 1;
-        min-width: 0;
-        flex-wrap: wrap;
         justify-content: flex-end;
     }
 }

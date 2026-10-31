@@ -110,16 +110,3 @@
     color: var(--bx-text-secondary);
     overflow-wrap: anywhere;
 }
-
-pre {
-    box-sizing: border-box;
-    inline-size: 100%;
-    max-inline-size: 100%;
-    margin: 0;
-    padding: spacing(3);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(sm);
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    font-size: 0.75rem;
-}
