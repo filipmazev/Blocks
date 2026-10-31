@@ -177,6 +177,37 @@ Provides detailed information about the user's device, OS, and orientation. Usef
 - isAppleDevice (checks both iOS and MacOS)
 - isLandscapeOrientation / isPortraitOrientation
 
+### `BxShortcutService`
+
+Shares shortcut definitions between menu hints and application-owned keyboard handlers. It resolves OS overrides, normalizes modifier aliases, formats platform symbols, creates accessible key names and matches individual keyboard events.
+
+```ts
+import { inject } from '@angular/core';
+import { BxShortcutService, ResolvableShortcut } from '@filip.mazev/blocks/core';
+
+private readonly shortcuts = inject(BxShortcutService);
+protected readonly openShortcut: ResolvableShortcut = ['mod', 'shift', 'k'];
+
+// resolve() returns ['⌘', '⇧', 'K'] on Apple devices or ['Ctrl', 'Shift', 'K'] elsewhere.
+// A second platform argument supports previews without changing device detection.
+this.shortcuts.resolve(this.openShortcut, 'mac');
+this.shortcuts.toAriaKeyshortcuts(this.openShortcut); // Meta+Shift+K or Control+Shift+K
+
+// Inside an application-owned keyboard handler:
+if (this.shortcuts.matches(event, this.openShortcut)) {
+  event.preventDefault();
+  // Invoke the action, or call menuTrigger.open(true).
+}
+```
+
+`mod` (also `primary`, `cmdorctrl`, `commandorcontrol`) means Command on macOS/iOS and Ctrl elsewhere. Explicit `command`/`cmd`/`meta`, `ctrl`/`control`, `option`/`alt` and `shift` map to familiar platform labels, including ⌘ ⌃ ⌥ ⇧ on Apple. Explicit Control stays Control on Apple. Letters are uppercase for display; arrows, Enter, Escape, Tab, Backspace, Delete, Space and plus have defaults too. Unrecognized labels remain display tokens.
+
+`ResolvableShortcut` accepts a string, a readonly token array, or `IOSShortcut` (`OSShortcut` remains a compatible alias). An OS object requires `default` and accepts optional `mac`, `windows`, `linux`, `ios`, `android` values. iOS/iPadOS falls back to `mac`, then `default`; all other absent overrides use `default`. Tablet hardware keyboards receive mobile OS mappings. `ShortcutPlatform` includes those five platforms and `default`; unknown platforms and SSR use `default` with Ctrl for `mod`.
+
+`matches(event, definition, options?)` requires exactly one ordinary key and the exact modifier state. It ignores handled, composing, AltGraph, repeat and editable-target events by default; `IShortcutMatchOptions` allows `platform`, `allowRepeat` and `allowInEditable` overrides. Matching uses `KeyboardEvent.key`, case insensitive, with layout-dependent characters. Arrays describe combinations, not sequential gestures; combined strings such as `'Ctrl+K'` remain custom labels. The service does not register listeners, consume events, manage sequences or resolve shortcut conflicts. Applications own scopes, actions, disabled guards and cleanup.
+
+The [menu item documentation](../../projects/blocks/primitives/components/menu-item/README.md) contains the complete mapping table and a runnable component. Try `/components/menu-item` or `/components/menu` for combinations and sequences opening menus, platform previews and guarded actions.
+
 ### `ScrollLockService`
 
 A utility to prevent background scrolling when overlays (like Modals) are active. This service handles complex edge cases, including:

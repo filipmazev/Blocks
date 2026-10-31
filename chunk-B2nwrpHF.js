@@ -1,4 +1,4 @@
-import{$n as fs,Ct as Qn,Hn as ds,Lr as ps,Qr as se,Ur as qn,Xn as f,Zn as fm,bi as z,er as g,f as Ce,gi as y,qt as Ve,st as M}from"./chunk-C74CBOi9.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Ar as m,Ci as v,Cn as ar,Gr as p,Mi as we,Nt as Sm,On as bn,Ut as V,f as D,fi as si,l as Bt,wt as Q,xr as jt,zn as de}from"./chunk-BAxYodTU.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -259,6 +259,28 @@ python3 -m http.server 8081</code></pre>
 <li>isAppleDevice (checks both iOS and MacOS)</li>
 <li>isLandscapeOrientation / isPortraitOrientation</li>
 </ul>
+<h3><code>BxShortcutService</code></h3>
+<p>Shares shortcut definitions between menu hints and application-owned keyboard handlers. It resolves OS overrides, normalizes modifier aliases, formats platform symbols, creates accessible key names and matches individual keyboard events.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxShortcutService</span>, <span class="hljs-title class_">ResolvableShortcut</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> shortcuts = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">BxShortcutService</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">openShortcut</span>: <span class="hljs-title class_">ResolvableShortcut</span> = [<span class="hljs-string">&#x27;mod&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;k&#x27;</span>];
+
+<span class="hljs-comment">// resolve() returns [&#x27;\u2318&#x27;, &#x27;\u21E7&#x27;, &#x27;K&#x27;] on Apple devices or [&#x27;Ctrl&#x27;, &#x27;Shift&#x27;, &#x27;K&#x27;] elsewhere.</span>
+<span class="hljs-comment">// A second platform argument supports previews without changing device detection.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">shortcuts</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">openShortcut</span>, <span class="hljs-string">&#x27;mac&#x27;</span>);
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">shortcuts</span>.<span class="hljs-title function_">toAriaKeyshortcuts</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">openShortcut</span>); <span class="hljs-comment">// Meta+Shift+K or Control+Shift+K</span>
+
+<span class="hljs-comment">// Inside an application-owned keyboard handler:</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">shortcuts</span>.<span class="hljs-title function_">matches</span>(event, <span class="hljs-variable language_">this</span>.<span class="hljs-property">openShortcut</span>)) {
+  event.<span class="hljs-title function_">preventDefault</span>();
+  <span class="hljs-comment">// Invoke the action, or call menuTrigger.open(true).</span>
+}</code></pre>
+<p><code>mod</code> (also <code>primary</code>, <code>cmdorctrl</code>, <code>commandorcontrol</code>) means Command on macOS/iOS and Ctrl elsewhere. Explicit <code>command</code>/<code>cmd</code>/<code>meta</code>, <code>ctrl</code>/<code>control</code>, <code>option</code>/<code>alt</code> and <code>shift</code> map to familiar platform labels, including \u2318 \u2303 \u2325 \u21E7 on Apple. Explicit Control stays Control on Apple. Letters are uppercase for display; arrows, Enter, Escape, Tab, Backspace, Delete, Space and plus have defaults too. Unrecognized labels remain display tokens.</p>
+<p><code>ResolvableShortcut</code> accepts a string, a readonly token array, or <code>IOSShortcut</code> (<code>OSShortcut</code> remains a compatible alias). An OS object requires <code>default</code> and accepts optional <code>mac</code>, <code>windows</code>, <code>linux</code>, <code>ios</code>, <code>android</code> values. iOS/iPadOS falls back to <code>mac</code>, then <code>default</code>; all other absent overrides use <code>default</code>. Tablet hardware keyboards receive mobile OS mappings. <code>ShortcutPlatform</code> includes those five platforms and <code>default</code>; unknown platforms and SSR use <code>default</code> with Ctrl for <code>mod</code>.</p>
+<p><code>matches(event, definition, options?)</code> requires exactly one ordinary key and the exact modifier state. It ignores handled, composing, AltGraph, repeat and editable-target events by default; <code>IShortcutMatchOptions</code> allows <code>platform</code>, <code>allowRepeat</code> and <code>allowInEditable</code> overrides. Matching uses <code>KeyboardEvent.key</code>, case insensitive, with layout-dependent characters. Arrays describe combinations, not sequential gestures; combined strings such as <code>&#39;Ctrl+K&#39;</code> remain custom labels. The service does not register listeners, consume events, manage sequences or resolve shortcut conflicts. Applications own scopes, actions, disabled guards and cleanup.</p>
+<p>The <a href="components/menu-item">menu item documentation</a> contains the complete mapping table and a runnable component. Try <code>/components/menu-item</code> or <code>/components/menu</code> for combinations and sequences opening menus, platform previews and guarded actions.</p>
 <h3><code>ScrollLockService</code></h3>
 <p>A utility to prevent background scrolling when overlays (like Modals) are active. This service handles complex edge cases, including:</p>
 <ul>
@@ -690,8 +712,8 @@ modalRef.<span class="hljs-title function_">afterClosed</span>().<span class="hl
 <li><code>durationInMs</code> |<code>number</code>|: (optional) Overrides the globally configured auto-close timeout.</li>
 </ul>
 `,"projects/blocks/README.md":`<h1>@filip.mazev/blocks</h1>
-<p>This package is used to provide the Angular Schematic for adding the blocks libraries.</p>
-<p>The <strong>Blocks</strong> umbrella package is the official entry point and Angular Schematic for the Blocks UI ecosystem. It provides a seamless, zero-config installation experience, allowing you to integrate our core tools, modals, and toast notifications into your Angular workspace with a single command.</p>
+<p>Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship in one package, alongside the installation schematic.</p>
+<p>Use the playground&#39;s generated component catalog for the current API reference and runnable examples. This guide covers installation and application-wide setup.</p>
 <h2>Installation</h2>
 <p>Requires Angular 22 and RxJS 7.8 or later within major 7.</p>
 <p>To install the complete Blocks ecosystem and automatically configure your workspace, run:</p>
@@ -884,6 +906,7 @@ transition.<span class="hljs-title function_">destroy</span>(); buttonSkin.<span
 </tbody></table>
 <p>For example, a success toast can set <code>--bx-glass-surface: var(--bx-bg-success)</code> and retain its established semantic appearance. Outside Blocks, system colors supply neutral fallbacks.</p>
 <h2>Spatial lighting and reflections</h2>
+<p><code>getGlassLightRoot(element)</code> resolves the existing overlay or <code>data-bx-light-scope</code> boundary for passive emitters. Angular integrations can register and update their emitters through <code>BxGlassLightingService</code>.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { mountGlassScene } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/runtime&#x27;</span>;
 
 <span class="hljs-keyword">const</span> scene = <span class="hljs-title function_">mountGlassScene</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>, {
@@ -914,7 +937,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>Performance and accessibility</h2>
 <ul>
 <li>One lazy animation clock and delegated press, hover-boundary and focus handling per document. Moving the pointer within an element does not change lighting. Settled scenes schedule no animation frames.</li>
-<li>At most four explicit lights and four reflectors per scene, and 24 visible surface lighting updates per frame. Interaction and active-state emitters share one delegated event stream and semantic-attribute observer; there is no observer per control.</li>
+<li>Each receiver evaluates at most four explicit scene lights, chosen from all registered sources by visible contribution after exclusions, intensity and distance falloff. Registration order does not discard nearby sources. Each scene retains a maximum of four reflectors, and at most 24 visible surfaces update per frame. Interaction and active-state emitters share one delegated event stream and semantic-attribute observer; there is no observer per control.</li>
 <li>Ambient geometry/style invalidations coalesce over 180 ms. A sampling frame handles at most four receivers, yielding after about 4 ms between receivers; a single receiver/readback remains atomic. Sixteen perimeter probes discover nearby colors, and media inventories update on insertion rather than on each frame.</li>
 <li>Static images and failed readbacks are cached until their assets change. Only media used by visible receivers is polled: live canvas/video checks begin at 500 ms and back off to 2 seconds while unchanged. Color-only changes reuse source bindings and geometry without hit testing; coverage or layout changes rediscover the layers. Unchanged samples do not repaint. Image/video samples respect object fit and position.</li>
 <li>Each surface uses two shared ambient edge layers for a 180 ms crossfade, instead of a DOM layer and animation per sample. Semantic lighting retains its independent contributions and immediate interaction updates. Hidden documents, reduced-motion receivers and unused media stop live polling; removing the last receiver tears down sampling. Static scenes schedule no polling or animation frames.</li>
@@ -976,6 +999,146 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>Playground</h2>
 <p>Open <code>/components/signal-forms</code> for multiple controls, sync/async/cross-field rules, pending state, custom messages, server errors, disabled submission, dynamic disabled/readonly, reset and reactive validation status. Use Fill valid data to exercise submission, or an email containing <code>server-error</code> to see a server rejection.</p>
 <p>The load-more and selection pages include fake APIs, failed requests, retry and small pages without scrollbars.</p>
+`,"projects/blocks/forms/components/autocomplete/README.md":`<h1>Editable autocomplete</h1>
+<p>An editable string control with optional suggestions. Free text remains valid; choosing a suggestion inserts its value. Integrates with the shared form-field and signal, reactive and template-driven forms contracts.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Autocomplete</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-autocomplete</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Destination&quot;</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;suggestions&quot;</span> [(<span class="hljs-attr">value</span>)]=<span class="hljs-string">&quot;destination&quot;</span> /&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>value</code> is a <code>string | null</code> model. <code>options</code> accepts <code>readonly IAutocompleteOption[]</code>, each with a unique string <code>value</code>, optional <code>ResolvableText label</code> and optional <code>disabled</code>.</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>externalFiltering</code></td>
+<td>false</td>
+<td>Application supplies filtered results</td>
+</tr>
+<tr>
+<td><code>inlineCompletion</code></td>
+<td>true</td>
+<td>Shows an uncommitted gray suffix for the first matching suggestion</td>
+</tr>
+<tr>
+<td><code>clearable</code></td>
+<td>true</td>
+<td>Shows the select-style clear action for nonempty text; hidden while readonly</td>
+</tr>
+<tr>
+<td><code>clearLabel</code></td>
+<td>Clear selection</td>
+<td>Translated accessible name of the clear action</td>
+</tr>
+<tr>
+<td><code>clearTooltip</code></td>
+<td>clearLabel</td>
+<td>Optional translated tooltip; empty string disables it</td>
+</tr>
+<tr>
+<td><code>searching</code></td>
+<td>false</td>
+<td>Replaces stale results with a distinct loading state</td>
+</tr>
+<tr>
+<td><code>loading</code></td>
+<td>false</td>
+<td>Application-owned initial/incremental request state</td>
+</tr>
+<tr>
+<td><code>hasMore</code></td>
+<td>false</td>
+<td>Explicit remote exhaustion contract</td>
+</tr>
+<tr>
+<td><code>loadError</code></td>
+<td>absent</td>
+<td>Retains options and offers explicit retry</td>
+</tr>
+<tr>
+<td><code>loadMoreConfig / loadMoreTemplate</code></td>
+<td>{} / absent</td>
+<td>Shared <code>ILoadMoreConfig</code> and <code>ILoadMoreContext</code></td>
+</tr>
+<tr>
+<td><code>loadMoreRevision</code></td>
+<td>options array</td>
+<td>Override the request-completion revision</td>
+</tr>
+<tr>
+<td><code>optionTemplate</code></td>
+<td>absent</td>
+<td><code>TemplateRef&lt;IAutocompleteOptionContext&gt;</code>; keep its content noninteractive</td>
+</tr>
+<tr>
+<td><code>emptyText / loadingText</code></td>
+<td>descriptive text</td>
+<td>Translatable status messages</td>
+</tr>
+<tr>
+<td><code>autocomplete</code></td>
+<td>off</td>
+<td>Native browser autocomplete attribute</td>
+</tr>
+<tr>
+<td><code>queryChange</code></td>
+<td>\u2014</td>
+<td>Text edits; application owns debounce and cancellation</td>
+</tr>
+<tr>
+<td><code>optionSelected</code></td>
+<td>\u2014</td>
+<td>Selected <code>IAutocompleteOption</code></td>
+</tr>
+<tr>
+<td><code>loadMore</code></td>
+<td>\u2014</td>
+<td><code>ILoadMoreRequest</code> with scroll, button or retry source</td>
+</tr>
+<tr>
+<td><code>openedChange</code></td>
+<td>\u2014</td>
+<td>Boolean panel state changes</td>
+</tr>
+<tr>
+<td><code>open() / close() / isOpen()</code></td>
+<td>\u2014</td>
+<td>Public panel controls</td>
+</tr>
+<tr>
+<td><code>completeLoadMore()</code></td>
+<td>\u2014</td>
+<td>Releases a request with no loading cycle or revision change</td>
+</tr>
+<tr>
+<td><code>clear()</code></td>
+<td>\u2014</td>
+<td>Clears text, marks touched, focuses the input and emits queryChange with an empty string; respects disabled/readonly</td>
+</tr>
+</tbody></table>
+<p>Inherits labels, placeholders, hints, validation, disabled, lowercase <code>readonly</code> and consumer <code>readOnly</code>, focus and reset behavior. See the <a href="components/signal-forms">forms guide</a>.</p>
+<p>For a standalone component, import <code>Autocomplete</code> and declare:</p>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">public</span> <span class="hljs-attr">destination</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">suggestions</span>: <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">IAutocompleteOption</span>[] = [
+  { <span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;Skopje&#x27;</span> }, { <span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;Ohrid&#x27;</span> }, { <span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;Unavailable&#x27;</span>, <span class="hljs-attr">disabled</span>: <span class="hljs-literal">true</span> }
+];</code></pre>
+<p>Import <code>IAutocompleteOption</code> from the forms public entry point.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-autocomplete-panel-height</code>, <code>--bx-autocomplete-panel-padding</code>, <code>--bx-autocomplete-background</code>, <code>--bx-autocomplete-radius</code> and <code>--bx-autocomplete-completion-color</code>. The editable control reuses InputField&#39;s styling, including its height, typography, spacing, floating label, required marker, focus state and filled/outlined appearance. Its inline completion shares the native input&#39;s metrics. Results use the same opaque backing and backdrop-free option-panel styling as Select/MultiSelect. Options wrap, panel width follows the control, and height is constrained to the viewport. Custom option templates receive the option, resolved label, active state and index.</p>
+<h2>Behavior and accessibility</h2>
+<p>Typing <code>Sk</code> can show a muted <code>opje</code> suffix for <code>Skopje</code>, without changing the form value. The hint appears only with the caret at the end, no selection, and an available prefix match; it is hidden during replacement searches and IME composition. Accept it with the forward arrow (Right in LTR, Left in RTL), End or Enter. The full selected suggestion becomes the value only on acceptance. Set <code>inlineCompletion</code> to false to use list suggestions alone.</p>
+<p>Up/Down move between available suggestions while focus stays in the combobox; Enter selects; Escape closes. Other native editing keys retain their meaning. IME composition does not issue partial searches. Tab visits the clear action when present, then the shared load-more/retry action, before continuing through the page. Readonly preserves readable, focusable text and prevents editing.</p>
+<p>The clear action reuses the shared field-clear appearance used by Select/MultiSelect. It remains disabled on disabled controls and is absent on readonly controls. Clearing keeps focus in the editable input and lets the application refresh suggestions for the empty query. The trailing Blocks <code>chevron-down</code> follows the open state and is replaced by a same-size decorative spinner during requests. Caret dimensions and gaps share Select&#39;s field-caret mixin; trailing padding, clear-action placement and available text spacing match Select while preserving InputField&#39;s full height and vertical text padding.</p>
+<p>For asynchronous results bind <code>[externalFiltering]=&quot;true&quot;</code>, <code>[searching]=&quot;searching()&quot;</code>, <code>[loading]=&quot;loading()&quot;</code>, <code>[hasMore]=&quot;hasMore()&quot;</code>, <code>[loadError]=&quot;error()&quot;</code>, handle <code>(queryChange)</code> and forward <code>(loadMore)</code> to your request coordinator. Set loading before starting requests. Cancel or ignore stale queries; retain loaded data and the failed cursor on failure; advance the cursor only on success. Clear errors when retrying. Searching suppresses old results and pagination without implying exhaustion.</p>
+<p>The shared LoadMoreDirective deduplicates requests, exposes an action when no scrollbar exists and preserves its button spinner during loading. Customize normal/loading/retry text through <code>ILoadMoreConfig</code>; custom footer templates must use the guarded callback and preserve keyboard access.</p>
+<p>The playground includes a runnable mock service with delayed initial/search/incremental requests, failure followed by explicit successful retry, empty results and a compact page-size control for exercising overflow transitions. Its load-more/error/retry footer shares the select/multi-select styling, with tonal accent actions. Source: <code>projects/playground/src/app/components/screens/library-components/essentials-examples/services/autocomplete-demo.service.ts</code>.</p>
+<h2>Playground</h2>
+<p><code>/components/autocomplete</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/forms/components/button/README.md":`<h1>Button</h1>
 <p>An action control with Blocks intent colors, familiar variants and visible focus.</p>
 <h2>Import</h2>
@@ -2474,6 +2637,363 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Visit <code>/components/top-nav</code> (redirects to <code>/components/top-nav/overview</code>). The demo uses the same four-level fixture, keywords, tags, disabled item, and language dropdown with English, Spanish, French, and German translations as side navigation. Page links stay on the top-nav demo route family, so route highlighting and selection feedback remain observable.</p>
 <p>Change preview width, force compact, add action controls, toggle icons/RTL/custom templates/sticky presentation, and switch languages. The preview uses the shared <code>sm</code> breakpoint so both presentations can be exercised within the documentation layout; library defaults remain <code>lg</code>. Try <code>dsgn tkns</code>, <code>palette</code>, <code>tokens</code>, or <code>Palette</code>, enter several levels, and use Back or clear search to inspect context and restoration. Appearance controls in the application toolbar apply to this component and its open panel.</p>
 <p>The playground application&#39;s own toolbar also uses <code>TopNav</code>: it supplies an empty <code>groups</code> array and disables search to retain the existing sidenav as the sole primary navigation. The sidenav trigger lives in the brand slot; Appearance, palette, and theme-mode controls live in the actions slot. Their dropdowns retain the existing overlay context.</p>
+`,"projects/blocks/primitives/components/accordion/README.md":`<h1>Accordion</h1>
+<p>Coordinates direct collapsible children into single or multiple expanded sections.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Accordion</span>, <span class="hljs-title class_">Collapsible</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-accordion</span> [<span class="hljs-attr">multiple</span>]=<span class="hljs-string">&quot;false&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-accordion-item</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Overview&quot;</span> [<span class="hljs-attr">expanded</span>]=<span class="hljs-string">&quot;true&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Project overview.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-accordion-item</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-accordion-item</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Details&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Project details.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-accordion-item</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-accordion</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>multiple</code> defaults to false. <code>collapseAll()</code> closes every child. Import <code>Collapsible</code> for the <code>bx-accordion-item</code> selector; it exposes the same inputs and <code>expanded</code> model as <a href="components/collapsible">Collapsible</a>.</p>
+<p>Place items directly inside the accordion. Nested accordions coordinate their own items. Single mode reconciles programmatic expanded-state changes and initially open children.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-accordion-gap</code> controls spacing. Each child supports the collapsible surface variables. No parallel animation or theme configuration is introduced.</p>
+<h2>Behavior and accessibility</h2>
+<p>ArrowUp/ArrowDown wrap between enabled headings; Home/End choose the first/last heading. Enter/Space toggle the focused item. Disabled items are skipped; readonly items stay focusable. Closing a section returns focus from its content to its heading. Panels have no motion dependency.</p>
+<h2>Playground</h2>
+<p><code>/components/accordion</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/alert/README.md":`<h1>Inline alert / banner</h1>
+<p>Inline feedback and general banners for default, info, danger, warning and success states.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Alert</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-alert</span> <span class="hljs-attr">tone</span>=<span class="hljs-string">&quot;success&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Saved&quot;</span> <span class="hljs-attr">message</span>=<span class="hljs-string">&quot;Your changes are ready.&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-banner</span> <span class="hljs-attr">tone</span>=<span class="hljs-string">&quot;warning&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Review needed&quot;</span> [<span class="hljs-attr">dismissible</span>]=<span class="hljs-string">&quot;true&quot;</span>
+  [(<span class="hljs-attr">visible</span>)]=<span class="hljs-string">&quot;visible&quot;</span> <span class="hljs-attr">dismissFocusTarget</span>=<span class="hljs-string">&quot;restore-banner&quot;</span>&gt;</span>
+  Some settings need your attention.
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-banner</span>&gt;</span>
+@if (!visible) { <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;restore-banner&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;visible = true&quot;</span>&gt;</span>Restore banner<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> }</code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tone</code></td>
+<td>default</td>
+<td><code>AlertTone</code></td>
+</tr>
+<tr>
+<td><code>title / message</code></td>
+<td>absent</td>
+<td><code>ResolvableText</code>; projected content is also supported</td>
+</tr>
+<tr>
+<td><code>dismissible</code></td>
+<td>false</td>
+<td>Shows a named native close action</td>
+</tr>
+<tr>
+<td><code>dismissLabel</code></td>
+<td>Dismiss notification</td>
+<td>Translatable action name</td>
+</tr>
+<tr>
+<td><code>emissive</code></td>
+<td>true</td>
+<td>Steady illumination of the banner and neighboring Blocks surfaces</td>
+</tr>
+<tr>
+<td><code>emissionColor</code></td>
+<td>tone text color</td>
+<td>Optional semantic light-color override</td>
+</tr>
+<tr>
+<td><code>emissionIntensity</code></td>
+<td>0.6</td>
+<td>Neighboring light strength, clamped to 0\u20134</td>
+</tr>
+<tr>
+<td><code>emissionRadius</code></td>
+<td>320</td>
+<td>Neighboring light falloff in CSS pixels</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td>true</td>
+<td>Two-way visibility model</td>
+</tr>
+<tr>
+<td><code>announcement</code></td>
+<td>off</td>
+<td><code>AlertAnnouncement</code>: off, polite or assertive</td>
+</tr>
+<tr>
+<td><code>dismissFocusTarget</code></td>
+<td>absent</td>
+<td>Optional element or element ID to focus after keyboard dismissal</td>
+</tr>
+<tr>
+<td><code>dismissed</code></td>
+<td>\u2014</td>
+<td>Emitted on dismissal</td>
+</tr>
+<tr>
+<td><code>dismiss()</code></td>
+<td>\u2014</td>
+<td>Respects dismissible and visible</td>
+</tr>
+</tbody></table>
+<p><code>bx-banner</code> is an alternate selector for <code>Alert</code>. Project optional actions with <code>bxAlertActions</code>.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-alert-background</code>, <code>--bx-alert-color</code>, <code>--bx-alert-border</code>, <code>--bx-alert-radius</code>, <code>--bx-alert-padding</code>, <code>--bx-alert-gap</code>, <code>--bx-alert-shadow</code>, <code>--bx-alert-min-opacity</code>, <code>--bx-alert-light-opacity</code> and <code>--bx-alert-rim-opacity</code>. Borders use the tone color at 44.8% opacity by default; increased contrast restores the full tone color, and <code>--bx-alert-border</code> always accepts an explicit override. Interior light opacity defaults to 0.32 and rim light opacity to 0.8 to keep illumination gentle while preserving the glass material. The shared glass surface follows application glassiness and reduced transparency. Borders have a uniform width; the old <code>--bx-alert-accent-width</code> is no longer used. The severity palette, icon, soft glow and steady light follow the same material and emissive mechanisms as toasts, without entrance, exit or progress animations. Optional <code>data-bx-light-scope</code> on an owning container limits neighboring illumination to that scene.</p>
+<h2>Behavior and accessibility</h2>
+<p>Static content is silent by default. Use polite for changing status and assertive for urgent errors; the live text excludes the action slot. Supply descriptive text as well as a tone. Content and actions wrap at narrow widths. If dismissal removes the focused control, provide dismissFocusTarget or manage focus through dismissed. Focus restoration waits for rendering, so the destination may be created conditionally after dismissal.</p>
+<h2>Playground</h2>
+<p><code>/components/alert</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/card/README.md":`<h1>Card</h1>
+<p>A general themed content surface built with the existing surface engine.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Card</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-card</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Project&quot;</span> <span class="hljs-attr">subtitle</span>=<span class="hljs-string">&quot;Updated recently&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;outlined&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Project content.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">bxCardFooter</span>&gt;</span>Last updated today<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-card</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>title</code> and <code>subtitle</code> accept <code>ResolvableText</code>. <code>headingLevel</code> defaults to 3 and is clamped to 1\u20136. <code>variant: CardVariant</code> is outlined (default), elevated or filled. Optional <code>opaque</code> follows application appearance when absent.</p>
+<p>Slots: <code>bxCardMedia</code>, <code>bxCardHeader</code>, default body and <code>bxCardFooter</code>. Header content follows the optional generated title/subtitle. Empty sections take no space. Project semantic content and Blocks actions into these slots.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-card-background</code>, <code>--bx-card-color</code>, <code>--bx-card-border</code>, <code>--bx-card-radius</code>, <code>--bx-card-shadow</code>, <code>--bx-card-padding</code> and <code>--bx-card-title-size</code>. Material changes update mounted surfaces; theme tokens remain inherited.</p>
+<h2>Behavior and accessibility</h2>
+<p>A card is a container; its links and buttons provide interaction. The optional title has heading semantics. Long content wraps. Combine with Grid and Container for responsive pages; give projected images a responsive width and meaningful alternative text.</p>
+<h2>Playground</h2>
+<p><code>/components/card</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/chip/README.md":`<h1>Interactive chip</h1>
+<p>A compact native action, toggle or removable token using Blocks semantic palettes.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Chip</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-chip</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Design&quot;</span> [(<span class="hljs-attr">selected</span>)]=<span class="hljs-string">&quot;designSelected&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-chip</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Angular&quot;</span> [<span class="hljs-attr">selectable</span>]=<span class="hljs-string">&quot;false&quot;</span> [<span class="hljs-attr">removable</span>]=<span class="hljs-string">&quot;true&quot;</span> (<span class="hljs-attr">removed</span>)=<span class="hljs-string">&quot;removeAngular()&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-chip</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Fixed selection&quot;</span> [<span class="hljs-attr">selected</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">readOnly</span>]=<span class="hljs-string">&quot;true&quot;</span> /&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>label</code></td>
+<td>required</td>
+<td><code>ResolvableText</code></td>
+</tr>
+<tr>
+<td><code>selected</code></td>
+<td>false</td>
+<td>Two-way selection model</td>
+</tr>
+<tr>
+<td><code>selectable</code></td>
+<td>true</td>
+<td>Toggles selection and exposes aria-pressed</td>
+</tr>
+<tr>
+<td><code>removable</code></td>
+<td>false</td>
+<td>Separate accessible remove action</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>false</td>
+<td>Removes both actions from normal focus</td>
+</tr>
+<tr>
+<td><code>readonly / readOnly</code></td>
+<td>false</td>
+<td>Prevents activation and removal while retaining focus</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>{}</td>
+<td><code>IChipConfig</code> appearance and remove label</td>
+</tr>
+<tr>
+<td><code>activated</code></td>
+<td>\u2014</td>
+<td>Main action, after selection changes</td>
+</tr>
+<tr>
+<td><code>removed</code></td>
+<td>\u2014</td>
+<td>Removal request; application owns the array</td>
+</tr>
+<tr>
+<td><code>focus(options?)</code></td>
+<td>\u2014</td>
+<td>Focuses the main action</td>
+</tr>
+</tbody></table>
+<p><code>IChipConfig</code> supports <code>color</code> (primary), <code>variant</code> (tonal), <code>size</code> (medium), optional <code>icon</code>, and translatable <code>removeLabel</code> (Remove {label}). Provide <code>BX_CHIP_DEFAULTS</code> for shared values; instance configuration wins.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-chip-background</code>, <code>--bx-chip-color</code>, <code>--bx-chip-border</code>, <code>--bx-chip-radius</code>, <code>--bx-chip-min-height</code>, <code>--bx-chip-hover-background</code> and <code>--bx-chip-remove-background</code> override the shared tag palette and spacing defaults. Main-action hover fills the entire chip behind the separate circular remove action.</p>
+<h2>Behavior and accessibility</h2>
+<p>Enter and Space activate native buttons. Delete or Backspace on the main action requests removal when enabled. Selection has a check mark and inset outline. The label wraps. The application should move focus to an adjacent chip or another action after removing the focused item; the playground demonstrates this. This primitive is not a form field; use selectedChange to coordinate application or form state.</p>
+<h2>Playground</h2>
+<p><code>/components/chip</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/collapsible/README.md":`<h1>Collapsible</h1>
+<p>A standalone disclosure. The same component also provides the bx-accordion-item selector.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Collapsible</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-collapsible</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Project details&quot;</span> [(<span class="hljs-attr">expanded</span>)]=<span class="hljs-string">&quot;expanded&quot;</span> [<span class="hljs-attr">region</span>]=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Persistent content.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-collapsible</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-collapsible</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Lazy content&quot;</span> [<span class="hljs-attr">contentTemplate</span>]=<span class="hljs-string">&quot;details&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">details</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Created only while expanded.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td>required</td>
+<td>Translated heading and button name</td>
+</tr>
+<tr>
+<td><code>expanded</code></td>
+<td>false</td>
+<td>Two-way state model</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>false</td>
+<td>Prevents toggling and heading focus</td>
+</tr>
+<tr>
+<td><code>readonly / readOnly</code></td>
+<td>false</td>
+<td>Prevents user toggling while retaining focus</td>
+</tr>
+<tr>
+<td><code>headingLevel</code></td>
+<td>3</td>
+<td>Heading level, clamped to 1\u20136</td>
+</tr>
+<tr>
+<td><code>region</code></td>
+<td>false</td>
+<td>Adds a named region for substantial content</td>
+</tr>
+<tr>
+<td><code>contentTemplate</code></td>
+<td>absent</td>
+<td>Lazy template, recreated on expansion</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>generated</td>
+<td>Base ID for the trigger and panel</td>
+</tr>
+<tr>
+<td><code>toggle() / focus()</code></td>
+<td>\u2014</td>
+<td>Guarded toggle and heading focus</td>
+</tr>
+</tbody></table>
+<p>Projected content remains mounted while collapsed; lazy template state is recreated on reopening. Application-driven expanded changes remain possible for disabled/readonly sections.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-collapsible-background</code>, <code>--bx-collapsible-border</code>, <code>--bx-collapsible-radius</code>, <code>--bx-collapsible-padding</code> and <code>--bx-collapsible-content-padding</code> follow shared semantic defaults.</p>
+<h2>Behavior and accessibility</h2>
+<p>Native button activation, aria-expanded and aria-controls connect the heading and panel. Hidden panels are inert. Programmatic collapse moves contained focus to the heading. Optional regions avoid filling the page with unnecessary landmarks.</p>
+<h2>Playground</h2>
+<p><code>/components/collapsible</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/container/README.md":`<h1>Content container</h1>
+<p>Centers content and constrains page width using the shared breakpoint scale.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Container</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-container</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;lg&quot;</span> <span class="hljs-attr">landmark</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Workspace<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Main page content.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-container</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>size: ContainerSize</code> is sm, md, lg (default), xl or full. Optional <code>landmark</code> accepts main, region or complementary. <code>ariaLabel</code> accepts <code>ResolvableText</code> and names a landmark when needed. The component adds no surface or scroll container.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-container-max-width</code> and <code>--bx-container-padding</code> override width and logical gutters. Presets come from core/styles/helpers; full width stays within the parent.</p>
+<h2>Behavior and accessibility</h2>
+<p>Use main once per page. Give regions descriptive names. Logical gutters and auto margins support RTL, narrow containers and zoom. Compose Stack, Grid and Card inside it.</p>
+<h2>Playground</h2>
+<p><code>/components/container</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/divider/README.md":`<h1>Divider</h1>
+<p>Separates adjacent content with a horizontal or vertical rule and an optional translated label.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Divider</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-divider</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-divider</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Continue&quot;</span> <span class="hljs-attr">lineStyle</span>=<span class="hljs-string">&quot;dashed&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-stack</span> <span class="hljs-attr">direction</span>=<span class="hljs-string">&quot;horizontal&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Start<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-divider</span> <span class="hljs-attr">orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>End<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-stack</span>&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>orientation</code></td>
+<td><code>horizontal</code></td>
+<td><code>horizontal</code> or <code>vertical</code></td>
+</tr>
+<tr>
+<td><code>lineStyle</code></td>
+<td><code>solid</code></td>
+<td><code>solid</code>, <code>dashed</code> or <code>dotted</code></td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>absent</td>
+<td><code>ResolvableText</code> between the two rule segments</td>
+</tr>
+<tr>
+<td><code>decorative</code></td>
+<td><code>false</code></td>
+<td>Hides the rule and label from assistive technology</td>
+</tr>
+</tbody></table>
+<p>Also exports <code>DividerOrientation</code> and <code>DividerStyle</code>. The stack example additionally imports <code>Stack</code>.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-divider-color</code>, <code>--bx-divider-thickness</code>, <code>--bx-divider-margin</code>, <code>--bx-divider-gap</code>, <code>--bx-divider-text</code>, <code>--bx-divider-font-size</code> and <code>--bx-divider-min-height</code> override shared defaults.</p>
+<h2>Behavior and accessibility</h2>
+<p>Uses separator semantics and reports its orientation. Labels wrap. Vertical dividers stretch within a flex row; give the row a meaningful height. No motion is required.</p>
+<h2>Playground</h2>
+<p><code>/components/divider</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/grid/README.md":`<h1>Grid layout</h1>
+<p>Responsive CSS grid for cards and general content without a separate layout framework.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Grid</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-grid</span> <span class="hljs-attr">minColumnWidth</span>=<span class="hljs-string">&quot;16rem&quot;</span> [<span class="hljs-attr">gap</span>]=<span class="hljs-string">&quot;4&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-card</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Project one&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-card</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Project two&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-grid</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>minColumnWidth</code> defaults to 16rem and controls auto-fit columns. Optional <code>columns</code> selects a fixed count clamped to 1\u201324. <code>gap: LayoutGap</code> defaults to 4 and uses the shared spacing scale. Fixed and automatic grids become one column below the shared sm breakpoint. The usage also imports <code>Card</code>.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-grid-gap</code> overrides spacing. Minimum column width never exceeds the parent. Fixed columns use minmax(0, 1fr) to allow long content to shrink.</p>
+<h2>Behavior and accessibility</h2>
+<p>Keeps natural DOM order without adding roles or keyboard behavior. Place semantic sections and controls inside the grid. Text enlargement, narrow containers and RTL use normal CSS layout.</p>
+<h2>Playground</h2>
+<p><code>/components/grid</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/loading-indicator/README.md":`<h1>Loading indicator</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
@@ -2509,6 +3029,152 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Delete&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;trash-2&quot;</span> [<span class="hljs-attr">danger</span>]=<span class="hljs-string">&quot;true&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;remove()&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, <code>danger</code>, and <code>wrapLabel</code>. Set <code>wrapLabel</code> to <code>true</code> when a menu item should wrap long content instead of truncating it. <code>action</code> emits the mouse event for enabled items. Clipped labels and projected text use the shared <code>TruncateDirective</code> and receive an automatic tooltip. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables that tooltip while retaining ellipsis, allowing application-owned feedback. <code>wrapLabel</code> disables truncation itself.</p>
+<h2>Shortcut definitions</h2>
+<p><code>shortcut</code> accepts <code>ResolvableShortcut</code> from <code>@filip.mazev/blocks/core</code>:</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- A portable combination: \u2318 \u21E7 V on Apple, Ctrl Shift V elsewhere. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Open view&quot;</span> [<span class="hljs-attr">shortcut</span>]=<span class="hljs-string">&quot;[&#x27;mod&#x27;, &#x27;shift&#x27;, &#x27;v&#x27;]&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;openView()&quot;</span> /&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Explicit OS differences; default is required. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Duplicate&quot;</span> [<span class="hljs-attr">shortcut</span>]=<span class="hljs-string">&quot;duplicateShortcut&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;duplicate()&quot;</span> /&gt;</span></code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ResolvableShortcut</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">duplicateShortcut</span>: <span class="hljs-title class_">ResolvableShortcut</span> = {
+  <span class="hljs-attr">mac</span>: [<span class="hljs-string">&#x27;command&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>],
+  <span class="hljs-attr">windows</span>: [<span class="hljs-string">&#x27;ctrl&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>],
+  <span class="hljs-attr">linux</span>: [<span class="hljs-string">&#x27;alt&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>],
+  <span class="hljs-attr">ios</span>: [<span class="hljs-string">&#x27;command&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>],
+  <span class="hljs-attr">android</span>: [<span class="hljs-string">&#x27;ctrl&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>],
+  <span class="hljs-attr">default</span>: [<span class="hljs-string">&#x27;mod&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>]
+};</code></pre>
+<p>A string is <strong>one token</strong>; use an array for a combination. <code>&#39;Ctrl+K&#39;</code> remains a single custom display token and is not parsed. <code>[&#39;mod&#39;, &#39;k&#39;, &#39;v&#39;]</code> displays three tokens, but does not define a sequence or a valid single-event combination. To open a menu with Command/Ctrl+K followed by V, track two separate events; the playground demonstrates application-owned sequence state with a two-second timeout, cancellation and cleanup.</p>
+<table>
+<thead>
+<tr>
+<th>Input aliases (case insensitive)</th>
+<th>macOS / iOS / iPadOS</th>
+<th>Windows</th>
+<th>Linux / Unix</th>
+<th>Android / unknown / SSR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mod</code>, <code>primary</code>, <code>cmdorctrl</code>, <code>commandorcontrol</code></td>
+<td>\u2318</td>
+<td>Ctrl</td>
+<td>Ctrl</td>
+<td>Ctrl</td>
+</tr>
+<tr>
+<td><code>command</code>, <code>cmd</code>, <code>meta</code>, <code>super</code>, <code>win</code>, <code>windows</code>, <code>\u2318</code></td>
+<td>\u2318</td>
+<td>Win</td>
+<td>Super</td>
+<td>Meta</td>
+</tr>
+<tr>
+<td><code>ctrl</code>, <code>control</code>, <code>\u2303</code></td>
+<td>\u2303</td>
+<td>Ctrl</td>
+<td>Ctrl</td>
+<td>Ctrl</td>
+</tr>
+<tr>
+<td><code>alt</code>, <code>option</code>, <code>opt</code>, <code>\u2325</code></td>
+<td>\u2325</td>
+<td>Alt</td>
+<td>Alt</td>
+<td>Alt</td>
+</tr>
+<tr>
+<td><code>shift</code>, <code>\u21E7</code></td>
+<td>\u21E7</td>
+<td>Shift</td>
+<td>Shift</td>
+<td>Shift</td>
+</tr>
+<tr>
+<td><code>enter</code>, <code>return</code></td>
+<td>\u21A9</td>
+<td>Enter</td>
+<td>Enter</td>
+<td>Enter</td>
+</tr>
+<tr>
+<td><code>backspace</code> / <code>delete</code></td>
+<td>\u232B / \u2326</td>
+<td>Backspace / Delete</td>
+<td>Backspace / Delete</td>
+<td>Backspace / Delete</td>
+</tr>
+<tr>
+<td><code>tab</code> / <code>escape</code>, <code>esc</code></td>
+<td>\u21E5 / \u238B</td>
+<td>Tab / Escape</td>
+<td>Tab / Escape</td>
+<td>Tab / Escape</td>
+</tr>
+<tr>
+<td><code>up</code>, <code>down</code>, <code>left</code>, <code>right</code> (or <code>Arrow\u2026</code>)</td>
+<td>\u2191 \u2193 \u2190 \u2192</td>
+<td>\u2191 \u2193 \u2190 \u2192</td>
+<td>\u2191 \u2193 \u2190 \u2192</td>
+<td>\u2191 \u2193 \u2190 \u2192</td>
+</tr>
+</tbody></table>
+<p>Letters display in uppercase. <code>space</code> becomes Space, and <code>plus</code> becomes +. Existing symbol tokens and unknown custom labels remain usable. Explicit <code>ctrl</code> always means Control, including on Mac; use <code>mod</code> for Command/Control adaptation. <code>ios</code> falls back to <code>mac</code>, then <code>default</code>; other absent overrides use <code>default</code>. Mobile mappings apply to hardware keyboards. Unknown platforms and server rendering use <code>default</code>, where <code>mod</code> means Control.</p>
+<h2>Handling keyboard activation</h2>
+<p>The component renders a hint and emits <code>action</code> for button activation. <strong>It does not attach a global keyboard listener or open a menu automatically.</strong> <code>BxShortcutService</code> now shares platform selection, alias normalization, presentation, accessibility metadata and event matching, so the hint and application handler use the same definition.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Component</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxShortcutService</span>, <span class="hljs-title class_">ResolvableShortcut</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">MenuItem</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+  <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-view-command&#x27;</span>,
+  <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">MenuItem</span>],
+  <span class="hljs-attr">template</span>: <span class="hljs-string">\`&lt;bx-menu-item label=&quot;Open view&quot; [shortcut]=&quot;viewShortcut&quot; (action)=&quot;openView()&quot; /&gt;\`</span>,
+  <span class="hljs-attr">host</span>: { <span class="hljs-string">&#x27;(document:keydown)&#x27;</span>: <span class="hljs-string">&#x27;onKeydown($event)&#x27;</span> }
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ViewCommand</span> {
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> shortcuts = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">BxShortcutService</span>);
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">viewShortcut</span>: <span class="hljs-title class_">ResolvableShortcut</span> = [<span class="hljs-string">&#x27;mod&#x27;</span>, <span class="hljs-string">&#x27;shift&#x27;</span>, <span class="hljs-string">&#x27;v&#x27;</span>];
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-title function_">onKeydown</span>(<span class="hljs-attr">event</span>: <span class="hljs-title class_">KeyboardEvent</span>): <span class="hljs-built_in">void</span> {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">shortcuts</span>.<span class="hljs-title function_">matches</span>(event, <span class="hljs-variable language_">this</span>.<span class="hljs-property">viewShortcut</span>)) <span class="hljs-keyword">return</span>;
+
+    event.<span class="hljs-title function_">preventDefault</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">openView</span>();
+  }
+
+  <span class="hljs-keyword">protected</span> <span class="hljs-title function_">openView</span>(): <span class="hljs-built_in">void</span> {
+    <span class="hljs-comment">// Run the same application action used by the menu item.</span>
+  }
+}</code></pre>
+<p>For opening a menu, call the public <code>MenuTriggerDirective.open(true)</code> method after a successful match. It opens with focus on the first enabled item; Escape restores focus to the trigger. Angular removes the host listener when this example&#39;s component is destroyed. Choose a handler scope appropriate to your application and enforce the same disabled/permission guards for pointer and keyboard activation.</p>
+<table>
+<thead>
+<tr>
+<th>Service API</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>platform(): ShortcutPlatform</code></td>
+<td>Detect the platform through <code>DeviceTypeService</code>.</td>
+</tr>
+<tr>
+<td>\`resolve(shortcut, platform?): string[]</td>
+<td>undefined\`</td>
+</tr>
+<tr>
+<td>\`toAriaKeyshortcuts(shortcut, platform?): string</td>
+<td>null\`</td>
+</tr>
+<tr>
+<td><code>matches(event, shortcut, options?): boolean</code></td>
+<td>Match one ordinary key plus the exact requested modifiers. Does not prevent defaults or invoke actions.</td>
+</tr>
+</tbody></table>
+<p><code>IShortcutMatchOptions</code> exposes <code>platform</code>, <code>allowInEditable</code> (false), and <code>allowRepeat</code> (false). Matching always ignores already-handled, composing and AltGraph events. By default it ignores input, textarea, select, contenteditable and textbox targets, including readonly inputs. Modifiers alone, duplicate modifiers, multiple ordinary keys and custom labels are display-only. Matching uses <code>KeyboardEvent.key</code> (case insensitive), so keyboard layout matters; Option/Alt characters must match the actual produced key. The service does not track pressed keys, sequences, global registrations, priority, or conflict resolution.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
@@ -2522,9 +3188,10 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
-<p>Use <code>action</code> for activation and <code>disabled</code> for unavailable commands. Shortcut hints describe a binding; registering the actual shortcut remains the application\u2019s responsibility.</p>
+<p>Use <code>action</code> for activation and <code>disabled</code> for unavailable commands. Valid combinations expose <code>aria-keyshortcuts</code> on the internal button while visual keycaps are hidden from its accessible name. Disabled items omit shortcut metadata; application handlers must also guard the disabled command. Only supply a binding hint when the application actually implements it. Existing custom display hints remain supported, but do not generate keyboard metadata.</p>
+<p>Browsers, operating systems and assistive technology may reserve key combinations. Keep actions reachable by button, choose suitable bindings for your audience, and offer application-owned remapping where needed. See <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-keyshortcuts">MDN&#39;s aria-keyshortcuts guidance</a>.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/menu-item</code> for a working example and its current value or action result.</p>
+<p>Open <code>/components/menu-item</code> or <code>/components/menu</code> for working menu-opening combinations and sequences, OS previews, disabled-command guards, an editable field, and visible action results.</p>
 `,"projects/blocks/primitives/components/menu/README.md":`<h1>Menu</h1>
 <p>A shared surface for related menu actions.</p>
 <h2>Import</h2>
@@ -2537,6 +3204,10 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>Menu</code> projects its children and provides the menu surface. Use <code>MenuItem</code> for consistent action styling. Place it in <code>bxDropdown</code> for positioned dismissal and keyboard behavior.</p>
+<h2>Keyboard shortcuts</h2>
+<p>Use <code>[shortcut]=&quot;[&#39;mod&#39;, &#39;shift&#39;, &#39;v&#39;]&quot;</code> on a <code>MenuItem</code> to display a platform-aware hint: Command on Apple devices, Ctrl elsewhere. Explicit <code>mac</code>, <code>windows</code>, <code>linux</code>, <code>ios</code> and <code>android</code> overrides are also supported with a required <code>default</code> fallback. Hints do not register actions.</p>
+<p>Use <code>BxShortcutService.matches(event, definition)</code> in an application-owned keyboard handler, then call <code>MenuTriggerDirective.open(true)</code> to open a positioned menu with focus. Use the same definition for the hint and handler, and apply the same disabled guards as pointer activation. The service also formats aliases/symbols and supplies <code>aria-keyshortcuts</code> names.</p>
+<p>Command/Ctrl+K followed by V is a sequence of two combinations, requiring application-owned state and cancellation. An array such as <code>[&#39;mod&#39;, &#39;k&#39;, &#39;v&#39;]</code> is only a hint with three tokens. See the <a href="components/menu-item">menu item README</a> for complete aliases, fallback rules, the service API and a working handler example. Both menu playground routes demonstrate a combination and a timed sequence opening an overlay.</p>
 <h2>Appearance</h2>
 <p>Menus use an opaque themed backing with no container blur, reflections, or live lighting. Colors, spacing, radius, elevation and row interactions still follow Blocks tokens. Trigger and row effects retain their application appearance settings.</p>
 <p><code>BxA11yService</code> controls reduced motion. Forced colors preserve native contrast and focus states.</p>
@@ -2544,6 +3215,77 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/menu</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/components/popover/README.md":`<h1>Popover</h1>
+<p>A general content surface and trigger for interactive help, compact forms and contextual details. Uses the existing CDK overlay, theme inheritance and surface engine.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Popover</span>, <span class="hljs-title class_">PopoverDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> [<span class="hljs-attr">bxPopover</span>]=<span class="hljs-string">&quot;details&quot;</span> #<span class="hljs-attr">popover</span>=<span class="hljs-string">&quot;bxPopover&quot;</span>
+  [<span class="hljs-attr">popoverConfig</span>]=<span class="hljs-string">&quot;{ ariaLabel: &#x27;Project details&#x27;, placement: &#x27;bottom&#x27; }&quot;</span>&gt;</span>Details<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">details</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-popover</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Interactive content belongs here.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;popover.close()&quot;</span>&gt;</span>Done<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-popover</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[bxPopover]</code></td>
+<td>required</td>
+<td>Content <code>TemplateRef&lt;unknown&gt;</code></td>
+</tr>
+<tr>
+<td><code>popoverConfig</code></td>
+<td><code>{}</code></td>
+<td><code>IPopoverConfig</code> overrides</td>
+</tr>
+<tr>
+<td><code>popoverDisabled</code></td>
+<td><code>false</code></td>
+<td>Prevents opening and closes an open panel</td>
+</tr>
+<tr>
+<td><code>isOpen()</code></td>
+<td><code>false</code></td>
+<td>Read-only trigger state</td>
+</tr>
+<tr>
+<td><code>openedChange</code></td>
+<td>\u2014</td>
+<td>Emits a boolean after opening or closing</td>
+</tr>
+<tr>
+<td><code>open() / close() / toggle()</code></td>
+<td>\u2014</td>
+<td>Programmatic trigger methods</td>
+</tr>
+<tr>
+<td><code>close(false)</code></td>
+<td>\u2014</td>
+<td>Dismiss without restoring trigger focus</td>
+</tr>
+<tr>
+<td><code>opaque</code> on <code>bx-popover</code></td>
+<td>absent</td>
+<td>Local reduced-transparency override</td>
+</tr>
+</tbody></table>
+<p><code>IPopoverConfig</code>: <code>placement</code> (bottom), <code>offset</code> (8px), <code>ariaLabel</code> (Details), <code>autoFocus</code> (true), <code>closeOnOutside</code> (true), <code>closeOnEscape</code> (true), <code>closeOnFocusOutside</code> (true). Labels accept <code>ResolvableText</code>.</p>
+<p>Provide <code>{ provide: BX_POPOVER_DEFAULTS, useValue: { placement: &#39;top&#39; } }</code> for application defaults. Instance properties win, followed by shared defaults and library defaults.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-popover-width</code>, <code>--bx-popover-max-width</code>, <code>--bx-popover-padding</code>, <code>--bx-popover-background</code>, <code>--bx-popover-color</code>, <code>--bx-popover-border</code>, <code>--bx-popover-radius</code> and <code>--bx-popover-shadow</code>. Use Blocks buttons and fields for controls inside the content. The material wrapper clips decorative layers; a separate content region scrolls vertically only when its content exceeds the available viewport.</p>
+<h2>Behavior and accessibility</h2>
+<p>Use a native button trigger. The directive owns nonmodal dialog semantics and its translated accessible name. Focus moves to the first tabbable control or the panel; Escape restores trigger focus. Tab exits at the panel boundary. Inside clicks stay open. Surface motion follows BxA11yService. Panels scroll within the viewport and inherit live theme changes, including modal/top-layer contexts. For a modal interaction use the modal package.</p>
+<h2>Playground</h2>
+<p><code>/components/popover</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/progress-bar/README.md":`<h1>Progress bar</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
@@ -2557,6 +3299,78 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/progress-bar</code>. Fake asynchronous requests demonstrate progress and loading buttons. Reduced-motion preferences remove continuous animation while preserving status feedback.</p>
+`,"projects/blocks/primitives/components/skeleton/README.md":`<h1>Skeleton</h1>
+<p>Reserves space while content loads, with text, rectangle and circle shapes.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Skeleton</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-skeleton</span> [<span class="hljs-attr">lines</span>]=<span class="hljs-string">&quot;3&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-skeleton</span> <span class="hljs-attr">shape</span>=<span class="hljs-string">&quot;circle&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;3rem&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-skeleton</span> <span class="hljs-attr">shape</span>=<span class="hljs-string">&quot;rectangle&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;8rem&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-skeleton</span> [<span class="hljs-attr">decorative</span>]=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Loading profile&quot;</span> /&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>shape</code></td>
+<td><code>text</code></td>
+<td><code>SkeletonShape</code>: text, rectangle or circle</td>
+</tr>
+<tr>
+<td><code>lines</code></td>
+<td><code>1</code></td>
+<td>Text rows, clamped to 1\u2013100</td>
+</tr>
+<tr>
+<td><code>width / height</code></td>
+<td>absent</td>
+<td>Optional CSS dimensions</td>
+</tr>
+<tr>
+<td><code>animated</code></td>
+<td><code>true</code></td>
+<td>Enables the pulse when motion preferences permit</td>
+</tr>
+<tr>
+<td><code>decorative</code></td>
+<td><code>true</code></td>
+<td>Hides repeated placeholders from accessibility APIs</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>Loading content</td>
+<td>Translatable status name when nondecorative</td>
+</tr>
+</tbody></table>
+<h2>Appearance and customization</h2>
+<p><code>--bx-skeleton-background</code>, <code>--bx-skeleton-height</code>, <code>--bx-skeleton-gap</code>, <code>--bx-skeleton-radius</code>, <code>--bx-skeleton-duration</code> and <code>--bx-skeleton-last-line-width</code>. Defaults use semantic element colors.</p>
+<h2>Behavior and accessibility</h2>
+<p>Replace skeletons with real content when the application finishes loading. Use one named status for a group of decorative placeholders. BxA11yService changes stop the pulse immediately, retaining the placeholder. Forced colors use a static system color.</p>
+<h2>Playground</h2>
+<p><code>/components/skeleton</code> includes live examples and shared appearance controls.</p>
+`,"projects/blocks/primitives/components/stack/README.md":`<h1>Stack layout</h1>
+<p>A small flex layout for vertical content, action rows and responsive groups.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Stack</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stack</span> <span class="hljs-attr">direction</span>=<span class="hljs-string">&quot;responsive&quot;</span> [<span class="hljs-attr">gap</span>]=<span class="hljs-string">&quot;4&quot;</span> <span class="hljs-attr">align</span>=<span class="hljs-string">&quot;center&quot;</span> <span class="hljs-attr">justify</span>=<span class="hljs-string">&quot;between&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Project details<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Updated today<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-stack</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>direction: StackDirection</code> is vertical (default), horizontal or responsive. Responsive stacks vertically below the shared sm breakpoint. <code>gap: LayoutGap</code> defaults to 4; supported shared spacing keys are 0, 1, 2, 3, 4, 5, 6, 8, 10 and 12. <code>align: LayoutAlign</code> is start, center, end or stretch (default). <code>justify: LayoutJustify</code> is start (default), center, end or between. <code>wrap</code> defaults to false; enable it for action rows.</p>
+<h2>Appearance and customization</h2>
+<p><code>--bx-stack-gap</code> overrides token-based spacing. CSS flex properties remain available for application-specific proportions.</p>
+<h2>Behavior and accessibility</h2>
+<p>Adds no ARIA role or keyboard behavior. DOM order remains reading and tab order. Use wrapping horizontal stacks for long translated actions; use responsive direction when content should stack on small screens.</p>
+<h2>Playground</h2>
+<p><code>/components/stack</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/tab/README.md":`<h1>Tab</h1>
 <p>Declares a labelled panel inside <a href="components/tabs"><code>Tabs</code></a>.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tabs</span>, <span class="hljs-title class_">Tab</span>, <span class="hljs-title class_">TabContentDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
@@ -2826,6 +3640,10 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p><code>menuPlacement</code> optionally selects the existing dropdown placement strategy (<code>top</code>, <code>bottom</code>, <code>left</code>, or <code>right</code>). Omitting it retains physical side-aligned submenu positioning. <code>TopNav</code> uses <code>bottom</code> for its one panel while <code>SideNav</code> retains its side placement. The shared tracker, top-layer context, focus handling, outside-click dismissal, and clipping behavior are unchanged.</p>
 <p><code>navigateMenuKey(event, menu, options?)</code> also accepts <code>IMenuKeyboardOptions</code>: vertical Up/Down navigation remains the default; horizontal orientation uses Left/Right with optional RTL direction and a roving tab stop. This supports the top navigation menubar without introducing a separate keyboard implementation.</p>
 <p><code>menuClosing</code> fires before DOM detachment (after the overlay enters its closing path), allowing owners to retain current scroll/focus context. <code>menuClosed</code> still fires after cleanup.</p>
+`,"projects/blocks/primitives/directives/popover/README.md":`<h1>Popover trigger</h1>
+<p>Import <code>PopoverDirective</code>, <code>Popover</code>, <code>IPopoverConfig</code> and optional <code>BX_POPOVER_DEFAULTS</code> from <code>@filip.mazev/blocks/primitives</code>.</p>
+<p>The directive owns positioning, focus, dismissal, dialog semantics and theme inheritance; the component supplies the visual surface. Use a native button trigger and a named dialog. See the <a href="components/popover">popover component guide</a> for working usage, API defaults, configuration, CSS variables and accessibility behavior.</p>
+<p>Playground: <code>/components/popover</code>.</p>
 `,"projects/blocks/primitives/directives/tooltip/README.md":`<h1>Tooltip trigger</h1>
 <p>Connects a help surface to a trigger using the overlay positioning system.</p>
 <h2>Import</h2>
@@ -3320,7 +4138,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var w=class c{document=f(z);router=f(Qn);readmeContent=y(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=se({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&Ce(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(ds(0,`div`,0)(1,`div`,1)(2,`span`),Ve(3,`Documentation`),fs()(),qn(4,`article`,2),fs()),a&2&&(M(4),ps(`innerHTML`,s.readmeContent(),fm))},styles:[`
+`};var w=class c{document=p(Q);router=p(ar);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=V({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&de(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(Bt(0,`div`,0)(1,`div`,1)(2,`span`),we(3,`Documentation`),jt()(),bn(4,`article`,2),jt()),a&2&&(D(4),si(`innerHTML`,s.readmeContent(),Sm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
