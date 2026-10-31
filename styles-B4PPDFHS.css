@@ -4,6 +4,7 @@
   border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, 0));
 }
 [data-bx-surface] {
+  --bx-glass-press: 0;
   isolation: isolate;
   background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
   -webkit-backdrop-filter: blur(var(--bx-glass-blur, var(--bx-glass-material-blur, 10px))) saturate(1.15);
@@ -61,11 +62,25 @@
       transparent 68%);
 }
 .bx-glass-ambient,
+.bx-glass-pressure,
 .bx-glass-contribution {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
+}
+.bx-glass-pressure {
+  opacity: calc(var(--bx-glass-press, 0) * var(--bx-glass-press-opacity, .6));
+  box-shadow: inset 0 2px 5px var(--bx-border-default, GrayText);
+}
+@supports (background: color-mix(in srgb, white, transparent)) {
+  .bx-glass-pressure {
+    background:
+      radial-gradient(
+        ellipse at 50% 0%,
+        color-mix(in srgb, var(--bx-glass-text, var(--bx-text-primary, CanvasText)) 28%, transparent),
+        transparent 75%);
+  }
 }
 @property --bx-glass-environment-color-0 { syntax: "<color>"; inherits: false; initial-value: transparent; }
 @property --bx-glass-environment-color-1 { syntax: "<color>"; inherits: false; initial-value: transparent; }
@@ -215,6 +230,7 @@
   .bx-glass-rim,
   .bx-glass-light,
   .bx-glass-ambient,
+  .bx-glass-pressure,
   .bx-glass-decoration::before,
   .bx-glass-decoration::after {
     display: none;
@@ -234,6 +250,7 @@
   .bx-glass-rim,
   .bx-glass-light,
   .bx-glass-ambient,
+  .bx-glass-pressure,
   .bx-glass-decoration::before,
   .bx-glass-decoration::after {
     display: none;
@@ -4417,6 +4434,41 @@ input.bx-slider:disabled {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.playground-code-block {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--bx-border-default);
+  border-radius: 0.5rem;
+  background: var(--bx-bg-surface);
+  overflow: auto;
+  white-space: pre;
+  overflow-wrap: normal;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+.playground-code-block > code.hljs {
+  display: block;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  font-size: inherit;
+}
+.playground-code-block:focus-visible {
+  outline: 2px solid var(--bx-border-brand);
+  outline-offset: 3px;
+}
+@media (forced-colors: active) {
+  .playground-code-block .hljs,
+  .playground-code-block .hljs span {
+    color: CanvasText;
+    background: Canvas;
+  }
 }
 .cdk-overlay-container {
   z-index: 100;

@@ -24,7 +24,7 @@ npm run build:playground
 npm run build:blocks
 ```
 
-Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run `npm run tools:build-docs` to regenerate its bundled content. Runtime documentation does not fetch Markdown files.
+Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run `npm run tools:build-docs` to regenerate its bundled content. Runtime documentation does not fetch Markdown files. Fenced README examples are highlighted during generation with the same highlight.js engine used by live usage examples and configurator file tabs. Code blocks follow the active light/dark syntax theme and support keyboard scrolling; short inline API names remain inline code.
 
 Keep Angular packages, CLI, builder and ng-packagr on major 22 with TypeScript 6. The checked-in lockfile preserves compatible versions. Runtime Markdown and Mermaid dependencies are no longer needed by the playground. Do not mix Angular 21 tooling with Angular 22.
 

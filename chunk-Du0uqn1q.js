@@ -1,18 +1,16 @@
-import{Jn as g,Mn as be,Rn as ds,Si as z,Un as f,ai as us,ct as M,ni as um,nr as hs,pn as Xn,tn as Un,ur as je,vi as y,yr as le}from"./chunk-o3QKG9oV.js";var w={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{$n as fs,Ct as Qn,Hn as ds,Lr as ps,Qr as se,Ur as qn,Xn as f,Zn as fm,bi as z,er as g,f as Ce,gi as y,qt as Ve,st as M}from"./chunk-C74CBOi9.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
 <p>Use an Angular 22 compatible Node version (22.22.3+, 24.15+, or 26+):</p>
-<pre><code class="language-sh">npm ci
-npm start
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="sh code example"><code class="hljs language-sh">npm ci
+npm start</code></pre>
 <p>Open <a href="http://localhost:8080">http://localhost:8080</a>. The component catalogue links each component to its own demonstration and README. <code>/appearance</code> provides application-wide material controls and spatial-lighting and fade demonstrations. <code>/icon-catalog</code> provides searchable, paginated icons.</p>
 <p>The playground defaults to Carbon / Cobalt (<code>#292a2d</code> / <code>#356fe8</code>) when no valid saved palette is present; Reset returns to Carbon / Cobalt.</p>
 <p>The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.</p>
-<pre><code class="language-sh">npm run build:playground
-npm run build:blocks
-</code></pre>
-<p>Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run <code>npm run tools:build-docs</code> to regenerate its bundled content. Runtime documentation does not fetch Markdown files.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="sh code example"><code class="hljs language-sh">npm run build:playground
+npm run build:blocks</code></pre>
+<p>Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run <code>npm run tools:build-docs</code> to regenerate its bundled content. Runtime documentation does not fetch Markdown files. Fenced README examples are highlighted during generation with the same highlight.js engine used by live usage examples and configurator file tabs. Code blocks follow the active light/dark syntax theme and support keyboard scrolling; short inline API names remain inline code.</p>
 <p>Keep Angular packages, CLI, builder and ng-packagr on major 22 with TypeScript 6. The checked-in lockfile preserves compatible versions. Runtime Markdown and Mermaid dependencies are no longer needed by the playground. Do not mix Angular 21 tooling with Angular 22.</p>
 <h2>Palettes</h2>
 <p>Each palette combines two tonal families. Choose one under <strong>Palettes</strong> in Appearance; the two swatches show its anchors. The same palette supplies both light and dark appearances.</p>
@@ -63,76 +61,71 @@ npm run build:blocks
 <p>Primary roles identify main actions, links and field focus. Accent roles identify checked checkboxes, radios and switches, slider progress, selected options and supporting actions. This follows Material&#39;s use of distinct color roles for emphasis while keeping broad surfaces neutral. For example, <code>color=&quot;accent&quot;</code> selects the second tone on buttons and tabs; <code>text-accent</code> follows it on icons. Documentation uses the primary role and Code Examples uses the accent role. Success, warning, danger and information retain their status meanings across palettes.</p>
 <p>Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground&#39;s Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.</p>
 <p>Carbon / Cobalt combines a deep neutral charcoal with a saturated cobalt-blue accent. Its dark appearance uses neutral off-white primary actions instead of a pale colored tint. Azure / Ember pairs blue with burnt orange, while Brick Rose / Cyan pairs a muted rose-red with cyan. Their dark action shades are tuned individually: Cobalt provides a clear blue accent, Ember stays orange, and Brick Rose stays deeper and more muted than the danger red. Status colors are independent of these palette families.</p>
-<pre><code class="language-ts">const theme = inject(ThemingService);
-theme.setPalette(&#39;violet-teal&#39;);
-theme.setApplicationTheme(&#39;dark&#39;);
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">const</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
+theme.<span class="hljs-title function_">setPalette</span>(<span class="hljs-string">&#x27;violet-teal&#x27;</span>);
+theme.<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-string">&#x27;dark&#x27;</span>);</code></pre>
 <p>Use the palette IDs above in <code>ThemingService.setPalette()</code> and <code>ng add --theme</code>. Sass exports follow the same names, such as <code>$carbon-cobalt-light-theme</code> and <code>$carbon-cobalt-dark-theme</code>. High contrast overrides both expressive roles with contrast-first black/white values.</p>
 <h2>Global configuration through Blocks</h2>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-export class Settings {
-  readonly theme = inject(ThemingService);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Settings</span> {
+  <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-  setAppearance() {
-    this.theme.setAppearance({
-      glassiness: 0.5,
-      quality: &#39;auto&#39;,
+  <span class="hljs-title function_">setAppearance</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({
+      <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>,
+      <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
     });
   }
-}
-</code></pre>
+}</code></pre>
 <p>There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full glassiness range; fields and filled actions retain their own legibility constraints.</p>
 <p><code>theme.appearance()</code> is the current typed configuration; <code>theme.resetAppearance()</code> restores defaults. Changes apply to existing components and open overlays. <code>glassiness</code> is 0\u20131, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint at 80% to retain a glassy appearance. There are no independent tint, blur, or material preset settings. <code>reducedTransparency: true</code> supplies fully opaque surfaces and preserves the chosen glassiness for when transparency is restored. Quality is <code>auto</code>, <code>baseline</code>, or <code>enhanced</code>. Reduced motion continues through <code>BxA11yService</code>; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to glassiness, and a saved solid preference becomes reduced transparency.</p>
 <p>The global styles are required once. <code>ng add @filip.mazev/blocks</code> adds the distributed material stylesheet to the application build. For an existing application, add <code>node_modules/@filip.mazev/blocks/effects/effects.css</code> to <code>angular.json</code> styles before the application stylesheet, or import <code>@filip.mazev/blocks/effects/effects.css</code> globally. Continue including the usual Blocks Sass theme once. The playground already does this.</p>
 <h2>Existing components and custom surfaces</h2>
 <p>Blocks components receive glass automatically. The <code>BxSurfaceDirective</code> remains useful for your own containers and local overrides:</p>
-<pre><code class="language-html">&lt;section bxSurface&gt;
-  &lt;button bx-button [bxDropdown]=&quot;actions&quot;&gt;Actions&lt;/button&gt;
-&lt;/section&gt;
-&lt;ng-template #actions&gt;
-  &lt;bx-menu&gt;
-    &lt;bx-menu-item label=&quot;Edit&quot;&gt;&lt;/bx-menu-item&gt;
-    &lt;bx-menu-item label=&quot;Duplicate&quot;&gt;&lt;/bx-menu-item&gt;
-  &lt;/bx-menu&gt;
-&lt;/ng-template&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">bxSurface</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> [<span class="hljs-attr">bxDropdown</span>]=<span class="hljs-string">&quot;actions&quot;</span>&gt;</span>Actions<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">actions</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Edit&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu-item</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Duplicate&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu-item</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
 <p>Place custom surfaces on containers with measurable CSS boxes. Native replaced elements such as inputs and images need a wrapper for decoration; use the dedicated <code>SliderDirective</code> (<code>input[type=range][bxSlider]</code>) for native ranges; Blocks form components already provide appropriate wrappers. Nested surfaces retain tint and reflection while avoiding a second backdrop-filter pass.</p>
 <h2>Overlay fades</h2>
 <p>The engine fades the material surface itself in and out while preserving its full dimensions, blur, and translucency. The positioning pane remains at full opacity so it does not interrupt backdrop filtering. Reopening reverses from the current opacity. Dropdowns use <code>bxTransition=&quot;fade&quot;</code> by default; the former <code>emerge</code> value remains a compatibility alias.</p>
 <p>Dropdowns expose <code>#actions=&quot;bxDropdown&quot;</code>, <code>open()</code>, <code>close()</code>, <code>toggle()</code>, <code>isOpen()</code> and <code>state()</code>. The adapter keeps an exiting panel inert and disposes it after motion settles, with revision guards for reopening. Focus and keyboard behavior remain native. No dragging or repositioning behavior was added in this iteration.</p>
 <h2>Framework-independent API</h2>
-<pre><code class="language-ts">import {
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> {
   configureAppearance,
   mountSurface,
   mountGlassScene,
   createGlassTransition,
-} from &#39;@filip.mazev/blocks/effects/runtime&#39;;
-import &#39;@filip.mazev/blocks/effects/effects.css&#39;;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/runtime&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/effects.css&#x27;</span>;
 
-const configuration = configureAppearance(document.documentElement, {
-  glassiness: 0.5, quality: &#39;auto&#39;,
+<span class="hljs-keyword">const</span> configuration = <span class="hljs-title function_">configureAppearance</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>, {
+  <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>, <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
 });
-const surface = mountSurface(button);
-const scene = mountGlassScene(container, {
-  lights: [{ element: lightMarker, z: 180, intensity: 1, radius: 640 }],
-  reflectors: [{ element: foreground, depth: 80, intensity: 0.3 }],
+<span class="hljs-keyword">const</span> surface = <span class="hljs-title function_">mountSurface</span>(button);
+<span class="hljs-keyword">const</span> scene = <span class="hljs-title function_">mountGlassScene</span>(container, {
+  <span class="hljs-attr">lights</span>: [{ <span class="hljs-attr">element</span>: lightMarker, <span class="hljs-attr">z</span>: <span class="hljs-number">180</span>, <span class="hljs-attr">intensity</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">radius</span>: <span class="hljs-number">640</span> }],
+  <span class="hljs-attr">reflectors</span>: [{ <span class="hljs-attr">element</span>: foreground, <span class="hljs-attr">depth</span>: <span class="hljs-number">80</span>, <span class="hljs-attr">intensity</span>: <span class="hljs-number">0.3</span> }],
 });
-// Mount and lay out the panel first.
-const panelSurface = mountSurface(panel);
-const transition = createGlassTransition(button, panel);
-await transition.enter();
-// Later: await transition.exit(), then remove the panel.
-// Call scene.refresh() after changing registered objects&#39; position or appearance.
-// On teardown: transition.destroy(); panelSurface.destroy(); surface.destroy();
-// scene.destroy(); configuration.destroy();
-</code></pre>
+<span class="hljs-comment">// Mount and lay out the panel first.</span>
+<span class="hljs-keyword">const</span> panelSurface = <span class="hljs-title function_">mountSurface</span>(panel);
+<span class="hljs-keyword">const</span> transition = <span class="hljs-title function_">createGlassTransition</span>(button, panel);
+<span class="hljs-keyword">await</span> transition.<span class="hljs-title function_">enter</span>();
+<span class="hljs-comment">// Later: await transition.exit(), then remove the panel.</span>
+<span class="hljs-comment">// Call scene.refresh() after changing registered objects&#x27; position or appearance.</span>
+<span class="hljs-comment">// On teardown: transition.destroy(); panelSurface.destroy(); surface.destroy();</span>
+<span class="hljs-comment">// scene.destroy(); configuration.destroy();</span></code></pre>
 <p>Transition promises resolve to <code>finished</code> or <code>cancelled</code>. Always guard asynchronous panel removal against a subsequent reopening. Controllers expose update/refresh and destroy methods; dispose them with their owning view. The former transition export remains as a deprecated compatibility alias; new code uses <code>createGlassTransition</code>.</p>
 <p>The native example can be served without Angular:</p>
-<pre><code class="language-sh">npm run build:blocks
-python3 -m http.server 8081
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="sh code example"><code class="hljs language-sh">npm run build:blocks
+python3 -m http.server 8081</code></pre>
 <p>Open <a href="http://localhost:8081/projects/blocks/effects/examples/">http://localhost:8081/projects/blocks/effects/examples/</a>.</p>
 <h2>Lighting and rendering limits</h2>
 <p>Lighting uses a bounded spatial model: up to four explicit lights and four foreground/background reflection proxies per scene. Every mounted glass surface also samples a few points around its edge and picks up subtle color from nearby visible CSS backgrounds, images, video and canvas. Paint order separates foreground from backdrop cues; depth and distance reduce their strength. Different sources retain localized edge colors, crossfading beneath existing semantic and explicit lights. Real CSS backdrop filtering continues to display the pixels behind a surface.</p>
@@ -143,27 +136,24 @@ python3 -m http.server 8081
 <h2>Blocks - Core Library</h2>
 <p><strong>Blocks Core</strong> is the foundational library for the Blocks ecosystem. It provides the essential infrastructure for building responsive, theme-aware Angular applications. It bridges the gap between TypeScript logic and SCSS styling, offering a unified system for breakpoints, device detection, scroll management and theming.</p>
 <h2>Installation</h2>
-<pre><code class="language-bash">npm i @filip.mazev/blocks-core@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">npm i @filip.mazev/blocks-core@latest</code></pre>
 <p>Or with the global blocks <code>ng</code> command which adds all blocks packages and sets up your styles.scss</p>
-<pre><code class="language-bash">ng add @filip.mazev/blocks@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">ng add @filip.mazev/blocks@latest</code></pre>
 <h2>Styles &amp; Theming</h2>
 <p>Blocks Core utilizes a robust SCSS architecture to manage design tokens and responsiveness.</p>
 <h3>1. Palette provider</h3>
 <p>The library uses a CSS Variable system generated via SCSS maps. To initialize the core theme, use the <code>bx-theme</code> mixin in your global styles.</p>
-<pre><code class="language-scss">@use &quot;@filip.mazev/blocks&quot; as *;
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-keyword">@use</span> <span class="hljs-string">&quot;@filip.mazev/blocks&quot;</span> as *;
 
-:root {
-  // Initialize default light theme
-  @include bx-theme($violet-teal-light-theme);
+<span class="hljs-selector-pseudo">:root</span> {
+  <span class="hljs-comment">// Initialize default light theme</span>
+  <span class="hljs-keyword">@include</span> bx-theme(<span class="hljs-variable">$violet-teal-light-theme</span>);
 }
 
-// Example: Switch to dark theme based on a class
-body.dark-theme {
-  @include bx-theme($violet-teal-dark-theme);
-}
-</code></pre>
+<span class="hljs-comment">// Example: Switch to dark theme based on a class</span>
+<span class="hljs-selector-tag">body</span><span class="hljs-selector-class">.dark-theme</span> {
+  <span class="hljs-keyword">@include</span> bx-theme(<span class="hljs-variable">$violet-teal-dark-theme</span>);
+}</code></pre>
 <p>This generates paired palette roles with the <code>--bx-</code> prefix: <code>--bx-primary</code>, <code>--bx-accent</code>, their <code>on-*</code> foregrounds, subtle containers, text and borders. <code>--bx-bg-canvas</code> stays neutral in light and dark appearances. See <a href="appearance#palettes">Palettes</a> for the available pairs, CLI IDs and usage.</p>
 <h3>2. Responsive Mixins</h3>
 <p>The library provides mixins that strictly align with the WindowDimensionsService breakpoints in TypeScript.</p>
@@ -179,59 +169,55 @@ body.dark-theme {
 <li><code>4xl</code>: 2560px</li>
 </ul>
 <p>Usage:</p>
-<pre><code class="language-scss">@use &quot;@filip.mazev/blocks-core/src/lib/styles/mixins&quot; as *;
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-keyword">@use</span> <span class="hljs-string">&quot;@filip.mazev/blocks-core/src/lib/styles/mixins&quot;</span> as *;
 
-.my-element {
-  width: 100%;
+<span class="hljs-selector-class">.my-element</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
 
-  // Applies when width &gt;= 768px
-  @include respond-up(md) {
-    width: 50%;
+  <span class="hljs-comment">// Applies when width &gt;= 768px</span>
+  <span class="hljs-keyword">@include</span> respond-up(md) {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">50%</span>;
   }
 
-  // Applies when width &lt;= 640px
-  @include respond-down(sm) {
-    display: none;
+  <span class="hljs-comment">// Applies when width &lt;= 640px</span>
+  <span class="hljs-keyword">@include</span> respond-down(sm) {
+    <span class="hljs-attribute">display</span>: none;
   }
-}
-</code></pre>
+}</code></pre>
 <h3>3. Design Tokens &amp; Utilities</h3>
 <p>Blocks Core includes a strictly defined design system for spacing, border-radiuses, shadows, and z-indexes. This ensures visual consistency across all components and applications.</p>
 <p>The library exposes these tokens in three different ways so you can use them wherever they fit best: <strong>SCSS Functions, HTML Utility Classes</strong>, and <strong>CSS Variables</strong>.</p>
 <h4>Using SCSS Functions (Recommended for Component Styles)</h4>
 <p>When writing custom component styles, use the provided SCSS functions to access the design tokens. This replaces hardcoded &quot;magic numbers&quot; (like <code>16px</code> or <code>1rem</code>) with standardized scale values.</p>
-<pre><code class="language-scss">@use &quot;@filip.mazev/blocks-core/src/lib/styles/index&quot; as blocks;
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-keyword">@use</span> <span class="hljs-string">&quot;@filip.mazev/blocks-core/src/lib/styles/index&quot;</span> as blocks;
 
-.my-card-element {
-    // Spacing
-    padding: blocks.spacing(4) blocks.spacing(6); 
-    margin-bottom: blocks.spacing(2);
+<span class="hljs-selector-class">.my-card-element</span> {
+    <span class="hljs-comment">// Spacing</span>
+    <span class="hljs-attribute">padding</span>: blocks.<span class="hljs-built_in">spacing</span>(<span class="hljs-number">4</span>) blocks.<span class="hljs-built_in">spacing</span>(<span class="hljs-number">6</span>); 
+    <span class="hljs-attribute">margin-bottom</span>: blocks.<span class="hljs-built_in">spacing</span>(<span class="hljs-number">2</span>);
 
-    // Styling
-    border-radius: blocks.radius(lg);
-    box-shadow: blocks.shadow(md);
+    <span class="hljs-comment">// Styling</span>
+    <span class="hljs-attribute">border-radius</span>: blocks.<span class="hljs-built_in">radius</span>(lg);
+    <span class="hljs-attribute">box-shadow</span>: blocks.<span class="hljs-built_in">shadow</span>(md);
 
-    // Z-Index
-    z-index: blocks.z(dropdown);
-}
-</code></pre>
+    <span class="hljs-comment">// Z-Index</span>
+    <span class="hljs-attribute">z-index</span>: blocks.<span class="hljs-built_in">z</span>(dropdown);
+}</code></pre>
 <h4>Using Utility Classes (Tailwind-Style)</h4>
 <p>For rapid UI development directly in your templates, Blocks Core automatically generates utility classes prefixed with <code>.bx-</code>.</p>
-<pre><code class="language-html">&lt;div class=&quot;bx-p-4 bx-my-2 bx-px-6&quot;&gt;...&lt;/div&gt;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;bx-p-4 bx-my-2 bx-px-6&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
-&lt;div class=&quot;bx-rounded-md bx-rounded-t-lg&quot;&gt;...&lt;/div&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;bx-rounded-md bx-rounded-t-lg&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
-&lt;div class=&quot;bx-shadow-modal bx-z-fixed&quot;&gt;...&lt;/div&gt;
-</code></pre>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;bx-shadow-modal bx-z-fixed&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <h4>Using CSS Variables</h4>
 <p>If you need to access tokens inline or outside of SCSS compilation, they are exposed globally on the <code>:root</code> element.</p>
-<pre><code class="language-scss">.dynamic-element {
-    padding: var(--bx-space-4);
-    border-radius: var(--bx-rounded-pill);
-    box-shadow: var(--bx-shadow-toast);
-    z-index: var(--bx-z-modal);
-}
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-selector-class">.dynamic-element</span> {
+    <span class="hljs-attribute">padding</span>: <span class="hljs-built_in">var</span>(--bx-space-<span class="hljs-number">4</span>);
+    <span class="hljs-attribute">border-radius</span>: <span class="hljs-built_in">var</span>(--bx-rounded-pill);
+    <span class="hljs-attribute">box-shadow</span>: <span class="hljs-built_in">var</span>(--bx-shadow-toast);
+    <span class="hljs-attribute">z-index</span>: <span class="hljs-built_in">var</span>(--bx-z-modal);
+}</code></pre>
 <h4>Available Scales Reference</h4>
 <ul>
 <li>Spacing Scale: <code>0</code>, <code>1</code> (0.25rem), <code>2</code> (0.5rem), <code>3</code> (0.75rem), <code>4</code> (1rem), <code>5</code> (1.25rem), <code>6</code> (1.5rem), <code>8</code> (2rem), <code>10</code> (2.5rem), <code>12</code> (3rem)</li>
@@ -242,21 +228,20 @@ body.dark-theme {
 <h2>Core Services</h2>
 <h3><code>WindowDimensionsService</code></h3>
 <p>Bridges the gap between CSS media queries and TypeScript logic. It provides reactive access to window size and standard breakpoint thresholds.</p>
-<pre><code class="language-typescript">export class MyComponent {
-  protected readonly windowDimensionsService = inject(WindowDimensionsService);
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyComponent</span> {
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> windowDimensionsService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">WindowDimensionsService</span>);
 
-  protected windowDimensions = this.windowDimensionsService.dimensions;
-  protected breakpoints = this.windowDimensionsService.breakpoints;
+  <span class="hljs-keyword">protected</span> windowDimensions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-property">dimensions</span>;
+  <span class="hljs-keyword">protected</span> breakpoints = <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-property">breakpoints</span>;
 
-  constructor() {
-    effect(() =&gt; {
-      const width = this.windowDimensions().width;
-      const isOnSmallScreen = width &lt; this.breakpoints.sm;
-      // handle logic for small screen for example
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-title function_">effect</span>(<span class="hljs-function">() =&gt;</span> {
+      <span class="hljs-keyword">const</span> width = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">windowDimensions</span>().<span class="hljs-property">width</span>;
+      <span class="hljs-keyword">const</span> isOnSmallScreen = width &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">breakpoints</span>.<span class="hljs-property">sm</span>;
+      <span class="hljs-comment">// handle logic for small screen for example</span>
     });
   }
-}
-</code></pre>
+}</code></pre>
 <h3><code>ThemingService</code></h3>
 <p>Handles the detection of system preferences (Dark/Light mode) and manages the application-level theme state.</p>
 <ul>
@@ -285,17 +270,15 @@ body.dark-theme {
 </li>
 </ul>
 <p>To use the scroll locking service within a component, in order to prevent enabling the scroll from one instance when another is disabling it, a <code>scrollLockId</code> must be generated and passed to the <code>disableScroll</code> and <code>enableScroll</code> methods, the provided <code>uuidv4</code> method from this library is recommended to be used for this.</p>
-<pre><code class="language-typescript">private scrollLockId: string = uuidv4();
-</code></pre>
-<pre><code class="language-typescript">// Lock scroll
-this.scrollLockService.disableScroll(this.scrollLockId, {
-  handleTouchInput: true,
-  handleExtremeOverflow: false,
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">private</span> <span class="hljs-attr">scrollLockId</span>: <span class="hljs-built_in">string</span> = <span class="hljs-title function_">uuidv4</span>();</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-comment">// Lock scroll</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">disableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockId</span>, {
+  <span class="hljs-attr">handleTouchInput</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">handleExtremeOverflow</span>: <span class="hljs-literal">false</span>,
 });
 
-// Unlock
-this.scrollLockService.enableScroll(this.scrollLockId);
-</code></pre>
+<span class="hljs-comment">// Unlock</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">enableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockId</span>);</code></pre>
 `,"documentation/modal/README.md":`<h1>@filip.mazev/blocks/modal</h1>
 <h2>Blocks - Modal Library</h2>
 <p><strong>Blocks</strong> is a powerful Angular component library. Its flagship feature is a highly customizable, service-driven <strong>Modal</strong> system that supports dynamic content, various positions, mobile-optimized swipe gestures, and robust theming.</p>
@@ -309,47 +292,43 @@ this.scrollLockService.enableScroll(this.scrollLockId);
 <li>Theming: Deeply integrated Scss theming system using CSS variables.</li>
 </ul>
 <h2>Installation</h2>
-<pre><code class="language-bash">npm i @filip.mazev/blocks@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">npm i @filip.mazev/blocks@latest</code></pre>
 <p>Or with the global blocks <code>ng</code> command which adds all blocks packages and sets up your styles.scss</p>
-<pre><code class="language-bash">ng add @filip.mazev/blocks@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">ng add @filip.mazev/blocks@latest</code></pre>
 <h2>Usage</h2>
 <h3>Create a Modal Component</h3>
 <p>Your modal content components must extend <code>IModal&lt;TData, TResult&gt;</code>:</p>
 <p>Typescript:</p>
-<pre><code class="language-typescript">import { Modal, ModalHeaderDirective, ModalFooterDirective } from &#39;@filip.mazev/modal&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Modal</span>, <span class="hljs-title class_">ModalHeaderDirective</span>, <span class="hljs-title class_">ModalFooterDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/modal&#x27;</span>;
 
-@Component({
-  selector: &#39;app-my-modal-component&#39;,
-  imports: [
-    ModalHeaderDirective, // optional (only if defining custom header)
-    ModalFooterDirective // optional (only if defining custom footer)
+<span class="hljs-meta">@Component</span>({
+  <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-my-modal-component&#x27;</span>,
+  <span class="hljs-attr">imports</span>: [
+    <span class="hljs-title class_">ModalHeaderDirective</span>, <span class="hljs-comment">// optional (only if defining custom header)</span>
+    <span class="hljs-title class_">ModalFooterDirective</span> <span class="hljs-comment">// optional (only if defining custom footer)</span>
   ],
-  templateUrl: &#39;./my-modal-component.html&#39;,
-  styleUrl: &#39;./my-modal-component.scss&#39;,
+  <span class="hljs-attr">templateUrl</span>: <span class="hljs-string">&#x27;./my-modal-component.html&#x27;</span>,
+  <span class="hljs-attr">styleUrl</span>: <span class="hljs-string">&#x27;./my-modal-component.scss&#x27;</span>,
 })
-export class MyModalComponent extends Modal&lt;MyData, MyResult&gt; {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyModalComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Modal</span>&lt;<span class="hljs-title class_">MyData</span>, <span class="hljs-title class_">MyResult</span>&gt; {
 
-}
-</code></pre>
+}</code></pre>
 <p>HTML (Template):</p>
-<pre><code class="language-HTML">&lt;div *appModalHeader&gt;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">appModalHeader</span>&gt;</span>
     Example Header
-&lt;/div&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
-&lt;h1&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>
  {{ data.Title }}
-&lt;/h1&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
 
-&lt;p&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
  {{ data.Body }}
-&lt;/p&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
 
-&lt;div *appModalFooter&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">appModalFooter</span>&gt;</span>
     Example Footer
-&lt;/div&gt;
-</code></pre>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <h3>About <code>ModalRef&lt;D, R&gt;</code></h3>
 <p>Accessible via this.modal inside any component that extends Modal. This reference provides programmatic control over the active modal instance, access to its configuration, and observable streams for its lifecycle events.</p>
 <h4>Methods</h4>
@@ -377,37 +356,36 @@ export class MyModalComponent extends Modal&lt;MyData, MyResult&gt; {
 </ul>
 <h3>2. Opening the Modal</h3>
 <p>Use the ModalService to launch your component:</p>
-<pre><code class="language-typescript">private readonly modals = inject(ModalService);
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> modals = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ModalService</span>);
 
 ...
 
-const modalRef = this.modals.open&lt;MyData, MyResult&gt;(MyModalComponent, {
-  data: { id: 1 }, // Must be of the type specified in MyData
-  style: {
-    layout: &#39;right&#39;, // Slide in from the right (left and center are also available options)
+<span class="hljs-keyword">const</span> modalRef = <span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-property">open</span>&lt;<span class="hljs-title class_">MyData</span>, <span class="hljs-title class_">MyResult</span>&gt;(<span class="hljs-title class_">MyModalComponent</span>, {
+  <span class="hljs-attr">data</span>: { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> }, <span class="hljs-comment">// Must be of the type specified in MyData</span>
+  <span class="hljs-attr">style</span>: {
+    <span class="hljs-attr">layout</span>: <span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-comment">// Slide in from the right (left and center are also available options)</span>
   },
-  header: {
-    title: &#39;Modal Title Here&#39;,
-    icon: { // (optional) undefined or IconData
-        name: &#39;chevron-right&#39;, // any IconName
-        color: &#39;text-danger&#39;, // (optional) any ThemedColor, will default to currentColor
-        bgColor: &#39;auto&#39;, // (optional) undefined, auto or ThemedColor, will default to no background
-        size: &#39;24&#39;, // (optional) undefined or any IconSize, will default to &#39;24&#39;
-        strokeWidth: &#39;1.5&#39; // (optional) undefined or any IconStrokeWidth, will default to &#39;1.5&#39;
+  <span class="hljs-attr">header</span>: {
+    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Modal Title Here&#x27;</span>,
+    <span class="hljs-attr">icon</span>: { <span class="hljs-comment">// (optional) undefined or IconData</span>
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;chevron-right&#x27;</span>, <span class="hljs-comment">// any IconName</span>
+        <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;text-danger&#x27;</span>, <span class="hljs-comment">// (optional) any ThemedColor, will default to currentColor</span>
+        <span class="hljs-attr">bgColor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-comment">// (optional) undefined, auto or ThemedColor, will default to no background</span>
+        <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;24&#x27;</span>, <span class="hljs-comment">// (optional) undefined or any IconSize, will default to &#x27;24&#x27;</span>
+        <span class="hljs-attr">strokeWidth</span>: <span class="hljs-string">&#x27;1.5&#x27;</span> <span class="hljs-comment">// (optional) undefined or any IconStrokeWidth, will default to &#x27;1.5&#x27;</span>
     }
   }
 });
 
-modalRef.afterClosed().subscribe(result: IModalCloseResult&lt;MyData&gt; =&gt; {
-    // result.state can be &#39;confirm&#39; or &#39;cancel&#39;
-    console.log(&#39;Modal closed with action:&#39;, result.state); 
+modalRef.<span class="hljs-title function_">afterClosed</span>().<span class="hljs-title function_">subscribe</span>(<span class="hljs-attr">result</span>: <span class="hljs-title class_">IModalCloseResult</span>&lt;<span class="hljs-title class_">MyData</span>&gt; =&gt; {
+    <span class="hljs-comment">// result.state can be &#x27;confirm&#x27; or &#x27;cancel&#x27;</span>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Modal closed with action:&#x27;</span>, result.<span class="hljs-property">state</span>); 
 
-    // result.data is of type \`MyData\` |\`\` undefined\` since no data is returned on &#39;cancel&#39;
-    if(result.data) {
-        console.log(&#39;Modal Result value:&#39;, result.data);
+    <span class="hljs-comment">// result.data is of type \`MyData\` |\`\` undefined\` since no data is returned on &#x27;cancel&#x27;</span>
+    <span class="hljs-keyword">if</span>(result.<span class="hljs-property">data</span>) {
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Modal Result value:&#x27;</span>, result.<span class="hljs-property">data</span>);
     }
-});
-</code></pre>
+});</code></pre>
 <h2>Configuration Options</h2>
 <h3><code>IModalConfig</code></h3>
 <p>Controls the behavior and content of the modal container:</p>
@@ -460,14 +438,13 @@ modalRef.afterClosed().subscribe(result: IModalCloseResult&lt;MyData&gt; =&gt; {
 <ul>
 <li>Example:</li>
 </ul>
-<pre><code class="language-typescript">style: {
-  layout: &#39;right&#39;, // Applied when width &gt; 1280px (Desktop)
-  breakpoints: {
-    &#39;sm&#39;: &#39;bottom-sheet&#39;, // Applied when width &lt;= 640px (Mobile)
-    &#39;xl&#39;: &#39;center&#39;        // Applied when width &lt;= 1280px AND &gt; 640px (Tablet/Laptop)
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-attr">style</span>: {
+  <span class="hljs-attr">layout</span>: <span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-comment">// Applied when width &gt; 1280px (Desktop)</span>
+  <span class="hljs-attr">breakpoints</span>: {
+    <span class="hljs-string">&#x27;sm&#x27;</span>: <span class="hljs-string">&#x27;bottom-sheet&#x27;</span>, <span class="hljs-comment">// Applied when width &lt;= 640px (Mobile)</span>
+    <span class="hljs-string">&#x27;xl&#x27;</span>: <span class="hljs-string">&#x27;center&#x27;</span>        <span class="hljs-comment">// Applied when width &lt;= 1280px AND &gt; 640px (Tablet/Laptop)</span>
   }
-}
-</code></pre>
+}</code></pre>
 <h3><code>IBottomSheetModalConfig</code></h3>
 <p>Configuration for the mobile-optimized bottom sheet modal (bottom sheet):</p>
 <ul>
@@ -482,22 +459,21 @@ modalRef.afterClosed().subscribe(result: IModalCloseResult&lt;MyData&gt; =&gt; {
 <li>Return true: The modal closes normally.</li>
 <li>Return false: The closing action is aborted, and the modal remains open.</li>
 </ol>
-<pre><code class="language-typescript">import { ModalCloseGuard, ModalService } from &#39;@filip.mazev/modal&#39;;
-import { Observable, of } from &#39;rxjs&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalCloseGuard</span>, <span class="hljs-title class_">ModalService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/modal&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Observable</span>, <span class="hljs-keyword">of</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;rxjs&#x27;</span>;
 
-export class UnsavedChangesGuard extends ModalCloseGuard {
-  constructor(private hasUnsavedChanges: boolean) {
-    super();
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UnsavedChangesGuard</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">ModalCloseGuard</span> {
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-attr">hasUnsavedChanges</span>: <span class="hljs-built_in">boolean</span></span>) {
+    <span class="hljs-variable language_">super</span>();
   }
 
-  canClose(modalService: ModalService): boolean {
-    if (this.hasUnsavedChanges) {
-      return confirm(&#39;You have unsaved changes. Discard?&#39;); // Simple browser confirm
+  <span class="hljs-title function_">canClose</span>(<span class="hljs-attr">modalService</span>: <span class="hljs-title class_">ModalService</span>): <span class="hljs-built_in">boolean</span> {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">hasUnsavedChanges</span>) {
+      <span class="hljs-keyword">return</span> <span class="hljs-title function_">confirm</span>(<span class="hljs-string">&#x27;You have unsaved changes. Discard?&#x27;</span>); <span class="hljs-comment">// Simple browser confirm</span>
     }
-    return true;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
   }
-}
-</code></pre>
+}</code></pre>
 <h3><code>ModalConfirmCloseGuard</code></h3>
 <p>The library provides a built-in ModalConfirmCloseGuard implementation designed to make &quot;Confirm Close&quot; workflows (e.g., &quot;Are you sure you want to discard unsaved changes?&quot;) completely type-safe and effortless.</p>
 <p>Instead of using a browser alert, this guard automatically opens another modal (your specified confirm component) and waits for its result.</p>
@@ -508,37 +484,36 @@ export class UnsavedChangesGuard extends ModalCloseGuard {
 </ol>
 <h3>Usage Example</h3>
 <p>This example demonstrates a deeply nested, type-safe confirmation flow.</p>
-<pre><code class="language-typescript">import { ModalConfirmCloseGuard } from &#39;@filip.mazev/modal&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalConfirmCloseGuard</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/modal&#x27;</span>;
 
-// Open the main modal
-const modal = this.modals.open&lt;string, undefined&gt;(CenteredModal, {
-  data: &quot;Hello from Modal!&quot;,
+<span class="hljs-comment">// Open the main modal</span>
+<span class="hljs-keyword">const</span> modal = <span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-property">open</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-literal">undefined</span>&gt;(<span class="hljs-title class_">CenteredModal</span>, {
+  <span class="hljs-attr">data</span>: <span class="hljs-string">&quot;Hello from Modal!&quot;</span>,
   
-  // Attach the guard to the configuration
-  closeGuard: new ModalConfirmCloseGuard&lt;ConfirmData, undefined&gt;(ConfirmCloseComponent, {
-    // This configuration is strictly typed to ConfirmCloseComponent&#39;s data requirements
-    data: {
-      title: &#39;Unsaved Changes&#39;,
-      message: &#39;Are you sure you want to close this modal?&#39;
+  <span class="hljs-comment">// Attach the guard to the configuration</span>
+  <span class="hljs-attr">closeGuard</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">ModalConfirmCloseGuard</span>&lt;<span class="hljs-title class_">ConfirmData</span>, <span class="hljs-literal">undefined</span>&gt;(<span class="hljs-title class_">ConfirmCloseComponent</span>, {
+    <span class="hljs-comment">// This configuration is strictly typed to ConfirmCloseComponent&#x27;s data requirements</span>
+    <span class="hljs-attr">data</span>: {
+      <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Unsaved Changes&#x27;</span>,
+      <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Are you sure you want to close this modal?&#x27;</span>
     },
-    style: {
-      layout: &#39;center&#39;
+    <span class="hljs-attr">style</span>: {
+      <span class="hljs-attr">layout</span>: <span class="hljs-string">&#x27;center&#x27;</span>
     }
   })
-});
-</code></pre>
+});</code></pre>
 <h2>Global Modal Settings</h2>
 <p>The library provides a global settings service (<code>ModalGlobalSettingsService</code>) that allows you to update default behaviors and styles for all modals in your application. These defaults are applied unless overridden by the <code>IModalConfig</code> you provide when opening a modal.</p>
 <h3>Example Usage</h3>
-<pre><code class="language-typescript">import { ModalGlobalSettingsService } from &#39;@filip.mazev/modal&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalGlobalSettingsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/modal&#x27;</span>;
 
-constructor(private readonly globalSettings: ModalGlobalSettingsService) {}
+<span class="hljs-title function_">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">globalSettings</span>: <span class="hljs-title class_">ModalGlobalSettingsService</span></span>) {}
 
-// Update global defaults at runtime
-this.globalSettings.update({
-  animate: false,               // Disable animations globally
-  hasBackdrop: true,            // Ensure all modals have a backdrop
-  disableCloseOnBackdropClick: true // Prevent closing on backdrop click
+<span class="hljs-comment">// Update global defaults at runtime</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">globalSettings</span>.<span class="hljs-title function_">update</span>({
+  <span class="hljs-attr">animate</span>: <span class="hljs-literal">false</span>,               <span class="hljs-comment">// Disable animations globally</span>
+  <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span>,            <span class="hljs-comment">// Ensure all modals have a backdrop</span>
+  <span class="hljs-attr">disableCloseOnBackdropClick</span>: <span class="hljs-literal">true</span> <span class="hljs-comment">// Prevent closing on backdrop click</span>
 });
 </code></pre>
 <h3>How It Works</h3>
@@ -562,41 +537,37 @@ this.globalSettings.update({
 <li>Dynamic Data: Pass strictly typed data to your toast components and return results.</li>
 </ul>
 <h2>Installation</h2>
-<pre><code class="language-bash">npm i @filip.mazev/blocks@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">npm i @filip.mazev/blocks@latest</code></pre>
 <p>Or with the global blocks <code>ng</code> command which adds all blocks packages and sets up your styles.scss</p>
-<pre><code class="language-bash">ng add @filip.mazev/blocks@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">ng add @filip.mazev/blocks@latest</code></pre>
 <h2>Usage</h2>
 <h3>Create a Toast Component</h3>
 <p>Your custom toast components must extend the <code>Toast&lt;TData, TResult&gt;</code> base class (which implements <code>IToast&lt;D, R&gt;</code>).</p>
 <p>Typescript:</p>
-<pre><code class="language-typescript">import { Component } from &#39;@angular/core&#39;;
-import { Toast } from &#39;@filip.mazev/toastr&#39;;
-import { INotificationView } from &#39;@interfaces/ui/inotification-view.interface&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Component</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Toast</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/toastr&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">INotificationView</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@interfaces/ui/inotification-view.interface&#x27;</span>;
 
-@Component({
-  selector: &#39;app-custom-toast&#39;,
-  templateUrl: &#39;./custom-toast.html&#39;,
-  styleUrl: &#39;./custom-toast.scss&#39;
+<span class="hljs-meta">@Component</span>({
+  <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-custom-toast&#x27;</span>,
+  <span class="hljs-attr">templateUrl</span>: <span class="hljs-string">&#x27;./custom-toast.html&#x27;</span>,
+  <span class="hljs-attr">styleUrl</span>: <span class="hljs-string">&#x27;./custom-toast.scss&#x27;</span>
 })
-export class CustomToastComponent extends Toast&lt;INotificationView, undefined&gt; {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomToastComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Toast</span>&lt;<span class="hljs-title class_">INotificationView</span>, <span class="hljs-literal">undefined</span>&gt; {
   
-  // Example method to close the toast from within the component
-  protected onDismiss(): void {
-    this.close(); 
+  <span class="hljs-comment">// Example method to close the toast from within the component</span>
+  <span class="hljs-keyword">protected</span> <span class="hljs-title function_">onDismiss</span>(): <span class="hljs-built_in">void</span> {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">close</span>(); 
   }
-}
-</code></pre>
+}</code></pre>
 <p>HTML (Template):</p>
-<pre><code class="language-HTML">&lt;div class=&quot;notification&quot;&gt;
-    &lt;button class=&quot;notification-close-button&quot; (click)=&quot;onDismiss()&quot;&gt;\u2715&lt;/button&gt;
-    &lt;div class=&quot;notification-content&quot;&gt;
-        &lt;h3&gt;{{ data.title }}&lt;/h3&gt;
-        &lt;p [class]=&quot;&#39;notification-&#39; + data.type&quot;&gt;{{ data.message }}&lt;/p&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;notification&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;notification-close-button&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;onDismiss()&quot;</span>&gt;</span>\u2715<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;notification-content&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{{ data.title }}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> [<span class="hljs-attr">class</span>]=<span class="hljs-string">&quot;&#x27;notification-&#x27; + data.type&quot;</span>&gt;</span>{{ data.message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <h3>About <code>ToastRef&lt;D, R&gt;</code></h3>
 <p>Accessible via <code>this.toast</code> inside any component that extends <code>Toast</code>. This reference provides programmatic control over the active toast instance.</p>
 <h4>Methods &amp; Observables</h4>
@@ -611,27 +582,26 @@ export class CustomToastComponent extends Toast&lt;INotificationView, undefined&
 </ul>
 <h3>2. Opening the Toast</h3>
 <p>Use the <code>ToastrService</code> to launch your component. Unlike modals, toasts are &quot;queued&quot;, meaning if you exceed the <code>maxOpened</code> limit, they will wait their turn before displaying.</p>
-<pre><code class="language-typescript">import { Component, inject } from &#39;@angular/core&#39;;
-import { ToastrService } from &#39;@filip.mazev/toastr&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Component</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ToastrService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/toastr&#x27;</span>;
 
-@Component({ ... })
-export class MyFeatureComponent {
-    private readonly toastr = inject(ToastrService);
+<span class="hljs-meta">@Component</span>({ ... })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyFeatureComponent</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> toastr = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ToastrService</span>);
 
-    public showNotification(view: INotificationView) {
-        const toastRef = this.toastr.queueToast(CustomToastComponent, {
-            data: view, // Strictly typed to INotificationView
-            position: &#39;top-right&#39;,
-            durationInMs: 5000,
-            swipeToDismiss: true
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">showNotification</span>(<span class="hljs-params"><span class="hljs-attr">view</span>: <span class="hljs-title class_">INotificationView</span></span>) {
+        <span class="hljs-keyword">const</span> toastRef = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toastr</span>.<span class="hljs-title function_">queueToast</span>(<span class="hljs-title class_">CustomToastComponent</span>, {
+            <span class="hljs-attr">data</span>: view, <span class="hljs-comment">// Strictly typed to INotificationView</span>
+            <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;top-right&#x27;</span>,
+            <span class="hljs-attr">durationInMs</span>: <span class="hljs-number">5000</span>,
+            <span class="hljs-attr">swipeToDismiss</span>: <span class="hljs-literal">true</span>
         });
 
-        toastRef.afterClosed$.subscribe(() =&gt; {
-            console.log(&#39;Toast finished and removed from screen.&#39;);
+        toastRef.<span class="hljs-property">afterClosed$</span>.<span class="hljs-title function_">subscribe</span>(<span class="hljs-function">() =&gt;</span> {
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Toast finished and removed from screen.&#x27;</span>);
         });
     }
-}
-</code></pre>
+}</code></pre>
 <h2>Configuration Options</h2>
 <h3><code>IToastConfig&lt;D&gt;</code></h3>
 <p>Controls the behavior, data, and placement of an individual toast:</p>
@@ -652,24 +622,24 @@ export class MyFeatureComponent {
 <p>Similar to the modal library (<code>@filip.mazev/modal</code>), you can manage application-wide defaults using the <code>ToastrGlobalSettingsService</code>. These defaults apply automatically unless overridden by the IToastConfig during the queueToast call. It also is the place where <code>maxOpened</code> is configured since this is a global configuration.</p>
 <p>The toast wrapper natively provides a top-right close button and a bottom animated progress bar (which pauses on hover and resizes dynamically). You can toggle their visibility or change their semantic colors universally across the app or on a per-toast basis.</p>
 <h3>Example Usage</h3>
-<pre><code class="language-typescript">import { Component, inject } from &#39;@angular/core&#39;;
-import { ToastrGlobalSettingsService } from &#39;@filip.mazev/toastr&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Component</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ToastrGlobalSettingsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/toastr&#x27;</span>;
 
-@Component({ ... })
-export class AppComponent {
-  private readonly toastrGlobalSettings = inject(ToastrGlobalSettingsService);
+<span class="hljs-meta">@Component</span>({ ... })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AppComponent</span> {
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> toastrGlobalSettings = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ToastrGlobalSettingsService</span>);
 
-  constructor() {
-    // Update global defaults at runtime
-    this.toastrGlobalSettings.update({
-      position: &#39;bottom-right&#39;,       // Move all toasts to the bottom right
-      durationInMs: 7500,             // Keep toasts open longer by default
-      maxOpened: 3,                   // Only show 3 toasts at a time; queue the rest
-      swipeToDismiss: true,           // Allow swipe gestures globally
-      showCloseButton: false,          // Remove the default close button on all wrappers
-      closeButtonColor: &#39;text-primary&#39;,
-      showProgressBar: true,          // Visually track the 7500ms duration or set to false to disable this
-      progressBarColor: &#39;text-primary&#39;
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">// Update global defaults at runtime</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">toastrGlobalSettings</span>.<span class="hljs-title function_">update</span>({
+      <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;bottom-right&#x27;</span>,       <span class="hljs-comment">// Move all toasts to the bottom right</span>
+      <span class="hljs-attr">durationInMs</span>: <span class="hljs-number">7500</span>,             <span class="hljs-comment">// Keep toasts open longer by default</span>
+      <span class="hljs-attr">maxOpened</span>: <span class="hljs-number">3</span>,                   <span class="hljs-comment">// Only show 3 toasts at a time; queue the rest</span>
+      <span class="hljs-attr">swipeToDismiss</span>: <span class="hljs-literal">true</span>,           <span class="hljs-comment">// Allow swipe gestures globally</span>
+      <span class="hljs-attr">showCloseButton</span>: <span class="hljs-literal">false</span>,          <span class="hljs-comment">// Remove the default close button on all wrappers</span>
+      <span class="hljs-attr">closeButtonColor</span>: <span class="hljs-string">&#x27;text-primary&#x27;</span>,
+      <span class="hljs-attr">showProgressBar</span>: <span class="hljs-literal">true</span>,          <span class="hljs-comment">// Visually track the 7500ms duration or set to false to disable this</span>
+      <span class="hljs-attr">progressBarColor</span>: <span class="hljs-string">&#x27;text-primary&#x27;</span>
     });
   }
 }
@@ -685,33 +655,32 @@ export class AppComponent {
 <p>The <code>ToastrService</code> exposes four convenience methods: <code>queueSuccess</code>, <code>queueInfo</code>, <code>queueWarning</code>, and <code>queueDanger</code>.</p>
 <h3>SimpleToast Usage</h3>
 <p>These methods accept an <code>IQueueSimpleToastRequest</code> object. They automatically inherit your global settings unless overridden.</p>
-<pre><code class="language-typescript">import { Component, inject } from &#39;@angular/core&#39;;
-import { ToastrService } from &#39;@filip.mazev/toastr&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Component</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ToastrService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/toastr&#x27;</span>;
 
-@Component({ ... })
-export class MyFeatureComponent {
-    private readonly toastr = inject(ToastrService);
+<span class="hljs-meta">@Component</span>({ ... })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyFeatureComponent</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> toastr = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ToastrService</span>);
 
-    public saveDocument() {
-        // ... save logic ...
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">saveDocument</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-comment">// ... save logic ...</span>
 
-        // Fire a quick success toast
-        this.toastr.queueSuccess({
-            message: &#39;Your document was saved successfully.&#39;,
-            title: &#39;Save Complete&#39; // Optional
+        <span class="hljs-comment">// Fire a quick success toast</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">toastr</span>.<span class="hljs-title function_">queueSuccess</span>({
+            <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Your document was saved successfully.&#x27;</span>,
+            <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Save Complete&#x27;</span> <span class="hljs-comment">// Optional</span>
         });
     }
 
-    public reportIssue() {
-        // Fire a quick danger toast with an overridden position
-        this.toastr.queueDanger({
-            message: &#39;Failed to connect to the server. Please try again later.&#39;,
-            position: &#39;bottom-center&#39;, // Optional override
-            durationInMs: 10000 // Optional override
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">reportIssue</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-comment">// Fire a quick danger toast with an overridden position</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">toastr</span>.<span class="hljs-title function_">queueDanger</span>({
+            <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Failed to connect to the server. Please try again later.&#x27;</span>,
+            <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;bottom-center&#x27;</span>, <span class="hljs-comment">// Optional override</span>
+            <span class="hljs-attr">durationInMs</span>: <span class="hljs-number">10000</span> <span class="hljs-comment">// Optional override</span>
         });
     }
-}
-</code></pre>
+}</code></pre>
 <h3>The <code>IQueueSimpleToastRequest</code> Interface</h3>
 <p>When using the quick status methods, the configuration is streamlined to focus on the text content:</p>
 <ul>
@@ -726,8 +695,7 @@ export class MyFeatureComponent {
 <h2>Installation</h2>
 <p>Requires Angular 22 and RxJS 7.8 or later within major 7.</p>
 <p>To install the complete Blocks ecosystem and automatically configure your workspace, run:</p>
-<pre><code class="language-bash">ng add @filip.mazev/blocks
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">ng add @filip.mazev/blocks</code></pre>
 <h2>What does ng add do?</h2>
 <p>When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:</p>
 <ul>
@@ -737,25 +705,22 @@ export class MyFeatureComponent {
 </ul>
 <h2>Manual Setup (Without Angular CLI)</h2>
 <p>If you prefer not to use <code>ng add</code> or are in an environment that doesn&#39;t support Angular Schematics, you can install the packages manually:</p>
-<pre><code class="language-bash">npm install @filip.mazev/blocks@latest
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="bash code example"><code class="hljs language-bash">npm install @filip.mazev/blocks@latest</code></pre>
 <p>Then, manually configure your styles.scss:</p>
-<pre><code class="language-scss">@use &#39;@filip.mazev/blocks&#39; as *;
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-keyword">@use</span> <span class="hljs-string">&#x27;@filip.mazev/blocks&#x27;</span> as *;
 
-@layer base {
-    :root {
-        @include bx-theme($carbon-cobalt-light-theme);
+<span class="hljs-keyword">@layer</span> base {
+    <span class="hljs-selector-pseudo">:root</span> {
+        <span class="hljs-keyword">@include</span> bx-theme(<span class="hljs-variable">$carbon-cobalt-light-theme</span>);
     }
 
-    [data-theme=&#39;dark&#39;] {
-        @include bx-theme($carbon-cobalt-dark-theme);
+    <span class="hljs-selector-attr">[data-theme=<span class="hljs-string">&#x27;dark&#x27;</span>]</span> {
+        <span class="hljs-keyword">@include</span> bx-theme(<span class="hljs-variable">$carbon-cobalt-dark-theme</span>);
     }
-}
-</code></pre>
+}</code></pre>
 <h2>Palettes</h2>
 <p>Use paired palette IDs consistently in the CLI and <code>ThemingService.setPalette()</code>. For example:</p>
-<pre><code class="language-sh">ng add @filip.mazev/blocks --theme=azure-ember
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="sh code example"><code class="hljs language-sh">ng add @filip.mazev/blocks --theme=azure-ember</code></pre>
 <p>The Sass exports use the same names: <code>$azure-ember-light-theme</code> and <code>$azure-ember-dark-theme</code>. Carbon / Cobalt is the installer default; the playground starts with Carbon / Cobalt. Only the current palette IDs and Sass names are supported.</p>
 <p>Buttons and tabs accept <code>color=&quot;accent&quot;</code> for the second tone. Icons and custom components can use semantic tokens such as <code>text-accent</code>, <code>accent-subtle</code>, <code>on-accent</code>, and <code>border-accent</code>. Canvas backgrounds stay neutral; status roles keep their meaning. See <a href="appearance#palettes">the palette reference</a> for all seven pairs.</p>
 <h2>Appearance</h2>
@@ -765,30 +730,27 @@ export class MyFeatureComponent {
 `,"projects/blocks/effects/README.md":`<h1>Appearance effects</h1>
 <p>Blocks components use glass through the existing theme system. The <code>BxSurfaceDirective</code> applies the same material to custom containers. Labels, inputs and icon paths retain their native rendering; decorative lighting and blur sit behind content.</p>
 <h2>Global configuration</h2>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-this.theme.setAppearance({
-  glassiness: 0.5,    // 0\u20131; the midpoint balances clarity and tint
-  quality: &#39;auto&#39;,    // auto | baseline | enhanced
-  reducedTransparency: false
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({
+  <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>,    <span class="hljs-comment">// 0\u20131; the midpoint balances clarity and tint</span>
+  <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,    <span class="hljs-comment">// auto | baseline | enhanced</span>
+  <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">false</span>
 });
 
-// Read the current configuration or return to defaults.
-const current = this.theme.appearance();
-this.theme.resetAppearance();
-</code></pre>
+<span class="hljs-comment">// Read the current configuration or return to defaults.</span>
+<span class="hljs-keyword">const</span> current = <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">appearance</span>();
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">resetAppearance</span>();</code></pre>
 <p>Global settings apply throughout the application, including mounted controls and overlays. Color comes from the active Blocks palette and semantic tokens; changing the palette does not require configuring a separate glass color scheme.</p>
 <h2>Custom surfaces</h2>
-<pre><code class="language-ts">import { BxSurfaceDirective } from &#39;@filip.mazev/blocks/effects&#39;;
-</code></pre>
-<pre><code class="language-html">&lt;section bxSurface class=&quot;custom-panel&quot;&gt;
-  &lt;h2&gt;Project settings&lt;/h2&gt;
-  &lt;p&gt;This surface inherits the global material.&lt;/p&gt;
-&lt;/section&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxSurfaceDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects&#x27;</span>;</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">bxSurface</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;custom-panel&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Project settings<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>This surface inherits the global material.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span></code></pre>
 <p>Provide layout and padding using the existing Blocks styling helpers. The directive supplies the material and token-based default border and radius. Controls and actionable surfaces get automatic hover/focus lighting; decorative containers receive nearby light without responding to hover themselves. Containing one input does not turn a panel into an interactive surface. Wrappers inside <code>bx-form-field</code> retain field interaction; custom control wrappers outside a field can opt in with <code>bxSurfaceInteractive</code>. Components can override the default border and radius with their existing tokens.</p>
 <table>
 <thead>
@@ -815,8 +777,8 @@ this.theme.resetAppearance();
 </tr>
 <tr>
 <td><code>bxSurfaceFocusEmission</code></td>
-<td>Surface emission color</td>
-<td>Override the color emitted while a contained or associated native control has focus</td>
+<td>Fields: surface emission color; actions: keyboard focus only</td>
+<td>Explicitly illuminate for any focus using this color</td>
 </tr>
 <tr>
 <td><code>bxReducedTransparency</code></td>
@@ -827,7 +789,8 @@ this.theme.resetAppearance();
 <p>Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.</p>
 <h2>Composition and motion</h2>
 <p>Use a single backing per physical surface. For example, a menu owns the backing while menu-item content shares it; a form-field label does not need an extra blurred card. Apply <code>bxTransition=&quot;fade&quot;</code> on a dropdown to fade its menu without resizing its contents. The fade runs on the material itself, preserving the configured translucency and blur throughout the animation.</p>
-<p>Buttons, links, native field surfaces and elements with actionable ARIA roles automatically illuminate their border and nearby surfaces on hover or focus. Active ARIA states keep the light enabled. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order, depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as <code>role=&quot;button&quot;</code>), or explicitly enable <code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> only to override the semantic color. The source is the element\u2019s geometry, never the mouse coordinates.</p>
+<p>Buttons, links, native field surfaces and elements with actionable ARIA roles automatically illuminate their border and nearby surfaces on hover, press, or keyboard focus. Editable field surfaces also illuminate for pointer focus; ordinary actions do not stay lit solely because a click left native focus on them. Checked, pressed, selected, and current states keep the light enabled. Expanded popup triggers also retain light, while plain layout-disclosure controls do not become selected just by expanding. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order, depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as <code>role=&quot;button&quot;</code>), or explicitly enable <code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> only to override the semantic color. The source is the element\u2019s geometry, never the mouse coordinates.</p>
+<p>Presses use the shared pressure spring for a soft inset sheen. Blocks buttons also compress their content inside a fixed hit area; quick taps still receive a visible response. Pointer release/cancellation, keyboard release, focus loss, hidden documents, and teardown clear press state. Touch hover does not latch. Reduced motion uses static press feedback.</p>
 <p>There is no drag-to-reposition interaction in this iteration. Spatial highlights are a lightweight lighting approximation, while backdrop blur uses browser compositing. These effects do not ray-trace arbitrary DOM content. Rendering quality can add supported enhancements, and baseline/solid modes remain available for constrained devices.</p>
 <h2>Accessibility and lifecycle</h2>
 <p><code>BxA11yService</code> controls reduced motion. Reduced transparency, unsupported backdrop filters and forced colors use opaque surfaces. Give controls visible or accessible labels independently of the glass decoration.</p>
@@ -840,28 +803,26 @@ this.theme.resetAppearance();
 `,"projects/blocks/effects/runtime/README.md":`<h1>Blocks effects runtime</h1>
 <p>Framework independent glass surfaces, spatial lighting and overlay fades. Native DOM content keeps its layout, semantics and text rendering. This entry point imports no Angular code; it is bundled inside Blocks alongside the Angular adapter and application-wide theme controls.</p>
 <h2>Install and use</h2>
-<pre><code class="language-sh">npm install @filip.mazev/blocks
-</code></pre>
-<pre><code class="language-ts">import &#39;@filip.mazev/blocks/effects/effects.css&#39;;
-import { configureAppearance, mountSurface, createGlassTransition } from &#39;@filip.mazev/blocks/effects/runtime&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="sh code example"><code class="hljs language-sh">npm install @filip.mazev/blocks</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/effects.css&#x27;</span>;
+<span class="hljs-keyword">import</span> { configureAppearance, mountSurface, createGlassTransition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/runtime&#x27;</span>;
 
-const config = configureAppearance(document.documentElement, {
-  glassiness: 0.5,
-  quality: &#39;auto&#39;,
+<span class="hljs-keyword">const</span> config = <span class="hljs-title function_">configureAppearance</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>, {
+  <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>,
+  <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
 });
-const buttonSkin = mountSurface(button);
-const panelSkin = mountSurface(panel);
+<span class="hljs-keyword">const</span> buttonSkin = <span class="hljs-title function_">mountSurface</span>(button);
+<span class="hljs-keyword">const</span> panelSkin = <span class="hljs-title function_">mountSurface</span>(panel);
 
-// The application or overlay library positions the panel before this call.
-const transition = createGlassTransition(button, panel);
-await transition.enter();
-config.update({ glassiness: .45 }); // All existing surfaces and body-mounted overlays update.
-const result = await transition.exit();
-if (result === &#39;finished&#39;) panel.hidden = true;
+<span class="hljs-comment">// The application or overlay library positions the panel before this call.</span>
+<span class="hljs-keyword">const</span> transition = <span class="hljs-title function_">createGlassTransition</span>(button, panel);
+<span class="hljs-keyword">await</span> transition.<span class="hljs-title function_">enter</span>();
+config.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">.45</span> }); <span class="hljs-comment">// All existing surfaces and body-mounted overlays update.</span>
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> transition.<span class="hljs-title function_">exit</span>();
+<span class="hljs-keyword">if</span> (result === <span class="hljs-string">&#x27;finished&#x27;</span>) panel.<span class="hljs-property">hidden</span> = <span class="hljs-literal">true</span>;
 
-// At component/application teardown:
-transition.destroy(); buttonSkin.destroy(); panelSkin.destroy(); config.destroy();
-</code></pre>
+<span class="hljs-comment">// At component/application teardown:</span>
+transition.<span class="hljs-title function_">destroy</span>(); buttonSkin.<span class="hljs-title function_">destroy</span>(); panelSkin.<span class="hljs-title function_">destroy</span>(); config.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p><code>configureAppearance</code> owns one root scope, merges updates, and restores the attributes and inline properties it owned on destroy. Mount it on <code>document.documentElement</code> to include overlays. Per-surface options override the global configuration; omitted options inherit it. There must be only one configuration controller per root and one surface controller per element. <code>surface.update(options)</code> replaces that surface&#39;s local options so <code>{}</code> returns it to global settings.</p>
 <h2>Global material and theme contract</h2>
 <p>The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component&#39;s border radius, size and layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.</p>
@@ -923,23 +884,22 @@ transition.destroy(); buttonSkin.destroy(); panelSkin.destroy(); config.destroy(
 </tbody></table>
 <p>For example, a success toast can set <code>--bx-glass-surface: var(--bx-bg-success)</code> and retain its established semantic appearance. Outside Blocks, system colors supply neutral fallbacks.</p>
 <h2>Spatial lighting and reflections</h2>
-<pre><code class="language-ts">import { mountGlassScene } from &#39;@filip.mazev/blocks/effects/runtime&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { mountGlassScene } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/runtime&#x27;</span>;
 
-const scene = mountGlassScene(document.documentElement, {
-  lights: [{ element: lamp, z: 180, color: &#39;var(--bx-primary)&#39;, intensity: 1.2, radius: 640 }],
-  reflectors: [
-    { element: backgroundShape, depth: -100, intensity: .25 },
-    { element: foregroundCard, depth: 70, intensity: .35 },
+<span class="hljs-keyword">const</span> scene = <span class="hljs-title function_">mountGlassScene</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>, {
+  <span class="hljs-attr">lights</span>: [{ <span class="hljs-attr">element</span>: lamp, <span class="hljs-attr">z</span>: <span class="hljs-number">180</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;var(--bx-primary)&#x27;</span>, <span class="hljs-attr">intensity</span>: <span class="hljs-number">1.2</span>, <span class="hljs-attr">radius</span>: <span class="hljs-number">640</span> }],
+  <span class="hljs-attr">reflectors</span>: [
+    { <span class="hljs-attr">element</span>: backgroundShape, <span class="hljs-attr">depth</span>: -<span class="hljs-number">100</span>, <span class="hljs-attr">intensity</span>: <span class="hljs-number">.25</span> },
+    { <span class="hljs-attr">element</span>: foregroundCard, <span class="hljs-attr">depth</span>: <span class="hljs-number">70</span>, <span class="hljs-attr">intensity</span>: <span class="hljs-number">.35</span> },
   ],
 });
 
-// After application code moves one of those elements:
-scene.refresh();
-// Or replace the scene configuration:
-scene.update({ lights: [{ x: 300, y: 80, z: 220, intensity: 1 }] });
-// On teardown:
-scene.destroy();
-</code></pre>
+<span class="hljs-comment">// After application code moves one of those elements:</span>
+scene.<span class="hljs-title function_">refresh</span>();
+<span class="hljs-comment">// Or replace the scene configuration:</span>
+scene.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">lights</span>: [{ <span class="hljs-attr">x</span>: <span class="hljs-number">300</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">80</span>, <span class="hljs-attr">z</span>: <span class="hljs-number">220</span>, <span class="hljs-attr">intensity</span>: <span class="hljs-number">1</span> }] });
+<span class="hljs-comment">// On teardown:</span>
+scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Coordinates are viewport CSS pixels. An element supplies its live bounding-box center (<code>offsetX</code>/<code>offsetY</code>, from 0 to 1, can move the source within it); a reflector uses its computed background color unless <code>color</code> is supplied. Signed <code>depth</code> places foreground and background reflection proxies relative to the glass plane. Light distance, height and falloff affect the position and strength of the highlight. Scrolling, resizing, visibility changes and explicit refreshes invalidate the scene; call <code>refresh()</code> after application-driven transforms or layout changes. For frequent updates that only move lights, <code>reuseGeometry: true</code> in the scene options retains receiver measurements until those invalidations. Ordinary scene updates continue to remeasure receivers.</p>
 <p>Every mounted glass surface also gets subtle, localized edge colors from the visible layers around its perimeter. Different sources keep their own colors; ambient gradients crossfade beneath hover, focus, validation and explicit scene lights. The runtime samples nearby computed backgrounds and local pixels from visible images, video and canvas, including <code>pointer-events: none</code> backdrops. Hit-test order and stacking layers distinguish foreground from background; depth and distance reduce the contribution. CSS gradients are approximated from their color stops. If the browser blocks pixel access to cross-origin or tainted media, the runtime falls back to the element&#39;s computed CSS colors. Asset loads, layout/scroll changes, and visual class/style changes refresh the samples; call <code>refreshGlassLighting(element)</code> after application-driven changes to a custom surface&#39;s surroundings.</p>
 <p>Portalled overlays can call <code>inheritGlassLighting(overlay, trigger)</code> before mounting their surfaces to receive light from the trigger&#39;s context. Call the returned cleanup function after removing the overlay. Tooltips and menus use this connection to preserve dialog boundaries and receive nearby colors. Tooltips remain transparent to pointer events.</p>
@@ -948,6 +908,9 @@ scene.destroy();
 <h2>Overlay fades</h2>
 <p>Overlays fade in over 180 ms and out over 140 ms using the Web Animations API. Their dimensions, clipping and text size remain unchanged. The fade composites the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop root that cuts off the page behind the glass. Native opacity interpolation avoids per-frame style mutations and lighting invalidation. Reversing an active fade continues from its current opacity; the interrupted promise resolves to <code>cancelled</code>.</p>
 <p>The transition temporarily owns the first material surface\u2019s <code>opacity</code> and the target\u2019s <code>visibility</code>. If no material is present, it fades the target. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. <code>refresh()</code> remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1\u2019s <code>createLiquidTransition</code> and associated type names remain deprecated aliases for <code>createGlassTransition</code>.</p>
+<h2>Press feedback</h2>
+<p>The delegated pointer and keyboard handlers drive the existing pressure spring, including a visible initial response for quick taps. A soft inset sheen sits within the material\u2019s fixed clipping box. <code>--bx-glass-press</code> on the host exposes the current pressure to component content; Blocks buttons use it for a small compression without moving their hit area or overlay origin. Controller-owned pressure writes are excluded from scene invalidation, so a press does not resample the entire document every frame.</p>
+<p>Pointer cancellation, matching key release, focus loss during a keyboard press, document/window blur, disabled state, and teardown clear pressure. Touch does not latch hover emission, typing in a field does not activate keyboard pressure, and Space on a native link keeps its normal scrolling behavior. Reduced motion applies static pressure feedback immediately and removes it on release.</p>
 <h2>Performance and accessibility</h2>
 <ul>
 <li>One lazy animation clock and delegated press, hover-boundary and focus handling per document. Moving the pointer within an element does not change lighting. Settled scenes schedule no animation frames.</li>
@@ -963,33 +926,31 @@ scene.destroy();
 <p>See <code>../examples/index.html</code> for a native DOM demo. Serve the repository over HTTP after building the workspace; no framework runtime is required. Build with <code>npm run build:blocks</code> at the workspace root; this builds all Blocks entry points and generates the native example\u2019s design tokens from Blocks. Browser regressions live in <code>tools/browser</code>.</p>
 <h3>Semantic lighting</h3>
 <p><code>BxGlassLightingService</code> in the Angular adapter combines sources within a form or toast stack. Validation text illuminates nearby controls and removes its source when the error clears. Toast light is anchored to the rendered progress bar\u2019s right edge, pauses with the toast, and illuminates adjacent notifications. Its own glow uses that same measured edge; it has no independent progress animation. <code>excludeSource</code> or <code>excludeElement</code> lets a source render its own glow separately. <code>observeGlassLighting</code> and <code>refreshGlassLighting</code> support custom decorative receivers, including the opaque circular slider thumb beside its native range input.</p>
-<p>A surface can opt into semantic emission with <code>mountSurface(element, { emission: &#39;var(--bx-primary)&#39; })</code>. Hover or keyboard focus activates that element as a source; its visible border and declared color determine the facing edges and corners of nearby surfaces. Hover light has a 120 CSS-pixel falloff radius and stays within the nearest main, aside, nav, dialog or overlay. Add <code>data-bx-light-scope</code> to isolate a custom region. Modal panels, native dialogs, popovers, fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent hover animation loop.</p>
+<p>A surface can opt into semantic emission with <code>mountSurface(element, { emission: &#39;var(--bx-primary)&#39; })</code>. Hover, press, or keyboard focus activates that element as a source; its visible border and declared color determine the facing edges and corners of nearby surfaces. Hover light has a 120 CSS-pixel falloff radius and stays within the nearest main, aside, nav, dialog or overlay. Add <code>data-bx-light-scope</code> to isolate a custom region. Modal panels, native dialogs, popovers, fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent hover animation loop.</p>
 <p>Backdrop behavior follows the browser\u2019s <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter">backdrop-root rules</a>. Visual treatment follows <a href="https://developer.apple.com/design/human-interface-guidelines/materials">Apple\u2019s material guidance</a>: restrained highlights and readable translucent layers.</p>
-<p>Use <code>focusEmission</code> for a field that should emit while its native control has focus. Focused fields remain active when a different button is hovered. Decorative native-control receivers can pass their hit target as the third argument to <code>observeGlassLighting</code>.</p>
+<p>Editable field surfaces emit while their native control has focus by default; action surfaces emit for keyboard focus only. An explicit <code>focusEmission</code> opts a custom surface into illumination for any focus. Checked, pressed, selected, and current states retain emission. An expanded trigger retains emission when it also declares <code>aria-haspopup</code>; ordinary layout expansion alone does not select a control. Focused fields remain active when a different button is hovered. Decorative native-control receivers can pass their hit target as the third argument to <code>observeGlassLighting</code>.</p>
 `,"projects/blocks/forms/README.md":`<h1>Forms</h1>
 <p>Blocks fields use Angular 22 native signal control contracts and support Signal Forms, Reactive Forms, Template-driven Forms and standalone models. The library supplies presentation, interaction and accessible feedback; Angular owns validation and submission.</p>
 <h2>Import and basic usage</h2>
-<pre><code class="language-ts">import { signal } from &#39;@angular/core&#39;;
-import { form, FormField as SignalFormField, FormRoot, required, email } from &#39;@angular/forms/signals&#39;;
-import { Button, InputField } from &#39;@filip.mazev/blocks/forms&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { signal } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { form, <span class="hljs-title class_">FormField</span> <span class="hljs-keyword">as</span> <span class="hljs-title class_">SignalFormField</span>, <span class="hljs-title class_">FormRoot</span>, required, email } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/forms/signals&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">InputField</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
 
-readonly accountModel = signal({ email: &#39;&#39; });
-readonly account = form(this.accountModel, (p) =&gt; {
-  required(p.email, { message: &#39;Email is required.&#39; });
-  email(p.email, { message: &#39;Enter a valid email address.&#39; });
+<span class="hljs-keyword">readonly</span> accountModel = <span class="hljs-title function_">signal</span>({ <span class="hljs-attr">email</span>: <span class="hljs-string">&#x27;&#x27;</span> });
+<span class="hljs-keyword">readonly</span> account = <span class="hljs-title function_">form</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">accountModel</span>, <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> {
+  <span class="hljs-title function_">required</span>(p.<span class="hljs-property">email</span>, { <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Email is required.&#x27;</span> });
+  <span class="hljs-title function_">email</span>(p.<span class="hljs-property">email</span>, { <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Enter a valid email address.&#x27;</span> });
 }, {
-  submission: {
-    ignoreValidators: &#39;none&#39;,
-    action: async (field) =&gt; { await this.api.save(field().value()); }
+  <span class="hljs-attr">submission</span>: {
+    <span class="hljs-attr">ignoreValidators</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+    <span class="hljs-attr">action</span>: <span class="hljs-title function_">async</span> (field) =&gt; { <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">api</span>.<span class="hljs-title function_">save</span>(<span class="hljs-title function_">field</span>().<span class="hljs-title function_">value</span>()); }
   }
-});
-</code></pre>
+});</code></pre>
 <p>Import <code>SignalFormField</code>, <code>FormRoot</code>, and the used Blocks controls into the standalone component. Alias Angular&#39;s directive because Blocks also exports its frame component as <code>FormField</code>.</p>
-<pre><code class="language-html">&lt;form [formRoot]=&quot;account&quot;&gt;
-  &lt;bx-input-field label=&quot;Email&quot; type=&quot;email&quot; [formField]=&quot;account.email&quot; /&gt;
-  &lt;button bx-button type=&quot;submit&quot; [disabled]=&quot;!account().valid()&quot; [loading]=&quot;account().submitting()&quot;&gt;Save&lt;/button&gt;
-&lt;/form&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> [<span class="hljs-attr">formRoot</span>]=<span class="hljs-string">&quot;account&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Email&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;email&quot;</span> [<span class="hljs-attr">formField</span>]=<span class="hljs-string">&quot;account.email&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">&quot;!account().valid()&quot;</span> [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;account().submitting()&quot;</span>&gt;</span>Save<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></code></pre>
 <h2>Validation and state</h2>
 <p>Schema validation supplies <code>required</code>, numeric and length limits, pattern metadata, errors, pending, disabled and readonly state to compatible controls. <code>valid()</code> is false while asynchronous validation is pending; <code>!invalid()</code> alone does not guarantee readiness.</p>
 <p>Use <code>ignoreValidators: &#39;none&#39;</code> to gate the submission handler as well as the visible button while async validation is pending. Submission marks interactive fields touched, prevents duplicate submissions, and applies returned server errors to their target fields.</p>
@@ -997,11 +958,10 @@ readonly account = form(this.accountModel, (p) =&gt; {
 <h2>Custom messages and visibility</h2>
 <p>Shared inputs include <code>errorMessages</code>, <code>errorPriority</code>, <code>errorMode</code> (<code>first</code> or <code>all</code>), and <code>errorPolicy</code> (<code>touched</code>, <code>dirty</code>, <code>submitted</code>, <code>always</code>, or a function receiving <code>IErrorState</code>). The default reveals invalid fields after touch or submission. A function can include custom group or application state. The submitted policy tracks native form submission; when invoking submission programmatically outside the form element, pass the shared <code>submitted</code> input from application state.</p>
 <p>Message resolution prefers projected <code>bx-error</code> content, then field message overrides, schema messages, and configured defaults. <code>minlength</code>/<code>maxlength</code> Reactive Forms keys and <code>minLength</code>/<code>maxLength</code> Signal Forms kinds are recognized. Resolvers receive the original error plus its parameter payload.</p>
-<pre><code class="language-ts">readonly messages: ValidationMessages = {
-  minLength: ({ params }) =&gt; \`Use at least \${params[&#39;minLength&#39;] ?? params[&#39;requiredLength&#39;]} characters.\`,
-  required: { key: &#39;validation.required&#39; }
-};
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">readonly</span> <span class="hljs-attr">messages</span>: <span class="hljs-title class_">ValidationMessages</span> = {
+  <span class="hljs-attr">minLength</span>: <span class="hljs-function">(<span class="hljs-params">{ params }</span>) =&gt;</span> <span class="hljs-string">\`Use at least <span class="hljs-subst">\${params[<span class="hljs-string">&#x27;minLength&#x27;</span>] ?? params[<span class="hljs-string">&#x27;requiredLength&#x27;</span>]}</span> characters.\`</span>,
+  <span class="hljs-attr">required</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;validation.required&#x27;</span> }
+};</code></pre>
 <p>Put this declaration in the appropriate constants or types-supporting module according to the house rules. Translation-key overrides receive error parameters through the existing adapter. Default messages can be replaced application-wide using <code>FormSettingsService.update()</code>; instance inputs take precedence. No error-message map is mandatory when the schema supplies messages.</p>
 <p>Projected <code>bx-error</code> supports rich content. <code>bx-hint</code>, <code>hint</code>, <code>hintEnd</code>, <code>bxPrefix</code>, and <code>bxSuffix</code> provide composable support and adornments. Supporting text and errors are associated automatically through <code>aria-describedby</code>. Custom error regions announce changes politely.</p>
 <h2>Compatibility and migration</h2>
@@ -1019,43 +979,64 @@ readonly account = form(this.accountModel, (p) =&gt; {
 `,"projects/blocks/forms/components/button/README.md":`<h1>Button</h1>
 <p>An action control with Blocks intent colors, familiar variants and visible focus.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Button } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;button bx-button variant=&quot;filled&quot; (click)=&quot;save()&quot;&gt;Save changes&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;filled&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;save()&quot;</span>&gt;</span>Save changes<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>variant</code>: text, filled, tonal, icon, fab, mini-fab, extended-fab. <code>color</code>: primary, accent, success, danger, info, warn, grayscale. <code>outlined</code>, <code>elevated</code>, <code>disabled</code>, and <code>interactive</code> control presentation and availability.</p>
 <p>Use the active palette&#39;s second tone for supporting actions:</p>
-<pre><code class="language-html">&lt;button bx-button variant=&quot;tonal&quot; color=&quot;accent&quot;&gt;Explore&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;tonal&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;accent&quot;</span>&gt;</span>Explore<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Icon, tonal and outlined glass buttons follow the full glassiness range without a minimum button-specific tint. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, <code>aria-expanded=&quot;true&quot;</code>, or a current <code>aria-current</code> value. Primary and grayscale buttons use the primary palette role; accent buttons use the second tone; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. No additional effects directive or lighting configuration is needed.</p>
+<p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, a current <code>aria-current</code> value, or an expanded popup trigger (<code>aria-expanded=&quot;true&quot;</code> with <code>aria-haspopup</code>). Plain expansion controls, such as a rail collapse action, do not acquire selected styling solely from <code>aria-expanded</code>. If an application used expansion as a toggle selection, use <code>aria-pressed</code> for that toggle instead. Primary and grayscale buttons use the primary palette role; accent buttons use the second tone; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. Pointer focus alone does not keep an action illuminated after the pointer leaves; focus stays on the native control and keyboard focus remains visible. Touch does not latch hover illumination. No additional effects directive or lighting configuration is needed.</p>
 <p>Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
+<p>Press feedback applies to every <code>bx-button</code> variant. Translucent glass buttons deepen their inset reflection, gather a soft theme-colored sheen, and compress their content slightly while held. Solid filled and floating actions use their semantic pressed color and the same content compression, without an extra sheen or inset ring. The existing shared pressure spring returns the content and material to rest, including quick taps. The button\u2019s hit area, layout, and overlay origin stay fixed. Mouse, touch, Enter, and Space activation use the same pressure state; release, cancellation, blur, or removal clears it. Text buttons and <code>[surfaceEffects]=&quot;false&quot;</code> retain native press feedback without decorative lighting.</p>
+<table>
+<thead>
+<tr>
+<th>CSS variable</th>
+<th>Default / behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bx-button-press-compression</code></td>
+<td><code>0.035</code>; content shrinks by 3.5% at full pressure</td>
+</tr>
+<tr>
+<td><code>--bx-button-press-offset</code></td>
+<td><code>1px</code>; content moves down at full pressure</td>
+</tr>
+<tr>
+<td><code>--bx-button-press-shadow</code></td>
+<td>Semantic inset shadow for translucent buttons; <code>none</code> for solid filled/floating actions</td>
+</tr>
+<tr>
+<td><code>--bx-glass-press-opacity</code></td>
+<td><code>0.6</code> for translucent buttons; <code>0</code> for solid filled/floating actions</td>
+</tr>
+</tbody></table>
+<p>Reduced motion keeps static pressed-color, inset, or underline feedback without compression or rebound. Reduced transparency retains each variant\u2019s pressed appearance on the opaque surface. Forced colors uses a visible pressed outline, and disabled/noninteractive controls do not animate or illuminate.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use the native <code>button[bx-button]</code> selector for actions and <code>a[bx-button]</code> with a real <code>href</code> for navigation. Give icon-only actions an accessible label. Disabled actions do not emit an action through a click listener.</p>
 <p><code>surfaceEffects</code> defaults to <code>true</code>. Set <code>[surfaceEffects]=&quot;false&quot;</code> for dense collections such as the icon catalog to retain Blocks button styling, theme updates, focus, loading and disabled behavior without mounting per-button runtime glass lighting or deformation. It can be changed while mounted. An explicitly applied <code>bxSurface</code> directive continues to own its surface independently.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/button</code> for a working example and its current value or action result.</p>
+<p>Open <code>/components/button</code> for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results. Press and release with mouse, touch, Enter, or Space, then move the pointer away while leaving focus on the button to inspect its resting state. The global Appearance controls also exercise theme, glassiness, and reduced-motion changes.</p>
 <h2>Asynchronous actions</h2>
 <p><code>loading</code> enables a spinner, exposes <code>aria-busy</code>, and disables activation independently from the <code>disabled</code> input. When loading ends, the original disabled state is retained. The spinner appears before the text and replaces a projected Blocks icon at its original size, including under page zoom or surface transforms. An icon-only button retains its accessible name and dimensions.</p>
-<pre><code class="language-html">&lt;button bx-button type=&quot;button&quot; variant=&quot;filled&quot; [loading]=&quot;saving()&quot; (click)=&quot;save()&quot;&gt;
-  &lt;bx-icon name=&quot;save&quot; size=&quot;20&quot; /&gt;Save changes
-&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;filled&quot;</span> [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;saving()&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;save()&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;save&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;20&quot;</span> /&gt;</span>Save changes
+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <p>For another icon implementation, import <code>ButtonIconDirective</code> and mark its element <code>bxButtonIcon</code>. Plain text buttons get an icon-sized spinner only during loading. Spinner colors inherit the button foreground; <code>BxA11yService</code> removes rotation in reduced-motion mode.</p>
 <p>Open <code>/components/button-loading</code> for fake asynchronous actions with and without icons. Application code owns the promise and loading state.</p>
 `,"projects/blocks/forms/components/button/directives/README.md":`<h1>Button icon slot</h1>
@@ -1064,16 +1045,14 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/checkbox-indicator/README.md":`<h1>Checkbox indicator</h1>
 <p>The reusable, decorative checkbox face used by Blocks checkbox controls and multiselect options. Supports unchecked, checked and partial selection using Blocks surfaces and icons.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { CheckboxIndicator } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">CheckboxIndicator</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add <code>CheckboxIndicator</code> to the standalone component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;button type=&quot;button&quot; role=&quot;checkbox&quot; [attr.aria-checked]=&quot;partial() ? &#39;mixed&#39; : selected()&quot;
-  (click)=&quot;toggleSelection()&quot;&gt;
-  &lt;bx-checkbox-indicator [checked]=&quot;selected()&quot; [indeterminate]=&quot;partial()&quot; /&gt;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;checkbox&quot;</span> [<span class="hljs-attr">attr.aria-checked</span>]=<span class="hljs-string">&quot;partial() ? &#x27;mixed&#x27; : selected()&quot;</span>
+  (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;toggleSelection()&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-checkbox-indicator</span> [<span class="hljs-attr">checked</span>]=<span class="hljs-string">&quot;selected()&quot;</span> [<span class="hljs-attr">indeterminate</span>]=<span class="hljs-string">&quot;partial()&quot;</span> /&gt;</span>
   Select all locations
-&lt;/button&gt;
-</code></pre>
+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <p>Use <code>Checkbox</code> for a standalone form control. Use this indicator inside an existing interactive control whose semantics and events are already managed.</p>
 <h2>API</h2>
 <table>
@@ -1114,26 +1093,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/checkbox/README.md":`<h1>Checkbox</h1>
 <p>A boolean choice integrated with Angular forms.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Checkbox } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Checkbox</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-checkbox label=&quot;Receive updates&quot; [formControl]=&quot;updates&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-checkbox</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Receive updates&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;updates&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(checked)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use a visible label. Space toggles the native input; focus and checked state remain visible in glass and solid modes. The control supports validation and touched state.</p>
@@ -1145,29 +1121,26 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/form-field/README.md":`<h1>Form field</h1>
 <p>A shared label, help text, validation and loading frame for controls.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { FormField } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">FormField</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-form-field label=&quot;Project name&quot; forId=&quot;project&quot; [required]=&quot;true&quot; [error]=&quot;error&quot;&gt;
-  &lt;input id=&quot;project&quot; (input)=&quot;update($event)&quot; /&gt;
-&lt;/bx-form-field&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-form-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Project name&quot;</span> <span class="hljs-attr">forId</span>=<span class="hljs-string">&quot;project&quot;</span> [<span class="hljs-attr">required</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">error</span>]=<span class="hljs-string">&quot;error&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;project&quot;</span> (<span class="hljs-attr">input</span>)=<span class="hljs-string">&quot;update($event)&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-form-field</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>label</code>, <code>tooltip</code>, <code>error</code>: text or a translation key object. <code>forId</code>: the native input ID. <code>required</code>, <code>loading</code>: booleans. Projects the control and an optional <code>bx-error</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p><code>--bx-field-padding-bottom</code> overrides the field wrapper\u2019s bottom padding (default: <code>0</code>). Set it on a group of controls when additional row spacing is needed.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Set <code>forId</code> to the actual input ID. Required decoration does not add validation to your control; apply the corresponding validator and native required attribute. Associate custom error text with <code>aria-describedby</code> when projecting your own control.</p>
@@ -1181,27 +1154,24 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/input-field/README.md":`<h1>Input field</h1>
 <p>A text, date or numeric input with a floating label and validation feedback.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { InputField } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InputField</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-input-field label=&quot;Project name&quot; [formControl]=&quot;name&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Project name&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;name&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <p><code>type</code>: text, password, email, number, date, time, datetime-local. Numeric controls accept <code>min</code>, <code>max</code>, and <code>step</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use a label and an appropriate input type. Number input emits a number or null when empty. Validators should enforce application constraints, including minimum and maximum values.</p>
@@ -1216,15 +1186,13 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/multi-select/README.md":`<h1>Multiselect</h1>
 <p>Checkbox-style multiple selection with remote pagination and explicit select-all intent.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { MultiSelect, IBxSelectOption, ISelectAllChange } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">MultiSelect</span>, <span class="hljs-title class_">IBxSelectOption</span>, <span class="hljs-title class_">ISelectAllChange</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-multi-select label=&quot;Workspaces&quot; [options]=&quot;options()&quot; [formField]=&quot;account.workspaces&quot;
-  [loading]=&quot;loading()&quot; [hasMore]=&quot;hasMore()&quot; [loadError]=&quot;loadError()&quot;
-  [isSearchable]=&quot;true&quot; [externalFiltering]=&quot;true&quot; [selectionScope]=&quot;query()&quot;
-  (search)=&quot;search($event)&quot; (loadMore)=&quot;loadNext($event)&quot;
-  (selectAllIntentChange)=&quot;handleSelectAll($event)&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-multi-select</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Workspaces&quot;</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;options()&quot;</span> [<span class="hljs-attr">formField</span>]=<span class="hljs-string">&quot;account.workspaces&quot;</span>
+  [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;loading()&quot;</span> [<span class="hljs-attr">hasMore</span>]=<span class="hljs-string">&quot;hasMore()&quot;</span> [<span class="hljs-attr">loadError</span>]=<span class="hljs-string">&quot;loadError()&quot;</span>
+  [<span class="hljs-attr">isSearchable</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">externalFiltering</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">selectionScope</span>]=<span class="hljs-string">&quot;query()&quot;</span>
+  (<span class="hljs-attr">search</span>)=<span class="hljs-string">&quot;search($event)&quot;</span> (<span class="hljs-attr">loadMore</span>)=<span class="hljs-string">&quot;loadNext($event)&quot;</span>
+  (<span class="hljs-attr">selectAllIntentChange</span>)=<span class="hljs-string">&quot;handleSelectAll($event)&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Shares single-select options, comparison, templates, field presentation and pagination inputs. Bind <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Form models should initialize the field with <code>[]</code>.</p>
 <p><code>showSelectAll</code> defaults to true. <code>selectAllLabel</code> is translatable. <code>selectAll</code> is a boolean model for intent; <code>selectAllChange</code> is its boolean model event. <code>selectAllIntentChange</code> emits the detailed <code>ISelectAllChange&lt;T&gt;</code> with selected intent, scope, loaded values and reason. <code>selectionScope</code> defaults to the current search term.</p>
@@ -1259,50 +1227,44 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>A Blocks \xD7 icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set <code>[clearable]=&quot;false&quot;</code> to hide it, or use <code>clearLabel</code> (<code>ResolvableText</code>, default <code>&#39;Clear selection&#39;</code>) to customize its accessible name. <code>clearTooltip</code> accepts its own <code>ResolvableText</code>, defaults to the resolved <code>clearLabel</code> when omitted, and can be set to an empty string to hide the tooltip.</p>
 <p><code>clearSelection()</code> performs the same guarded action programmatically. Clearing closes the panel, marks the control touched and returns focus to the combobox; it preserves Angular&#39;s blur/submit update policy. The action is hidden while readonly and disabled when the control is disabled. Keyboard users can Tab to the action and activate it with Enter or Space.</p>
 <p>Clearing writes <code>[]</code>, disables future-page select-all intent and emits <code>selectionChange</code> with <code>{ value: [], source: &#39;clear&#39; }</code>. If intent was enabled, <code>selectAllIntentChange</code> also emits with <code>selected: false</code> and <code>reason: &#39;clear&#39;</code>. Required controls continue to use the existing validation policy.</p>
-<pre><code class="language-html">&lt;bx-multi-select [options]=&quot;locations&quot; [clearLabel]=&quot;{ key: &#39;locations.clearAction&#39; }&quot;
-  [clearTooltip]=&quot;{ key: &#39;locations.clearTooltip&#39; }&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-multi-select</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;locations&quot;</span> [<span class="hljs-attr">clearLabel</span>]=<span class="hljs-string">&quot;{ key: &#x27;locations.clearAction&#x27; }&quot;</span>
+  [<span class="hljs-attr">clearTooltip</span>]=<span class="hljs-string">&quot;{ key: &#x27;locations.clearTooltip&#x27; }&quot;</span> /&gt;</span></code></pre>
 <p>Use <code>[clearable]=&quot;false&quot;</code> for required selections that must retain a value or for lists with an explicit \u201CNone\u201D option. This input controls the clear action independently of validation; <code>required</code> continues to enforce form validity. The select/multiselect playground includes an \u201CAllow clearing selection\u201D switch; configuration controls such as page size deliberately hide the clear action.</p>
-<pre><code class="language-html">&lt;bx-multi-select [options]=&quot;options&quot; [clearable]=&quot;false&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-multi-select</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;options&quot;</span> [<span class="hljs-attr">clearable</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span></code></pre>
 <h2>Select-all tooltip</h2>
 <p><code>allSelectedTooltip</code> accepts the tooltip text for active <code>selectAll</code> intent, including the trigger&#39;s keyboard tooltip and the \u201Call selected\u201D tag&#39;s hover/touch tooltip. Pass <code>false</code> or an empty string to disable both. This also prevents the tag&#39;s automatic clipped-label tooltip or <code>tagConfig.tooltip</code> from replacing disabled feedback. Ordinary finite selections keep their existing tooltip behavior when intent ends.</p>
 <p>Omitting the input preserves the list of loaded selected labels, subject to <code>tooltipOnTruncate</code>. Those labels describe only loaded items. For remote \u201CALL\u201D selection, disable that feedback or supply application-owned text representing the full selectable scope:</p>
-<pre><code class="language-html">&lt;bx-multi-select [options]=&quot;loadedLocations&quot; [(value)]=&quot;selected&quot; [(selectAll)]=&quot;allSelected&quot;
-  allSelectedText=&quot;All locations&quot; [allSelectedTooltip]=&quot;false&quot; /&gt;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-multi-select</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;loadedLocations&quot;</span> [(<span class="hljs-attr">value</span>)]=<span class="hljs-string">&quot;selected&quot;</span> [(<span class="hljs-attr">selectAll</span>)]=<span class="hljs-string">&quot;allSelected&quot;</span>
+  <span class="hljs-attr">allSelectedText</span>=<span class="hljs-string">&quot;All locations&quot;</span> [<span class="hljs-attr">allSelectedTooltip</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span>
 
-&lt;bx-multi-select [options]=&quot;loadedLocations&quot; [(value)]=&quot;selected&quot; [(selectAll)]=&quot;allSelected&quot;
-  allSelectedText=&quot;All locations&quot; [allSelectedTooltip]=&quot;allLocationsTooltip()&quot; /&gt;
-</code></pre>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-multi-select</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;loadedLocations&quot;</span> [(<span class="hljs-attr">value</span>)]=<span class="hljs-string">&quot;selected&quot;</span> [(<span class="hljs-attr">selectAll</span>)]=<span class="hljs-string">&quot;allSelected&quot;</span>
+  <span class="hljs-attr">allSelectedText</span>=<span class="hljs-string">&quot;All locations&quot;</span> [<span class="hljs-attr">allSelectedTooltip</span>]=<span class="hljs-string">&quot;allLocationsTooltip()&quot;</span> /&gt;</span></code></pre>
 <p>Compute <code>allLocationsTooltip</code> in the application using its API&#39;s total of selectable results. For example, return <code>&#39;All &#39; + pagination.selectableTotal + &#39; locations&#39;</code> or call the application&#39;s translation service with the total. Exclude disabled options and disabled groups across the whole result set, including unloaded pages. Do not subtract only the disabled items on the current page or substitute the loaded selected count for a remote total. If the API does not provide enough information, disable the tooltip or use a general description such as \u201CAll matching locations\u201D.</p>
 <p>The component accepts <code>ResolvableText</code>, so simple translation keys also work and react to <code>BX_I18N</code> version changes. Interpolation, pluralization, total calculation and any more complex translation logic belong to the application; the component has no tooltip-parameters or pagination-total API. Updating the supplied text refreshes mounted tooltips. Explicit custom tooltips work independently of automatic <code>tooltipOnTruncate</code> feedback; <code>false</code> disables only select-all feedback.</p>
 <p>The playground defaults to application-formatted text using the fake API&#39;s <code>selectableTotal</code>: 23 selectable locations across 24 results, excluding disabled Vienna even before its page loads. The total follows search scope. <strong>Select-all tooltip</strong> also demonstrates custom finished text, disabled feedback and the optional loaded-label compatibility behavior, in text and tag display.</p>
 `,"projects/blocks/forms/components/radio-button/README.md":`<h1>Radio</h1>
 <p>A single choice within a named group.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Radio } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Radio</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-radio label=&quot;Daily&quot; name=&quot;frequency&quot; value=&quot;daily&quot; [formControl]=&quot;frequency&quot; /&gt;
-&lt;bx-radio label=&quot;Weekly&quot; name=&quot;frequency&quot; value=&quot;weekly&quot; [formControl]=&quot;frequency&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-radio</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Daily&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;frequency&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;daily&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;frequency&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-radio</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Weekly&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;frequency&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;weekly&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;frequency&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Legacy individually bound radios support <code>[formControl]</code>, <code>formControlName</code>, and <code>[(ngModel)]</code>. For new forms, bind a <code>RadioGroup</code> with <code>[formField]</code> or an existing Angular form directive, and keep each radio value as its option value. See the <a href="components/radio-group">radio-group guide</a>.</p>
 <p><code>value</code> is required and identifies this option. <code>name</code> groups the native radio inputs.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Selected radios keep emitting the theme color after pointer release and blur. Hovering the circle or its label highlights the surface and emits color; disabled controls do neither.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use the same form control and name for mutually exclusive options, distinct values, and visible labels. A fieldset with a legend gives the group an accessible name.</p>
@@ -1311,14 +1273,12 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/radio-group/README.md":`<h1>Radio group</h1>
 <p>Owns one typed form value, group labeling, validation and disabled/readonly state for radio options.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { RadioGroup, Radio } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RadioGroup</span>, <span class="hljs-title class_">Radio</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-radio-group label=&quot;Plan&quot; [formField]=&quot;account.plan&quot;&gt;
-  &lt;bx-radio label=&quot;Personal&quot; value=&quot;personal&quot; /&gt;
-  &lt;bx-radio label=&quot;Team&quot; value=&quot;team&quot; /&gt;
-&lt;/bx-radio-group&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-radio-group</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Plan&quot;</span> [<span class="hljs-attr">formField</span>]=<span class="hljs-string">&quot;account.plan&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-radio</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Personal&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;personal&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-radio</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Team&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;team&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-radio-group</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>Bind the group through <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Individual options retain their option <code>value</code>; avoid binding both the group and its children to form controls.</p>
 <p>Shared field inputs configure labels, hints, errors, visibility policy, readonly and required state. The group generates a shared native name unless <code>name</code> is provided. Legacy individually bound radio controls remain supported.</p>
@@ -1332,12 +1292,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/range-slider/README.md":`<h1>Range slider</h1>
 <p>Two constrained range thumbs bound to a <code>[number, number]</code> form value.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { RangeSlider } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">RangeSlider</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-range-slider label=&quot;Budget&quot; [(value)]=&quot;range&quot; [min]=&quot;0&quot; [max]=&quot;100&quot;
-  [step]=&quot;10&quot; [discrete]=&quot;true&quot; [showTickMarks]=&quot;true&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-range-slider</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Budget&quot;</span> [(<span class="hljs-attr">value</span>)]=<span class="hljs-string">&quot;range&quot;</span> [<span class="hljs-attr">min</span>]=<span class="hljs-string">&quot;0&quot;</span> [<span class="hljs-attr">max</span>]=<span class="hljs-string">&quot;100&quot;</span>
+  [<span class="hljs-attr">step</span>]=<span class="hljs-string">&quot;10&quot;</span> [<span class="hljs-attr">discrete</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">showTickMarks</span>]=<span class="hljs-string">&quot;true&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Supports Angular forms and standalone value binding. <code>min</code>, <code>max</code>, and <code>step</code> configure the range. <code>discrete</code> shows formatted values; <code>displayWith(value)</code> customizes display and accessible value text. <code>startLabel</code> and <code>endLabel</code> are translatable thumb names. <code>showTickMarks</code> shows bounded tick indicators.</p>
 <p>Ticks mark actual step values and are centered on the thumbs&#39; travel, including ranges where the step does not divide the span evenly. The selection fill uses the same thumb centers in LTR and RTL. Set <code>--bx-slider-thumb-size</code> to customize both native and decorative thumbs together; it defaults to the shared <code>spacing(6)</code> token, and the fill and tick insets follow that size.</p>
@@ -1352,12 +1310,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/search-input/README.md":`<h1>Search input</h1>
 <p>A searchable text control with one clear action, request loading feedback, and an explicit retry action. Requests and results remain application-owned.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { SearchInput } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SearchInput</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-search-input label=&quot;Find a component&quot; [formControl]=&quot;query&quot; (search)=&quot;filter($event)&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-search-input</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Find a component&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;query&quot;</span> (<span class="hljs-attr">search</span>)=<span class="hljs-string">&quot;filter($event)&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <p>Search value/placeholder ellipsis uses the shared <code>TruncateDirective</code>; its native-input measurement accounts for the current font and inline padding. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables automatic clipped-value tooltips while keeping ellipsis and measurement. The default inherits <code>FormSettingsService</code>, then true.</p>
@@ -1422,55 +1378,52 @@ this.theme.setAppearance({ reducedTransparency: true });
 </tr>
 </tbody></table>
 <h3>Asynchronous requests</h3>
-<pre><code class="language-html">&lt;bx-search-input label=&quot;Find a component&quot; [(value)]=&quot;query&quot;
-    [loading]=&quot;loading()&quot; [loadError]=&quot;loadError()&quot;
-    loadingAriaLabel=&quot;Searching components&quot; retryLabel=&quot;Try again&quot;
-    [retryConfig]=&quot;{ variant: &#39;tonal&#39;, color: &#39;accent&#39; }&quot;
-    (search)=&quot;runSearch($event)&quot; (retry)=&quot;runSearch($event)&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-search-input</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Find a component&quot;</span> [(<span class="hljs-attr">value</span>)]=<span class="hljs-string">&quot;query&quot;</span>
+    [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;loading()&quot;</span> [<span class="hljs-attr">loadError</span>]=<span class="hljs-string">&quot;loadError()&quot;</span>
+    <span class="hljs-attr">loadingAriaLabel</span>=<span class="hljs-string">&quot;Searching components&quot;</span> <span class="hljs-attr">retryLabel</span>=<span class="hljs-string">&quot;Try again&quot;</span>
+    [<span class="hljs-attr">retryConfig</span>]=<span class="hljs-string">&quot;{ variant: &#x27;tonal&#x27;, color: &#x27;accent&#x27; }&quot;</span>
+    (<span class="hljs-attr">search</span>)=<span class="hljs-string">&quot;runSearch($event)&quot;</span> (<span class="hljs-attr">retry</span>)=<span class="hljs-string">&quot;runSearch($event)&quot;</span> /&gt;</span></code></pre>
 <p>For example, the application can coordinate a promise-returning API with cancellation:</p>
-<pre><code class="language-ts">private readonly destroyRef = inject(DestroyRef);
-protected readonly query = signal&lt;string | null&gt;(&#39;&#39;);
-protected readonly loading = signal(false);
-protected readonly loadError = signal&lt;string | undefined&gt;(undefined);
-protected readonly results = signal&lt;readonly string[]&gt;([]);
-private request?: AbortController;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> destroyRef = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">DestroyRef</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> query = signal&lt;<span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-string">&#x27;&#x27;</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> loading = <span class="hljs-title function_">signal</span>(<span class="hljs-literal">false</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> loadError = signal&lt;<span class="hljs-built_in">string</span> | <span class="hljs-literal">undefined</span>&gt;(<span class="hljs-literal">undefined</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> results = signal&lt;<span class="hljs-keyword">readonly</span> <span class="hljs-built_in">string</span>[]&gt;([]);
+<span class="hljs-keyword">private</span> <span class="hljs-attr">request</span>?: <span class="hljs-title class_">AbortController</span>;
 
-constructor() {
-  this.destroyRef.onDestroy(() =&gt; this.request?.abort());
+<span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-variable language_">this</span>.<span class="hljs-property">destroyRef</span>.<span class="hljs-title function_">onDestroy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">request</span>?.<span class="hljs-title function_">abort</span>());
 }
 
-protected async runSearch(query: string): Promise&lt;void&gt; {
-  this.request?.abort();
-  const request = new AbortController();
-  this.request = request;
-  this.loading.set(true);
-  this.loadError.set(undefined);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">async</span> <span class="hljs-title function_">runSearch</span>(<span class="hljs-attr">query</span>: <span class="hljs-built_in">string</span>): <span class="hljs-title class_">Promise</span>&lt;<span class="hljs-built_in">void</span>&gt; {
+  <span class="hljs-variable language_">this</span>.<span class="hljs-property">request</span>?.<span class="hljs-title function_">abort</span>();
+  <span class="hljs-keyword">const</span> request = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AbortController</span>();
+  <span class="hljs-variable language_">this</span>.<span class="hljs-property">request</span> = request;
+  <span class="hljs-variable language_">this</span>.<span class="hljs-property">loading</span>.<span class="hljs-title function_">set</span>(<span class="hljs-literal">true</span>);
+  <span class="hljs-variable language_">this</span>.<span class="hljs-property">loadError</span>.<span class="hljs-title function_">set</span>(<span class="hljs-literal">undefined</span>);
 
-  try {
-    const results = await this.api.search(query, request.signal);
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">api</span>.<span class="hljs-title function_">search</span>(query, request.<span class="hljs-property">signal</span>);
 
-    if (!request.signal.aborted) this.results.set(results);
-  } catch {
-    if (!request.signal.aborted) this.loadError.set(&#39;Search failed. Try again.&#39;);
-  } finally {
-    if (this.request === request) this.loading.set(false);
+    <span class="hljs-keyword">if</span> (!request.<span class="hljs-property">signal</span>.<span class="hljs-property">aborted</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">results</span>.<span class="hljs-title function_">set</span>(results);
+  } <span class="hljs-keyword">catch</span> {
+    <span class="hljs-keyword">if</span> (!request.<span class="hljs-property">signal</span>.<span class="hljs-property">aborted</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">loadError</span>.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;Search failed. Try again.&#x27;</span>);
+  } <span class="hljs-keyword">finally</span> {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">request</span> === request) <span class="hljs-variable language_">this</span>.<span class="hljs-property">loading</span>.<span class="hljs-title function_">set</span>(<span class="hljs-literal">false</span>);
   }
-}
-</code></pre>
+}</code></pre>
 <p>Import <code>DestroyRef</code>, <code>inject</code>, and <code>signal</code> from <code>@angular/core</code>. Supply your application API&#39;s <code>search(query, signal): Promise&lt;readonly string[]&gt;</code>. Add debouncing in the application when useful, and mark loading from the start of that debounce. Keep the previous results during a replacement request or failure; replace them only when the latest request succeeds. A successful empty response is distinct from a failure. Set <code>loading</code> synchronously in the event handler and clear <code>loadError</code> when starting a new attempt. The component makes no requests and has no pagination behavior.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <p>The retry action uses the same Blocks <code>Button</code> and <code>LoadingSpinner</code> as select request feedback. Import <code>ISearchRetryConfig</code> from <code>@filip.mazev/blocks/forms</code> for typed presentation settings. Native browser search decorations are suppressed so only the named Blocks clear action appears. Set <code>--bx-search-feedback-gap</code> to customize the space between the field and its visible status message; it defaults to the shared spacing-2 token and applies equally to initial loading, errors, and retry loading.</p>
 <h2>Behavior and accessibility</h2>
@@ -1481,14 +1434,12 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/components/select/README.md":`<h1>Select</h1>
 <p>A typed single-value control with searchable, grouped options and remote pagination.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Select, IBxSelectOption } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Select</span>, <span class="hljs-title class_">IBxSelectOption</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-select label=&quot;Workspace&quot; [options]=&quot;options()&quot; [formField]=&quot;account.workspace&quot;
-  [isSearchable]=&quot;true&quot; [externalFiltering]=&quot;true&quot;
-  [loading]=&quot;loading()&quot; [hasMore]=&quot;hasMore()&quot; [loadError]=&quot;loadError()&quot;
-  [loadMoreConfig]=&quot;paginationAppearance&quot; (search)=&quot;search($event)&quot; (loadMore)=&quot;loadNext($event)&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-select</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Workspace&quot;</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;options()&quot;</span> [<span class="hljs-attr">formField</span>]=<span class="hljs-string">&quot;account.workspace&quot;</span>
+  [<span class="hljs-attr">isSearchable</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">externalFiltering</span>]=<span class="hljs-string">&quot;true&quot;</span>
+  [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;loading()&quot;</span> [<span class="hljs-attr">hasMore</span>]=<span class="hljs-string">&quot;hasMore()&quot;</span> [<span class="hljs-attr">loadError</span>]=<span class="hljs-string">&quot;loadError()&quot;</span>
+  [<span class="hljs-attr">loadMoreConfig</span>]=<span class="hljs-string">&quot;paginationAppearance&quot;</span> (<span class="hljs-attr">search</span>)=<span class="hljs-string">&quot;search($event)&quot;</span> (<span class="hljs-attr">loadMore</span>)=<span class="hljs-string">&quot;loadNext($event)&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Supports Signal Forms, Reactive Forms, Template-driven Forms, and standalone <code>[(value)]</code>. Existing <code>[formControl]</code> and <code>formControlName</code> bindings remain available. <code>BxSelectOption</code> remains as a compatibility alias for <code>IBxSelectOption</code>.</p>
 <p>Options provide <code>label</code>, <code>value</code>, optional <code>disabled</code>, <code>icon</code>, <code>group</code> and <code>groupDisabled</code>. Labels and group headings accept translation keys. <code>compareWith(a, b)</code> defaults to <code>Object.is</code>; supply a comparator for object values. Selected labels are retained when filtering replaces the visible results. <code>searchValue</code> is a string model: the term and matching results persist together across panel close/reopen. Bind it when application code needs to clear or replace a query.</p>
@@ -1518,39 +1469,34 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>A Blocks \xD7 icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set <code>[clearable]=&quot;false&quot;</code> to hide it, or use <code>clearLabel</code> (<code>ResolvableText</code>, default <code>&#39;Clear selection&#39;</code>) to customize its accessible name. <code>clearTooltip</code> accepts its own <code>ResolvableText</code>, defaults to the resolved <code>clearLabel</code> when omitted, and can be set to an empty string to hide the tooltip.</p>
 <p><code>clearSelection()</code> performs the same guarded action programmatically. Clearing closes the panel, marks the control touched and returns focus to the combobox; it preserves Angular&#39;s blur/submit update policy. The action is hidden while readonly and disabled when the control is disabled. Keyboard users can Tab to the action and activate it with Enter or Space.</p>
 <p>Clearing writes <code>null</code> and emits <code>selectionChange</code> with <code>{ value: null, source: &#39;clear&#39; }</code>. Required controls report validation through the existing error policy.</p>
-<pre><code class="language-html">&lt;bx-select [options]=&quot;locations&quot; [clearLabel]=&quot;{ key: &#39;locations.clearAction&#39; }&quot;
-  [clearTooltip]=&quot;{ key: &#39;locations.clearTooltip&#39; }&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-select</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;locations&quot;</span> [<span class="hljs-attr">clearLabel</span>]=<span class="hljs-string">&quot;{ key: &#x27;locations.clearAction&#x27; }&quot;</span>
+  [<span class="hljs-attr">clearTooltip</span>]=<span class="hljs-string">&quot;{ key: &#x27;locations.clearTooltip&#x27; }&quot;</span> /&gt;</span></code></pre>
 <p>Use <code>[clearable]=&quot;false&quot;</code> for required selections that must retain a value or for lists with an explicit \u201CNone\u201D option. This input controls the clear action independently of validation; <code>required</code> continues to enforce form validity. The select/multiselect playground includes an \u201CAllow clearing selection\u201D switch; configuration controls such as page size deliberately hide the clear action.</p>
-<pre><code class="language-html">&lt;bx-select [options]=&quot;options&quot; [clearable]=&quot;false&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-select</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;options&quot;</span> [<span class="hljs-attr">clearable</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span></code></pre>
 `,"projects/blocks/forms/components/shared/load-more/README.md":`<h1>Load-more footer</h1>
 <p>Internal presentation used by <code>LoadMoreDirective</code>. Applications configure it through <code>ILoadMoreConfig</code> and <code>ILoadMoreContext</code>; it is not a separate public construction API.</p>
 <p>See the <a href="components/load-more">load-more directive</a> for imports, request ownership, error/retry behavior, templates, appearance and accessibility. Its live page is <code>/components/load-more</code>.</p>
 `,"projects/blocks/forms/components/slide-toggle/README.md":`<h1>Slide toggle</h1>
 <p>A boolean preference that takes effect immediately.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { SlideToggle } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SlideToggle</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-slide-toggle label=&quot;Enable notifications&quot; [formControl]=&quot;notifications&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-slide-toggle</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Enable notifications&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;notifications&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(checked)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Toggles keep emitting the theme color while switched on, including values set through Angular forms. Hovering the track or its label highlights the surface and emits color; disabled controls do neither.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use for immediate settings, with a label describing the enabled state. The native checkbox retains keyboard behavior and checked state.</p>
@@ -1561,29 +1507,26 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/directives/error/README.md":`<h1>Error message</h1>
 <p>A projected custom error message inside a form-field.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { BxError, FormField } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxError</span>, <span class="hljs-title class_">FormField</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <p>Add the standalone component to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-form-field label=&quot;Reference&quot; forId=&quot;reference&quot;&gt;
-  &lt;input id=&quot;reference&quot; aria-describedby=&quot;reference-error&quot; /&gt;
-  &lt;bx-error id=&quot;reference-error&quot;&gt;Enter at least three characters.&lt;/bx-error&gt;
-&lt;/bx-form-field&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-form-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Reference&quot;</span> <span class="hljs-attr">forId</span>=<span class="hljs-string">&quot;reference&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;reference&quot;</span> <span class="hljs-attr">aria-describedby</span>=<span class="hljs-string">&quot;reference-error&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-error</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;reference-error&quot;</span>&gt;</span>Enter at least three characters.<span class="hljs-tag">&lt;/<span class="hljs-name">bx-error</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-form-field</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>BxError</code> is a content projection component with selector <code>bx-error</code>. It has no inputs; the form field projects it into its error region.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Render only when validation should be shown. Tie the input to the error ID with <code>aria-describedby</code> and update <code>aria-invalid</code> as needed. This component does not run validation.</p>
@@ -1592,11 +1535,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/directives/hint/README.md":`<h1>Field hint</h1>
 <p>Composable content and native integration for the shared field frame.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { BxHint } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxHint</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-input-field label=&quot;Reference&quot;&gt;&lt;bx-hint&gt;Public identifier&lt;/bx-hint&gt;&lt;/bx-input-field&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Reference&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-hint</span>&gt;</span>Public identifier<span class="hljs-tag">&lt;/<span class="hljs-name">bx-hint</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-input-field</span>&gt;</span></code></pre>
 <h2>API and behavior</h2>
 <p>Use <code>align=&quot;start&quot;</code> or <code>align=&quot;end&quot;</code> for projected supporting content. Convenience fields also accept <code>hint</code> and <code>hintEnd</code> as translated text. Descriptions are connected automatically and replaced by visible errors.</p>
 <h2>Appearance and accessibility</h2>
@@ -1607,19 +1548,17 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/directives/load-more/README.md":`<h1>Load more</h1>
 <p>Shared incremental loading for a scroll container. The directive appends a footer at the bottom-left, inside the container&#39;s padding. Use it for paginated option panels and future data tables or lists; attach it to their scroll wrapper rather than a native <code>table</code>, <code>tbody</code>, <code>ul</code> or <code>select</code> element.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { LoadMoreDirective, ILoadMoreRequest, ILoadMoreConfig } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">LoadMoreDirective</span>, <span class="hljs-title class_">ILoadMoreRequest</span>, <span class="hljs-title class_">ILoadMoreConfig</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;div bxLoadMore #pager=&quot;bxLoadMore&quot; role=&quot;region&quot; aria-label=&quot;Workspaces&quot; tabindex=&quot;0&quot;
-  [loadMoreHasMore]=&quot;hasMore()&quot;
-  [loadMoreLoading]=&quot;loading()&quot;
-  [loadMoreError]=&quot;loadError()&quot;
-  [loadMoreRevision]=&quot;items()&quot;
-  [loadMoreConfig]=&quot;paginationAppearance&quot;
-  (loadMore)=&quot;loadNext($event)&quot;&gt;
-  @for (item of items(); track item.id) { &lt;div&gt;{{ item.name }}&lt;/div&gt; }
-&lt;/div&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">bxLoadMore</span> #<span class="hljs-attr">pager</span>=<span class="hljs-string">&quot;bxLoadMore&quot;</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;region&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Workspaces&quot;</span> <span class="hljs-attr">tabindex</span>=<span class="hljs-string">&quot;0&quot;</span>
+  [<span class="hljs-attr">loadMoreHasMore</span>]=<span class="hljs-string">&quot;hasMore()&quot;</span>
+  [<span class="hljs-attr">loadMoreLoading</span>]=<span class="hljs-string">&quot;loading()&quot;</span>
+  [<span class="hljs-attr">loadMoreError</span>]=<span class="hljs-string">&quot;loadError()&quot;</span>
+  [<span class="hljs-attr">loadMoreRevision</span>]=<span class="hljs-string">&quot;items()&quot;</span>
+  [<span class="hljs-attr">loadMoreConfig</span>]=<span class="hljs-string">&quot;paginationAppearance&quot;</span>
+  (<span class="hljs-attr">loadMore</span>)=<span class="hljs-string">&quot;loadNext($event)&quot;</span>&gt;</span>
+  @for (item of items(); track item.id) { <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{{ item.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> }
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <p>Give the wrapper a constrained maximum height and <code>overflow: auto</code>. Applications own API calls, cursors, cancellation and data accumulation. The directive never fetches data itself.</p>
 <h2>API</h2>
 <ul>
@@ -1641,11 +1580,10 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>The button shows its loading spinner and becomes disabled while loading. A button visible before a request stays visible during it, including when newly appended items create overflow. The error and retry remain reachable after failure, and scroll events cannot automatically retry a failing request. Request guards prevent duplicates until a loading cycle completes, the revision changes, or <code>complete()</code> is called.</p>
 <p>When more data exists without usable item overflow, auto mode displays the footer action. Container resizing, viewport/zoom resizing, and data changes re-evaluate overflow. The footer itself does not count as item overflow, preventing show/hide oscillation. Always mode retains an explicit action even with a scrollbar. There is no automatic fetch loop to fill the viewport.</p>
 <h2>Custom action</h2>
-<pre><code class="language-html">&lt;ng-template #customAction let-label let-loading=&quot;loading&quot; let-disabled=&quot;disabled&quot; let-request=&quot;request&quot;&gt;
-  &lt;button bx-button type=&quot;button&quot; variant=&quot;tonal&quot; color=&quot;accent&quot;
-    [loading]=&quot;loading&quot; [disabled]=&quot;disabled&quot; (click)=&quot;request()&quot;&gt;{{ label }}&lt;/button&gt;
-&lt;/ng-template&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">customAction</span> <span class="hljs-attr">let-label</span> <span class="hljs-attr">let-loading</span>=<span class="hljs-string">&quot;loading&quot;</span> <span class="hljs-attr">let-disabled</span>=<span class="hljs-string">&quot;disabled&quot;</span> <span class="hljs-attr">let-request</span>=<span class="hljs-string">&quot;request&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;tonal&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;accent&quot;</span>
+    [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;loading&quot;</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">&quot;disabled&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;request()&quot;</span>&gt;</span>{{ label }}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
 <p>Pass the template through <code>loadMoreTemplate</code>. Keep the action keyboard-accessible and represent its busy/disabled states. <code>--bx-load-more-padding</code> changes footer padding; the default has no additional horizontal inset. Button classes and semantic theme variables customize appearance without DOM access.</p>
 <h2>Appearance and accessibility</h2>
 <p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
@@ -1655,11 +1593,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/directives/native-control/README.md":`<h1>Native control</h1>
 <p>Composable content and native integration for the shared field frame.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { NativeControlDirective } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NativeControlDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-form-field label=&quot;Notes&quot;&gt;&lt;textarea bxInput label=&quot;Notes&quot; [formField]=&quot;account.note&quot;&gt;&lt;/textarea&gt;&lt;/bx-form-field&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-form-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Notes&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">bxInput</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Notes&quot;</span> [<span class="hljs-attr">formField</span>]=<span class="hljs-string">&quot;account.note&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-form-field</span>&gt;</span></code></pre>
 <h2>API and behavior</h2>
 <p>Registers a native input, textarea or select with the field frame. Import the desired Angular forms directives separately. Native attributes and third-party directives remain available. <code>BX_FORM_FIELD_CONTROL</code> and <code>IFormFieldControl</code> allow consumer controls to register their own state and focus contract.</p>
 <h2>Appearance and accessibility</h2>
@@ -1670,11 +1606,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/directives/prefix/README.md":`<h1>Field prefix</h1>
 <p>Composable content and native integration for the shared field frame.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { PrefixDirective } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PrefixDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-input-field label=&quot;Amount&quot;&gt;&lt;span bxPrefix aria-hidden=&quot;true&quot;&gt;$&lt;/span&gt;&lt;/bx-input-field&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Amount&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">bxPrefix</span> <span class="hljs-attr">aria-hidden</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>$<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-input-field</span>&gt;</span></code></pre>
 <h2>API and behavior</h2>
 <p>Projects custom content before the input. Keep decorative prefixes hidden from assistive technology; express meaningful units in the label or description.</p>
 <h2>Appearance and accessibility</h2>
@@ -1684,11 +1618,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Open <code>/components/prefix</code> for working field composition and compatibility examples.</p>
 `,"projects/blocks/forms/directives/slider/README.md":`<h1>Slider</h1>
 <p><code>SliderDirective</code> gives a native range input a glass thumb, a recessed track, and a value fill. Native keyboard, touch, disabled, minimum, maximum, step, and Angular forms behavior are preserved.</p>
-<pre><code class="language-ts">import { SliderDirective } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
-<pre><code class="language-html">&lt;label for=&quot;volume&quot;&gt;Volume&lt;/label&gt;
-&lt;input id=&quot;volume&quot; type=&quot;range&quot; bxSlider min=&quot;0&quot; max=&quot;100&quot; [formControl]=&quot;volume&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SliderDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;volume&quot;</span>&gt;</span>Volume<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;volume&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;range&quot;</span> <span class="hljs-attr">bxSlider</span> <span class="hljs-attr">min</span>=<span class="hljs-string">&quot;0&quot;</span> <span class="hljs-attr">max</span>=<span class="hljs-string">&quot;100&quot;</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">&quot;volume&quot;</span> /&gt;</span></code></pre>
 <p>Import the directive into your component and include the existing Blocks core stylesheet. The directive also supports <code>ngModel</code> or native <code>[value]</code> and <code>(input)</code> bindings. It reads programmatic value changes after Angular renders, so resetting a form updates the fill too.</p>
 <p>The slider inherits semantic theme colors. Solid material, reduced transparency, increased contrast, and unsupported backdrop filtering use an opaque thumb. WebKit/Blink and Firefox have separate native thumb and track rules. Provide an associated label or <code>aria-label</code> for every slider.</p>
 <p><code>--bx-slider-thumb-size</code> sets the native and decorative thumb diameter together, defaulting to <code>spacing(6)</code> from the shared tokens. The decorative thumb&#39;s position follows the same travel distance as the native thumb.</p>
@@ -1698,11 +1630,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/forms/directives/suffix/README.md":`<h1>Field suffix</h1>
 <p>Composable content and native integration for the shared field frame.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { SuffixDirective } from &#39;@filip.mazev/blocks/forms&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SuffixDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-input-field label=&quot;Weight&quot;&gt;&lt;span bxSuffix aria-hidden=&quot;true&quot;&gt;kg&lt;/span&gt;&lt;/bx-input-field&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Weight&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">bxSuffix</span> <span class="hljs-attr">aria-hidden</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>kg<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-input-field</span>&gt;</span></code></pre>
 <h2>API and behavior</h2>
 <p>Projects custom content after the input. Custom interactive suffix actions need accessible names and native button semantics.</p>
 <h2>Appearance and accessibility</h2>
@@ -1713,26 +1643,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/icons/components/README.md":`<h1>Icon</h1>
 <p>An asynchronously loaded SVG icon using semantic foreground and background tokens.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Icon } from &#39;@filip.mazev/blocks/icons&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Icon</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/icons&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-icon name=&quot;sparkles&quot; size=&quot;32&quot; color=&quot;text-primary&quot; [decorative]=&quot;false&quot; ariaLabel=&quot;Highlights&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;sparkles&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;32&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;text-primary&quot;</span> [<span class="hljs-attr">decorative</span>]=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Highlights&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>name</code> is required. <code>size</code>, <code>strokeWidth</code>, <code>color</code>, <code>bgColor</code>, <code>decorative</code>, <code>ariaLabel</code> configure rendering. Color accepts a semantic token or themed color; <code>bgColor=&quot;auto&quot;</code> derives a complementary token.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Leave decorative icons hidden from assistive technology; meaningful standalone icons need <code>decorative=false</code> and <code>ariaLabel</code>. Label icon buttons on the button itself. The catalog paginates icon previews to bound SVG work.</p>
@@ -1741,32 +1668,28 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/components/README.md":`<h1>Modal core</h1>
 <p>The service-owned host that composes modal content and chooses the active layout.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalCore } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalCore</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;!-- Open from an action in your template --&gt;
-&lt;button bx-button (click)=&quot;openModal()&quot;&gt;Open modal core&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Open from an action in your template --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;openModal()&quot;</span>&gt;</span>Open modal core<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>ModalService.open(ContentComponent, config)</code> accepts data, header, style, close behavior and guards. Style <code>layout</code> selects center, left, right or bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. Observe <code>afterClosed()</code> for the close result.</p>
-<pre><code class="language-ts">this.modals.open(DialogContent, {
-  header: { text: &quot;Modal core&quot; },
-  style: { layout: &quot;center&quot;, hasBackdrop: true }
-});
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">DialogContent</span>, {
+  <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Modal core&quot;</span> },
+  <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
+});</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Open through <code>ModalService</code> so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. <code>Modal</code> content receives its typed data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to return a result. Do not instantiate service-owned view wrappers as general page containers.</p>
@@ -1775,32 +1698,28 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/components/shared/ui/backdrop/README.md":`<h1>Modal backdrop</h1>
 <p>The background scrim that separates an open modal from page content.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalBackdrop } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalBackdrop</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;!-- Open from an action in your template --&gt;
-&lt;button bx-button (click)=&quot;openModal()&quot;&gt;Open modal backdrop&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Open from an action in your template --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;openModal()&quot;</span>&gt;</span>Open modal backdrop<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>ModalService.open(ContentComponent, config)</code> accepts data, header, style, close behavior and guards. Style <code>layout</code> selects center, left, right or bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. Observe <code>afterClosed()</code> for the close result.</p>
-<pre><code class="language-ts">this.modals.open(DialogContent, {
-  header: { text: &quot;Modal backdrop&quot; },
-  style: { layout: &quot;center&quot;, hasBackdrop: true }
-});
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">DialogContent</span>, {
+  <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Modal backdrop&quot;</span> },
+  <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
+});</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Open through <code>ModalService</code> so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. <code>Modal</code> content receives its typed data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to return a result. Do not instantiate service-owned view wrappers as general page containers.</p>
@@ -1809,26 +1728,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/components/shared/ui/banner/README.md":`<h1>Modal banner</h1>
 <p>The shared modal heading, semantic icon and close action.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalBanner } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalBanner</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-modal-banner [header]=&quot;{ text: &#39;Project settings&#39; }&quot; [showCloseButton]=&quot;true&quot; (close)=&quot;handleClose($event)&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-modal-banner</span> [<span class="hljs-attr">header</span>]=<span class="hljs-string">&quot;{ text: &#x27;Project settings&#x27; }&quot;</span> [<span class="hljs-attr">showCloseButton</span>]=<span class="hljs-string">&quot;true&quot;</span> (<span class="hljs-attr">close</span>)=<span class="hljs-string">&quot;handleClose($event)&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Required inputs: <code>header</code> (header config or undefined), <code>showCloseButton</code> (boolean). <code>close</code> emits a modal close mode or undefined. Header supports text and an optional icon configuration.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Prefer configuring <code>header</code> on ModalService for a normal dialog. Direct use is available for custom composition; ensure the surrounding dialog has an accessible name and handle close output.</p>
@@ -1837,32 +1753,28 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/components/views/bottom-sheet/README.md":`<h1>Bottom sheet</h1>
 <p>A bottom-aligned modal surface suitable for compact actions and mobile layouts.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalBottomSheet } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalBottomSheet</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;!-- Open from an action in your template --&gt;
-&lt;button bx-button (click)=&quot;openModal()&quot;&gt;Open bottom sheet&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Open from an action in your template --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;openModal()&quot;</span>&gt;</span>Open bottom sheet<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>ModalService.open(ContentComponent, config)</code> accepts data, header, style, close behavior and guards. Style <code>layout</code> selects center, left, right or bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. Observe <code>afterClosed()</code> for the close result.</p>
-<pre><code class="language-ts">this.modals.open(DialogContent, {
-  header: { text: &quot;Bottom sheet&quot; },
-  style: { layout: &quot;bottom-sheet&quot;, hasBackdrop: true }
-});
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">DialogContent</span>, {
+  <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Bottom sheet&quot;</span> },
+  <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;bottom-sheet&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
+});</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Open through <code>ModalService</code> so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. <code>Modal</code> content receives its typed data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to return a result. Do not instantiate service-owned view wrappers as general page containers.</p>
@@ -1871,32 +1783,28 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/components/views/centered/README.md":`<h1>Centered modal</h1>
 <p>A focused dialog centered in the available viewport.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalCentered } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalCentered</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;!-- Open from an action in your template --&gt;
-&lt;button bx-button (click)=&quot;openModal()&quot;&gt;Open centered modal&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Open from an action in your template --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;openModal()&quot;</span>&gt;</span>Open centered modal<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>ModalService.open(ContentComponent, config)</code> accepts data, header, style, close behavior and guards. Style <code>layout</code> selects center, left, right or bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. Observe <code>afterClosed()</code> for the close result.</p>
-<pre><code class="language-ts">this.modals.open(DialogContent, {
-  header: { text: &quot;Centered modal&quot; },
-  style: { layout: &quot;center&quot;, hasBackdrop: true }
-});
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">DialogContent</span>, {
+  <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Centered modal&quot;</span> },
+  <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
+});</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Open through <code>ModalService</code> so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. <code>Modal</code> content receives its typed data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to return a result. Do not instantiate service-owned view wrappers as general page containers.</p>
@@ -1905,32 +1813,28 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/components/views/side/README.md":`<h1>Side modal</h1>
 <p>A left or right panel for editing alongside the page context.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalSide } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalSide</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;!-- Open from an action in your template --&gt;
-&lt;button bx-button (click)=&quot;openModal()&quot;&gt;Open side modal&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Open from an action in your template --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;openModal()&quot;</span>&gt;</span>Open side modal<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>ModalService.open(ContentComponent, config)</code> accepts data, header, style, close behavior and guards. Style <code>layout</code> selects center, left, right or bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. Observe <code>afterClosed()</code> for the close result.</p>
-<pre><code class="language-ts">this.modals.open(DialogContent, {
-  header: { text: &quot;Side modal&quot; },
-  style: { layout: &quot;right&quot;, hasBackdrop: true }
-});
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-variable language_">this</span>.<span class="hljs-property">modals</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">DialogContent</span>, {
+  <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&quot;Side modal&quot;</span> },
+  <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;right&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
+});</code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Open through <code>ModalService</code> so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. <code>Modal</code> content receives its typed data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to return a result. Do not instantiate service-owned view wrappers as general page containers.</p>
@@ -1939,26 +1843,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/directives/footer/README.md":`<h1>Modal footer</h1>
 <p>Projects custom footer content into the active Blocks modal layout.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalFooterDirective } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalFooterDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;div *appModalFooter&gt;Custom footer content&lt;/div&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">appModalFooter</span>&gt;</span>Custom footer content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>A standalone structural directive. It captures a TemplateRef and registers it with the owning ModalCore; it has no public inputs.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use only inside content opened by ModalService. The template moves to the active modal view. Keep action buttons keyboard accessible and use ModalRef to close with a result. Outside a modal the directive emits a development warning.</p>
@@ -1967,26 +1868,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/modal/directives/header/README.md":`<h1>Modal header</h1>
 <p>Projects custom header content into the active Blocks modal layout.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ModalHeaderDirective } from &#39;@filip.mazev/blocks/modal&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalHeaderDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;div *appModalHeader&gt;Custom header content&lt;/div&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">appModalHeader</span>&gt;</span>Custom header content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>A standalone structural directive. It captures a TemplateRef and registers it with the owning ModalCore; it has no public inputs.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use only inside content opened by ModalService. The template moves to the active modal view. Keep action buttons keyboard accessible and use ModalRef to close with a result. Outside a modal the directive emits a development warning.</p>
@@ -1994,124 +1892,128 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Open <code>/components/modal-header</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/navigation/README.md":`<h1>Navigation</h1>
 <p>Declare UI sections once with <code>defineNavigation</code>. Its <code>withNav</code> helper restricts each route&#39;s <code>section</code> to the declared IDs and checks the remaining navigation metadata. Declarations can live in <code>app.routes.ts</code> or a shared <code>app.navigation.ts</code> used by multiple route files.</p>
-<pre><code class="language-ts">import { defineNavigation } from &#39;@filip.mazev/blocks/navigation&#39;;
-import { Routes } from &#39;@angular/router&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { defineNavigation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Routes</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/router&#x27;</span>;
 
-export const navigation = defineNavigation({
-  sections: [
-    { id: &#39;start&#39;, title: &#39;Get started&#39; },
-    { id: &#39;forms&#39;, title: &#39;Form controls&#39; }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> navigation = <span class="hljs-title function_">defineNavigation</span>({
+  <span class="hljs-attr">sections</span>: [
+    { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;start&#x27;</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Get started&#x27;</span> },
+    { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;forms&#x27;</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Form controls&#x27;</span> }
   ]
 });
 
-const { withNav } = navigation;
+<span class="hljs-keyword">const</span> { withNav } = navigation;
 
-export const routes: Routes = [
-  withNav(
-    { path: &#39;home&#39;, loadComponent: () =&gt; import(&#39;./home&#39;).then(m =&gt; m.Home) },
-    { label: &#39;Overview&#39;, section: &#39;start&#39; }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-attr">routes</span>: <span class="hljs-title class_">Routes</span> = [
+  <span class="hljs-title function_">withNav</span>(
+    { <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;home&#x27;</span>, <span class="hljs-attr">loadComponent</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;./home&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">m</span> =&gt;</span> m.<span class="hljs-property">Home</span>) },
+    { <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Overview&#x27;</span>, <span class="hljs-attr">section</span>: <span class="hljs-string">&#x27;start&#x27;</span> }
   )
 ];
 
-// withNav({}, { section: &#39;typo&#39; }); // TypeScript error: undeclared section.
-</code></pre>
+<span class="hljs-comment">// withNav({}, { section: &#x27;typo&#x27; }); // TypeScript error: undeclared section.</span></code></pre>
 <p>Provide the same configuration in your application&#39;s providers:</p>
-<pre><code class="language-ts">import { provideNavigation } from &#39;@filip.mazev/blocks/navigation&#39;;
-import { navigation } from &#39;./app.routes&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { provideNavigation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
+<span class="hljs-keyword">import</span> { navigation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./app.routes&#x27;</span>;
 
-// In ApplicationConfig.providers, alongside provideRouter(routes):
-provideNavigation(navigation.config)
-</code></pre>
+<span class="hljs-comment">// In ApplicationConfig.providers, alongside provideRouter(routes):</span>
+<span class="hljs-title function_">provideNavigation</span>(navigation.<span class="hljs-property">config</span>)</code></pre>
 <p><code>NavigationService.menuGroups()</code> returns nonempty <code>{ id, title, items }</code> groups. Sections follow declaration order unless their numeric <code>order</code> is specified; sections with an order come first. Titles default to the section ID. Each group&#39;s items are flat entries from the menu tree, including descendants, with existing route ordering, access checks, visibility and translations applied. Excluded parent containers do not become links. <code>menu()</code> continues to expose the menu tree.</p>
 <p>The standalone <code>withNav</code> and <code>provideNavigation</code> helpers remain available. For these existing callers, undeclared sections appear after declared sections with their ID as the title. Items without a section appear in a group with an empty ID and title. Type checking against a declaration applies when using the <code>withNav</code> returned by <code>defineNavigation</code>.</p>
 <p>The UI can apply search to <code>menuGroups()</code> without defining section titles, ordering or flattening. Track groups by <code>id</code> and entries by <code>route</code>.</p>
 <p>Run the grouping and metadata type checks with <code>npm run test:navigation</code>.</p>
+<h2>Navigation views</h2>
+<p><code>SideNav</code> and <code>TopNav</code> consume the same hierarchical route sections, metadata, access filtering, translation adapter, and most-specific active route. They share item presentation, one-level-at-a-time browsing, flat contextual search, and focus/scroll restoration. Configure application defaults through <code>sideNav</code> and <code>topNav</code> in <code>defineNavigation</code>; instance configuration overrides those settings.</p>
+<p>See <a href="components/side-nav">side navigation</a> and <a href="components/top-nav">top navigation</a> for public imports, configuration, slots, accessibility, and runnable examples. Their playground routes are <code>/components/side-nav</code> and <code>/components/top-nav</code>.</p>
 `,"projects/blocks/navigation/components/breadcrumbs/README.md":`<h1>Breadcrumbs</h1>
 <p>A route-aware trail derived from Blocks navigation metadata.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Breadcrumbs } from &#39;@filip.mazev/blocks/navigation&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Breadcrumbs</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-breadcrumbs [minimumBreadcrumbs]=&quot;1&quot; divider=&quot;chevron-right&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-breadcrumbs</span> [<span class="hljs-attr">minimumBreadcrumbs</span>]=<span class="hljs-string">&quot;1&quot;</span> <span class="hljs-attr">divider</span>=<span class="hljs-string">&quot;chevron-right&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>minimumBreadcrumbs</code> defaults to 2; values below 1 are clamped. <code>divider</code> accepts an icon name. Route labels come from <code>withNav</code> metadata and <code>NavigationService</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Register metadata with <code>withNav</code> and provide navigation in application configuration. Breadcrumbs navigate using the router and update after navigation. This demo lives under Components so the trail has a real parent route.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/breadcrumbs</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/navigation/components/shared/navigation-item/README.md":`<h1>Navigation item</h1>
+<p>Internal item presentation shared by <a href="components/side-nav">SideNav</a> and <a href="components/top-nav">TopNav</a>. Consumers configure the public owners rather than importing this implementation component.</p>
+<p>A native page link and a separate disclosure retain independent hover/focus surfaces. Only the most specific active route receives selected styling. Top-level horizontal disclosures point down/up; vertical levels use a forward arrow. The scoped navigation state coordinates all requests through the owner&#39;s one submenu panel.</p>
+<p>Search results always retain their muted parent path, including custom templates. Search results have no floating guides or additional selection styling. The established side-nav CSS variables remain supported; top navigation maps its own variables into the same shared styles.</p>
+<p>Both public playground pages demonstrate these interactions, translation changes, disabled routes, and four levels of nesting.</p>
+`,"projects/blocks/navigation/components/shared/navigation-level/README.md":`<h1>Navigation level</h1>
+<p>Internal nested-list presentation shared by <a href="components/side-nav">SideNav</a> and <a href="components/top-nav">TopNav</a>. The owner supplies one scoped state/focus service and chooses the surface: inline rail, side panel, or top dropdown.</p>
+<p>The current parent remains a route link. Back, Escape, or the opposite arrow returns one level, while Up/Down and Home/End move through the list. The header and parent path remain above the scrolling list. Ancestor path buttons open their respective panels without route navigation, using Blocks text buttons and the owner\u2019s focus/scroll restoration. The current parent heading remains a separate page link. Owners restore the matching scroll position and disclosure focus. Levels use the same short slide, disabled reactively by reduced-motion preferences.</p>
+<p>Neither this view nor an item creates additional overlays. Theme, text resolution, route matching, and flat contextual search come from the shared navigation state. Consumer APIs and examples live with the public owners.</p>
 `,"projects/blocks/navigation/components/side-nav/README.md":`<h1>Side navigation</h1>
-<p>A route-driven application rail with collapsible sections, a compact icon rail, one shared submenu panel, contextual fuzzy search, and a responsive mobile drawer. It shares <code>NavigationService</code> with breadcrumbs and uses Blocks menu, overlay, theme, surface, search, tag, and accessibility facilities.</p>
+<p>A route-driven application rail with collapsible sections, a compact icon rail, one shared submenu panel, contextual fuzzy search, and a responsive mobile drawer. It shares <code>NavigationService</code> with breadcrumbs and <code>TopNav</code>, and shares item, search, level, and focus behavior with top navigation and uses Blocks menu, overlay, theme, surface, search, tag, and accessibility facilities.</p>
 <h2>Public import</h2>
-<pre><code class="language-ts">import {
-  SideNav, SideNavHeaderDirective, SideNavFooterDirective,
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> {
+  <span class="hljs-title class_">SideNav</span>, <span class="hljs-title class_">SideNavHeaderDirective</span>, <span class="hljs-title class_">SideNavFooterDirective</span>,
   defineNavigation, provideNavigation,
-  ISideNavConfig, ISideNavItemContext, ISideNavLayout,
-  INavigationTreeGroup, INavigationItem
-} from &#39;@filip.mazev/blocks/navigation&#39;;
-</code></pre>
+  <span class="hljs-title class_">ISideNavConfig</span>, <span class="hljs-title class_">ISideNavItemContext</span>, <span class="hljs-title class_">ISideNavLayout</span>,
+  <span class="hljs-title class_">INavigationTreeGroup</span>, <span class="hljs-title class_">INavigationItem</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
 <p><code>SideNavConfig</code> aliases <code>ISideNavConfig</code>; <code>NavItem</code> aliases the resolved <code>INavigationItem</code> contract. Interfaces follow the library&#39;s <code>I</code> naming convention. Import all three components/directives in the shell&#39;s Angular <code>imports</code>.</p>
 <h2>Working usage and withNav</h2>
 <p>Declare sections once, attach metadata to Angular routes, and provide the same configuration to navigation. Nested routes inherit the parent&#39;s section; assigning another section moves that branch to the named section. No component-specific copy of your routing configuration is required.</p>
-<pre><code class="language-ts">import { Routes, provideRouter } from &#39;@angular/router&#39;;
-import { defineNavigation, provideNavigation } from &#39;@filip.mazev/blocks/navigation&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Routes</span>, provideRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/router&#x27;</span>;
+<span class="hljs-keyword">import</span> { defineNavigation, provideNavigation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
 
-export const navigation = defineNavigation({
-  sections: [
-    { id: &#39;workspace&#39;, title: &#39;Workspace&#39;, icon: { name: &#39;building-2&#39; },
-      collapsible: true, showInBreadcrumbs: true },
-    { id: &#39;admin&#39;, title: { key: &#39;sections.admin&#39; }, icon: { name: &#39;settings&#39; },
-      collapsible: true, collapsed: true, showInBreadcrumbs: false }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> navigation = <span class="hljs-title function_">defineNavigation</span>({
+  <span class="hljs-attr">sections</span>: [
+    { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;workspace&#x27;</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Workspace&#x27;</span>, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;building-2&#x27;</span> },
+      <span class="hljs-attr">collapsible</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">showInBreadcrumbs</span>: <span class="hljs-literal">true</span> },
+    { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;admin&#x27;</span>, <span class="hljs-attr">title</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;sections.admin&#x27;</span> }, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;settings&#x27;</span> },
+      <span class="hljs-attr">collapsible</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">collapsed</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">showInBreadcrumbs</span>: <span class="hljs-literal">false</span> }
   ],
-  sideNav: { side: &#39;left&#39;, persistenceKey: &#39;studio.navigation.v1&#39; }
+  <span class="hljs-attr">sideNav</span>: { <span class="hljs-attr">side</span>: <span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-attr">persistenceKey</span>: <span class="hljs-string">&#x27;studio.navigation.v1&#x27;</span> }
 });
-const { withNav } = navigation;
+<span class="hljs-keyword">const</span> { withNav } = navigation;
 
-export const routes: Routes = [
-  withNav({ path: &#39;projects&#39;, children: [
-    withNav({ path: &#39;tokens&#39;, loadComponent: () =&gt; import(&#39;./tokens&#39;).then(m =&gt; m.Tokens) }, {
-      label: { key: &#39;nav.tokens&#39; }, icon: { name: &#39;swatch-book&#39; },
-      endIcon: { name: &#39;sparkles&#39; }, keywords: [&#39;palette&#39;, &#39;variables&#39;],
-      tags: [{ text: { key: &#39;nav.new&#39; }, config: { color: &#39;success&#39; } }],
-      showInBreadcrumbs: false
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-attr">routes</span>: <span class="hljs-title class_">Routes</span> = [
+  <span class="hljs-title function_">withNav</span>({ <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;projects&#x27;</span>, <span class="hljs-attr">children</span>: [
+    <span class="hljs-title function_">withNav</span>({ <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;tokens&#x27;</span>, <span class="hljs-attr">loadComponent</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;./tokens&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">m</span> =&gt;</span> m.<span class="hljs-property">Tokens</span>) }, {
+      <span class="hljs-attr">label</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;nav.tokens&#x27;</span> }, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;swatch-book&#x27;</span> },
+      <span class="hljs-attr">endIcon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sparkles&#x27;</span> }, <span class="hljs-attr">keywords</span>: [<span class="hljs-string">&#x27;palette&#x27;</span>, <span class="hljs-string">&#x27;variables&#x27;</span>],
+      <span class="hljs-attr">tags</span>: [{ <span class="hljs-attr">text</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;nav.new&#x27;</span> }, <span class="hljs-attr">config</span>: { <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;success&#x27;</span> } }],
+      <span class="hljs-attr">showInBreadcrumbs</span>: <span class="hljs-literal">false</span>
     })
-  ] }, { label: &#39;Projects&#39;, section: &#39;workspace&#39;, icon: { name: &#39;folder&#39; } })
+  ] }, { <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Projects&#x27;</span>, <span class="hljs-attr">section</span>: <span class="hljs-string">&#x27;workspace&#x27;</span>, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;folder&#x27;</span> } })
 ];
 
-// In application providers:
-// provideRouter(routes), ...provideNavigation(navigation.config)
-</code></pre>
+<span class="hljs-comment">// In application providers:</span>
+<span class="hljs-comment">// provideRouter(routes), ...provideNavigation(navigation.config)</span></code></pre>
 <p>A route that only groups children can omit a component. Provide an empty child route if that group&#39;s own URL should render a page. Parent labels remain links; their adjacent disclosure opens the child menu. In the compact rail, the parent icon opens its menu and the heading link inside navigates to the parent&#39;s route.</p>
-<pre><code class="language-html">&lt;div class=&quot;application-shell&quot;&gt;
-  &lt;bx-side-nav #navigation [config]=&quot;{ side: &#39;left&#39; }&quot; [(collapsed)]=&quot;collapsed&quot;&gt;
-    &lt;ng-template bxSideNavHeader let-compact let-mobile=&quot;mobile&quot;&gt;
-      &lt;a routerLink=&quot;/home&quot; aria-label=&quot;Studio home&quot;&gt;
-        &lt;bx-icon name=&quot;blocks&quot; /&gt;
-        @if (!compact) { &lt;strong&gt;Studio&lt;/strong&gt; }
-      &lt;/a&gt;
-    &lt;/ng-template&gt;
-    &lt;ng-template bxSideNavFooter let-compact&gt;
-      &lt;bx-icon name=&quot;circle-user-round&quot; /&gt;
-      @if (!compact) { &lt;span&gt;Alex \xB7 Workspace admin&lt;/span&gt; }
-    &lt;/ng-template&gt;
-  &lt;/bx-side-nav&gt;
-  &lt;main&gt;&lt;!-- router outlet --&gt;&lt;/main&gt;
-&lt;/div&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;application-shell&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-side-nav</span> #<span class="hljs-attr">navigation</span> [<span class="hljs-attr">config</span>]=<span class="hljs-string">&quot;{ side: &#x27;left&#x27; }&quot;</span> [(<span class="hljs-attr">collapsed</span>)]=<span class="hljs-string">&quot;collapsed&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxSideNavHeader</span> <span class="hljs-attr">let-compact</span> <span class="hljs-attr">let-mobile</span>=<span class="hljs-string">&quot;mobile&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">routerLink</span>=<span class="hljs-string">&quot;/home&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Studio home&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;blocks&quot;</span> /&gt;</span>
+        @if (!compact) { <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>Studio<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> }
+      <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxSideNavFooter</span> <span class="hljs-attr">let-compact</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;circle-user-round&quot;</span> /&gt;</span>
+      @if (!compact) { <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Alex \xB7 Workspace admin<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> }
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-nav</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span><span class="hljs-comment">&lt;!-- router outlet --&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
 <p>Use <code>display: flex; min-width: 0</code> on your shell and <code>flex: 1; min-width: 0</code> on its content. The component reserves its own desktop width; the host adjusts its flex order for the configured physical side, including RTL layouts. Mobile drawers reserve zero horizontal space. The built-in Blocks tonal hamburger is fixed at the configured edge and hides while the drawer is open, leaving one close action in its header; reserve room for it in your toolbar. For exact alignment with other toolbar actions, put an application-owned trigger in that toolbar\u2019s flex layout and disable the built-in trigger; bind its <code>aria-controls</code> to <code>navigation.panelId</code>. A custom trigger can call <code>navigation.open($event)</code>, <code>close()</code>, or <code>toggle($event)</code> with <code>showMobileTrigger: false</code>. Passing the click event or opening button ensures focus returns to it even in browsers that do not focus buttons on pointer activation.</p>
 <p>Header/footer slots use the modal pattern: directives register <code>ng-template</code> references with their containing component. <code>$implicit</code> and <code>collapsed</code> contain the effective compact presentation state; <code>mobile</code> identifies drawer presentation. Keep interactive projected content accessible and avoid fixed widths inside compact slots.</p>
 <h2>API</h2>
@@ -2226,7 +2128,7 @@ export const routes: Routes = [
 </tr>
 <tr>
 <td><code>showSearchGuide</code></td>
-<td><code>true</code>; external monochrome arrow for the best nested result only; reduced motion disables animation</td>
+<td>Deprecated compatibility option; ignored because search guides have been removed</td>
 </tr>
 <tr>
 <td><code>backLabel</code>, <code>pathLabel</code></td>
@@ -2303,18 +2205,6 @@ export const routes: Routes = [
 <td>Shared accent tonal surfaces; only the active route has the selected border</td>
 </tr>
 <tr>
-<td><code>--bx-side-nav-guide-color</code>, <code>--bx-side-nav-guide-background</code></td>
-<td>Theme text/surface tokens; monochrome by default</td>
-</tr>
-<tr>
-<td><code>--bx-side-nav-guide-width</code></td>
-<td><code>4rem</code>, constrained to the available space outside the panel</td>
-</tr>
-<tr>
-<td><code>--bx-side-nav-guide-duration</code></td>
-<td><code>2400ms</code>; reduced motion disables the pointing animation</td>
-</tr>
-<tr>
 <td><code>--bx-side-nav-item-gap</code></td>
 <td>Shared spacing 2 (<code>0.5rem</code>) between adjacent items</td>
 </tr>
@@ -2336,14 +2226,13 @@ export const routes: Routes = [
 </tr>
 </tbody></table>
 <p>Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and fragments do not clear selection. Only the most specific matching item receives the selected tonal background and border. For example, <code>/components/side-nav/overview</code> selects Side navigation rather than also selecting <code>/components</code>. Its owning section uses accent text without a second selected box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives <code>aria-current=&quot;page&quot;</code>.</p>
-<p>The navigation region is the panel&#39;s sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining space, aligned with header, search, and footer controls. Its scrollbar gutter and the flyouts&#39; gutters remain reserved when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.</p>
+<p>The navigation region is the panel&#39;s sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining space, aligned with header, search, and footer controls. Activating its search icon expands the rail and focuses the search field without scrolling the page. Its scrollbar gutter and the flyouts&#39; gutters remain reserved when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.</p>
 <p>The background and search use Blocks surfaces. Rows reuse their containing surface; the adjacent submenu panel is opaque, without backdrop filters. Theme inheritance keeps open overlays synchronized with their source. Standard semantic colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks.</p>
-<pre><code class="language-html">&lt;ng-template #item let-entry let-active=&quot;active&quot; let-compact=&quot;collapsed&quot;&gt;
-  &lt;bx-icon [name]=&quot;entry.icon?.name ?? &#39;circle&#39;&quot; /&gt;
-  @if (!compact) { &lt;span&gt;{{ entry.label }}&lt;/span&gt; }
-&lt;/ng-template&gt;
-&lt;bx-side-nav [itemTemplate]=&quot;item&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">item</span> <span class="hljs-attr">let-entry</span> <span class="hljs-attr">let-active</span>=<span class="hljs-string">&quot;active&quot;</span> <span class="hljs-attr">let-compact</span>=<span class="hljs-string">&quot;collapsed&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> [<span class="hljs-attr">name</span>]=<span class="hljs-string">&quot;entry.icon?.name ?? &#x27;circle&#x27;&quot;</span> /&gt;</span>
+  @if (!compact) { <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ entry.label }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> }
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-side-nav</span> [<span class="hljs-attr">itemTemplate</span>]=<span class="hljs-string">&quot;item&quot;</span> /&gt;</span></code></pre>
 <p>Item templates should contain presentation only. The surrounding control owns the accessible interaction; avoid nested links/buttons. Application-owned <code>groups</code> use stable unique item IDs and resolved section titles; item <code>data.label</code> and <code>data.keywords</code> may retain translation definitions. Update the groups input when application-owned data changes. The route access adapter applies to service-generated groups; callers supplying groups own their visibility decisions.</p>
 <h2>Behavior and accessibility</h2>
 <p>Every label remains a native route link. Its separate chevron opens children without navigating. The whole navigation chooses one submenu presentation, independent of branch depth:</p>
@@ -2352,31 +2241,245 @@ export const routes: Routes = [
 <li>Above that threshold, one opaque adjacent panel opens. All deeper levels replace the list in that same panel; further overlays never accumulate or overlap.</li>
 <li>Mobile drawers always browse inside the panel. <code>submenuMode: &#39;inline&#39;</code> forces this on desktop too; <code>submenuMode: &#39;flyout&#39;</code> is an explicit desktop override for previews or application layouts.</li>
 </ul>
-<p>Back and the parent path stay above the scrolling list. The current parent&#39;s heading is also a link to its own page. Returning to a level restores its scroll position and disclosure focus. Changing the available width preserves the browsing path; a compact rail temporarily expands when it needs to display inline levels without changing its saved collapse preference. Levels slide briefly on explicit browsing changes; reduced motion disables the slide. Opening a submenu requires a disclosure click, touch, or keyboard action; hovering a label no longer opens menus.</p>
-<p>Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It renders a flat list of direct matches with translated parent paths in the main navigation, with identical behavior in both presentations. Searching never opens submenus. Labels navigate directly; result disclosures leave search and browse the chosen item&#39;s children. Clearing search restores the previous browsing level and its scroll position. Search temporarily expands a compact rail without changing its saved preference. Search covers the currently supplied tree, not unloaded or remote results.</p>
-<p>The best nested result may show one elongated monochrome arrow beside the navigation surface, with its tip slightly overlapping the edge towards its row. It floats gently while pointing towards the item; reduced motion keeps it static. Top-level results never show a guide. Search and expanded ancestors do not add selection colors or outlines. The page link and its separate disclosure have independent hover and focus surfaces; selection belongs to the page link. <code>showSearchGuide: false</code> removes the arrow. The older <code>--bx-side-nav-item-highlight-background</code> has no effect now that search does not color rows.</p>
+<p>Back and the clickable ancestor path stay above the scrolling list. Each ancestor button opens that submenu panel without navigating to its page; the section button opens its root list. The current parent&#39;s heading is also a link to its own page. Returning to a level restores its scroll position and disclosure focus. Changing the available width preserves the browsing path; a compact rail temporarily expands when it needs to display inline levels without changing its saved collapse preference. Levels slide briefly on explicit browsing changes; reduced motion disables the slide. Opening a submenu requires a disclosure click, touch, or keyboard action; hovering a label no longer opens menus.</p>
+<p>Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It renders a flat list of direct matches with translated parent paths in the main navigation, with identical behavior in both presentations. Searching never opens submenus. Labels navigate directly; result disclosures leave search and browse the chosen item&#39;s children. After navigating to a search result, clearing search opens its containing submenu and scrolls that result into view, preserving search-field focus. Clearing without a successful selection restores the previous browsing level and its scroll position. Search temporarily expands a compact rail without changing its saved preference. Search covers the currently supplied tree, not unloaded or remote results.</p>
+<p>Search results use muted parent paths without floating arrows, extra selection colors, or outlines. The page link and its separate disclosure have independent hover and focus surfaces; selection belongs to the page link. The legacy <code>showSearchGuide</code> option is ignored, and the former guide CSS variables and <code>--bx-side-nav-item-highlight-background</code> no longer affect the component.</p>
 <p>Menus retain <code>menu</code>/<code>menuitem</code> semantics, accessible names, native links, and separate disclosure buttons. Enter/Space or the arrow towards the submenu opens children. Up/Down and Home/End move within the current menu. Back, Escape, or the opposite arrow returns one level, restoring scroll and focus; Escape at the root can dismiss the mobile drawer. Tab cycles inside the adjacent panel or mobile drawer. Clicking outside closes the adjacent panel.</p>
 <p>The adjacent panel reuses <code>MenuTriggerDirective</code>, native CSS anchoring, origin visibility tracking, theme inheritance, and the measured fallback used by Blocks dropdowns. Scrolling does not write overlay positions when native anchoring is available. The panel closes when its origin leaves its clipping container or the viewport. It honors <code>bxOverlayContext</code>; menus opened from dialogs or top-layer overlays retain that layer.</p>
-<pre><code class="language-html">&lt;!-- App-wide defaults can set the same options through defineNavigation(). --&gt;
-&lt;bx-side-nav [config]=&quot;{ submenuBreakpoint: &#39;xl&#39;, submenuMode: &#39;auto&#39;, backLabel: { key: &#39;nav.back&#39; } }&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- App-wide defaults can set the same options through defineNavigation(). --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-side-nav</span> [<span class="hljs-attr">config</span>]=<span class="hljs-string">&quot;{ submenuBreakpoint: &#x27;xl&#x27;, submenuMode: &#x27;auto&#x27;, backLabel: { key: &#x27;nav.back&#x27; } }&quot;</span> /&gt;</span></code></pre>
 <p>Fixed mobile navigation uses a labelled modal drawer with focus capture/trapping, scroll locking, a click-to-close scrim, a Blocks icon-only close button with hover feedback, and Escape dismissal. Closing restores the opening control&#39;s focus. A submenu consumes Escape before the drawer does. Resizing out of mobile mode closes the drawer and releases its lock. Browser-only persistence and measurement are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key changes, without cross-tab synchronization.</p>
-<p>For an inline mobile preview, use a positioned shell (<code>position: relative</code>) with a minimum height and <code>overflow: hidden</code>. Its drawer and scrim stay inside that shell and do not lock page scrolling. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested glass. Presentation changes establish the closed layout immediately; explicit open/close actions animate the slide. Reduced motion disables that animation.</p>
+<p>For an inline mobile preview, use a positioned shell (<code>position: relative</code>) with a minimum height and <code>overflow: hidden</code>. Its drawer and scrim stay inside that shell and do not lock page scrolling. Off-screen drawer content is clipped without creating a scroll container, and focus capture uses <code>preventScroll</code> to keep the surrounding content stationary during either slide direction. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested glass. Presentation changes establish the closed layout immediately; explicit open/close actions animate the slide. Reduced motion disables that animation.</p>
 <h2>Playground</h2>
-<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withNav</code> routes, an expanded text-only menu, its Blocks brand, and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional search, and a live English/Macedonian adapter covering every menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive navigation. Use the adjacent-panel control to compare the two desktop presentations. Try <code>dsgn tkns</code>, <code>palette</code>, or <code>\u0442\u043E\u043A\u0435\u043D\u0438</code> for flat contextual results, clear the search, and use the disclosures and Back control through all four levels.</p>
-`,"projects/blocks/navigation/components/side-nav/components/side-nav-branch/README.md":`<h1>Side-nav branch</h1>
-<p>Internal item presentation for <a href="components/side-nav">SideNav</a>. Consumers import <code>SideNav</code> from <code>@filip.mazev/blocks/navigation</code>; this implementation component is intentionally absent from the public barrel.</p>
-<p>The owning side-nav supplies translated item data, active-route state, and an optional item template through its scoped state service. Each row renders a native route link, Blocks tags, and a separate disclosure button. Click/touch, Enter/Space, or the forward arrow requests children from the owner. The owner chooses inline browsing or its one shared adjacent panel; rows never create recursive overlays.</p>
-<p>Search results include a muted parent path even with custom item templates. Only the best nested result may have an external elongated monochrome arrow, using the shared overlay origin tracker and a gentle floating animation. Reduced motion keeps it static. Root results have no guide, and search does not add selected colors or outlines. The page link and disclosure button have separate hover and focus surfaces; only the page link receives route selection. Compact alignment and disabled semantics remain independent.</p>
-<p>See <code>/components/side-nav</code> for the four-level fixture, compact presentation, inline/adjacent levels, mobile drawer, RTL, custom item content, and English/Macedonian labels.</p>
+<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withNav</code> routes, an expanded text-only menu, its Blocks brand, and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive navigation. Use the adjacent-panel control to compare the two desktop presentations. Try <code>dsgn tkns</code>, <code>palette</code>, <code>tokens</code>, or <code>Palette</code> for flat contextual results, clear the search, and use the disclosures and Back control through all four levels.</p>
+`,"projects/blocks/navigation/components/top-nav/README.md":`<h1>Top navigation</h1>
+<p>A responsive horizontal route navigation bar with brand/action slots, a compact menu, contextual search, and one shared panel for every nesting level. It uses the same route state, item views, Back behavior, search matching, focus/scroll bookmarks, and tonal styling as <code>SideNav</code>.</p>
+<h2>Public import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> {
+  <span class="hljs-title class_">TopNav</span>, <span class="hljs-title class_">TopNavBrandDirective</span>, <span class="hljs-title class_">TopNavActionsDirective</span>,
+  <span class="hljs-title class_">ITopNavConfig</span>, <span class="hljs-title class_">ITopNavSlotContext</span>, <span class="hljs-title class_">INavigationItemContext</span>,
+  defineNavigation, provideNavigation
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
+<p>Import the component and any slot directives used by your standalone shell. Root links come from <code>NavigationService.menuTreeGroups()</code> unless the optional <code>groups</code> input is supplied. An explicit empty array omits the primary menu control while preserving brand/actions; with search disabled this also serves as a toolbar shell.</p>
+<h2>Working usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Component</span>, signal } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">RouterLink</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/router&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">TopNav</span>, <span class="hljs-title class_">TopNavBrandDirective</span>, <span class="hljs-title class_">TopNavActionsDirective</span>, <span class="hljs-title class_">ITopNavConfig</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+  <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-header&#x27;</span>,
+  <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">RouterLink</span>, <span class="hljs-title class_">TopNav</span>, <span class="hljs-title class_">TopNavBrandDirective</span>, <span class="hljs-title class_">TopNavActionsDirective</span>, <span class="hljs-title class_">Button</span>],
+  <span class="hljs-attr">template</span>: <span class="hljs-string">\`
+    &lt;bx-top-nav [config]=&quot;config&quot; [(opened)]=&quot;menuOpen&quot;&gt;
+      &lt;ng-template bxTopNavBrand let-compact&gt;
+        &lt;a routerLink=&quot;/home&quot;&gt;Studio&lt;/a&gt;
+      &lt;/ng-template&gt;
+      &lt;ng-template bxTopNavActions&gt;
+        &lt;a bx-button variant=&quot;tonal&quot; color=&quot;grayscale&quot; routerLink=&quot;/settings&quot;&gt;Settings&lt;/a&gt;
+      &lt;/ng-template&gt;
+    &lt;/bx-top-nav&gt;
+  \`</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Header</span> {
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> menuOpen = <span class="hljs-title function_">signal</span>(<span class="hljs-literal">false</span>);
+  <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">config</span>: <span class="hljs-title class_">ITopNavConfig</span> = { <span class="hljs-attr">compactBreakpoint</span>: <span class="hljs-string">&#x27;lg&#x27;</span>, <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;sticky&#x27;</span> };
+}</code></pre>
+<p>Declare the same route metadata used by side navigation and breadcrumbs:</p>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">const</span> navigation = <span class="hljs-title function_">defineNavigation</span>({
+  <span class="hljs-attr">sections</span>: [{ <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;workspace&#x27;</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;Workspace&#x27;</span> }],
+  <span class="hljs-attr">topNav</span>: { <span class="hljs-attr">searchable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">ariaLabel</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;navigation.primary&#x27;</span> } }
+});
+<span class="hljs-keyword">const</span> { withNav } = navigation;
+<span class="hljs-keyword">const</span> routes = [
+  <span class="hljs-title function_">withNav</span>({ <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;projects&#x27;</span>, <span class="hljs-attr">children</span>: [
+    <span class="hljs-title function_">withNav</span>({ <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;tokens&#x27;</span>, <span class="hljs-attr">loadComponent</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;./tokens&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">m</span> =&gt;</span> m.<span class="hljs-property">Tokens</span>) },
+      { <span class="hljs-attr">label</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;navigation.tokens&#x27;</span> }, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;swatch-book&#x27;</span> } })
+  ] }, { <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Projects&#x27;</span>, <span class="hljs-attr">section</span>: <span class="hljs-string">&#x27;workspace&#x27;</span>, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;folder&#x27;</span> } })
+];
+<span class="hljs-comment">// Application providers: provideRouter(routes), ...provideNavigation(navigation.config)</span></code></pre>
+<p>A parent label always navigates to the parent&#39;s own route. Its separate chevron opens children without navigating. Declare an empty child route if the parent URL should render its own page. Parameterized menu destinations still require concrete application-owned entries; navigation does not invent parameter values.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input/model/output/method</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>config</code></td>
+<td>Optional <code>ITopNavConfig</code>; instance settings override <code>provideNavigation().topNav</code>, then library defaults</td>
+</tr>
+<tr>
+<td><code>groups</code></td>
+<td>Optional readonly <code>INavigationTreeGroup[]</code>; otherwise hierarchical route sections from <code>NavigationService</code></td>
+</tr>
+<tr>
+<td><code>itemTemplate</code></td>
+<td>Optional <code>TemplateRef&lt;INavigationItemContext&gt;</code> inside the managed page link/button; search paths remain visible</td>
+</tr>
+<tr>
+<td><code>opened</code> / <code>openedChange</code></td>
+<td>Two-way panel state, initially false, never persisted</td>
+</tr>
+<tr>
+<td><code>itemSelected</code></td>
+<td>The selected resolved <code>INavigationItem</code>; selecting a page closes the panel</td>
+</tr>
+<tr>
+<td><code>isCompact()</code>, <code>query()</code></td>
+<td>Readonly resolved presentation and current search query</td>
+</tr>
+<tr>
+<td><code>panelId</code></td>
+<td>Stable panel ID for an application-owned trigger&#39;s <code>aria-controls</code></td>
+</tr>
+<tr>
+<td><code>open(origin?, focusSearch?)</code></td>
+<td>Open the panel; pass a click event/element for positioning and focus return; the second argument optionally focuses search</td>
+</tr>
+<tr>
+<td><code>close(restoreFocus?)</code></td>
+<td>Close the panel; defaults to restoring the opening control&#39;s focus</td>
+</tr>
+<tr>
+<td><code>toggle(origin?)</code></td>
+<td>Toggle the panel from an optional click event or element</td>
+</tr>
+<tr>
+<td><code>search(query)</code></td>
+<td>Search programmatically, opening the panel if necessary; an empty query restores browsing</td>
+</tr>
+</tbody></table>
+<p><code>ITopNavConfig</code> options are optional:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default / behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>position</code>, <code>top</code></td>
+<td><code>&#39;sticky&#39;</code>, <code>&#39;0px&#39;</code>; <code>&#39;inline&#39;</code> leaves positioning to the containing layout</td>
+</tr>
+<tr>
+<td><code>compactBreakpoint</code></td>
+<td>Shared <code>&#39;lg&#39;</code> breakpoint, applied to both the viewport and the bar&#39;s available width</td>
+</tr>
+<tr>
+<td><code>compact</code></td>
+<td>Unset for automatic presentation; true forces compact, false bypasses the breakpoint. Content that does not fit always uses compact navigation</td>
+</tr>
+<tr>
+<td><code>panelWidth</code>, <code>panelMaxHeight</code></td>
+<td><code>&#39;24rem&#39;</code>, <code>&#39;32rem&#39;</code>; viewport constraints and the available space above/below the trigger take precedence</td>
+</tr>
+<tr>
+<td><code>searchable</code></td>
+<td><code>true</code>; the toolbar search button opens the same shared panel</td>
+</tr>
+<tr>
+<td><code>showItemIcons</code>, <code>showSectionIcons</code></td>
+<td><code>false</code>, <code>false</code>; optional leading item icons and panel section icons</td>
+</tr>
+<tr>
+<td><code>showSearchGuide</code></td>
+<td>Deprecated compatibility option; ignored because search guides have been removed</td>
+</tr>
+<tr>
+<td><code>ariaLabel</code></td>
+<td><code>&#39;Main navigation&#39;</code></td>
+</tr>
+<tr>
+<td><code>searchPlaceholder</code>, <code>searchLabel</code>, <code>clearSearchLabel</code></td>
+<td><code>&#39;Search navigation\u2026&#39;</code>, <code>&#39;Search navigation&#39;</code>, <code>&#39;Clear search&#39;</code></td>
+</tr>
+<tr>
+<td><code>openLabel</code>, <code>closeLabel</code></td>
+<td><code>&#39;Open navigation&#39;</code>, <code>&#39;Close navigation&#39;</code></td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>&#39;No matching pages.&#39;</code></td>
+</tr>
+<tr>
+<td><code>submenuLabel</code>, <code>resultLabel</code></td>
+<td><code>&#39;Open submenu&#39;</code>, <code>&#39;Search result&#39;</code></td>
+</tr>
+<tr>
+<td><code>backLabel</code>, <code>pathLabel</code></td>
+<td><code>&#39;Back&#39;</code>, <code>&#39;Navigation path&#39;</code></td>
+</tr>
+</tbody></table>
+<p>All configurable text accepts <code>ResolvableText</code>. <code>BX_I18N</code> is optional; strings work without it, missing adapters fall back to translation keys, and an adapter version signal refreshes mounted labels, badges, keywords, action names, and paths. Section titles supplied by application-owned <code>groups</code> are resolved strings, so update that input when the language changes. The playground shares one live language adapter between its fixtures and navigation.</p>
+<p><code>bxTopNavBrand</code> and <code>bxTopNavActions</code> register templates with their owner. Their <code>ITopNavSlotContext</code> contains <code>$implicit</code>/<code>compact</code> and <code>open</code>. Both slots remain available in compact presentation. Keep projected controls responsive and provide accessible names for icon-only actions.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">item</span> <span class="hljs-attr">let-entry</span> <span class="hljs-attr">let-active</span>=<span class="hljs-string">&quot;active&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ entry.label }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  @if (active) { <span class="hljs-tag">&lt;<span class="hljs-name">small</span> <span class="hljs-attr">aria-hidden</span>=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>\u2713<span class="hljs-tag">&lt;/<span class="hljs-name">small</span>&gt;</span> }
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-top-nav</span> [<span class="hljs-attr">itemTemplate</span>]=<span class="hljs-string">&quot;item&quot;</span> /&gt;</span></code></pre>
+<p>Custom item content is presentation only; do not place nested links/buttons inside it. Native links preserve modified-click and open-in-new-tab behavior. Supplying new <code>groups</code> arrays updates mounted navigation without a transport dependency; applications own loading, access policy, and request lifecycle for custom trees. Service-generated groups retain the existing route visibility/access adapter contracts.</p>
+<h2>Appearance and customization</h2>
+<p>The bar uses the shared Blocks surface. Its panel is an opaque menu surface with semantic colors and theme inheritance. It intentionally uses no nested backdrop filter. Keep the component outside another <code>bxSurface</code> when demonstrating bar blur, since Blocks suppresses nested glass passes.</p>
+<table>
+<thead>
+<tr>
+<th>CSS variable</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bx-top-nav-top</code></td>
+<td>Resolved sticky offset</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-panel-width</code>, <code>--bx-top-nav-panel-max-height</code></td>
+<td>Resolved width/height settings</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-height</code>, <code>--bx-top-nav-gap</code></td>
+<td><code>3.75rem</code> minimum height and shared spacing 2 between bar regions</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-padding-inline</code>, <code>--bx-top-nav-padding-block</code></td>
+<td>Shared spacing 3 and spacing 2</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-radius</code></td>
+<td>Shared medium radius</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-item-radius</code>, <code>--bx-top-nav-item-gap</code></td>
+<td>Shared medium radius, spacing 2</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-item-background</code></td>
+<td>Transparent</td>
+</tr>
+<tr>
+<td><code>--bx-top-nav-item-hover-background</code>, <code>--bx-top-nav-item-active-background</code></td>
+<td>Shared accent tonal surface</td>
+</tr>
+</tbody></table>
+<p>Only the most specific matching route gets selected styling. Query parameters, matrix parameters, fragments, and redirect URLs do not produce multiple selected routes. A horizontal ancestor may use accent text for context without acquiring the selected box. Section headings in the panel likewise use accent text. Page links and disclosures have independent hover and focus surfaces.</p>
+<h2>Behavior and accessibility</h2>
+<p>The bar measures its primary links and remaining space after brand/actions. It switches to the compact menu at the configured breakpoint or whenever content does not fit, including changes from translation, slot content, fonts, resizing, and browser zoom. Links are not left hidden behind an essential horizontal scrollbar. A compact slot that shrinks its brand/actions does not cause repeated expand/collapse feedback.</p>
+<p>Both presentations use one dropdown panel. The first disclosure opens it below the bar using <code>MenuTriggerDirective</code> and the existing overlay context. Further disclosures replace its list; recursive overlays never accumulate. Back and the clickable ancestor path remain above the scrolling list. Ancestor buttons open their submenu panels without navigating to their pages, and the parent&#39;s heading remains a route link. Back restores the previous list&#39;s scroll and disclosure focus. The browsing path survives presentation changes; the panel can reattach to the compact control when its former origin disappears.</p>
+<p>Search always renders flat direct matches with muted parent paths. It does not open nested panels or color ancestors as selected. After navigating to a result, clearing search opens its containing submenu and scrolls the selected row into view while retaining search-field focus. Without a successful selection it restores the prior browsing location and scroll position. A result label navigates directly; its disclosure leaves search and browses the result&#39;s children. Search results have no floating guides; the legacy <code>showSearchGuide</code> option is ignored and the former guide CSS variables no longer affect the component.</p>
+<p>Horizontal links use a menubar with one tab stop, Left/Right movement respecting RTL, Home/End, and Down to open a parent&#39;s submenu. The panel uses native links and menu semantics; Up/Down and Home/End navigate a list. Back, Escape, or the opposite arrow returns one nested level. Escape at the panel root or its close action dismisses it and restores the opening control. Tab stays inside the open panel; outside clicks and route changes close it. Focus return uses <code>preventScroll</code>.</p>
+<p>The panel is nonmodal: it does not lock page scrolling. Shared native CSS anchoring follows scrolling and closes a panel whose origin becomes clipped/offscreen. The bar&#39;s overlay context supports sticky headers and top-layer surfaces; theme, palette, opaque appearance, forced colors, and accessibility changes update mounted controls and overlays. Resize/direction observers, subscriptions, focus traps, and overlays clean up with their owners. Browser measurements are deferred until rendering and guarded for SSR.</p>
+<h2>Playground</h2>
+<p>Visit <code>/components/top-nav</code> (redirects to <code>/components/top-nav/overview</code>). The demo uses the same four-level fixture, keywords, tags, disabled item, and language dropdown with English, Spanish, French, and German translations as side navigation. Page links stay on the top-nav demo route family, so route highlighting and selection feedback remain observable.</p>
+<p>Change preview width, force compact, add action controls, toggle icons/RTL/custom templates/sticky presentation, and switch languages. The preview uses the shared <code>sm</code> breakpoint so both presentations can be exercised within the documentation layout; library defaults remain <code>lg</code>. Try <code>dsgn tkns</code>, <code>palette</code>, <code>tokens</code>, or <code>Palette</code>, enter several levels, and use Back or clear search to inspect context and restoration. Appearance controls in the application toolbar apply to this component and its open panel.</p>
+<p>The playground application&#39;s own toolbar also uses <code>TopNav</code>: it supplies an empty <code>groups</code> array and disables search to retain the existing sidenav as the sole primary navigation. The sidenav trigger lives in the brand slot; Appearance, palette, and theme-mode controls live in the actions slot. Their dropdowns retain the existing overlay context.</p>
 `,"projects/blocks/primitives/components/loading-indicator/README.md":`<h1>Loading indicator</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { LoadingIndicator } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">LoadingIndicator</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-loading-indicator label=&quot;Fetching results&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-loading-indicator</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Fetching results&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>label</code> accepts translated text; <code>size</code> controls its decorative spinner. The host is a polite busy status region. Project optional supporting content after the status text. CSS variables: <code>--bx-loading-color</code>, <code>--bx-loading-gap</code>.</p>
 <h2>Appearance and accessibility</h2>
@@ -2387,11 +2490,9 @@ export const routes: Routes = [
 `,"projects/blocks/primitives/components/loading-spinner/README.md":`<h1>Loading spinner</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { LoadingSpinner } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">LoadingSpinner</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-loading-spinner label=&quot;Fetching results&quot; [size]=&quot;24&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-loading-spinner</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Fetching results&quot;</span> [<span class="hljs-attr">size</span>]=<span class="hljs-string">&quot;24&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>size</code> is the diameter in pixels (20 by default). <code>label</code> is translatable. <code>decorative</code> defaults to false; set it to true when surrounding content already names the operation. CSS variables: <code>--bx-spinner-color</code>, <code>--bx-spinner-stroke</code>, <code>--bx-spinner-size</code>.</p>
 <h2>Appearance and accessibility</h2>
@@ -2402,26 +2503,23 @@ export const routes: Routes = [
 `,"projects/blocks/primitives/components/menu-item/README.md":`<h1>Menu item</h1>
 <p>A menu action with optional icons, a shortcut hint, and destructive intent.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">MenuItem</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-menu-item label=&quot;Delete&quot; icon=&quot;trash-2&quot; [danger]=&quot;true&quot; (action)=&quot;remove()&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Delete&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;trash-2&quot;</span> [<span class="hljs-attr">danger</span>]=<span class="hljs-string">&quot;true&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;remove()&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>label</code>, <code>icon</code>, <code>endIcon</code>, <code>shortcut</code>, <code>disabled</code>, <code>danger</code>, and <code>wrapLabel</code>. Set <code>wrapLabel</code> to <code>true</code> when a menu item should wrap long content instead of truncating it. <code>action</code> emits the mouse event for enabled items. Clipped labels and projected text use the shared <code>TruncateDirective</code> and receive an automatic tooltip. <code>[tooltipOnTruncate]=&quot;false&quot;</code> disables that tooltip while retaining ellipsis, allowing application-owned feedback. <code>wrapLabel</code> disables truncation itself.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use <code>action</code> for activation and <code>disabled</code> for unavailable commands. Shortcut hints describe a binding; registering the actual shortcut remains the application\u2019s responsibility.</p>
@@ -2430,15 +2528,13 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/components/menu/README.md":`<h1>Menu</h1>
 <p>A shared surface for related menu actions.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Menu</span>, <span class="hljs-title class_">MenuItem</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-menu&gt;
-  &lt;bx-menu-item label=&quot;Duplicate&quot; icon=&quot;copy&quot; (action)=&quot;duplicate()&quot; /&gt;
-  &lt;bx-menu-item label=&quot;Archive&quot; icon=&quot;archive&quot; (action)=&quot;archive()&quot; /&gt;
-&lt;/bx-menu&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Duplicate&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;copy&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;duplicate()&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Archive&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;archive&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;archive()&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>Menu</code> projects its children and provides the menu surface. Use <code>MenuItem</code> for consistent action styling. Place it in <code>bxDropdown</code> for positioned dismissal and keyboard behavior.</p>
 <h2>Appearance</h2>
@@ -2451,11 +2547,9 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/components/progress-bar/README.md":`<h1>Progress bar</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ProgressBar } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ProgressBar</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-progress-bar label=&quot;Upload progress&quot; [value]=&quot;progress()&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-progress-bar</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Upload progress&quot;</span> [<span class="hljs-attr">value</span>]=<span class="hljs-string">&quot;progress()&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>mode</code> supports <code>determinate</code>, <code>indeterminate</code>, <code>buffer</code>, and <code>query</code>. <code>value</code> and <code>bufferValue</code> are clamped to 0\u2013100. Unknown progress omits <code>aria-valuenow</code>. <code>label</code> accepts translations. CSS variables: <code>--bx-progress-color</code>, <code>--bx-progress-track</code>, <code>--bx-progress-height</code>, <code>--bx-progress-radius</code>.</p>
 <h2>Appearance and accessibility</h2>
@@ -2465,17 +2559,15 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Open <code>/components/progress-bar</code>. Fake asynchronous requests demonstrate progress and loading buttons. Reduced-motion preferences remove continuous animation while preserving status feedback.</p>
 `,"projects/blocks/primitives/components/tab/README.md":`<h1>Tab</h1>
 <p>Declares a labelled panel inside <a href="components/tabs"><code>Tabs</code></a>.</p>
-<pre><code class="language-ts">import { Tabs, Tab, TabContentDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
-<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Project details&quot;&gt;
-  &lt;bx-tab label=&quot;Overview&quot; value=&quot;overview&quot;&gt;
-    &lt;ng-template bxTabContent&gt;&lt;app-overview /&gt;&lt;/ng-template&gt;
-  &lt;/bx-tab&gt;
-  &lt;bx-tab label=&quot;Activity&quot; value=&quot;activity&quot; [disabled]=&quot;loading()&quot;&gt;
-    &lt;ng-template bxTabContent&gt;&lt;app-activity /&gt;&lt;/ng-template&gt;
-  &lt;/bx-tab&gt;
-&lt;/bx-tabs&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tabs</span>, <span class="hljs-title class_">Tab</span>, <span class="hljs-title class_">TabContentDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tabs</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Project details&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Overview&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;overview&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxTabContent</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">app-overview</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Activity&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;activity&quot;</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">&quot;loading()&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxTabContent</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">app-activity</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-tabs</span>&gt;</span></code></pre>
 <p><code>label</code> is required and accepts <code>ResolvableText</code>. <code>value</code> identifies selection and must be unique within its group; an omitted value is generated. <code>disabled</code> removes the tab from selection and arrow-key navigation.</p>
 <p><code>color</code> chooses a semantic palette role: <code>primary</code>, <code>accent</code>, <code>success</code>, <code>danger</code>, <code>info</code>, <code>warn</code>, or <code>grayscale</code>. The <code>accent</code> role follows the second tone of the active palette. <code>textColor</code>, <code>highlightColor</code> and <code>contentColor</code> accept Blocks color tokens for the label, selected highlight/light and panel text. <code>icon</code> and <code>endIcon</code> add leading and trailing Blocks icons.</p>
 <p>Use direct content for simple panels, or <code>ng-template bxTabContent</code> to create the contents only while selected. The Tabs component renders the header and accessible panel; <code>bx-tab</code> is the projected declaration.</p>
@@ -2483,24 +2575,22 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/components/tabs/README.md":`<h1>Tabs</h1>
 <p>Switch between related panels with themed segmented or underline tabs.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Tabs, Tab, TabContentDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tabs</span>, <span class="hljs-title class_">Tab</span>, <span class="hljs-title class_">TabContentDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add these standalone declarations to the consuming component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Project information&quot; [(selectedValue)]=&quot;selectedTab&quot;&gt;
-  &lt;bx-tab label=&quot;Documentation&quot; value=&quot;documentation&quot;&gt;
-    &lt;ng-template bxTabContent&gt;
-      &lt;app-documentation /&gt;
-    &lt;/ng-template&gt;
-  &lt;/bx-tab&gt;
-  &lt;bx-tab label=&quot;Code Examples&quot; value=&quot;code&quot; color=&quot;accent&quot;&gt;
-    &lt;ng-template bxTabContent&gt;
-      &lt;app-examples /&gt;
-    &lt;/ng-template&gt;
-  &lt;/bx-tab&gt;
-  &lt;bx-tab label=&quot;Unavailable&quot; value=&quot;unavailable&quot; [disabled]=&quot;true&quot; /&gt;
-&lt;/bx-tabs&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tabs</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Project information&quot;</span> [(<span class="hljs-attr">selectedValue</span>)]=<span class="hljs-string">&quot;selectedTab&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Documentation&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;documentation&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxTabContent</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">app-documentation</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Code Examples&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;code&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;accent&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxTabContent</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">app-examples</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Unavailable&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;unavailable&quot;</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">&quot;true&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-tabs</span>&gt;</span></code></pre>
 <p>Initialize <code>selectedTab</code> to a tab&#39;s value or <code>null</code> to select the first enabled tab. Values must be unique within a group. Omitted values receive generated identifiers.</p>
 <p>Use <code>variant=&quot;underline&quot;</code> for file tabs or a full-width navigation strip. The default <code>segmented</code> variant groups the controls in a compact material.</p>
 <h2>API</h2>
@@ -2585,25 +2675,23 @@ this.theme.setAppearance({ reducedTransparency: true });
 </tbody></table>
 <p>Labels accept strings or <code>{ key: &#39;translation.key&#39; }</code> using <code>BX_I18N</code>. Removing or disabling the selected tab selects the first enabled tab. An empty or fully disabled group has no selected panel and a <code>null</code> model.</p>
 <h2>Per-tab colors and icons</h2>
-<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Workspace&quot;&gt;
-  &lt;bx-tab label=&quot;Overview&quot; icon=&quot;house&quot; color=&quot;primary&quot;&gt;Overview content.&lt;/bx-tab&gt;
-  &lt;bx-tab label=&quot;Checks&quot; icon=&quot;badge-check&quot; endIcon=&quot;chevron-right&quot; color=&quot;success&quot;&gt;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tabs</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Workspace&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Overview&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;house&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;primary&quot;</span>&gt;</span>Overview content.<span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Checks&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;badge-check&quot;</span> <span class="hljs-attr">endIcon</span>=<span class="hljs-string">&quot;chevron-right&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;success&quot;</span>&gt;</span>
     All checks passed.
-  &lt;/bx-tab&gt;
-  &lt;bx-tab label=&quot;Activity&quot; icon=&quot;activity&quot; color=&quot;info&quot;
-    textColor=&quot;text-warn&quot; highlightColor=&quot;text-warn&quot; contentColor=&quot;text-info&quot;&gt;
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Activity&quot;</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">&quot;activity&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;info&quot;</span>
+    <span class="hljs-attr">textColor</span>=<span class="hljs-string">&quot;text-warn&quot;</span> <span class="hljs-attr">highlightColor</span>=<span class="hljs-string">&quot;text-warn&quot;</span> <span class="hljs-attr">contentColor</span>=<span class="hljs-string">&quot;text-info&quot;</span>&gt;</span>
     Recent activity.
-  &lt;/bx-tab&gt;
-&lt;/bx-tabs&gt;
-</code></pre>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-tabs</span>&gt;</span></code></pre>
 <p>Color overrides use the existing Blocks <code>Color</code> tokens, including semantic tokens such as <code>text-success</code> and palette tokens such as <code>purple-500</code>. Tokens follow the active theme. <code>textColor</code> styles the header in both selected and inactive states; <code>contentColor</code> supplies an inherited panel color without overriding projected components&#39; own semantic styles. Icons are decorative and inherit the header&#39;s text color. Their leading/trailing placement follows the text direction.</p>
 <h2>Content lifecycle</h2>
 <p>Direct content is supported for simple panels:</p>
-<pre><code class="language-html">&lt;bx-tabs ariaLabel=&quot;Project details&quot;&gt;
-  &lt;bx-tab label=&quot;Overview&quot;&gt;&lt;p&gt;Project overview.&lt;/p&gt;&lt;/bx-tab&gt;
-  &lt;bx-tab label=&quot;Activity&quot;&gt;&lt;p&gt;Recent updates.&lt;/p&gt;&lt;/bx-tab&gt;
-&lt;/bx-tabs&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tabs</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Project details&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Overview&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Project overview.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-tab</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Activity&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Recent updates.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-tab</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-tabs</span>&gt;</span></code></pre>
 <p>Angular constructs directly projected components eagerly. Use <code>ng-template bxTabContent</code> for lazy documentation, syntax highlighting or other work that should run only for the selected panel. Panel-local state is recreated when revisiting a lazy panel; keep persistent state in the consuming component or a service.</p>
 <h2>Appearance</h2>
 <p>Tabs use Blocks semantic colors, spacing, radius, focus and surface effects. The shared glass header remains transmissive, while the selected tab has a translucent tint and emits a restrained amount of its highlight color into nearby surfaces. The default highlight follows the primary palette role. Use <code>color=&quot;accent&quot;</code> for the second tone, such as supporting Code Examples navigation. The initial render uses the same glass styling before the runtime mounts, and transitions apply to later interactions. Appearance settings and reduced motion follow <code>ThemingService</code> and <code>BxA11yService</code>, like other primitives. Forced colors use a visible selected outline.</p>
@@ -2616,16 +2704,14 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/components/tag/README.md":`<h1>Tag</h1>
 <p>Informational labels with semantic colors, tonal/filled/outlined variants, optional icons and counts, disabled presentation, and accessible tooltips. Tags do not imply a button or selection action.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Tag, ITagConfig, TagColor, TagVariant } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tag</span>, <span class="hljs-title class_">ITagConfig</span>, <span class="hljs-title class_">TagColor</span>, <span class="hljs-title class_">TagVariant</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-tag [text]=&quot;{ key: &#39;locations.skopje&#39; }&quot; color=&quot;accent&quot; variant=&quot;tonal&quot;
-  leadingIcon=&quot;map-pin&quot; trailingIcon=&quot;chevron-right&quot; [trailingNumber]=&quot;12&quot;
-  [tooltip]=&quot;{ key: &#39;locations.description&#39; }&quot; /&gt;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tag</span> [<span class="hljs-attr">text</span>]=<span class="hljs-string">&quot;{ key: &#x27;locations.skopje&#x27; }&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;accent&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;tonal&quot;</span>
+  <span class="hljs-attr">leadingIcon</span>=<span class="hljs-string">&quot;map-pin&quot;</span> <span class="hljs-attr">trailingIcon</span>=<span class="hljs-string">&quot;chevron-right&quot;</span> [<span class="hljs-attr">trailingNumber</span>]=<span class="hljs-string">&quot;12&quot;</span>
+  [<span class="hljs-attr">tooltip</span>]=<span class="hljs-string">&quot;{ key: &#x27;locations.description&#x27; }&quot;</span> /&gt;</span>
 
-&lt;bx-tag [leadingNumber]=&quot;42&quot; color=&quot;info&quot; variant=&quot;filled&quot; ariaLabel=&quot;42 locations&quot; /&gt;
-&lt;bx-tag text=&quot;Skopje&quot; /&gt;&lt;bx-tag text=&quot;+2&quot; tooltip=&quot;Ohrid, Bitola&quot; /&gt;
-</code></pre>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-tag</span> [<span class="hljs-attr">leadingNumber</span>]=<span class="hljs-string">&quot;42&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;info&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;filled&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;42 locations&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-tag</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;Skopje&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-tag</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;+2&quot;</span> <span class="hljs-attr">tooltip</span>=<span class="hljs-string">&quot;Ohrid, Bitola&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>text</code>, <code>tooltip</code>, and <code>ariaLabel</code> accept <code>ResolvableText</code>. <code>color</code> selects primary, accent, success, danger, info, warn or neutral. <code>variant</code> is tonal (default), filled or outlined. <code>size</code> is small or medium. <code>disabled</code> changes the visual/accessible presentation without inventing an action.</p>
 <p><code>leadingIcon</code>, <code>trailingIcon</code>, and <code>iconSize</code> configure decorative icons. <code>leadingNumber</code> and <code>trailingNumber</code> accept numbers, strings such as <code>+2</code>, or null to hide a count. Omit text for a number-only tag. Numeric values use <code>Intl.NumberFormat</code> with the optional <code>locale</code>; strings retain their prefixes.</p>
@@ -2641,31 +2727,28 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Select and multiselect support <code>selectionDisplay=&quot;tags&quot;</code>. <code>tagConfig</code> sets shared tag appearance, and option <code>tagConfig</code> provides per-value overrides. <code>visibleTagCount</code> defaults to one and is clamped to at least one. Remaining values become an overflow tag such as <code>+2</code>, with their translated names in its tooltip. <code>tagOverflowText</code> and <code>overflowTagConfig</code> customize that tag.</p>
 <p>The parent combobox exposes the complete selection for keyboard users; embedded tags do not introduce nested tab stops or actions. Multiselect&#39;s <code>allSelectedText</code> still takes precedence when select-all intent is active.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/tag</code> for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, translations, and resizable conditional tooltips. <code>/components/truncate</code> demonstrates the shared directive directly. <code>/components/multi-select</code> includes selected-tag mode, visible-tag limits, and a Skopje +2 style overflow example.</p>
+<p>Open <code>/components/tag</code> for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, an English/Spanish/French/German translation dropdown, and resizable conditional tooltips. <code>/components/truncate</code> demonstrates the shared directive directly. <code>/components/multi-select</code> includes selected-tag mode, visible-tag limits, and a Skopje +2 style overflow example.</p>
 `,"projects/blocks/primitives/components/tooltip/README.md":`<h1>Tooltip</h1>
 <p>A short descriptive surface for supplementary help.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { Tooltip } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tooltip</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;bx-tooltip text=&quot;Changes are saved automatically.&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tooltip</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;Changes are saved automatically.&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>text</code> is required and accepts plain text or a translation key object. For automatic positioning and trigger handling, use <code>TooltipDirective</code> instead.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Tooltips retain their neutral, opaque background while nearby emissive colors add a restrained, directional highlight to the facing border. The arrow shares the body&#39;s background and samples the lighting on its side of the bubble. Positioned tooltips receive light from their trigger&#39;s context, including inside dialogs, while remaining transparent to pointer events. The overview&#39;s wake-up hint and Bring home action include explanatory tooltips. The hint fades without changing the layout and appears only while the orb is asleep in its pod.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Do not put essential instructions only in a tooltip. Direct use requires the application to supply positioning, visibility and a relationship to its trigger. Prefer the directive for interactive pages.</p>
@@ -2674,23 +2757,20 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/directives/context-menu/README.md":`<h1>Context menu</h1>
 <p>A menu positioned at a context action\u2019s coordinates.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { BxOverlayContextDirective, ContextMenuDirective, Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxOverlayContextDirective</span>, <span class="hljs-title class_">ContextMenuDirective</span>, <span class="hljs-title class_">Menu</span>, <span class="hljs-title class_">MenuItem</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;div [bxContextMenu]=&quot;actions&quot; tabindex=&quot;0&quot;&gt;Right-click or touch and hold here&lt;/div&gt;
-&lt;ng-template #actions&gt;&lt;bx-menu&gt;&lt;bx-menu-item label=&quot;Copy&quot; (action)=&quot;copy()&quot; /&gt;&lt;/bx-menu&gt;&lt;/ng-template&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">bxContextMenu</span>]=<span class="hljs-string">&quot;actions&quot;</span> <span class="hljs-attr">tabindex</span>=<span class="hljs-string">&quot;0&quot;</span>&gt;</span>Right-click or touch and hold here<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">actions</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Copy&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;copy()&quot;</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>bxContextMenu</code> requires a TemplateRef. <code>open(event: MouseEvent)</code> positions the menu at the event coordinates.</p>
 <p><code>bxContextMenuLongPress</code> defaults to <code>true</code>. Set it to <code>false</code> on targets where native touch selection or another hold gesture should take precedence. Mouse and keyboard activation remain available.</p>
 <h2>Overlay placement</h2>
 <p>Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:</p>
-<pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
-  &lt;button [bxDropdown]=&quot;actions&quot;&gt;Actions&lt;/button&gt;
-  &lt;div [bxContextMenu]=&quot;actions&quot;&gt;More actions&lt;/div&gt;
-&lt;/header&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">header</span> [<span class="hljs-attr">bxOverlayContext</span>]=<span class="hljs-string">&quot;{ useTopLayer: true }&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> [<span class="hljs-attr">bxDropdown</span>]=<span class="hljs-string">&quot;actions&quot;</span>&gt;</span>Actions<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> [<span class="hljs-attr">bxContextMenu</span>]=<span class="hljs-string">&quot;actions&quot;</span>&gt;</span>More actions<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span></code></pre>
 <p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
 <h2>Appearance</h2>
 <p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Row effects retain their application appearance settings.</p>
@@ -2704,23 +2784,20 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/directives/dropdown/README.md":`<h1>Dropdown</h1>
 <p>A positioned menu that fades in and out without resizing its contents.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { BxOverlayContextDirective, DropdownDirective, Menu, MenuItem } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxOverlayContextDirective</span>, <span class="hljs-title class_">DropdownDirective</span>, <span class="hljs-title class_">Menu</span>, <span class="hljs-title class_">MenuItem</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;button bx-button [bxDropdown]=&quot;actions&quot; bxTransition=&quot;fade&quot;&gt;Actions&lt;/button&gt;
-&lt;ng-template #actions&gt;
-  &lt;bx-menu&gt;&lt;bx-menu-item label=&quot;Save&quot; (action)=&quot;save()&quot; /&gt;&lt;/bx-menu&gt;
-&lt;/ng-template&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> [<span class="hljs-attr">bxDropdown</span>]=<span class="hljs-string">&quot;actions&quot;</span> <span class="hljs-attr">bxTransition</span>=<span class="hljs-string">&quot;fade&quot;</span>&gt;</span>Actions<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">actions</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Save&quot;</span> (<span class="hljs-attr">action</span>)=<span class="hljs-string">&quot;save()&quot;</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>bxDropdown</code>: required TemplateRef. <code>placement</code>: overlay placement. <code>bxTransition</code>: fade (default) or none; emerge remains a compatibility alias for fade. Export as <code>bxDropdown</code>; call <code>open()</code>, <code>close()</code>, or <code>toggle()</code>. Read <code>isOpen()</code> and <code>state()</code> for lifecycle.</p>
 <h2>Overlay placement</h2>
 <p>Menus use the normal application overlay layer by default. To let a menu escape a sticky header or another stacking context, provide a top-layer context on a wrapper or directly on the trigger:</p>
-<pre><code class="language-html">&lt;header [bxOverlayContext]=&quot;{ useTopLayer: true }&quot;&gt;
-  &lt;button [bxDropdown]=&quot;actions&quot;&gt;Actions&lt;/button&gt;
-&lt;/header&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">header</span> [<span class="hljs-attr">bxOverlayContext</span>]=<span class="hljs-string">&quot;{ useTopLayer: true }&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> [<span class="hljs-attr">bxDropdown</span>]=<span class="hljs-string">&quot;actions&quot;</span>&gt;</span>Actions<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span></code></pre>
 <p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
 <p>Where supported, native CSS anchors keep the menu attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.</p>
 <h2>Appearance</h2>
@@ -2732,52 +2809,49 @@ this.theme.setAppearance({ reducedTransparency: true });
 <p>Open <code>/components/dropdown</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/primitives/directives/menu-trigger/README.md":`<h1>Nested menu trigger</h1>
 <p><code>MenuTriggerDirective</code> opens a <code>bx-menu</code> template using Blocks&#39; overlay positioning and theme inheritance. Use it for arbitrary-depth opaque submenus; each descendant receives the containing trigger through <code>menuParent</code>.</p>
-<pre><code class="language-ts">import { Menu, MenuItem, MenuTriggerDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
-<pre><code class="language-html">&lt;button [bxMenuTrigger]=&quot;menu&quot; menuLabel=&quot;Projects&quot; #projects=&quot;bxMenuTrigger&quot;&gt;Projects&lt;/button&gt;
-&lt;ng-template #menu&gt;
-  &lt;bx-menu&gt;
-    &lt;bx-menu-item label=&quot;Overview&quot; /&gt;
-    &lt;button role=&quot;menuitem&quot; [bxMenuTrigger]=&quot;children&quot; [menuParent]=&quot;projects&quot; menuLabel=&quot;Design&quot;&gt;Design&lt;/button&gt;
-  &lt;/bx-menu&gt;
-&lt;/ng-template&gt;
-&lt;ng-template #children&gt;&lt;bx-menu&gt;&lt;bx-menu-item label=&quot;Tokens&quot; /&gt;&lt;/bx-menu&gt;&lt;/ng-template&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Menu</span>, <span class="hljs-title class_">MenuItem</span>, <span class="hljs-title class_">MenuTriggerDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> [<span class="hljs-attr">bxMenuTrigger</span>]=<span class="hljs-string">&quot;menu&quot;</span> <span class="hljs-attr">menuLabel</span>=<span class="hljs-string">&quot;Projects&quot;</span> #<span class="hljs-attr">projects</span>=<span class="hljs-string">&quot;bxMenuTrigger&quot;</span>&gt;</span>Projects<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">menu</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Overview&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;menuitem&quot;</span> [<span class="hljs-attr">bxMenuTrigger</span>]=<span class="hljs-string">&quot;children&quot;</span> [<span class="hljs-attr">menuParent</span>]=<span class="hljs-string">&quot;projects&quot;</span> <span class="hljs-attr">menuLabel</span>=<span class="hljs-string">&quot;Design&quot;</span>&gt;</span>Design<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">children</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Tokens&quot;</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-menu</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
 <p><code>bxMenuTrigger</code> is required. Optional inputs are <code>menuOrigin</code> (the full row when the trigger is a separate disclosure), <code>menuParent</code>, physical <code>menuSide</code> (<code>right</code> by default), <code>menuHover</code> (true), <code>menuManual</code> (false), <code>menuLabel</code> (trigger label fallback), and <code>menuPinned</code> (false; keeps a search-revealed path open during pointer movement). <code>menuOpened</code>/<code>menuClosed</code> report transitions. <code>isOpen()</code>, <code>open(focus?, origin?)</code>, <code>close(restoreFocus?)</code> and <code>toggle(event)</code> expose explicit controls. Selection owners call <code>MenuCascadeService.closeAll()</code> after activating an action; this preserves parent disclosure clicks in recursive menus.</p>
 <p>Native trigger semantics supply Enter/Space. Arrow towards the menu and Up/Down open it with focus. Up/Down/Home/End navigate within an open menu; Escape/opposite arrow dismiss one layer, and Tab is trapped inside its surface. Click outside dismisses the entire path, including search-pinned menus. Hover close has a short pointer-crossing delay and retains focused descendants. Cascades reuse the shared origin tracker&#39;s native CSS anchoring, refreshing dependent descendants on geometry changes and using measured positions only as a fallback. Clipped or offscreen origins close their branch. Overlays, traps, listeners, subscriptions, and timers are cleaned up on destruction. The trigger honors <code>bxOverlayContext</code> for top-layer positioning, as dropdowns and context menus do; origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes siblings, and nested menus inherit live theme state. Surfaces use the ordinary opaque <code>bx-menu</code> appearance, without added motion or glass effects.</p>
 <p>The side-navigation demo at <code>/components/side-nav</code> demonstrates nested hover, keyboard, and search-driven opening. Menu width and scroll constraints belong to the owner; the side-nav exposes <code>--bx-side-nav-menu-width</code>.</p>
 <p><code>bx-menu</code> accepts <code>--bx-menu-min-width</code> (default <code>12rem</code>). Constrained submenu owners set it to <code>0</code>, use border-box sizing, and reserve their vertical scrollbar gutter.</p>
 <p><code>menuManual: true</code> lets an owner coordinate one overlay for several disclosure controls. Automatic click, pointer, and trigger-key handling and the directive&#39;s host ARIA attributes are omitted; the owner supplies its visible controls and accessible semantics and calls <code>open()</code>/<code>close()</code>. <code>open(focus?, origin?)</code> optionally supplies the actual positioning origin for that opening, defaulting to <code>menuOrigin</code> and then the host. Overlay keyboard dismissal, focus trapping, outside-click handling, theme inheritance, and origin tracking remain shared. Side navigation uses this mode for its single adjacent panel.</p>
+<p><code>menuPlacement</code> optionally selects the existing dropdown placement strategy (<code>top</code>, <code>bottom</code>, <code>left</code>, or <code>right</code>). Omitting it retains physical side-aligned submenu positioning. <code>TopNav</code> uses <code>bottom</code> for its one panel while <code>SideNav</code> retains its side placement. The shared tracker, top-layer context, focus handling, outside-click dismissal, and clipping behavior are unchanged.</p>
+<p><code>navigateMenuKey(event, menu, options?)</code> also accepts <code>IMenuKeyboardOptions</code>: vertical Up/Down navigation remains the default; horizontal orientation uses Left/Right with optional RTL direction and a roving tab stop. This supports the top navigation menubar without introducing a separate keyboard implementation.</p>
+<p><code>menuClosing</code> fires before DOM detachment (after the overlay enters its closing path), allowing owners to retain current scroll/focus context. <code>menuClosed</code> still fires after cleanup.</p>
 `,"projects/blocks/primitives/directives/tooltip/README.md":`<h1>Tooltip trigger</h1>
 <p>Connects a help surface to a trigger using the overlay positioning system.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { TooltipDirective } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TooltipDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;button bx-button bxTooltip=&quot;Saves this project&quot; placement=&quot;top&quot;&gt;Save&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">bxTooltip</span>=<span class="hljs-string">&quot;Saves this project&quot;</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">&quot;top&quot;</span>&gt;</span>Save<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>bxTooltip</code>: required text or translation key. <code>placement</code>: top, bottom, left, right, and supported aligned placements. <code>show()</code> and <code>hide()</code> expose explicit lifecycle control.</p>
 <p>Changing the text updates an open tooltip. Empty text dismisses it; restoring text while hovered or keyboard-focused reveals it again. This supports labels that only need a tooltip while truncated.</p>
 <p>Use the shared <a href="components/truncate">TruncateDirective</a> for ellipsis and reactive truncation detection instead of duplicating element-size observers. Pass <code>resolvedText | bxTruncatedText: overflow.truncated()</code> to <code>bxTooltip</code> using the public <code>TruncatedTextPipe</code>; the owner supplies an appropriate focus target and visible focus styling.</p>
 <p><code>bxTooltipHover</code> defaults to <code>true</code>. Set it to <code>false</code> to keep the keyboard description while nested content supplies its own pointer tooltip, such as an overflow tag within a select trigger.</p>
 <p><code>bxTooltipTouch</code> defaults to <code>&#39;none&#39;</code>: normal touch taps activate the control without showing its tooltip. Set it to <code>&#39;longpress&#39;</code> for an optional touch-and-hold hint, or <code>&#39;tap&#39;</code> on a dedicated information button that has no other action.</p>
-<pre><code class="language-html">&lt;button type=&quot;button&quot; bxTooltip=&quot;Appearance settings apply to all components&quot; bxTooltipTouch=&quot;tap&quot; aria-label=&quot;More information&quot;&gt;\u24D8&lt;/button&gt;
-&lt;button type=&quot;button&quot; bxTooltip=&quot;Optional extra context&quot; bxTooltipTouch=&quot;longpress&quot;&gt;Hold for a hint&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">bxTooltip</span>=<span class="hljs-string">&quot;Appearance settings apply to all components&quot;</span> <span class="hljs-attr">bxTooltipTouch</span>=<span class="hljs-string">&quot;tap&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;More information&quot;</span>&gt;</span>\u24D8<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">bxTooltip</span>=<span class="hljs-string">&quot;Optional extra context&quot;</span> <span class="hljs-attr">bxTooltipTouch</span>=<span class="hljs-string">&quot;longpress&quot;</span>&gt;</span>Hold for a hint<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Keep trigger text meaningful without its tooltip. Use short, non-interactive text; put interactive help in a menu or dialog.</p>
@@ -2790,28 +2864,24 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/primitives/directives/truncate/README.md":`<h1>Truncated text</h1>
 <p>Shared single-line ellipsis styling, reactive overflow detection, and conditional text selection. <code>TruncateDirective</code> measures the rendered element. <code>TruncatedTextPipe</code> and <code>truncatedText()</code> use that measured state for tooltips or application-owned feedback. The pure pipe does not poll the DOM or own observers.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { TruncateDirective, TruncatedTextPipe, TooltipDirective, truncatedText } from &#39;@filip.mazev/blocks/primitives&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">TruncateDirective</span>, <span class="hljs-title class_">TruncatedTextPipe</span>, <span class="hljs-title class_">TooltipDirective</span>, truncatedText } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <p>Add the standalone directive, pipe, and tooltip directive to the component&#39;s <code>imports</code> when composing a conditional tooltip. Include Blocks&#39; established <code>core/styles/index</code> global entry once; it supplies the shared <code>.bx-truncate</code> utility used by the directive.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;div class=&quot;label-container&quot;&gt;
-  &lt;span bxTruncate #overflow=&quot;bxTruncate&quot;
-      [bxTooltip]=&quot;label() | bxTruncatedText: overflow.truncated()&quot;
-      [attr.tabindex]=&quot;overflow.truncated() ? 0 : null&quot;
-      bxTooltipTouch=&quot;longpress&quot; placement=&quot;top&quot;&gt;{{ label() }}&lt;/span&gt;
-&lt;/div&gt;
-</code></pre>
-<pre><code class="language-ts">import { signal } from &#39;@angular/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;label-container&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">bxTruncate</span> #<span class="hljs-attr">overflow</span>=<span class="hljs-string">&quot;bxTruncate&quot;</span>
+      [<span class="hljs-attr">bxTooltip</span>]=<span class="hljs-string">&quot;label() | bxTruncatedText: overflow.truncated()&quot;</span>
+      [<span class="hljs-attr">attr.tabindex</span>]=<span class="hljs-string">&quot;overflow.truncated() ? 0 : null&quot;</span>
+      <span class="hljs-attr">bxTooltipTouch</span>=<span class="hljs-string">&quot;longpress&quot;</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">&quot;top&quot;</span>&gt;</span>{{ label() }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { signal } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 
-protected readonly label = signal(&#39;A long location name that may not fit&#39;);
-</code></pre>
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> label = <span class="hljs-title function_">signal</span>(<span class="hljs-string">&#x27;A long location name that may not fit&#x27;</span>);</code></pre>
 <p>Constrain the available width so overflow can occur:</p>
-<pre><code class="language-scss">.label-container {
-    inline-size: 14rem;
-    max-inline-size: 100%;
-    min-inline-size: 0;
-}
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-selector-class">.label-container</span> {
+    <span class="hljs-attribute">inline-size</span>: <span class="hljs-number">14rem</span>;
+    <span class="hljs-attribute">max-inline-size</span>: <span class="hljs-number">100%</span>;
+    <span class="hljs-attribute">min-inline-size</span>: <span class="hljs-number">0</span>;
+}</code></pre>
 <h2>API</h2>
 <table>
 <thead>
@@ -2853,41 +2923,37 @@ protected readonly label = signal(&#39;A long location name that may not fit&#39
 </tr>
 </tbody></table>
 <h3>Public pipe and helper</h3>
-<pre><code class="language-html">&lt;!-- Empty text disables the existing tooltip when content fits or the feature is off. --&gt;
-&lt;span bxTruncate #overflow=&quot;bxTruncate&quot;
-    [bxTooltip]=&quot;label() | bxTruncatedText: overflow.truncated(): automaticTooltips()&quot;&gt;{{ label() }}&lt;/span&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Empty text disables the existing tooltip when content fits or the feature is off. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">bxTruncate</span> #<span class="hljs-attr">overflow</span>=<span class="hljs-string">&quot;bxTruncate&quot;</span>
+    [<span class="hljs-attr">bxTooltip</span>]=<span class="hljs-string">&quot;label() | bxTruncatedText: overflow.truncated(): automaticTooltips()&quot;</span>&gt;</span>{{ label() }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></code></pre>
 <p><code>bxTruncatedText</code> accepts text, the measured boolean, and an optional enabled boolean (default true). It returns the original string or translation-key object when both booleans are true, otherwise an empty string. Null and undefined text become empty strings. It preserves <code>ResolvableText</code> for the existing translation adapter.</p>
 <p>The exported <code>truncatedText(text, truncated, enabled = true)</code> helper provides the same behavior in TypeScript. Read the directive signals directly when custom behavior is more useful:</p>
-<pre><code class="language-ts">import { computed, signal, viewChild } from &#39;@angular/core&#39;;
-import { TruncateDirective, truncatedText } from &#39;@filip.mazev/blocks/primitives&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { computed, signal, viewChild } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">TruncateDirective</span>, truncatedText } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;
 
-protected readonly overflow = viewChild(TruncateDirective);
-protected readonly label = signal(&#39;A long label&#39;);
-protected readonly automaticTooltips = signal(true);
-protected readonly customFeedback = computed(() =&gt;
-  truncatedText(this.label(), this.overflow()?.truncated() ?? false, this.automaticTooltips())
-);
-</code></pre>
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> overflow = <span class="hljs-title function_">viewChild</span>(<span class="hljs-title class_">TruncateDirective</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> label = <span class="hljs-title function_">signal</span>(<span class="hljs-string">&#x27;A long label&#x27;</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> automaticTooltips = <span class="hljs-title function_">signal</span>(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> customFeedback = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span>
+  <span class="hljs-title function_">truncatedText</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">label</span>(), <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">overflow</span>()?.<span class="hljs-title function_">truncated</span>() ?? <span class="hljs-literal">false</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">automaticTooltips</span>())
+);</code></pre>
 <p>The pipe is pure: pass the current <code>truncated()</code> boolean rather than an element or directive object. This lets Angular update its result when measurement changes.</p>
 <h3>Disable automatic tooltips without disabling truncation</h3>
-<pre><code class="language-html">&lt;bx-tag [text]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; tooltip=&quot;My application description&quot; /&gt;
-&lt;bx-menu-item [label]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
-&lt;bx-input-field [label]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
-&lt;bx-search-input [value]=&quot;label()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
-&lt;bx-select label=&quot;Location&quot; [options]=&quot;options()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
-&lt;bx-multi-select label=&quot;Locations&quot; [options]=&quot;options()&quot; [tooltipOnTruncate]=&quot;false&quot; /&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-tag</span> [<span class="hljs-attr">text</span>]=<span class="hljs-string">&quot;label()&quot;</span> [<span class="hljs-attr">tooltipOnTruncate</span>]=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">tooltip</span>=<span class="hljs-string">&quot;My application description&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-menu-item</span> [<span class="hljs-attr">label</span>]=<span class="hljs-string">&quot;label()&quot;</span> [<span class="hljs-attr">tooltipOnTruncate</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> [<span class="hljs-attr">label</span>]=<span class="hljs-string">&quot;label()&quot;</span> [<span class="hljs-attr">tooltipOnTruncate</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-search-input</span> [<span class="hljs-attr">value</span>]=<span class="hljs-string">&quot;label()&quot;</span> [<span class="hljs-attr">tooltipOnTruncate</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-select</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Location&quot;</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;options()&quot;</span> [<span class="hljs-attr">tooltipOnTruncate</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-multi-select</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Locations&quot;</span> [<span class="hljs-attr">options</span>]=<span class="hljs-string">&quot;options()&quot;</span> [<span class="hljs-attr">tooltipOnTruncate</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span></code></pre>
 <p><code>tooltipOnTruncate</code> defaults to true. False suppresses the component&#39;s automatic ellipsis tooltip while retaining ellipsis and measurement, so an application can attach its own tooltip. Explicit tag tooltip descriptions and overflow-tag lists are independent; they retain their existing contract. <code>ITagConfig.tooltipOnTruncate</code> supplies a reusable tag default, and a direct tag input takes precedence.</p>
 <p>Forms resolve the instance input, then shared application settings, then true:</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { FormSettingsService } from &#39;@filip.mazev/blocks/forms&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">FormSettingsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
 
-private readonly formSettings = inject(FormSettingsService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> formSettings = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">FormSettingsService</span>);
 
-// For example, in application initialization:
-this.formSettings.update({ tooltipOnTruncate: false });
-</code></pre>
+<span class="hljs-comment">// For example, in application initialization:</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">formSettings</span>.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">tooltipOnTruncate</span>: <span class="hljs-literal">false</span> });</code></pre>
 <p><code>[bxTruncate]=&quot;false&quot;</code> is a separate choice: it disables ellipsis itself on a custom text element. <code>tooltipOnTruncate</code> only disables automatic tooltips on an owning component.</p>
 <h2>Appearance and customization</h2>
 <p>The directive supplies ellipsis mechanics rather than a theme or a tooltip. Keep widths, typography, colors, borders, and focus styling on the owning control or container using Blocks tokens. Apply it to the text element rather than a wrapper containing icons, counters, or actions. The shared <code>truncate-text</code> Sass mixin is available through <code>core/styles/helpers</code> for stylesheet-only integrations; the directive and existing components use that same utility.</p>
@@ -2903,26 +2969,23 @@ this.formSettings.update({ tooltipOnTruncate: false });
 `,"projects/blocks/toastr/components/README.md":`<h1>Toast core</h1>
 <p>The toast lifecycle host with progress, dismissal and content composition.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { ToastCore, ToastrService } from &#39;@filip.mazev/blocks/toastr&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ToastCore</span>, <span class="hljs-title class_">ToastrService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/toastr&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;button bx-button (click)=&quot;notify()&quot;&gt;Show notification&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;notify()&quot;</span>&gt;</span>Show notification<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>Use <code>ToastrService.queueToast(ContentComponent, config)</code> for custom content, or queueInfo, queueSuccess, queueWarning and queueDanger for common messages. Config controls position, durationInMs, progress and close actions.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Create notifications through the service; the wrapper owns timers, pause/resume and cleanup. Keep important information available outside transient messages. The playground\u2019s toast page can show all four semantic intents.</p>
@@ -2931,32 +2994,29 @@ this.theme.setAppearance({ reducedTransparency: true });
 `,"projects/blocks/toastr/components/views/simple-toast/README.md":`<h1>Simple toast</h1>
 <p>A notification with a semantic icon, optional title and message.</p>
 <h2>Import</h2>
-<pre><code class="language-ts">import { SimpleToast, ToastrService } from &#39;@filip.mazev/blocks/toastr&#39;;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SimpleToast</span>, <span class="hljs-title class_">ToastrService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/toastr&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
 <h2>Usage</h2>
-<pre><code class="language-html">&lt;button bx-button (click)=&quot;notify()&quot;&gt;Show success&lt;/button&gt;
-</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;notify()&quot;</span>&gt;</span>Show success<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>Use <code>toastr.queueSuccess({ title: &quot;Saved&quot;, message: &quot;Your settings are up to date.&quot; })</code>. Equivalent methods queueInfo, queueWarning and queueDanger set the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<pre><code class="language-ts">import { inject } from &#39;@angular/core&#39;;
-import { ThemingService } from &#39;@filip.mazev/blocks/core&#39;;
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
-private readonly theme = inject(ThemingService);
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
-// Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
-// Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
-</code></pre>
+<span class="hljs-comment">// Application-wide, including open overlays.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Write a concise message with a clear outcome. Use a modal or an inline message when acknowledgement or a long interaction is required. Simple toast content shares the parent toast glass surface.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/simple-toast</code> for a working example and its current value or action result.</p>
-`};var k={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var T={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
+`};var k={"assets/modal-readme/README.md":`documentation/modal/README.md`,"assets/toastr-readme/README.md":`documentation/toastr/README.md`,"assets/blocks-core-readme/README.md":`documentation/core/README.md`,"assets/core-readme/README.md":`documentation/core/README.md`};var q={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
 
@@ -3260,7 +3320,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var q=class r{document=f(z);router=f(Xn);readmeContent=y(()=>{let e=this.path().replace(/^\/+/,``);return w[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let o=e.target?.closest?.(`a[href]`);if(!o||o.hasAttribute(`download`)||o.target&&o.target!==`_self`)return;let n=new URL(o.href,this.document.baseURI),a=new URL(`.`,this.document.baseURI);if(n.origin!==a.origin||!n.pathname.startsWith(a.pathname))return;let c=n.pathname.slice(a.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${n.search}${n.hash}`))}static ɵfac=function(t){return new(t||r)};static ɵcmp=le({type:r,selectors:[[`app-readme`]],hostBindings:function(t,o){t&1&&be(`click`,function(a){return o.navigateDocumentation(a)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(t,o){t&1&&(us(0,`div`,0)(1,`div`,1)(2,`span`),je(3,`Documentation`),ds()(),Un(4,`article`,2),ds()),t&2&&(M(4),hs(`innerHTML`,o.readmeContent(),um))},styles:[`
+`};var w=class c{document=f(z);router=f(Qn);readmeContent=y(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=se({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&Ce(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(ds(0,`div`,0)(1,`div`,1)(2,`span`),Ve(3,`Documentation`),fs()(),qn(4,`article`,2),fs()),a&2&&(M(4),ps(`innerHTML`,s.readmeContent(),fm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
@@ -3328,29 +3388,15 @@ export class ToastExample {
 .readme-content[_ngcontent-%COMP%]     th {
   background: var(--%NS%bx-bg-surface-alt);
 }
-.readme-content[_ngcontent-%COMP%]     code {
+.readme-content[_ngcontent-%COMP%]     code:not(.hljs) {
   padding: 0.15em 0.35em;
   border-radius: 0.25rem;
   background: var(--%NS%bx-bg-surface-alt);
   font-size: 0.85em;
-}
-.readme-content[_ngcontent-%COMP%]     pre {
-  max-width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--%NS%bx-border-default);
-  background: var(--%NS%bx-bg-surface);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  line-height: 1.6;
-}
-.readme-content[_ngcontent-%COMP%]     pre code {
-  background: transparent;
-  padding: 0;
-  white-space: pre;
 }
 .readme-content[_ngcontent-%COMP%]     blockquote {
   margin-inline: 0;
   padding-left: 1rem;
   border-left: 3px solid var(--%NS%bx-border-brand);
   color: var(--%NS%bx-text-secondary);
-}`]})};export{q as n,T as t};
+}`]})};export{w as n,q as t};
