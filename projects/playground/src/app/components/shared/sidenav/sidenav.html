@@ -1,5 +1,13 @@
 <bx-side-nav [config]="config" [collapsed]="false">
   <ng-template bxSideNavHeader>
-    <a class="brand" routerLink="/home" [attr.aria-label]="title()"><app-blocks-logo /><span>{{ title() }}</span></a>
+    <a class="brand" routerLink="/home" [attr.aria-label]="brandLabel()">
+      <app-blocks-logo />
+      <span class="brand-name">
+        <span>{{ title() }}</span>
+        @if (releaseChannel === 'beta') {
+          <bx-tag class="brand-beta" text="Beta" size="small" color="neutral" [opaque]="true" [focusable]="false" />
+        }
+      </span>
+    </a>
   </ng-template>
 </bx-side-nav>

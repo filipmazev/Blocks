@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BLOCKS_VERSION } from '@filip.mazev/blocks';
+import { BLOCKS_VERSION_LABEL } from '@filip.mazev/blocks';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@icons/components/icon';
 import { IconName } from '@icons/types/icon.types';
@@ -19,7 +19,7 @@ import { LightOrb } from './light-orb/light-orb';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Home {
-  protected readonly version = BLOCKS_VERSION;
+  protected readonly version = BLOCKS_VERSION_LABEL;
 
   protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
 

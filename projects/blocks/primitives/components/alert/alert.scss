@@ -10,12 +10,16 @@
         --bx-alert-background,
         color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-alert-role-background))
     );
-    --bx-glass-edge: var(--bx-alert-border, var(--bx-alert-role-border));
+    --bx-glass-edge: var(
+        --bx-alert-border,
+        color-mix(in srgb, var(--bx-alert-role-border) 44.8%, transparent)
+    );
     --bx-glass-text: var(--bx-alert-color, var(--bx-alert-role-color));
     --bx-glass-radius: var(--bx-alert-radius, #{radius(lg)});
     --bx-glass-shadow: var(--bx-alert-shadow, #{shadow(sm)});
     --bx-glass-min-opacity: var(--bx-alert-min-opacity, 0.2);
-    --bx-glass-decoration-opacity: var(--bx-alert-light-opacity, 0.4);
+    --bx-glass-decoration-opacity: var(--bx-alert-light-opacity, 0.32);
+    --bx-glass-rim-visibility: var(--bx-alert-rim-opacity, 0.8);
 
     position: relative;
     display: flex;
@@ -34,7 +38,7 @@
     --bx-glass-shadow: var(
         --bx-alert-shadow,
         #{shadow(sm)},
-        0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 55%, transparent)
+        0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 44%, transparent)
     );
 
     &::after {
@@ -46,7 +50,7 @@
         pointer-events: none;
         background: radial-gradient(
             ellipse at 50% 100%,
-            color-mix(in srgb, var(--bx-alert-emission) 8%, transparent),
+            color-mix(in srgb, var(--bx-alert-emission) 6.4%, transparent),
             transparent 70%
         );
     }
@@ -102,6 +106,10 @@
 }
 
 @media (forced-colors: active), (prefers-contrast: more) {
+    .bx-alert {
+        --bx-glass-edge: var(--bx-alert-border, var(--bx-alert-role-border));
+    }
+
     .bx-alert.has-emission {
         --bx-glass-shadow: none;
 

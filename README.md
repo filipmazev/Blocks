@@ -33,11 +33,25 @@ Documentation is generated before playground builds and serving. After changing 
 
 ## Publishing
 
+The library version and release channel live in `projects/blocks/package.json`. `publishConfig.tag` is currently `beta`: the playground shows a Beta badge and `v1.4.20 (beta)`, and npm publishes to the `beta` channel. Change the tag to `latest` for a stable release; the badge and suffix disappear after version synchronization. `BLOCKS_VERSION` remains the numeric package version; `BLOCKS_RELEASE_CHANNEL` and `BLOCKS_VERSION_LABEL` are generated alongside it. Starts and builds synchronize these automatically.
+
+To prepare the next minor version locally (currently 1.4.20 → 1.5.0), without publishing or creating a Git tag:
+
 ```sh
-bash publish.sh
+npm run version:minor
 ```
 
-The script checks npm authentication, increments the patch version, builds the package and publishes it. If publishing fails after the version increment, correct the authentication issue and use `bash publish.sh --retry` to rebuild and retry the same version. The npm token needs publish access to `@filip.mazev/blocks` and permission to bypass two-factor authentication.
+This updates the library manifest, workspace lockfile, and generated version constants. `npm run version:blocks -- patch|minor|major` supports other increments. The beta channel stays active until you change it.
+
+To bump and publish in one step, choose the increment:
+
+```sh
+bash publish.sh                # Patch bump (default)
+bash publish.sh --bump minor   # Next minor release, resetting the patch to 0
+bash publish.sh --retry        # Publish the existing version after a local bump or failed attempt
+```
+
+Choose one command: after `npm run version:minor`, use `--retry` to publish that prepared version without another bump. The script checks npm authentication before changing the version, then builds and publishes. It accepts an existing npm login, `NPM_TOKEN`, or an interactive token prompt; `--token` remains supported. For unattended publication, the token needs publish access to `@filip.mazev/blocks` and permission to bypass two-factor authentication.
 
 To build and deploy the playground to the existing GitHub Pages target:
 

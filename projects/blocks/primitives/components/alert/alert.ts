@@ -60,8 +60,8 @@ export class Alert {
   public readonly emissive = input(true, { transform: booleanAttribute });
   /** Optional light color. Defaults to the tone's semantic text color. */
   public readonly emissionColor = input<string | undefined>(undefined);
-  /** Neighboring light strength; the shared renderer clamps to 0–4. Defaults to 0.75. */
-  public readonly emissionIntensity = input(0.75);
+  /** Neighboring light strength; the shared renderer clamps to 0–4. Defaults to 0.6. */
+  public readonly emissionIntensity = input(0.6);
   /** Light falloff in CSS pixels. Defaults to 320. */
   public readonly emissionRadius = input(320);
   public readonly visible = model(true);

@@ -1,7 +1,11 @@
 {
     "name": "@filip.mazev/blocks",
-    "version": "1.4.20",
+    "version": "1.4.21",
     "license": "MIT",
+    "publishConfig": {
+        "access": "public",
+        "tag": "beta"
+    },
     "schematics": "./schematics/collection.json",
     "exports": {
         ".": {

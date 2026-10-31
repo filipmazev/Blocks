@@ -26,3 +26,18 @@ app-blocks-logo {
     min-width: 0;
     overflow-wrap: anywhere;
 }
+
+.brand-name {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing(2);
+}
+
+.brand-beta {
+    --bx-tag-font-size: 0.5625rem;
+    --bx-tag-padding: 0 0.375em;
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+
+    flex: none;
+}

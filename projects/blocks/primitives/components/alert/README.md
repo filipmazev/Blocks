@@ -29,7 +29,7 @@ import { Alert } from '@filip.mazev/blocks/primitives';
 | `dismissLabel` | Dismiss notification | Translatable action name |
 | `emissive` | true | Steady illumination of the banner and neighboring Blocks surfaces |
 | `emissionColor` | tone text color | Optional semantic light-color override |
-| `emissionIntensity` | 0.75 | Neighboring light strength, clamped to 0–4 |
+| `emissionIntensity` | 0.6 | Neighboring light strength, clamped to 0–4 |
 | `emissionRadius` | 320 | Neighboring light falloff in CSS pixels |
 | `visible` | true | Two-way visibility model |
 | `announcement` | off | `AlertAnnouncement`: off, polite or assertive |
@@ -41,7 +41,7 @@ import { Alert } from '@filip.mazev/blocks/primitives';
 
 ## Appearance and customization
 
-`--bx-alert-background`, `--bx-alert-color`, `--bx-alert-border`, `--bx-alert-radius`, `--bx-alert-padding`, `--bx-alert-gap`, `--bx-alert-shadow`, `--bx-alert-min-opacity` and `--bx-alert-light-opacity`. Interior light opacity defaults to 0.4 to keep illumination gentle while preserving the glass material and exterior rim. The shared glass surface follows application glassiness and reduced transparency. Borders have a uniform width; the old `--bx-alert-accent-width` is no longer used. The severity palette, icon, soft glow and steady light follow the same material and emissive mechanisms as toasts, without entrance, exit or progress animations. Optional `data-bx-light-scope` on an owning container limits neighboring illumination to that scene.
+`--bx-alert-background`, `--bx-alert-color`, `--bx-alert-border`, `--bx-alert-radius`, `--bx-alert-padding`, `--bx-alert-gap`, `--bx-alert-shadow`, `--bx-alert-min-opacity`, `--bx-alert-light-opacity` and `--bx-alert-rim-opacity`. Borders use the tone color at 44.8% opacity by default; increased contrast restores the full tone color, and `--bx-alert-border` always accepts an explicit override. Interior light opacity defaults to 0.32 and rim light opacity to 0.8 to keep illumination gentle while preserving the glass material. The shared glass surface follows application glassiness and reduced transparency. Borders have a uniform width; the old `--bx-alert-accent-width` is no longer used. The severity palette, icon, soft glow and steady light follow the same material and emissive mechanisms as toasts, without entrance, exit or progress animations. Optional `data-bx-light-scope` on an owning container limits neighboring illumination to that scene.
 
 ## Behavior and accessibility
 
