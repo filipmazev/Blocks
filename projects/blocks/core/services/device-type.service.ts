@@ -89,24 +89,27 @@ export class DeviceTypeService {
 
   private isTabletDevice(): boolean {
     const regex = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/i;
-    return regex.test(this.userAgent);
+    const navigator = this.document.defaultView?.navigator;
+
+    // iPadOS can request desktop sites and identify as a Mac while retaining touch hardware.
+    return regex.test(this.userAgent) || (navigator?.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
 
   private getMobileOS(): MobileOS | undefined {
-    if (this.isMobileDevice()) {
+    if (this.isMobileDevice() || this.isTabletDevice()) {
       const ua = this.userAgent;
       if (/windows phone/i.test(ua)) return MobileOS.WindowsPhone;
       if (/android/i.test(ua)) return MobileOS.Android;
       const view = this.document.defaultView as (Window & { MSStream?: unknown }) | null;
-      if (/iPad|iPhone|iPod/.test(ua) && !view?.MSStream) return MobileOS.iOS;
+      if ((/iPad|iPhone|iPod/.test(ua) || (ua.includes('Mac') && this.isTabletDevice())) && !view?.MSStream) return MobileOS.iOS;
 
-      return MobileOS.Unknown;
+      return this.isMobileDevice() ? MobileOS.Unknown : undefined;
     }
     return undefined;
   }
 
   private getDesktopOS(): DesktopOS | undefined {
-    if (this.isDesktopDevice) {
+    if (!this.isMobileDevice() && !this.getMobileOS()) {
       const ua = this.userAgent;
       if (ua.includes('Win')) return DesktopOS.Windows;
       if (ua.includes('Mac')) return DesktopOS.MacOS;

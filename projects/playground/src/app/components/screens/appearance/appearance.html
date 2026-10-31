@@ -23,14 +23,14 @@
           <button bx-button type="button" variant="tonal" [color]="theme.palette() === palette.id ? 'accent' : 'grayscale'" [attr.aria-pressed]="theme.palette() === palette.id" (click)="theme.setPalette(palette.id)"><span class="palette-swatches" aria-hidden="true"><span [style.background-color]="palette.colors[0]"></span><span [style.background-color]="palette.colors[1]"></span></span>{{ palette.label }}</button>
         }
       </div></fieldset>
-      <fieldset class="rendering-options"><legend>Rendering</legend><div class="quality-picker">@for (option of qualities; track option.value) {<bx-radio name="appearance-quality" [label]="option.label" [value]="option.value" [ngModel]="appearance().quality" (ngModelChange)="updateAppearance({quality: $event})" />}</div></fieldset>
+      <fieldset class="rendering-options"><legend>Rendering</legend><div class="quality-picker">@for (option of qualities; track option.value) {<bx-radio name="appearance-quality" [label]="option.label" [value]="option.value" [ngModel]="appearance().quality" (ngModelChange)="updateAppearance({quality: $event})" subscriptSizing="dynamic" />}</div></fieldset>
       <p class="section-note rendering-note">Baseline uses blur and tint. Automatic adds reflections and highlights when supported.</p>
       <div class="accessibility-controls" role="group" aria-labelledby="accessibility-title">
         <h3 id="accessibility-title">Accessibility</h3>
         <div class="accessibility-options">
-          <bx-slide-toggle label="Reduce motion" [ngModel]="reducedMotion()" (ngModelChange)="setMotion($event)" />
-          <bx-slide-toggle label="Reduce transparency" [ngModel]="appearance().reducedTransparency" (ngModelChange)="updateAppearance({reducedTransparency: $event})" />
-          <bx-slide-toggle label="High contrast" [ngModel]="theme.highContrast()" (ngModelChange)="theme.setHighContrast($event)" />
+          <bx-slide-toggle label="Reduce motion" [ngModel]="reducedMotion()" (ngModelChange)="setMotion($event)" subscriptSizing="dynamic" />
+          <bx-slide-toggle label="Reduce transparency" [ngModel]="appearance().reducedTransparency" (ngModelChange)="updateAppearance({reducedTransparency: $event})" subscriptSizing="dynamic" />
+          <bx-slide-toggle label="High contrast" [ngModel]="theme.highContrast()" (ngModelChange)="theme.setHighContrast($event)" subscriptSizing="dynamic" />
         </div>
       </div>
     </aside>

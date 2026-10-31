@@ -93,12 +93,8 @@
             <output>Selected: {{ selectedTab() }}</output>
           </div>
         }
-        @case ('menu') {
-          <bx-menu class="menu-preview"><bx-menu-item label="Duplicate project" icon="copy" (action)="activate('Project duplicated')" /><bx-menu-item label="Archive project" icon="archive" (action)="activate('Project archived')" /><bx-menu-item label="Unavailable action" [disabled]="true" /></bx-menu>
-        }
-        @case ('menu-item') {
-          <bx-menu class="menu-preview"><bx-menu-item label="Copy link" icon="link" (action)="activate('Copy link')" /><bx-menu-item label="Open settings" icon="settings" endIcon="chevron-right" (action)="activate('Open settings')" /><bx-menu-item label="Delete project" icon="trash-2" [danger]="true" (action)="activate('Delete requested')" /><bx-menu-item label="Unavailable action" [disabled]="true" /></bx-menu>
-        }
+        @case ('menu') { <app-menu-shortcut-examples /> }
+        @case ('menu-item') { <app-menu-shortcut-examples /> }
         @case ('tooltip') {
           <div class="demo-stack"><bx-tooltip text="Your changes are saved automatically." /><p>Standalone tooltip content. Use the trigger directive for positioned help.</p><a routerLink="/components/tooltip-directive">Try the tooltip trigger</a></div>
         }

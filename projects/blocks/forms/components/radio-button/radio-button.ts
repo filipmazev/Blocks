@@ -2,10 +2,11 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Component, computed, DestroyRef, ElementRef, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
-import { LabelPosition } from '../shared/types/validation.types';
+import { LabelPosition, SubscriptSizing } from '../shared/types/validation.types';
 import { RadioRegistry } from './services/radio-registry.service';
 import { BX_RADIO_GROUP } from '../radio-group/tokens/radio-group.token';
 import { FormField } from '../form-field/form-field';
+import { FormSettingsService } from '../shared/services/form-settings.service';
 
 @Component({
   selector: 'bx-radio',
@@ -18,6 +19,7 @@ import { FormField } from '../form-field/form-field';
 export class Radio extends BxBaseControl<unknown> {
   protected readonly group = inject(BX_RADIO_GROUP, { optional: true });
   private readonly registry = inject(RadioRegistry);
+  private readonly defaults = inject(FormSettingsService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   private readonly i18n = inject(BX_I18N, { optional: true });
@@ -32,7 +34,11 @@ export class Radio extends BxBaseControl<unknown> {
   protected readonly effectiveDisabled = computed(() => this.isDisabled() || !!this.group?.disabled());
   protected readonly effectiveName = computed(() => this.group?.groupName() ?? this.name());
   protected readonly selected = computed(() => (this.group ? this.group.value() : this.internalValue()) === this.value());
+
   public readonly labelPosition = input<LabelPosition>('after');
+  public readonly subscriptSizing = input<SubscriptSizing | undefined>(undefined);
+
+  public readonly resolvedSubscriptSizing = computed(() => this.subscriptSizing() ?? this.defaults.settings().subscriptSizing);
 
   public readonly value = input.required<unknown>();
 

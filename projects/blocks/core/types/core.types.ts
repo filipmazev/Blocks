@@ -11,20 +11,9 @@ export type ResolvableText = string | { key: string };
 
 export type BxPlacement = 'top' | 'bottom' | 'left' | 'right';
 
-export type ShortcutKey = string | string[];
-
-export interface OSShortcut {
-  mac?: ShortcutKey;
-  windows?: ShortcutKey;
-  linux?: ShortcutKey;
-  default: ShortcutKey;
-}
-
-export type ResolvableShortcut = ShortcutKey | OSShortcut;
-
-export function isOSShortcut(val: unknown): val is OSShortcut {
-  return typeof val === 'object' && val !== null && !Array.isArray(val) && 'default' in val;
-}
+// Preserve existing deep imports while shortcut contracts live in dedicated files.
+export type { ShortcutKey, OSShortcut, ResolvableShortcut } from './shortcut.types';
+export { isOSShortcut } from '../helpers/shortcut.helpers';
 
 export type DefaultValidatorKey = 'required' | 'minlength' | 'maxlength' | 'email' | 'pattern' | 'min' | 'max';
 

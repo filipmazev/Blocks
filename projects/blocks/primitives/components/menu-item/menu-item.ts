@@ -34,6 +34,8 @@ export class MenuItem {
     return this.bxShortcutService.resolve(this.shortcut());
   });
 
+  protected readonly shortcutAria = computed(() => this.bxShortcutService.toAriaKeyshortcuts(this.shortcut()));
+
   public readonly isAnimated = computed(() => !this.a11y.isReducedMotion());
 
   public readonly icon = input<IconName | undefined>(undefined);
@@ -45,6 +47,7 @@ export class MenuItem {
   public readonly disabled = input(false);
   public readonly danger = input(false);
 
+  /** Platform-aware hint only. Handle keyboard activation in the application with BxShortcutService.matches(). */
   public readonly shortcut = input<ResolvableShortcut | undefined>(undefined);
 
   public readonly action = output<MouseEvent>();

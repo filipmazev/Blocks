@@ -346,7 +346,7 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     package: '@filip.mazev/blocks/primitives',
     selector: 'bx-menu-item',
     description: 'A menu action with optional icons, a shortcut hint, and destructive intent.',
-    example: '<bx-menu-item label="Delete" icon="trash-2" [danger]="true" (action)="remove()" />'
+    example: '<bx-menu-item label="Open view" icon="external-link" [shortcut]="[\'mod\', \'shift\', \'v\']" (action)="openView()" />'
   },
   {
     id: 'tooltip',

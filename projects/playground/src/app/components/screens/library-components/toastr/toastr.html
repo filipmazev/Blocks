@@ -12,13 +12,13 @@
             <div class="form-section">
                 <h3>General Style & Data</h3>
 
-                <bx-select [clearable]="false" label="Position" [errorMessages]="{ required: 'Choose a position.' }" formControlName="position" [options]="positionSelectOptions">
+                <bx-select [clearable]="false" label="Position" [errorMessages]="{ required: 'Choose a position.' }" formControlName="position" [options]="positionSelectOptions" subscriptSizing="dynamic">
                 </bx-select>
 
-                <bx-input-field label="Title for demo toast" formControlName="title">
+                <bx-input-field label="Title for demo toast" formControlName="title" subscriptSizing="dynamic">
                 </bx-input-field>
 
-                <bx-input-field label="Message for demo toast" formControlName="message">
+                <bx-input-field label="Message for demo toast" formControlName="message" subscriptSizing="dynamic">
                 </bx-input-field>
             </div>
 
@@ -26,17 +26,17 @@
                 <h3>Behavior & Toggles</h3>
 
                 <bx-input-field label="Duration (ms)" [errorMessages]="{ min: 'Duration must be zero or greater.' }" formControlName="durationInMs" type="number"
-                    tooltip="Set to 0 to disable auto-close">
+                    tooltip="Set to 0 to disable auto-close" subscriptSizing="dynamic">
                 </bx-input-field>
 
-                <bx-input-field label="Max Opened (Queue Limit)" [errorMessages]="{ min: 'Show at least one notification.', max: 'Show at most ten notifications.' }" formControlName="maxOpened" type="number">
+                <bx-input-field label="Max Opened (Queue Limit)" [errorMessages]="{ min: 'Show at least one notification.', max: 'Show at most ten notifications.' }" formControlName="maxOpened" type="number" subscriptSizing="dynamic">
                 </bx-input-field>
 
                 <div class="form-checkboxes">
-                    <bx-checkbox label="Animate" formControlName="animate">
+                    <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic">
                     </bx-checkbox>
 
-                    <bx-checkbox label="Swipe to Dismiss" formControlName="swipeToDismiss">
+                    <bx-checkbox label="Swipe to Dismiss" formControlName="swipeToDismiss" subscriptSizing="dynamic">
                     </bx-checkbox>
                 </div>
             </div>

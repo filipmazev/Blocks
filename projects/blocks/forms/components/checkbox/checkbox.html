@@ -1,13 +1,18 @@
-<bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [loading]="loading()"
-    [hint]="hint()" [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
-    <label class="bx-inline-wrapper" [class.is-disabled]="disabled()" [class.is-readonly]="isReadonly()" [class.is-keyboard-focused]="keyboardFocused()" [class.label-before]="labelPosition() === 'before'">
-        <input type="checkbox" class="bx-visually-hidden" [id]="controlId()" [attr.name]="name() || null" [attr.data-testid]="dataTestId()"
-            [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="describedBy()"
-            [attr.aria-invalid]="showError()" [attr.aria-readonly]="isReadonly()" [disabled]="disabled()" [required]="effectiveRequired()" [checked]="displayedChecked()" [indeterminate]="indeterminate()"
-            (click)="onReadonlyClick($event)" (change)="onToggle($event)" (blur)="onBlur()">
-        <bx-checkbox-indicator [checked]="displayedChecked()" [indeterminate]="indeterminate()" [invalid]="showError()" [disabled]="disabled()" />
+<bx-form-field [control]="fieldControl" [inline]="true" [tooltip]="tooltip()" [loading]="loading()" [hint]="hint()"
+    [hintEnd]="hintEnd()" [subscriptSizing]="resolvedSubscriptSizing()" [forId]="controlId()">
+    <label class="bx-inline-wrapper" [class.is-disabled]="disabled()" [class.is-readonly]="isReadonly()"
+        [class.is-keyboard-focused]="keyboardFocused()" [class.label-before]="labelPosition() === 'before'">
+        <input type="checkbox" class="bx-visually-hidden" [id]="controlId()" [attr.name]="name() || null"
+            [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()" [attr.aria-labelledby]="ariaLabelledBy()"
+            [attr.aria-describedby]="describedBy()" [attr.aria-invalid]="showError()"
+            [attr.aria-readonly]="isReadonly()" [disabled]="disabled()" [required]="effectiveRequired()"
+            [checked]="displayedChecked()" [indeterminate]="indeterminate()" (click)="onReadonlyClick($event)"
+            (change)="onToggle($event)" (blur)="onBlur()">
+        <bx-checkbox-indicator [checked]="displayedChecked()" [indeterminate]="indeterminate()" [invalid]="showError()"
+            [disabled]="disabled()" />
         <span class="bx-inline-label"><ng-content />{{ resolvedLabel() }}
-            @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-inline-required" aria-hidden="true">*</span> }
+            @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-inline-required"
+                aria-hidden="true">*</span> }
         </span>
     </label>
     <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />

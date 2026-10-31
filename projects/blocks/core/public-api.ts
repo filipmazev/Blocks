@@ -43,3 +43,7 @@ export * from './helpers/resolve-text.helpers';
 export * from './interfaces/ioverlay-origin-options.interface';
 export * from './helpers/overlay-origin-visibility.helpers';
 export * from './types/overlay-origin.types';
+
+export type { ShortcutPlatform } from './types/shortcut.types';
+export * from './interfaces/ios-shortcut.interface';
+export * from './interfaces/ishortcut-match-options.interface';

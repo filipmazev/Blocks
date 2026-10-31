@@ -1,5 +1,5 @@
 <button bxSurface [bxSurfaceEmission]="danger() ? 'var(--bx-text-danger)' : 'var(--bx-primary)'" type="button" role="menuitem" [disabled]="disabled()" class="bx-menu-item-btn" [class.is-disabled]="disabled()" [class.is-danger]="danger()"
-    [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)"
+    [attr.aria-keyshortcuts]="disabled() ? null : shortcutAria()" [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)"
     [bxTooltip]="(resolvedLabel() ?? menuText.text().trim()) | bxTruncatedText: menuText.truncated(): tooltipOnTruncate()" bxTooltipTouch="longpress">
 
     @if (icon()) {
@@ -15,7 +15,7 @@
     </span>
 
     @if (resolvedShortcut()) {
-    <span class="bx-menu-item-shortcut">
+    <span class="bx-menu-item-shortcut" [attr.aria-hidden]="shortcutAria() ? true : null">
         @for (key of resolvedShortcut(); track $index) {
         <kbd>{{ key }}</kbd>
         }

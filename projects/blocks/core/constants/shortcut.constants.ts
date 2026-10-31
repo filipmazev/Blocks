@@ -1,0 +1,77 @@
+/** Case-insensitive aliases shared by display, accessibility metadata and keyboard matching. */
+export const SHORTCUT_KEY_ALIASES: Readonly<Record<string, string>> = {
+  mod: 'mod',
+  primary: 'mod',
+  cmdorctrl: 'mod',
+  commandorcontrol: 'mod',
+  cmd: 'Meta',
+  command: 'Meta',
+  meta: 'Meta',
+  super: 'Meta',
+  win: 'Meta',
+  windows: 'Meta',
+  '⌘': 'Meta',
+  ctrl: 'Control',
+  control: 'Control',
+  '⌃': 'Control',
+  alt: 'Alt',
+  option: 'Alt',
+  opt: 'Alt',
+  '⌥': 'Alt',
+  shift: 'Shift',
+  '⇧': 'Shift',
+  esc: 'Escape',
+  escape: 'Escape',
+  '⎋': 'Escape',
+  return: 'Enter',
+  enter: 'Enter',
+  '↩': 'Enter',
+  '↵': 'Enter',
+  '⏎': 'Enter',
+  backspace: 'Backspace',
+  '⌫': 'Backspace',
+  delete: 'Delete',
+  del: 'Delete',
+  '⌦': 'Delete',
+  tab: 'Tab',
+  '⇥': 'Tab',
+  space: ' ',
+  spacebar: ' ',
+  plus: '+',
+  up: 'ArrowUp',
+  arrowup: 'ArrowUp',
+  '↑': 'ArrowUp',
+  down: 'ArrowDown',
+  arrowdown: 'ArrowDown',
+  '↓': 'ArrowDown',
+  left: 'ArrowLeft',
+  arrowleft: 'ArrowLeft',
+  '←': 'ArrowLeft',
+  right: 'ArrowRight',
+  arrowright: 'ArrowRight',
+  '→': 'ArrowRight'
+};
+
+export const SHORTCUT_MODIFIERS: readonly string[] = ['Control', 'Alt', 'Shift', 'Meta'];
+
+export const SHORTCUT_APPLE_LABELS: Readonly<Record<string, string>> = {
+  Meta: '⌘',
+  Control: '⌃',
+  Alt: '⌥',
+  Shift: '⇧',
+  Enter: '↩',
+  Backspace: '⌫',
+  Delete: '⌦',
+  Tab: '⇥',
+  Escape: '⎋'
+};
+
+export const SHORTCUT_COMMON_LABELS: Readonly<Record<string, string>> = {
+  Control: 'Ctrl',
+  Meta: 'Meta',
+  ' ': 'Space',
+  ArrowUp: '↑',
+  ArrowDown: '↓',
+  ArrowLeft: '←',
+  ArrowRight: '→'
+};

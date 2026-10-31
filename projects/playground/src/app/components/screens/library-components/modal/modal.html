@@ -12,12 +12,12 @@
             <div class="form-section">
                 <h3>General Style</h3>
 
-                <bx-select [clearable]="false" label="Default Layout" [errorMessages]="{ required: 'Choose a layout.' }" formControlName="layout" [options]="layoutSelectOptions">
+                <bx-select [clearable]="false" label="Default Layout" [errorMessages]="{ required: 'Choose a layout.' }" formControlName="layout" [options]="layoutSelectOptions" subscriptSizing="dynamic">
                 </bx-select>
 
-                <bx-input-field label="Header Text" formControlName="headerText"></bx-input-field>
+                <bx-input-field label="Header Text" formControlName="headerText" subscriptSizing="dynamic"></bx-input-field>
 
-                <bx-input-field label="Title" formControlName="title"></bx-input-field>
+                <bx-input-field label="Title" formControlName="title" subscriptSizing="dynamic"></bx-input-field>
 
             </div>
 
@@ -25,21 +25,21 @@
                 <h3>Behavior & Toggles</h3>
 
                 <div class="form-checkboxes">
-                    <bx-checkbox label="Animate" formControlName="animate"></bx-checkbox>
+                    <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic"></bx-checkbox>
 
-                    <bx-checkbox label="Has Backdrop" formControlName="hasBackdrop"></bx-checkbox>
+                    <bx-checkbox label="Has Backdrop" formControlName="hasBackdrop" subscriptSizing="dynamic"></bx-checkbox>
 
-                    <bx-checkbox label="Show Close Button" formControlName="showCloseButton"></bx-checkbox>
+                    <bx-checkbox label="Show Close Button" formControlName="showCloseButton" subscriptSizing="dynamic"></bx-checkbox>
 
                     <bx-checkbox label="Disable Close (Global)" formControlName="disableClose"
-                        tooltip="Prevents closing via ESC key or backdrop clicks.">
+                        tooltip="Prevents closing via ESC key or backdrop clicks." subscriptSizing="dynamic">
                     </bx-checkbox>
 
                     <bx-checkbox label="Disable Backdrop Click"
-                        formControlName="disableCloseOnBackdropClick"></bx-checkbox>
+                        formControlName="disableCloseOnBackdropClick" subscriptSizing="dynamic"></bx-checkbox>
 
                     <bx-checkbox label="Use Confirm Close Guard" formControlName="hasConfirmCloseGuard"
-                        tooltip="Intercepts the close event and prompts the user to confirm.">
+                        tooltip="Intercepts the close event and prompts the user to confirm." subscriptSizing="dynamic">
                     </bx-checkbox>
                 </div>
             </div>
@@ -50,7 +50,7 @@
 
                 <div class="breakpoints-grid">
                     @for(breakpoint of breakpointKeys; track breakpoint) {
-                    <bx-select [clearable]="false" [label]="breakpoint" [formControlName]="breakpoint" [options]="breakpointSelectOptions">
+                <bx-select [clearable]="false" [label]="breakpoint" [formControlName]="breakpoint" [options]="breakpointSelectOptions" subscriptSizing="dynamic">
                     </bx-select>
                     }
                 </div>
