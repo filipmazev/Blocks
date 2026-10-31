@@ -1,4 +1,4 @@
-import{Ar as m,Ci as v,Cn as ar,Gr as p,Mi as we,Nt as Sm,On as bn,Ut as V,f as D,fi as si,l as Bt,wt as Q,xr as jt,zn as de}from"./chunk-BAxYodTU.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Ar as m,Ci as v,Cn as ar,Gr as p,Mi as we,Nt as Sm,On as bn,Ut as V,f as D,fi as si,l as Bt,wt as Q,xr as jt,zn as de}from"./chunk-zHe8pzQe.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -545,6 +545,126 @@ modalRef.<span class="hljs-title function_">afterClosed</span>().<span class="hl
 <li>Individual modal configurations (IModalConfig) can still override the global defaults on a per-modal basis.</li>
 </ul>
 <p>This enables dynamic control of modal behavior, such as temporarily disabling animations, forcing bottom-sheet layouts on mobile, or preventing accidental dismissals, without modifying individual modal calls.</p>
+`,"documentation/releases/1.5.0/README.md":`<p>Blocks has grown from separate core and modal libraries into a unified Angular UI library with shared theming, forms, navigation, notifications, icons and appearance effects.</p>
+<p>These notes cover the library, its documentation and installation schematic. They compare <code>f9bf13b2bb6914c26d11639076006bd1dcc5a851</code> with <code>55b915c819525cfa365d4b59389a765233b2cd35</code>.</p>
+<h2>Unified package and installation</h2>
+<ul>
+<li>Consolidated <code>@filip.mazev/blocks-core</code> and <code>@filip.mazev/modal</code> into <code>@filip.mazev/blocks</code>.</li>
+<li>Added dedicated public entry points for <code>core</code>, <code>forms</code>, <code>primitives</code>, <code>navigation</code>, <code>icons</code>, <code>modal</code>, <code>toastr</code> and <code>effects</code>.</li>
+<li>Added an interactive <code>ng add @filip.mazev/blocks</code> schematic with palette selection, global Sass configuration and effects stylesheet registration.</li>
+<li>Updated Angular peer dependencies from Angular 21 to Angular 22.</li>
+</ul>
+<h2>Theming and customization</h2>
+<ul>
+<li>Reworked theming around semantic roles for backgrounds, text, borders, primary and accent colors, and status feedback.</li>
+<li>Added typed color contracts, including <code>SemanticColorToken</code>, palette shade tokens and light/dark <code>ThemedColor</code> configurations.</li>
+<li>Introduced seven duo-tone palettes: Carbon / Cobalt, Azure / Ember, Violet / Teal, Tangerine / Indigo, Brick Rose / Cyan, Lime / Violet and Cyberpunk.</li>
+<li>Expanded <code>ThemingService</code> with runtime palette selection, high-contrast controls, appearance configuration and persisted preferences.</li>
+<li>Added shared styling utilities and component CSS variables for more consistent customization of spacing, typography, surfaces and interaction states.</li>
+<li>Preserved the connection between responsive Sass mixins and <code>WindowDimensionsService</code> breakpoints.</li>
+</ul>
+<p>See the <a href="appearance">appearance guide</a> for the current palettes and application-wide configuration.</p>
+<h2>Glass, physics and lighting</h2>
+<ul>
+<li>Added a shared glass material across components and overlays, configurable globally through <code>ThemingService.setAppearance()</code>.</li>
+<li>Added adjustable glassiness, automatic/baseline/enhanced rendering quality and reduced-transparency settings.</li>
+<li>Added <code>BxSurfaceDirective</code> for applying Blocks materials to application-owned surfaces, with local appearance and interaction overrides.</li>
+<li>Introduced spring-based press feedback and spatial lighting that responds to hover, press, keyboard focus and selected states.</li>
+<li>Added ambient edge tinting from nearby content, with depth and occlusion handling that respects overlay boundaries.</li>
+<li>Added opaque fallbacks for forced colors, reduced transparency and unsupported backdrop filters.</li>
+<li>Exposed a framework-independent DOM effects runtime through <code>@filip.mazev/blocks/effects/runtime</code>.</li>
+</ul>
+<h2>Forms and controls</h2>
+<ul>
+<li>Added buttons, form fields, text and numeric inputs, multiline inputs, search inputs, checkboxes, radio buttons and groups, switches, selects, multiselects, autocomplete and sliders.</li>
+<li>Added integration with Angular Signal Forms, Reactive Forms, template-driven forms and standalone value models.</li>
+<li>Introduced shared validation presentation with configurable error messages, priorities, visibility policies, projected errors and application defaults.</li>
+<li>Added composable prefixes, suffixes, hints, required markers, floating labels and filled/outlined field appearances.</li>
+<li>Added native-control integration through <code>bxInput</code> and an extension contract for custom form-field controls.</li>
+<li>Added distinct readonly behavior through both <code>readOnly</code> and Angular&#39;s lowercase <code>readonly</code> contract.</li>
+<li>Added numeric parse-state handling, keyboard-accessible steppers, textarea autosizing and native input attribute forwarding.</li>
+</ul>
+<h2>Asynchronous selection and pagination</h2>
+<ul>
+<li>Added application-owned loading, searching, error and pagination state to selection controls.</li>
+<li>Added searchable multiselects with tag presentation, overflow summaries, configurable templates and explicit select-all intent.</li>
+<li>Added editable autocomplete with free-text values, optional inline completion, custom option templates and externally filtered suggestions.</li>
+<li>Introduced reusable <code>LoadMoreDirective</code> behavior with guarded scroll requests, a visible fallback action when content does not overflow, and explicit retry.</li>
+<li>Distinguished scroll, button and retry request sources.</li>
+<li>Added retained-content error states and separate feedback for initial loading, replacement searches and incremental loading.</li>
+</ul>
+<h2>Primitives and overlays</h2>
+<ul>
+<li>Added cards, containers, stacks, grids, dividers, alerts, chips, tags, collapsibles and accordions.</li>
+<li>Added loading indicators, spinners, skeletons and determinate/indeterminate progress bars.</li>
+<li>Added tabs with controlled selection, disabled states, per-tab colors and icons, keyboard navigation and lazy content templates.</li>
+<li>Added menus, cascading submenus, dropdowns, context menus, tooltips and interactive popovers.</li>
+<li>Added shared overlay positioning, live theme inheritance, keyboard dismissal and focus behavior for the new overlay controls.</li>
+<li>Added <code>TruncateDirective</code>, <code>TruncatedTextPipe</code> and <code>truncatedText()</code> for reusable overflow detection and conditional tooltips.</li>
+<li>Added configurable automatic truncation tooltips across supported controls.</li>
+</ul>
+<h2>Navigation</h2>
+<ul>
+<li>Added <code>NavigationService</code>, route metadata helpers, breadcrumbs and shared navigation configuration.</li>
+<li>Added <code>defineNavigation()</code> with typed section IDs and reusable route declarations.</li>
+<li>Added route-driven side navigation and top navigation with shared hierarchical browsing, contextual search and active-route handling.</li>
+<li>Added compact side rails, responsive mobile drawers, configurable slots and persisted desktop navigation state.</li>
+<li>Added access-adapter filtering, translated navigation metadata and focus/scroll restoration when navigating submenu levels.</li>
+</ul>
+<h2>Icons and notifications</h2>
+<ul>
+<li>Added Lucide SVG icon integration with asynchronous loading, typed names, configurable sizing and stroke width, and semantic colors.</li>
+<li>Added custom icon definition helpers and decorative/meaningful icon semantics.</li>
+<li>Added <code>ToastrService</code> with standard information, success, warning and danger notifications, plus custom content.</li>
+<li>Added six notification positions, configurable duration, progress indicators, swipe dismissal, pause/resume controls and typed close results.</li>
+<li>Added shared notification defaults and theme-aware notification surfaces.</li>
+</ul>
+<h2>Accessibility, translations and developer experience</h2>
+<ul>
+<li>Added <code>BxA11yService</code> for reactive reduced-motion preferences and application overrides.</li>
+<li>Added optional <code>BX_I18N</code> integration and shared <code>ResolvableText</code> contracts for configurable text.</li>
+<li>Added reactive translation updates through the adapter&#39;s version signal.</li>
+<li>Added keyboard interaction, focus presentation, accessible labels, validation descriptions and RTL behavior across the new components.</li>
+<li>Expanded public configuration interfaces, template customization points and component documentation.</li>
+</ul>
+<h2>Migration notes</h2>
+<table>
+<thead>
+<tr>
+<th>Previous API or setup</th>
+<th>Current replacement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@filip.mazev/blocks-core</code> imports</td>
+<td><code>@filip.mazev/blocks/core</code></td>
+</tr>
+<tr>
+<td><code>@filip.mazev/modal</code> imports</td>
+<td><code>@filip.mazev/blocks/modal</code></td>
+</tr>
+<tr>
+<td>Deep Sass imports from the old packages</td>
+<td><code>@use &#39;@filip.mazev/blocks&#39; as *;</code></td>
+</tr>
+<tr>
+<td><code>core-theme(...)</code> and legacy theme maps</td>
+<td><code>bx-theme(...)</code> with a current palette map</td>
+</tr>
+<tr>
+<td>Custom <code>--fm-*</code> theme overrides</td>
+<td>Review and migrate to the current <code>--bx-*</code> semantic tokens</td>
+</tr>
+<tr>
+<td>Modal <code>bannerText</code></td>
+<td><code>header: { text: ... }</code>, with optional icon configuration</td>
+</tr>
+<tr>
+<td>Angular 21 applications</td>
+<td>Upgrade to Angular 22</td>
+</tr>
+</tbody></table>
+<p>For manual installation, register <code>@filip.mazev/blocks/effects/effects.css</code> once alongside the global Blocks theme. The installation schematic configures this automatically.</p>
 `,"documentation/toastr/README.md":`<h1>@filip.mazev/blocks/toastr</h1>
 <h2>Blocks - Toastr Library</h2>
 <p><strong>Blocks</strong> is a powerful Angular component library. The <strong>Toastr</strong> package provides a highly customizable, component-driven toast notification system. It features robust queue management, swipe-to-dismiss gestures for mobile, flexible screen positioning, and full type safety for dynamic content.</p>
@@ -1812,6 +1932,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;sparkles&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;32&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;text-primary&quot;</span> [<span class="hljs-attr">decorative</span>]=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Highlights&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>name</code> is required. <code>size</code>, <code>strokeWidth</code>, <code>color</code>, <code>bgColor</code>, <code>decorative</code>, <code>ariaLabel</code> configure rendering. Color accepts a semantic token or themed color; <code>bgColor=&quot;auto&quot;</code> derives a complementary token.</p>
+<p><code>size</code> accepts the string values <code>&#39;16&#39;</code>, <code>&#39;20&#39;</code>, <code>&#39;24&#39;</code>, <code>&#39;28&#39;</code>, <code>&#39;32&#39;</code>, <code>&#39;36&#39;</code>, <code>&#39;40&#39;</code>, <code>&#39;44&#39;</code> and <code>&#39;48&#39;</code>, measured in pixels. The default is <code>&#39;24&#39;</code>. For a small icon between the first two sizes, choose <code>&#39;16&#39;</code> or <code>&#39;20&#39;</code>; <code>&#39;18&#39;</code> is not supported by <code>IconSize</code>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
@@ -4138,7 +4259,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var w=class c{document=p(Q);router=p(ar);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=V({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&de(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(Bt(0,`div`,0)(1,`div`,1)(2,`span`),we(3,`Documentation`),jt()(),bn(4,`article`,2),jt()),a&2&&(D(4),si(`innerHTML`,s.readmeContent(),Sm))},styles:[`
+`};var w=class c{document=p(Q);router=p(ar);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=V({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&de(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(Bt(0,`div`,0)(1,`div`,1)(2,`span`),we(3,`Documentation`),jt()(),bn(4,`article`,2),jt()),a&2&&(D(4),si(`innerHTML`,s.readmeContent(),Sm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
