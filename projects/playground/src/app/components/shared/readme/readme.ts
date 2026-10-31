@@ -32,7 +32,7 @@ export class Readme {
     const base = new URL('.', this.document.baseURI);
     if (destination.origin !== base.origin || !destination.pathname.startsWith(base.pathname)) return;
     const route = destination.pathname.slice(base.pathname.length);
-    if (!/^(?:home|glass|components(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(route)) return;
+    if (!/^(?:home|glass|appearance|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(route)) return;
     event.preventDefault();
     void this.router.navigateByUrl(`/${route}${destination.search}${destination.hash}`);
   }

@@ -20,6 +20,8 @@ Add the standalone component or directive to your component's `imports`.
 
 `name` is required. `size`, `strokeWidth`, `color`, `bgColor`, `decorative`, `ariaLabel` configure rendering. Color accepts a semantic token or themed color; `bgColor="auto"` derives a complementary token.
 
+`size` accepts the string values `'16'`, `'20'`, `'24'`, `'28'`, `'32'`, `'36'`, `'40'`, `'44'` and `'48'`, measured in pixels. The default is `'24'`. For a small icon between the first two sizes, choose `'16'` or `'20'`; `'18'` is not supported by `IconSize`.
+
 ## Appearance
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.

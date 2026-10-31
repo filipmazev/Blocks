@@ -19,7 +19,7 @@ npm ci
 npm start
 ```
 
-Open http://localhost:8080 for the playground, `/components` for the catalog, and `/appearance` for shared theme and accessibility controls. This workspace uses Angular 22 and TypeScript 6.
+Open http://localhost:8080 for the playground, `/components` for the catalog, `/appearance` for shared theme and accessibility controls, and `/release-notes` for version-specific library changes. Direct release links use `/release-notes/<version>`, such as `/release-notes/1.5.0`. This workspace uses Angular 22 and TypeScript 6.
 
 ## Development
 
@@ -33,9 +33,9 @@ Documentation is generated before playground builds and serving. After changing 
 
 ## Publishing
 
-The library version and release channel live in `projects/blocks/package.json`. `publishConfig.tag` is currently `beta`: the playground shows a Beta badge and `v1.4.20 (beta)`, and npm publishes to the `beta` channel. Change the tag to `latest` for a stable release; the badge and suffix disappear after version synchronization. `BLOCKS_VERSION` remains the numeric package version; `BLOCKS_RELEASE_CHANNEL` and `BLOCKS_VERSION_LABEL` are generated alongside it. Starts and builds synchronize these automatically.
+The library version and release channel live in `projects/blocks/package.json`. `publishConfig.tag` is currently `beta`: the playground shows a Beta badge and the current version with a `(beta)` suffix, and npm publishes to the `beta` channel. Change the tag to `latest` for a stable release; the badge and suffix disappear after version synchronization. `BLOCKS_VERSION` remains the numeric package version; `BLOCKS_RELEASE_CHANNEL` and `BLOCKS_VERSION_LABEL` are generated alongside it. Starts and builds synchronize these automatically.
 
-To prepare the next minor version locally (currently 1.4.20 → 1.5.0), without publishing or creating a Git tag:
+To prepare the next minor version locally (for example, 1.4.21 → 1.5.0), without publishing or creating a Git tag:
 
 ```sh
 npm run version:minor
@@ -52,6 +52,8 @@ bash publish.sh --retry        # Publish the existing version after a local bump
 ```
 
 Choose one command: after `npm run version:minor`, use `--retry` to publish that prepared version without another bump. The script checks npm authentication before changing the version, then builds and publishes. It accepts an existing npm login, `NPM_TOKEN`, or an interactive token prompt; `--token` remains supported. For unattended publication, the token needs publish access to `@filip.mazev/blocks` and permission to bypass two-factor authentication.
+
+For the 1.5.0 beta release from 1.4.21, run `bash publish.sh --bump minor`. Keep `publishConfig.tag` set to `beta`: the package version will be `1.5.0`, published under npm's `beta` tag. Consumers can install it with `npm install @filip.mazev/blocks@beta`. Release-notes metadata is maintained separately in the playground's release registry; use `status: 'released'` and `channel: 'beta'` for this release.
 
 To build and deploy the playground to the existing GitHub Pages target:
 

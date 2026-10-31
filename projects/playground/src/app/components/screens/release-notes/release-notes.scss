@@ -1,0 +1,118 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.release-page {
+    max-inline-size: 70rem;
+    margin-inline: auto;
+    color: var(--bx-text-primary);
+}
+
+.page-heading {
+    margin-block-end: spacing(8);
+}
+
+h1 {
+    margin-block: 0 spacing(3);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.2;
+}
+
+.release-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(4) spacing(6);
+    margin-block-end: spacing(6);
+}
+
+.version-select {
+    flex: 0 1 22rem;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+.current-version {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+    margin: 0;
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}
+
+.release-summary {
+    padding: spacing(6);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    margin-block-end: spacing(8);
+    overflow-wrap: anywhere;
+
+    > p {
+        max-inline-size: 50rem;
+        color: var(--bx-text-secondary);
+        line-height: 1.65;
+    }
+
+    a {
+        max-inline-size: 100%;
+    }
+}
+
+.release-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.draft-notice {
+    padding-inline-start: spacing(3);
+    border-inline-start: 3px solid var(--bx-border-warn);
+}
+
+.comparison {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+    margin-block: spacing(3) 0;
+    font-size: 0.8125rem;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.release-documentation {
+    min-inline-size: 0;
+}
+
+.missing-release {
+    > bx-icon {
+        margin-block-end: spacing(4);
+    }
+}
+
+@include respond-down(sm) {
+    .page-heading {
+        margin-block-end: spacing(6);
+    }
+
+    .version-select {
+        flex-basis: 100%;
+    }
+
+    .release-summary {
+        padding: spacing(4);
+    }
+}

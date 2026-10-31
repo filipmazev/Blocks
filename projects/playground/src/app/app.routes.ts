@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { APP_NAVIGATION } from './app.navigation';
 import { COMPONENT_EXAMPLES } from './components/screens/library-components/component-demo/component-catalog';
+import { RELEASE_NOTES } from './components/screens/release-notes/constants/release-notes.constants';
 
 const { withNav } = APP_NAVIGATION;
 
@@ -55,6 +56,20 @@ export const ROUTES: Routes = [
       ]
     },
     { label: 'All components', breadcrumb: 'Components', section: 'Start', menu: true, order: 3 }
+  ),
+  withNav(
+    {
+      path: 'release-notes',
+      title: 'Release notes · Blocks',
+      children: [
+        { path: '', pathMatch: 'full', redirectTo: RELEASE_NOTES[0].version },
+        {
+          path: ':version',
+          loadComponent: () => import('./components/screens/release-notes/release-notes').then((m) => m.ReleaseNotes)
+        }
+      ]
+    },
+    { label: 'Release notes', breadcrumb: 'Release notes', section: 'Start', icon: { name: 'history' }, menu: true, order: 4 }
   ),
   withNav(
     {

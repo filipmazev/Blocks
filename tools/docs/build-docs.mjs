@@ -73,6 +73,10 @@ routes.set('documentation/toastr/README.md', 'toastr');
 routes.set('documentation/core/README.md', 'components');
 routes.set('projects/blocks/README.md', 'home');
 for (const file of files) {
+  const release = /^documentation\/releases\/([^/]+)\/README\.md$/.exec(file);
+  if (release) routes.set(file, `release-notes/${release[1]}`);
+}
+for (const file of files) {
   const html = await marked.parse(await readFile(path.join(root, file), 'utf8'), { gfm: true });
   documents[file] = html.replace(/href="([^"#][^"]*)"/g, (match, href) => {
     if (/^(?:[a-z]+:|\/)/i.test(href)) return match;
