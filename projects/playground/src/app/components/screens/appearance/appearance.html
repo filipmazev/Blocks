@@ -1,264 +1,182 @@
 <section class="appearance" aria-labelledby="appearance-title">
-  <header class="page-heading">
-    <p class="eyebrow">Make Blocks your own</p>
-    <h1 id="appearance-title">Appearance</h1>
-    <p>
-      Choose your preferred appearance, shape your surfaces, and find a palette that feels right.
-    </p>
-  </header>
-
-  <div class="mode-picker" role="group" aria-label="Appearance mode">
-    @for (mode of modes(); track mode.value) {
-      <bx-card
-        class="mode-choice"
-        [clickable]="true"
-        [selected]="selectedMode() === mode.value"
-        highlightColor="accent"
-        [ariaLabel]="mode.label"
-        (activated)="setMode(mode.value)"
-      >
-        <span class="mode-content"
-          ><span class="mode-visual" [class.is-auto]="mode.value === 'auto'">
-            @if (mode.value === 'auto') {
-              <app-appearance-mode-preview mode="light" />
-              <app-appearance-mode-preview mode="dark" />
-            } @else {
-              <app-appearance-mode-preview [mode]="mode.value" />
-            }
-          </span>
-          <span class="mode-caption"
-            ><span class="mode-label"
-              >{{ mode.label
-              }}<bx-icon
-                [name]="
-                  selectedMode() === mode.value ? 'circle-check' : 'circle'
-                "
-                size="20" /></span
-            ></span
-          ></span
-        >
-      </bx-card>
-    }
-    @if (compactModes()) {
-      <bx-slide-toggle class="mode-auto" label="Automatic" labelPosition="before"
-        [ngModel]="theme.applicationTheme() === null" (ngModelChange)="setAutomaticMode($event)" subscriptSizing="dynamic" />
-    }
-  </div>
-
-  <section class="settings-section surfaces-section" aria-labelledby="surfaces-title">
-    <header class="section-heading">
-      <div>
-        <h2 id="surfaces-title">Surfaces</h2>
-      </div>
+    <header class="page-heading">
+        <p class="eyebrow">Make Blocks your own</p>
+        <h1 id="appearance-title">Appearance</h1>
+        <p>
+            Choose your preferred appearance, shape your surfaces, and find a palette that feels right.
+        </p>
     </header>
-    <bx-container size="full" class="surface-layout">
-      <div class="surface-introduction">
-        <div class="panel-heading">
-          <h3 id="surface-appearance-title">Surface Appearance</h3>
-          <button
-            bx-button
-            type="button"
-            variant="text"
-            color="grayscale"
-            aria-label="Reset surface appearance"
-            (click)="reset()"
-          >
-            Reset
-          </button>
-        </div>
-      </div>
-      <div class="surface-demo-column">
-        <div class="preview-column"><app-appearance-preview /></div>
-        <section
-          class="translucency-controls"
-          aria-label="Translucency"
-          aria-describedby="translucency-note"
-          [class.is-disabled]="appearance().reducedTransparency"
-          [attr.tabindex]="appearance().reducedTransparency ? 0 : null"
-          [bxTooltip]="
+
+    <div class="mode-picker" role="group" aria-label="Appearance mode">
+        @for (mode of modes(); track mode.value) {
+        <bx-card class="mode-choice" [clickable]="true" [selected]="selectedMode() === mode.value"
+            highlightColor="accent" [ariaLabel]="mode.label" (activated)="setMode(mode.value)">
+            <span class="mode-content"><span class="mode-visual" [class.is-auto]="mode.value === 'auto'">
+                    @if (mode.value === 'auto') {
+                    <app-appearance-mode-preview mode="light" />
+                    <app-appearance-mode-preview mode="dark" />
+                    } @else {
+                    <app-appearance-mode-preview [mode]="mode.value" />
+                    }
+                </span>
+                <span class="mode-caption"><span class="mode-label">{{ mode.label
+                        }}<bx-icon [name]="
+                  selectedMode() === mode.value ? 'circle-check' : 'circle'
+                " size="20" /></span></span></span>
+        </bx-card>
+        }
+        @if (compactModes()) {
+        <bx-slide-toggle class="mode-auto" label="Automatic" labelPosition="before"
+            [ngModel]="theme.applicationTheme() === null" (ngModelChange)="setAutomaticMode($event)"
+            subscriptSizing="dynamic" />
+        }
+    </div>
+
+    <section class="settings-section surfaces-section" aria-labelledby="surfaces-title">
+        <header class="section-heading">
+            <div>
+                <h2 id="surfaces-title">Surfaces</h2>
+            </div>
+        </header>
+        <bx-container size="full" class="surface-layout">
+            <div class="surface-introduction">
+                <div class="panel-heading">
+                    <h3 id="surface-appearance-title">Surface Appearance</h3>
+                    <button bx-button type="button" variant="text" color="grayscale"
+                        aria-label="Reset surface appearance" (click)="reset()">
+                        Reset
+                    </button>
+                </div>
+            </div>
+            <div class="surface-demo-column">
+                <div class="preview-column"><app-appearance-preview /></div>
+                <section class="translucency-controls" aria-label="Translucency" aria-describedby="translucency-note"
+                    [class.is-disabled]="appearance().reducedTransparency"
+                    [attr.tabindex]="appearance().reducedTransparency ? 0 : null" [bxTooltip]="
             appearance().reducedTransparency
               ? 'Turn off Reduce transparency to adjust translucency.'
               : ''
-          "
-        >
-          <div class="translucency-range">
-            <bx-icon
-              name="circle-dashed"
-              size="20"
-              [decorative]="false"
-              ariaLabel="Lighter tint"
-            />
-            <input
-              #translucency
-              id="appearance-translucency"
-              type="range"
-              bxSlider
-              min="0"
-              max="1"
-              step="0.01"
-              aria-label="Translucency"
-              aria-describedby="translucency-note"
-              [attr.aria-valuetext]="translucencyDescription()"
-              [value]="appearance().translucency"
-              [disabled]="appearance().reducedTransparency"
-              (input)="updateAppearance({ translucency: +translucency.value })"
-            />
-            <bx-icon
-              class="translucency-tinted-icon"
-              name="circle"
-              size="20"
-              [decorative]="false"
-              ariaLabel="Richly tinted"
-            />
-          </div>
-        </section>
-        <p id="translucency-note" class="section-note">
-          {{
-            appearance().reducedTransparency
-              ? 'Reduced transparency keeps surfaces opaque. Turn it off to adjust translucency.'
-              : 'Slide from a lighter tint to a richer finish. Glassiness always keeps a readable backing.'
-          }}
-        </p>
-      </div>
-    </bx-container>
-    <bx-collapsible class="advanced-settings" title="Advanced settings" [headingLevel]="3">
-      <div class="advanced-grid">
-        <div>
-          <fieldset class="rendering-options">
-            <legend>Rendering</legend>
-            <div class="quality-picker">
-              @for (option of qualities; track option.value) {
-                <bx-radio
-                  name="appearance-quality"
-                  [label]="option.label"
-                  [value]="option.value"
-                  [disabled]="option.value === 'enhanced' && theme.preferredGlassiness() === 'off'"
-                  [ngModel]="appearance().quality"
-                  (ngModelChange)="updateAppearance({ quality: $event })"
-                  subscriptSizing="dynamic"
-                />
-              }
+          ">
+                    <div class="translucency-range">
+                        <bx-icon name="circle-dashed" size="20" [decorative]="false" ariaLabel="Lighter tint" />
+                        <input #translucency id="appearance-translucency" type="range" bxSlider min="0" max="1"
+                            step="0.01" aria-label="Translucency" aria-describedby="translucency-note"
+                            [attr.aria-valuetext]="translucencyDescription()" [value]="appearance().translucency"
+                            [disabled]="appearance().reducedTransparency"
+                            (input)="updateAppearance({ translucency: +translucency.value })" />
+                        <bx-icon class="translucency-tinted-icon" name="circle" size="20" [decorative]="false"
+                            ariaLabel="Richly tinted" />
+                    </div>
+                </section>
+                <p id="translucency-note" class="section-note">
+                    {{
+                    appearance().reducedTransparency
+                    ? 'Reduced transparency keeps surfaces opaque. Turn it off to adjust translucency.'
+                    : 'Slide from a lighter tint to a richer finish. Glassiness always keeps a readable backing.'
+                    }}
+                </p>
             </div>
-          </fieldset>
-          <p class="section-note">
-            Automatic balances detail and performance. Enhanced adds reflections and bevels to
-            selected surfaces but may reduce performance. Baseline uses blur and tint and turns glassiness off.
-          </p>
-        </div>
-        <div>
-          <fieldset class="rendering-options">
-            <legend>Glassiness</legend>
-            <div class="quality-picker">
-              @for (option of glassinessModes; track option.value) {
-                <bx-radio
-                  name="appearance-glassiness"
-                  [label]="option.label"
-                  [value]="option.value"
-                  [disabled]="appearance().quality === 'baseline'"
-                  [ngModel]="appearance().glassiness ?? 'auto'"
-                  (ngModelChange)="updateAppearance({ glassiness: $event })"
-                  subscriptSizing="dynamic"
-                />
-              }
+        </bx-container>
+        <bx-collapsible class="advanced-settings" title="Advanced settings" [headingLevel]="3">
+            <div class="advanced-grid">
+                <div>
+                    <fieldset class="rendering-options">
+                        <legend>Rendering</legend>
+                        <div class="quality-picker">
+                            @for (option of qualities; track option.value) {
+                            <bx-radio name="appearance-quality" [label]="option.label" [value]="option.value"
+                                [disabled]="option.value === 'enhanced' && theme.preferredGlassiness() === 'off'"
+                                [ngModel]="appearance().quality" (ngModelChange)="updateAppearance({ quality: $event })"
+                                subscriptSizing="dynamic" />
+                            }
+                        </div>
+                    </fieldset>
+                    <p class="section-note">
+                        Automatic balances detail and performance. Enhanced adds reflections and bevels to
+                        selected surfaces but may reduce performance. Baseline uses blur and tint and turns glassiness
+                        off.
+                    </p>
+                </div>
+                <div>
+                    <fieldset class="rendering-options">
+                        <legend>Glassiness</legend>
+                        <div class="quality-picker">
+                            @for (option of glassinessModes; track option.value) {
+                            <bx-radio name="appearance-glassiness" [label]="option.label" [value]="option.value"
+                                [disabled]="appearance().quality === 'baseline'"
+                                [ngModel]="appearance().glassiness ?? 'auto'"
+                                (ngModelChange)="updateAppearance({ glassiness: $event })" subscriptSizing="dynamic" />
+                            }
+                        </div>
+                    </fieldset>
+                    <p class="section-note">
+                        Refraction enhances selected controls on supported browsers. Text and icons keep their theme
+                        colors. Accessibility preferences take precedence.
+                    </p>
+                </div>
             </div>
-          </fieldset>
-          <p class="section-note">
-            Refraction enhances selected controls on supported browsers. Text and icons keep their theme colors. Accessibility preferences take precedence.
-          </p>
+        </bx-collapsible>
+    </section>
+
+    <section class="settings-section" aria-labelledby="theme-title">
+        <header class="section-heading">
+            <div>
+                <h2 id="theme-title">Theme</h2>
+            </div>
+        </header>
+        <div class="palette-picker">
+            @for (palette of theme.palettes; track palette.id) {
+            <button bx-button type="button" variant="tonal"
+                [color]="theme.palette() === palette.id ? 'accent' : 'grayscale'"
+                [attr.aria-pressed]="theme.palette() === palette.id" (click)="theme.setPalette(palette.id)"><span
+                    class="palette-swatches" aria-hidden="true"><span
+                        [style.background-color]="palette.colors[0]"></span><span
+                        [style.background-color]="palette.colors[1]"></span></span>{{ palette.label }}</button>
+            }
         </div>
-      </div>
-    </bx-collapsible>
-  </section>
+    </section>
 
-  <section class="settings-section" aria-labelledby="theme-title">
-    <header class="section-heading">
-      <div>
-        <h2 id="theme-title">Theme</h2>
-      </div>
-    </header>
-    <div class="palette-picker" role="group" aria-label="Theme palette">
-      @for (palette of theme.palettes; track palette.id) {
-        <button
-          bx-button
-          type="button"
-          variant="tonal"
-          color="grayscale"
-          class="palette-choice"
-          [class.is-selected]="theme.palette() === palette.id"
-          [attr.aria-pressed]="theme.palette() === palette.id"
-          (click)="theme.setPalette(palette.id)"
-        >
-          <span class="palette-swatches" aria-hidden="true"
-            ><span [style.background-color]="palette.colors[0]"></span
-            ><span [style.background-color]="palette.colors[1]"></span
-          ></span>
-          <span>{{ palette.label }}</span
-          ><bx-icon [name]="theme.palette() === palette.id ? 'circle-check' : 'circle'" size="20" />
-        </button>
-      }
-    </div>
-  </section>
+    <section class="settings-section" aria-labelledby="accessibility-title">
+        <header class="section-heading">
+            <div>
+                <h2 id="accessibility-title">Accessibility</h2>
+            </div>
+        </header>
+        <div class="accessibility-options">
+            <div>
+                <bx-slide-toggle label="Reduce motion" [ngModel]="reducedMotion()" (ngModelChange)="setMotion($event)"
+                    subscriptSizing="dynamic" />
+                <p class="section-note">Keep transitions and decorative movement to a minimum.</p>
+            </div>
+            <div>
+                <bx-slide-toggle label="Reduce transparency" [ngModel]="appearance().reducedTransparency"
+                    (ngModelChange)="updateAppearance({ reducedTransparency: $event })" subscriptSizing="dynamic" />
+                <p class="section-note">
+                    Use opaque surfaces while preserving your translucency preference.
+                </p>
+            </div>
+            <div>
+                <bx-slide-toggle label="High contrast" [ngModel]="theme.highContrast()"
+                    (ngModelChange)="theme.setHighContrast($event)" subscriptSizing="dynamic" />
+                <p class="section-note">Strengthen the separation between content and its background.</p>
+            </div>
+        </div>
+    </section>
 
-  <section class="settings-section" aria-labelledby="accessibility-title">
-    <header class="section-heading">
-      <div>
-        <h2 id="accessibility-title">Accessibility</h2>
-      </div>
-    </header>
-    <div class="accessibility-options">
-      <div>
-        <bx-slide-toggle
-          label="Reduce motion"
-          [ngModel]="reducedMotion()"
-          (ngModelChange)="setMotion($event)"
-          subscriptSizing="dynamic"
-        />
-        <p class="section-note">Keep transitions and decorative movement to a minimum.</p>
-      </div>
-      <div>
-        <bx-slide-toggle
-          label="Reduce transparency"
-          [ngModel]="appearance().reducedTransparency"
-          (ngModelChange)="updateAppearance({ reducedTransparency: $event })"
-          subscriptSizing="dynamic"
-        />
-        <p class="section-note">
-          Use opaque surfaces while preserving your translucency preference.
-        </p>
-      </div>
-      <div>
-        <bx-slide-toggle
-          label="High contrast"
-          [ngModel]="theme.highContrast()"
-          (ngModelChange)="theme.setHighContrast($event)"
-          subscriptSizing="dynamic"
-        />
-        <p class="section-note">Strengthen the separation between content and its background.</p>
-      </div>
-    </div>
-  </section>
-
-  <bx-collapsible
-    class="appearance-documentation"
-    title="Appearance API, performance, and accessibility"
-    [headingLevel]="2"
-    [contentTemplate]="documentation"
-  />
-  <ng-template #documentation>
-    <div class="implementation">
-      <div>
-        <h3>One configuration. Every component.</h3>
-        <p>
-          Surfaces follow the existing semantic theme. Use the controls above, or configure the
-          theming service in your application.
-        </p>
-      </div>
-      <pre
-        class="playground-code-block"
-        tabindex="0"
-        aria-label="TypeScript appearance configuration"
-      ><code language="typescript" [highlight]="codeExample"></code></pre>
-    </div>
-    <app-readme path="documentation/appearance/README.md" />
-  </ng-template>
+    <bx-collapsible class="appearance-documentation" title="Appearance API, performance, and accessibility"
+        [headingLevel]="2" [contentTemplate]="documentation" />
+    <ng-template #documentation>
+        <div class="implementation">
+            <div>
+                <h3>One configuration. Every component.</h3>
+                <p>
+                    Surfaces follow the existing semantic theme. Use the controls above, or configure the
+                    theming service in your application.
+                </p>
+            </div>
+            <pre class="playground-code-block" tabindex="0"
+                aria-label="TypeScript appearance configuration"><code language="typescript" [highlight]="codeExample"></code></pre>
+        </div>
+        <app-readme path="documentation/appearance/README.md" />
+    </ng-template>
 </section>
