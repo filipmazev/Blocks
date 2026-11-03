@@ -17,7 +17,7 @@ Open <http://localhost:8080>. The component catalogue links each component to it
 
 The playground defaults to Carbon / Cobalt (`#292a2d` / `#356fe8`) when no valid saved palette is present; Reset returns to Carbon / Cobalt.
 
-The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate translucency card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.
+The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.
 
 ```sh
 npm run build:playground
@@ -67,48 +67,18 @@ export class Settings {
 
   setAppearance() {
     this.theme.setAppearance({
-      translucency: 0.5,
+      glassiness: 0.5,
       quality: 'auto',
     });
   }
 }
 ```
 
-There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full translucency range; fields and filled actions retain their own legibility constraints.
+There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full glassiness range; fields and filled actions retain their own legibility constraints.
 
-`theme.appearance()` is the current typed configuration; `theme.resetAppearance()` restores defaults. Changes apply to existing components and open overlays. `translucency` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint near 72.5% to retain a glassy appearance. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen translucency for when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to translucency, and a saved solid preference becomes reduced transparency.
+`theme.appearance()` is the current typed configuration; `theme.resetAppearance()` restores defaults. Changes apply to existing components and open overlays. `glassiness` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint at 80% to retain a glassy appearance. There are no independent tint, blur, or material preset settings. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen glassiness for when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to glassiness, and a saved solid preference becomes reduced transparency.
 
 The global styles are required once. `ng add @filip.mazev/blocks` adds the distributed material stylesheet to the application build. For an existing application, add `node_modules/@filip.mazev/blocks/effects/effects.css` to `angular.json` styles before the application stylesheet, or import `@filip.mazev/blocks/effects/effects.css` globally. Continue including the usual Blocks Sass theme once. The playground already does this.
-
-## Appearance playground
-
-The `/appearance` page separates color mode, surfaces, theme palettes, and accessibility. Light and Dark select an explicit mode. Auto follows live system color-scheme changes, including after a reload. Clickable Blocks cards choose the mode; their inert previews use Blocks components in the selected palette. The selected card uses the shared emissive highlight, and Auto joins its light/dark preview halves without inner corner rounding.
-
-```ts
-theme.setApplicationTheme('dark');
-theme.setApplicationTheme(null); // Follow the system appearance.
-```
-
-The Surfaces section places its Surface Appearance title beside the scrolling journal on wide layouts and above it on smaller screens. The padded pill slider sits below the demo, followed by its description; Reset restores surface preferences. Its Blocks Advanced settings disclosure contains rendering and glassiness options. Rendering, glassiness, translucency and reduced transparency are saved together in `blocks-appearance` and restored on refresh, including Enhanced. Baseline temporarily sets Glassiness to Off and disables all glassiness choices, including browser opt-in. Switching back to Automatic or Enhanced restores the previous Automatic or browser opt-in policy; an explicitly chosen Off remains Off. Enhanced stays available from Baseline when the remembered policy permits it. This also applies to `theme.setAppearance()` and restored preferences. `theme.preferredGlassiness()` exposes the requested policy while `theme.appearance().glassiness` reflects the effective value. Turning Glassiness Off intentionally returns Enhanced to Automatic. Theme palettes and accessibility preferences have independent sections; resetting surfaces changes only surface preferences.
-
-The top bar provides a single Appearance link. On wide screens, selectable Blocks cards offer Light, Dark and Auto. On screens at the shared `sm` breakpoint or narrower, Light and Dark appear side by side with portrait previews and an Automatic slide toggle below. Automatic highlights the currently active mode and follows system changes; choosing the other card disables Auto, while choosing the already active card keeps it enabled. Turning Auto off preserves the current mode. Mode and palette preferences remain available on this page and persist across refreshes.
-
-## Glassiness and translucency
-
-The **Translucency** slider controls tint and blur. It defaults to 50%; the preceding midpoint now falls around 70% on the slider, with both endpoints preserved. The classic material retains its clear minimum and caps tint near 72.5%; active refraction adds the stronger readability floor below. Use **Reduce transparency** for opaque surfaces.
-
-**Glassiness** is a per-element enhancement on supported browsers. Ordinary components keep their existing material. Select individual controls:
-
-```html
-<button bx-button variant="icon" glassiness="auto" aria-label="Bookmark">…</button>
-<section bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="enhanced">…</section>
-```
-
-`theme.setAppearance({ translucency: 0.5, glassiness: 'auto' })` sets the shared scale and browser policy. It does not select every component. Off disables selected glassiness; browser opt-in allows testing future support. Automatic uses one refraction pass. Enhanced adds full reflection and bevel layers, with a bounded reflection region and throttled invalidation. The five Appearance preview controls use the automatic path; the three overview feature cards and toast wrappers request Enhanced. Device budgets, baseline quality and accessibility still take precedence.
-
-Text, placeholders and icons keep their theme or component foreground colors while scrolling. Active refraction retains a default minimum of 72% tint for readability, increasing to about 74.9% tint at the slider midpoint and 89% at maximum. Blur starts at 0.5px, reaches about 0.8px at the midpoint and 9.2px at maximum, keeping low settings sharper. Active, selected and open-popup controls have a stronger 90% minimum backing, and existing component opacity constraints can demand more. The sampler supplies decorative edge lighting; it never chooses text or icon colors. Custom material and foreground overrides remain application-owned. See the [effects README](../../projects/blocks/effects/README.md#glassiness-and-translucency) for material variables and browser/accessibility fallbacks.
-
-The numeric `glassiness` API was renamed to `translucency`. The directive inputs are now `bxSurfaceTranslucency` and `bxSurfaceGlassiness`, and the scalar CSS variable is `--bx-translucency`. Saved older preferences migrate automatically to the new names and curve.
 
 ## Existing components and custom surfaces
 
@@ -146,7 +116,7 @@ import {
 import '@filip.mazev/blocks/effects/effects.css';
 
 const configuration = configureAppearance(document.documentElement, {
-  translucency: 0.5, quality: 'auto',
+  glassiness: 0.5, quality: 'auto',
 });
 const surface = mountSurface(button);
 const scene = mountGlassScene(container, {
@@ -178,8 +148,8 @@ Open <http://localhost:8081/projects/blocks/effects/examples/>.
 
 Lighting uses a bounded spatial model: up to four explicit lights and four foreground/background reflection proxies per scene. Every mounted glass surface also samples a few points around its edge and picks up subtle color from nearby visible CSS backgrounds, images, video and canvas. Paint order separates foreground from backdrop cues; depth and distance reduce their strength. Different sources retain localized edge colors, crossfading beneath existing semantic and explicit lights. Real CSS backdrop filtering continues to display the pixels behind a surface.
 
-These are deliberate optical approximations. Media sampling uses a small downscaled buffer at selected edge points; the engine does not capture arbitrary DOM into a texture, ray trace the page, or infer a 3D scene. Refractive refraction and rim reflection use the browser's live backdrop pixels through SVG filters. Register moving scene objects and call `scene.refresh()` when your application changes them; call `refreshGlassLighting(element)` after application-driven changes around an automatically lit surface. Static scenes do no ongoing sampling. Layout changes are coalesced over 180 ms; visible live media shares the existing adaptive polling loop and backs off when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit testing. Hidden pages and reduced-motion receivers stop live media checks.
+These are deliberate optical approximations. Media sampling uses a small downscaled buffer at selected edge points; the engine does not capture or mirror the page or arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call `scene.refresh()` when your application changes them; call `refreshGlassLighting(element)` after application-driven changes around an automatically lit surface. Static scenes do no ongoing sampling. Layout changes are coalesced over 180 ms; visible live media is checked every 500 ms, backing off to 2 seconds when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit testing. Hidden pages and reduced-motion receivers stop live media checks.
 
-Baseline uses one material layer and directional lighting. Enhanced rendering adds colored reflection and a specular edge; active refraction also adds SVG backdrop passes for refraction and edge reflection. Use Glassiness Off or Baseline when the added GPU cost is unsuitable. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.
+Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.
 
 Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing high blur or putting glass over frequently changing content.

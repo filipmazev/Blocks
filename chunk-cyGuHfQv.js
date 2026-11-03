@@ -1,4 +1,4 @@
-import{Bt as Re,Gt as Sg,Ht as S,Oi as v,Vn as be,_r as hn,ei as p,g as Bi,ln as Wn,lt as Lr,or as fn,xr as ie,z as H,zr as m}from"./chunk-BjKrh6Fv.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
+import{Ar as m,Ci as v,Cn as ar,Gr as p,Mi as we,Nt as Sm,On as bn,Ut as V,f as D,fi as si,l as Bt,wt as Q,xr as jt,zn as de}from"./chunk-zHe8pzQe.js";var x={"documentation/appearance/README.md":`<h1>Blocks appearance</h1>
 <p>Glass is integrated into Blocks components and its existing theme engine. Surface colors, text, borders, radii and elevation come from Blocks tokens. Icons, labels, validation messages and other structural content inherit their containing surface instead of adding redundant blurred boxes.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point shipped inside Blocks provides the same material and motion primitives without Angular, CDK or RxJS.</p>
 <h2>Run and build</h2>
@@ -7,7 +7,7 @@ import{Bt as Re,Gt as Sg,Ht as S,Oi as v,Vn as be,_r as hn,ei as p,g as Bi,ln as
 npm start</code></pre>
 <p>Open <a href="http://localhost:8080">http://localhost:8080</a>. The component catalogue links each component to its own demonstration and README. <code>/appearance</code> provides application-wide material controls and spatial-lighting and fade demonstrations. <code>/icon-catalog</code> provides searchable, paginated icons.</p>
 <p>The playground defaults to Carbon / Cobalt (<code>#292a2d</code> / <code>#356fe8</code>) when no valid saved palette is present; Reset returns to Carbon / Cobalt.</p>
-<p>The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate translucency card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.</p>
+<p>The appearance preview is a scrollable national-parks article with English copy and photos adapted from EcoProject24. Independent glass search, bookmark, contents, and navigation controls stay over the article while its images and text scroll beneath them. Search filters the featured places, and the contents and navigation controls jump within the preview. The opening image uses the original mountain photograph; responsive WebP copies up to 2400 pixels wide are loaded eagerly, with smaller versions for narrow screens. The preview sits above a separate glassiness card. A short scroll down and back plays once when the preview comes into view, stops on interaction, and is skipped when reduced motion is enabled.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="sh code example"><code class="hljs language-sh">npm run build:playground
 npm run build:blocks</code></pre>
 <p>Documentation is generated automatically before serving/building the playground. After editing a README while the development server is already running, run <code>npm run tools:build-docs</code> to regenerate its bundled content. Runtime documentation does not fetch Markdown files. Fenced README examples are highlighted during generation with the same highlight.js engine used by live usage examples and configurator file tabs. Code blocks follow the active light/dark syntax theme and support keyboard scrolling; short inline API names remain inline code.</p>
@@ -74,28 +74,14 @@ theme.<span class="hljs-title function_">setApplicationTheme</span>(<span class=
 
   <span class="hljs-title function_">setAppearance</span>(<span class="hljs-params"></span>) {
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({
-      <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span>,
+      <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>,
       <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
     });
   }
 }</code></pre>
-<p>There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full translucency range; fields and filled actions retain their own legibility constraints.</p>
-<p><code>theme.appearance()</code> is the current typed configuration; <code>theme.resetAppearance()</code> restores defaults. Changes apply to existing components and open overlays. <code>translucency</code> is 0\u20131, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint near 72.5% to retain a glassy appearance. <code>reducedTransparency: true</code> supplies fully opaque surfaces and preserves the chosen translucency for when transparency is restored. Quality is <code>auto</code>, <code>baseline</code>, or <code>enhanced</code>. Reduced motion continues through <code>BxA11yService</code>; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to translucency, and a saved solid preference becomes reduced transparency.</p>
+<p>There is no global semantic-emission setting. Interactive lights use the color of the active control or status item; passive edge cues sample the surrounding scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full glassiness range; fields and filled actions retain their own legibility constraints.</p>
+<p><code>theme.appearance()</code> is the current typed configuration; <code>theme.resetAppearance()</code> restores defaults. Changes apply to existing components and open overlays. <code>glassiness</code> is 0\u20131, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the maximum caps tint at 80% to retain a glassy appearance. There are no independent tint, blur, or material preset settings. <code>reducedTransparency: true</code> supplies fully opaque surfaces and preserves the chosen glassiness for when transparency is restored. Quality is <code>auto</code>, <code>baseline</code>, or <code>enhanced</code>. Reduced motion continues through <code>BxA11yService</code>; system transparency and contrast preferences remain respected. Previously saved tint preferences migrate to glassiness, and a saved solid preference becomes reduced transparency.</p>
 <p>The global styles are required once. <code>ng add @filip.mazev/blocks</code> adds the distributed material stylesheet to the application build. For an existing application, add <code>node_modules/@filip.mazev/blocks/effects/effects.css</code> to <code>angular.json</code> styles before the application stylesheet, or import <code>@filip.mazev/blocks/effects/effects.css</code> globally. Continue including the usual Blocks Sass theme once. The playground already does this.</p>
-<h2>Appearance playground</h2>
-<p>The <code>/appearance</code> page separates color mode, surfaces, theme palettes, and accessibility. Light and Dark select an explicit mode. Auto follows live system color-scheme changes, including after a reload. Clickable Blocks cards choose the mode; their inert previews use Blocks components in the selected palette. The selected card uses the shared emissive highlight, and Auto joins its light/dark preview halves without inner corner rounding.</p>
-<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts">theme.<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-string">&#x27;dark&#x27;</span>);
-theme.<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-literal">null</span>); <span class="hljs-comment">// Follow the system appearance.</span></code></pre>
-<p>The Surfaces section places its Surface Appearance title beside the scrolling journal on wide layouts and above it on smaller screens. The padded pill slider sits below the demo, followed by its description; Reset restores surface preferences. Its Blocks Advanced settings disclosure contains rendering and glassiness options. Rendering, glassiness, translucency and reduced transparency are saved together in <code>blocks-appearance</code> and restored on refresh, including Enhanced. Baseline temporarily sets Glassiness to Off and disables all glassiness choices, including browser opt-in. Switching back to Automatic or Enhanced restores the previous Automatic or browser opt-in policy; an explicitly chosen Off remains Off. Enhanced stays available from Baseline when the remembered policy permits it. This also applies to <code>theme.setAppearance()</code> and restored preferences. <code>theme.preferredGlassiness()</code> exposes the requested policy while <code>theme.appearance().glassiness</code> reflects the effective value. Turning Glassiness Off intentionally returns Enhanced to Automatic. Theme palettes and accessibility preferences have independent sections; resetting surfaces changes only surface preferences.</p>
-<p>The top bar provides a single Appearance link. On wide screens, selectable Blocks cards offer Light, Dark and Auto. On screens at the shared <code>sm</code> breakpoint or narrower, Light and Dark appear side by side with portrait previews and an Automatic slide toggle below. Automatic highlights the currently active mode and follows system changes; choosing the other card disables Auto, while choosing the already active card keeps it enabled. Turning Auto off preserves the current mode. Mode and palette preferences remain available on this page and persist across refreshes.</p>
-<h2>Glassiness and translucency</h2>
-<p>The <strong>Translucency</strong> slider controls tint and blur. It defaults to 50%; the preceding midpoint now falls around 70% on the slider, with both endpoints preserved. The classic material retains its clear minimum and caps tint near 72.5%; active refraction adds the stronger readability floor below. Use <strong>Reduce transparency</strong> for opaque surfaces.</p>
-<p><strong>Glassiness</strong> is a per-element enhancement on supported browsers. Ordinary components keep their existing material. Select individual controls:</p>
-<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-attr">glassiness</span>=<span class="hljs-string">&quot;auto&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Bookmark&quot;</span>&gt;</span>\u2026<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">bxSurface</span> <span class="hljs-attr">bxSurfaceGlassiness</span>=<span class="hljs-string">&quot;auto&quot;</span> <span class="hljs-attr">bxSurfaceQuality</span>=<span class="hljs-string">&quot;enhanced&quot;</span>&gt;</span>\u2026<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span></code></pre>
-<p><code>theme.setAppearance({ translucency: 0.5, glassiness: &#39;auto&#39; })</code> sets the shared scale and browser policy. It does not select every component. Off disables selected glassiness; browser opt-in allows testing future support. Automatic uses one refraction pass. Enhanced adds full reflection and bevel layers, with a bounded reflection region and throttled invalidation. The five Appearance preview controls use the automatic path; the three overview feature cards and toast wrappers request Enhanced. Device budgets, baseline quality and accessibility still take precedence.</p>
-<p>Text, placeholders and icons keep their theme or component foreground colors while scrolling. Active refraction retains a default minimum of 72% tint for readability, increasing to about 74.9% tint at the slider midpoint and 89% at maximum. Blur starts at 0.5px, reaches about 0.8px at the midpoint and 9.2px at maximum, keeping low settings sharper. Active, selected and open-popup controls have a stronger 90% minimum backing, and existing component opacity constraints can demand more. The sampler supplies decorative edge lighting; it never chooses text or icon colors. Custom material and foreground overrides remain application-owned. See the <a href="components/surface#glassiness-and-translucency">effects README</a> for material variables and browser/accessibility fallbacks.</p>
-<p>The numeric <code>glassiness</code> API was renamed to <code>translucency</code>. The directive inputs are now <code>bxSurfaceTranslucency</code> and <code>bxSurfaceGlassiness</code>, and the scalar CSS variable is <code>--bx-translucency</code>. Saved older preferences migrate automatically to the new names and curve.</p>
 <h2>Existing components and custom surfaces</h2>
 <p>Blocks components receive glass automatically. The <code>BxSurfaceDirective</code> remains useful for your own containers and local overrides:</p>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">bxSurface</span>&gt;</span>
@@ -121,7 +107,7 @@ theme.<span class="hljs-title function_">setApplicationTheme</span>(<span class=
 <span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/effects.css&#x27;</span>;
 
 <span class="hljs-keyword">const</span> configuration = <span class="hljs-title function_">configureAppearance</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>, {
-  <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span>, <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
+  <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>, <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
 });
 <span class="hljs-keyword">const</span> surface = <span class="hljs-title function_">mountSurface</span>(button);
 <span class="hljs-keyword">const</span> scene = <span class="hljs-title function_">mountGlassScene</span>(container, {
@@ -143,8 +129,8 @@ python3 -m http.server 8081</code></pre>
 <p>Open <a href="http://localhost:8081/projects/blocks/effects/examples/">http://localhost:8081/projects/blocks/effects/examples/</a>.</p>
 <h2>Lighting and rendering limits</h2>
 <p>Lighting uses a bounded spatial model: up to four explicit lights and four foreground/background reflection proxies per scene. Every mounted glass surface also samples a few points around its edge and picks up subtle color from nearby visible CSS backgrounds, images, video and canvas. Paint order separates foreground from backdrop cues; depth and distance reduce their strength. Different sources retain localized edge colors, crossfading beneath existing semantic and explicit lights. Real CSS backdrop filtering continues to display the pixels behind a surface.</p>
-<p>These are deliberate optical approximations. Media sampling uses a small downscaled buffer at selected edge points; the engine does not capture arbitrary DOM into a texture, ray trace the page, or infer a 3D scene. Refractive refraction and rim reflection use the browser&#39;s live backdrop pixels through SVG filters. Register moving scene objects and call <code>scene.refresh()</code> when your application changes them; call <code>refreshGlassLighting(element)</code> after application-driven changes around an automatically lit surface. Static scenes do no ongoing sampling. Layout changes are coalesced over 180 ms; visible live media shares the existing adaptive polling loop and backs off when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit testing. Hidden pages and reduced-motion receivers stop live media checks.</p>
-<p>Baseline uses one material layer and directional lighting. Enhanced rendering adds colored reflection and a specular edge; active refraction also adds SVG backdrop passes for refraction and edge reflection. Use Glassiness Off or Baseline when the added GPU cost is unsuitable. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.</p>
+<p>These are deliberate optical approximations. Media sampling uses a small downscaled buffer at selected edge points; the engine does not capture or mirror the page or arbitrary DOM into a texture, ray trace the page, infer a 3D scene, or physically refract all foreground/background content. Register moving scene objects and call <code>scene.refresh()</code> when your application changes them; call <code>refreshGlassLighting(element)</code> after application-driven changes around an automatically lit surface. Static scenes do no ongoing sampling. Layout changes are coalesced over 180 ms; visible live media is checked every 500 ms, backing off to 2 seconds when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit testing. Hidden pages and reduced-motion receivers stop live media checks.</p>
+<p>Baseline uses one material layer and directional lighting. Enhanced rendering adds a colored reflection and a specular edge without another backdrop-filter pass. Auto mode considers CSS capability, coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.</p>
 <p>Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing high blur or putting glass over frequently changing content.</p>
 `,"documentation/core/README.md":`<h1>@filip.mazev/blocks-core</h1>
 <h2>Blocks - Core Library</h2>
@@ -679,83 +665,6 @@ modalRef.<span class="hljs-title function_">afterClosed</span>().<span class="hl
 </tr>
 </tbody></table>
 <p>For manual installation, register <code>@filip.mazev/blocks/effects/effects.css</code> once alongside the global Blocks theme. The installation schematic configures this automatically.</p>
-`,"documentation/releases/1.5.2/README.md":`<p>Blocks 1.5.2 alpha adds opt-in glassiness, selectable cards and a more focused appearance page, with shared lighting fixes for themed controls.</p>
-<p>Package version: <code>1.5.2</code>. Distribution channel: npm&#39;s <code>alpha</code> tag.</p>
-<h2>Glassiness and surface appearance</h2>
-<ul>
-<li>Added SVG-backed refraction for explicitly selected surfaces on supported browsers, with the existing material as the fallback.</li>
-<li>Added <code>glassiness</code> policies (<code>auto</code>, <code>off</code>, <code>on</code>) to surface configuration and opt-in controls. Global Off, device budgets and accessibility preferences take precedence.</li>
-<li>Added Automatic rendering with one refraction pass and Enhanced rendering with reflection and bevel layers. Shared geometry caches, bounded reflection regions and paused offscreen work limit rendering costs.</li>
-<li>Kept glassiness opt-in for controls and cards that benefit from it, including the appearance preview, overview feature cards and toast surfaces.</li>
-<li>Renamed the numeric surface preference to <code>translucency</code>. Tint and blur use a nonlinear scale with a lighter default, a sharp minimum and a stronger finish at the maximum. Reduce transparency remains the fully opaque presentation.</li>
-<li>Kept text, placeholders and icons in their theme or component colors. A minimum tint backing provides readability without dynamic foreground switching.</li>
-<li>Persisted rendering, glassiness, translucency and reduced transparency together, including Enhanced rendering across refreshes. Glassiness Off returns Enhanced to Automatic.</li>
-<li>Baseline temporarily switches Glassiness to Off and disables its controls, including browser opt-in. Returning to Automatic or Enhanced restores the previous glassiness policy, including after a reload; an explicitly chosen Off stays Off. Enhanced remains available from Baseline when the remembered policy permits it.</li>
-<li>Preserved the material while scrolling under translucent surfaces and during overlay fades.</li>
-</ul>
-<h2>Selectable cards</h2>
-<ul>
-<li>Added clickable cards with controlled <code>selected</code> state, <code>selectedChange</code>, <code>activated</code>, disabled and readonly behavior.</li>
-<li>Added the native <code>button[bx-card]</code> variant alongside <code>bx-card</code>.</li>
-<li>Added configurable selection lighting through <code>highlightColor</code> and <code>--bx-card-highlight</code>, using the shared semantic lighting engine.</li>
-<li>Preserved keyboard activation, visible focus and nested action behavior. Disabled cards cannot activate; readonly cards remain focusable and preserve their selected state.</li>
-</ul>
-<h2>Lighting and form controls</h2>
-<ul>
-<li>Resolved emission colors in the source component&#39;s theme scope so accent-colored controls illuminate neighboring surfaces with the correct color.</li>
-<li>Kept active borders painted as surfaces cross viewport edges or pass behind sticky headers, avoiding a visible fade on re-entry.</li>
-<li>Kept surrounding light active while sources and receivers remain partly exposed, including inside clipped scrolling containers. A covered center or projected corner no longer removes the entire effect; fully covered surfaces remain excluded.</li>
-<li>Restored accent emission for form checkboxes, including checked and indeterminate states, hover and keyboard focus. Disabled and readonly checkboxes remain passive.</li>
-<li>Added the <code>Checkbox.emissive</code> input, defaulting to <code>true</code>, and the decorative <code>CheckboxIndicator.emissive</code> input, defaulting to <code>false</code>.</li>
-<li>Kept multiselect option and select-all indicators non-emissive while retaining their themed faces and selection marks.</li>
-<li>Aligned slide-toggle hints and errors with the control and added layout tokens for settings rows with labels and switches at opposite ends.</li>
-</ul>
-<h2>Accordion and collapsible headers</h2>
-<ul>
-<li>Matched hover highlights to the container&#39;s inner corner radius, including custom radius values.</li>
-<li>Kept expanded headers rounded at the top and square at the bottom, and removed the divider between the header and content.</li>
-</ul>
-<h2>Appearance playground</h2>
-<ul>
-<li>Organized preferences into Appearance, Surfaces, Theme and Accessibility sections.</li>
-<li>Added selectable Light, Dark and Auto preview cards built from Blocks components.</li>
-<li>On smaller screens, Light and Dark cards sit side by side with portrait previews and an Automatic slide toggle below. Automatic highlights the active system mode; choosing the other card switches to an explicit preference.</li>
-<li>Moved the translucency slider into a padded pill below the surface demo, with a separate description and a Reset action. Advanced settings use the Blocks collapsible component.</li>
-<li>Kept the disabled glassiness controls synchronized with Baseline and the remembered rendering preferences.</li>
-<li>Simplified the top bar to one Appearance action. Mode and palette controls live on the appearance page.</li>
-<li>Added alpha channel labeling to the playground and release-note selector while preserving earlier version URLs.</li>
-<li>Linked the overview&#39;s npm action to the newest version in the configured release channel.</li>
-</ul>
-<h2>Migration and configuration</h2>
-<p>The numeric <code>glassiness</code> preference is now <code>translucency</code>; <code>glassiness</code> selects browser policy for refraction. Existing saved numeric preferences migrate automatically. Applications using the old numeric API should update these names:</p>
-<table>
-<thead>
-<tr>
-<th>Previous numeric API</th>
-<th>Replacement</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>setAppearance({ glassiness: 0.5 })</code></td>
-<td><code>setAppearance({ translucency: 0.5 })</code></td>
-</tr>
-<tr>
-<td><code>bxSurfaceGlassiness</code> with a numeric value</td>
-<td><code>bxSurfaceTranslucency</code></td>
-</tr>
-<tr>
-<td><code>--bx-glassiness</code></td>
-<td><code>--bx-translucency</code></td>
-</tr>
-</tbody></table>
-<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
-<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
-
-<span class="hljs-keyword">const</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
-theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span>, <span class="hljs-attr">glassiness</span>: <span class="hljs-string">&#x27;auto&#x27;</span> });</code></pre>
-<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-attr">glassiness</span>=<span class="hljs-string">&quot;auto&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Open contents&quot;</span>&gt;</span>\u2026<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">bx-checkbox</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Receive updates&quot;</span> [<span class="hljs-attr">emissive</span>]=<span class="hljs-string">&quot;true&quot;</span> /&gt;</span></code></pre>
-<p>Register the effects stylesheet once through the existing Blocks setup. Custom material and foreground overrides remain application-owned. See the <a href="appearance">appearance guide</a>, <a href="components/card">card documentation</a> and <a href="components/checkbox">checkbox documentation</a> for the complete APIs.</p>
 `,"documentation/toastr/README.md":`<h1>@filip.mazev/blocks/toastr</h1>
 <h2>Blocks - Toastr Library</h2>
 <p><strong>Blocks</strong> is a powerful Angular component library. The <strong>Toastr</strong> package provides a highly customizable, component-driven toast notification system. It features robust queue management, swipe-to-dismiss gestures for mobile, flexible screen positioning, and full type safety for dynamic content.</p>
@@ -957,7 +866,7 @@ theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hlj
 <p>The Sass exports use the same names: <code>$azure-ember-light-theme</code> and <code>$azure-ember-dark-theme</code>. Carbon / Cobalt is the installer default; the playground starts with Carbon / Cobalt. Only the current palette IDs and Sass names are supported.</p>
 <p>Buttons and tabs accept <code>color=&quot;accent&quot;</code> for the second tone. Icons and custom components can use semantic tokens such as <code>text-accent</code>, <code>accent-subtle</code>, <code>on-accent</code>, and <code>border-accent</code>. Canvas backgrounds stay neutral; status roles keep their meaning. See <a href="appearance#palettes">the palette reference</a> for all seven pairs.</p>
 <h2>Appearance</h2>
-<p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ translucency: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
+<p>Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through <code>ThemingService.setAppearance({ glassiness: 0.5 })</code>; use <code>resetAppearance()</code> for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.</p>
 <p>Load <code>@filip.mazev/blocks/effects/effects.css</code> once globally alongside the Blocks Sass theme. <code>ng add</code> registers the stylesheet for new installations. <code>BxSurfaceDirective</code> from <code>@filip.mazev/blocks/effects</code> is available for custom containers and local overrides. The framework-independent engine is <code>@filip.mazev/blocks/effects/runtime</code>, included in the same package.</p>
 <p>The source playground provides a dedicated README and working page for every component, with global appearance controls at <code>/appearance</code>.</p>
 `,"projects/blocks/effects/README.md":`<h1>Appearance effects</h1>
@@ -969,9 +878,8 @@ theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hlj
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({
-  <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span>,    <span class="hljs-comment">// 0\u20131; the midpoint balances clarity and tint</span>
+  <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>,    <span class="hljs-comment">// 0\u20131; the midpoint balances clarity and tint</span>
   <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,    <span class="hljs-comment">// auto | baseline | enhanced</span>
-  <span class="hljs-attr">glassiness</span>: <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-comment">// auto | off | on</span>
   <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">false</span>
 });
 
@@ -995,14 +903,9 @@ theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hlj
 </tr>
 </thead>
 <tbody><tr>
-<td><code>bxSurfaceTranslucency</code></td>
-<td>Global translucency</td>
-<td>0\u20131</td>
-</tr>
-<tr>
 <td><code>bxSurfaceGlassiness</code></td>
-<td>Off unless selected</td>
-<td><code>auto</code>, <code>off</code>, or <code>on</code>; baseline and accessibility settings take precedence</td>
+<td>Global glassiness</td>
+<td>0\u20131</td>
 </tr>
 <tr>
 <td><code>bxSurfaceInteractive</code></td>
@@ -1026,19 +929,6 @@ theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hlj
 </tr>
 </tbody></table>
 <p>Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.</p>
-<h2>Glassiness and translucency</h2>
-<p>Translucency controls tint and blur from 0 to 1, with a default of 0.5. Its material strength is <code>0.5 \xD7 value\xB2 + 0.35 \xD7 value\u2074</code>: zero retains the lightest material tint, and the preceding midpoint now falls around 70% while both endpoints stay unchanged. The classic material ranges from 6% to about 72.5% tint; active refraction uses the stronger readability floor described below. Reduce transparency remains the explicit opaque presentation.</p>
-<p>Glassiness is an opt-in enhancement. Ordinary components keep the existing material. Select individual buttons or custom surfaces:</p>
-<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-attr">glassiness</span>=<span class="hljs-string">&quot;auto&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Bookmark&quot;</span>&gt;</span>\u2026<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">section</span> <span class="hljs-attr">bxSurface</span> <span class="hljs-attr">bxSurfaceGlassiness</span>=<span class="hljs-string">&quot;auto&quot;</span>&gt;</span>\u2026<span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span></code></pre>
-<p><code>theme.setAppearance({ glassiness: &#39;auto&#39; })</code> sets the browser policy for selected elements; it never enables every surface. Automatic works on supported browsers and preserves the existing look elsewhere. <code>off</code> is an application-wide switch. <code>on</code> allows testing SVG backdrop support on another browser and bypasses automatic device hints; it cannot add missing rendering support. Enhanced returns to Automatic when Glassiness is Off, and the playground disables that option until glassiness is enabled. Baseline, opaque intent fills, nested-surface guards and accessibility preferences still win. Asymmetric or elliptical corners keep their existing material.</p>
-<p>Automatic rendering uses one SVG backdrop pass per selected element, with the existing Blocks lighting. Enhanced adds the reference&#39;s reflection and bevel layers. A surface can request <code>bxSurfaceQuality=&quot;enhanced&quot;</code>; the global baseline/device policy still applies. The overview&#39;s three feature cards and the toast wrappers opt into Enhanced. Toasts are bounded by the existing maximum of four open notifications; applications can choose <code>glassQuality: &#39;auto&#39;</code> or <code>glassiness: &#39;off&#39;</code> in toast settings. Hidden receivers suspend filter work, maps are shared by effective geometry, reflections reach at most 64 CSS pixels beyond a surface, and reflection invalidation is rate limited.</p>
-<p>Text, placeholders and icons retain their theme or component foreground colors as content moves underneath. Refraction uses a fixed readability backing instead of sampling the backdrop to change text color. At the clearest slider setting its default tint is at least 72%, with 0.5px blur. Blur follows the slider from 0.5px through about 0.8px at the midpoint to 9.2px at maximum, preserving a sharper refractive appearance at low settings. Increasing translucency adds tint and blur; the default midpoint is about 74.9% tint and the maximum about 89%. Active, selected and open-popup controls use at least 90% tint for their semantic foregrounds. Component opacity constraints can request a stronger backing. Reduced transparency still supplies the fully opaque presentation.</p>
-<p>Customize <code>--bx-refraction-min-opacity</code> (0.72), <code>--bx-refraction-min-blur</code> (0.5px), or <code>--bx-refraction-blur</code> for application-specific materials. Custom backgrounds and foreground colors should preserve readability. Ambient edge lighting continues to sample the scene without changing text or icon colors.</p>
-<p>Additional surface variables are <code>--bx-refraction-blur</code>, <code>--bx-refraction-saturation</code> (1.15), <code>--bx-refraction-reflection-opacity</code> (1), and the full renderer&#39;s edge exposure variables. Existing <code>--bx-glass-blur</code>, <code>--bx-glass-surface</code>, <code>--bx-glass-opacity</code> and radius tokens still apply. CSS supplies the live backdrop; TypeScript assembles cached grayscale PNG displacement maps in SVG. The Nordify MIT notice is retained. Standard and WebKit declarations are supplied, with standard CSS for other engines.</p>
-<p>The distributed <code>effects/effects.css</code> path is unchanged. Its source is <code>effects/effects.scss</code>; <code>npm run tools:build-effects</code> regenerates it, and normal build scripts run this automatically. Explore the selected controls and slider at <code>/appearance</code>.</p>
-<h3>Migration</h3>
-<p>The former numeric <code>glassiness</code> setting is now <code>translucency</code>. Rename <code>bxSurfaceGlassiness</code> (numeric) to <code>bxSurfaceTranslucency</code>. The scalar CSS property is now <code>--bx-translucency</code>. Persisted older preferences migrate automatically; normalized values use the new curve.</p>
 <h2>Composition and motion</h2>
 <p>Use a single backing per physical surface. For example, a menu owns the backing while menu-item content shares it; a form-field label does not need an extra blurred card. Apply <code>bxTransition=&quot;fade&quot;</code> on a dropdown to fade its menu without resizing its contents. The fade runs on the material itself, preserving the configured translucency and blur throughout the animation.</p>
 <p>Buttons, links, native field surfaces and elements with actionable ARIA roles automatically illuminate their border and nearby surfaces on hover, press, or keyboard focus. Editable field surfaces also illuminate for pointer focus; ordinary actions do not stay lit solely because a click left native focus on them. Checked, pressed, selected, and current states keep the light enabled. Expanded popup triggers also retain light, while plain layout-disclosure controls do not become selected just by expanding. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order, depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as <code>role=&quot;button&quot;</code>), or explicitly enable <code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> only to override the semantic color. The source is the element\u2019s geometry, never the mouse coordinates.</p>
@@ -1060,7 +950,7 @@ theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hlj
 <span class="hljs-keyword">import</span> { configureAppearance, mountSurface, createGlassTransition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/runtime&#x27;</span>;
 
 <span class="hljs-keyword">const</span> config = <span class="hljs-title function_">configureAppearance</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>, {
-  <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span>,
+  <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span>,
   <span class="hljs-attr">quality</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
 });
 <span class="hljs-keyword">const</span> buttonSkin = <span class="hljs-title function_">mountSurface</span>(button);
@@ -1069,14 +959,13 @@ theme.<span class="hljs-title function_">setAppearance</span>({ <span class="hlj
 <span class="hljs-comment">// The application or overlay library positions the panel before this call.</span>
 <span class="hljs-keyword">const</span> transition = <span class="hljs-title function_">createGlassTransition</span>(button, panel);
 <span class="hljs-keyword">await</span> transition.<span class="hljs-title function_">enter</span>();
-config.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">.45</span> }); <span class="hljs-comment">// All existing surfaces and body-mounted overlays update.</span>
+config.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">.45</span> }); <span class="hljs-comment">// All existing surfaces and body-mounted overlays update.</span>
 <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> transition.<span class="hljs-title function_">exit</span>();
 <span class="hljs-keyword">if</span> (result === <span class="hljs-string">&#x27;finished&#x27;</span>) panel.<span class="hljs-property">hidden</span> = <span class="hljs-literal">true</span>;
 
 <span class="hljs-comment">// At component/application teardown:</span>
 transition.<span class="hljs-title function_">destroy</span>(); buttonSkin.<span class="hljs-title function_">destroy</span>(); panelSkin.<span class="hljs-title function_">destroy</span>(); config.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p><code>configureAppearance</code> owns one root scope, merges updates, and restores the attributes and inline properties it owned on destroy. Mount it on <code>document.documentElement</code> to include overlays. Per-surface options override the global configuration; omitted options inherit it. There must be only one configuration controller per root and one surface controller per element. <code>surface.update(options)</code> replaces that surface&#39;s local options so <code>{}</code> returns it to global settings.</p>
-<p>Setting application <code>quality: &#39;baseline&#39;</code> temporarily sets <code>glassiness: &#39;off&#39;</code>, including during initialization and partial updates. Switching back to <code>quality: &#39;auto&#39;</code> or <code>&#39;enhanced&#39;</code> restores the requested glassiness policy. An explicit <code>glassiness</code> update replaces that preference, including while baseline is selected. A previously requested <code>&#39;off&#39;</code> remains off and continues to prevent Enhanced rendering.</p>
 <h2>Global material and theme contract</h2>
 <p>The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component&#39;s border radius, size and layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.</p>
 <p><code>mountSurface(element)</code> includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their border and nearby surfaces on interaction or an active ARIA state. Decorative containers receive nearby light without their own hover effect, even when they contain a single input such as a slider. Only wrappers within <code>bx-form-field</code> infer interactivity from their input; other custom wrappers can opt in with <code>interactive: true</code>. The default color is the theme accent, or the error color inside an invalid Blocks form field. Override <code>emission</code>/<code>focusEmission</code> for a different semantic color; <code>interactive</code> explicitly overrides automatic control/action detection.</p>
@@ -1089,19 +978,14 @@ transition.<span class="hljs-title function_">destroy</span>(); buttonSkin.<span
 </tr>
 </thead>
 <tbody><tr>
-<td><code>translucency</code></td>
-<td>0\u20131, default 0.5</td>
-<td><code>--bx-translucency</code></td>
+<td><code>glassiness</code></td>
+<td>0\u20131, balanced default 0.5</td>
+<td><code>--bx-glassiness</code></td>
 </tr>
 <tr>
 <td><code>quality</code></td>
 <td><code>auto</code>, <code>baseline</code>, <code>enhanced</code></td>
 <td>root <code>data-bx-glass-quality</code></td>
-</tr>
-<tr>
-<td><code>glassiness</code></td>
-<td><code>auto</code> (default), <code>off</code>, <code>on</code></td>
-<td>root <code>data-bx-glassiness-mode</code>; only explicitly selected surfaces participate</td>
 </tr>
 <tr>
 <td><code>reducedTransparency</code></td>
@@ -1114,9 +998,7 @@ transition.<span class="hljs-title function_">destroy</span>(); buttonSkin.<span
 <td>root <code>data-bx-reduced-motion</code></td>
 </tr>
 </tbody></table>
-<p>Translucency controls tint and blur together. Material strength is <code>m = 0.5 \xD7 translucency\xB2 + 0.35 \xD7 translucency\u2074</code>. Tint is <code>0.06 + 1.02m \u2212 0.28m\xB2</code>, existing-material blur is <code>4 + 24m\xB2</code> px, and glassiness blur is <code>0.5 + 12m\xB2</code> px. The default translucency is 0.5; the preceding midpoint falls around 70% on this scale. Both endpoints stay unchanged, and maximum classic tint is about 72.5%. Reduced transparency provides opaque surfaces without losing that preference.</p>
-<p>Opt in per element with <code>mountSurface(element, { glassiness: &#39;auto&#39; })</code>. Omitted surfaces keep their existing material. <code>configureAppearance(root, { glassiness: &#39;auto&#39; })</code> is a browser policy for selected surfaces, not a global opt-in. Automatic uses one refraction pass on supported browsers; unsupported engines keep the previous look. <code>on</code> permits testing another engine, while <code>off</code> disables selected enhancements. Local <code>quality: &#39;enhanced&#39;</code> adds the full reflection/bevel treatment, subject to application baseline and device policy.</p>
-<p>Foreground colors stay theme-owned. Refraction retains at least 72% tint for readable theme foregrounds. Blur ranges from 0.5px at the clearest setting to about 0.8px at the midpoint and 9.2px at maximum; low settings preserve sharper refraction while the tint supplies the backing. Component opacity constraints can request more backing. No text-contrast sampling, foreground switching, grouping or per-control contrast subscriptions are mounted. The existing shared sampler continues to supply decorative ambient edge lighting. See <a href="components/surface#glassiness-and-translucency">appearance effects</a> for material variables and browser/accessibility fallbacks.</p>
+<p>Glassiness controls tint and blur together. Tint is <code>0.06 + 1.02 \xD7 glassiness \u2212 0.28 \xD7 glassiness\xB2</code>; blur is <code>4 + 24 \xD7 glassiness\xB2</code> CSS pixels. The minimum is nearly clear with a light blur, the midpoint uses 10 px blur and a balanced tint, and the maximum caps tint at 80% to remain glassy. Components retain their semantic minimum opacity where needed for readable controls. There are no selectable material presets or independent blur/tint options. Reduced transparency disables backdrop filtering and provides fully opaque surfaces without discarding the glassiness preference.</p>
 <p>Local color aliases preserve component intent:</p>
 <table>
 <thead>
@@ -1165,10 +1047,10 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Every mounted glass surface also gets subtle, localized edge colors from the visible layers around its perimeter. Different sources keep their own colors; ambient gradients crossfade beneath hover, focus, validation and explicit scene lights. The runtime samples nearby computed backgrounds and local pixels from visible images, video and canvas, including <code>pointer-events: none</code> backdrops. Hit-test order and stacking layers distinguish foreground from background; depth and distance reduce the contribution. CSS gradients are approximated from their color stops. If the browser blocks pixel access to cross-origin or tainted media, the runtime falls back to the element&#39;s computed CSS colors. Asset loads, layout/scroll changes, and visual class/style changes refresh the samples; call <code>refreshGlassLighting(element)</code> after application-driven changes to a custom surface&#39;s surroundings.</p>
 <p>Portalled overlays can call <code>inheritGlassLighting(overlay, trigger)</code> before mounting their surfaces to receive light from the trigger&#39;s context. Call the returned cleanup function after removing the overlay. Tooltips and menus use this connection to preserve dialog boundaries and receive nearby colors. Tooltips remain transparent to pointer events.</p>
 <p>For compound opaque shapes, <code>--bx-glass-unified-lighting: 1</code> exposes restrained samples of received lighting through <code>--bx-glass-lit-edge</code> and its <code>-top</code>, <code>-right</code>, <code>-bottom</code>, and <code>-left</code> variants. Tooltip bodies retain their neutral backing and use a subtle spatial rim; arrows sample their facing side instead of tinting the entire outline. Interior decorative lighting stays hidden to avoid coloring the fill or introducing seams.</p>
-<p>This is a bounded, stylized lighting model. The browser&#39;s backdrop filter displays content behind glass; refraction rendering also displaces those pixels and reflects surroundings into the edge. Raster lighting samples use a shared 32-by-32 scratch buffer cached across receivers and frames. The package does not capture arbitrary DOM into a texture or implement ray tracing. Registered foreground/background objects remain available as explicit reflection proxies when a more deliberate scene is needed. Gradient-backed reflectors can supply an explicit representative color.</p>
+<p>This is a bounded, stylized lighting model. The browser&#39;s backdrop filter still displays content behind glass. Raster sampling uses a shared 32-by-32 scratch buffer and caches each source across receivers and frames; the package does <strong>not</strong> capture or mirror the page or arbitrary DOM into a texture, implement ray tracing, or physically refract page pixels. Registered foreground/background objects remain available as explicit reflection proxies when a more deliberate scene is needed. Gradient-backed reflectors can supply an explicit representative color.</p>
 <h2>Overlay fades</h2>
 <p>Overlays fade in over 180 ms and out over 140 ms using the Web Animations API. Their dimensions, clipping and text size remain unchanged. The fade composites the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop root that cuts off the page behind the glass. Native opacity interpolation avoids per-frame style mutations and lighting invalidation. Reversing an active fade continues from its current opacity; the interrupted promise resolves to <code>cancelled</code>.</p>
-<p>The transition temporarily owns the first material surface\u2019s <code>opacity</code> and the target\u2019s <code>visibility</code>. If no material is present, it fades the target. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. <code>refresh()</code> remains a compatibility no-op because a fade requires no geometry measurements.</p>
+<p>The transition temporarily owns the first material surface\u2019s <code>opacity</code> and the target\u2019s <code>visibility</code>. If no material is present, it fades the target. The overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both endpoints must belong to the same document. <code>refresh()</code> remains a compatibility no-op because a fade requires no geometry measurements. Version 0.1\u2019s <code>createLiquidTransition</code> and associated type names remain deprecated aliases for <code>createGlassTransition</code>.</p>
 <h2>Press feedback</h2>
 <p>The delegated pointer and keyboard handlers drive the existing pressure spring, including a visible initial response for quick taps. A soft inset sheen sits within the material\u2019s fixed clipping box. <code>--bx-glass-press</code> on the host exposes the current pressure to component content; Blocks buttons use it for a small compression without moving their hit area or overlay origin. Controller-owned pressure writes are excluded from scene invalidation, so a press does not resample the entire document every frame.</p>
 <p>Pointer cancellation, matching key release, focus loss during a keyboard press, document/window blur, disabled state, and teardown clear pressure. Touch does not latch hover emission, typing in a field does not activate keyboard pressure, and Space on a native link keeps its normal scrolling behavior. Reduced motion applies static pressure feedback immediately and removes it on release.</p>
@@ -1180,17 +1062,16 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <li>Static images and failed readbacks are cached until their assets change. Only media used by visible receivers is polled: live canvas/video checks begin at 500 ms and back off to 2 seconds while unchanged. Color-only changes reuse source bindings and geometry without hit testing; coverage or layout changes rediscover the layers. Unchanged samples do not repaint. Image/video samples respect object fit and position.</li>
 <li>Each surface uses two shared ambient edge layers for a 180 ms crossfade, instead of a DOM layer and animation per sample. Semantic lighting retains its independent contributions and immediate interaction updates. Hidden documents, reduced-motion receivers and unused media stop live polling; removing the last receiver tears down sampling. Static scenes schedule no polling or animation frames.</li>
 <li>Nested surfaces retain their tint and reflection but skip additional backdrop filters.</li>
-<li><code>baseline</code> uses one backdrop pass and a dynamic highlight. Supported <code>enhanced</code> rendering adds a narrow specular edge and colored reflection overlay; active refraction adds SVG backdrop passes for refraction and rim reflection. <code>auto</code> chooses baseline for coarse pointers, data saving or low reported CPU concurrency; capability checks guard enhancements. Hardware hints are conservative defaults, not measured frame-rate guarantees.</li>
+<li><code>baseline</code> uses one backdrop pass and a dynamic highlight. Supported <code>enhanced</code> rendering adds a narrow specular edge and colored reflection overlay without another backdrop pass. <code>auto</code> chooses the baseline for coarse pointers, data saving or low reported CPU concurrency; capability checks guard enhancements. Hardware hints are conservative defaults, not measured frame-rate guarantees.</li>
 <li>Operating-system reduced motion/transparency, increased contrast and forced colors receive simpler rendering. A global <code>reducedTransparency: false</code> leaves the OS transparency preference enabled; explicit surface options can override it. An explicit reduced-motion setting takes precedence so Blocks can preserve its existing manual accessibility override; omit it to follow the OS. Reduced motion finishes transitions immediately. Unsupported backdrop filtering or color mixing produces an opaque fallback.</li>
 <li>Backdrop filters still have a cost. Use one outer material for large sections, avoid full-screen stacked filtered panels, and profile actual target devices before treating any frame-rate target as verified.</li>
 </ul>
 <p>See <code>../examples/index.html</code> for a native DOM demo. Serve the repository over HTTP after building the workspace; no framework runtime is required. Build with <code>npm run build:blocks</code> at the workspace root; this builds all Blocks entry points and generates the native example\u2019s design tokens from Blocks. Browser regressions live in <code>tools/browser</code>.</p>
 <h3>Semantic lighting</h3>
 <p><code>BxGlassLightingService</code> in the Angular adapter combines sources within a form or toast stack. Validation text illuminates nearby controls and removes its source when the error clears. Toast light is anchored to the rendered progress bar\u2019s right edge, pauses with the toast, and illuminates adjacent notifications. Its own glow uses that same measured edge; it has no independent progress animation. <code>excludeSource</code> or <code>excludeElement</code> lets a source render its own glow separately. <code>observeGlassLighting</code> and <code>refreshGlassLighting</code> support custom decorative receivers, including the opaque circular slider thumb beside its native range input.</p>
-<p>A surface can opt into semantic emission with <code>mountSurface(element, { emission: &#39;var(--bx-primary)&#39; })</code>. Hover, press, or keyboard focus activates that element as a source; its visible border and declared color determine the facing edges and corners of nearby surfaces. Source colors are resolved in the emitting element before projection, so local custom properties and scoped themes retain their color on other receivers. Hover light has a 120 CSS-pixel falloff radius and stays within the nearest main, aside, nav, dialog or overlay. Add <code>data-bx-light-scope</code> to isolate a custom region. Modal panels, native dialogs, popovers, fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent hover animation loop.</p>
+<p>A surface can opt into semantic emission with <code>mountSurface(element, { emission: &#39;var(--bx-primary)&#39; })</code>. Hover, press, or keyboard focus activates that element as a source; its visible border and declared color determine the facing edges and corners of nearby surfaces. Hover light has a 120 CSS-pixel falloff radius and stays within the nearest main, aside, nav, dialog or overlay. Add <code>data-bx-light-scope</code> to isolate a custom region. Modal panels, native dialogs, popovers, fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent hover animation loop.</p>
 <p>Backdrop behavior follows the browser\u2019s <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter">backdrop-root rules</a>. Visual treatment follows <a href="https://developer.apple.com/design/human-interface-guidelines/materials">Apple\u2019s material guidance</a>: restrained highlights and readable translucent layers.</p>
 <p>Editable field surfaces emit while their native control has focus by default; action surfaces emit for keyboard focus only. An explicit <code>focusEmission</code> opts a custom surface into illumination for any focus. Checked, pressed, selected, and current states retain emission. An expanded trigger retains emission when it also declares <code>aria-haspopup</code>; ordinary layout expansion alone does not select a control. Focused fields remain active when a different button is hovered. Decorative native-control receivers can pass their hit target as the third argument to <code>observeGlassLighting</code>.</p>
-<p>Active borders stay painted when surfaces are partly clipped by the viewport, a scrolling container, or an overlapping header. Scrolling them back into view preserves their lighting without a fade. Surrounding light also remains active while part of the source and receiver is exposed; a covered center or projected corner alone does not remove it. Fully covered surfaces remain excluded. Exposure checks share a short-lived cache and use bounded fallback probes only when the preferred point is covered.</p>
 `,"projects/blocks/forms/README.md":`<h1>Forms</h1>
 <p>Blocks fields use Angular 22 native signal control contracts and support Signal Forms, Reactive Forms, Template-driven Forms and standalone models. The library supplies presentation, interaction and accessible feedback; Angular owns validation and submission.</p>
 <h2>Import and basic usage</h2>
@@ -1387,23 +1268,19 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;filled&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;save()&quot;</span>&gt;</span>Save changes<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>variant</code>: text, filled, tonal, icon, fab, mini-fab, extended-fab. <code>color</code>: primary, accent, success, danger, info, warn, grayscale. <code>outlined</code>, <code>elevated</code>, <code>disabled</code>, and <code>interactive</code> control presentation and availability.</p>
-<p><code>glassiness</code> is an explicit per-button opt-in: omitted buttons keep their existing material. Set <code>glassiness=&quot;auto&quot;</code> for supported browsers, or <code>&quot;on&quot;</code> to test other engines. Application-wide Off, baseline quality, opaque intent fills and accessibility still take precedence. Automatic rendering uses one SVG backdrop pass; Enhanced adds the full reflection/bevel treatment. Text and icons keep their semantic theme colors; active refraction maintains a minimum tint and blur even at the clearest translucency setting.</p>
-<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-attr">glassiness</span>=<span class="hljs-string">&quot;auto&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Bookmark&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;bookmark&quot;</span> /&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <p>Use the active palette&#39;s second tone for supporting actions:</p>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;tonal&quot;</span> <span class="hljs-attr">color</span>=<span class="hljs-string">&quot;accent&quot;</span>&gt;</span>Explore<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Icon, tonal and outlined glass buttons follow the full translucency range without a minimum button-specific tint. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Icon, tonal and outlined glass buttons follow the full glassiness range without a minimum button-specific tint. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for <code>aria-pressed=&quot;true&quot;</code>, <code>aria-selected=&quot;true&quot;</code>, a current <code>aria-current</code> value, or an expanded popup trigger (<code>aria-expanded=&quot;true&quot;</code> with <code>aria-haspopup</code>). Plain expansion controls, such as a rail collapse action, do not acquire selected styling solely from <code>aria-expanded</code>. If an application used expansion as a toggle selection, use <code>aria-pressed</code> for that toggle instead. Primary and grayscale buttons use the primary palette role; accent buttons use the second tone; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. Pointer focus alone does not keep an action illuminated after the pointer leaves; focus stays on the native control and keyboard focus remains visible. Touch does not latch hover illumination. No additional effects directive or lighting configuration is needed.</p>
-<p>Filled buttons retain their semantic background and paired foreground color across translucency settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
+<p>Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1437,7 +1314,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Use the native <code>button[bx-button]</code> selector for actions and <code>a[bx-button]</code> with a real <code>href</code> for navigation. Give icon-only actions an accessible label. Disabled actions do not emit an action through a click listener.</p>
 <p><code>surfaceEffects</code> defaults to <code>true</code>. Set <code>[surfaceEffects]=&quot;false&quot;</code> for dense collections such as the icon catalog to retain Blocks button styling, theme updates, focus, loading and disabled behavior without mounting per-button runtime glass lighting or deformation. It can be changed while mounted. An explicitly applied <code>bxSurface</code> directive continues to own its surface independently.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/button</code> for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results. Press and release with mouse, touch, Enter, or Space, then move the pointer away while leaving focus on the button to inspect its resting state. The global Appearance controls also exercise theme, translucency, and reduced-motion changes.</p>
+<p>Open <code>/components/button</code> for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results. Press and release with mouse, touch, Enter, or Space, then move the pointer away while leaving focus on the button to inspect its resting state. The global Appearance controls also exercise theme, glassiness, and reduced-motion changes.</p>
 <h2>Asynchronous actions</h2>
 <p><code>loading</code> enables a spinner, exposes <code>aria-busy</code>, and disables activation independently from the <code>disabled</code> input. When loading ends, the original disabled state is retained. The spinner appears before the text and replaces a projected Blocks icon at its original size, including under page zoom or surface transforms. An icon-only button retains its accessible name and dimensions.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;filled&quot;</span> [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;saving()&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;save()&quot;</span>&gt;</span>
@@ -1489,16 +1366,11 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <td><code>false</code></td>
 <td>Suppresses the active surface finish; the owner provides disabled semantics and opacity.</td>
 </tr>
-<tr>
-<td><code>emissive</code></td>
-<td><code>false</code></td>
-<td>Enables shared lighting for an owning interactive control. <code>Checkbox</code> enables it by default; multiselect indicators remain passive.</td>
-</tr>
 </tbody></table>
 <h2>Appearance and customization</h2>
 <p>Uses the same shared surface and choice finish as <code>Checkbox</code>. <code>--bx-checkbox-size</code> customizes its dimensions (default <code>1.125rem</code>). Semantic tokens control colors and radius; theme and appearance changes update mounted indicators. Motion follows the shared accessibility styles. Forced colors and high contrast flatten the decorative finish.</p>
 <h2>Behavior and accessibility</h2>
-<p>The indicator is always hidden from assistive technology, has no tab stop and does not handle pointer or keyboard input. With <code>emissive</code> enabled, its face participates in hit testing so the shared engine can illuminate the owning control; events still reach that control. The owner must supply an accessible label, visible focus, checked/mixed state, readonly/disabled handling and keyboard interaction. Multiselect uses listbox option semantics for each row and checkbox semantics for the select-all action without nested interactive elements.</p>
+<p>The indicator is always hidden from assistive technology, has no tab stop and does not handle pointer or keyboard input. The owner must supply an accessible label, visible focus, checked/mixed state, readonly/disabled handling and keyboard interaction. Multiselect uses listbox option semantics for each row and checkbox semantics for the select-all action without nested interactive elements.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/checkbox-indicator</code> for live unchecked, checked and partial states controlled by Blocks checkboxes. <code>/components/checkbox</code> and <code>/components/multi-select</code> demonstrate its integration.</p>
 `,"projects/blocks/forms/components/checkbox/README.md":`<h1>Checkbox</h1>
@@ -1511,14 +1383,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(checked)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1528,7 +1400,6 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Open <code>/components/checkbox</code> for a working example and its current value or action result.</p>
 <h2>Selection configuration</h2>
 <p><code>indeterminate</code> is a boolean model with <code>indeterminateChange</code>. <code>clickAction</code> supports <code>check-indeterminate</code> (default), <code>check</code>, and <code>noop</code>. <code>labelPosition</code> is <code>before</code> or <code>after</code>. Use <code>checkedChange</code> or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.</p>
-<p><code>emissive</code> defaults to <code>true</code>. Hover, keyboard focus, checked and indeterminate states use the shared accent lighting; invalid controls use validation colors. Disabled and readonly checkboxes remain passive. Set <code>[emissive]=&quot;false&quot;</code> to keep the themed face without emitting light. Multiselect indicators are passive by default and retain their row&#39;s selection appearance.</p>
 <p>The checkbox face is shared with multiselect through the public <a href="components/checkbox-indicator">CheckboxIndicator</a> component. <code>--bx-checkbox-size</code> changes its dimensions (default <code>1.125rem</code>).</p>
 `,"projects/blocks/forms/components/form-field/README.md":`<h1>Form field</h1>
 <p>A shared label, help text, validation and loading frame for controls.</p>
@@ -1542,7 +1413,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p><code>label</code>, <code>tooltip</code>, <code>error</code>: text or a translation key object. <code>forId</code>: the native input ID. <code>required</code>, <code>loading</code>: booleans. Projects the control and an optional <code>bx-error</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p><code>--bx-field-padding-bottom</code> overrides the field wrapper\u2019s bottom padding (default: <code>0</code>). Set it on a group of controls when additional row spacing is needed.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
@@ -1550,7 +1421,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1574,14 +1445,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(value)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <p><code>type</code>: text, password, email, number, date, time, datetime-local. Numeric controls accept <code>min</code>, <code>max</code>, and <code>step</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1633,7 +1504,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>The debounce/request period hides pagination actions and old results. Provide <code>loadingLabel</code> for centered loading text; without it, a simple centered spinner is shown. <code>loadingAriaLabel</code> supplies a translatable accessible name. Once results arrive, filtered pages can be paginated normally.</p>
 <h2>Option spacing</h2>
 <p>Rounded option rows have a small gap, shared by select and multiselect. Set <code>--bx-select-option-gap</code> on the control to customize it (default: Blocks <code>spacing(1)</code>). All built-in selection and caret icons use Blocks <code>Icon</code>; searching uses Blocks <code>SearchInput</code>.</p>
-<p>Option and select-all checkboxes reuse the public <code>CheckboxIndicator</code> component, including its indeterminate state and themed finish. Indicators remain non-emissive; the option button owns selection and interaction. Form checkboxes outside multiselect enable emission by default. <code>--bx-checkbox-size</code> customizes indicator dimensions without changing keyboard behavior.</p>
+<p>Option and select-all checkboxes reuse the public <code>CheckboxIndicator</code> component, including its indeterminate state and themed finish. The option button remains the interactive target. <code>--bx-checkbox-size</code> customizes indicator dimensions without changing keyboard behavior.</p>
 <p>The select-all checkbox also shows checked when every selectable loaded row is individually selected, including deselecting and reselecting the last missing row. Disabled rows and disabled groups do not contribute to this state. Clicking a checked header clears the eligible loaded rows. This finite visual state does not activate remote select-all intent: future pages remain unselected unless the explicit select-all action enabled intent.</p>
 <h2>Clearing selection</h2>
 <p>A Blocks \xD7 icon button appears before the dropdown/loading indicator, with equal spacing between the action and the selected text/tags and between the two icons, when a selection exists. Its reserved space prevents overlap with selected text or tags. Set <code>[clearable]=&quot;false&quot;</code> to hide it, or use <code>clearLabel</code> (<code>ResolvableText</code>, default <code>&#39;Clear selection&#39;</code>) to customize its accessible name. <code>clearTooltip</code> accepts its own <code>ResolvableText</code>, defaults to the resolved <code>clearLabel</code> when omitted, and can be set to an empty string to hide the tooltip.</p>
@@ -1666,7 +1537,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Legacy individually bound radios support <code>[formControl]</code>, <code>formControlName</code>, and <code>[(ngModel)]</code>. For new forms, bind a <code>RadioGroup</code> with <code>[formField]</code> or an existing Angular form directive, and keep each radio value as its option value. See the <a href="components/radio-group">radio-group guide</a>.</p>
 <p><code>value</code> is required and identifies this option. <code>name</code> groups the native radio inputs.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Selected radios keep emitting the theme color after pointer release and blur. Hovering the circle or its label highlights the surface and emits color; disabled controls do neither.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
@@ -1674,7 +1545,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1826,14 +1697,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 }</code></pre>
 <p>Import <code>DestroyRef</code>, <code>inject</code>, and <code>signal</code> from <code>@angular/core</code>. Supply your application API&#39;s <code>search(query, signal): Promise&lt;readonly string[]&gt;</code>. Add debouncing in the application when useful, and mark loading from the start of that debounce. Keep the previous results during a replacement request or failure; replace them only when the latest request succeeds. A successful empty response is distinct from a failure. Set <code>loading</code> synchronously in the event handler and clear <code>loadError</code> when starting a new attempt. The component makes no requests and has no pagination behavior.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1898,8 +1769,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p>The control uses Angular 22 native signal control contracts. Use <code>[formField]</code>, <code>[formControl]</code>, <code>formControlName</code>, <code>[(ngModel)]</code>, or standalone <code>[(checked)]</code>. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the <a href="components/signal-forms">forms guide</a> for validation, submission, translations and compatibility.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
-<p>Hints and errors align with the control&#39;s inline start by default. <code>--bx-field-support-padding</code> overrides that support-text padding. For a full-width settings row with the label at the start and the switch at the end, use <code>labelPosition=&quot;before&quot;</code> with <code>--bx-toggle-inline-size: 100%</code> and <code>--bx-toggle-justify-content: space-between</code>. Their defaults are <code>auto</code> and <code>start</code>. Labels can wrap while the switch retains its size; logical layout also follows RTL direction.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Toggles keep emitting the theme color while switched on, including values set through Angular forms. Hovering the track or its label highlights the surface and emits color; disabled controls do neither.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
@@ -1907,7 +1777,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -1930,14 +1800,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p><code>BxError</code> is a content projection component with selector <code>bx-error</code>. It has no inputs; the form field projects it into its error region.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2064,14 +1934,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p><code>name</code> is required. <code>size</code>, <code>strokeWidth</code>, <code>color</code>, <code>bgColor</code>, <code>decorative</code>, <code>ariaLabel</code> configure rendering. Color accepts a semantic token or themed color; <code>bgColor=&quot;auto&quot;</code> derives a complementary token.</p>
 <p><code>size</code> accepts the string values <code>&#39;16&#39;</code>, <code>&#39;20&#39;</code>, <code>&#39;24&#39;</code>, <code>&#39;28&#39;</code>, <code>&#39;32&#39;</code>, <code>&#39;36&#39;</code>, <code>&#39;40&#39;</code>, <code>&#39;44&#39;</code> and <code>&#39;48&#39;</code>, measured in pixels. The default is <code>&#39;24&#39;</code>. For a small icon between the first two sizes, choose <code>&#39;16&#39;</code> or <code>&#39;20&#39;</code>; <code>&#39;18&#39;</code> is not supported by <code>IconSize</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2094,14 +1964,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
   <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
 });</code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2124,14 +1994,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
   <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
 });</code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2149,14 +2019,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p>Required inputs: <code>header</code> (header config or undefined), <code>showCloseButton</code> (boolean). <code>close</code> emits a modal close mode or undefined. Header supports text and an optional icon configuration.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2179,14 +2049,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
   <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;bottom-sheet&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
 });</code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2209,14 +2079,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
   <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;center&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
 });</code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2239,14 +2109,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
   <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&quot;right&quot;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
 });</code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2264,14 +2134,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p>A standalone structural directive. It captures a TemplateRef and registers it with the owning ModalCore; it has no public inputs.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2289,14 +2159,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p>A standalone structural directive. It captures a TemplateRef and registers it with the owning ModalCore; it has no public inputs.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2349,14 +2219,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p><code>minimumBreadcrumbs</code> defaults to 2; values below 1 are clamped. <code>divider</code> accepts an icon name. Route labels come from <code>withNav</code> metadata and <code>NavigationService</code>.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -2994,129 +2864,29 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 </tbody></table>
 <p><code>bx-banner</code> is an alternate selector for <code>Alert</code>. Project optional actions with <code>bxAlertActions</code>.</p>
 <h2>Appearance and customization</h2>
-<p><code>--bx-alert-background</code>, <code>--bx-alert-color</code>, <code>--bx-alert-border</code>, <code>--bx-alert-radius</code>, <code>--bx-alert-padding</code>, <code>--bx-alert-gap</code>, <code>--bx-alert-shadow</code>, <code>--bx-alert-min-opacity</code>, <code>--bx-alert-light-opacity</code> and <code>--bx-alert-rim-opacity</code>. Borders use the tone color at 44.8% opacity by default; increased contrast restores the full tone color, and <code>--bx-alert-border</code> always accepts an explicit override. Interior light opacity defaults to 0.32 and rim light opacity to 0.8 to keep illumination gentle while preserving the glass material. The shared glass surface follows application translucency and reduced transparency. Borders have a uniform width; the old <code>--bx-alert-accent-width</code> is no longer used. The severity palette, icon, soft glow and steady light follow the same material and emissive mechanisms as toasts, without entrance, exit or progress animations. Optional <code>data-bx-light-scope</code> on an owning container limits neighboring illumination to that scene.</p>
+<p><code>--bx-alert-background</code>, <code>--bx-alert-color</code>, <code>--bx-alert-border</code>, <code>--bx-alert-radius</code>, <code>--bx-alert-padding</code>, <code>--bx-alert-gap</code>, <code>--bx-alert-shadow</code>, <code>--bx-alert-min-opacity</code>, <code>--bx-alert-light-opacity</code> and <code>--bx-alert-rim-opacity</code>. Borders use the tone color at 44.8% opacity by default; increased contrast restores the full tone color, and <code>--bx-alert-border</code> always accepts an explicit override. Interior light opacity defaults to 0.32 and rim light opacity to 0.8 to keep illumination gentle while preserving the glass material. The shared glass surface follows application glassiness and reduced transparency. Borders have a uniform width; the old <code>--bx-alert-accent-width</code> is no longer used. The severity palette, icon, soft glow and steady light follow the same material and emissive mechanisms as toasts, without entrance, exit or progress animations. Optional <code>data-bx-light-scope</code> on an owning container limits neighboring illumination to that scene.</p>
 <h2>Behavior and accessibility</h2>
 <p>Static content is silent by default. Use polite for changing status and assertive for urgent errors; the live text excludes the action slot. Supply descriptive text as well as a tone. Content and actions wrap at narrow widths. If dismissal removes the focused control, provide dismissFocusTarget or manage focus through dismissed. Focus restoration waits for rendering, so the destination may be created conditionally after dismissal.</p>
 <h2>Playground</h2>
 <p><code>/components/alert</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/card/README.md":`<h1>Card</h1>
-<p>A themed content surface with optional whole-card activation and controlled selection, using Blocks&#39; shared lighting and accessibility preferences.</p>
+<p>A general themed content surface built with the existing surface engine.</p>
 <h2>Public import</h2>
 <pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Card</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
 <h2>Usage</h2>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-card</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Project&quot;</span> <span class="hljs-attr">subtitle</span>=<span class="hljs-string">&quot;Updated recently&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;outlined&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Project content.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">bxCardFooter</span>&gt;</span>Last updated today<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">bx-card</span>&gt;</span>
-
-<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-card</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Open project&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Open project&quot;</span> (<span class="hljs-attr">activated</span>)=<span class="hljs-string">&quot;openProject()&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>A single native button action across the entire card.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
-<p>For a selectable card, the consumer owns its selection:</p>
-<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { signal } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
-
-<span class="hljs-keyword">readonly</span> selected = <span class="hljs-title function_">signal</span>(<span class="hljs-literal">false</span>);</code></pre>
-<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-card</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Workspace&quot;</span> [<span class="hljs-attr">clickable</span>]=<span class="hljs-string">&quot;true&quot;</span> [(<span class="hljs-attr">selected</span>)]=<span class="hljs-string">&quot;selected&quot;</span> <span class="hljs-attr">highlightColor</span>=<span class="hljs-string">&quot;accent&quot;</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Press anywhere to choose this workspace.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">bx-card</span>&gt;</span></code></pre>
-<p>For an exclusive choice, bind <code>[selected]</code> from the chosen value and update that value on <code>(activated)</code>. Activating an already selected choice keeps it selected. Use <code>[(selected)]</code> when each activation should toggle selection.</p>
 <h2>API</h2>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>Default</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>title</code>, <code>subtitle</code></td>
-<td>absent</td>
-<td>Translated <code>ResolvableText</code> content</td>
-</tr>
-<tr>
-<td><code>headingLevel</code></td>
-<td>3</td>
-<td>Title heading level, clamped to 1\u20136</td>
-</tr>
-<tr>
-<td><code>variant: CardVariant</code></td>
-<td>outlined</td>
-<td>Outlined, elevated or filled</td>
-</tr>
-<tr>
-<td><code>opaque</code></td>
-<td>inherited</td>
-<td>Optional opaque presentation</td>
-</tr>
-<tr>
-<td><code>clickable</code></td>
-<td>false</td>
-<td>Whole-card action; native <code>button[bx-card]</code> is always clickable</td>
-</tr>
-<tr>
-<td><code>selected</code></td>
-<td>absent</td>
-<td>Controlled boolean selection; absence creates a plain action</td>
-</tr>
-<tr>
-<td><code>selectedChange</code></td>
-<td>\u2014</td>
-<td>Requested next boolean selection, emitted only when <code>selected</code> is supplied; supports <code>[(selected)]</code></td>
-</tr>
-<tr>
-<td><code>activated</code></td>
-<td>\u2014</td>
-<td>Enabled pointer, Enter or Space activation, and guarded <code>activate()</code> calls</td>
-</tr>
-<tr>
-<td><code>highlightColor: Color</code></td>
-<td>CSS/primary</td>
-<td>Semantic or palette token for hover, focus and selected emission</td>
-</tr>
-<tr>
-<td><code>disabled</code></td>
-<td>false</td>
-<td>Suppresses activation and excludes a clickable card from keyboard navigation</td>
-</tr>
-<tr>
-<td><code>readonly</code>, <code>readOnly</code></td>
-<td>false</td>
-<td>Prevents activation while preserving focus and selected appearance</td>
-</tr>
-<tr>
-<td><code>ariaLabel</code></td>
-<td>content</td>
-<td>Optional translated accessible name</td>
-</tr>
-<tr>
-<td><code>ariaLabelledBy</code>, <code>ariaDescribedBy</code></td>
-<td>absent</td>
-<td>Optional labeling/description IDs</td>
-</tr>
-<tr>
-<td><code>activate()</code></td>
-<td>\u2014</td>
-<td>Requests activation after checking current interactive state</td>
-</tr>
-<tr>
-<td><code>focus(options?)</code></td>
-<td>\u2014</td>
-<td>Focuses an enabled clickable card</td>
-</tr>
-</tbody></table>
-<p>Slots: <code>bxCardMedia</code>, <code>bxCardHeader</code>, default body and <code>bxCardFooter</code>. Header content follows the optional generated title/subtitle. Empty sections take no space.</p>
+<p><code>title</code> and <code>subtitle</code> accept <code>ResolvableText</code>. <code>headingLevel</code> defaults to 3 and is clamped to 1\u20136. <code>variant: CardVariant</code> is outlined (default), elevated or filled. Optional <code>opaque</code> follows application appearance when absent.</p>
+<p>Slots: <code>bxCardMedia</code>, <code>bxCardHeader</code>, default body and <code>bxCardFooter</code>. Header content follows the optional generated title/subtitle. Empty sections take no space. Project semantic content and Blocks actions into these slots.</p>
 <h2>Appearance and customization</h2>
-<p>Existing variables: <code>--bx-card-background</code>, <code>--bx-card-color</code>, <code>--bx-card-border</code>, <code>--bx-card-radius</code>, <code>--bx-card-shadow</code>, <code>--bx-card-padding</code> and <code>--bx-card-title-size</code>.</p>
-<p>Interactive variables: <code>--bx-card-highlight</code> (defaults to <code>--bx-primary</code>), <code>--bx-card-selected-background</code> (element active), <code>--bx-card-selected-border</code> (ordinary card border), <code>--bx-card-hover-background</code> (element hover), <code>--bx-card-pressed-background</code> (element active), <code>--bx-card-focus-color</code> (highlight), and <code>--bx-card-disabled-opacity</code> (0.6).</p>
-<p><code>highlightColor</code> overrides <code>--bx-card-highlight</code> with a typed Blocks token. Selected cards resolve their highlight in their own theme scope and emit the same persistent border light as selected Blocks controls, without adding a second selection outline. Keyboard focus retains its own visible ring. Colors follow the active palette, and mounted surfaces react to theme and appearance changes.</p>
+<p><code>--bx-card-background</code>, <code>--bx-card-color</code>, <code>--bx-card-border</code>, <code>--bx-card-radius</code>, <code>--bx-card-shadow</code>, <code>--bx-card-padding</code> and <code>--bx-card-title-size</code>. Material changes update mounted surfaces; theme tokens remain inherited.</p>
 <h2>Behavior and accessibility</h2>
-<p>Ordinary cards remain containers whose links and buttons provide interaction. Prefer <code>button[bx-card]</code> for a native whole-card action; it uses <code>type=&quot;button&quot;</code>. <code>bx-card[clickable]</code> adds button semantics and Enter/Space operation. Enter activates on keydown without repeats; Space activates on keyup and does not scroll the page. <code>selected</code> supplies <code>aria-pressed</code>; selection is accompanied by material and emitted-light feedback. Add a visible check or other content indicator when useful.</p>
-<p>Use <code>activated</code> for guarded actions. Read-only cards remain focusable and announce that activation is unavailable. Disabled cards are removed from tab order and retain a readable disabled presentation. Application-driven selection updates remain possible in either state.</p>
-<p>A whole-card action should contain descriptive, noninteractive content. Use an ordinary card for multiple independent actions; nested controls do not activate the card. Long content wraps. Combine with Grid and Container for responsive pages, and give images meaningful alternative text.</p>
-<p>The surface engine respects reduced motion and transparency; forced colors uses a static selected border and visible keyboard focus. No decorative motion is needed to identify selection.</p>
+<p>A card is a container; its links and buttons provide interaction. The optional title has heading semantics. Long content wraps. Combine with Grid and Container for responsive pages; give projected images a responsive width and meaningful alternative text.</p>
 <h2>Playground</h2>
-<p><code>/components/card</code> demonstrates native actions, controlled/two-way selection, configurable highlight tokens, disabled and read-only states, and ordinary content cards. <code>/appearance</code> uses clickable cards for Light, Dark and Auto.</p>
+<p><code>/components/card</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/chip/README.md":`<h1>Interactive chip</h1>
 <p>A compact native action, toggle or removable token using Blocks semantic palettes.</p>
 <h2>Public import</h2>
@@ -3260,7 +3030,6 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Projected content remains mounted while collapsed; lazy template state is recreated on reopening. Application-driven expanded changes remain possible for disabled/readonly sections.</p>
 <h2>Appearance and customization</h2>
 <p><code>--bx-collapsible-background</code>, <code>--bx-collapsible-border</code>, <code>--bx-collapsible-radius</code>, <code>--bx-collapsible-padding</code> and <code>--bx-collapsible-content-padding</code> follow shared semantic defaults.</p>
-<p>The heading&#39;s hover background follows the surface&#39;s inner corners. Expanded headings keep rounded top corners and square bottom corners, with no divider between the heading and content. Accordion items share this appearance.</p>
 <h2>Behavior and accessibility</h2>
 <p>Native button activation, aria-expanded and aria-controls connect the heading and panel. Hidden panels are inert. Programmatic collapse moves contained focus to the heading. Optional regions avoid filling the page with unnecessary landmarks.</p>
 <h2>Playground</h2>
@@ -3528,14 +3297,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 </tbody></table>
 <p><code>IShortcutMatchOptions</code> exposes <code>platform</code>, <code>allowInEditable</code> (false), and <code>allowRepeat</code> (false). Matching always ignores already-handled, composing and AltGraph events. By default it ignores input, textarea, select, contenteditable and textbox targets, including readonly inputs. Modifiers alone, duplicate modifiers, multiple ordinary keys and custom labels are display-only. Matching uses <code>KeyboardEvent.key</code> (case insensitive), so keyboard layout matters; Option/Alt characters must match the actual produced key. The service does not track pressed keys, sequences, global registrations, priority, or conflict resolution.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -3884,7 +3653,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p><code>config</code> accepts reusable <code>ITagConfig</code> appearance, icon, count and tooltip defaults. Direct inputs take precedence. <code>opaque</code> (also in <code>ITagConfig</code>) removes translucency and backdrop blur when true; false or absent follows application appearance and accessibility preferences. Navigation badges use it to keep their rows opaque. Consumer CSS variables can override the semantic palette without changing the component.</p>
 <p>Without an explicit <code>tooltip</code>, a tag automatically shows its complete label only when its rendered text is truncated. Resizing, content/translation changes, and loaded fonts update this condition through the shared <a href="components/truncate">TruncateDirective</a>. An explicit tooltip still describes the tag even when its label fits, including overflow tags listing hidden selections. Set <code>[tooltipOnTruncate]=&quot;false&quot;</code> to retain truncation while supplying custom feedback. <code>ITagConfig.tooltipOnTruncate</code> provides the reusable default, with the direct input taking precedence. <code>tooltip=&quot;&quot;</code> also suppresses the automatic tooltip. The public <code>TruncateDirective</code>, <code>TruncatedTextPipe</code> (<code>bxTruncatedText</code>), and <code>truncatedText()</code> helper are available for application-owned text.</p>
 <h2>Appearance</h2>
-<p>Uses Blocks semantic theme colors and the shared glass surface. Tags inherit application translucency, receive surrounding emitted light, and follow opaque/reduced-transparency preferences. They have no hover illumination or press effect because they are informational. Tooltip motion follows <code>BxA11yService</code>.</p>
+<p>Uses Blocks semantic theme colors and the shared glass surface. Tags inherit application glassiness, receive surrounding emitted light, and follow opaque/reduced-transparency preferences. They have no hover illumination or press effect because they are informational. Tooltip motion follows <code>BxA11yService</code>.</p>
 <p>Text tags use small rounded corners. A single number without text or icons uses a circle that grows for longer counts. Override <code>--bx-tag-background</code>, <code>--bx-tag-color</code>, <code>--bx-tag-border</code>, <code>--bx-tag-radius</code>, <code>--bx-tag-padding</code>, <code>--bx-tag-gap</code>, <code>--bx-tag-font-size</code>, <code>--bx-tag-shadow</code>, <code>--bx-tag-counter-background</code>, <code>--bx-tag-counter-radius</code>, and <code>--bx-tag-disabled-opacity</code> as needed. <code>--bx-tag-number-size</code> and <code>--bx-tag-number-padding</code> configure number-only circles; <code>--bx-tag-fill-opacity</code> and <code>--bx-tag-outline-opacity</code> tune the variant tints. Forced colors retain a visible boundary.</p>
 <h2>Accessibility and translations</h2>
 <p>Visible text remains available to assistive technology; decorative icons are hidden. An explicit <code>ariaLabel</code> names the tag group when the visible numbers need context. Tooltip tags support hover, keyboard focus and touch-and-hold. <code>focusable</code> defaults to true for a tooltip-bearing standalone tag; set it false when a surrounding interactive control supplies keyboard access to the same description.</p>
@@ -3904,7 +3673,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <h2>API</h2>
 <p><code>text</code> is required and accepts plain text or a translation key object. For automatic positioning and trigger handling, use <code>TooltipDirective</code> instead.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <p>Tooltips retain their neutral, opaque background while nearby emissive colors add a restrained, directional highlight to the facing border. The arrow shares the body&#39;s background and samples the lighting on its side of the bubble. Positioned tooltips receive light from their trigger&#39;s context, including inside dialogs, while remaining transparent to pointer events. The overview&#39;s wake-up hint and Bring home action include explanatory tooltips. The hint fades without changing the layout and appears only while the orb is asleep in its pod.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
@@ -3912,7 +3681,7 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -4012,14 +3781,14 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">bxTooltip</span>=<span class="hljs-string">&quot;Appearance settings apply to all components&quot;</span> <span class="hljs-attr">bxTooltipTouch</span>=<span class="hljs-string">&quot;tap&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;More information&quot;</span>&gt;</span>\u24D8<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">bxTooltip</span>=<span class="hljs-string">&quot;Optional extra context&quot;</span> <span class="hljs-attr">bxTooltipTouch</span>=<span class="hljs-string">&quot;longpress&quot;</span>&gt;</span>Hold for a hint<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -4138,11 +3907,6 @@ scene.<span class="hljs-title function_">destroy</span>();</code></pre>
 <p>Previews use an aligned responsive card grid. Width changes affect each example inside its card; preview areas and caption space stay reserved. Wrapped content scrolls inside its preview rather than moving later examples.</p>
 `,"projects/blocks/toastr/components/README.md":`<h1>Toast core</h1>
 <p>The toast lifecycle host with progress, dismissal and content composition.</p>
-<p>Toast wrappers opt into enhanced glassiness on supported browsers. The default maximum of four open notifications bounds the extra surfaces. The application-wide baseline, automatic device budget, reduced transparency and high contrast still take precedence. Reflections have a bounded capture area and throttled invalidation; hidden receivers suspend work.</p>
-<p>Per-toast <code>IToastConfig</code> supports <code>glassiness</code> (<code>auto</code>, <code>off</code>, <code>on</code>), <code>glassQuality</code> (<code>auto</code>, <code>baseline</code>, <code>enhanced</code>). The same defaults can be set through <code>ToastrGlobalSettingsService.update()</code>. Simple toast content keeps its semantic foreground colors while its material provides the backing. An explicit <code>hasDefaultBackground: false</code> suppresses the added glassiness enhancement.</p>
-<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">const</span> settings = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ToastrGlobalSettingsService</span>);
-settings.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">glassQuality</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }); <span class="hljs-comment">// One refraction pass for selected toasts.</span>
-settings.<span class="hljs-title function_">update</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-string">&#x27;off&#x27;</span> });  <span class="hljs-comment">// Existing material and lighting.</span></code></pre>
 <h2>Import</h2>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ToastCore</span>, <span class="hljs-title class_">ToastrService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/toastr&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
@@ -4151,14 +3915,14 @@ settings.<span class="hljs-title function_">update</span>({ <span class="hljs-at
 <h2>API</h2>
 <p>Use <code>ToastrService.queueToast(ContentComponent, config)</code> for custom content, or queueInfo, queueSuccess, queueWarning and queueDanger for common messages. Config controls position, durationInMs, progress and close actions.</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -4168,7 +3932,6 @@ settings.<span class="hljs-title function_">update</span>({ <span class="hljs-at
 <p>Open <code>/components/toast-core</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/toastr/components/views/simple-toast/README.md":`<h1>Simple toast</h1>
 <p>A notification with a semantic icon, optional title and message.</p>
-<p>The toast wrapper uses enhanced glassiness on supported browsers, with shared translucency and accessibility preferences. Text retains its semantic foreground as the background scrolls; the material keeps a minimum tint and blur for readability. Progress and border lighting retain the notification type. Use toast configuration or global toast settings to select automatic detail, or disable glassiness.</p>
 <h2>Import</h2>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SimpleToast</span>, <span class="hljs-title class_">ToastrService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/toastr&#x27;</span>;</code></pre>
 <p>Add the standalone component or directive to your component&#39;s <code>imports</code>.</p>
@@ -4177,14 +3940,14 @@ settings.<span class="hljs-title function_">update</span>({ <span class="hljs-at
 <h2>API</h2>
 <p>Use <code>toastr.queueSuccess({ title: &quot;Saved&quot;, message: &quot;Your settings are up to date.&quot; })</code>. Equivalent methods queueInfo, queueWarning and queueDanger set the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).</p>
 <h2>Appearance</h2>
-<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
+<p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
 <span class="hljs-keyword">import</span> { <span class="hljs-title class_">ThemingService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> theme = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>);
 
 <span class="hljs-comment">// Application-wide, including open overlays.</span>
-<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">translucency</span>: <span class="hljs-number">0.5</span> });
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">glassiness</span>: <span class="hljs-number">0.5</span> });
 <span class="hljs-comment">// Opaque presentation retains the same layout and component API.</span>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">theme</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.</p>
@@ -4496,7 +4259,7 @@ export class ToastExample {
     // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var w=class c{document=p(ie);router=p(Lr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=H({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&be(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(fn(0,`div`,0)(1,`div`,1)(2,`span`),Re(3,`Documentation`),hn()(),Wn(4,`article`,2),hn()),a&2&&(S(4),Bi(`innerHTML`,s.readmeContent(),Sg))},styles:[`
+`};var w=class c{document=p(Q);router=p(ar);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=V({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&de(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(Bt(0,`div`,0)(1,`div`,1)(2,`span`),we(3,`Documentation`),jt()(),bn(4,`article`,2),jt()),a&2&&(D(4),si(`innerHTML`,s.readmeContent(),Sm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
