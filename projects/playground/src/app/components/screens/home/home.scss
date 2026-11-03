@@ -140,12 +140,19 @@
 .home-footer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    vertical-align: center;
     flex-wrap: wrap;
     gap: spacing(4);
     padding-block: spacing(6);
     border-top: 1px solid var(--bx-border-default);
     font-size: 0.8rem;
     color: var(--bx-text-secondary);
+
+    & .footer-links {
+        display: flex;
+        gap: spacing(4);
+    }
 }
 
 @include respond-down(xl) {
