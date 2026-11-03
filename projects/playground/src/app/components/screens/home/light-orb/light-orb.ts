@@ -514,10 +514,10 @@ export class LightOrb {
       this.lastRibbon = time;
       const speed = p.mood === 'danger' ? 3.4 : p.mood === 'info' ? 0.65 : p.mood === 'warn' ? 1.9 : 1.1;
       const strength = p.mood === 'danger' ? 1.3 : p.mood === 'info' ? 0.65 : 1;
-      const wave = this.liquidPath(this.ribbonTime * speed, 0, strength);
+      const wave = this.ribbonPath(this.ribbonTime * speed, 0, strength);
       this.ribbonCore().nativeElement.setAttribute('d', wave);
       this.ribbonGlow().nativeElement.setAttribute('d', wave);
-      this.ribbonTail().nativeElement.setAttribute('d', this.liquidPath(this.ribbonTime * speed * 0.8, 2.4, strength * 0.8));
+      this.ribbonTail().nativeElement.setAttribute('d', this.ribbonPath(this.ribbonTime * speed * 0.8, 2.4, strength * 0.8));
     }
     const height = Math.max(0, this.floor - p.y);
     const shadow = {
@@ -572,7 +572,7 @@ export class LightOrb {
     });
   }
 
-  private liquidPath(time: number, phase: number, strength: number): string {
+  private ribbonPath(time: number, phase: number, strength: number): string {
     const turn = time * 0.32 + phase;
     const tilt = 0.55 + Math.sin(time * 0.31 + phase) * 0.35;
     const cosTurn = Math.cos(turn),

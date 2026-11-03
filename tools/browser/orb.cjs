@@ -146,7 +146,7 @@ test('the unlit swatch sleeps in its well and charges gradually when waking itse
   );
 });
 
-test('liquid ribbons change their 3D shape and light the sphere without ambient rescans', async (t) => {
+test('liquid-light ribbons change their 3D shape and light the sphere without ambient rescans', async (t) => {
   const page = await overview(t);
   await wake(page);
   await page.waitForFunction(() => {

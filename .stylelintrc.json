@@ -1,5 +1,26 @@
 {
   "extends": ["stylelint-config-standard-scss"],
+  "overrides": [
+    {
+      "files": ["projects/blocks/effects/styles/*.scss"],
+      "rules": {
+        "property-no-vendor-prefix": [
+          true,
+          {
+            "ignoreProperties": [
+              "-webkit-backdrop-filter",
+              "-webkit-mask",
+              "-webkit-mask-image",
+              "-webkit-mask-composite",
+              "-webkit-mask-repeat",
+              "-webkit-mask-size",
+              "-webkit-mask-position"
+            ]
+          }
+        ]
+      }
+    }
+  ],
   "rules": {
     "at-rule-empty-line-before": [
       "always",

@@ -15,7 +15,7 @@
     --bx-glass-surface: var(--bx-bg-surface-alt);
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: none;
-    --bx-glass-opacity: calc(0.1 + 0.25 * var(--bx-glassiness, 0.5));
+    --bx-glass-opacity: calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469));
     --bx-glass-radius: #{radius(md)};
 
     display: flex;

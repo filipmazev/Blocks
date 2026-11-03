@@ -1,4 +1,5 @@
 import { injectComponentSurface } from '@filip.mazev/blocks/effects';
+import type { GlassinessMode } from '@filip.mazev/blocks/effects/runtime';
 import {
   afterRenderEffect,
   Component,
@@ -40,6 +41,7 @@ import { ButtonIconDirective } from './directives/button-icon.directive';
 export class Button {
   private readonly appearance = injectComponentSurface(
     () => ({
+      glassiness: this.glassiness(),
       interactive: this.variant() === 'text' || !this.interactive() || this.isDisabled() ? false : undefined,
       emission:
         this.variant() !== 'text' && this.interactive() && !this.isDisabled()
@@ -74,6 +76,8 @@ export class Button {
   public readonly interactive = input<boolean, unknown>(true, { transform: booleanAttribute });
   /** Enable runtime glass lighting and deformation; defaults to true. Disable for dense collections while retaining button styling and semantics. */
   public readonly surfaceEffects = input<boolean, unknown>(true, { transform: booleanAttribute });
+  /** Opt this button into backdrop refraction. Omitted buttons retain the existing material and lighting. */
+  public readonly glassiness = input<GlassinessMode | undefined>();
 
   constructor() {
     afterRenderEffect((onCleanup) => {

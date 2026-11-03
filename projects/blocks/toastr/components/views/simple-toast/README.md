@@ -2,6 +2,8 @@
 
 A notification with a semantic icon, optional title and message.
 
+The toast wrapper uses enhanced glassiness on supported browsers, with shared translucency and accessibility preferences. Text retains its semantic foreground as the background scrolls; the material keeps a minimum tint and blur for readability. Progress and border lighting retain the notification type. Use toast configuration or global toast settings to select automatic detail, or disable glassiness.
+
 ## Import
 
 ```ts
@@ -22,7 +24,7 @@ Use `toastr.queueSuccess({ title: "Saved", message: "Your settings are up to dat
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -31,7 +33,7 @@ import { ThemingService } from '@filip.mazev/blocks/core';
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
+this.theme.setAppearance({ translucency: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ reducedTransparency: true });
 ```

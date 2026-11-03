@@ -74,7 +74,7 @@ The debounce/request period hides pagination actions and old results. Provide `l
 
 Rounded option rows have a small gap, shared by select and multiselect. Set `--bx-select-option-gap` on the control to customize it (default: Blocks `spacing(1)`). All built-in selection and caret icons use Blocks `Icon`; searching uses Blocks `SearchInput`.
 
-Option and select-all checkboxes reuse the public `CheckboxIndicator` component, including its indeterminate state and themed finish. The option button remains the interactive target. `--bx-checkbox-size` customizes indicator dimensions without changing keyboard behavior.
+Option and select-all checkboxes reuse the public `CheckboxIndicator` component, including its indeterminate state and themed finish. Indicators remain non-emissive; the option button owns selection and interaction. Form checkboxes outside multiselect enable emission by default. `--bx-checkbox-size` customizes indicator dimensions without changing keyboard behavior.
 
 The select-all checkbox also shows checked when every selectable loaded row is individually selected, including deselecting and reselecting the last missing row. Disabled rows and disabled groups do not contribute to this state. Clicking a checked header clears the eligible loaded rows. This finite visual state does not activate remote select-all intent: future pages remain unselected unless the explicit select-all action enabled intent.
 

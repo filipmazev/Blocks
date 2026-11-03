@@ -36,16 +36,16 @@
 </div>
 
 <div class="preview-tools" role="group" aria-label="Nature journal controls">
-  <button bx-button type="button" variant="icon" color="grayscale" class="preview-icon-button" aria-label="Back to the start of the article" (click)="scrollTo(reader)"><bx-icon name="arrow-up" size="16" /></button>
-  <div bxSurface bxSurfaceInteractive bxSurfaceFocusEmission="var(--bx-primary)" class="preview-search">
+  <button bx-button glassiness="auto" type="button" variant="icon" color="grayscale" class="preview-icon-button" aria-label="Back to the start of the article" (click)="scrollTo(reader)"><bx-icon name="arrow-up" size="16" /></button>
+  <div bxSurface bxSurfaceGlassiness="auto" bxSurfaceInteractive bxSurfaceFocusEmission="var(--bx-primary)" class="preview-search">
     <bx-icon name="search" size="16" />
     <input #query type="search" aria-label="Search the national parks article" placeholder="Find a place" [value]="search()" (input)="search.set(query.value)">
   </div>
-  <button bx-button type="button" variant="icon" [color]="saved() ? 'primary' : 'grayscale'" class="preview-icon-button" [attr.aria-pressed]="saved()" [attr.aria-label]="saved() ? 'Remove article from saved places' : 'Save article to your places'" (click)="saved.set(!saved())"><bx-icon [name]="saved() ? 'bookmark-check' : 'bookmark'" size="16" /></button>
-  <button bx-button type="button" variant="icon" color="grayscale" class="preview-icon-button" aria-label="Article contents" [bxDropdown]="contents" placement="bottom"><bx-icon name="ellipsis" size="20" /></button>
+  <button bx-button glassiness="auto" type="button" variant="icon" [color]="saved() ? 'primary' : 'grayscale'" class="preview-icon-button" [attr.aria-pressed]="saved()" [attr.aria-label]="saved() ? 'Remove article from saved places' : 'Save article to your places'" (click)="saved.set(!saved())"><bx-icon [name]="saved() ? 'bookmark-check' : 'bookmark'" size="16" /></button>
+  <button bx-button glassiness="auto" type="button" variant="icon" color="grayscale" class="preview-icon-button" aria-label="Article contents" [bxDropdown]="contents" placement="bottom"><bx-icon name="ellipsis" size="20" /></button>
 </div>
 
-<nav bxSurface class="preview-navigation" aria-label="Places in this article">
+<nav bxSurface bxSurfaceGlassiness="auto" class="preview-navigation" aria-label="Places in this article">
   <span class="preview-saved-status" bxTruncate role="status">{{ saved() ? 'Saved to your places' : 'Explore Macedonia' }}</span>
   @for (park of parks(); track park.id) {
     <button type="button" (click)="scrollTo(reader, park.id)"><bx-icon name="mountain" size="16" /><span>{{ park.shortTitle }}</span></button>

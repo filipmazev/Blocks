@@ -31,7 +31,7 @@ Without an explicit `tooltip`, a tag automatically shows its complete label only
 
 ## Appearance
 
-Uses Blocks semantic theme colors and the shared glass surface. Tags inherit application glassiness, receive surrounding emitted light, and follow opaque/reduced-transparency preferences. They have no hover illumination or press effect because they are informational. Tooltip motion follows `BxA11yService`.
+Uses Blocks semantic theme colors and the shared glass surface. Tags inherit application translucency, receive surrounding emitted light, and follow opaque/reduced-transparency preferences. They have no hover illumination or press effect because they are informational. Tooltip motion follows `BxA11yService`.
 
 Text tags use small rounded corners. A single number without text or icons uses a circle that grows for longer counts. Override `--bx-tag-background`, `--bx-tag-color`, `--bx-tag-border`, `--bx-tag-radius`, `--bx-tag-padding`, `--bx-tag-gap`, `--bx-tag-font-size`, `--bx-tag-shadow`, `--bx-tag-counter-background`, `--bx-tag-counter-radius`, and `--bx-tag-disabled-opacity` as needed. `--bx-tag-number-size` and `--bx-tag-number-padding` configure number-only circles; `--bx-tag-fill-opacity` and `--bx-tag-outline-opacity` tune the variant tints. Forced colors retain a visible boundary.
 

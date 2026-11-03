@@ -14,6 +14,8 @@ import { CheckboxClickAction } from './types/checkbox.types';
 export class Checkbox extends BxCheckedControl {
   public readonly indeterminate = model(false);
   public readonly clickAction = input<CheckboxClickAction>('check-indeterminate');
+  /** Enables shared hover, focus and checked-state lighting. Defaults to true; disabled and readonly controls remain passive. */
+  public readonly emissive = input(true);
 
   protected override onToggle(event: Event): void {
     if (this.clickAction() === 'noop') {

@@ -103,6 +103,3 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
     }
   };
 }
-
-/** @deprecated Use createGlassTransition. */
-export const createLiquidTransition = createGlassTransition;

@@ -10,6 +10,8 @@
         "schematics/**/*.d.ts",
         "core/styles/**/*.scss",
         "_index.scss",
+        "effects/**/*.scss",
+        "effects/THIRD_PARTY_NOTICES.md",
         {
             "glob": "effects.css",
             "input": "effects",

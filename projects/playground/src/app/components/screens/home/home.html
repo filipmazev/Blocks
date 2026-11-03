@@ -22,7 +22,7 @@
     </div>
     <div #featureGrid class="feature-grid">
       @for (feature of features; track feature.title) {
-        <a bxSurface class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" color="text-accent" />
+        <a bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="enhanced" class="feature-card" [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" color="text-accent" />
           @if (feature.icon === 'palette') {
             <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
           }
@@ -31,6 +31,6 @@
     </div>
   </section>
   <section class="home-links" aria-label="Explore Blocks"><a bx-button variant="text" routerLink="/modal">Modal playground<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text" routerLink="/toastr">Toast playground<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text" routerLink="/icon-catalog">Icon catalog<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text" routerLink="/release-notes">Release notes<bx-icon name="arrow-right" size="16" /></a></section>
-  <footer class="home-footer"><span>Designed &amp; developed by Filip Mazev</span><span>Blocks {{ version }}</span><a href="https://www.npmjs.com/package/@filip.mazev/blocks" target="_blank" rel="noopener noreferrer">npm package</a></footer>
+  <footer class="home-footer"><span>Designed &amp; developed by Filip Mazev</span><span>Blocks {{ version }}</span><a [href]="npmPackageUrl" target="_blank" rel="noopener noreferrer">npm package</a></footer>
 </div>
 

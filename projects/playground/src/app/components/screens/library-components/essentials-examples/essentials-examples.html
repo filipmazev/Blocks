@@ -82,6 +82,35 @@
             </bx-alert>
             @if (!alertVisible()) { <button id="restore-banner" bx-button variant="tonal" (click)="alertVisible.set(true)">Restore dismissible banner</button> }
         }
+        @case ('card') {
+            <bx-stack direction="horizontal" [wrap]="true" align="center">
+                <bx-checkbox label="Clickable" [(checked)]="cardClickable" subscriptSizing="dynamic" />
+                <bx-checkbox label="Disable selectable card" [(checked)]="cardDisabled" subscriptSizing="dynamic" />
+                <bx-checkbox label="Read-only selectable card" [(checked)]="cardReadOnly" subscriptSizing="dynamic" />
+                <bx-select label="Highlight token" [options]="cardHighlightOptions" [clearable]="false" [value]="cardHighlight()"
+                    (selectionChange)="cardHighlight.set($event.value ?? 'accent')" subscriptSizing="dynamic" />
+            </bx-stack>
+            <bx-grid minColumnWidth="14rem">
+                <bx-card title="Selectable workspace" ariaLabel="Select workspace" [clickable]="cardClickable()" [(selected)]="cardSelected"
+                    [disabled]="cardDisabled()" [readOnly]="cardReadOnly()" [highlightColor]="cardHighlight()" (activated)="status.set('Workspace activated')">
+                    <p>Press anywhere, or use Enter and Space. Selection emits the chosen token through the shared surface lighting.</p>
+                </bx-card>
+                <button bx-card title="Open reports" ariaLabel="Open reports" [highlightColor]="cardHighlight()" (activated)="status.set('Reports opened')">
+                    <p>A native button card provides a single action without a selected state.</p>
+                </button>
+                <bx-card title="Unavailable workspace" ariaLabel="Unavailable workspace" [clickable]="true" [disabled]="true" [selected]="true">
+                    <p>A disabled card retains its content and selection but cannot be activated or focused.</p>
+                </bx-card>
+                <bx-card title="Fixed workspace" ariaLabel="Fixed workspace" [clickable]="true" [readOnly]="true" [selected]="true" [highlightColor]="cardHighlight()">
+                    <p>Read-only selection remains focusable and keeps its appearance.</p>
+                </bx-card>
+                <bx-card title="Project details" subtitle="Content container">
+                    <p>Ordinary cards remain containers for independent actions.</p>
+                    <button bx-button bxCardFooter variant="tonal" (click)="status.set('Project opened')">Open project</button>
+                </bx-card>
+            </bx-grid>
+            <output>Workspace selected: {{ cardSelected() }} · Highlight: {{ cardHighlight() }}</output>
+        }
         @default {
             <bx-container size="full" class="container-demo" landmark="region" ariaLabel="Workspace content">
                 <bx-stack>

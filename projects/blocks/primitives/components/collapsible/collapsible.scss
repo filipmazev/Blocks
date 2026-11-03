@@ -28,7 +28,7 @@
     min-block-size: spacing(12);
     padding: var(--bx-collapsible-padding, #{spacing(3)} #{spacing(4)});
     border: 0;
-    border-radius: var(--bx-glass-radius);
+    border-radius: max(0px, calc(var(--bx-glass-radius) - 1px));
     background: transparent;
     color: inherit;
     font: inherit;
@@ -62,10 +62,14 @@
     &[aria-disabled='true'] {
         cursor: default;
     }
+
+    &[aria-expanded='true'] {
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+    }
 }
 
 .bx-collapsible-content {
     padding: var(--bx-collapsible-content-padding, #{spacing(4)});
-    border-block-start: 1px solid var(--bx-glass-edge);
     overflow-wrap: anywhere;
 }

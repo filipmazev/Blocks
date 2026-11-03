@@ -7,6 +7,10 @@ import type { Lighting, LightContribution } from './scene';
 import { subscribeFrame } from './scheduler';
 import { Spring } from './spring';
 import type { GlassSurface, SurfaceOptions } from './types';
+import { RefractiveSurface } from './refraction/classes/refractive-surface';
+import { DetailedRefractiveSurface } from './refraction/classes/detailed-refractive-surface';
+import { hasRefractionGeometry, supportsRefraction } from './refraction/helpers/refraction.helpers';
+import type { GlassinessMode } from './refraction/types/refraction.types';
 
 const mounted = new WeakMap<HTMLElement, GlassSurface>();
 
@@ -35,7 +39,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   const ownProperties = [
     'position',
     '--bx-glass-press',
-    '--bx-glassiness',
+    '--bx-translucency',
     '--bx-glass-lit-edge',
     '--bx-glass-lit-edge-top',
     '--bx-glass-lit-edge-right',
@@ -43,7 +47,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     '--bx-glass-lit-edge-left'
   ];
   const restoreStyles = rememberStyles(element, ownProperties);
-  const attributes = ['data-bx-surface', 'data-bx-reduced-transparency', 'data-bx-reduced-motion', 'data-bx-glass-renderer'];
+  const attributes = ['data-bx-surface', 'data-bx-reduced-transparency', 'data-bx-reduced-motion', 'data-bx-glass-renderer', 'data-bx-refraction'];
   const originalAttributes = new Map(attributes.map((name) => [name, element.getAttribute(name)]));
   const restoreAttributes = rememberAttributes(element, attributes);
   const originals = new Map(
@@ -93,10 +97,14 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   let unifiedLighting = false;
   let pressed = false;
   let paintedPressure: string | undefined;
+  let refraction: RefractiveSurface | DetailedRefractiveSurface | undefined;
+  let detailedRefraction = false;
+  let visible = true;
 
   const interactive = () => (options.interactive ?? isActionSurface(element)) && !isSurfaceInteractionBlocked(element);
   let emitting = false;
   let emittingColor: string | undefined;
+  let sourceColor: string | undefined;
 
   type Layer = { edge: HTMLElement; glow: HTMLElement; animations: Animation[]; leaving: boolean };
 
@@ -278,17 +286,19 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     decoration.style.setProperty('--bx-glass-reflection-strength', String(value.reflectionStrength));
     decoration.style.setProperty('--bx-glass-reflection-x', `${value.reflectionX.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-reflection-y', `${value.reflectionY.toFixed(2)}%`);
+    refraction?.refresh();
     animate();
   };
   const sync = () => {
-    element.setAttribute('data-bx-surface', 'glass');
+    if (element.getAttribute('data-bx-surface') !== 'glass') element.setAttribute('data-bx-surface', 'glass');
     const inheritedMotion = globalValue('data-bx-reduced-motion') ?? originalAttributes.get('data-bx-reduced-motion');
     const inheritedTransparency = globalValue('data-bx-reduced-transparency') ?? originalAttributes.get('data-bx-reduced-transparency');
     reducedMotion = options.reducedMotion ?? (inheritedMotion === null || inheritedMotion === undefined ? motion.matches : inheritedMotion === 'true');
     const reducedTransparency = options.reducedTransparency ?? (inheritedTransparency === 'true' || transparency.matches);
     element.setAttribute('data-bx-reduced-transparency', String(reducedTransparency));
     element.setAttribute('data-bx-reduced-motion', String(reducedMotion));
-    const quality = inheritedAttribute(element, 'data-bx-glass-quality') ?? 'auto';
+    const applicationQuality = inheritedAttribute(element, 'data-bx-glass-quality') ?? 'auto';
+    const quality = applicationQuality === 'baseline' ? 'baseline' : (options.quality ?? applicationQuality);
     const supported =
       typeof CSS !== 'undefined' &&
       CSS.supports('background', 'color-mix(in srgb, white, black)') &&
@@ -300,14 +310,52 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       view.matchMedia('(pointer: coarse)').matches;
     const enhanced = quality !== 'baseline' && supported && (quality === 'enhanced' || !economical);
     element.setAttribute('data-bx-glass-renderer', enhanced ? 'enhanced' : 'baseline');
-    if (options.glassiness !== undefined) element.style.setProperty('--bx-glassiness', String(finiteClamp(options.glassiness, 0, 1, 0.5)));
-    else restoreProperty('--bx-glassiness');
+    if (options.translucency !== undefined) element.style.setProperty('--bx-translucency', String(finiteClamp(options.translucency, 0, 1, 0.5)));
+    else restoreProperty('--bx-translucency');
 
     // Absolutely positioned children use the padding box. Extend only across the
     // host's real border so their inherited outer radius describes the same curve.
     // Borderless and one-sided surfaces must never grow beyond their border box.
     const style = view.getComputedStyle(element);
     unifiedLighting = style.getPropertyValue('--bx-glass-unified-lighting').trim() === '1';
+
+    const policy = (inheritedAttribute(element, 'data-bx-glassiness-mode') as GlassinessMode | null) ?? 'auto';
+    const optedIn = options.glassiness !== undefined && options.glassiness !== 'off';
+    const refractionMode = policy === 'off' || options.glassiness === 'off' ? 'off' : policy === 'on' || options.glassiness === 'on' ? 'on' : 'auto';
+    const refractionEnabled =
+      optedIn &&
+      (!economical || applicationQuality === 'enhanced' || refractionMode === 'on') &&
+      supported &&
+      quality !== 'baseline' &&
+      (enhanced || refractionMode === 'on') &&
+      supportsRefraction(view, refractionMode) &&
+      !reducedTransparency &&
+      !view.matchMedia('(prefers-contrast: more), (forced-colors: active)').matches &&
+      !element.closest('.high-contrast, .bx-high-contrast-scope') &&
+      !element.parentElement?.closest('[data-bx-surface]') &&
+      !element.matches('.bx-btn-text') &&
+      parseFloat(style.getPropertyValue('--bx-glass-min-opacity')) !== 1 &&
+      hasRefractionGeometry(element, style);
+
+    if (refractionEnabled) {
+      element.setAttribute('data-bx-refraction', 'true');
+      const detailed = quality === 'enhanced';
+
+      if (refraction && detailed !== detailedRefraction) {
+        refraction.destroy();
+        refraction = undefined;
+      }
+
+      detailedRefraction = detailed;
+
+      if (refraction) refraction.update();
+      else refraction = detailed ? new DetailedRefractiveSurface(element) : new RefractiveSurface(element);
+      refraction.setVisible(visible);
+    } else {
+      refraction?.destroy();
+      refraction = undefined;
+      element.removeAttribute('data-bx-refraction');
+    }
 
     for (const side of ['top', 'right', 'bottom', 'left']) {
       const width = style.getPropertyValue(`border-${side}-width`);
@@ -345,8 +393,23 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   const unregister = registerSurface(element, {
     light: lighting,
     sync,
+    visibility(value) {
+      visible = value;
+      refraction?.setVisible(value);
+    },
     interactive,
     emission: emissionColor,
+    resolveEmission(color) {
+      // Reuse an existing decorative layer as a color probe. This resolves custom
+      // properties, currentColor and theme-dependent functions in the emitter's scope.
+      // Passing unresolved variables to another surface would use its tokens instead.
+      if (sourceColor !== color) {
+        rim.style.color = color;
+        sourceColor = color;
+      }
+
+      return view.getComputedStyle(rim).color;
+    },
     focusEmission: () => options.focusEmission ?? (isFieldSurface(element) ? emissionColor() : undefined),
     emit,
     press() {
@@ -377,6 +440,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       disposed = true;
       unsubscribe?.();
       unregister();
+      refraction?.destroy();
       decoration.remove();
       rim.remove();
       for (const [key, layer] of layers) removeLayer(key, layer);

@@ -28,7 +28,7 @@ nested scrollers, backdrops and top-layer contexts retain their existing strateg
 Playwright viewport resizing does not reproduce iOS Safari's browser chrome,
 keyboard or rubber-band compositor behavior; confirm those on an iPhone.
 
-Button glassiness regressions cover the complete slider range (including values below 30%), light and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions. With motion enabled, they also check immediate material updates across visible surfaces and sustained image-color sampling on all four article controls during nested scrolling.
+Button translucency regressions cover the complete slider range (including the minimum tint/blur backing for active refraction and the classic fallback), light and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions. With motion enabled, they also check immediate material updates across visible surfaces and sustained image-color sampling on all four article controls during nested scrolling.
 
 ```sh
 BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/buttons.cjs

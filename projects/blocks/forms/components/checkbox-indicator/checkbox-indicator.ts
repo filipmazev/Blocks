@@ -8,7 +8,7 @@ import { Icon } from '@filip.mazev/blocks/icons';
   imports: [BxSurfaceDirective, Icon],
   templateUrl: './checkbox-indicator.html',
   styleUrl: './checkbox-indicator.scss',
-  host: { 'aria-hidden': 'true' },
+  host: { 'aria-hidden': 'true', '[class.is-emissive]': 'emissive()' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxIndicator {
@@ -20,4 +20,6 @@ export class CheckboxIndicator {
   public readonly invalid = input(false);
   /** Suppresses the active surface finish when the owner is disabled. Defaults to false. */
   public readonly disabled = input(false);
+  /** Enables the owning control's interactive lighting. Defaults to false for decorative indicators, including multiselect options. */
+  public readonly emissive = input(false);
 }

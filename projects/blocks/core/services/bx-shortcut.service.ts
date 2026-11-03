@@ -11,7 +11,6 @@ import { SHORTCUT_APPLE_LABELS, SHORTCUT_COMMON_LABELS, SHORTCUT_MODIFIERS } fro
 export class BxShortcutService {
   private readonly deviceTypeService = inject(DeviceTypeService);
 
-  /** Current platform; SSR/unknown platforms use default and resolve mod to Control. */
   public platform(): ShortcutPlatform {
     const state = this.deviceTypeService.getDeviceState();
 

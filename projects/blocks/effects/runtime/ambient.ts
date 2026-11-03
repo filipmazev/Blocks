@@ -83,7 +83,7 @@ export class AmbientSampler {
     if (!sample) return [];
     const dx = entry.bounds && sample.bounds ? entry.bounds.left - sample.bounds.left : 0;
     const dy = entry.bounds && sample.bounds ? entry.bounds.top - sample.bounds.top : 0;
-    // Keep cached taps attached to a moving receiver until its next sample.
+
     return dx || dy ? sample.lights.map((light) => ({ ...light, x: light.x + dx, y: light.y + dy })) : sample.lights;
   }
 
@@ -243,7 +243,6 @@ export class AmbientSampler {
       for (const [source, entries] of this.liveSources()) {
         const previous = this.media.get(source);
         const next = this.readRaster(source, true);
-        // Compare quantized pixels, not just the fact that a canvas/video exists.
         if (previous?.data && next?.data && this.samePixels(previous.data, next.data)) continue;
         if (previous?.data === next?.data) continue;
         changed = true;

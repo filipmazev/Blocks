@@ -15,7 +15,8 @@ import { BlocksLogo } from './blocks-logo';
 export class Sidenav {
   private readonly sideNav = viewChild(SideNav);
   protected readonly releaseChannel: string = BLOCKS_RELEASE_CHANNEL;
-  protected readonly brandLabel = computed(() => `${this.title()}${this.releaseChannel === 'beta' ? ' beta' : ''}`);
+  protected readonly releaseLabel = this.releaseChannel === 'alpha' ? 'Alpha' : this.releaseChannel === 'beta' ? 'Beta' : '';
+  protected readonly brandLabel = computed(() => `${this.title()}${this.releaseLabel ? ` ${this.releaseChannel}` : ''}`);
   protected readonly config: ISideNavConfig = {
     persistenceKey: 'blocks.playground.navigation.v1',
     ariaLabel: 'Component documentation',

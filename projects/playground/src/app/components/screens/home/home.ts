@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BLOCKS_VERSION_LABEL } from '@filip.mazev/blocks';
+import { BLOCKS_RELEASE_CHANNEL, BLOCKS_VERSION_LABEL } from '@filip.mazev/blocks';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@icons/components/icon';
 import { IconName } from '@icons/types/icon.types';
@@ -20,6 +20,7 @@ import { LightOrb } from './light-orb/light-orb';
 })
 export class Home {
   protected readonly version = BLOCKS_VERSION_LABEL;
+  protected readonly npmPackageUrl = `https://www.npmjs.com/package/@filip.mazev/blocks/v/${encodeURIComponent(BLOCKS_RELEASE_CHANNEL)}`;
 
   protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
 

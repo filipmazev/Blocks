@@ -4,8 +4,8 @@
       <app-blocks-logo />
       <span class="brand-name">
         <span>{{ title() }}</span>
-        @if (releaseChannel === 'beta') {
-          <bx-tag class="brand-beta" text="Beta" size="small" color="neutral" [opaque]="true" [focusable]="false" />
+        @if (releaseLabel) {
+          <bx-tag class="brand-release" [text]="releaseLabel" size="small" color="neutral" [opaque]="true" [focusable]="false" />
         }
       </span>
     </a>

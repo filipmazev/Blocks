@@ -146,6 +146,7 @@
     display: flex;
     align-items: center;
     gap: spacing(2);
+    flex-wrap: wrap;
 }
 
 .preview-tools .preview-icon-button {
@@ -160,6 +161,7 @@
     display: flex;
     align-items: center;
     flex: 1;
+    flex-basis: 8rem;
     min-width: 0;
     min-height: 2.75rem;
     gap: spacing(2);
@@ -187,7 +189,7 @@
 
 .preview-search input::placeholder {
     color: inherit;
-    opacity: 0.75;
+    opacity: 1;
 }
 
 .preview-navigation {
@@ -197,6 +199,7 @@
     display: flex;
     align-items: center;
     gap: spacing(2);
+    flex-wrap: wrap;
     padding: spacing(2);
 
     --bx-glass-radius: #{radius(pill)};

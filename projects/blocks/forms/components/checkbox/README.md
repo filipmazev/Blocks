@@ -22,7 +22,7 @@ The control uses Angular 22 native signal control contracts. Use `[formField]`, 
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -31,7 +31,7 @@ import { ThemingService } from '@filip.mazev/blocks/core';
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
+this.theme.setAppearance({ translucency: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ reducedTransparency: true });
 ```
@@ -49,5 +49,7 @@ Open `/components/checkbox` for a working example and its current value or actio
 ## Selection configuration
 
 `indeterminate` is a boolean model with `indeterminateChange`. `clickAction` supports `check-indeterminate` (default), `check`, and `noop`. `labelPosition` is `before` or `after`. Use `checkedChange` or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.
+
+`emissive` defaults to `true`. Hover, keyboard focus, checked and indeterminate states use the shared accent lighting; invalid controls use validation colors. Disabled and readonly checkboxes remain passive. Set `[emissive]="false"` to keep the themed face without emitting light. Multiselect indicators are passive by default and retain their row's selection appearance.
 
 The checkbox face is shared with multiselect through the public [CheckboxIndicator](../checkbox-indicator/README.md) component. `--bx-checkbox-size` changes its dimensions (default `1.125rem`).

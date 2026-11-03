@@ -86,8 +86,8 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     symbol: 'Card',
     package: '@filip.mazev/blocks/primitives',
     selector: 'bx-card',
-    description: 'Themed content surfaces with media, header and footer slots.',
-    example: '<bx-card title="Project"><p>Project content</p><button bxCardFooter>Open project</button></bx-card>'
+    description: 'Themed content surfaces and clickable cards with selected, disabled and read-only states.',
+    example: '<bx-card title="Project" [clickable]="true" [selected]="true" highlightColor="accent"><p>Selected workspace</p></bx-card>'
   },
   {
     id: 'container',

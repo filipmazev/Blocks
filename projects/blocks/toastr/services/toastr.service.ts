@@ -261,6 +261,8 @@ export class ToastrService {
     return {
       ...config,
       position: config?.position ?? this.globalSettings.position(),
+      glassiness: config?.glassiness ?? this.globalSettings.glassiness(),
+      glassQuality: config?.glassQuality ?? this.globalSettings.glassQuality(),
       animate: finalAnimateState,
       wrapperClass: config?.wrapperClass ?? this.globalSettings.wrapperClass(),
       durationInMs: config?.durationInMs ?? this.globalSettings.durationInMs(),

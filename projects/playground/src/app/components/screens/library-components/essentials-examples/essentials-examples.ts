@@ -1,5 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, effect, inject, Injector, input, signal, viewChildren } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Color } from '@filip.mazev/blocks/core';
 import { Autocomplete, Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import {
   Accordion,
@@ -18,6 +19,7 @@ import {
 } from '@filip.mazev/blocks/primitives';
 import { AutocompleteDemoService } from './services/autocomplete-demo.service';
 import { AUTOCOMPLETE_PAGE_SIZES } from './constants/autocomplete-options.constants';
+import { CARD_HIGHLIGHT_OPTIONS } from './constants/card-options.constants';
 
 @Component({
   selector: 'app-essentials-examples',
@@ -63,6 +65,12 @@ export class EssentialsExamples {
   protected readonly status = signal('Ready');
   protected readonly destination = new FormControl<string | null>('');
   protected readonly chipConfig = { color: 'accent' as const };
+  protected readonly cardHighlightOptions = CARD_HIGHLIGHT_OPTIONS;
+  protected readonly cardHighlight = signal<Color>('accent');
+  protected readonly cardClickable = signal(true);
+  protected readonly cardDisabled = signal(false);
+  protected readonly cardReadOnly = signal(false);
+  protected readonly cardSelected = signal(false);
   public readonly example = input.required<string>();
 
   constructor() {

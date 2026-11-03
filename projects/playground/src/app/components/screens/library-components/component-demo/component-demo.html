@@ -59,7 +59,15 @@
           </div>
         }
         @case ('checkbox') {
-          <div class="demo-stack"><bx-checkbox label="Receive product updates" [formControl]="checked" /><bx-checkbox label="Include preview features" [formControl]="secondChecked" /><bx-checkbox label="Unavailable setting" [formControl]="disabledCheck" /><output>Updates: {{ checked.value ? 'on' : 'off' }} · Previews: {{ secondChecked.value ? 'on' : 'off' }}</output></div>
+          <div class="demo-stack">
+            <bx-checkbox label="Receive product updates" [formControl]="checked" />
+            <bx-checkbox label="Include preview features" [formControl]="secondChecked" />
+            <bx-checkbox label="Partial selection" [indeterminate]="true" />
+            <bx-checkbox label="Without emission" [checked]="true" [emissive]="false" />
+            <bx-checkbox label="Read-only selection" [checked]="true" [readOnly]="true" />
+            <bx-checkbox label="Unavailable setting" [formControl]="disabledCheck" />
+            <output>Updates: {{ checked.value ? 'on' : 'off' }} · Previews: {{ secondChecked.value ? 'on' : 'off' }}</output>
+          </div>
         }
         @case ('form-field') {
           <div class="demo-stack control-width"><bx-form-field label="Project name" forId="field-preview" [required]="true" [error]="fieldError()"><span bxSurface class="native-control-surface"><input class="native-control" id="field-preview" [value]="fieldValue()" (input)="updateField($event)" (blur)="showError.set(true)" [attr.aria-invalid]="!!fieldError()" /></span></bx-form-field><button bx-button variant="tonal" (click)="showError.set(true)">Validate name</button><output>Value: {{ fieldValue() || 'empty' }}</output></div>
@@ -78,7 +86,7 @@
           <div class="demo-stack control-width"><label for="volume-demo">Volume</label><input bxSlider id="volume-demo" type="range" min="0" max="100" [formControl]="volume" /><output>{{ volume.value }}%</output><button bx-button (click)="volume.setValue(50)">Reset volume</button><label for="disabled-volume">Unavailable range</label><input bxSlider id="disabled-volume" type="range" value="30" disabled /></div>
         }
         @case ('slide-toggle') {
-          <div class="demo-stack"><bx-slide-toggle label="Enable notifications" [formControl]="enabled" /><bx-slide-toggle label="Unavailable setting" [formControl]="disabledCheck" /><output>Notifications are {{ enabled.value ? 'enabled' : 'disabled' }}.</output></div>
+          <div class="demo-stack"><bx-slide-toggle label="Enable notifications" hint="Receive updates for important activity." [formControl]="enabled" /><bx-slide-toggle label="Unavailable setting" [formControl]="disabledCheck" /><output>Notifications are {{ enabled.value ? 'enabled' : 'disabled' }}.</output></div>
         }
         @case ('error') {
           <div class="demo-stack control-width"><bx-form-field label="Reference" forId="error-preview"><span bxSurface class="native-control-surface"><input class="native-control" id="error-preview" [value]="fieldValue()" (input)="updateField($event)" (blur)="showError.set(true)" [attr.aria-invalid]="!!fieldError()" [attr.aria-describedby]="fieldError() ? 'custom-error' : null" /></span>@if (fieldError()) { <bx-error id="custom-error">{{ fieldError() }}</bx-error> }</bx-form-field><button bx-button variant="tonal" (click)="showError.set(true)">Validate reference</button></div>

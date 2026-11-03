@@ -1,16 +1,9 @@
-/** Application-wide material preferences, inherited by components and overlays. */
-export interface BxAppearanceConfig {
-  /** 0 is lightly blurred and nearly clear; 1 is richly tinted, retaining translucency. */
-  glassiness: number;
-  quality: 'auto' | 'baseline' | 'enhanced';
-  reducedTransparency: boolean;
-}
+import type { IBxAppearanceConfig } from '../interfaces/ibx-appearance-config.interface';
 
-export const DEFAULT_APPEARANCE_CONFIG: Readonly<BxAppearanceConfig> = Object.freeze({
-  glassiness: 0.5,
-  quality: 'auto',
-  reducedTransparency: false
-});
+/** Application-wide appearance configuration; retained under its existing public name. */
+export type BxAppearanceConfig = IBxAppearanceConfig;
+
+export { DEFAULT_APPEARANCE_CONFIG } from '../constants/appearance.constants';
 
 export type BxThemeId = 'carbon-cobalt' | 'azure-ember' | 'violet-teal' | 'tangerine-indigo' | 'brick-rose-cyan' | 'lime-violet' | 'cyberpunk';
 

@@ -22,7 +22,7 @@
     #panel button { display:block; width:100%; text-align:left; padding:.65rem; border:0; border-radius:var(--bx-rounded-sm); background:transparent; }
     #panel button:hover { background:color-mix(in srgb,var(--bx-primary) 12%,transparent); }
     :focus-visible { outline:2px solid var(--bx-primary); outline-offset:3px; }
-    .glassiness-range { display:flex; align-items:center; gap:.75rem; } .glassiness-range svg { width:20px; height:20px; flex:none; }
+    .translucency-range { display:flex; align-items:center; gap:.75rem; } .translucency-range svg { width:20px; height:20px; flex:none; }
     .check-control { display:flex; align-items:center; gap:.5rem; } .hint { opacity:.75; font-size:.875rem; }
   </style>
 </head>
@@ -32,9 +32,9 @@
   <h1>One material. Native controls.</h1>
   <p>Open the action panel to see the glass surface open and close. Move the light to change its spatial reflection. These controls configure every glass surface on this page.</p>
   <div class="controls">
-    <label>Glassiness<span class="glassiness-range">
+    <label>Translucency<span class="translucency-range">
       <svg viewBox="0 0 24 24" role="img" aria-label="Nearly transparent"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" /></svg>
-      <input id="glassiness" type="range" min="0" max="1" step=".01" value=".5" aria-valuetext="Balanced glass">
+      <input id="translucency" type="range" min="0" max="1" step=".01" value=".5" aria-valuetext="Balanced glass">
       <svg viewBox="0 0 24 24" role="img" aria-label="Richly tinted"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity=".8" /></svg>
     </span></label>
     <label class="check-control"><input id="reduced-transparency" type="checkbox">Reduce transparency</label>
@@ -58,7 +58,7 @@
   import { configureAppearance, mountSurface, mountGlassScene, createGlassTransition } from '../../../../dist/blocks/fesm2022/filip.mazev-blocks-effects-runtime.mjs';
   const $ = id => document.getElementById(id);
   const trigger = $('trigger'), panel = $('panel');
-  const config = configureAppearance(document.documentElement, { glassiness:.5, quality:'auto' });
+  const config = configureAppearance(document.documentElement, { translucency:.5, quality:'auto' });
   const surfaces = [trigger,panel].map(element => mountSurface(element));
   const scene = mountGlassScene(document.documentElement, {
     lights:[{element:$('lamp'),z:150,color:'var(--bx-primary)',intensity:1.4,radius:700}],
@@ -99,12 +99,12 @@
     $('status').textContent=`${button.dataset.action} selected.`; toggle(false);
   });
   $('quality').addEventListener('change',event=>config.update({quality:event.target.value}));
-  $('glassiness').addEventListener('input',event=>{
-    const value=Number(event.target.value); config.update({glassiness:value});
+  $('translucency').addEventListener('input',event=>{
+    const value=Number(event.target.value); config.update({translucency:value});
     event.target.setAttribute('aria-valuetext',value<.25?'Nearly transparent glass':value<.75?'Balanced glass':'Richly tinted glass');
   });
   $('reduced-transparency').addEventListener('change',event=>{
-    config.update({reducedTransparency:event.target.checked}); $('glassiness').disabled=event.target.checked;
+    config.update({reducedTransparency:event.target.checked}); $('translucency').disabled=event.target.checked;
   });
   $('light-position').addEventListener('input',event=>{$('lamp').style.left=`${event.target.value}%`;scene.refresh();});
   addEventListener('resize',()=>{if(opened)place();});

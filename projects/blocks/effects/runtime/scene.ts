@@ -38,11 +38,14 @@ interface SurfaceHooks {
   light(value: Lighting): void;
   interactive(): boolean;
   emission?(): string | undefined;
+  /** Resolve source-local CSS colors before projecting them into another element's variable scope. */
+  resolveEmission?(color: string): string;
   focusEmission?(): string | undefined;
   emit?(active: boolean, color?: string): void;
   press(): void;
   release(): void;
   sync(): void;
+  visibility?(visible: boolean): void;
 }
 interface Entry {
   id: number;
@@ -136,6 +139,7 @@ class SceneRuntime {
   private connected = false;
   private motion: MediaQueryList;
   private transparency: MediaQueryList;
+  private contrast: MediaQueryList;
   private view: Window;
   private ambient: AmbientSampler;
 
@@ -311,6 +315,7 @@ class SceneRuntime {
     );
     this.motion = view.matchMedia('(prefers-reduced-motion: reduce)');
     this.transparency = view.matchMedia('(prefers-reduced-transparency: reduce)');
+    this.contrast = view.matchMedia('(prefers-contrast: more), (forced-colors: active)');
     if (typeof view.IntersectionObserver === 'function')
       this.observer = new view.IntersectionObserver(
         (records) => {
@@ -319,6 +324,7 @@ class SceneRuntime {
             if (!entry) continue;
             if (record.isIntersecting && !entry.visible) entry.resuming = true;
             entry.visible = record.isIntersecting;
+            entry.hooks.visibility?.(entry.visible);
             this.ambient.invalidate(entry, true);
             if (entry.visible) {
               entry.bounds = undefined;
@@ -335,6 +341,9 @@ class SceneRuntime {
       this.stateObserver = new view.MutationObserver((records) => {
         const changed = new Set<Entry>();
         let visualChanged = false;
+        const themeChanged = records.some(
+          (record) => record.target === this.doc.documentElement && (record.attributeName === 'class' || record.attributeName === 'data-theme')
+        );
         for (const record of records) {
           if (record.type === 'childList') {
             if (record.target.nodeType === 1 && this.isLightingDecoration(record.target)) continue;
@@ -385,6 +394,9 @@ class SceneRuntime {
           }
           this.ambient.invalidate();
         }
+
+        // Angular can mount a child before its parent. Reconcile newly nested materials before the next paint.
+        if (themeChanged || records.some((record) => record.attributeName === 'data-bx-surface')) this.sync();
         if (!changed.size && !visualChanged) return;
         for (const entry of changed) this.updateSelected(entry);
         this.updateEmitter();
@@ -475,7 +487,7 @@ class SceneRuntime {
   private isLightingDecoration(node: Node): boolean {
     if (node.nodeType !== node.ELEMENT_NODE) return true;
     const element = node as Element;
-    return element.matches('.bx-glass-decoration, .bx-glass-rim') || !!element.closest('.bx-glass-decoration, .bx-glass-rim');
+    return !!element.closest('.bx-glass-decoration, .bx-glass-rim, .bx-refraction-layer, .bx-refraction-defs, .bx-refraction-cover, .bx-refraction-tick');
   }
 
   private find(event: Event): Entry | undefined {
@@ -529,7 +541,7 @@ class SceneRuntime {
 
   private updateSelected(entry: Entry): void {
     const control = entry.element.closest('label')?.control;
-    const checked = control?.matches('input[type="checkbox"]:checked, input[type="radio"]:checked');
+    const checked = control?.matches('input[type="checkbox"]:is(:checked, :indeterminate), input[type="radio"]:checked');
     if (entry.hooks.emission?.() && (entry.element.matches(ACTIVE_SURFACE_STATE_SELECTOR) || checked)) this.selected.add(entry);
     else this.selected.delete(entry);
   }
@@ -571,6 +583,7 @@ class SceneRuntime {
         'role',
         'data-bx-light-scope',
         'data-bx-surface',
+        'data-theme',
         'data-bx-reduced-transparency',
         'data-bx-reduced-motion',
         'src',
@@ -608,6 +621,7 @@ class SceneRuntime {
     this.doc.addEventListener(configurationEvent, this.sync);
     this.motion.addEventListener('change', this.sync);
     this.transparency.addEventListener('change', this.sync);
+    this.contrast.addEventListener('change', this.sync);
   }
 
   private disconnectIfEmpty(): void {
@@ -643,6 +657,7 @@ class SceneRuntime {
     this.doc.removeEventListener(configurationEvent, this.sync);
     this.motion.removeEventListener('change', this.sync);
     this.transparency.removeEventListener('change', this.sync);
+    this.contrast.removeEventListener('change', this.sync);
   }
 
   private schedule(): void {
@@ -655,7 +670,7 @@ class SceneRuntime {
         const bounds = emitter.element.getBoundingClientRect();
         const exposed =
           visibility.exposed(emitter.element, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds) && !emitter.element.closest(disabledSelector);
-        return { emitter, color, exposed };
+        return { emitter, color: exposed ? (emitter.hooks.resolveEmission?.(color) ?? color) : color, exposed };
       });
       const activeLights = emissions
         .filter((source) => source.exposed)
@@ -708,7 +723,8 @@ class SceneRuntime {
           return [entry, lighting] as const;
         });
       for (const entry of batch) this.queue.delete(entry);
-      for (const { emitter, color, exposed } of emissions) emitter.hooks.emit?.(exposed, color);
+      // The browser clips each active border; source occlusion only gates light cast onto other surfaces.
+      for (const { emitter, color } of emissions) emitter.hooks.emit?.(true, color);
       for (const [entry, lighting] of projections) {
         if (this.sameLighting(entry.lastLighting, lighting)) continue;
         entry.lastLighting = lighting;

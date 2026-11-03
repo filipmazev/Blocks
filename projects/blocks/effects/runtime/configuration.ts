@@ -1,9 +1,10 @@
 import { finiteClamp, rememberAttributes, rememberStyles } from './dom';
 import type { AppearanceConfiguration, AppearanceConfigurationController } from './types';
+import { rememberRenderedSurfaceStyles } from './helpers/surface-style.helpers';
 
 export const configurationEvent = 'bx-glass-config-change';
-const attributes = ['data-bx-glass-quality', 'data-bx-reduced-motion', 'data-bx-reduced-transparency'];
-const properties = ['--bx-glassiness'];
+const attributes = ['data-bx-glass-quality', 'data-bx-glassiness-mode', 'data-bx-reduced-motion', 'data-bx-reduced-transparency'];
+const properties = ['--bx-translucency'];
 const configured = new WeakSet<HTMLElement>();
 
 /** Configure one inherited application scope. Use document.documentElement to include overlays. */
@@ -13,7 +14,12 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
   const restoreAttributes = rememberAttributes(root, attributes);
   const originalAttributes = new Map(attributes.map((name) => [name, root.getAttribute(name)]));
   const restoreStyles = rememberStyles(root, properties);
+  let preferredGlassiness = initial.glassiness;
   let options = { ...initial };
+
+  if (options.quality === 'baseline') options.glassiness = 'off';
+  if (options.glassiness === 'off' && options.quality !== 'baseline') options.quality = 'auto';
+
   let disposed = false;
   const notify = () => {
     const viewEvent = root.ownerDocument.defaultView?.CustomEvent;
@@ -22,6 +28,7 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
   const paint = (sync = true) => {
     const values: [string, unknown][] = [
       ['data-bx-glass-quality', options.quality],
+      ['data-bx-glassiness-mode', options.glassiness],
       ['data-bx-reduced-motion', options.reducedMotion],
       ['data-bx-reduced-transparency', options.reducedTransparency]
     ];
@@ -31,10 +38,11 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
       if (next === null) root.removeAttribute(name);
       else root.setAttribute(name, next);
     }
-    if (options.glassiness !== undefined) {
-      const next = String(finiteClamp(options.glassiness, 0, 1, 0.5));
-      if (root.style.getPropertyValue('--bx-glassiness') !== next) root.style.setProperty('--bx-glassiness', next);
+    if (options.translucency !== undefined) {
+      const next = String(finiteClamp(options.translucency, 0, 1, 0.5));
+      if (root.style.getPropertyValue('--bx-translucency') !== next) root.style.setProperty('--bx-translucency', next);
     } else restoreStyles();
+    rememberRenderedSurfaceStyles(root);
     // Tint and blur inherit directly in CSS. Only renderer/accessibility changes
     // need to synchronously revisit every mounted surface.
     if (sync) notify();
@@ -44,9 +52,16 @@ export function configureAppearance(root: HTMLElement, initial: AppearanceConfig
     update(next) {
       if (!disposed) {
         const previous = options;
-        options = { ...options, ...next };
+
+        if ('glassiness' in next) preferredGlassiness = next.glassiness;
+
+        options = { ...options, ...next, glassiness: preferredGlassiness };
+
+        if (options.quality === 'baseline') options.glassiness = 'off';
+        if (options.glassiness === 'off' && options.quality !== 'baseline') options.quality = 'auto';
         paint(
           previous.quality !== options.quality ||
+            previous.glassiness !== options.glassiness ||
             previous.reducedMotion !== options.reducedMotion ||
             previous.reducedTransparency !== options.reducedTransparency
         );

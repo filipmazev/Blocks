@@ -30,6 +30,7 @@ Use `Checkbox` for a standalone form control. Use this indicator inside an exist
 | `indeterminate` | `false` | Shows the Blocks minus icon and accent face; takes precedence over checked. |
 | `invalid` | `false` | Uses validation colors from the theme. |
 | `disabled` | `false` | Suppresses the active surface finish; the owner provides disabled semantics and opacity. |
+| `emissive` | `false` | Enables shared lighting for an owning interactive control. `Checkbox` enables it by default; multiselect indicators remain passive. |
 
 ## Appearance and customization
 
@@ -37,7 +38,7 @@ Uses the same shared surface and choice finish as `Checkbox`. `--bx-checkbox-siz
 
 ## Behavior and accessibility
 
-The indicator is always hidden from assistive technology, has no tab stop and does not handle pointer or keyboard input. The owner must supply an accessible label, visible focus, checked/mixed state, readonly/disabled handling and keyboard interaction. Multiselect uses listbox option semantics for each row and checkbox semantics for the select-all action without nested interactive elements.
+The indicator is always hidden from assistive technology, has no tab stop and does not handle pointer or keyboard input. With `emissive` enabled, its face participates in hit testing so the shared engine can illuminate the owning control; events still reach that control. The owner must supply an accessible label, visible focus, checked/mixed state, readonly/disabled handling and keyboard interaction. Multiselect uses listbox option semantics for each row and checkbox semantics for the select-all action without nested interactive elements.
 
 ## Playground
 

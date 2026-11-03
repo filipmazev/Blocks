@@ -29,24 +29,26 @@ export class ReleaseNotes {
   protected readonly releaseLabel = computed(() => {
     const release = this.release();
 
-    return release?.status === 'draft' ? 'Draft' : release?.channel === 'beta' ? 'Beta' : 'Released';
+    if (release?.status === 'draft') return release.channel === 'alpha' ? 'Alpha · Draft' : 'Draft';
+
+    return release?.channel === 'alpha' ? 'Alpha' : release?.channel === 'beta' ? 'Beta' : 'Released';
   });
 
   protected readonly releaseColor = computed(() => {
     const release = this.release();
 
-    return release?.status === 'draft' ? 'warn' : release?.channel === 'beta' ? 'info' : 'success';
+    return release?.status === 'draft' ? 'warn' : release?.channel === 'alpha' || release?.channel === 'beta' ? 'info' : 'success';
   });
 
   protected readonly compareUrl = computed(() => {
     const release = this.release();
 
-    return release ? `https://github.com/filipmazev/Blocks/compare/${release.fromCommit}...${release.toCommit}` : null;
+    return release?.toCommit ? `https://github.com/filipmazev/Blocks/compare/${release.fromCommit}...${release.toCommit}` : null;
   });
 
   protected readonly versions: readonly IBxSelectOption<string>[] = RELEASE_NOTES.map((release) => ({
     value: release.version,
-    label: `v${release.version}${release.status === 'draft' ? ' · Draft' : release.channel === 'beta' ? ' · Beta' : ''}`
+    label: `v${release.version}${release.channel === 'alpha' ? ' · Alpha' : release.channel === 'beta' ? ' · Beta' : ''}${release.status === 'draft' ? ' · Draft' : ''}`
   }));
 
   protected selectVersion(version: string | null): void {

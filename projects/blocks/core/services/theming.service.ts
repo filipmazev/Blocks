@@ -3,9 +3,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { DeviceTheme } from '../types/core.types';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { configureAppearance } from '@filip.mazev/blocks/effects/runtime';
-import { BxAppearanceConfig, DEFAULT_APPEARANCE_CONFIG, THEME_PALETTES, BxThemeId } from '../types/appearance.types';
+import { BxAppearanceConfig, THEME_PALETTES, BxThemeId } from '../types/appearance.types';
+import { DEFAULT_APPEARANCE_CONFIG } from '../constants/appearance.constants';
 import { resolveThemeId } from '../helpers/theme-functions';
 import { BxA11yService } from './bx-a11y.service';
+import type { IStoredAppearancePreferences } from '../interfaces/istored-appearance-preferences.interface';
+import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,10 @@ export class ThemingService implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly a11y = inject(BxA11yService);
   private readonly _appearance = signal<BxAppearanceConfig>({ ...DEFAULT_APPEARANCE_CONFIG });
+  private readonly _preferredGlassiness = signal<GlassinessMode>('auto');
   public readonly appearance = this._appearance.asReadonly();
+  /** Requested glassiness policy, defaulting to 'auto'. Baseline temporarily forces appearance().glassiness off while preserving this choice. */
+  public readonly preferredGlassiness = this._preferredGlassiness.asReadonly();
   public readonly palettes = THEME_PALETTES;
   private readonly _palette = signal<BxThemeId>('carbon-cobalt');
   public readonly palette = this._palette.asReadonly();
@@ -65,10 +71,11 @@ export class ThemingService implements OnDestroy {
     }
   }
 
-  public setApplicationTheme(theme: DeviceTheme): void {
+  /** Set an explicit appearance, or null to follow live system color-scheme changes. */
+  public setApplicationTheme(theme: DeviceTheme | null): void {
     this._applicationTheme.set(theme);
     if (this.isBrowser) {
-      this.writeStored('theme', theme);
+      this.writeStored('theme', theme ?? 'auto');
     }
   }
 
@@ -89,17 +96,24 @@ export class ThemingService implements OnDestroy {
 
   public setAppearance(settings: Partial<BxAppearanceConfig>): void {
     const current = this.appearance();
-    const glassiness = settings.glassiness ?? current.glassiness;
+    const translucency = settings.translucency ?? current.translucency;
     const next: BxAppearanceConfig = {
-      glassiness: Number.isFinite(glassiness) ? Math.min(1, Math.max(0, glassiness)) : DEFAULT_APPEARANCE_CONFIG.glassiness,
+      translucency: Number.isFinite(translucency) ? Math.min(1, Math.max(0, translucency)) : DEFAULT_APPEARANCE_CONFIG.translucency,
       quality: settings.quality ?? current.quality,
+      glassiness: settings.glassiness ?? this.preferredGlassiness(),
       reducedTransparency: (settings.reducedTransparency ?? current.reducedTransparency) === true
     };
     if (!['auto', 'baseline', 'enhanced'].includes(next.quality)) next.quality = 'auto';
+    if (!['auto', 'off', 'on'].includes(next.glassiness ?? 'auto')) next.glassiness = 'auto';
+
+    this._preferredGlassiness.set(next.glassiness ?? 'auto');
+
+    if (next.quality === 'baseline') next.glassiness = 'off';
+    if (next.glassiness === 'off' && next.quality === 'enhanced') next.quality = 'auto';
 
     this._appearance.set(next);
     this.appearanceController?.update(next);
-    if (this.isBrowser) this.writeStored('blocks-appearance', JSON.stringify(next));
+    if (this.isBrowser) this.writeStored('blocks-appearance', JSON.stringify({ ...next, preferredGlassiness: this.preferredGlassiness() }));
   }
 
   public resetAppearance(): void {
@@ -118,12 +132,24 @@ export class ThemingService implements OnDestroy {
     try {
       const stored = this.readStored('blocks-appearance');
       if (stored) {
-        const saved = JSON.parse(stored) as Partial<BxAppearanceConfig> & { tint?: number; material?: string };
+        const saved = JSON.parse(stored) as IStoredAppearancePreferences;
         if (!saved || typeof saved !== 'object') return;
         // Migrate old preferences once; only the new configuration is persisted.
         this.setAppearance({
-          glassiness: saved.glassiness ?? saved.tint ?? DEFAULT_APPEARANCE_CONFIG.glassiness,
-          quality: saved.quality ?? DEFAULT_APPEARANCE_CONFIG.quality,
+          translucency:
+            typeof saved.translucency === 'number'
+              ? saved.translucency
+              : typeof saved.glassiness === 'number'
+                ? saved.glassiness
+                : typeof saved.tint === 'number'
+                  ? saved.tint
+                  : DEFAULT_APPEARANCE_CONFIG.translucency,
+          quality: (saved.quality as GlassQuality | undefined) ?? DEFAULT_APPEARANCE_CONFIG.quality,
+          glassiness: (typeof saved.preferredGlassiness === 'string'
+            ? saved.preferredGlassiness
+            : typeof saved.glassiness === 'string'
+              ? saved.glassiness
+              : undefined) as GlassinessMode | undefined,
           reducedTransparency: saved.reducedTransparency === true || saved.material === 'solid'
         });
       }

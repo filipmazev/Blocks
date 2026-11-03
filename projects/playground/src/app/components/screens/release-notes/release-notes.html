@@ -21,11 +21,13 @@
       @if (entry.status === 'draft') {
         <p class="draft-notice">These notes are a preview and may change before this version is published.</p>
       }
-      <a bx-button [href]="compareUrl()" target="_blank" rel="noopener noreferrer">
-        View changes on GitHub<bx-icon name="arrow-up-right" size="20" />
-      </a>
-      <p class="comparison"><span>Comparison</span> <code>{{ entry.fromCommit.slice(0, 7) }}</code><span>to</span>
-        <code>{{ entry.toCommit.slice(0, 7) }}</code></p>
+      @if (entry.toCommit; as toCommit) {
+        <a bx-button [href]="compareUrl()" target="_blank" rel="noopener noreferrer">
+          View changes on GitHub<bx-icon name="arrow-up-right" size="20" />
+        </a>
+        <p class="comparison"><span>Comparison</span> <code>{{ entry.fromCommit.slice(0, 7) }}</code><span>to</span>
+          <code>{{ toCommit.slice(0, 7) }}</code></p>
+      }
     </section>
 
     <section class="release-documentation" aria-label="Changes and migration notes">

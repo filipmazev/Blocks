@@ -8,6 +8,11 @@
     border-radius: var(--bx-rounded-sm);
 }
 
+// The face must participate in hit testing for its owning label's lighting to remain visible.
+:host(.is-emissive) {
+    pointer-events: auto;
+}
+
 .bx-checkbox-box {
     box-sizing: border-box;
     flex-shrink: 0;

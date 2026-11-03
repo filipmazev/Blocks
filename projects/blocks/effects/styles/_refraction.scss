@@ -1,0 +1,387 @@
+// SVG displacement and bevel masks adapted from Nordify (MIT).
+// Imported once through effects.scss; component styles must not emit these rules.
+// Preferences override the material even before the runtime's change listener runs.
+[data-bx-refraction='true'] {
+    // Keep a readable backing with stable theme foregrounds, including at zero.
+    --bx-refraction-material-opacity: clamp(
+        0,
+        var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469),
+        1
+    );
+    --bx-refraction-blur: max(
+        var(--bx-refraction-min-blur, 0.5px),
+        var(
+            --bx-glass-blur,
+            calc(
+                0.5px + 12px * var(--bx-glass-material-strength, 0.1469) *
+                    var(--bx-glass-material-strength, 0.1469)
+            )
+        )
+    );
+    --bx-refraction-spec: calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)));
+    --bx-refraction-glint-exp: calc(1.35 + 0.1 * var(--bx-refraction-dark, 0));
+    --bx-refraction-glint-sat: calc(3.1 - 1.1 * var(--bx-refraction-dark, 0));
+    --bx-refraction-rim-exp: calc(0.84 + 0.41 * var(--bx-refraction-dark, 0));
+    --bx-refraction-rim-sat: calc(2.2 - 0.9 * var(--bx-refraction-dark, 0));
+    --bx-refraction-caustic-o: calc(0.35 * (1 - var(--bx-refraction-dark, 0)));
+    --bx-refraction-underlay: 0;
+
+    background: transparent !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+[data-theme='light'] {
+    --bx-refraction-dark: 0;
+}
+
+[data-bx-refraction='true']:is(
+    :active,
+    [aria-pressed='true'],
+    [aria-selected='true'],
+    [aria-checked='true'],
+    [aria-expanded='true'][aria-haspopup]:not([aria-haspopup='false'])
+) {
+    // Selected semantic inks and pressed fills need a stronger static backing.
+    --bx-refraction-state-opacity: 0.9;
+}
+
+[data-theme='dark'] {
+    --bx-refraction-dark: 1;
+}
+
+.bx-refraction-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.bx-refraction-tick {
+    pointer-events: none;
+    background: rgb(128 128 128 / 0.4%);
+}
+
+.bx-refraction-tick[data-tick] {
+    background: rgb(128 128 128 / 0.8%);
+}
+
+.bx-refraction-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bx-refraction-reflect {
+    z-index: -1;
+    border-radius: 0;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.bx-refraction-caustic {
+    transform: translateY(calc(12px * var(--bx-refraction-s, 1))) scale(0.86);
+    filter: blur(calc(10px * var(--bx-refraction-s, 1)));
+}
+
+.bx-refraction-caustic-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-sizing: border-box;
+    border: calc(9px * var(--bx-refraction-s, 1)) solid var(--bx-refraction-caustic, #ffffff);
+    opacity: var(--bx-refraction-caustic-o, 0.7);
+    -webkit-mask-image:
+        radial-gradient(
+            70% 120% at 78% 0%,
+            rgb(0 0 0 / 58%) 0%,
+            rgb(0 0 0 / 42%) 35%,
+            rgb(0 0 0 / 18%) 62%,
+            transparent 85%
+        ),
+        radial-gradient(
+            70% 120% at 22% 100%,
+            rgb(0 0 0 / 58%) 0%,
+            rgb(0 0 0 / 42%) 35%,
+            rgb(0 0 0 / 18%) 62%,
+            transparent 85%
+        ),
+        linear-gradient(rgb(0 0 0 / 40%) 0 0);
+    mask-image:
+        radial-gradient(
+            70% 120% at 78% 0%,
+            rgb(0 0 0 / 58%) 0%,
+            rgb(0 0 0 / 42%) 35%,
+            rgb(0 0 0 / 18%) 62%,
+            transparent 85%
+        ),
+        radial-gradient(
+            70% 120% at 22% 100%,
+            rgb(0 0 0 / 58%) 0%,
+            rgb(0 0 0 / 42%) 35%,
+            rgb(0 0 0 / 18%) 62%,
+            transparent 85%
+        ),
+        linear-gradient(rgb(0 0 0 / 40%) 0 0);
+    -webkit-mask-composite: source-over, source-over;
+    mask-composite: add, add;
+}
+
+.bx-refraction-pane {
+    transform: translateZ(0);
+    background-image: linear-gradient(
+        var(--bx-refraction-tint, transparent),
+        var(--bx-refraction-tint, transparent)
+    );
+}
+
+.bx-refraction-edge {
+    z-index: -1;
+    transform: translateZ(0);
+
+    --bx-refraction-edge-width: calc(var(--bx-refraction-rim-w, 0.7px) * var(--bx-refraction-s, 1));
+    --bx-refraction-edge-depth: calc(
+        var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1)
+    );
+    --bx-refraction-edge-radius: var(--bx-refraction-r);
+
+    -webkit-mask-image:
+        var(--bx-refraction-arc),
+        linear-gradient(
+            to bottom,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        linear-gradient(
+            to top,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        linear-gradient(
+            to right,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        linear-gradient(
+            to left,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 100% 100%,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 0 100%,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 100% 0,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 0 0,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        );
+    mask-image:
+        var(--bx-refraction-arc),
+        linear-gradient(
+            to bottom,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        linear-gradient(
+            to top,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        linear-gradient(
+            to right,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        linear-gradient(
+            to left,
+            #000000 var(--bx-refraction-edge-width),
+            transparent var(--bx-refraction-edge-depth)
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 100% 100%,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 0 100%,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 100% 0,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        ),
+        radial-gradient(
+            circle var(--bx-refraction-edge-radius) at 0 0,
+            transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
+            #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
+        );
+    -webkit-mask-size:
+        auto,
+        calc(100% - 2 * var(--bx-refraction-edge-radius)) 100%,
+        calc(100% - 2 * var(--bx-refraction-edge-radius)) 100%,
+        100% calc(100% - 2 * var(--bx-refraction-edge-radius)),
+        100% calc(100% - 2 * var(--bx-refraction-edge-radius)),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius);
+    mask-size:
+        auto,
+        calc(100% - 2 * var(--bx-refraction-edge-radius)) 100%,
+        calc(100% - 2 * var(--bx-refraction-edge-radius)) 100%,
+        100% calc(100% - 2 * var(--bx-refraction-edge-radius)),
+        100% calc(100% - 2 * var(--bx-refraction-edge-radius)),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius),
+        var(--bx-refraction-edge-radius) var(--bx-refraction-edge-radius);
+    -webkit-mask-position:
+        0 0,
+        var(--bx-refraction-edge-radius) 0,
+        var(--bx-refraction-edge-radius) 100%,
+        0 var(--bx-refraction-edge-radius),
+        100% var(--bx-refraction-edge-radius),
+        0 0,
+        100% 0,
+        0 100%,
+        100% 100%;
+    mask-position:
+        0 0,
+        var(--bx-refraction-edge-radius) 0,
+        var(--bx-refraction-edge-radius) 100%,
+        0 var(--bx-refraction-edge-radius),
+        100% var(--bx-refraction-edge-radius),
+        0 0,
+        100% 0,
+        0 100%,
+        100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-composite:
+        source-in, source-over, source-over, source-over, source-over, source-over, source-over,
+        source-over, source-over;
+    mask-composite: intersect, add, add, add, add, add, add, add, add;
+}
+
+.bx-refraction-fold {
+    --bx-refraction-arc: linear-gradient(#000000 0 0);
+    --bx-refraction-edge-width: 0px;
+    --bx-refraction-edge-depth: calc(var(--bx-refraction-r) * var(--bx-refraction-fold-k, 0.39));
+}
+
+.bx-refraction-glint {
+    --bx-refraction-arc: var(--bx-refraction-arc-glint);
+}
+
+.bx-refraction-rim {
+    --bx-refraction-arc: var(--bx-refraction-arc-rim);
+}
+
+.bx-refraction-spec {
+    background: rgb(255 255 255 / var(--bx-refraction-spec, 0.13));
+
+    --bx-refraction-arc: var(--bx-refraction-arc-glint);
+}
+
+.bx-refraction-underlay {
+    z-index: -1;
+    background-color: rgb(255 255 255 / var(--bx-refraction-underlay, 0.14));
+}
+
+.bx-refraction-layer {
+    z-index: -2;
+}
+
+.bx-refraction-pane {
+    background: color-mix(
+        in srgb,
+        var(--bx-glass-surface, var(--bx-bg-surface, Canvas))
+            calc(
+                max(
+                        var(--bx-glass-min-opacity, 0),
+                        var(--bx-glass-opacity, 0),
+                        var(--bx-refraction-state-opacity, 0),
+                        var(--bx-refraction-material-opacity, 0.72)
+                    ) *
+                    100%
+            ),
+        transparent
+    );
+}
+
+.bx-refraction-cover {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.bx-refraction-reflect {
+    z-index: -1;
+    opacity: var(--bx-refraction-reflection-opacity, 1);
+}
+
+.bx-refraction-tick {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -3;
+}
+
+.bx-refraction-caustic {
+    z-index: -3;
+}
+
+[data-bx-refraction='true'] [data-bx-surface] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+:is([data-bx-reduced-transparency='true'], .high-contrast, .bx-high-contrast-scope) {
+    &[data-bx-refraction='true'] {
+        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    }
+
+    .bx-refraction-layer {
+        display: none;
+    }
+}
+
+.high-contrast [data-bx-surface],
+.bx-high-contrast-scope [data-bx-surface] {
+    background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-bx-refraction='true'] {
+        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    }
+
+    .bx-refraction-layer {
+        display: none;
+    }
+}
+
+@media (forced-colors: active) {
+    [data-bx-refraction='true'] {
+        background: Canvas !important;
+    }
+}

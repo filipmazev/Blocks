@@ -7,11 +7,11 @@ export interface IReleaseNotes {
   /** Draft notes remain explicitly unpublished until marked released. */
   readonly status: 'draft' | 'released';
   /** npm distribution channel; omitted or latest denotes a stable release. */
-  readonly channel?: 'beta' | 'latest';
+  readonly channel?: 'alpha' | 'beta' | 'latest';
   /** Repository-relative README path consumed by the documentation generator. */
   readonly readme: string;
   /** First commit in the comparison, excluded from the changes. */
   readonly fromCommit: string;
-  /** Last commit covered by the notes; never inferred from the current checkout. */
-  readonly toCommit: string;
+  /** Last commit covered by the notes; omit until the final release commit exists. Never inferred from the current checkout. */
+  readonly toCommit?: string;
 }

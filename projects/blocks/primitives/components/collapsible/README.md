@@ -38,6 +38,8 @@ Projected content remains mounted while collapsed; lazy template state is recrea
 
 `--bx-collapsible-background`, `--bx-collapsible-border`, `--bx-collapsible-radius`, `--bx-collapsible-padding` and `--bx-collapsible-content-padding` follow shared semantic defaults.
 
+The heading's hover background follows the surface's inner corners. Expanded headings keep rounded top corners and square bottom corners, with no divider between the heading and content. Accordion items share this appearance.
+
 ## Behavior and accessibility
 
 Native button activation, aria-expanded and aria-controls connect the heading and panel. Hidden panels are inert. Programmatic collapse moves contained focus to the heading. Optional regions avoid filling the page with unnecessary landmarks.

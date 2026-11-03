@@ -4,7 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
-        "prebuild": "node tools/version-sync.mjs",
+        "prebuild": "npm run tools:build-effects && node tools/version-sync.mjs",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "tools:generate:icons:lucide": "node tools/icons/generate-lucide-icons.mjs",
@@ -12,7 +12,7 @@
         "tools:sync-version": "node tools/version-sync.mjs",
         "version:blocks": "node tools/version-bump.mjs",
         "version:minor": "node tools/version-bump.mjs minor",
-        "build:blocks": "npm run tools:sync-effects-tokens && npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && node tools/restore-full-css-hex.mjs dist/blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 2 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
+        "build:blocks": "npm run tools:build-effects && npm run tools:sync-effects-tokens && npm run tools:sync-version && npm run tools:generate:icons:lucide && npm run tools:sync-theme-types && ng build blocks && node tools/restore-full-css-hex.mjs dist/blocks && tsc -p projects/blocks/tsconfig.schematics.json && copyfiles -u 2 projects/blocks/schematics/collection.json projects/blocks/schematics/*/schema.json dist/blocks",
         "test": "ng test",
         "test:themes": "node --test tools/tokens/themes.test.mjs",
         "test:navigation": "vitest run --config projects/blocks/navigation/vitest.config.mts && tsc -p projects/blocks/navigation/tsconfig.spec.json",
@@ -24,10 +24,11 @@
         "lint:playground": "ng lint playground && stylelint \"projects/playground/**/*.scss\" && prettier --check --tab-width 4 \"projects/playground/**/*.scss\"",
         "tools:build-docs": "node tools/docs/build-docs.mjs",
         "tools:sync-effects-tokens": "node tools/sync-effects-tokens.mjs",
-        "prestart": "npm run tools:sync-version && npm run tools:build-docs",
-        "prewatch": "npm run tools:sync-version && npm run tools:build-docs",
-        "build:playground": "npm run tools:sync-version && npm run tools:build-docs && ng build playground",
-        "deploy:playground": "npm run tools:sync-version && npm run tools:build-docs && ng deploy playground --base-href=/Blocks/"
+        "prestart": "npm run tools:build-effects && npm run tools:sync-version && npm run tools:build-docs",
+        "prewatch": "npm run tools:build-effects && npm run tools:sync-version && npm run tools:build-docs",
+        "build:playground": "npm run tools:build-effects && npm run tools:sync-version && npm run tools:build-docs && ng build playground",
+        "deploy:playground": "npm run tools:build-effects && npm run tools:sync-version && npm run tools:build-docs && ng deploy playground --base-href=/Blocks/",
+        "tools:build-effects": "node tools/build-effects-styles.mjs"
     },
     "prettier": {
         "printWidth": 100,

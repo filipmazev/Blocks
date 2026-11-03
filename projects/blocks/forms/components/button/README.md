@@ -20,6 +20,14 @@ Add the standalone component or directive to your component's `imports`.
 
 `variant`: text, filled, tonal, icon, fab, mini-fab, extended-fab. `color`: primary, accent, success, danger, info, warn, grayscale. `outlined`, `elevated`, `disabled`, and `interactive` control presentation and availability.
 
+`glassiness` is an explicit per-button opt-in: omitted buttons keep their existing material. Set `glassiness="auto"` for supported browsers, or `"on"` to test other engines. Application-wide Off, baseline quality, opaque intent fills and accessibility still take precedence. Automatic rendering uses one SVG backdrop pass; Enhanced adds the full reflection/bevel treatment. Text and icons keep their semantic theme colors; active refraction maintains a minimum tint and blur even at the clearest translucency setting.
+
+```html
+<button bx-button variant="icon" glassiness="auto" aria-label="Bookmark">
+  <bx-icon name="bookmark" />
+</button>
+```
+
 Use the active palette's second tone for supporting actions:
 
 ```html
@@ -28,11 +36,11 @@ Use the active palette's second tone for supporting actions:
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting glassiness updates existing components and overlays. Icon, tonal and outlined glass buttons follow the full glassiness range without a minimum button-specific tint. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Icon, tonal and outlined glass buttons follow the full translucency range without a minimum button-specific tint. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 Interactive button variants illuminate their border and nearby glass on hover, press and keyboard focus. Text buttons do not emit light, but keep their underline hover and focus outline. The same light remains active for `aria-pressed="true"`, `aria-selected="true"`, a current `aria-current` value, or an expanded popup trigger (`aria-expanded="true"` with `aria-haspopup`). Plain expansion controls, such as a rail collapse action, do not acquire selected styling solely from `aria-expanded`. If an application used expansion as a toggle selection, use `aria-pressed` for that toggle instead. Primary and grayscale buttons use the primary palette role; accent buttons use the second tone; success, danger, info and warning buttons use their semantic color. Disabled and noninteractive buttons do not emit. Pointer focus alone does not keep an action illuminated after the pointer leaves; focus stays on the native control and keyboard focus remains visible. Touch does not latch hover illumination. No additional effects directive or lighting configuration is needed.
 
-Filled buttons retain their semantic background and paired foreground color across glassiness settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.
+Filled buttons retain their semantic background and paired foreground color across translucency settings and reduced transparency, including hover and press. Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal and outlined buttons keep their glass backing.
 
 ```ts
 import { inject } from '@angular/core';
@@ -41,7 +49,7 @@ import { ThemingService } from '@filip.mazev/blocks/core';
 private readonly theme = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ glassiness: 0.5 });
+this.theme.setAppearance({ translucency: 0.5 });
 // Opaque presentation retains the same layout and component API.
 this.theme.setAppearance({ reducedTransparency: true });
 ```
@@ -67,7 +75,7 @@ Use the native `button[bx-button]` selector for actions and `a[bx-button]` with 
 
 ## Playground
 
-Open `/components/button` for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results. Press and release with mouse, touch, Enter, or Space, then move the pointer away while leaving focus on the button to inspect its resting state. The global Appearance controls also exercise theme, glassiness, and reduced-motion changes.
+Open `/components/button` for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results. Press and release with mouse, touch, Enter, or Space, then move the pointer away while leaving focus on the button to inspect its resting state. The global Appearance controls also exercise theme, translucency, and reduced-motion changes.
 
 ## Asynchronous actions
 

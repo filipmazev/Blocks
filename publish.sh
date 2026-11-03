@@ -24,7 +24,7 @@ while [[ "$#" -gt 0 ]]; do
         --help|-h)
             echo "Usage: bash publish.sh [--bump patch|minor|major | --retry] [--token TOKEN]"
             echo "Defaults to a patch bump. --retry publishes the existing version without a bump."
-            echo "The package's publishConfig.tag selects the npm channel (beta or latest)."
+            echo "The package's publishConfig.tag selects the npm channel (alpha, beta or latest)."
             exit 0
             ;;
         *) echo "Unknown parameter passed: $1" >&2; exit 1 ;;
@@ -59,7 +59,11 @@ if [[ -n "$AUTH_TOKEN" ]]; then
 fi
 
 unset AUTH_TOKEN
-npm whoami >/dev/null
+
+if ! npm whoami >/dev/null; then
+    echo "npm authentication failed. Run npm login or provide a valid NPM_TOKEN, then retry." >&2
+    exit 1
+fi
 
 if [[ "$RETRY" == false ]]; then
     npm run version:blocks -- "$BUMP"
@@ -67,7 +71,13 @@ fi
 
 npm run build:blocks
 
-# npm uses publishConfig.tag from the built package; beta releases do not replace latest.
-(cd dist/blocks && npm publish --access public)
+PUBLISH_PACKAGE="$(node -p "const pkg = require('./dist/blocks/package.json'); pkg.name + '@' + pkg.version")"
+PUBLISH_TAG="$(node -p "require('./dist/blocks/package.json').publishConfig?.tag ?? 'latest'")"
+
+echo "Publishing $PUBLISH_PACKAGE with npm tag $PUBLISH_TAG."
+
+# Pass the manifest's channel explicitly so npm's publish notice reports it accurately too.
+(cd dist/blocks && npm publish --access public --tag "$PUBLISH_TAG")
 
 echo "Build and publish completed successfully."
+echo "Verify the channel with: npm view ${PUBLISH_PACKAGE%@*}@$PUBLISH_TAG version"

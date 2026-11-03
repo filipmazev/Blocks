@@ -18,3 +18,4 @@ export * from './tokens/toast-data.token';
 
 export * from './classes/toast-ref';
 export * from './classes/toast';
+export type { IToastrGlobalSettings } from './interfaces/itoastr-global-settings.interface';

@@ -1,8 +1,14 @@
+import type { GlassinessMode } from './refraction/types/refraction.types';
+
 export type GlassQuality = 'auto' | 'baseline' | 'enhanced';
 
 export interface SurfaceOptions {
-  /** 0–1 glassiness; omitted values inherit the application's balanced default. */
-  glassiness?: number;
+  /** Optional local renderer quality. The application's baseline policy and accessibility settings still take precedence. */
+  quality?: GlassQuality;
+  /** 0–1 translucency; omitted values inherit the application's balanced default. */
+  translucency?: number;
+  /** Explicitly opt this surface into refraction. Omitted surfaces keep their existing material. 'auto' follows browser policy; 'on' allows other engines. */
+  glassiness?: GlassinessMode;
   /** Override automatic action/control detection for interaction lighting and press deformation. */
   interactive?: boolean;
   /** Override the default theme accent/error color emitted on interaction or an active ARIA state. */
@@ -13,6 +19,7 @@ export interface SurfaceOptions {
   reducedTransparency?: boolean;
 }
 export interface AppearanceConfiguration extends Omit<SurfaceOptions, 'interactive' | 'emission' | 'focusEmission'> {
+  /** Shared rendering budget. Omitted values inherit the root attribute; 'baseline' temporarily sets glassiness to 'off', preserving the requested policy. */
   quality?: GlassQuality;
 }
 export interface AppearanceConfigurationController {
@@ -36,10 +43,6 @@ export interface GlassTransition {
   refresh(): void;
   destroy(): void;
 }
-/** @deprecated Use GlassTransitionOptions. */
-export type LiquidTransitionOptions = GlassTransitionOptions;
-/** @deprecated Use GlassTransition. */
-export type LiquidTransition = GlassTransition;
 
 /** A light in viewport CSS pixels. An element supplies its live center when present. */
 export interface GlassLight {

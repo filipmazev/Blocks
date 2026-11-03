@@ -9,7 +9,7 @@
             [checked]="displayedChecked()" [indeterminate]="indeterminate()" (click)="onReadonlyClick($event)"
             (change)="onToggle($event)" (blur)="onBlur()">
         <bx-checkbox-indicator [checked]="displayedChecked()" [indeterminate]="indeterminate()" [invalid]="showError()"
-            [disabled]="disabled()" />
+            [disabled]="disabled()" [emissive]="emissive()" />
         <span class="bx-inline-label"><ng-content />{{ resolvedLabel() }}
             @if (effectiveRequired() && !resolvedHideRequiredMarker()) { <span class="bx-inline-required"
                 aria-hidden="true">*</span> }

@@ -1,6 +1,8 @@
 @use '../../../core/styles/helpers' as *;
 
 :host {
+    --bx-field-support-padding: 0;
+
     display: block;
 }
 
@@ -18,7 +20,9 @@
 
 .bx-inline-wrapper {
     display: inline-flex;
+    inline-size: var(--bx-toggle-inline-size, auto);
     align-items: center;
+    justify-content: var(--bx-toggle-justify-content, start);
     gap: spacing(2);
     cursor: pointer;
     user-select: none;
@@ -34,8 +38,10 @@
 }
 
 .bx-inline-label {
+    min-inline-size: 0;
     font-size: 0.875rem;
     color: var(--bx-text-primary);
+    overflow-wrap: anywhere;
 }
 
 .bx-inline-required {
@@ -65,6 +71,7 @@
 
 .bx-slide-toggle-track {
     position: relative;
+    flex-shrink: 0;
     width: 42px;
     height: 24px;
     background-color: var(--bx-border-strong);
