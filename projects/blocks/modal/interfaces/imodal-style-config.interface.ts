@@ -1,4 +1,6 @@
-import { BreakpointKey, ModalLayout } from '@modal/types/modal.types';
+import { BreakpointKey } from '@filip.mazev/blocks/core';
+
+import { ModalLayout } from '@modal/types/modal.types';
 
 import { IBottomSheetModalConfig } from './ibottom-sheet-modal-config.interface';
 

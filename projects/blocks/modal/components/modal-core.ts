@@ -25,7 +25,7 @@ import { filter, from, fromEvent, Observable, of, Subject, take } from 'rxjs';
 
 import type { IWindowDimensions } from '@filip.mazev/blocks/core';
 
-import { isTextWithKey, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
+import { BreakpointKey, isTextWithKey, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
 
 import { ModalConfig } from '@modal/classes/modal-config';
 import { ModalBackdrop } from '@modal/components/shared/ui/backdrop/modal-backdrop';
@@ -37,7 +37,7 @@ import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interfa
 import { IModalComponent } from '@modal/interfaces/imodal-component.interface';
 import { ModalService } from '@modal/services/modal.service';
 import { ModalGlobalSettingsService } from '@modal/services/modal-global-settings.service';
-import { BreakpointKey, ModalCloseMode, ModalLayout } from '@modal/types/modal.types';
+import { ModalCloseMode, ModalLayout } from '@modal/types/modal.types';
 
 import * as animConst from '@modal/constants/modal-animation.constants';
 

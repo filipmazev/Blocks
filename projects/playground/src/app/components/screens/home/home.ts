@@ -11,6 +11,7 @@ import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 
 import { BxA11yService } from '@core/services/bx-a11y.service';
 import { ThemingService } from '@core/services/theming.service';
+import { WindowDimensionsService } from '@core/services/window-dimension.service';
 import { Button } from '@forms/components/button/button';
 import { Icon } from '@icons/components/icon';
 import { LightOrb } from '@playground/components/screens/home/light-orb/light-orb';
@@ -28,9 +29,24 @@ import { OddityCanvas } from 'oddity-angular';
 })
 export class Home {
   private readonly themingService = inject(ThemingService);
+  private readonly windowDimensionService = inject(WindowDimensionsService);
 
   protected readonly releases = inject(PackageReleaseService);
   protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
+
+  private readonly glassCount: Signal<number> = computed(() =>
+    this.windowDimensionService.resolveResponsiveValue(
+      {
+        xs: 20,
+        sm: 30,
+        md: 50,
+        lg: 70,
+        xl: 80,
+        '2xl': 90
+      },
+      100
+    )
+  );
 
   private readonly lightOrb: Signal<LightOrb | undefined> = viewChild(LightOrb);
   private readonly wakeHint: Signal<TooltipDirective | undefined> = viewChild(TooltipDirective);
@@ -66,6 +82,8 @@ export class Home {
     const accentColor = window.getComputedStyle(document.body).getPropertyValue('--bx-color-accent-500');
     const bgColor = window.getComputedStyle(document.body).getPropertyValue('--bx-bg-canvas');
 
+    const glassCount = this.glassCount();
+
     return {
       fxOrder: 'Ggr',
       stops: [
@@ -89,7 +107,7 @@ export class Home {
       lightFollow: 1,
       glassMode: 1,
       glassAmount: 0.38,
-      glassCount: 100,
+      glassCount: glassCount,
       glassAngle: 180,
       glassProfile: 2,
       glassBevel: 0.01,

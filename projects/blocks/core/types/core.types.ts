@@ -1,3 +1,4 @@
+import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
 import { BxCustomValidators } from '@core/interfaces/ibx-custom-validators.interface';
 
 export type DeviceTheme = 'light' | 'dark';
@@ -18,3 +19,6 @@ export type { OSShortcut, ResolvableShortcut, ShortcutKey } from './shortcut.typ
 export type DefaultValidatorKey = 'required' | 'minlength' | 'maxlength' | 'email' | 'pattern' | 'min' | 'max';
 
 export type ValidatorKey = DefaultValidatorKey | keyof BxCustomValidators;
+
+export type BreakpointKey = keyof typeof BREAKPOINTS;
+export type BreakpointValue = (typeof BREAKPOINTS)[BreakpointKey];

@@ -37,6 +37,40 @@ Draft notes for the next Alpha release. This version has not been published; con
   the original inline body styles only after the final owner releases its lock.
 - Kept embedded inline drawers contained in their preview shell without a page scroll lock.
 
+## Window dimensions and responsive breakpoints
+
+- Expanded `WindowDimensionsService` with signals for extra-small and small mobile viewports, small laptops, large desktops, ultra-wide screens, and cumulative
+  `*AndBelow` ranges, while retaining `isMobile`, `isTablet`, and `isDesktop`.
+- Added `currentBreakpoint()` for the active breakpoint key and `currentBreakpointValue()` for its numeric threshold. Both return `undefined` outside the
+  browser.
+- Standardized breakpoint matching on minimum-width thresholds, so the active breakpoint is the highest configured threshold not exceeding the viewport width.
+- Added strongly typed `isAtLeast()`, `isBelow()`, and `isBetween()` methods for custom viewport checks, avoiding manual comparisons with breakpoint numbers.
+- Added generic `resolveResponsiveValue()` to select the value assigned to the highest matching configured breakpoint, with a caller-provided fallback for
+  server rendering or when no configured breakpoint matches.
+- Centralized comparisons behind shared helpers, while preserving convenient, reactive boolean signals for common viewport categories.
+- Improved first-render dimension detection by reading the browser viewport without depending on an uninitialized class field.
+- Replaced the 150 ms debounced resize listener with animation-frame-aligned event coalescing for more responsive dimension updates. Resize subscriptions now
+  clean up automatically when the service is destroyed.
+
+For example, choose a value by viewport size without manually comparing breakpoint constants:
+
+```typescript
+public readonly glassCount: Signal<number> = computed(() =>
+  this.windowDimensionsService.resolveResponsiveValue(
+    { xs: 10, md: 30, '2xl': 100 },
+    100
+  )
+);
+```
+
+Or use a direct comparison inside a reactive computation:
+
+```typescript
+public readonly showExpandedLayout: Signal<boolean> = computed(() =>
+  this.windowDimensionsService.isAtLeast('2xl')
+);
+```
+
 ## Navigation API
 
 - Renamed the navigation configuration helper from `withNav` to `withInAppNavigation` to clarify its purpose and distinguish in-app navigation from other
@@ -44,6 +78,8 @@ Draft notes for the next Alpha release. This version has not been published; con
 - Removed the previous `withNav` export. Applications using the old helper must update their imports and configuration calls.
 
 ## Breaking changes and migration
+
+### Navigation configuration
 
 The navigation configuration helper has been renamed. This is a **breaking change** for applications using `withNav`.
 
@@ -53,9 +89,22 @@ The navigation configuration helper has been renamed. This is a **breaking chang
 
 Update imports and references to use `withInAppNavigation`. The existing navigation configuration behavior remains unchanged.
 
+### Window dimensions behavior
+
+The window dimensions updates include behavior changes that may affect consumers:
+
+- **`isDesktop()` now begins at `xl` (1280 px), rather than `lg` (1024 px).** Use `isAtLeast('lg')` or `isSmallLaptop()` where the previous desktop threshold is
+  required.
+- The writable `_dimensions` signal is now private. Use the public readonly `dimensions()` signal to read viewport dimensions; callers can no longer set
+  dimensions directly through the service.
+- Resize-driven updates can occur more frequently because they are scheduled per animation frame rather than waiting for a 150 ms quiet period. Review any
+  expensive computations triggered by dimension changes.
+
+The existing `isMobile()` and `isTablet()` breakpoint boundaries remain unchanged.
+
 ## Compatibility
 
 Existing public entry points other than the removed `withNav` export remain available. Backdrop inputs are additive, and older release-note URLs continue to
-work.
+work. Window dimension consumers should review the `isDesktop()` threshold change and any direct writes to `_dimensions`.
 
 Stable NPM installs still use the `latest` tag; Alpha and Beta remain opt-in.

@@ -1,6 +1,8 @@
+import { BreakpointKey } from '@filip.mazev/blocks/core';
+
 import { IBottomSheetModalConfig } from '@modal/interfaces/ibottom-sheet-modal-config.interface';
 import { IModalStyleConfig } from '@modal/interfaces/imodal-style-config.interface';
-import { BreakpointKey, ModalLayout } from '@modal/types/modal.types';
+import { ModalLayout } from '@modal/types/modal.types';
 
 export class ModalStyleConfig implements IModalStyleConfig {
   public layout: ModalLayout;
