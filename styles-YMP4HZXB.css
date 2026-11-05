@@ -16,8 +16,8 @@
 [data-bx-surface],
 .bx-btn {
   --bx-glass-material-position: calc(var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5));
-  --bx-glass-material-strength: calc( 0.5 * var(--bx-glass-material-position) + 0.35 * var(--bx-glass-material-position) * var(--bx-glass-material-position) );
-  --bx-glass-material-blur: calc( 4px + 24px * var(--bx-glass-material-strength) * var(--bx-glass-material-strength) );
+  --bx-glass-material-strength: calc(0.5 * var(--bx-glass-material-position) + 0.35 * var(--bx-glass-material-position) * var(--bx-glass-material-position));
+  --bx-glass-material-blur: calc(4px + 24px * var(--bx-glass-material-strength) * var(--bx-glass-material-strength));
   --bx-glass-material-opacity: calc( 0.06 + 1.02 * var(--bx-glass-material-strength) - 0.28 * var(--bx-glass-material-strength) * var(--bx-glass-material-strength) );
 }
 .bx-glass-decoration {
@@ -261,8 +261,8 @@
   }
 }
 [data-bx-refraction=true] {
-  --bx-refraction-material-opacity: clamp( 0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1 );
-  --bx-refraction-blur: max( var(--bx-refraction-min-blur, 0.5px), var( --bx-glass-blur, calc( 0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469) ) ) );
+  --bx-refraction-material-opacity: clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1);
+  --bx-refraction-blur: max( var(--bx-refraction-min-blur, 0.5px), var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469))) );
   --bx-refraction-spec: calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)));
   --bx-refraction-glint-exp: calc(1.35 + 0.1 * var(--bx-refraction-dark, 0));
   --bx-refraction-glint-sat: calc(3.1 - 1.1 * var(--bx-refraction-dark, 0));
@@ -359,7 +359,7 @@
   z-index: -1;
   transform: translateZ(0);
   --bx-refraction-edge-width: calc(var(--bx-refraction-rim-w, 0.7px) * var(--bx-refraction-s, 1));
-  --bx-refraction-edge-depth: calc( var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1) );
+  --bx-refraction-edge-depth: calc(var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1));
   --bx-refraction-edge-radius: var(--bx-refraction-r);
   -webkit-mask-image:
     var(--bx-refraction-arc),
@@ -4353,6 +4353,8 @@
 .bx-slider-shell input.bx-slider::-moz-range-track {
   background: var(--bx-bg-neutral);
 }
+.bx-slider-shell {
+}
 .bx-slider-shell input.bx-slider::-webkit-slider-thumb {
   background: transparent;
   border-color: transparent;
@@ -4407,11 +4409,11 @@
   border-color: color-mix(in srgb, var(--bx-text-primary) 35%, var(--bx-border-strong));
   -webkit-backdrop-filter: blur(var(--bx-slider-lens-blur, 1.5px));
   backdrop-filter: blur(var(--bx-slider-lens-blur, 1.5px));
-  --bx-slider-lens-width: calc( var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5) );
-  --bx-slider-lens-inset: calc( var(--bx-slider-thumb-size, 1.5rem) / 2 * var(--bx-slider-magnification, 1.5) );
-  --bx-slider-lens-travel: calc( (var(--bx-slider-track-width) - var(--bx-slider-thumb-size, 1.5rem)) * var(--bx-slider-magnification, 1.5) );
-  --bx-slider-lens-start-offset: calc( var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel) );
-  --bx-slider-lens-end-offset: calc( var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel) );
+  --bx-slider-lens-width: calc(var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5));
+  --bx-slider-lens-inset: calc(var(--bx-slider-thumb-size, 1.5rem) / 2 * var(--bx-slider-magnification, 1.5));
+  --bx-slider-lens-travel: calc((var(--bx-slider-track-width) - var(--bx-slider-thumb-size, 1.5rem)) * var(--bx-slider-magnification, 1.5));
+  --bx-slider-lens-start-offset: calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel));
+  --bx-slider-lens-end-offset: calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel));
 }
 .bx-slider-thumb:dir(rtl) {
   --bx-slider-physical-position: calc(1 - var(--bx-slider-position, 0.5));
