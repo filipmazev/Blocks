@@ -1,2 +1,8 @@
-<button type="button" class="modal-backdrop" aria-label="Close dialog" [class.backdrop-fade-in]="isAnimated() && isOpen()"
-    [class.backdrop-fade-out]="isAnimated() && !isOpen()" (click)="click.emit($event)"></button>
+<button
+    type="button"
+    class="modal-backdrop"
+    [attr.aria-label]="resolvedLabel()"
+    [tabIndex]="tabIndex()"
+    [class.backdrop-fade-in]="isAnimated() && isOpen()"
+    [class.backdrop-fade-out]="isAnimated() && !isOpen()"
+    (click)="click.emit($event)"></button>

@@ -1,7 +1,8 @@
 import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { APP_CONFIG } from '@playground/app.config';
+
 import { App } from '@playground/app';
+import { APP_CONFIG } from '@playground/app.config';
 
 bootstrapApplication(App, {
   ...APP_CONFIG,

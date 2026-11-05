@@ -1,28 +1,16 @@
-import { subscribeFrame } from './scheduler';
-import { inheritedAttribute } from './configuration';
-import { lightingVisibility } from './visibility';
-import type { PointLight } from './scene';
+import type { IAmbientReceiver } from '@effects/runtime/interfaces/iambient-receiver.interface';
+import type { IRasterSample } from '@effects/runtime/interfaces/iraster-sample.interface';
+import type { ISample } from '@effects/runtime/interfaces/isample.interface';
+import type { IVisualSource } from '@effects/runtime/interfaces/ivisual-source.interface';
 
-export interface AmbientReceiver {
-  id: number;
-  element: HTMLElement;
-  visible: boolean;
-  bounds?: DOMRect;
-}
-interface VisualSource {
-  element: Element;
-  color: string;
-}
-interface Sample {
-  bounds?: DOMRect;
-  lights: PointLight[];
-  media: Set<Element>;
-  rects: Map<Element, DOMRect>;
-}
-interface RasterSample {
-  data: ImageData | null;
-  stamp?: number;
-}
+import type { IPointLight } from './scene';
+
+import { inheritedAttribute } from './configuration';
+import { subscribeFrame } from './scheduler';
+import { lightingVisibility } from './visibility';
+export type { IAmbientReceiver } from '@effects/runtime/interfaces/iambient-receiver.interface';
+/** @deprecated Use IAmbientReceiver; the historical type name remains available for compatibility. */
+export type { IAmbientReceiver as AmbientReceiver } from '@effects/runtime/interfaces/iambient-receiver.interface';
 
 const sampleInterval = 180;
 const liveInterval = 16;
@@ -30,27 +18,27 @@ const rasterSize = 32;
 
 /** Shared environmental sampling; geometry changes bypass the visual-source cooldown. */
 export class AmbientSampler {
-  private samples = new Map<AmbientReceiver, Sample>();
-  private dirty = new Set<AmbientReceiver>();
-  private pending = new Set<AmbientReceiver>();
-  private urgent = new Set<AmbientReceiver>();
-  private sources = new Set<Element>();
-  private initialized = false;
-  private media = new WeakMap<Element, RasterSample>();
+  private samples: Map<IAmbientReceiver, ISample> = new Map<IAmbientReceiver, ISample>();
+  private dirty: Set<IAmbientReceiver> = new Set<IAmbientReceiver>();
+  private pending: Set<IAmbientReceiver> = new Set<IAmbientReceiver>();
+  private urgent: Set<IAmbientReceiver> = new Set<IAmbientReceiver>();
+  private sources: Set<Element> = new Set<Element>();
+  private initialized: boolean = false;
+  private media: WeakMap<Element, IRasterSample> = new WeakMap<Element, IRasterSample>();
   private dependencies?: Set<Element>;
   private sampleCanvas: HTMLCanvasElement;
   private sampleContext: CanvasRenderingContext2D | null;
   private timer?: number;
   private liveTimer?: number;
   private stopFrame?: () => void;
-  private nextSample = 0;
-  private liveDelay = liveInterval;
+  private nextSample: number = 0;
+  private liveDelay: number = liveInterval;
   private motion: MediaQueryList;
 
   constructor(
     private doc: Document,
     private view: Window,
-    private changed: (entry: AmbientReceiver) => void,
+    private changed: (entry: IAmbientReceiver) => void,
     private observeRoot: (root: ShadowRoot) => void
   ) {
     this.sampleCanvas = doc.createElement('canvas');
@@ -59,18 +47,21 @@ export class AmbientSampler {
     this.motion = view.matchMedia('(prefers-reduced-motion: reduce)');
   }
 
-  public add(entry: AmbientReceiver): void {
+  public add(entry: IAmbientReceiver): void {
     if (!this.initialized) {
       this.scan(this.doc);
       this.initialized = true;
     }
+
     const root = entry.element.getRootNode();
+
     if ('host' in root) this.scan(root as ShadowRoot);
+
     this.samples.set(entry, { lights: [], media: new Set(), rects: new Map() });
     this.invalidate(entry);
   }
 
-  public remove(entry: AmbientReceiver): void {
+  public remove(entry: IAmbientReceiver): void {
     this.samples.delete(entry);
     this.dirty.delete(entry);
     this.pending.delete(entry);
@@ -78,26 +69,31 @@ export class AmbientSampler {
     this.syncLive();
   }
 
-  public lights(entry: AmbientReceiver): PointLight[] {
+  public lights(entry: IAmbientReceiver): IPointLight[] {
     const sample = this.samples.get(entry);
+
     if (!sample) return [];
+
     const dx = entry.bounds && sample.bounds ? entry.bounds.left - sample.bounds.left : 0;
     const dy = entry.bounds && sample.bounds ? entry.bounds.top - sample.bounds.top : 0;
 
     return dx || dy ? sample.lights.map((light) => ({ ...light, x: light.x + dx, y: light.y + dy })) : sample.lights;
   }
 
-  public invalidate(entry?: AmbientReceiver | AmbientReceiver[], immediate = false): void {
+  public invalidate(entry?: IAmbientReceiver | IAmbientReceiver[], immediate = false): void {
     for (const receiver of entry ? (Array.isArray(entry) ? entry : [entry]) : this.samples.keys()) {
       if (!receiver.visible || !receiver.element.isConnected) continue;
+
       if (!this.pending.has(receiver)) this.dirty.add(receiver);
+
       if (immediate) this.urgent.add(receiver);
     }
+
     this.resume();
   }
 
   /** Viewport re-entry waits for a current sample before replacing the cached paint. */
-  public isPending(entry: AmbientReceiver): boolean {
+  public isPending(entry: IAmbientReceiver): boolean {
     return this.urgent.has(entry);
   }
 
@@ -110,27 +106,38 @@ export class AmbientSampler {
     for (const node of record.addedNodes) {
       if (node.nodeType === 1) this.scan(node as Element);
     }
+
     for (const source of this.sources) if (!source.isConnected) this.sources.delete(source);
   }
 
   public resume(): void {
     if (this.doc.hidden) {
       if (this.timer !== undefined) this.view.clearTimeout(this.timer);
+
       if (this.liveTimer !== undefined) this.view.clearTimeout(this.liveTimer);
+
       this.timer = this.liveTimer = undefined;
       this.stopFrame?.();
       this.stopFrame = undefined;
+
       for (const entry of this.pending) this.dirty.add(entry);
+
       this.pending.clear();
+
       return;
     }
+
     if (this.urgent.size) {
       if (this.timer !== undefined) this.view.clearTimeout(this.timer);
+
       this.timer = undefined;
+
       for (const entry of this.dirty) this.pending.add(entry);
+
       this.dirty.clear();
       this.stopFrame ??= subscribeFrame(() => this.sampleBatch());
     }
+
     if (this.dirty.size && this.timer === undefined && !this.stopFrame) {
       this.timer = this.view.setTimeout(
         () => {
@@ -143,12 +150,15 @@ export class AmbientSampler {
         Math.max(0, this.nextSample - this.view.performance.now())
       );
     }
+
     this.syncLive();
   }
 
   public destroy(): void {
     if (this.timer !== undefined) this.view.clearTimeout(this.timer);
+
     if (this.liveTimer !== undefined) this.view.clearTimeout(this.liveTimer);
+
     this.stopFrame?.();
     this.stopFrame = undefined;
     this.timer = this.liveTimer = undefined;
@@ -163,13 +173,20 @@ export class AmbientSampler {
     this.liveDelay = liveInterval;
   }
 
+  //#region Helpers
+
   private scan(root: ParentNode): void {
     if ('host' in root) this.observeRoot(root as ShadowRoot);
+
     if ('tagName' in root && /^(IMG|VIDEO|CANVAS)$/.test(String(root.tagName))) this.sources.add(root as Element);
+
     const shadow = 'shadowRoot' in root ? (root as Element).shadowRoot : null;
+
     if (shadow) this.scan(shadow);
+
     for (const element of root.querySelectorAll('*')) {
       if (/^(IMG|VIDEO|CANVAS)$/.test(element.tagName)) this.sources.add(element);
+
       if (element.shadowRoot) this.scan(element.shadowRoot);
     }
   }
@@ -180,93 +197,137 @@ export class AmbientSampler {
     const rects = new Map<Element, DOMRect>();
     const rasterSamples = new Map<Element, ImageData | null>();
     const sources = [...this.sources];
-    const completed: AmbientReceiver[] = [];
+    const completed: IAmbientReceiver[] = [];
+
     // Scroll receivers stay ahead of deferred work even while new scroll events
     // keep arriving. Set order rotates completed receivers behind waiting peers.
     for (const entry of new Set([...this.urgent, ...this.pending])) {
       this.pending.delete(entry);
       this.urgent.delete(entry);
+
       if (!entry.visible || !entry.element.isConnected || !this.samples.has(entry)) continue;
+
       entry.bounds = entry.element.getBoundingClientRect();
+
       const bounds = entry.bounds;
+
       // IntersectionObserver's margin keeps receivers warm, but hit tests outside
       // the viewport have no pixels. Keep their last lighting until they return.
       if (bounds.bottom <= 0 || bounds.right <= 0 || bounds.top >= this.view.innerHeight || bounds.left >= this.view.innerWidth) continue;
+
       this.dependencies = new Set();
+
       const lights = this.environmentLights(entry, sources, rasterSamples, rects, visibility);
       const mediaRects = new Map<Element, DOMRect>();
+
       for (const source of this.dependencies) mediaRects.set(source, this.rectFor(source, rects));
+
       this.samples.set(entry, { bounds, lights, media: this.dependencies, rects: mediaRects });
       completed.push(entry);
+
       // A receiver is atomic. Yield between receivers rather than block a frame with a whole page.
       if (completed.length >= 4 || this.view.performance.now() - start >= 4) break;
     }
+
     this.dependencies = undefined;
+
     for (const entry of completed) this.changed(entry);
+
     if (this.pending.size) return true;
+
     this.stopFrame = undefined;
     this.nextSample = this.view.performance.now() + sampleInterval;
     this.resume();
+
     return false;
   }
 
-  private liveSources(): Map<Element, AmbientReceiver[]> {
-    const sources = new Map<Element, AmbientReceiver[]>();
+  private liveSources(): Map<Element, IAmbientReceiver[]> {
+    const sources = new Map<Element, IAmbientReceiver[]>();
+
     for (const [entry, sample] of this.samples) {
       const motion = inheritedAttribute(entry.element, 'data-bx-reduced-motion');
+
       if (!entry.visible || !entry.element.isConnected || (motion === null ? this.motion.matches : motion === 'true')) continue;
+
       const bounds = entry.bounds;
+
       if (bounds && (bounds.bottom <= 0 || bounds.right <= 0 || bounds.top >= this.view.innerHeight || bounds.left >= this.view.innerWidth)) continue;
+
       for (const source of sample.media) {
         if (!source.isConnected || !/^(CANVAS|VIDEO)$/.test(source.tagName) || this.media.get(source)?.data === null) continue;
+
         if (source.tagName === 'VIDEO' && (source as HTMLVideoElement).paused) continue;
+
         const entries = sources.get(source) ?? [];
+
         entries.push(entry);
         sources.set(source, entries);
       }
     }
+
     return sources;
   }
 
   private syncLive(): void {
     const active = !this.doc.hidden && this.liveSources().size > 0;
+
     if (!active && this.liveTimer !== undefined) {
       this.view.clearTimeout(this.liveTimer);
       this.liveTimer = undefined;
     }
+
     if (!active || this.liveTimer !== undefined) return;
+
     this.liveTimer = this.view.setTimeout(() => {
       this.liveTimer = undefined;
+
       let changed = false;
-      const recolored = new Set<AmbientReceiver>();
+
+      const recolored = new Set<IAmbientReceiver>();
       const visibility = lightingVisibility(this.doc, this.view);
+
       for (const [source, entries] of this.liveSources()) {
         const previous = this.media.get(source);
         const next = this.readRaster(source, true);
+
         if (previous?.data && next?.data && this.samePixels(previous.data, next.data)) continue;
+
         if (previous?.data === next?.data) continue;
+
         changed = true;
+
         const coverageChanged = !previous?.data || !next?.data || !this.samePixels(previous.data, next.data, true);
+
         for (const entry of entries) {
           const sample = this.samples.get(entry);
+
           if (!sample || coverageChanged || this.dirty.has(entry) || this.pending.has(entry)) {
             this.dirty.add(entry);
             this.urgent.add(entry);
             continue;
           }
+
           // Animation changes pixels, not the hit-test stack. Reuse the source bindings and
           // geometry until a real layout/visibility invalidation, and repaint only changed taps.
           const pixels = new Map([[source, next?.data ?? null]]);
+
           sample.lights = sample.lights.map((light) => {
             if (light.source !== source) return light;
+
             const color = this.rasterColorAt(source, light.x, light.y, pixels, sample.rects, visibility);
+
             if (!color || color === light.color) return light;
+
             recolored.add(entry);
+
             return { ...light, color };
           });
         }
       }
+
       for (const entry of recolored) this.changed(entry);
+
       this.liveDelay = changed ? liveInterval : Math.min(250, this.liveDelay * 2);
       this.resume();
     }, this.liveDelay);
@@ -276,32 +337,48 @@ export class AmbientSampler {
     for (let index = alphaOnly ? 3 : 0; index < first.data.length; index += alphaOnly ? 4 : 1) {
       if (alphaOnly ? first.data[index] >> 3 !== second.data[index] >> 3 : Math.abs(first.data[index] - second.data[index]) >= 2) return false;
     }
+
     return true;
   }
 
-  private readRaster(element: Element, refresh = false): RasterSample | undefined {
+  private readRaster(element: Element, refresh = false): IRasterSample | undefined {
     const cached = this.media.get(element);
+
     if (cached && !refresh) return cached;
+
     const tag = element.tagName;
+
     let source: CanvasImageSource;
     let stamp: number | undefined;
+
     if (tag === 'IMG') {
       const image = element as HTMLImageElement;
+
       if (!image.complete || !image.naturalWidth) return undefined;
+
       source = image;
     } else if (tag === 'VIDEO') {
       const video = element as HTMLVideoElement;
+
       if (video.readyState < 2 || !video.videoWidth) return undefined;
+
       stamp = video.currentTime;
+
       if (cached?.stamp === stamp) return cached;
+
       source = video;
     } else {
       const canvas = element as HTMLCanvasElement;
+
       if (!canvas.width || !canvas.height) return undefined;
+
       source = canvas;
     }
+
     if (!this.sampleContext) return undefined;
+
     let data: ImageData | null = null;
+
     try {
       this.sampleContext.clearRect(0, 0, rasterSize, rasterSize);
       this.sampleContext.drawImage(source, 0, 0, rasterSize, rasterSize);
@@ -311,19 +388,23 @@ export class AmbientSampler {
       this.sampleCanvas.width = rasterSize;
       this.sampleContext = this.sampleCanvas.getContext('2d', { willReadFrequently: true });
     }
+
     const result = { data, stamp };
+
     this.media.set(element, result);
+
     return result;
   }
 
   private environmentLights(
-    entry: AmbientReceiver,
+    entry: IAmbientReceiver,
     rasterSources: Element[],
     rasterSamples: Map<Element, ImageData | null>,
     rects: Map<Element, DOMRect>,
     visibility: ReturnType<typeof lightingVisibility>
-  ): PointLight[] {
+  ): IPointLight[] {
     const bounds = entry.bounds;
+
     if (
       !bounds ||
       bounds.width <= 0 ||
@@ -332,6 +413,7 @@ export class AmbientSampler {
       entry.element.getAttribute('data-bx-reduced-transparency') === 'true'
     )
       return [];
+
     const insetX = Math.min(3, bounds.width * 0.1);
     const insetY = Math.min(3, bounds.height * 0.1);
     const points = [
@@ -352,12 +434,16 @@ export class AmbientSampler {
     ];
     const visibleX = Math.max(1, Math.min(this.view.innerWidth - 1, bounds.left + bounds.width / 2));
     const visibleY = Math.max(1, Math.min(this.view.innerHeight - 1, bounds.top + bounds.height / 2));
+
     if (!visibility.exposed(entry.element, visibleX, visibleY, bounds)) return [];
+
     const targetBoundary = visibility.ambientBoundary(entry.element);
     const passiveTooltip = visibility.style(entry.element).pointerEvents === 'none' && !!entry.element.closest('bx-tooltip, [role="tooltip"]');
+
     // Cull once per receiver, rather than walking every media element at every edge probe.
     rasterSources = rasterSources.filter((source) => {
       const rect = this.rectFor(source, rects);
+
       return (
         rect.width > 0 &&
         rect.height > 0 &&
@@ -368,15 +454,18 @@ export class AmbientSampler {
         visibility.ambientBoundary(source) === targetBoundary
       );
     });
-    const lights: PointLight[] = [];
+
+    const lights: IPointLight[] = [];
     const sourcesByEdge = new Map<number, Set<Element>>();
     const colorsByEdge = new Map<number, Map<Element, Set<string>>>();
 
     points.forEach((point, index) => {
       if (point.x < 0 || point.y < 0 || point.x >= this.view.innerWidth || point.y >= this.view.innerHeight) return;
+
       const stack = visibility.elementsAt(point.x, point.y);
       const receiverIndex = stack.findIndex((element) => this.isInside(element, entry.element));
-      let source: VisualSource | undefined;
+
+      let source: IVisualSource | undefined;
       let foreground = false;
 
       if (point.side === 'inside' && receiverIndex >= 0) {
@@ -384,7 +473,9 @@ export class AmbientSampler {
           skipAncestors: true,
           skipRoot: true
         });
+
         if (source) foreground = true;
+
         source ??= this.findRasterSource(rasterSources, entry, point.x, point.y, visibility, rasterSamples, rects, stack, receiverIndex, true, targetBoundary);
         source ??= this.findVisualSource(stack.slice(receiverIndex + 1), entry, point.x, point.y, visibility, rasterSamples, rects, {
           skipAncestors: true,
@@ -416,19 +507,28 @@ export class AmbientSampler {
       }
 
       if (!source || visibility.ambientBoundary(source.element) !== targetBoundary) return;
+
       const sourceRect = this.rectFor(source.element, rects);
       const gapX = Math.max(bounds.left - sourceRect.right, sourceRect.left - bounds.right, 0);
       const gapY = Math.max(bounds.top - sourceRect.bottom, sourceRect.top - bounds.bottom, 0);
+
       if (point.side === 'outside' && Math.hypot(gapX, gapY) > 160) return;
+
       if (source.element === entry.element || this.isInside(source.element, entry.element)) return;
+
       const edgeSources = sourcesByEdge.get(point.edge) ?? new Set<Element>();
+
       if (point.side === 'outside' && edgeSources.has(source.element)) return;
+
       const edgeColors = colorsByEdge.get(point.edge) ?? new Map<Element, Set<string>>();
       const sourceColors = edgeColors.get(source.element) ?? new Set<string>();
+
       if (point.side === 'outside' && sourceColors.has(source.color)) return;
+
       sourceColors.add(source.color);
       edgeColors.set(source.element, sourceColors);
       colorsByEdge.set(point.edge, edgeColors);
+
       if (point.side === 'inside') {
         edgeSources.add(source.element);
         sourcesByEdge.set(point.edge, edgeSources);
@@ -437,9 +537,11 @@ export class AmbientSampler {
       if (point.side === 'outside') {
         foreground = this.isAmbientForeground(source.element, entry.element, stack, -1, visibility);
       }
+
       const depth = foreground ? 24 : 52;
       const gap = Math.hypot(gapX, gapY);
       const edgeLength = point.edge % 2 === 0 ? bounds.width : bounds.height;
+
       lights.push({
         key: `environment:${entry.id}:${index}`,
         source: source.element.namespaceURI === 'http://www.w3.org/1999/xhtml' ? (source.element as HTMLElement) : undefined,
@@ -459,28 +561,34 @@ export class AmbientSampler {
 
   private findVisualSource(
     elements: Element[],
-    entry: AmbientReceiver,
+    entry: IAmbientReceiver,
     x: number,
     y: number,
     visibility: ReturnType<typeof lightingVisibility>,
     rasterSamples: Map<Element, ImageData | null>,
     rects: Map<Element, DOMRect>,
     options: { skipAncestors: boolean; skipRoot: boolean }
-  ): VisualSource | undefined {
+  ): IVisualSource | undefined {
     for (const element of elements) {
       if (element === entry.element || this.isInside(element, entry.element)) continue;
+
       if (options.skipAncestors && this.isInside(entry.element, element)) continue;
+
       if (options.skipRoot && (element === this.doc.documentElement || element === this.doc.body)) continue;
+
       if (visibility.ambientBoundary(element) !== visibility.ambientBoundary(entry.element)) continue;
+
       const color = this.visualColorAt(element, x, y, visibility, rasterSamples, rects);
+
       if (color) return { element, color };
     }
+
     return undefined;
   }
 
   private findRasterSource(
     sources: Element[],
-    entry: AmbientReceiver,
+    entry: IAmbientReceiver,
     x: number,
     y: number,
     visibility: ReturnType<typeof lightingVisibility>,
@@ -490,20 +598,25 @@ export class AmbientSampler {
     receiverIndex: number,
     foreground: boolean | undefined,
     targetBoundary: HTMLElement
-  ): VisualSource | undefined {
+  ): IVisualSource | undefined {
     const matches = sources
       .filter((element) => {
         if (this.isInside(element, entry.element) || visibility.ambientBoundary(element) !== targetBoundary) return false;
+
         const bounds = this.rectFor(element, rects);
+
         if (x < bounds.left || x >= bounds.right || y < bounds.top || y >= bounds.bottom) return false;
+
         return foreground === undefined || this.isAmbientForeground(element, entry.element, stack, receiverIndex, visibility) === foreground;
       })
       .sort((first, second) => this.rasterOrder(second, stack, entry.element, visibility) - this.rasterOrder(first, stack, entry.element, visibility));
 
     for (const element of matches) {
       const color = this.rasterColorAt(element, x, y, rasterSamples, rects, visibility);
+
       if (color) return { element, color };
     }
+
     return undefined;
   }
 
@@ -516,15 +629,22 @@ export class AmbientSampler {
     rects: Map<Element, DOMRect>
   ): string | undefined {
     const raster = this.rasterColorAt(element, x, y, rasterSamples, rects, visibility);
+
     if (raster) return raster;
+
     const style = visibility.style(element);
     const gradient = this.gradientColorAt(style.backgroundImage, this.rectFor(element, rects), x, y);
+
     if (gradient) return gradient;
+
     if (!this.isTransparent(style.backgroundColor)) return style.backgroundColor;
+
     for (const side of ['top', 'right', 'bottom', 'left']) {
       const color = style.getPropertyValue(`border-${side}-color`);
+
       if (parseFloat(style.getPropertyValue(`border-${side}-width`)) > 0 && !this.isTransparent(color)) return color;
     }
+
     return undefined;
   }
 
@@ -537,25 +657,37 @@ export class AmbientSampler {
     visibility: ReturnType<typeof lightingVisibility>
   ): string | undefined {
     const tag = element.tagName;
+
     if (!/^(IMG|CANVAS|VIDEO)$/.test(tag)) return undefined;
+
     const bounds = this.rectFor(element, rects);
+
     if (bounds.width <= 0 || bounds.height <= 0) return undefined;
+
     const css = visibility.style(element);
+
     if (css.visibility !== 'visible' || Number(css.opacity) === 0) return undefined;
+
     this.dependencies?.add(element);
+
     let data = cache.get(element);
+
     if (data === undefined) {
       data = this.readRaster(element)?.data ?? null;
       cache.set(element, data);
     }
+
     if (!data) return undefined;
 
     let u = Math.max(0, Math.min(1, (x - bounds.left) / bounds.width));
     let v = Math.max(0, Math.min(1, (y - bounds.top) / bounds.height));
+
     if ((tag === 'IMG' || tag === 'VIDEO') && css.objectFit !== 'fill') {
       const width = tag === 'IMG' ? (element as HTMLImageElement).naturalWidth : (element as HTMLVideoElement).videoWidth;
       const height = tag === 'IMG' ? (element as HTMLImageElement).naturalHeight : (element as HTMLVideoElement).videoHeight;
+
       if (!width || !height) return undefined;
+
       const contain = Math.min(bounds.width / width, bounds.height / height);
       const scale =
         css.objectFit === 'cover'
@@ -568,14 +700,19 @@ export class AmbientSampler {
       const [positionX = '50%', positionY = '50%'] = css.objectPosition.split(' ');
       const offset = (position: string, space: number) => {
         if (position.endsWith('%')) return (parseFloat(position) / 100) * space;
+
         if (position.endsWith('px')) return parseFloat(position);
+
         return position === 'left' || position === 'top' ? 0 : position === 'right' || position === 'bottom' ? space : space / 2;
       };
+
       u = (x - bounds.left - offset(positionX, bounds.width - width * scale)) / (width * scale);
       v = (y - bounds.top - offset(positionY, bounds.height - height * scale)) / (height * scale);
+
       // A letterbox is the element's CSS background, not a stretched image edge.
       if (u < 0 || u > 1 || v < 0 || v > 1) return undefined;
     }
+
     // Interpolate between texel centers. Nearest-neighbor taps on the shared
     // downsample jumped between whole color blocks as an image scrolled.
     const px = Math.max(0, Math.min(data.width - 1, u * data.width - 0.5));
@@ -591,86 +728,116 @@ export class AmbientSampler {
       [right, bottom, (px - left) * (py - top)]
     ];
     const channels = [0, 0, 0];
+
     let alpha = 0;
+
     for (const [x, y, weight] of taps) {
       const offset = (y * data.width + x) * 4;
       const coverage = (data.data[offset + 3] / 255) * weight;
+
       alpha += coverage;
+
       for (let channel = 0; channel < 3; channel++) channels[channel] += data.data[offset + channel] * coverage;
     }
+
     if (alpha < 0.08) return undefined;
+
     return `rgb(${channels.map((channel) => Math.round(channel / alpha)).join(' ')} / ${alpha.toFixed(2)})`;
   }
 
   private gradientColorAt(image: string, bounds: DOMRect, x: number, y: number): string | undefined {
     if (!image.includes('gradient(')) return undefined;
+
     const matches = image.match(
       /#[\da-f]{3,8}\b|(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^)]*\)|\b(?:transparent|black|white|red|green|blue|orange|yellow|purple|gray|grey|teal|cyan|magenta)\b/gi
     );
     const colors = (matches ?? []).filter((color) => !this.isTransparent(color));
+
     if (!colors.length) return undefined;
 
     let amount = 0.5;
+
     if (image.includes('linear-gradient(')) {
       const prelude =
         image
           .match(/linear-gradient\(\s*([^,]+)/i)?.[1]
           ?.trim()
           .toLowerCase() ?? '';
+
       let dx = 0,
         dy = 1;
+
       const angle = prelude.match(/^(-?[\d.]+)deg$/);
+
       if (angle) {
         const radians = (Number(angle[1]) * Math.PI) / 180;
+
         dx = Math.sin(radians);
         dy = -Math.cos(radians);
       } else if (prelude.startsWith('to ')) {
         dx = prelude.includes('right') ? 1 : prelude.includes('left') ? -1 : 0;
         dy = prelude.includes('bottom') ? 1 : prelude.includes('top') ? -1 : 0;
       }
+
       const range = Math.max(0.01, Math.abs(dx) + Math.abs(dy));
       const u = (x - bounds.left) / Math.max(1, bounds.width) - 0.5;
       const v = (y - bounds.top) / Math.max(1, bounds.height) - 0.5;
+
       amount = Math.max(0, Math.min(1, 0.5 + (u * dx + v * dy) / range));
     } else {
       const u = (x - (bounds.left + bounds.width / 2)) / Math.max(1, bounds.width / 2);
       const v = (y - (bounds.top + bounds.height / 2)) / Math.max(1, bounds.height / 2);
+
       amount = Math.max(0, Math.min(1, Math.hypot(u, v) / Math.SQRT2));
     }
+
     const position = amount * (colors.length - 1);
     const index = Math.min(colors.length - 1, Math.floor(position));
+
     if (index === colors.length - 1 || position === index) return colors[index];
+
     return `color-mix(in srgb, ${colors[index]} ${((1 - (position - index)) * 100).toFixed(2)}%, ${colors[index + 1]})`;
   }
 
   private isTransparent(color: string): boolean {
     const value = color.trim().toLowerCase();
+
     if (!value || value === 'transparent') return true;
+
     const alpha = value.match(/\/\s*([\d.]+)%?\s*\)$/) ?? (/^rgba\(|^hsla\(/.test(value) ? value.match(/,\s*([\d.]+)\s*\)$/) : null);
+
     return !!alpha && Number(alpha[1]) <= 0.02;
   }
 
   private isInside(element: Element, ancestor: Element): boolean {
     let current: Element | null = element;
+
     while (current) {
       if (current === ancestor) return true;
+
       const root = current.getRootNode() as ShadowRoot;
+
       current = current.parentElement ?? root.host ?? null;
     }
+
     return false;
   }
 
   private layerElement(element: Element, visibility: ReturnType<typeof lightingVisibility>): HTMLElement {
     let current: Element | null = element;
+
     while (current && current.namespaceURI !== 'http://www.w3.org/1999/xhtml') {
       const root = current.getRootNode() as ShadowRoot;
+
       current = current.parentElement ?? root.host ?? null;
     }
+
     return current ? visibility.layer(current as HTMLElement) : this.doc.documentElement;
   }
 
   private zIndex(element: HTMLElement, visibility: ReturnType<typeof lightingVisibility>): number {
     const value = Number.parseFloat(visibility.style(element).zIndex);
+
     return Number.isFinite(value) ? value : 0;
   }
 
@@ -682,26 +849,36 @@ export class AmbientSampler {
     visibility: ReturnType<typeof lightingVisibility>
   ): boolean {
     const sourceIndex = stack.indexOf(source);
+
     if (sourceIndex >= 0 && receiverIndex >= 0) return sourceIndex < receiverIndex;
+
     const sourceLayer = this.layerElement(source, visibility);
     const receiverLayer = visibility.layer(receiver);
     const depth = this.zIndex(sourceLayer, visibility) - this.zIndex(receiverLayer, visibility);
+
     if (depth !== 0) return depth > 0;
+
     return !!(source.compareDocumentPosition(receiver) & 2);
   }
 
   private rasterOrder(element: Element, stack: Element[], receiver: HTMLElement, visibility: ReturnType<typeof lightingVisibility>): number {
     const index = stack.indexOf(element);
+
     if (index >= 0) return 10000 - index;
+
     return this.zIndex(this.layerElement(element, visibility), visibility) - this.zIndex(visibility.layer(receiver), visibility);
   }
 
   private rectFor(element: Element, rects: Map<Element, DOMRect>): DOMRect {
     let rect = rects.get(element);
+
     if (!rect) {
       rect = element.getBoundingClientRect();
       rects.set(element, rect);
     }
+
     return rect;
   }
+
+  //#endregion
 }

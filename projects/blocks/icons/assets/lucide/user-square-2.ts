@@ -1,4 +1,4 @@
-import { defineIcon } from '../../helpers/define-icon';
+import { defineIcon } from '@icons/helpers/define-icon';
 
 export const lucideUserSquare2 = defineIcon({
   name: 'user-square-2',

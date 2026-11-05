@@ -109,8 +109,7 @@
 
 .orb-body {
     background:
-        radial-gradient(ellipse at 28% 20%, #ffffff55, #ffffff00 48%),
-        radial-gradient(ellipse at 65% 90%, #00000014, #00000000 62%),
+        radial-gradient(ellipse at 28% 20%, #ffffff55, #ffffff00 48%), radial-gradient(ellipse at 65% 90%, #00000014, #00000000 62%),
         color-mix(in srgb, var(--bx-bg-surface) 15%, transparent);
     box-shadow:
         inset 1px 1px 2px #ffffff66,
@@ -246,14 +245,6 @@
     inset: 4px;
     border-radius: 50%;
     background:
-        radial-gradient(
-            ellipse at 40% 58%,
-            color-mix(in srgb, currentcolor 32%, transparent),
-            transparent 68%
-        ),
-        radial-gradient(
-            ellipse at 62% 40%,
-            color-mix(in srgb, currentcolor 24%, transparent),
-            transparent 62%
-        );
+        radial-gradient(ellipse at 40% 58%, color-mix(in srgb, currentcolor 32%, transparent), transparent 68%),
+        radial-gradient(ellipse at 62% 40%, color-mix(in srgb, currentcolor 24%, transparent), transparent 62%);
 }

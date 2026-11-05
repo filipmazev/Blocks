@@ -1,4 +1,4 @@
-import { ResolvableText } from '../types/core.types';
+import { ResolvableText } from '@core/types/core.types';
 
 /**
  * Type guard to check if a ResolvableText is an object with a 'key' property, indicating it's a translation key rather than a plain string.

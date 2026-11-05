@@ -1,4 +1,4 @@
-import { defineIcon } from '../../helpers/define-icon';
+import { defineIcon } from '@icons/helpers/define-icon';
 
 export const lucideMapPinPen = defineIcon({
   name: 'map-pin-pen',

@@ -1,3 +1,3 @@
-// This interface is intentionally empty so applications can extend validator keys via declaration merging.
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+/** Applications augment this interface to add validator keys to Blocks controls. */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/naming-convention -- Preserve the declaration-merging interface applications augment.
 export interface BxCustomValidators {}

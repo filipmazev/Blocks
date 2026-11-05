@@ -1,7 +1,10 @@
+import type { Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, forwardRef } from '@angular/core';
-import { FormField } from '../form-field/form-field';
-import { BxValueControl } from '../shared/classes/bx-value-control';
-import { BX_RADIO_GROUP } from './tokens/radio-group.token';
+
+import { FormField } from '@forms/components/form-field/form-field';
+import { BX_RADIO_GROUP } from '@forms/components/radio-group/tokens/radio-group.token';
+import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
 
 @Component({
   selector: 'bx-radio-group',
@@ -12,7 +15,7 @@ import { BX_RADIO_GROUP } from './tokens/radio-group.token';
   providers: [{ provide: BX_RADIO_GROUP, useExisting: forwardRef(() => RadioGroup) }]
 })
 export class RadioGroup<T> extends BxValueControl<T> {
-  public readonly groupName = computed(() => this.name() || this.controlId());
+  public readonly groupName: Signal<string> = computed(() => this.name() || this.controlId());
 
   public override focus(options?: FocusOptions): void {
     const selected = this.hostElement.querySelector<HTMLInputElement>('input:checked:not(:disabled)');

@@ -1,0 +1,10 @@
+{
+    "$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
+    "builders": {
+        "library": {
+            "implementation": "./library.mjs",
+            "schema": "./library.schema.json",
+            "description": "Build Blocks with workspace aliases resolved before ng-packagr bundles JavaScript and declarations."
+        }
+    }
+}

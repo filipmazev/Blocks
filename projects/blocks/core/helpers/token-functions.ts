@@ -1,6 +1,7 @@
-import { Color, ThemeColorToken, ThemedColor } from '../types/tokens.types';
-import { SemanticColorToken } from '../types/theme.types';
-import * as tokenConsts from '../constants/tokens.constants';
+import { SemanticColorToken } from '@core/types/theme.types';
+import { Color, ThemeColorToken, ThemedColor } from '@core/types/tokens.types';
+
+import * as tokenConsts from '@core/constants/tokens.constants';
 
 /**
  * Type Guard: Detects if a token is a static palette shade (e.g., 'orange-500')
@@ -22,9 +23,9 @@ export function isThemedColor(color: unknown): color is Extract<ThemedColor, obj
 export function resolveTokenToCssVar(token: Color): string {
   if (isPaletteToken(token)) {
     return `var(--${tokenConsts.TOKEN_PREFIX}${tokenConsts.TOKEN_DELIMITER}${tokenConsts.TOKEN_COLOR_DELIMITER}${tokenConsts.TOKEN_DELIMITER}${token})`;
-  } else {
-    return `var(--${tokenConsts.TOKEN_PREFIX}${tokenConsts.TOKEN_DELIMITER}${token})`;
   }
+
+  return `var(--${tokenConsts.TOKEN_PREFIX}${tokenConsts.TOKEN_DELIMITER}${token})`;
 }
 
 /**
@@ -50,6 +51,7 @@ export function getComplementaryToken(token: Color): Color {
  */
 export function invertPaletteToken(token: Color): Color {
   const parts = token.split(tokenConsts.TOKEN_DELIMITER);
+
   if (parts.length < 2) return token;
 
   const shadeStr = parts.pop();
@@ -59,6 +61,7 @@ export function invertPaletteToken(token: Color): Color {
   if (isNaN(shade)) return token;
 
   let invertedShade: number;
+
   if (shade === 50) invertedShade = 900;
   else if (shade === 1000) invertedShade = 50;
   else invertedShade = 1000 - shade;

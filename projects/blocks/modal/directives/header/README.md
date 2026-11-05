@@ -22,7 +22,8 @@ A standalone structural directive. It captures a TemplateRef and registers it wi
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -36,11 +37,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Use only inside content opened by ModalService. The template moves to the active modal view. Keep action buttons keyboard accessible and use ModalRef to close with a result. Outside a modal the directive emits a development warning.
+Use only inside content opened by ModalService. The template moves to the active modal view. Keep action buttons keyboard accessible and use ModalRef to close
+with a result. Outside a modal the directive emits a development warning.
 
 ## Playground
 

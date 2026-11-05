@@ -1,5 +1,6 @@
 import { Color } from '@filip.mazev/blocks/core';
-import { TabColor, TabsVariant } from '../types/tabs.types';
+
+import { TabColor, TabsVariant } from '@primitives/types/tabs.types';
 
 export const DEFAULT_TABS_VARIANT: TabsVariant = 'segmented';
 export const DEFAULT_TABS_LABEL = 'Tabs';

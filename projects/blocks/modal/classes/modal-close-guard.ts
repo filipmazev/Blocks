@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
-import { ModalService } from '../services/modal.service';
+
+import { ModalService } from '@modal/services/modal.service';
 
 /**
  * Abstract class representing a modal close guard.

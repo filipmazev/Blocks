@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { ConnectionPositionPair, Overlay, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
-import { BxPlacement } from '../types/core.types';
+import { ConnectionPositionPair, FlexibleConnectedPositionStrategy, Overlay } from '@angular/cdk/overlay';
+import { inject, Injectable } from '@angular/core';
+
+import { BxPlacement } from '@core/types/core.types';
 
 @Injectable({ providedIn: 'root' })
 export class BxOverlayPositionService {
@@ -26,6 +27,8 @@ export class BxOverlayPositionService {
   public getCoordinateStrategy(x: number, y: number): FlexibleConnectedPositionStrategy {
     return this.overlay.position().flexibleConnectedTo({ x, y }).withPositions(this.getPositions('bottom', 2)).withPush(true).withViewportMargin(8);
   }
+
+  //#region Helpers
 
   private getPositions(placement: BxPlacement, offset: number): ConnectionPositionPair[] {
     const top = new ConnectionPositionPair({ originX: 'center', originY: 'top' }, { overlayX: 'center', overlayY: 'bottom' }, 0, -offset, [
@@ -55,4 +58,6 @@ export class BxOverlayPositionService {
         return [right, left, top, bottom];
     }
   }
+
+  //#endregion
 }

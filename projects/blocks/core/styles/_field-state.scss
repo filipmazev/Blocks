@@ -1,6 +1,5 @@
 @use 'mixins' as *;
 
-// Shared by native projected fields and Blocks input, search and select controls.
 @mixin glass-field {
     --bx-glass-surface: var(--bx-bg-neutral);
     --bx-glass-min-opacity: 0.45;
@@ -14,14 +13,7 @@
         display: none;
     }
 
-    &:focus-within:not(
-            .is-disabled,
-            :disabled,
-            .is-readonly,
-            [readonly],
-            [aria-readonly='true'],
-            :has([readonly], [aria-readonly='true'])
-        ),
+    &:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly='true'], :has([readonly], [aria-readonly='true'])),
     &:focus-visible:not(:disabled, [readonly], [aria-readonly='true']),
     &.is-open:not(:disabled),
     &.is-readonly.is-keyboard-focused:focus-within,

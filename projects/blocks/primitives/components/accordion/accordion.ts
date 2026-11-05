@@ -1,7 +1,10 @@
+import type { InputSignalWithTransform, Signal } from '@angular/core';
+
 import { booleanAttribute, ChangeDetectionStrategy, Component, contentChildren, effect, forwardRef, input, untracked } from '@angular/core';
-import { Collapsible } from '../collapsible/collapsible';
-import { IAccordionCoordinator } from './interfaces/iaccordion-coordinator.interface';
-import { BX_ACCORDION_COORDINATOR } from './tokens/accordion-coordinator.token';
+
+import { IAccordionCoordinator } from '@primitives/components/accordion/interfaces/iaccordion-coordinator.interface';
+import { BX_ACCORDION_COORDINATOR } from '@primitives/components/accordion/tokens/accordion-coordinator.token';
+import { Collapsible } from '@primitives/components/collapsible/collapsible';
 
 @Component({
   selector: 'bx-accordion',
@@ -12,8 +15,10 @@ import { BX_ACCORDION_COORDINATOR } from './tokens/accordion-coordinator.token';
   host: { '(keydown)': 'onKeydown($event)' }
 })
 export class Accordion implements IAccordionCoordinator {
-  private readonly items = contentChildren(Collapsible);
-  public readonly multiple = input(false, { transform: booleanAttribute });
+  private readonly items: Signal<readonly Collapsible[]> = contentChildren(Collapsible);
+
+  public readonly multiple: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+
   private previousOpened: readonly Collapsible[] = [];
 
   constructor() {
@@ -23,6 +28,7 @@ export class Accordion implements IAccordionCoordinator {
 
       if (!multiple && opened.length > 1) {
         const newest = opened.find((item) => !this.previousOpened.includes(item)) ?? opened[0];
+
         untracked(() => opened.filter((item) => item !== newest).forEach((item) => item.expanded.set(false)));
         this.previousOpened = [newest];
       } else this.previousOpened = opened;
@@ -51,6 +57,7 @@ export class Accordion implements IAccordionCoordinator {
 
     const next =
       event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+
     event.preventDefault();
     event.stopPropagation();
     items[next].focus();

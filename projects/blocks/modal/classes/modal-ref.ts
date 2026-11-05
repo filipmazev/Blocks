@@ -1,36 +1,31 @@
-import { ComponentRef, Type } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { ModalConfig } from './modal-config';
-import { ModalCore } from '../components/modal-core';
-import { ModalState } from '../enums/modal-state.enum';
-import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
-import { IModalRef } from '../interfaces/imodal-ref.interface';
-import { ModalService } from '../services/modal.service';
-import { ModalCloseMode } from '../types/modal.types';
-import { IModal } from '../interfaces/imodal.interface';
 import { ComponentType } from '@angular/cdk/portal';
+import { ComponentRef, Type } from '@angular/core';
+
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+
+import { ModalCore } from '@modal/components/modal-core';
+import { ModalState } from '@modal/enums/modal-state.enum';
+import { IModal } from '@modal/interfaces/imodal.interface';
+import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
+import { IModalRef } from '@modal/interfaces/imodal-ref.interface';
+import { ModalService } from '@modal/services/modal.service';
+import { ModalCloseMode } from '@modal/types/modal.types';
+
+import { ModalConfig } from './modal-config';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
-  //#region Modal Container
-
   private _modalContainer: Type<ModalCore<D, R, C>> = {} as Type<ModalCore<D, R, C>>;
-
   private _modalContainerRef: ComponentRef<ModalCore<D, R, C>> = {} as ComponentRef<ModalCore<D, R, C>>;
   private _modalContainerElement: HTMLElement = {} as HTMLElement;
   private _parentElement: HTMLElement | undefined = undefined;
-  //#region Component
   private _componentRef: ComponentRef<C> = {} as ComponentRef<C>;
-  //#region Self
   private _modalState: ModalState = ModalState.CLOSED;
-  //#endregion
-  private modalState = new BehaviorSubject<ModalState>(this.getStatus());
+  private modalState: BehaviorSubject<ModalState> = new BehaviorSubject<ModalState>(this.getStatus());
   private _modalConfig?: ModalConfig<D, R> = undefined;
-  //#region Observables
   private backdropClickSubject: Subject<MouseEvent> = new Subject<MouseEvent>();
-  //#endregion
   private afterCloseSubject: Subject<IModalCloseResult<R | undefined>> = new Subject<IModalCloseResult<R | undefined>>();
-  //#endregion
+
   constructor(
     componentRef: ComponentRef<C>,
     public componentType: ComponentType<C>,
@@ -49,50 +44,24 @@ export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R
     return this._modalContainer;
   }
 
-  private set modalContainer(modalContainer: Type<ModalCore<D, R, C>>) {
-    this._modalContainer = modalContainer;
-  }
-
   public get modalContainerRef(): ComponentRef<ModalCore<D, R, C>> {
     return this._modalContainerRef;
-  }
-
-  private set modalContainerRef(modalContainerRef: ComponentRef<ModalCore<D, R, C>>) {
-    this._modalContainerRef = modalContainerRef;
   }
 
   public get modalContainerElement(): HTMLElement {
     return this._modalContainerElement;
   }
 
-  private set modalContainerElement(modalContainerElement: HTMLElement) {
-    this._modalContainerElement = modalContainerElement;
-  }
-
   public get parentElement(): HTMLElement | undefined {
     return this._parentElement;
   }
-
-  private set parentElement(parentElement: HTMLElement | undefined) {
-    this._parentElement = parentElement;
-  }
-
-  //#endregion
 
   public get componentRef(): ComponentRef<C> {
     return this._componentRef;
   }
 
-  private set componentRef(componentRef: ComponentRef<C>) {
-    this._componentRef = componentRef;
-  }
-
   public get modalConfig(): ModalConfig<D, R> | undefined {
     return this._modalConfig;
-  }
-
-  private set modalConfig(modalConfig: ModalConfig<D, R> | undefined) {
-    this._modalConfig = modalConfig;
   }
 
   public backdropClick(): Observable<MouseEvent> {
@@ -110,8 +79,6 @@ export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R
   public afterClosed(): Observable<IModalCloseResult<R | undefined>> {
     return this.afterCloseSubject.asObservable();
   }
-
-  //#region Public Methods
 
   public async open(): Promise<void> {
     this._modalState = ModalState.OPENING;
@@ -139,6 +106,28 @@ export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R
     this.modalContainerRef.instance.close(state, result, false, forceClose);
   }
 
+  //#region Helpers
+
+  private set modalContainerRef(modalContainerRef: ComponentRef<ModalCore<D, R, C>>) {
+    this._modalContainerRef = modalContainerRef;
+  }
+
+  private set modalContainerElement(modalContainerElement: HTMLElement) {
+    this._modalContainerElement = modalContainerElement;
+  }
+
+  private set parentElement(parentElement: HTMLElement | undefined) {
+    this._parentElement = parentElement;
+  }
+
+  private set componentRef(componentRef: ComponentRef<C>) {
+    this._componentRef = componentRef;
+  }
+
+  private set modalConfig(modalConfig: ModalConfig<D, R> | undefined) {
+    this._modalConfig = modalConfig;
+  }
+
   private getStatus(): ModalState {
     return this._modalState;
   }
@@ -150,10 +139,6 @@ export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R
   private afterClose(result: IModalCloseResult<R | undefined>) {
     this.afterCloseSubject.next(result);
   }
-
-  //#endregion
-
-  //#region Private Methods
 
   private handleClose(result: IModalCloseResult<R | undefined>): void {
     this._modalState = ModalState.CLOSING;
@@ -174,5 +159,6 @@ export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R
       this.modalService?.unregister(this);
     }, this.modalContainerRef.instance.animationDuration);
   }
+
   //#endregion
 }

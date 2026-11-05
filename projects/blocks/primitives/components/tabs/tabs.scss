@@ -68,17 +68,9 @@
     }
 
     &.is-selected {
-        --bx-glass-surface: color-mix(
-            in srgb,
-            var(--bx-tab-highlight, var(--bx-primary)) 35%,
-            var(--bx-bg-surface)
-        );
+        --bx-glass-surface: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface));
         --bx-glass-text: var(--bx-tab-selected-text, var(--bx-text-brand));
-        --bx-glass-edge: color-mix(
-            in srgb,
-            var(--bx-tab-highlight, var(--bx-primary)) 35%,
-            transparent
-        );
+        --bx-glass-edge: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent);
         --bx-glass-opacity: 0.45;
         --bx-glass-decoration-opacity: 0.5;
         --bx-glass-rim-visibility: 0.65;
@@ -101,8 +93,6 @@
     min-width: 0;
     min-height: 0;
     max-height: var(--bx-tabs-max-panel-height, none);
-
-    // Unbounded panels belong to the page's scroll flow. Bounded viewers opt in.
     overflow: var(--bx-tabs-panel-overflow, visible);
 }
 

@@ -1,11 +1,22 @@
-import { createRefractionFilter, layoutRefractionFilter } from '../helpers/refraction-filter.helpers';
-import { rememberStyles } from '../../dom';
-import { SLOTS, REFR_FOLD_DEPTH } from '../constants/refraction-maps.constants';
-import { BAKE_SLACK_DOWN, BAKE_SLACK_UP, BAKE_SETTLE_MS, AVAIL_STEP, REGION } from '../constants/refraction.constants';
-import { buildReflection, reflectionPad, reflectionScale, sliceRect, buildBevelArcs } from '../helpers/refraction-maps.helpers';
-import { cachedRefraction, readRadius } from '../helpers/refraction.helpers';
-import { el, layer, buildField, packField, setBackdrop, setAttr, setStyle, setFieldImages, layField } from '../helpers/refraction-svg.helpers';
-import type { RefractionMap, ReflectionMap, ReflectAvail } from '../types/refraction-maps.types';
+import type { ReflectAvail, ReflectionMap, RefractionMap } from '@effects/runtime/refraction/types/refraction-maps.types';
+
+import { rememberStyles } from '@effects/runtime/dom';
+import { AVAIL_STEP, BAKE_SETTLE_MS, BAKE_SLACK_DOWN, BAKE_SLACK_UP, REGION } from '@effects/runtime/refraction/constants/refraction.constants';
+import { REFR_FOLD_DEPTH, SLOTS } from '@effects/runtime/refraction/constants/refraction-maps.constants';
+import { cachedRefraction, readRadius } from '@effects/runtime/refraction/helpers/refraction.helpers';
+import { createRefractionFilter, layoutRefractionFilter } from '@effects/runtime/refraction/helpers/refraction-filter.helpers';
+import { buildBevelArcs, buildReflection, reflectionPad, reflectionScale, sliceRect } from '@effects/runtime/refraction/helpers/refraction-maps.helpers';
+import {
+  buildField,
+  el,
+  layer,
+  layField,
+  packField,
+  setAttr,
+  setBackdrop,
+  setFieldImages,
+  setStyle
+} from '@effects/runtime/refraction/helpers/refraction-svg.helpers';
 
 /** CSS backdrop refraction with SVG maps; shares Blocks tint, lighting and accessibility. */
 export class DetailedRefractiveSurface {
@@ -13,7 +24,8 @@ export class DetailedRefractiveSurface {
   public readonly update: () => void;
   public readonly destroy: () => void;
   public readonly setVisible: (visible: boolean) => void;
-  private static instances = 0;
+
+  private static instances: number = 0;
 
   constructor(host: HTMLElement) {
     const doc = host.ownerDocument;
@@ -22,7 +34,9 @@ export class DetailedRefractiveSurface {
     if (!view) throw new Error('Refraction must be mounted in a browser document.');
 
     const restore = rememberStyles(host, ['--bx-refraction-r']);
+
     let radius = readRadius(host);
+
     const rim = 1.3,
       reflect = true,
       reflectStrength = 2.5;
@@ -60,28 +74,38 @@ export class DetailedRefractiveSurface {
      the pill); z-index lifts it above the pane when painting. */
 
     const reflectLayer = layer(root, 'bx-refraction-layer bx-refraction-reflect');
+
     reflectLayer.hidden = true;
+
     const causticWrap = layer(root, 'bx-refraction-layer bx-refraction-caustic');
+
     layer(causticWrap, 'bx-refraction-caustic-ring');
+
     const pane = layer(root, 'bx-refraction-layer bx-refraction-pane');
     const fold = layer(root, 'bx-refraction-layer bx-refraction-edge bx-refraction-fold');
     const glint = layer(root, 'bx-refraction-layer bx-refraction-edge bx-refraction-glint');
     const rimLayer = layer(root, 'bx-refraction-layer bx-refraction-edge bx-refraction-rim');
+
     host.prepend(root);
 
     const makeCover = () => {
       const c = doc.createElement('span');
+
       c.className = 'bx-refraction-cover';
       c.setAttribute('aria-hidden', 'true');
       c.style.position = 'absolute';
       layer(c, 'bx-refraction-layer bx-refraction-edge bx-refraction-spec');
       layer(c, 'bx-refraction-layer bx-refraction-underlay');
+
       return c;
     };
+
     const cover = makeCover();
+
     host.append(cover);
 
     const tick = doc.createElement('span');
+
     tick.className = 'bx-refraction-tick';
     tick.setAttribute('aria-hidden', 'true');
     // Out of the flow from the start, so it never becomes a flex or grid item.
@@ -94,12 +118,14 @@ export class DetailedRefractiveSurface {
     // prefixed and unprefixed versions sit next to each other.
     const bevel = (prop: string, exposure: number, sat: number) =>
       `brightness(var(--bx-refraction-${prop}-exp, ${exposure})) saturate(var(--bx-refraction-${prop}-sat, ${sat}))`;
+
     setBackdrop(fold, 'brightness(var(--bx-refraction-fold-exp, 1.08)) saturate(var(--bx-refraction-fold-sat, 1.3))');
     fold.style.setProperty('--bx-refraction-fold-k', String(REFR_FOLD_DEPTH));
     setBackdrop(glint, bevel('glint', 1.35, 3.1));
     setBackdrop(rimLayer, bevel('rim', 0.84, 2.2));
 
     const frost = ' blur(var(--bx-refraction-blur, 0.5px)) saturate(var(--bx-refraction-saturation, 1.15))';
+
     setBackdrop(pane, frost.trim());
 
     /* --- State --------------------------------------------------------------- */
@@ -121,6 +147,7 @@ export class DetailedRefractiveSurface {
     const measureAvail = (): ReflectAvail => {
       const r = host.getBoundingClientRect();
       const q = (v: number) => Math.max(0, Math.floor(v / AVAIL_STEP) * AVAIL_STEP);
+
       let top = 0,
         right = view.innerWidth,
         bottom = view.innerHeight,
@@ -151,6 +178,7 @@ export class DetailedRefractiveSurface {
     /** Lays every tile into the current box. Never bakes. */
     const sync = () => {
       host.style.setProperty('--bx-refraction-r', `${Math.max(0.01, Math.min(radius, w / 2, h / 2))}px`);
+
       const style = view.getComputedStyle(host);
 
       for (const side of ['top', 'right', 'bottom', 'left']) {
@@ -164,13 +192,16 @@ export class DetailedRefractiveSurface {
       if (refl) {
         const reflection = refl;
         const [pt, pr, pb, pl] = refl.pad;
+
         layField(reflField, refl.slice, w, h, pl, pt);
         setAttr(reflDisp, 'scale', reflectionScale(refl, w, h));
         setAttr(reflFilter, 'width', w + pl + pr + REGION * 2);
         setAttr(reflFilter, 'height', h + pt + pb + REGION * 2);
+
         const rects = SLOTS.map((slot) => sliceRect(slot, w, h, reflection.mask.r, reflection.mask.reach, pl, pt));
         const position = rects.map((r) => `${r.x}px ${r.y}px`).join(',');
         const size = rects.map((r) => `${r.w}px ${r.h}px`).join(',');
+
         setStyle(reflectLayer, 'mask-position', position);
         setStyle(reflectLayer, '-webkit-mask-position', position);
         setStyle(reflectLayer, 'mask-size', size);
@@ -178,7 +209,9 @@ export class DetailedRefractiveSurface {
       }
 
       const arcs = buildBevelArcs(w, h);
+
       setStyle(glint, '--bx-refraction-arc-glint', arcs.glint);
+
       const spec = cover.querySelector<HTMLElement>('.bx-refraction-spec');
 
       if (spec) setStyle(spec, '--bx-refraction-arc-glint', arcs.glint);
@@ -197,20 +230,27 @@ export class DetailedRefractiveSurface {
 
       setFieldImages(reflField, refl);
       setAttr(reflBlur, 'stdDeviation', refl.blur);
+
       const [pt, pr, pb, pl] = refl.pad;
       const style = view.getComputedStyle(host);
       const borders = ['top', 'right', 'bottom', 'left'].map((side) => parseFloat(style.getPropertyValue(`border-${side}-width`)) || 0);
+
       reflectLayer.style.inset = `${-pt - borders[0]}px ${-pr - borders[1]}px ${-pb - borders[2]}px ${-pl - borders[3]}px`;
+
       // Same shape as the mask, as a plain compositor clip: it keeps the filter
       // work to the outline instead of the whole overhang, and if the mask is
       // not rasterised yet for one frame, the overhang still cannot flash.
       const clip = `inset(${pt}px ${pr}px ${pb}px ${pl}px round var(--bx-refraction-r))`;
+
       setStyle(reflectLayer, 'clip-path', clip);
       setStyle(reflectLayer, '-webkit-clip-path', clip);
+
       const images = SLOTS.map((slot) => {
         const img = reflection.mask.img[slot];
+
         return img.startsWith('linear-gradient(') ? img : `url("${img}")`;
       }).join(',');
+
       setStyle(reflectLayer, 'mask-image', images);
       setStyle(reflectLayer, '-webkit-mask-image', images);
       setBackdrop(reflectLayer, `url(#${reflectId})`);
@@ -233,6 +273,7 @@ export class DetailedRefractiveSurface {
 
     const onResize = () => {
       if (paused) return;
+
       const nw = Math.round(host.offsetWidth);
       const nh = Math.round(host.offsetHeight);
       const nextRadius = readRadius(host);
@@ -277,7 +318,9 @@ export class DetailedRefractiveSurface {
     // nothing while it moves: a fresh mask is not rasterised for a frame.
     const onView = () => {
       view.clearTimeout(viewTimer);
+
       if (paused) return;
+
       viewTimer = view.setTimeout(function check() {
         if (disposed) return;
 
@@ -287,6 +330,7 @@ export class DetailedRefractiveSurface {
         if (spot !== lastSpot) {
           lastSpot = spot;
           viewTimer = view.setTimeout(check, 120);
+
           return;
         }
 
@@ -298,6 +342,7 @@ export class DetailedRefractiveSurface {
         // on every side, moving or resizing the element gives the same map.
         const short = Math.min(reflSize.w, reflSize.h);
         const before = avail && reflectionPad(short, avail);
+
         avail = next;
 
         if (!before || reflectionPad(short, next).some((v, i) => v !== before[i])) {
@@ -319,14 +364,17 @@ export class DetailedRefractiveSurface {
         tick.toggleAttribute('data-tick');
       }
     };
+
     const onScroll = () => {
       if (paused) return;
+
       if (refl) refresh();
 
       onView();
     };
 
     const ro = new view.ResizeObserver(onResize);
+
     ro.observe(host);
     doc.addEventListener('scroll', onScroll, { passive: true, capture: true });
     view.addEventListener('resize', onView, { passive: true });
@@ -350,12 +398,14 @@ export class DetailedRefractiveSurface {
         view.clearTimeout(viewTimer);
       }
     };
+
     this.update = () => {
       if (disposed) return;
 
       onResize();
       onView();
     };
+
     this.destroy = () => {
       if (disposed) return;
 

@@ -1,9 +1,8 @@
+import type { IFrameEntry } from '@effects/runtime/interfaces/iframe-entry.interface';
 export type FrameCallback = (deltaSeconds: number, timestamp: number) => boolean;
 
-interface FrameEntry {
-  callback: FrameCallback;
-}
-const entries = new Set<FrameEntry>();
+const entries = new Set<IFrameEntry>();
+
 let frame: number | undefined;
 let previousTime: number | undefined;
 let ticking = false;
@@ -11,10 +10,14 @@ let ticking = false;
 function tick(timestamp: number): void {
   frame = undefined;
   ticking = true;
+
   const delta = previousTime === undefined ? 1 / 60 : Math.min(0.064, Math.max(0, (timestamp - previousTime) / 1000));
+
   previousTime = timestamp;
+
   for (const entry of Array.from(entries)) {
     if (!entries.has(entry)) continue;
+
     try {
       if (!entry.callback(delta, timestamp)) entries.delete(entry);
     } catch (error) {
@@ -25,7 +28,9 @@ function tick(timestamp: number): void {
       });
     }
   }
+
   ticking = false;
+
   if (entries.size > 0) frame = requestAnimationFrame(tick);
   else previousTime = undefined;
 }
@@ -33,13 +38,19 @@ function tick(timestamp: number): void {
 /** All effects share one lazy clock. Returning false removes the callback. */
 export function subscribeFrame(callback: FrameCallback): () => void {
   if (typeof requestAnimationFrame !== 'function') return () => {};
-  const entry: FrameEntry = { callback };
+
+  const entry: IFrameEntry = { callback };
+
   entries.add(entry);
+
   if (frame === undefined && !ticking) frame = requestAnimationFrame(tick);
+
   return () => {
     entries.delete(entry);
+
     if (entries.size === 0) {
       if (frame !== undefined) cancelAnimationFrame(frame);
+
       frame = undefined;
       previousTime = undefined;
     }

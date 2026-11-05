@@ -2,111 +2,204 @@
     <p>Use Appearance to try themes, materials and reduced motion.</p>
     @switch (example()) {
         @case ('divider') {
-            <p>Full width separator</p><bx-divider />
+            <p>Full width separator</p>
+            <bx-divider />
             <bx-divider label="Continue" />
             <bx-divider lineStyle="dashed" />
             <bx-stack direction="horizontal" align="stretch"><span>Start</span><bx-divider orientation="vertical" /><span>End</span></bx-stack>
         }
         @case ('popover') {
             <bx-stack direction="horizontal" [wrap]="true">
-                <button bx-button variant="filled" [bxPopover]="details" #popover="bxPopover" [popoverConfig]="{ ariaLabel: 'Project details' }">Open details</button>
+                <button #popover="bxPopover" type="button" bx-button variant="filled" [bxPopover]="details" [popoverConfig]="{ ariaLabel: 'Project details' }">
+                    Open details
+                </button>
                 <ng-template #details>
-                    <bx-popover><bx-stack>
-                        <strong>Project details</strong>
-                        <p>Your changes are saved in this workspace.</p>
-                        <bx-input-field label="Project note" />
-                        <button bx-button variant="tonal" (click)="popover.close()">Done</button>
-                    </bx-stack></bx-popover>
+                    <bx-popover
+                        ><bx-stack>
+                            <strong>Project details</strong>
+                            <p>Your changes are saved in this workspace.</p>
+                            <bx-input-field label="Project note" />
+                            <button type="button" bx-button variant="tonal" (click)="popover.close()">Done</button>
+                        </bx-stack></bx-popover
+                    >
                 </ng-template>
             </bx-stack>
             <p>Internal actions stay open. Escape, outside click and tabbing out dismiss the panel.</p>
         }
         @case ('skeleton') {
-            <button bx-button variant="tonal" (click)="skeletonVisible.set(!skeletonVisible())">Toggle loaded content</button>
+            <button type="button" bx-button variant="tonal" (click)="skeletonVisible.set(!skeletonVisible())">Toggle loaded content</button>
             <bx-card title="Project details">
                 @if (skeletonVisible()) {
-                    <bx-stack><bx-skeleton shape="circle" height="3rem" /><bx-skeleton [lines]="3" [decorative]="false" label="Loading content" /><bx-skeleton shape="rectangle" height="5rem" /></bx-stack>
-                } @else { <p>Loaded content replaces the placeholders without moving the surrounding actions.</p> }
+                    <bx-stack
+                        ><bx-skeleton shape="circle" height="3rem" /><bx-skeleton label="Loading content" [lines]="3" [decorative]="false" /><bx-skeleton
+                            shape="rectangle"
+                            height="5rem"
+                    /></bx-stack>
+                } @else {
+                    <p>Loaded content replaces the placeholders without moving the surrounding actions.</p>
+                }
             </bx-card>
         }
         @case ('autocomplete') {
-            <bx-autocomplete label="Destination" placeholder="Type a city or a custom destination" [formControl]="destination"
-                [options]="remote.options()" [externalFiltering]="true" [searching]="remote.searching()" [loading]="remote.loading()"
-                [hasMore]="remote.hasMore()" [loadError]="remote.error()" [readOnly]="readOnly()"
-                loadingText="Loading suggestions" emptyText="No suggestions. Enter your own destination."
+            <bx-autocomplete
+                label="Destination"
+                placeholder="Type a city or a custom destination"
+                loadingText="Loading suggestions"
+                emptyText="No suggestions. Enter your own destination."
+                [formControl]="destination"
+                [options]="remote.options()"
+                [externalFiltering]="true"
+                [searching]="remote.searching()"
+                [loading]="remote.loading()"
+                [hasMore]="remote.hasMore()"
+                [loadError]="remote.error()"
+                [readOnly]="readOnly()"
                 [loadMoreConfig]="remote.loadMoreConfig"
-                (queryChange)="remote.search($event)" (loadMore)="remote.loadMore($event)" (optionSelected)="status.set('Chose ' + $event.value)" />
-            <bx-stack direction="horizontal" [wrap]="true" align="center" [gap]="2">
-                <button bx-button type="button" variant="tonal" color="danger" [disabled]="remote.loading() || !remote.hasMore()"
-                    (click)="remote.failNext.set(true)">Fail next page</button>
+                (queryChange)="remote.search($event)"
+                (loadMore)="remote.loadMore($event)"
+                (optionSelected)="status.set('Chose ' + $event.value)" />
+            <bx-stack direction="horizontal" align="center" [wrap]="true" [gap]="2">
+                <button
+                    bx-button
+                    type="button"
+                    variant="tonal"
+                    color="danger"
+                    [disabled]="remote.loading() || !remote.hasMore()"
+                    (click)="remote.failNext.set(true)">
+                    Fail next page
+                </button>
                 <button bx-button type="button" variant="text" [disabled]="remote.loading()" (click)="remote.search('')">Reload suggestions</button>
-                <bx-checkbox label="Read only" [(checked)]="readOnly" subscriptSizing="dynamic" />
-                <bx-select class="autocomplete-page-size" label="Page size" [clearable]="false" [options]="pageSizes" [value]="remote.pageSize()"
-                    (selectionChange)="remote.setPageSize($event.value)" subscriptSizing="dynamic" />
+                <bx-checkbox label="Read only" subscriptSizing="dynamic" [(checked)]="readOnly" />
+                <bx-select
+                    class="autocomplete-page-size"
+                    label="Page size"
+                    subscriptSizing="dynamic"
+                    [clearable]="false"
+                    [options]="pageSizes"
+                    [value]="remote.pageSize()"
+                    (selectionChange)="remote.setPageSize($event.value)" />
             </bx-stack>
-            <output>Value: {{ destination.value || '(empty)' }} · {{ remote.options().length }} suggestions loaded · {{ remote.status() }}{{ remote.failNext() ? ' · Next page will fail' : '' }}</output>
-            <p>Choose Fail next page, load another page, then Retry request. Existing suggestions remain visible. Small pages show the load-more action; larger pages enable scrolling. Search for an unknown city to see the empty state and keep free text.</p>
+            <output
+                >Value: {{ destination.value || '(empty)' }} · {{ remote.options().length }} suggestions loaded · {{ remote.status()
+                }}{{ remote.failNext() ? ' · Next page will fail' : '' }}</output
+            >
+            <p>
+                Choose Fail next page, load another page, then Retry request. Existing suggestions remain visible. Small pages show the load-more action; larger
+                pages enable scrolling. Search for an unknown city to see the empty state and keep free text.
+            </p>
         }
         @case ('chip') {
             <bx-stack direction="horizontal" [wrap]="true" [gap]="2">
-                <bx-chip label="Design" [(selected)]="selected" [config]="chipConfig" />
-                @for (chip of removableChips(); track chip) { <bx-chip [label]="chip" [selectable]="false" [removable]="true" [config]="chipConfig" (removed)="removeChip(chip)" (activated)="status.set('Activated ' + chip)" /> }
+                <bx-chip label="Design" [config]="chipConfig" [(selected)]="selected" />
+                @for (chip of removableChips(); track chip) {
+                    <bx-chip
+                        [label]="chip"
+                        [selectable]="false"
+                        [removable]="true"
+                        [config]="chipConfig"
+                        (removed)="removeChip(chip)"
+                        (activated)="status.set('Activated ' + chip)" />
+                }
                 <bx-chip label="Read only" [selected]="true" [readOnly]="true" [removable]="true" />
                 <bx-chip label="Disabled" [disabled]="true" />
             </bx-stack>
-            <button bx-button variant="tonal" (click)="resetChips()">Restore chips</button>
+            <button type="button" bx-button variant="tonal" (click)="resetChips()">Restore chips</button>
             <output>Design selected: {{ selected() }}</output>
         }
         @case ('accordion') {
             <bx-checkbox label="Allow multiple open panels" [(checked)]="multiple" />
             <bx-accordion [multiple]="multiple()">
-                <bx-accordion-item title="Project details" [expanded]="true"><p>Your changes are saved in this workspace.</p><bx-input-field label="Project name" /></bx-accordion-item>
-                <bx-accordion-item title="Keyboard and focus"><p>Use arrows, Home and End between headings; Enter or Space toggles a section.</p></bx-accordion-item>
+                <bx-accordion-item title="Project details" [expanded]="true"
+                    ><p>Your changes are saved in this workspace.</p>
+                    <bx-input-field label="Project name"
+                /></bx-accordion-item>
+                <bx-accordion-item title="Keyboard and focus"
+                    ><p>Use arrows, Home and End between headings; Enter or Space toggles a section.</p></bx-accordion-item
+                >
                 <bx-accordion-item title="Lazy content" [contentTemplate]="lazyContent" />
                 <bx-accordion-item title="Unavailable section" [disabled]="true" />
             </bx-accordion>
             <ng-template #lazyContent><bx-input-field label="Created when opened" /></ng-template>
         }
         @case ('collapsible') {
-            <bx-collapsible title="Project details" [(expanded)]="expanded" [region]="true"><p>Your changes are saved in this workspace.</p><bx-input-field label="Project name" /></bx-collapsible>
-            <button bx-button variant="tonal" (click)="expanded.set(!expanded())">Toggle from application</button>
-            <bx-collapsible title="Read-only open section" [expanded]="true" [readOnly]="true"><p>This content remains accessible while user toggling is prevented.</p></bx-collapsible>
+            <bx-collapsible title="Project details" [region]="true" [(expanded)]="expanded"
+                ><p>Your changes are saved in this workspace.</p>
+                <bx-input-field label="Project name"
+            /></bx-collapsible>
+            <button type="button" bx-button variant="tonal" (click)="expanded.set(!expanded())">Toggle from application</button>
+            <bx-collapsible title="Read-only open section" [expanded]="true" [readOnly]="true"
+                ><p>This content remains accessible while user toggling is prevented.</p></bx-collapsible
+            >
             <output>Expanded: {{ expanded() }}</output>
         }
         @case ('alert') {
-            @for (tone of tones; track tone) { <bx-alert [tone]="tone" [title]="tone" message="Your changes are saved in this workspace." /> }
-            <bx-alert tone="info" title="Project details" [dismissible]="true" [(visible)]="alertVisible"
-                dismissLabel="Dismiss notification" dismissFocusTarget="restore-banner" (dismissed)="status.set('Banner dismissed')">
+            @for (tone of tones; track tone) {
+                <bx-alert message="Your changes are saved in this workspace." [tone]="tone" [title]="tone" />
+            }
+            <bx-alert
+                tone="info"
+                title="Project details"
+                dismissLabel="Dismiss notification"
+                dismissFocusTarget="restore-banner"
+                [dismissible]="true"
+                [(visible)]="alertVisible"
+                (dismissed)="status.set('Banner dismissed')">
                 Long content and actions wrap inside the available width.
-                <button bx-button bxAlertActions variant="tonal" (click)="status.set('Banner action')">Review changes</button>
+                <button type="button" bx-button bxAlertActions variant="tonal" (click)="status.set('Banner action')">Review changes</button>
             </bx-alert>
-            @if (!alertVisible()) { <button id="restore-banner" bx-button variant="tonal" (click)="alertVisible.set(true)">Restore dismissible banner</button> }
+            @if (!alertVisible()) {
+                <button type="button" id="restore-banner" bx-button variant="tonal" (click)="alertVisible.set(true)">Restore dismissible banner</button>
+            }
         }
         @case ('card') {
-            <bx-stack direction="horizontal" [wrap]="true" align="center">
-                <bx-checkbox label="Clickable" [(checked)]="cardClickable" subscriptSizing="dynamic" />
-                <bx-checkbox label="Disable selectable card" [(checked)]="cardDisabled" subscriptSizing="dynamic" />
-                <bx-checkbox label="Read-only selectable card" [(checked)]="cardReadOnly" subscriptSizing="dynamic" />
-                <bx-select label="Highlight token" [options]="cardHighlightOptions" [clearable]="false" [value]="cardHighlight()"
-                    (selectionChange)="cardHighlight.set($event.value ?? 'accent')" subscriptSizing="dynamic" />
+            <bx-stack direction="horizontal" align="center" [wrap]="true">
+                <bx-checkbox label="Clickable" subscriptSizing="dynamic" [(checked)]="cardClickable" />
+                <bx-checkbox label="Disable selectable card" subscriptSizing="dynamic" [(checked)]="cardDisabled" />
+                <bx-checkbox label="Read-only selectable card" subscriptSizing="dynamic" [(checked)]="cardReadOnly" />
+                <bx-select
+                    label="Highlight token"
+                    subscriptSizing="dynamic"
+                    [options]="cardHighlightOptions"
+                    [clearable]="false"
+                    [value]="cardHighlight()"
+                    (selectionChange)="cardHighlight.set($event.value ?? 'accent')" />
             </bx-stack>
             <bx-grid minColumnWidth="14rem">
-                <bx-card title="Selectable workspace" ariaLabel="Select workspace" [clickable]="cardClickable()" [(selected)]="cardSelected"
-                    [disabled]="cardDisabled()" [readOnly]="cardReadOnly()" [highlightColor]="cardHighlight()" (activated)="status.set('Workspace activated')">
+                <bx-card
+                    title="Selectable workspace"
+                    ariaLabel="Select workspace"
+                    [clickable]="cardClickable()"
+                    [disabled]="cardDisabled()"
+                    [readOnly]="cardReadOnly()"
+                    [highlightColor]="cardHighlight()"
+                    [(selected)]="cardSelected"
+                    (activated)="status.set('Workspace activated')">
                     <p>Press anywhere, or use Enter and Space. Selection emits the chosen token through the shared surface lighting.</p>
                 </bx-card>
-                <button bx-card title="Open reports" ariaLabel="Open reports" [highlightColor]="cardHighlight()" (activated)="status.set('Reports opened')">
+                <button
+                    type="button"
+                    bx-card
+                    title="Open reports"
+                    ariaLabel="Open reports"
+                    [highlightColor]="cardHighlight()"
+                    (activated)="status.set('Reports opened')">
                     <p>A native button card provides a single action without a selected state.</p>
                 </button>
                 <bx-card title="Unavailable workspace" ariaLabel="Unavailable workspace" [clickable]="true" [disabled]="true" [selected]="true">
                     <p>A disabled card retains its content and selection but cannot be activated or focused.</p>
                 </bx-card>
-                <bx-card title="Fixed workspace" ariaLabel="Fixed workspace" [clickable]="true" [readOnly]="true" [selected]="true" [highlightColor]="cardHighlight()">
+                <bx-card
+                    title="Fixed workspace"
+                    ariaLabel="Fixed workspace"
+                    [clickable]="true"
+                    [readOnly]="true"
+                    [selected]="true"
+                    [highlightColor]="cardHighlight()">
                     <p>Read-only selection remains focusable and keeps its appearance.</p>
                 </bx-card>
                 <bx-card title="Project details" subtitle="Content container">
                     <p>Ordinary cards remain containers for independent actions.</p>
-                    <button bx-button bxCardFooter variant="tonal" (click)="status.set('Project opened')">Open project</button>
+                    <button type="button" bx-button bxCardFooter variant="tonal" (click)="status.set('Project opened')">Open project</button>
                 </bx-card>
             </bx-grid>
             <output>Workspace selected: {{ cardSelected() }} · Highlight: {{ cardHighlight() }}</output>
@@ -114,10 +207,21 @@
         @default {
             <bx-container size="full" class="container-demo" landmark="region" ariaLabel="Workspace content">
                 <bx-stack>
-                    <bx-stack direction="responsive" justify="between" align="center"><h3>Workspace overview</h3><button bx-button variant="tonal" (click)="status.set('New project requested')">New project</button></bx-stack>
+                    <bx-stack direction="responsive" justify="between" align="center"
+                        ><h3>Workspace overview</h3>
+                        <button type="button" bx-button variant="tonal" (click)="status.set('New project requested')">New project</button></bx-stack
+                    >
                     <bx-grid minColumnWidth="12rem">
-                        <bx-card title="Project details" subtitle="Outlined surface"><p>Your changes are saved in this workspace.</p><button bx-button bxCardFooter variant="tonal" (click)="status.set('Opened project')">Open project</button></bx-card>
-                        <bx-card title="Team activity" variant="elevated"><bx-stack [gap]="2"><bx-chip label="Ready" [selectable]="false" /><p>Cards and layout share the global material and semantic palette.</p></bx-stack></bx-card>
+                        <bx-card title="Project details" subtitle="Outlined surface"
+                            ><p>Your changes are saved in this workspace.</p>
+                            <button type="button" bx-button bxCardFooter variant="tonal" (click)="status.set('Opened project')">Open project</button></bx-card
+                        >
+                        <bx-card title="Team activity" variant="elevated"
+                            ><bx-stack [gap]="2"
+                                ><bx-chip label="Ready" [selectable]="false" />
+                                <p>Cards and layout share the global material and semantic palette.</p></bx-stack
+                            ></bx-card
+                        >
                         <bx-card title="Notes" variant="filled"><p>Resize this page or increase browser zoom to see the grid adapt.</p></bx-card>
                     </bx-grid>
                 </bx-stack>
@@ -126,4 +230,3 @@
     }
     <output role="status">{{ status() }}</output>
 </bx-stack>
-

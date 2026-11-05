@@ -1,28 +1,38 @@
-<button bxSurface [bxSurfaceEmission]="danger() ? 'var(--bx-text-danger)' : 'var(--bx-primary)'" type="button" role="menuitem" [disabled]="disabled()" class="bx-menu-item-btn" [class.is-disabled]="disabled()" [class.is-danger]="danger()"
-    [attr.aria-keyshortcuts]="disabled() ? null : shortcutAria()" [class.bx-menu-item-animated]="isAnimated()" (click)="onClick($event)"
-    [bxTooltip]="(resolvedLabel() ?? menuText.text().trim()) | bxTruncatedText: menuText.truncated(): tooltipOnTruncate()" bxTooltipTouch="longpress">
-
+<button
+    bxSurface
+    type="button"
+    role="menuitem"
+    class="bx-menu-item-btn"
+    bxTooltipTouch="longpress"
+    [bxSurfaceEmission]="danger() ? 'var(--bx-text-danger)' : 'var(--bx-primary)'"
+    [disabled]="disabled()"
+    [class.is-disabled]="disabled()"
+    [class.is-danger]="danger()"
+    [attr.aria-keyshortcuts]="disabled() ? null : shortcutAria()"
+    [class.bx-menu-item-animated]="isAnimated()"
+    [bxTooltip]="resolvedLabel() ?? menuText.text().trim() | bxTruncatedText: menuText.truncated() : tooltipOnTruncate()"
+    (click)="onClick($event)">
     @if (icon()) {
-    <bx-icon class="bx-icon-pos-start" [name]="icon()!" size="20" />
+        <bx-icon class="bx-icon-pos-start" size="20" [name]="icon()!" />
     }
 
-    <span class="bx-menu-item-content" [bxTruncate]="!wrapLabel()" #menuText="bxTruncate" [class.bx-menu-item-content-wrapped]="wrapLabel()">
+    <span #menuText="bxTruncate" class="bx-menu-item-content" [bxTruncate]="!wrapLabel()" [class.bx-menu-item-content-wrapped]="wrapLabel()">
         @if (resolvedLabel()) {
-        {{ resolvedLabel() }}
+            {{ resolvedLabel() }}
         } @else {
-        <ng-content></ng-content>
+            <ng-content></ng-content>
         }
     </span>
 
     @if (resolvedShortcut()) {
-    <span class="bx-menu-item-shortcut" [attr.aria-hidden]="shortcutAria() ? true : null">
-        @for (key of resolvedShortcut(); track $index) {
-        <kbd>{{ key }}</kbd>
-        }
-    </span>
+        <span class="bx-menu-item-shortcut" [attr.aria-hidden]="shortcutAria() ? true : null">
+            @for (key of resolvedShortcut(); track $index) {
+                <kbd>{{ key }}</kbd>
+            }
+        </span>
     }
 
     @if (endIcon()) {
-    <bx-icon class="bx-icon-pos-end" [name]="endIcon()!" size="20" />
+        <bx-icon class="bx-icon-pos-end" size="20" [name]="endIcon()!" />
     }
 </button>

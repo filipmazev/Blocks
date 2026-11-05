@@ -1,6 +1,7 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { ButtonColor, ButtonVariant } from '../../../../types/form.types';
-import { LoadMoreButtonMode } from '../types/load-more.types';
+
+import { LoadMoreButtonMode } from '@forms/components/shared/load-more/types/load-more.types';
+import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
 
 /** Appearance and behavior shared by paginated surfaces. All properties are optional. */
 export interface ILoadMoreConfig {

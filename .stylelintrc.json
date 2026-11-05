@@ -1,60 +1,67 @@
 {
-  "extends": ["stylelint-config-standard-scss"],
-  "overrides": [
-    {
-      "files": ["projects/blocks/effects/styles/*.scss"],
-      "rules": {
-        "property-no-vendor-prefix": [
-          true,
-          {
-            "ignoreProperties": [
-              "-webkit-backdrop-filter",
-              "-webkit-mask",
-              "-webkit-mask-image",
-              "-webkit-mask-composite",
-              "-webkit-mask-repeat",
-              "-webkit-mask-size",
-              "-webkit-mask-position"
-            ]
-          }
+    "extends": ["stylelint-config-standard-scss"],
+    "overrides": [
+        {
+            "files": ["projects/blocks/effects/styles/*.scss"],
+            "rules": {
+                "property-no-vendor-prefix": [
+                    true,
+                    {
+                        "ignoreProperties": [
+                            "-webkit-backdrop-filter",
+                            "-webkit-mask",
+                            "-webkit-mask-image",
+                            "-webkit-mask-composite",
+                            "-webkit-mask-repeat",
+                            "-webkit-mask-size",
+                            "-webkit-mask-position"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["**/*.scss"],
+            "rules": {
+                "comment-pattern": "^(?:(?:eslint|stylelint)-(?:disable|enable)(?:-next-line|-line)?\\b|IMPORTANT:\\s+\\S)"
+            }
+        }
+    ],
+    "rules": {
+        "at-rule-empty-line-before": [
+            "always",
+            {
+                "except": ["blockless-after-same-name-blockless", "first-nested"],
+                "ignore": ["after-comment"],
+                "ignoreAtRules": ["else"]
+            }
+        ],
+        "color-hex-length": "long",
+        "scss/at-else-empty-line-before": null,
+        "scss/at-else-closing-brace-newline-after": null,
+        "scss/at-else-closing-brace-space-after": null,
+        "scss/at-if-closing-brace-newline-after": null,
+        "scss/at-if-closing-brace-space-after": null,
+        "scss/operator-no-newline-after": null,
+        "rule-empty-line-before": [
+            "always",
+            {
+                "except": ["first-nested"],
+                "ignore": ["after-comment"]
+            }
+        ],
+        "selector-pseudo-element-no-unknown": [
+            true,
+            {
+                "ignorePseudoElements": ["ng-deep"]
+            }
+        ],
+        "unit-no-unknown": [
+            true,
+            {
+                "ignoreFunctions": ["radius"]
+            }
         ]
-      }
-    }
-  ],
-  "rules": {
-    "at-rule-empty-line-before": [
-      "always",
-      {
-        "except": ["blockless-after-same-name-blockless", "first-nested"],
-        "ignore": ["after-comment"],
-        "ignoreAtRules": ["else"]
-      }
-    ],
-    "color-hex-length": "long",
-    "scss/at-else-empty-line-before": null,
-    "scss/at-else-closing-brace-newline-after": null,
-    "scss/at-else-closing-brace-space-after": null,
-    "scss/at-if-closing-brace-newline-after": null,
-    "scss/at-if-closing-brace-space-after": null,
-    "scss/operator-no-newline-after": null,
-    "rule-empty-line-before": [
-      "always",
-      {
-        "except": ["first-nested"],
-        "ignore": ["after-comment"]
-      }
-    ],
-    "selector-pseudo-element-no-unknown": [
-      true,
-      {
-        "ignorePseudoElements": ["ng-deep"]
-      }
-    ],
-    "unit-no-unknown": [
-      true,
-      {
-        "ignoreFunctions": ["radius"]
-      }
-    ]
-  }
+    },
+    "ignoreFiles": ["projects/blocks/effects/effects.css", "projects/blocks/effects/examples/tokens.css"]
 }

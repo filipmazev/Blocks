@@ -1,7 +1,9 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormField } from '../form-field/form-field';
-import { BxCheckedControl } from '../shared/classes/bx-checked-control';
+
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+
+import { FormField } from '@forms/components/form-field/form-field';
+import { BxCheckedControl } from '@forms/components/shared/classes/bx-checked-control';
 
 @Component({
   selector: 'bx-slide-toggle',

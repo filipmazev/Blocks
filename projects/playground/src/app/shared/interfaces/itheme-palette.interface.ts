@@ -1,4 +1,4 @@
-import { ThemeId } from '../types/common.types';
+import { ThemeId } from '@playground/types/common.types';
 
 export interface IThemePalette {
   id: ThemeId;

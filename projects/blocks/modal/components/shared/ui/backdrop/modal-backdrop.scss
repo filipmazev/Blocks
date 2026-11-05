@@ -1,24 +1,24 @@
 @use '../../../../../core/styles/helpers' as *;
 
+:host {
+    display: contents;
+}
+
 .modal-backdrop {
     padding: 0;
     border: 0;
     appearance: none;
     cursor: pointer;
-    position: fixed;
+    position: var(--bx-modal-backdrop-position, fixed);
     inset: 0;
-    z-index: z(modal);
+    z-index: var(--bx-modal-backdrop-z-index, #{z(modal)});
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
-    background: rgb(0 0 0 / 25%);
     backface-visibility: hidden;
     -webkit-font-smoothing: subpixel-antialiased;
     transform-style: preserve-3d;
     transform-origin: center;
-}
-
-.modal-backdrop {
-    background: rgb(0 0 0 / 32%);
+    background: var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%));
     backdrop-filter: blur(8px);
 }
 

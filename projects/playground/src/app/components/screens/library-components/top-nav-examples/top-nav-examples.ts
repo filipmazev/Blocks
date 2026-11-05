@@ -1,11 +1,18 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
+import type { INavigationTreeGroup } from '@navigation/interfaces/inavigation-tree-group.interface';
+import type { ITopNavExamplesTextState } from '@playground/components/screens/library-components/top-nav-examples/interfaces/itop-nav-examples-text-state.interface';
+
 import { BX_I18N } from '@filip.mazev/blocks/core';
 import { Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { INavigationItem, ITopNavConfig, TopNav, TopNavBrandDirective, TopNavActionsDirective } from '@filip.mazev/blocks/navigation';
-import { NavigationDemoI18nService } from '../shared/navigation-examples/services/navigation-demo-i18n.service';
-import { navigationDemoGroups } from '../shared/navigation-examples/helpers/navigation-examples.helpers';
+import { INavigationItem, ITopNavConfig, TopNav, TopNavActionsDirective, TopNavBrandDirective } from '@filip.mazev/blocks/navigation';
+
+import { navigationDemoGroups } from '@playground/components/screens/library-components/shared/navigation-examples/helpers/navigation-examples.helpers';
+import { NavigationDemoI18nService } from '@playground/components/screens/library-components/shared/navigation-examples/services/navigation-demo-i18n.service';
 
 @Component({
   selector: 'app-top-nav-examples',
@@ -17,7 +24,8 @@ import { navigationDemoGroups } from '../shared/navigation-examples/helpers/navi
 })
 export class TopNavExamples {
   protected readonly translations = inject(NavigationDemoI18nService);
-  protected readonly groups = computed(() => {
+
+  protected readonly groups: Signal<INavigationTreeGroup[]> = computed(() => {
     const groups = navigationDemoGroups('/components/top-nav', this.translations);
 
     return groups.map((group) =>
@@ -39,17 +47,20 @@ export class TopNavExamples {
     );
   });
 
-  protected readonly compact = signal(false);
-  protected readonly searchable = signal(true);
-  protected readonly icons = signal(false);
-  protected readonly sticky = signal(false);
-  protected readonly rtl = signal(false);
-  protected readonly custom = signal(false);
-  protected readonly actions = signal(false);
-  protected readonly width = signal<string | number | null>(1100);
-  protected readonly selected = signal<INavigationItem | undefined>(undefined);
-  protected readonly action = signal<string | undefined>(undefined);
-  protected readonly text = computed(() => ({
+  protected readonly compact: WritableSignal<boolean> = signal(false);
+  protected readonly searchable: WritableSignal<boolean> = signal(true);
+  protected readonly icons: WritableSignal<boolean> = signal(false);
+  protected readonly sticky: WritableSignal<boolean> = signal(false);
+  protected readonly rtl: WritableSignal<boolean> = signal(false);
+  protected readonly custom: WritableSignal<boolean> = signal(false);
+  protected readonly actions: WritableSignal<boolean> = signal(false);
+
+  protected readonly width: WritableSignal<string | number | null> = signal<string | number | null>(1100);
+
+  protected readonly selected: WritableSignal<INavigationItem | undefined> = signal<INavigationItem | undefined>(undefined);
+  protected readonly action: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
+
+  protected readonly text: Signal<ITopNavExamplesTextState> = computed(() => ({
     compact: this.translations.translate('top.compact'),
     width: this.translations.translate('top.width'),
     icons: this.translations.translate('top.icons'),
@@ -67,8 +78,7 @@ export class TopNavExamples {
     settings: this.translations.translate('top.settings'),
     help: this.translations.translate('top.help')
   }));
-
-  protected readonly selection = computed(() => {
+  protected readonly selection: Signal<string> = computed(() => {
     const item = this.selected();
     const action = this.action();
 
@@ -78,8 +88,7 @@ export class TopNavExamples {
         ? `${this.translations.translate(`nav.${item.id}`)} · ${item.id}`
         : this.translations.translate('demo.select');
   });
-
-  protected readonly config = computed<ITopNavConfig>(() => ({
+  protected readonly config: Signal<ITopNavConfig> = computed<ITopNavConfig>(() => ({
     position: this.sticky() ? 'sticky' : 'inline',
     compactBreakpoint: 'sm',
     compact: this.compact() ? true : undefined,

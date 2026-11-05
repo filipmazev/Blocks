@@ -11,6 +11,11 @@
     color: var(--bx-text-primary);
 }
 
+.unpublished-banner {
+    display: block;
+    margin-block-end: spacing(6);
+}
+
 .page-heading {
     margin-block-end: spacing(8);
 }
@@ -29,6 +34,7 @@ h1 {
     margin-block-end: spacing(6);
 }
 
+.channel-select,
 .version-select {
     flex: 0 1 22rem;
     min-inline-size: 0;
@@ -108,6 +114,7 @@ code {
         margin-block-end: spacing(6);
     }
 
+    .channel-select,
     .version-select {
         flex-basis: 100%;
     }

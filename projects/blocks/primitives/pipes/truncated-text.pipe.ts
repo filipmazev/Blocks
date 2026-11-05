@@ -1,6 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { truncatedText } from '../helpers/truncation.helpers';
+
+import { truncatedText } from '@primitives/helpers/truncation.helpers';
 
 /** Selects text for conditional feedback using the shared directive's reactive measurement. */
 @Pipe({ name: 'bxTruncatedText' })

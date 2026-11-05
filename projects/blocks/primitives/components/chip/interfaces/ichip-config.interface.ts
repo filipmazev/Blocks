@@ -1,6 +1,7 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
 import { IconName } from '@filip.mazev/blocks/icons';
-import { TagColor, TagSize, TagVariant } from '../../tag/types/tag.types';
+
+import { TagColor, TagSize, TagVariant } from '@primitives/components/tag/types/tag.types';
 
 /** Optional chip appearance. Instance configuration overrides BX_CHIP_DEFAULTS. */
 export interface IChipConfig {

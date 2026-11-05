@@ -1,15 +1,21 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import type { ResolvableShortcut, ShortcutPlatform } from '@core/types/shortcut.types';
+
 import { BxShortcutService } from '@filip.mazev/blocks/core';
 import { Button, Checkbox, InputField } from '@filip.mazev/blocks/forms';
 import { Menu, MenuItem, MenuTriggerDirective } from '@filip.mazev/blocks/primitives';
+
 import {
   MENU_DUPLICATE_SHORTCUT,
   MENU_OPEN_SHORTCUT,
   MENU_SEQUENCE_PREFIX,
   MENU_SHORTCUT_PLATFORMS,
   MENU_VIEW_SHORTCUT
-} from './constants/menu-shortcut-examples.constants';
+} from '@playground/components/screens/library-components/menu-shortcut-examples/constants/menu-shortcut-examples.constants';
 
 @Component({
   selector: 'app-menu-shortcut-examples',
@@ -25,18 +31,23 @@ import {
 })
 export class MenuShortcutExamples {
   protected readonly shortcuts = inject(BxShortcutService);
-  private readonly menu = viewChild(MenuTriggerDirective);
-  protected readonly openShortcut = MENU_OPEN_SHORTCUT;
-  protected readonly sequencePrefix = MENU_SEQUENCE_PREFIX;
-  protected readonly viewShortcut = MENU_VIEW_SHORTCUT;
-  protected readonly duplicateShortcut = MENU_DUPLICATE_SHORTCUT;
-  protected readonly platforms = MENU_SHORTCUT_PLATFORMS;
-  protected readonly viewDisabled = new FormControl(false, { nonNullable: true });
-  protected readonly typing = new FormControl('', { nonNullable: true });
-  protected readonly waitingForView = signal(false);
-  protected readonly status = signal('Ready. Open the menu with its button or keyboard shortcut.');
+
+  private readonly menu: Signal<MenuTriggerDirective | undefined> = viewChild(MenuTriggerDirective);
+
+  protected readonly openShortcut: ResolvableShortcut = MENU_OPEN_SHORTCUT;
+  protected readonly sequencePrefix: ResolvableShortcut = MENU_SEQUENCE_PREFIX;
+  protected readonly viewShortcut: ResolvableShortcut = MENU_VIEW_SHORTCUT;
+  protected readonly duplicateShortcut: ResolvableShortcut = MENU_DUPLICATE_SHORTCUT;
+  protected readonly platforms: readonly ShortcutPlatform[] = MENU_SHORTCUT_PLATFORMS;
+  protected readonly viewDisabled: FormControl<boolean> = new FormControl(false, { nonNullable: true });
+  protected readonly typing: FormControl<string> = new FormControl('', { nonNullable: true });
+
+  protected readonly waitingForView: WritableSignal<boolean> = signal(false);
+
+  protected readonly status: WritableSignal<string> = signal('Ready. Open the menu with its button or keyboard shortcut.');
+
   private sequenceTimer?: ReturnType<typeof setTimeout>;
-  private actionCount = 0;
+  private actionCount: number = 0;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.resetSequence());
@@ -48,6 +59,7 @@ export class MenuShortcutExamples {
       this.resetSequence();
       this.menu()?.open(true);
       this.status.set('Menu opened by shortcut. Use arrow keys, Enter or Escape.');
+
       return;
     }
 
@@ -56,6 +68,7 @@ export class MenuShortcutExamples {
       this.resetSequence();
       this.waitingForView.set(true);
       this.sequenceTimer = setTimeout(() => this.resetSequence(), 2000);
+
       return;
     }
 
@@ -64,12 +77,14 @@ export class MenuShortcutExamples {
       if (['Meta', 'Control', 'Alt', 'Shift'].includes(event.key) || event.repeat) return;
 
       const completed = this.shortcuts.matches(event, 'v');
+
       this.resetSequence();
 
       if (completed) {
         event.preventDefault();
         this.menu()?.open(true);
         this.status.set('Menu opened by sequence.');
+
         return;
       }
     }

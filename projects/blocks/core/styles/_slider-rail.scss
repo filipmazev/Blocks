@@ -1,6 +1,5 @@
 @use 'mixins' as *;
 
-// Shared finish and geometry for native slider tracks and the range slider rail.
 @mixin slider-rail {
     box-sizing: border-box;
     height: spacing(2);

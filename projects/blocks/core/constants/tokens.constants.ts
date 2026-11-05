@@ -1,4 +1,4 @@
-import { SemanticColorToken } from '../types/theme.types';
+import { SemanticColorToken } from '@core/types/theme.types';
 
 export const PALETTE_NAMES = [
   'primary',

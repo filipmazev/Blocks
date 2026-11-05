@@ -1,6 +1,5 @@
 @use 'core/styles/helpers' as *;
 
-// The ToastCore owns the material. Keep projected toast content transparent.
 .notification {
     display: flex;
     position: relative;

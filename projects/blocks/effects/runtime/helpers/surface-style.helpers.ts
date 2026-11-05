@@ -1,4 +1,4 @@
-import { SURFACE_RENDERED_STYLES } from '../constants/surface-style.constants';
+import { SURFACE_RENDERED_STYLES } from '@effects/runtime/constants/surface-style.constants';
 
 /** Controller-only style writes do not change scene geometry or sampled surrounding content. */
 export function rememberRenderedSurfaceStyles(element: HTMLElement): void {

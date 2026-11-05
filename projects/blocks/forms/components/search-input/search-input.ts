@@ -1,12 +1,16 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
+
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
-import { Button } from '../button/button';
-import { FormField } from '../form-field/form-field';
-import { BxValueControl } from '../shared/classes/bx-value-control';
-import { ISearchRetryConfig } from './interfaces/isearch-retry-config.interface';
+
+import { Button } from '@forms/components/button/button';
+import { FormField } from '@forms/components/form-field/form-field';
+import { ISearchRetryConfig } from '@forms/components/search-input/interfaces/isearch-retry-config.interface';
+import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
 
 @Component({
   selector: 'bx-search-input',
@@ -17,36 +21,42 @@ import { ISearchRetryConfig } from './interfaces/isearch-retry-config.interface'
 })
 export class SearchInput extends BxValueControl<string> {
   private readonly i18n = inject(BX_I18N, { optional: true });
+
   // The application clears loadError when retrying; retain it to reserve the status row's height.
-  private readonly retryError = signal<ResolvableText | undefined>(undefined);
-  private readonly retrying = computed(() => this.retryError() !== undefined);
-  protected readonly resolvedClearLabel = computed(() => resolveText(this.clearLabel(), this.i18n));
-  protected readonly resolvedLoadError = computed(() => resolveText(this.loadError(), this.i18n));
-  protected readonly resolvedLoadingLabel = computed(() => resolveText(this.loadingLabel(), this.i18n));
-  protected readonly resolvedLoadingAriaLabel = computed(() => resolveText(this.loadingAriaLabel(), this.i18n));
-  protected readonly resolvedRetryLabel = computed(() => resolveText(this.retryLabel(), this.i18n));
-  protected readonly resolvedRetryAriaLabel = computed(() => resolveText(this.retryConfig().ariaLabel, this.i18n) || this.resolvedRetryLabel());
-  protected readonly resolvedRetainedError = computed(() => resolveText(this.retryError() ?? this.loadError(), this.i18n));
-  protected readonly isBusy = computed(() => this.loading() || this.pending());
-  protected readonly showRetry = computed(() => !!this.loadError() || this.retrying());
-  protected readonly showStatus = computed(() => !!this.resolvedLoadError() || (this.isBusy() && (!!this.resolvedLoadingLabel() || this.showRetry())));
-  protected readonly searchDescribedBy = computed(() => `${this.describedBy()} ${this.controlId()}-search-status`);
+  private readonly retryError: WritableSignal<ResolvableText | undefined> = signal<ResolvableText | undefined>(undefined);
 
-  public readonly clearLabel = input<ResolvableText>('Clear search');
-  public readonly autocomplete = input('off');
+  private readonly retrying: Signal<boolean> = computed(() => this.retryError() !== undefined);
+
+  protected readonly resolvedClearLabel: Signal<string> = computed(() => resolveText(this.clearLabel(), this.i18n));
+  protected readonly resolvedLoadError: Signal<string> = computed(() => resolveText(this.loadError(), this.i18n));
+  protected readonly resolvedLoadingLabel: Signal<string> = computed(() => resolveText(this.loadingLabel(), this.i18n));
+  protected readonly resolvedLoadingAriaLabel: Signal<string> = computed(() => resolveText(this.loadingAriaLabel(), this.i18n));
+  protected readonly resolvedRetryLabel: Signal<string> = computed(() => resolveText(this.retryLabel(), this.i18n));
+  protected readonly resolvedRetryAriaLabel: Signal<string> = computed(() => resolveText(this.retryConfig().ariaLabel, this.i18n) || this.resolvedRetryLabel());
+  protected readonly resolvedRetainedError: Signal<string> = computed(() => resolveText(this.retryError() ?? this.loadError(), this.i18n));
+  protected readonly isBusy: Signal<boolean> = computed(() => this.loading() || this.pending());
+  protected readonly showRetry: Signal<boolean> = computed(() => !!this.loadError() || this.retrying());
+  protected readonly showStatus: Signal<boolean> = computed(
+    () => !!this.resolvedLoadError() || (this.isBusy() && (!!this.resolvedLoadingLabel() || this.showRetry()))
+  );
+  protected readonly searchDescribedBy: Signal<string> = computed(() => `${this.describedBy()} ${this.controlId()}-search-status`);
+
+  public readonly clearLabel: InputSignal<ResolvableText> = input<ResolvableText>('Clear search');
+  public readonly autocomplete: InputSignal<string> = input('off');
   /** Application-owned request failure, separate from form validation. */
-  public readonly loadError = input<ResolvableText | undefined>(undefined);
+  public readonly loadError: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
   /** Optional visible loading text; otherwise only loadingAriaLabel is announced. */
-  public readonly loadingLabel = input<ResolvableText | undefined>(undefined);
-  public readonly loadingAriaLabel = input<ResolvableText>('Searching');
-  public readonly retryLabel = input<ResolvableText>('Retry search');
-  public readonly retryConfig = input<ISearchRetryConfig>({});
-  // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the established public search event.
-  public readonly search = output<string>();
-  /** Requests another attempt for the current query. Set loading synchronously before starting the request. */
-  public readonly retry = output<string>();
+  public readonly loadingLabel: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly loadingAriaLabel: InputSignal<ResolvableText> = input<ResolvableText>('Searching');
+  public readonly retryLabel: InputSignal<ResolvableText> = input<ResolvableText>('Retry search');
+  public readonly retryConfig: InputSignal<ISearchRetryConfig> = input<ISearchRetryConfig>({});
 
-  private composing = false;
+  // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the established public search event.
+  public readonly search: OutputEmitterRef<string> = output<string>();
+  /** Requests another attempt for the current query. Set loading synchronously before starting the request. */
+  public readonly retry: OutputEmitterRef<string> = output<string>();
+
+  private composing: boolean = false;
 
   constructor() {
     super();
@@ -77,6 +87,7 @@ export class SearchInput extends BxValueControl<string> {
     if (this.composing || this.disabled() || this.isReadonly()) return;
 
     const value = (event.target as HTMLInputElement).value;
+
     this.retryError.set(undefined);
     this.updateValue(value);
     this.search.emit(value);

@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { afterNextRender, DestroyRef, effect, ElementRef, inject, NgZone, PLATFORM_ID } from '@angular/core';
+
 import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
 import { mountSurface, SurfaceOptions } from '@filip.mazev/blocks/effects/runtime';
 
@@ -8,9 +9,12 @@ export function injectComponentSurface(options: () => SurfaceOptions = () => ({}
   const element = inject<ElementRef<HTMLElement>>(ElementRef);
   const zone = inject(NgZone);
   const a11y = inject(BxA11yService);
+
   inject(ThemingService);
+
   let surface: ReturnType<typeof mountSurface> | undefined;
   let rendered = false;
+
   const browser = isPlatformBrowser(inject(PLATFORM_ID));
   const sync = () => {
     const current = { ...options(), reducedMotion: a11y.isReducedMotion() };
@@ -26,6 +30,7 @@ export function injectComponentSurface(options: () => SurfaceOptions = () => ({}
       else if (!element.nativeElement.hasAttribute('data-bx-surface')) surface = mountSurface(element.nativeElement, current);
     });
   };
+
   effect(sync);
   afterNextRender(() => {
     rendered = true;

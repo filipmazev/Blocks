@@ -1,15 +1,18 @@
 import { inject, Injectable } from '@angular/core';
+
+import { IModal } from '@modal/interfaces/imodal.interface';
+import { MODAL_DATA } from '@modal/tokens/modal-data.token';
+
 import { ModalRef } from './modal-ref';
-import { MODAL_DATA } from '../tokens/modal-data.token';
-import { IModal } from '../interfaces/imodal.interface';
 
 @Injectable()
 export class Modal<D, R> implements IModal<D, R> {
+  private readonly injectedData = inject<D>(MODAL_DATA);
+
   /**
    * Data injected into the modal component.
    */
-  public data = inject<D>(MODAL_DATA);
-
+  public data: D = this.injectedData;
   /**
    * Reference to the ModalRef instance associated with this modal.
    */

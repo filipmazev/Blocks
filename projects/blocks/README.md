@@ -1,6 +1,7 @@
 # @filip.mazev/blocks
 
-Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship in one package, alongside the installation schematic.
+Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship
+in one package, alongside the installation schematic.
 
 Use the playground's generated component catalog for the current API reference and runnable examples. This guide covers installation and application-wide setup.
 
@@ -18,9 +19,11 @@ ng add @filip.mazev/blocks
 
 When you run the command above, the Angular CLI will execute our custom schematic to handle the boilerplate for you:
 
-* Palette selection: Carbon / Cobalt is the CLI default. Azure / Ember, Violet / Teal, Tangerine / Indigo, Brick Rose / Cyan, Lime / Violet, and Cyberpunk are also available. Use `--theme=azure-ember` to select Azure / Ember.
-* Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
-* SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both light/dark mode CSS variables based on your theme selection.
+- Palette selection: Carbon / Cobalt is the CLI default. Azure / Ember, Violet / Teal, Tangerine / Indigo, Brick Rose / Cyan, Lime / Violet, and Cyberpunk are
+  also available. Use `--theme=azure-ember` to select Azure / Ember.
+- Dependency Management: Automatically adds the latest versions of the Blocks ecosystem to your package.json and runs npm install.
+- SCSS Injection: Intelligently locates your project's global stylesheet (styles.scss or styles.sass) and injects the required @use statements, mixins, and both
+  light/dark mode CSS variables based on your theme selection.
 
 ## Manual Setup (Without Angular CLI)
 
@@ -46,7 +49,6 @@ Then, manually configure your styles.scss:
 }
 ```
 
-
 ## Palettes
 
 Use paired palette IDs consistently in the CLI and `ThemingService.setPalette()`. For example:
@@ -55,14 +57,21 @@ Use paired palette IDs consistently in the CLI and `ThemingService.setPalette()`
 ng add @filip.mazev/blocks --theme=azure-ember
 ```
 
-The Sass exports use the same names: `$azure-ember-light-theme` and `$azure-ember-dark-theme`. Carbon / Cobalt is the installer default; the playground starts with Carbon / Cobalt. Only the current palette IDs and Sass names are supported.
+The Sass exports use the same names: `$azure-ember-light-theme` and `$azure-ember-dark-theme`. Carbon / Cobalt is the installer default; the playground starts
+with Carbon / Cobalt. Only the current palette IDs and Sass names are supported.
 
-Buttons and tabs accept `color="accent"` for the second tone. Icons and custom components can use semantic tokens such as `text-accent`, `accent-subtle`, `on-accent`, and `border-accent`. Canvas backgrounds stay neutral; status roles keep their meaning. See [the palette reference](../../documentation/appearance/README.md#palettes) for all seven pairs.
+Buttons and tabs accept `color="accent"` for the second tone. Icons and custom components can use semantic tokens such as `text-accent`, `accent-subtle`,
+`on-accent`, and `border-accent`. Canvas backgrounds stay neutral; status roles keep their meaning. See
+[the palette reference](../playground/src/app/components/screens/appearance/README.md#palettes) for all seven pairs.
 
 ## Appearance
 
-Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through `ThemingService.setAppearance({ translucency: 0.5 })`; use `resetAppearance()` for defaults. Existing controls receive their material automatically, including menus, dialogs and notifications.
+Version 1.4.0 integrates glass throughout Blocks using its existing semantic theme. Configure it application-wide through
+`ThemingService.setAppearance({ translucency: 0.5 })`; use `resetAppearance()` for defaults. Existing controls receive their material automatically, including
+menus, dialogs and notifications.
 
-Load `@filip.mazev/blocks/effects/effects.css` once globally alongside the Blocks Sass theme. `ng add` registers the stylesheet for new installations. `BxSurfaceDirective` from `@filip.mazev/blocks/effects` is available for custom containers and local overrides. The framework-independent engine is `@filip.mazev/blocks/effects/runtime`, included in the same package.
+Load `@filip.mazev/blocks/effects/effects.css` once globally alongside the Blocks Sass theme. `ng add` registers the stylesheet for new installations.
+`BxSurfaceDirective` from `@filip.mazev/blocks/effects` is available for custom containers and local overrides. The framework-independent engine is
+`@filip.mazev/blocks/effects/runtime`, included in the same package.
 
 The source playground provides a dedicated README and working page for every component, with global appearance controls at `/appearance`.

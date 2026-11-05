@@ -1,6 +1,10 @@
-Blocks has grown from separate core and modal libraries into a unified Angular UI library with shared theming, forms, navigation, notifications, icons and appearance effects.
+# Blocks 1.5.0
 
-These notes cover the library, its documentation and installation schematic. They compare `f9bf13b2bb6914c26d11639076006bd1dcc5a851` with `55b915c819525cfa365d4b59389a765233b2cd35`.
+Blocks has grown from separate core and modal libraries into a unified Angular UI library with shared theming, forms, navigation, notifications, icons and
+appearance effects.
+
+These notes cover the library, its documentation and installation schematic. They compare `f9bf13b2bb6914c26d11639076006bd1dcc5a851` with
+`55b915c819525cfa365d4b59389a765233b2cd35`.
 
 ## Unified package and installation
 
@@ -18,7 +22,8 @@ These notes cover the library, its documentation and installation schematic. The
 - Added shared styling utilities and component CSS variables for more consistent customization of spacing, typography, surfaces and interaction states.
 - Preserved the connection between responsive Sass mixins and `WindowDimensionsService` breakpoints.
 
-See the [appearance guide](../../appearance/README.md) for the current palettes and application-wide configuration.
+See the [appearance guide](../../../projects/playground/src/app/components/screens/appearance/README.md) for the current palettes and application-wide
+configuration.
 
 ## Glass, physics and lighting
 
@@ -32,7 +37,8 @@ See the [appearance guide](../../appearance/README.md) for the current palettes 
 
 ## Forms and controls
 
-- Added buttons, form fields, text and numeric inputs, multiline inputs, search inputs, checkboxes, radio buttons and groups, switches, selects, multiselects, autocomplete and sliders.
+- Added buttons, form fields, text and numeric inputs, multiline inputs, search inputs, checkboxes, radio buttons and groups, switches, selects, multiselects,
+  autocomplete and sliders.
 - Added integration with Angular Signal Forms, Reactive Forms, template-driven forms and standalone value models.
 - Introduced shared validation presentation with configurable error messages, priorities, visibility policies, projected errors and application defaults.
 - Added composable prefixes, suffixes, hints, required markers, floating labels and filled/outlined field appearances.
@@ -85,14 +91,15 @@ See the [appearance guide](../../appearance/README.md) for the current palettes 
 
 ## Migration notes
 
-| Previous API or setup | Current replacement |
-| --- | --- |
-| `@filip.mazev/blocks-core` imports | `@filip.mazev/blocks/core` |
-| `@filip.mazev/modal` imports | `@filip.mazev/blocks/modal` |
-| Deep Sass imports from the old packages | `@use '@filip.mazev/blocks' as *;` |
-| `core-theme(...)` and legacy theme maps | `bx-theme(...)` with a current palette map |
-| Custom `--fm-*` theme overrides | Review and migrate to the current `--bx-*` semantic tokens |
-| Modal `bannerText` | `header: { text: ... }`, with optional icon configuration |
-| Angular 21 applications | Upgrade to Angular 22 |
+| Previous API or setup                   | Current replacement                                        |
+| --------------------------------------- | ---------------------------------------------------------- |
+| `@filip.mazev/blocks-core` imports      | `@filip.mazev/blocks/core`                                 |
+| `@filip.mazev/modal` imports            | `@filip.mazev/blocks/modal`                                |
+| Deep Sass imports from the old packages | `@use '@filip.mazev/blocks' as *;`                         |
+| `core-theme(...)` and legacy theme maps | `bx-theme(...)` with a current palette map                 |
+| Custom `--fm-*` theme overrides         | Review and migrate to the current `--bx-*` semantic tokens |
+| Modal `bannerText`                      | `header: { text: ... }`, with optional icon configuration  |
+| Angular 21 applications                 | Upgrade to Angular 22                                      |
 
-For manual installation, register `@filip.mazev/blocks/effects/effects.css` once alongside the global Blocks theme. The installation schematic configures this automatically.
+For manual installation, register `@filip.mazev/blocks/effects/effects.css` once alongside the global Blocks theme. The installation schematic configures this
+automatically.

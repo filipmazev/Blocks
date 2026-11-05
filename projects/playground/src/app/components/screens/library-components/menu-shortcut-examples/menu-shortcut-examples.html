@@ -1,35 +1,56 @@
 <div class="shortcut-demo">
-  <p><code>shortcut</code> displays a hint. This example also handles keyboard events using <code>BxShortcutService.matches()</code>.</p>
-  <p>On this device, <code>mod</code> uses {{ shortcuts.resolve('mod')?.join('') }} (detected platform: {{ shortcuts.platform() }}).</p>
-  <div>
-    <button bx-button variant="filled" [bxMenuTrigger]="actions" menuPlacement="bottom" [menuHover]="false" menuLabel="Project actions"
-      [attr.aria-keyshortcuts]="shortcuts.toAriaKeyshortcuts(openShortcut)">
-      Project actions · {{ shortcuts.resolve(openShortcut)?.join(' + ') }}
-    </button>
-  </div>
-  <p>Press {{ shortcuts.resolve(openShortcut)?.join(' + ') }} together to open the menu. Or press {{ shortcuts.resolve(sequencePrefix)?.join(' + ') }},
-    release the keys, then press V within two seconds. Escape, another key, a pointer press or leaving the window cancels the sequence.</p>
-  <p role="status">{{ waitingForView() ? 'Waiting for V…' : status() }}</p>
-  <ng-template #actions>
-    <bx-menu class="shortcut-menu">
-      <bx-menu-item label="Open view" icon="external-link" [shortcut]="viewShortcut" [disabled]="viewDisabled.value" (action)="activate('View opened')" />
-      <bx-menu-item label="Duplicate project" icon="copy" [shortcut]="duplicateShortcut" (action)="activate('Project duplicated')" />
-      <bx-menu-item label="Delete project" icon="trash-2" [danger]="true" (action)="activate('Delete requested')" />
-    </bx-menu>
-  </ng-template>
-  <bx-checkbox label="Disable Open view (click and shortcut)" [formControl]="viewDisabled" />
-  <bx-input-field label="Type here to try the editable-control guard" [formControl]="typing" />
-  <p>The Open view shortcut works while this demo is mounted, including when the menu is closed. Shortcuts ignore typing fields, held-key repeats and composition.</p>
-  <h3>Defaults across platforms</h3>
-  <p>These previews use the same service and definitions. <code>mod</code> avoids repeating OS mappings; explicit overrides are available when bindings differ.</p>
-  <div class="platform-previews">
-    @for (platform of platforms; track platform) {
-      <section class="platform-preview">
-        <h4>{{ platform === 'default' ? 'Unknown / server' : platform }}</h4>
-        <p>Portable: <kbd>{{ shortcuts.resolve(openShortcut, platform)?.join(' + ') }}</kbd></p>
-        <p>OS override: <kbd>{{ shortcuts.resolve(duplicateShortcut, platform)?.join(' + ') }}</kbd></p>
-        <p>Modifiers: <kbd>{{ shortcuts.resolve(['command', 'ctrl', 'option', 'shift'], platform)?.join(' + ') }}</kbd></p>
-      </section>
-    }
-  </div>
+    <p><code>shortcut</code> displays a hint. This example also handles keyboard events using <code>BxShortcutService.matches()</code>.</p>
+    <p>On this device, <code>mod</code> uses {{ shortcuts.resolve('mod')?.join('') }} (detected platform: {{ shortcuts.platform() }}).</p>
+    <div>
+        <button
+            type="button"
+            bx-button
+            variant="filled"
+            menuPlacement="bottom"
+            menuLabel="Project actions"
+            [bxMenuTrigger]="actions"
+            [menuHover]="false"
+            [attr.aria-keyshortcuts]="shortcuts.toAriaKeyshortcuts(openShortcut)">
+            Project actions · {{ shortcuts.resolve(openShortcut)?.join(' + ') }}
+        </button>
+    </div>
+    <p>
+        Press {{ shortcuts.resolve(openShortcut)?.join(' + ') }} together to open the menu. Or press {{ shortcuts.resolve(sequencePrefix)?.join(' + ') }},
+        release the keys, then press V within two seconds. Escape, another key, a pointer press or leaving the window cancels the sequence.
+    </p>
+    <p role="status">{{ waitingForView() ? 'Waiting for V…' : status() }}</p>
+    <ng-template #actions>
+        <bx-menu class="shortcut-menu">
+            <bx-menu-item label="Open view" icon="external-link" [shortcut]="viewShortcut" [disabled]="viewDisabled.value" (action)="activate('View opened')" />
+            <bx-menu-item label="Duplicate project" icon="copy" [shortcut]="duplicateShortcut" (action)="activate('Project duplicated')" />
+            <bx-menu-item label="Delete project" icon="trash-2" [danger]="true" (action)="activate('Delete requested')" />
+        </bx-menu>
+    </ng-template>
+    <bx-checkbox label="Disable Open view (click and shortcut)" [formControl]="viewDisabled" />
+    <bx-input-field label="Type here to try the editable-control guard" [formControl]="typing" />
+    <p>
+        The Open view shortcut works while this demo is mounted, including when the menu is closed. Shortcuts ignore typing fields, held-key repeats and
+        composition.
+    </p>
+    <h3>Defaults across platforms</h3>
+    <p>
+        These previews use the same service and definitions. <code>mod</code> avoids repeating OS mappings; explicit overrides are available when bindings
+        differ.
+    </p>
+    <div class="platform-previews">
+        @for (platform of platforms; track platform) {
+            <section class="platform-preview">
+                <h4>{{ platform === 'default' ? 'Unknown / server' : platform }}</h4>
+                <p>
+                    Portable: <kbd>{{ shortcuts.resolve(openShortcut, platform)?.join(' + ') }}</kbd>
+                </p>
+                <p>
+                    OS override: <kbd>{{ shortcuts.resolve(duplicateShortcut, platform)?.join(' + ') }}</kbd>
+                </p>
+                <p>
+                    Modifiers: <kbd>{{ shortcuts.resolve(['command', 'ctrl', 'option', 'shift'], platform)?.join(' + ') }}</kbd>
+                </p>
+            </section>
+        }
+    </div>
 </div>

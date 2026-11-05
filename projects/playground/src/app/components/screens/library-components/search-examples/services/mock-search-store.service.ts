@@ -1,16 +1,24 @@
-import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import type { WritableSignal } from '@angular/core';
+
+import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { COMPONENT_EXAMPLES } from '../../component-demo/constants/component-catalog.constants';
-import { delay } from '../../form-examples/helpers/delay.helpers';
+
+import { COMPONENT_EXAMPLES } from '@playground/components/screens/library-components/component-demo/constants/component-catalog.constants';
+import { delay } from '@playground/components/screens/library-components/form-examples/helpers/delay.helpers';
 
 @Injectable()
 export class MockSearchStore {
-  public readonly query = signal('');
-  public readonly completedQuery = signal('');
-  public readonly results = signal<readonly string[]>([]);
-  public readonly loading = signal(false);
-  public readonly error = signal<ResolvableText | undefined>(undefined);
-  public readonly requests = signal<readonly string[]>([]);
+  public readonly query: WritableSignal<string> = signal('');
+  public readonly completedQuery: WritableSignal<string> = signal('');
+
+  public readonly results: WritableSignal<readonly string[]> = signal<readonly string[]>([]);
+
+  public readonly loading: WritableSignal<boolean> = signal(false);
+
+  public readonly error: WritableSignal<ResolvableText | undefined> = signal<ResolvableText | undefined>(undefined);
+  public readonly requests: WritableSignal<readonly string[]> = signal<readonly string[]>([]);
+
   private controller?: AbortController;
 
   constructor() {
@@ -20,7 +28,9 @@ export class MockSearchStore {
 
   public async search(query: string, fail = false): Promise<void> {
     this.controller?.abort();
+
     const controller = new AbortController();
+
     this.controller = controller;
     this.query.set(query);
     this.loading.set(true);
@@ -33,10 +43,12 @@ export class MockSearchStore {
       await delay(800, controller.signal);
 
       if (controller.signal.aborted) return;
+
       if (fail) throw new Error('Simulated request failure');
 
       const term = query.trim().toLocaleLowerCase();
       const results = COMPONENT_EXAMPLES.map((entry) => entry.title).filter((title) => title.toLocaleLowerCase().includes(term));
+
       this.results.set(results);
       this.completedQuery.set(query);
       this.record(`Success: ${results.length} results`);

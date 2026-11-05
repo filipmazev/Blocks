@@ -1,28 +1,32 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { RouterLink } from '@angular/router';
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import type { WritableSignal } from '@angular/core';
+
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'; // <-- Added import
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ICodeFile } from '@playground/interfaces/icode-file.interface';
+import { RouterLink } from '@angular/router';
+
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+
+import { Button } from '@forms/components/button/button';
+import { Checkbox } from '@forms/components/checkbox/checkbox';
+import { InputField } from '@forms/components/input-field/input-field';
+import { Select } from '@forms/components/select/select';
+import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import { DemoToast } from '@playground/components/screens/library-components/toastr/components/demo-toast/demo-toast';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
-import { ToastrConfigFormControls } from '@playground/types/form.types';
+import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
-import { DemoToast } from './components/demo-toast/demo-toast';
+import { ToastrConfigFormControls } from '@playground/types/form.types';
 import { ToastrService } from '@toastr/services/toastr.service';
 import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
-import { Button } from '@forms/components/button/button';
-import { Select } from '@forms/components/select/select';
-import { Checkbox } from '@forms/components/checkbox/checkbox';
-import { InputField } from '@forms/components/input-field/input-field';
-import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 
 @Component({
   selector: 'app-toastr-demo',
   imports: [BxSurfaceDirective, RouterLink, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './toastr.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './toastr.scss'
 })
 export class Toastr {
@@ -30,11 +34,8 @@ export class Toastr {
   private readonly toastrGlobalSettings = inject(ToastrGlobalSettingsService);
 
   protected readonly positionOptions: ToastPosition[] = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
-
-  protected readonly typeOptions = ['info', 'success', 'warn', 'danger'];
-
+  protected readonly typeOptions: string[] = ['info', 'success', 'warn', 'danger'];
   protected readonly form: FormGroup<ToastrConfigFormControls>;
-
   protected readonly positionSelectOptions: BxSelectOption<string>[] = this.positionOptions.map((pos) => ({
     label: pos
       .split('-')
@@ -43,8 +44,8 @@ export class Toastr {
     value: pos
   }));
 
-  protected readonly resultMessage = signal('Queue a notification to preview its appearance and lifetime.');
-  protected toastrReadmePath = signal<string>('assets/toastr-readme/README.md');
+  protected readonly resultMessage: WritableSignal<string> = signal('Queue a notification to preview its appearance and lifetime.');
+  protected readonly toastrReadmePath: WritableSignal<string> = signal<string>('projects/blocks/toastr/README.md');
 
   protected codeFiles: ICodeFile[] = [
     {
@@ -69,8 +70,8 @@ export class Toastr {
     }
   ];
 
-  private toastCount = 0;
-  private openedCount = 0;
+  private toastCount: number = 0;
+  private openedCount: number = 0;
 
   constructor() {
     this.form = new FormGroup<ToastrConfigFormControls>({
@@ -96,6 +97,7 @@ export class Toastr {
     if (this.form.invalid) return;
 
     this.toastCount++;
+
     const request = this.form.getRawValue();
 
     const toastRef = this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {

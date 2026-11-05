@@ -1,7 +1,9 @@
-import { IBxI18nAdapter, resolveText } from '@filip.mazev/blocks/core';
 import { ValidationError } from '@angular/forms/signals';
-import { VALIDATION_KIND_ALIASES } from '../constants/validation.constants';
-import { ValidationMessages } from '../types/validation.types';
+
+import { IBxI18nAdapter, resolveText } from '@filip.mazev/blocks/core';
+
+import { VALIDATION_KIND_ALIASES } from '@forms/components/shared/constants/validation.constants';
+import { ValidationMessages } from '@forms/components/shared/types/validation.types';
 
 /** Resolve schema messages and legacy error payloads without losing validator context. */
 export function resolveValidationMessage(

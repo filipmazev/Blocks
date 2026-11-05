@@ -1,7 +1,9 @@
-import { REFRACTION_CACHE } from '../constants/refraction.constants';
+import type { GlassinessMode } from '@effects/runtime/refraction/types/refraction.types';
+import type { RefractionMap } from '@effects/runtime/refraction/types/refraction-maps.types';
+
+import { REFRACTION_CACHE } from '@effects/runtime/refraction/constants/refraction.constants';
+
 import { buildRefraction } from './refraction-maps.helpers';
-import type { RefractionMap } from '../types/refraction-maps.types';
-import type { GlassinessMode } from '../types/refraction.types';
 
 /** CSS.supports checks parsing, not whether an SVG filter actually processes backdrop pixels. */
 export const supportsRefraction = (view: Window & typeof globalThis, mode: GlassinessMode = 'auto'): boolean => {
@@ -39,8 +41,10 @@ export const hasRefractionGeometry = (host: HTMLElement, style: CSSStyleDeclarat
 
 export const cachedRefraction = (short: number, radius: number): RefractionMap => {
   radius = Math.max(0.01, Math.min(radius, short / 2));
+
   const reach = Math.max(2, Math.min(Math.floor(short / 2), Math.ceil(radius)));
   const key = `${radius}|${reach}`;
+
   let map = REFRACTION_CACHE.get(key);
 
   if (!map) {

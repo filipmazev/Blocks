@@ -1,4 +1,4 @@
-import { LoadMoreSource } from '../types/load-more.types';
+import { LoadMoreSource } from '@forms/components/shared/load-more/types/load-more.types';
 
 /** A transport-independent request for the next page; the application owns page/cursor state. */
 export interface ILoadMoreRequest {

@@ -1,32 +1,54 @@
-<div class="bx-field-wrapper" [class.is-invalid]="showErrors()" [class.dynamic-subscript]="subscriptSizing() === 'dynamic'" [attr.data-bx-field-invalid]="showErrors()">
+<div
+    class="bx-field-wrapper"
+    [class.is-invalid]="showErrors()"
+    [class.dynamic-subscript]="subscriptSizing() === 'dynamic'"
+    [attr.data-bx-field-invalid]="showErrors()">
     @if (resolvedLabel()) {
-    <div class="bx-field-header">
-        <label class="bx-field-label" [attr.for]="controlId()">{{ resolvedLabel() }}
-            @if (isRequired() && !hideRequiredMarker()) { <span class="bx-field-required" aria-hidden="true">*</span> }
-        </label>
-    </div>
+        <div class="bx-field-header">
+            <label class="bx-field-label" [attr.for]="controlId()"
+                >{{ resolvedLabel() }}
+                @if (isRequired() && !hideRequiredMarker()) {
+                    <span class="bx-field-required" aria-hidden="true">*</span>
+                }
+            </label>
+        </div>
     }
     <div class="bx-field-control" [class.bx-field-control-inline]="inline()">
         <ng-content select="[bxPrefix]" />
         <ng-content />
         <ng-content select="[bxSuffix]" />
-        @if (showLoadingIndicator() && isLoading()) { <bx-loading-spinner [size]="16" [decorative]="true" /> }
+        @if (showLoadingIndicator() && isLoading()) {
+            <bx-loading-spinner [size]="16" [decorative]="true" />
+        }
         @if (tooltip()) {
-        <button type="button" class="bx-field-tooltip-trigger" [bxTooltip]="tooltip()!" bxTooltipTouch="tap" placement="top" [attr.aria-label]="resolvedTooltipLabel()">
-            <bx-icon name="help-circle" size="16" />
-        </button>
+            <button
+                type="button"
+                class="bx-field-tooltip-trigger"
+                bxTooltipTouch="tap"
+                placement="top"
+                [bxTooltip]="tooltip()!"
+                [attr.aria-label]="resolvedTooltipLabel()">
+                <bx-icon name="help-circle" size="16" />
+            </button>
         }
     </div>
     <div class="bx-field-subscript" [hidden]="hideSubscript()" [id]="controlId() + '-description'">
         <div class="bx-field-error-projected" [hidden]="!showErrors()"><ng-content select="bx-error" ngProjectAs="bx-error" /></div>
         @if (showErrors() && !projectedError()) {
-        <div class="bx-field-error" [class.bx-animated]="isAnimated()" aria-live="polite">
-            @if (messages().length) { <bx-icon name="alert-circle" size="16" /> }
-            <div>@for (message of messages(); track $index) { <div class="bx-field-error-text">{{ message }}</div> }</div>
-        </div>
+            <div class="bx-field-error" aria-live="polite" [class.bx-animated]="isAnimated()">
+                @if (messages().length) {
+                    <bx-icon name="alert-circle" size="16" />
+                }
+                <div>
+                    @for (message of messages(); track $index) {
+                        <div class="bx-field-error-text">{{ message }}</div>
+                    }
+                </div>
+            </div>
         }
         <div class="bx-field-hints" [hidden]="showErrors()">
-            <span>{{ resolvedHint() }}</span><ng-content select="bx-hint" ngProjectAs="bx-hint" /><span class="bx-field-hint-end">{{ resolvedHintEnd() }}</span>
+            <span>{{ resolvedHint() }}</span
+            ><ng-content select="bx-hint" ngProjectAs="bx-hint" /><span class="bx-field-hint-end">{{ resolvedHintEnd() }}</span>
         </div>
     </div>
 </div>

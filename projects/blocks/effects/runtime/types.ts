@@ -1,90 +1,41 @@
-import type { GlassinessMode } from './refraction/types/refraction.types';
-
 export type GlassQuality = 'auto' | 'baseline' | 'enhanced';
+export type { ISurfaceOptions } from '@effects/runtime/interfaces/isurface-options.interface';
+/** @deprecated Use ISurfaceOptions; the historical type name remains available for compatibility. */
+export type { ISurfaceOptions as SurfaceOptions } from '@effects/runtime/interfaces/isurface-options.interface';
 
-export interface SurfaceOptions {
-  /** Optional local renderer quality. The application's baseline policy and accessibility settings still take precedence. */
-  quality?: GlassQuality;
-  /** 0–1 translucency; omitted values inherit the application's balanced default. */
-  translucency?: number;
-  /** Explicitly opt this surface into refraction. Omitted surfaces keep their existing material. 'auto' follows browser policy; 'on' allows other engines. */
-  glassiness?: GlassinessMode;
-  /** Override automatic action/control detection for interaction lighting and press deformation. */
-  interactive?: boolean;
-  /** Override the default theme accent/error color emitted on interaction or an active ARIA state. */
-  emission?: string;
-  /** Override illumination for any focus. Omitted: editable fields illuminate on focus; actions illuminate only on keyboard focus. */
-  focusEmission?: string;
-  reducedMotion?: boolean;
-  reducedTransparency?: boolean;
-}
-export interface AppearanceConfiguration extends Omit<SurfaceOptions, 'interactive' | 'emission' | 'focusEmission'> {
-  /** Shared rendering budget. Omitted values inherit the root attribute; 'baseline' temporarily sets glassiness to 'off', preserving the requested policy. */
-  quality?: GlassQuality;
-}
-export interface AppearanceConfigurationController {
-  /** Merge a partial application-wide configuration. */
-  update(options: AppearanceConfiguration): void;
-  destroy(): void;
-}
-export interface GlassSurface {
-  update(options: SurfaceOptions): void;
-  destroy(): void;
-}
+export type { IAppearanceConfiguration } from '@effects/runtime/interfaces/iappearance-configuration.interface';
+/** @deprecated Use IAppearanceConfiguration; the historical type name remains available for compatibility. */
+export type { IAppearanceConfiguration as AppearanceConfiguration } from '@effects/runtime/interfaces/iappearance-configuration.interface';
+
+export type { IAppearanceConfigurationController } from '@effects/runtime/interfaces/iappearance-configuration-controller.interface';
+/** @deprecated Use IAppearanceConfigurationController; the historical type name remains available for compatibility. */
+export type { IAppearanceConfigurationController as AppearanceConfigurationController } from '@effects/runtime/interfaces/iappearance-configuration-controller.interface';
+
+export type { IGlassSurface } from '@effects/runtime/interfaces/iglass-surface.interface';
+/** @deprecated Use IGlassSurface; the historical type name remains available for compatibility. */
+export type { IGlassSurface as GlassSurface } from '@effects/runtime/interfaces/iglass-surface.interface';
+export type { IGlassTransitionOptions } from '@effects/runtime/interfaces/iglass-transition-options.interface';
+
 export type MotionResult = 'finished' | 'cancelled';
-export interface GlassTransitionOptions {
-  reducedMotion?: boolean;
-  /** Called on each fade frame; avoid synchronous layout writes here. */
-  onUpdate?: () => void;
-}
-export interface GlassTransition {
-  enter(): Promise<MotionResult>;
-  exit(): Promise<MotionResult>;
-  refresh(): void;
-  destroy(): void;
-}
+/** @deprecated Use IGlassTransitionOptions; the historical type name remains available for compatibility. */
+export type { IGlassTransitionOptions as GlassTransitionOptions } from '@effects/runtime/interfaces/iglass-transition-options.interface';
 
-/** A light in viewport CSS pixels. An element supplies its live center when present. */
-export interface GlassLight {
-  element?: HTMLElement;
-  /** Emit from the element's lower border instead of a single point. */
-  edge?: 'bottom';
-  /** Source position within the element, from 0 to 1. Defaults to its center. */
-  offsetX?: number;
-  offsetY?: number;
-  /** Illuminate neighboring surfaces; the emitter can render its own light separately. */
-  excludeSource?: boolean;
-  /** Exclude a containing surface when the light is anchored to one of its children. */
-  excludeElement?: HTMLElement;
-  x?: number;
-  y?: number;
-  /** Height above the glass plane in CSS pixels. Defaults to 180. */
-  z?: number;
-  color?: string;
-  intensity?: number;
-  /** Falloff radius in CSS pixels. Defaults to 640. */
-  radius?: number;
-}
-/** An inexpensive colored reflection proxy for a foreground or background object. */
-export interface GlassReflector {
-  element: HTMLElement;
-  /** Defaults to the element's computed background color. */
-  color?: string;
-  intensity?: number;
-  /** Signed depth relative to the glass plane. Defaults to 80. */
-  depth?: number;
-}
-export interface GlassSceneOptions {
-  /** Reuse receiver measurements for frequent light-only updates. refresh() still invalidates them. */
-  reuseGeometry?: boolean;
-  /** All sources are candidates; each receiver evaluates its four strongest visible lights after exclusions and distance falloff. */
-  lights?: readonly GlassLight[];
-  /** At most four reflectors are evaluated per scene. */
-  reflectors?: readonly GlassReflector[];
-}
-export interface GlassScene {
-  update(options: GlassSceneOptions): void;
-  /** Call after moving a registered light/reflector without scrolling or resizing. */
-  refresh(): void;
-  destroy(): void;
-}
+export type { IGlassTransition } from '@effects/runtime/interfaces/iglass-transition.interface';
+/** @deprecated Use IGlassTransition; the historical type name remains available for compatibility. */
+export type { IGlassTransition as GlassTransition } from '@effects/runtime/interfaces/iglass-transition.interface';
+
+export type { IGlassLight } from '@effects/runtime/interfaces/iglass-light.interface';
+/** @deprecated Use IGlassLight; the historical type name remains available for compatibility. */
+export type { IGlassLight as GlassLight } from '@effects/runtime/interfaces/iglass-light.interface';
+
+export type { IGlassReflector } from '@effects/runtime/interfaces/iglass-reflector.interface';
+/** @deprecated Use IGlassReflector; the historical type name remains available for compatibility. */
+export type { IGlassReflector as GlassReflector } from '@effects/runtime/interfaces/iglass-reflector.interface';
+
+export type { IGlassSceneOptions } from '@effects/runtime/interfaces/iglass-scene-options.interface';
+/** @deprecated Use IGlassSceneOptions; the historical type name remains available for compatibility. */
+export type { IGlassSceneOptions as GlassSceneOptions } from '@effects/runtime/interfaces/iglass-scene-options.interface';
+
+export type { IGlassScene } from '@effects/runtime/interfaces/iglass-scene.interface';
+/** @deprecated Use IGlassScene; the historical type name remains available for compatibility. */
+export type { IGlassScene as GlassScene } from '@effects/runtime/interfaces/iglass-scene.interface';

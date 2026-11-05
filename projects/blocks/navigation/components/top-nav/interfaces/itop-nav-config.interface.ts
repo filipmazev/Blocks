@@ -1,5 +1,6 @@
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
-import { INavigationViewConfig } from '../../shared/interfaces/inavigation-view-config.interface';
+
+import { INavigationViewConfig } from '@navigation/components/shared/interfaces/inavigation-view-config.interface';
 
 /** Application-wide or per-instance horizontal navigation. Instance settings override application settings, then library defaults. */
 export interface ITopNavConfig extends Omit<INavigationViewConfig, 'side' | 'collapseLabel' | 'expandLabel'> {

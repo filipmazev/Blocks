@@ -23,10 +23,7 @@
                         "tsConfig": "projects/playground/tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "stylePreprocessorOptions": {
-                            "includePaths": [
-                                "projects/blocks",
-                                "node_modules"
-                            ]
+                            "includePaths": ["projects/blocks", "node_modules"]
                         },
                         "assets": [
                             "projects/playground/src/assets",
@@ -50,10 +47,7 @@
                                 "output": "/assets/documentation"
                             }
                         ],
-                        "styles": [
-                            "projects/blocks/effects/effects.css",
-                            "projects/playground/src/styles.scss"
-                        ]
+                        "styles": ["projects/blocks/effects/effects.css", "projects/playground/src/styles.scss"]
                     },
                     "configurations": {
                         "production": {
@@ -106,10 +100,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "projects/playground/**/*.ts",
-                            "projects/playground/**/*.html"
-                        ]
+                        "lintFilePatterns": ["projects/playground/**/*.ts", "projects/playground/**/*.html"]
                     }
                 },
                 "deploy": {
@@ -124,7 +115,7 @@
             "prefix": "lib",
             "architect": {
                 "build": {
-                    "builder": "@angular/build:ng-packagr",
+                    "builder": "./tools/builders:library",
                     "configurations": {
                         "production": {
                             "tsConfig": "projects/blocks/tsconfig.lib.prod.json"
@@ -138,18 +129,13 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "projects/blocks/**/*.ts",
-                            "projects/blocks/**/*.html"
-                        ]
+                        "lintFilePatterns": ["projects/blocks/**/*.ts", "projects/blocks/**/*.html"]
                     }
                 }
             }
         }
     },
     "cli": {
-        "schematicCollections": [
-            "angular-eslint"
-        ]
+        "schematicCollections": ["angular-eslint"]
     }
 }

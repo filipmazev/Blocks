@@ -1,18 +1,22 @@
-import { Injectable, inject, Injector, ApplicationRef, EnvironmentInjector, createComponent, ComponentRef } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { ComponentType } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
+import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable, Injector } from '@angular/core';
+
 import { take } from 'rxjs';
-import { IToastConfig } from '../interfaces/itoast-config.interface';
-import { ToastRef } from '../classes/toast-ref';
-import { TOAST_DATA } from '../tokens/toast-data.token';
-import { IToast } from '../interfaces/itoast.interface';
-import { ToastrGlobalSettingsService } from './toastr-global-settings.service';
-import { ToastPosition } from '../types/toastr.types';
-import { ToastCore } from '../components/toast-core';
-import { SimpleToast } from '../components/views/simple-toast/simple-toast';
-import { ISimpleToastData } from '../interfaces/isimple-toast.interface';
-import { IQueueSimpleToastRequest } from '../interfaces/iqueue-simple-toast-request.interface';
+
 import { BxA11yService } from '@filip.mazev/blocks/core';
+
+import { ToastRef } from '@toastr/classes/toast-ref';
+import { ToastCore } from '@toastr/components/toast-core';
+import { SimpleToast } from '@toastr/components/views/simple-toast/simple-toast';
+import { IQueueSimpleToastRequest } from '@toastr/interfaces/iqueue-simple-toast-request.interface';
+import { ISimpleToastData } from '@toastr/interfaces/isimple-toast.interface';
+import { IToast } from '@toastr/interfaces/itoast.interface';
+import { IToastConfig } from '@toastr/interfaces/itoast-config.interface';
+import { TOAST_DATA } from '@toastr/tokens/toast-data.token';
+import { ToastPosition } from '@toastr/types/toastr.types';
+
+import { ToastrGlobalSettingsService } from './toastr-global-settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +31,9 @@ export class ToastrService {
 
   private readonly toastQueue: Array<() => void> = [];
   private readonly activeToasts: Array<ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>> = [];
-  private readonly containers = new Map<ToastPosition, HTMLElement>();
+  private readonly containers: Map<ToastPosition, HTMLElement> = new Map<ToastPosition, HTMLElement>();
 
-  private activePauses = 0;
+  private activePauses: number = 0;
 
   /**
    * Displays a toast notification with the specified component and configuration.
@@ -140,7 +144,7 @@ export class ToastrService {
     });
   }
 
-  //#region Helper Methods
+  //#region Helpers
 
   private processQueue(): void {
     if (this.activePauses > 0) {
@@ -151,6 +155,7 @@ export class ToastrService {
 
     while (this.activeToasts.length < max && this.toastQueue.length > 0) {
       const buildNext = this.toastQueue.shift();
+
       if (buildNext) {
         buildNext();
       }
@@ -190,6 +195,7 @@ export class ToastrService {
     this.appRef.attachView(wrapperRef.hostView);
 
     const container = this.getContainer(config.position || 'top-right');
+
     container.appendChild(wrapperRef.location.nativeElement);
 
     this.activeToasts.push(wrapperRef as ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>);
@@ -246,6 +252,7 @@ export class ToastrService {
     }
 
     const container = this.document.createElement('div');
+
     container.classList.add('toast-container', `toast-container-${position}`);
     this.document.body.appendChild(container);
 

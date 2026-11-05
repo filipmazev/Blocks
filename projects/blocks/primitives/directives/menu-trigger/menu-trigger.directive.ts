@@ -1,26 +1,31 @@
+import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
+import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
 import {
   DestroyRef,
   Directive,
-  ElementRef,
-  NgZone,
-  HostListener,
   effect,
+  ElementRef,
+  HostListener,
   inject,
   input,
+  NgZone,
   output,
   signal,
-  untracked,
   TemplateRef,
+  untracked,
   ViewContainerRef
 } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
-import { BxOverlayPositionService, BxPlacement, inheritOverlayTheme, OverlayOriginTracker, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+
 import { Subscription } from 'rxjs';
-import { BX_OVERLAY_CONTEXT } from '../overlay-context.token';
-import { MenuCascadeService } from './services/menu-cascade.service';
-import { navigateMenuKey } from './helpers/menu-keyboard.helpers';
+
+import { BxOverlayPositionService, BxPlacement, inheritOverlayTheme, OverlayOriginTracker, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+
+import { navigateMenuKey } from '@primitives/directives/menu-trigger/helpers/menu-keyboard.helpers';
+import { MenuCascadeService } from '@primitives/directives/menu-trigger/services/menu-cascade.service';
+import { BX_OVERLAY_CONTEXT } from '@primitives/directives/overlay-context.token';
 
 /** Hover, click, touch and keyboard trigger for nested, opaque bx-menu surfaces. */
 @Directive({
@@ -41,33 +46,39 @@ export class MenuTriggerDirective {
   private readonly cascade = inject(MenuCascadeService);
   private readonly vcr = inject(ViewContainerRef);
   private readonly traps = inject(FocusTrapFactory);
-  private readonly opened = signal(false);
-  protected readonly overlayId = signal<string | null>(null);
-  public readonly isOpen = this.opened.asReadonly();
-  public readonly bxMenuTrigger = input.required<TemplateRef<unknown>>();
+
+  private readonly opened: WritableSignal<boolean> = signal(false);
+
+  protected readonly overlayId: WritableSignal<string | null> = signal<string | null>(null);
+
+  public readonly isOpen: Signal<boolean> = this.opened.asReadonly();
+
+  public readonly bxMenuTrigger: InputSignal<TemplateRef<unknown>> = input.required<TemplateRef<unknown>>();
   /** The enclosing trigger, when this is a submenu. */
   /** Optional positioning origin when a disclosure button belongs to a wider row. Defaults to the trigger element. */
-  public readonly menuOrigin = input<HTMLElement | undefined>(undefined);
-  public readonly menuParent = input<MenuTriggerDirective | undefined>(undefined);
+  public readonly menuOrigin: InputSignal<HTMLElement | undefined> = input<HTMLElement | undefined>(undefined);
+  public readonly menuParent: InputSignal<MenuTriggerDirective | undefined> = input<MenuTriggerDirective | undefined>(undefined);
   /** Physical preferred side; viewport collision handling can flip the menu. Defaults to right. */
-  public readonly menuSide = input<'left' | 'right'>('right');
+  public readonly menuSide: InputSignal<'left' | 'right'> = input<'left' | 'right'>('right');
   /** Optional dropdown placement. Omit to retain side-aligned submenu positioning; top navigation uses bottom. */
-  public readonly menuPlacement = input<BxPlacement | undefined>(undefined);
+  public readonly menuPlacement: InputSignal<BxPlacement | undefined> = input<BxPlacement | undefined>(undefined);
   /** Allows hover opening. Click and keyboard access always remain available. Defaults to true. */
-  public readonly menuHover = input(true);
+  public readonly menuHover: InputSignal<boolean> = input(true);
   /** Let the owner call open/close and supply trigger semantics. Defaults to false; automatic event handling and host ARIA are omitted when true. */
-  public readonly menuManual = input(false);
+  public readonly menuManual: InputSignal<boolean> = input(false);
   /** Accessible menu name, normally the trigger's resolved label. */
-  public readonly menuLabel = input('');
+  public readonly menuLabel: InputSignal<string> = input('');
   /** Keep a revealed search path open during pointer movement; Escape still dismisses it. */
-  public readonly menuPinned = input(false);
-  public readonly menuOpened = output();
+  public readonly menuPinned: InputSignal<boolean> = input(false);
+
+  public readonly menuOpened: OutputEmitterRef<void> = output();
   /** Emitted before DOM detachment so owners can retain scroll/focus context. The overlay is already marked as closing. */
-  public readonly menuClosing = output();
-  public readonly menuClosed = output();
+  public readonly menuClosing: OutputEmitterRef<void> = output();
+  public readonly menuClosed: OutputEmitterRef<void> = output();
+
   private overlayRef?: OverlayRef;
   private trap?: FocusTrap;
-  private subscriptions = new Subscription();
+  private subscriptions: Subscription = new Subscription();
   private disconnectTheme?: () => void;
   private hoverTimer?: number;
   private positionTracker?: OverlayOriginTracker;
@@ -77,6 +88,7 @@ export class MenuTriggerDirective {
     effect(() => {
       const label = this.menuLabel();
       const opened = this.isOpen();
+
       untracked(() => {
         if (opened)
           this.overlayRef?.overlayElement
@@ -89,22 +101,27 @@ export class MenuTriggerDirective {
   @HostListener('click', ['$event'])
   public toggle(event: MouseEvent): void {
     if (this.menuManual()) return;
+
     event.preventDefault();
     event.stopPropagation();
+
     if (this.isOpen()) this.close(true);
     else this.open(true);
   }
 
   public open(focus = false, origin = this.menuOrigin() ?? this.source): void {
     this.cancelClose();
+
     if (this.isOpen()) {
       if (focus) this.focusFirst();
+
       return;
     }
 
     if (!this.source.ownerDocument.defaultView || this.source.matches(':disabled, [aria-disabled="true"]')) return;
 
     this.cascade.activate(this);
+
     const placement = this.menuPlacement();
     const overlay = this.overlay.create({
       positionStrategy: placement
@@ -117,29 +134,36 @@ export class MenuTriggerDirective {
       direction: 'ltr',
       hasBackdrop: false
     });
+
     this.overlayRef = overlay;
     this.overlayId.set(overlay.overlayElement.id);
     this.opened.set(true);
     this.disconnectTheme = inheritOverlayTheme(this.source, overlay.overlayElement);
     this.subscriptions = new Subscription();
+
     const view = overlay.attach(new TemplatePortal(this.bxMenuTrigger(), this.vcr));
+
     view.detectChanges();
+
     const menu = overlay.overlayElement.querySelector<HTMLElement>('[role="menu"]');
 
     if (menu) menu.setAttribute('aria-label', this.menuLabel() || this.source.getAttribute('aria-label') || this.source.textContent?.trim() || '');
 
     this.trap = this.traps.create(overlay.overlayElement);
+
     const tracker = this.zone.runOutsideAngular(() =>
       trackOverlayOrigin(overlay, origin, {
         onPosition: () => this.cascade.repositionChildren(this),
         onOriginHidden: () => this.zone.run(() => this.close())
       })
     );
+
     this.positionTracker = tracker;
     this.subscriptions.add(() => {
       tracker();
       this.positionTracker = undefined;
     });
+
     if (this.overlayRef !== overlay) return;
 
     this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onMenuKey(event)));
@@ -149,8 +173,10 @@ export class MenuTriggerDirective {
       })
     );
     this.subscriptions.add(overlay.detachments().subscribe(() => this.close()));
+
     const enter = () => this.cancelClose();
     const leave = () => this.scheduleClose();
+
     overlay.overlayElement.addEventListener('pointerenter', enter);
     overlay.overlayElement.addEventListener('pointerleave', leave);
     this.subscriptions.add(() => {
@@ -158,20 +184,26 @@ export class MenuTriggerDirective {
       overlay.overlayElement.removeEventListener('pointerleave', leave);
     });
     overlay.updatePosition();
+
     if (focus) this.focusFirst();
+
     this.menuOpened.emit();
   }
 
   public close(restoreFocus = false): void {
     this.cancelClose();
+
     if (!this.overlayRef) return;
 
     this.cascade.closeChildren(this);
+
     const overlay = this.overlayRef;
+
     this.overlayRef = undefined;
     this.menuClosing.emit();
 
     if (restoreFocus || overlay.overlayElement.contains(this.source.ownerDocument.activeElement)) this.source.focus({ preventScroll: true });
+
     this.subscriptions.unsubscribe();
     this.trap?.destroy();
     this.trap = undefined;
@@ -195,6 +227,7 @@ export class MenuTriggerDirective {
   @HostListener('pointerleave')
   public scheduleClose(): void {
     if (this.menuManual() || this.menuPinned()) return;
+
     this.cancelClose();
     this.hoverTimer = this.source.ownerDocument.defaultView?.setTimeout(() => {
       const focused = this.source.ownerDocument.activeElement;
@@ -211,6 +244,7 @@ export class MenuTriggerDirective {
   @HostListener('keydown', ['$event'])
   protected onKey(event: KeyboardEvent): void {
     if (this.menuManual()) return;
+
     const forward = this.menuSide() === 'right' ? 'ArrowRight' : 'ArrowLeft';
 
     if (![forward, 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
@@ -221,6 +255,7 @@ export class MenuTriggerDirective {
   }
 
   //#region Helpers
+
   private cancelClose(): void {
     this.source.ownerDocument.defaultView?.clearTimeout(this.hoverTimer);
     this.hoverTimer = undefined;
@@ -240,6 +275,7 @@ export class MenuTriggerDirective {
       event.preventDefault();
       event.stopPropagation();
       this.close(true);
+
       return;
     }
 
@@ -247,5 +283,6 @@ export class MenuTriggerDirective {
 
     if (menu) navigateMenuKey(event, menu);
   }
+
   //#endregion
 }

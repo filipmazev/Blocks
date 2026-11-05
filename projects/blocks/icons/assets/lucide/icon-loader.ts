@@ -1,4 +1,5 @@
-import type { IconDefinition } from '../../interfaces/icon-definition.interface';
+import type { IconDefinition } from '@icons/interfaces/icon-definition.interface';
+
 import type { LucideName } from './names';
 
 export type LucideIconLoaders = Record<LucideName, () => Promise<IconDefinition>>;

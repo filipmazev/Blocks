@@ -220,17 +220,11 @@
     border-radius: inherit;
     pointer-events: none;
     z-index: -1;
-    background: radial-gradient(
-        ellipse at var(--bx-toast-light-x, 50%) 100%,
-        color-mix(in srgb, var(--bx-toast-emission) 22%, transparent),
-        transparent 65%
-    );
+    background: radial-gradient(ellipse at var(--bx-toast-light-x, 50%) 100%, color-mix(in srgb, var(--bx-toast-emission) 22%, transparent), transparent 65%);
 }
 
 .toast-wrapper.has-emission {
-    --bx-glass-shadow:
-        #{shadow(toast)},
-        0 8px 24px -16px color-mix(in srgb, var(--bx-toast-emission) 55%, transparent);
+    --bx-glass-shadow: #{shadow(toast)}, 0 8px 24px -16px color-mix(in srgb, var(--bx-toast-emission) 55%, transparent);
 }
 
 @media (forced-colors: active), (prefers-contrast: more) {

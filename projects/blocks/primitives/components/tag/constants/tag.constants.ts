@@ -1,5 +1,5 @@
-import { TagColor } from '../types/tag.types';
-import { ITagPalette } from '../interfaces/itag-palette.interface';
+import { ITagPalette } from '@primitives/components/tag/interfaces/itag-palette.interface';
+import { TagColor } from '@primitives/components/tag/types/tag.types';
 
 export const TAG_PALETTES: Readonly<Record<TagColor, ITagPalette>> = {
   primary: {

@@ -1,23 +1,18 @@
-import { IModalStyleConfig } from '../interfaces/imodal-style-config.interface';
-import { IBottomSheetModalConfig } from '../interfaces/ibottom-sheet-modal-config.interface';
-import { BreakpointKey, ModalLayout } from '../types/modal.types';
+import { IBottomSheetModalConfig } from '@modal/interfaces/ibottom-sheet-modal-config.interface';
+import { IModalStyleConfig } from '@modal/interfaces/imodal-style-config.interface';
+import { BreakpointKey, ModalLayout } from '@modal/types/modal.types';
 
 export class ModalStyleConfig implements IModalStyleConfig {
   public layout: ModalLayout;
   public breakpoints?: Partial<Record<BreakpointKey, ModalLayout>>;
-
   public animate: boolean;
   public hasBackdrop: boolean;
   public closeDelay?: number;
   public showCloseButton?: boolean;
-
   public mobileConfig: IBottomSheetModalConfig;
-
   public contentWrapper: boolean;
-
   public wrapperClasses: string;
   public wrapperStyles: string;
-
   public overrideFullHeight: boolean;
 
   constructor(config?: IModalStyleConfig) {

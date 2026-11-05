@@ -1,25 +1,31 @@
+import type { INgAddOptions } from '@playground/../../../blocks/schematics/ng-add/interfaces/ing-add-options.interface';
+
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+export type { INgAddOptions } from '@playground/../../../blocks/schematics/ng-add/interfaces/ing-add-options.interface';
+/** @deprecated Use INgAddOptions; the historical type name remains available for compatibility. */
+export type { INgAddOptions as NgAddOptions } from '@playground/../../../blocks/schematics/ng-add/interfaces/ing-add-options.interface';
 
-export interface NgAddOptions {
-  theme?: 'carbon-cobalt' | 'azure-ember' | 'violet-teal' | 'tangerine-indigo' | 'brick-rose-cyan' | 'lime-violet' | 'cyberpunk';
-}
-
-export function ngAdd(options: NgAddOptions): Rule {
+export function ngAdd(options: INgAddOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const theme = options.theme ?? 'carbon-cobalt';
+
     injectStyles(tree, context, { theme });
+
     return tree;
   };
 }
 
-function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptions): void {
+function injectStyles(tree: Tree, context: SchematicContext, options: INgAddOptions): void {
   const workspaceConfigPath = '/angular.json';
+
   if (!tree.exists(workspaceConfigPath)) {
     context.logger.warn('Could not find angular.json. Please configure the Blocks theme manually.');
+
     return;
   }
 
   const workspaceConfigBuffer = tree.read(workspaceConfigPath);
+
   if (!workspaceConfigBuffer) return;
 
   const workspaceConfig = JSON.parse(workspaceConfigBuffer.toString('utf-8'));
@@ -31,30 +37,38 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
 
   if (!project) {
     context.logger.warn('Could not find a valid project in angular.json.');
+
     return;
   }
 
   const buildOptions = (project.architect ?? project.targets)?.build?.options;
+
   if (!buildOptions) {
     context.logger.warn(`Could not find styles configuration for project "${projectName}".`);
+
     return;
   }
 
   buildOptions.styles ??= [];
+
   const effectsStyles = 'node_modules/@filip.mazev/blocks/effects/effects.css';
 
   const legacyStyles = new Set(['node_modules/@filip.mazev/blocks/glass/glass.css', 'node_modules/@filip.mazev/blocks-glass/glass.css']);
+
   buildOptions.styles = buildOptions.styles.filter((style: string | { input: string }) => !legacyStyles.has(typeof style === 'string' ? style : style.input));
 
   const hasEffectsStyles = buildOptions.styles.some((style: string | { input: string }) => (typeof style === 'string' ? style : style.input) === effectsStyles);
 
   if (!hasEffectsStyles) buildOptions.styles.unshift(effectsStyles);
+
   tree.overwrite(workspaceConfigPath, JSON.stringify(workspaceConfig, null, 2) + '\n');
   context.logger.info('Configured the shared Blocks effects stylesheet.');
 
   let targetStylePath = '';
+
   for (const style of buildOptions.styles) {
     const styleString = typeof style === 'string' ? style : style.input;
+
     if (styleString && (styleString.endsWith('.scss') || styleString.endsWith('.sass'))) {
       targetStylePath = styleString;
       break;
@@ -63,16 +77,20 @@ function injectStyles(tree: Tree, context: SchematicContext, options: NgAddOptio
 
   if (!targetStylePath || !tree.exists(targetStylePath)) {
     context.logger.warn('Could not locate a global .scss or .sass file. Please configure the Blocks theme manually.');
+
     return;
   }
 
   const targetStyle = tree.read(targetStylePath);
+
   if (!targetStyle) return;
+
   const content = targetStyle.toString('utf-8');
 
   // Existing themes still receive the effects stylesheet above.
   if (content.includes('@filip.mazev/blocks')) {
     context.logger.info('Blocks SCSS configuration already exists. Skipping style injection.');
+
     return;
   }
 

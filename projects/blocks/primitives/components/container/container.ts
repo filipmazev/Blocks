@@ -1,6 +1,10 @@
+import type { InputSignal, Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { ContainerSize } from '../shared/types/layout.types';
+
+import { ContainerSize } from '@primitives/components/shared/types/layout.types';
 
 @Component({
   selector: 'bx-container',
@@ -15,9 +19,11 @@ import { ContainerSize } from '../shared/types/layout.types';
 })
 export class Container {
   private readonly i18n = inject(BX_I18N, { optional: true });
-  protected readonly resolvedLabel = computed(() => resolveText(this.ariaLabel(), this.i18n));
-  public readonly size = input<ContainerSize>('lg');
+
+  protected readonly resolvedLabel: Signal<string> = computed(() => resolveText(this.ariaLabel(), this.i18n));
+
+  public readonly size: InputSignal<ContainerSize> = input<ContainerSize>('lg');
   /** Optional semantic landmark. Use main once per page, region for named sections. */
-  public readonly landmark = input<'main' | 'region' | 'complementary' | undefined>(undefined);
-  public readonly ariaLabel = input<ResolvableText | undefined>(undefined);
+  public readonly landmark: InputSignal<'main' | 'region' | 'complementary' | undefined> = input<'main' | 'region' | 'complementary' | undefined>(undefined);
+  public readonly ariaLabel: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
 }

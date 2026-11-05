@@ -1,17 +1,23 @@
+import type { ModelSignal, Signal, WritableSignal } from '@angular/core';
+
 import { computed, Directive, model, signal } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
+
+import { IPendingValue } from '@forms/components/shared/interfaces/ipending-value.interface';
+
 import { BxControlState } from './bx-control-state';
-import { IPendingValue } from '../interfaces/ipending-value.interface';
 
 @Directive()
 export abstract class BxValueControl<T> extends BxControlState implements FormValueControl<T | null> {
-  private readonly edit = signal<IPendingValue<T> | undefined>(undefined);
-  protected readonly internalValue = computed(() => {
+  private readonly edit: WritableSignal<IPendingValue<T> | undefined> = signal<IPendingValue<T> | undefined>(undefined);
+
+  protected readonly internalValue: Signal<T | null> = computed(() => {
     const edit = this.edit();
+
     return edit ? edit.value : this.value();
   });
 
-  public readonly value = model<T | null>(null);
+  public readonly value: ModelSignal<T | null> = model<T | null>(null);
 
   public override reset(): void {
     super.reset();

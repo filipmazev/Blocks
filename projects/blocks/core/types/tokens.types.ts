@@ -1,5 +1,6 @@
 import { SemanticColorToken } from './theme.types';
-import * as tokenConsts from '../constants/tokens.constants';
+
+import * as tokenConsts from '@core/constants/tokens.constants';
 
 export type ThemePalette = (typeof tokenConsts.PALETTE_NAMES)[number];
 export type ThemeShade = (typeof tokenConsts.SHADE_NUMBERS)[number];

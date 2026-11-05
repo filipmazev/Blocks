@@ -1,4 +1,4 @@
-import { DemoLanguage } from '../../shared/i18n/types/demo-language.types';
+import { DemoLanguage } from '@playground/components/screens/library-components/shared/i18n/types/demo-language.types';
 export const DEMO_TRANSLATIONS: Readonly<Record<DemoLanguage, Readonly<Record<string, string>>>> = {
   en: {
     language: 'Language',

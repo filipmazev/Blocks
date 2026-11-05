@@ -1,10 +1,12 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+
+import { SHORTCUT_APPLE_LABELS, SHORTCUT_COMMON_LABELS, SHORTCUT_MODIFIERS } from '@core/constants/shortcut.constants';
+import { MobileOS } from '@core/enums/mobile-os.enum';
+import { isOSShortcut, normalizeShortcutKey } from '@core/helpers/shortcut.helpers';
+import { IShortcutMatchOptions } from '@core/interfaces/ishortcut-match-options.interface';
+import { ResolvableShortcut, ShortcutPlatform } from '@core/types/shortcut.types';
+
 import { DeviceTypeService } from './device-type.service';
-import { MobileOS } from '../enums/mobile-os.enum';
-import { ResolvableShortcut, ShortcutPlatform } from '../types/shortcut.types';
-import { IShortcutMatchOptions } from '../interfaces/ishortcut-match-options.interface';
-import { isOSShortcut, normalizeShortcutKey } from '../helpers/shortcut.helpers';
-import { SHORTCUT_APPLE_LABELS, SHORTCUT_COMMON_LABELS, SHORTCUT_MODIFIERS } from '../constants/shortcut.constants';
 
 /** Shares platform selection and key normalization between shortcut hints and application-owned keyboard handlers. */
 @Injectable({ providedIn: 'root' })
@@ -15,9 +17,13 @@ export class BxShortcutService {
     const state = this.deviceTypeService.getDeviceState();
 
     if (state.mobileOS === MobileOS.iOS) return 'ios';
+
     if (state.isAppleDevice) return 'mac';
+
     if (state.isAndroidDevice) return 'android';
+
     if (state.isWindowsDesktop) return 'windows';
+
     if (state.isLinuxOrUnixDesktop) return 'linux';
 
     return 'default';
@@ -30,8 +36,11 @@ export class BxShortcutService {
 
     return keys?.map((key) => {
       if (apple && Object.hasOwn(SHORTCUT_APPLE_LABELS, key)) return SHORTCUT_APPLE_LABELS[key];
+
       if (key === 'Meta' && platform === 'windows') return 'Win';
+
       if (key === 'Meta' && platform === 'linux') return 'Super';
+
       if (Object.hasOwn(SHORTCUT_COMMON_LABELS, key)) return SHORTCUT_COMMON_LABELS[key];
 
       return key.length === 1 ? key.toUpperCase() : key;
@@ -63,7 +72,9 @@ export class BxShortcutService {
     const keys = this.keys(shortcut, platform);
 
     if (!keys || !this.isCombination(keys)) return false;
+
     if (event.ctrlKey !== keys.includes('Control') || event.metaKey !== keys.includes('Meta')) return false;
+
     if (event.altKey !== keys.includes('Alt') || event.shiftKey !== keys.includes('Shift')) return false;
 
     const key = keys.find((entry) => !SHORTCUT_MODIFIERS.includes(entry));
@@ -72,6 +83,7 @@ export class BxShortcutService {
   }
 
   //#region Helpers
+
   private keys(shortcut: ResolvableShortcut | undefined, platform: ShortcutPlatform): string[] | undefined {
     if (shortcut === undefined) return undefined;
 
@@ -95,5 +107,6 @@ export class BxShortcutService {
         /^(?:Arrow(?:Up|Down|Left|Right)|Escape|Enter|Tab|Backspace|Delete|Home|End|PageUp|PageDown|Insert|F(?:[1-9]|1[0-9]|2[0-4]))$/.test(ordinary[0]))
     );
   }
+
   //#endregion
 }

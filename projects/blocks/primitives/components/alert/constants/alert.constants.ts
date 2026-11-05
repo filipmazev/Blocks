@@ -1,6 +1,7 @@
 import { IconName } from '@filip.mazev/blocks/icons';
-import { AlertTone } from '../types/alert.types';
-import { TagColor } from '../../tag/types/tag.types';
+
+import { AlertTone } from '@primitives/components/alert/types/alert.types';
+import { TagColor } from '@primitives/components/tag/types/tag.types';
 
 export const ALERT_COLORS: Readonly<Record<AlertTone, TagColor>> = {
   default: 'neutral',

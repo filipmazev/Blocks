@@ -1,41 +1,52 @@
 // Adapted from Nordify refraction (MIT). See effects/THIRD_PARTY_NOTICES.md.
-import type { Slot, Corner, Edge, Axis, SliceRect, ReflectAvail, RefractionMap, V3, ReflectionMap } from '../types/refraction-maps.types';
+import type {
+  Axis,
+  Corner,
+  Edge,
+  ReflectAvail,
+  ReflectionMap,
+  RefractionMap,
+  SliceRect,
+  Slot,
+  V3
+} from '@effects/runtime/refraction/types/refraction-maps.types';
+
 import {
-  CORNER_TEX,
-  LINE_TEX,
-  CRC_TABLE,
-  REFR_BAND,
-  REFR_DEPTH,
-  REFR_LIP_BAND,
-  REFR_LIP,
-  REFR_LIP_POW,
-  REFR_WIDTH,
-  REFR_REACH,
-  REFR_TILT,
-  REFR_HEAD,
-  REFR_PEAK,
-  REFR_MAG_PEAK,
-  IOR,
-  R0,
-  SIN_CRIT,
-  EYE_DIST,
-  REFL_REACH,
-  REFL_REACH_MAX,
-  RIM_SPAN,
-  REFL_CURVE,
-  REFL_FLOOR,
-  REFL_INNER,
-  REFL_FADE,
-  REFL_BLUR,
-  REFL_BLUR_PER_STEP,
-  WEDGES,
-  CSTOPS,
-  RSTOPS,
+  ARC_CACHE,
   ARC_PEAK,
   ARC_SHAPE,
   ARC_STEP,
-  ARC_CACHE
-} from '../constants/refraction-maps.constants';
+  CORNER_TEX,
+  CRC_TABLE,
+  CSTOPS,
+  EYE_DIST,
+  IOR,
+  LINE_TEX,
+  R0,
+  REFL_BLUR,
+  REFL_BLUR_PER_STEP,
+  REFL_CURVE,
+  REFL_FADE,
+  REFL_FLOOR,
+  REFL_INNER,
+  REFL_REACH,
+  REFL_REACH_MAX,
+  REFR_BAND,
+  REFR_DEPTH,
+  REFR_HEAD,
+  REFR_LIP,
+  REFR_LIP_BAND,
+  REFR_LIP_POW,
+  REFR_MAG_PEAK,
+  REFR_PEAK,
+  REFR_REACH,
+  REFR_TILT,
+  REFR_WIDTH,
+  RIM_SPAN,
+  RSTOPS,
+  SIN_CRIT,
+  WEDGES
+} from '@effects/runtime/refraction/constants/refraction-maps.constants';
 
 export const clamp255 = (v: number) => Math.max(0, Math.min(255, Math.round(v)));
 
@@ -50,12 +61,14 @@ export const crc32 = (bytes: Uint8Array) => {
 export const chunk = (type: string, data: Uint8Array) => {
   const out = new Uint8Array(12 + data.length);
   const view = new DataView(out.buffer);
+
   view.setUint32(0, data.length);
 
   for (let i = 0; i < 4; i++) out[4 + i] = type.charCodeAt(i);
 
   out.set(data, 8);
   view.setUint32(8 + data.length, crc32(out.subarray(4, 8 + data.length)));
+
   return out;
 };
 
@@ -69,8 +82,10 @@ export function encodePng(w: number, h: number, channels: 1 | 2, pixels: Uint8Ar
 
   const len = raw.length;
   const z = new Uint8Array(len + 11);
+
   z.set([0x78, 0x01, 1, len & 255, len >>> 8, ~len & 255, (~len >>> 8) & 255]);
   z.set(raw, 7);
+
   let a = 1;
   let b = 0;
 
@@ -83,6 +98,7 @@ export function encodePng(w: number, h: number, channels: 1 | 2, pixels: Uint8Ar
 
   const ihdr = new Uint8Array(13);
   const hv = new DataView(ihdr.buffer);
+
   hv.setUint32(0, w);
   hv.setUint32(4, h);
   ihdr[8] = 8;
@@ -138,12 +154,14 @@ export const cornerCenters = (R: number): Record<Corner, [number, number]> => ({
  *  the tile is one texel wide and stretched. */
 export const edgeTile = (dir: Edge, reach: number, R: number, value: (q: number) => number) => {
   const edgeAtZero = dir === 'top' || dir === 'left';
+
   return lineTile(dir === 'top' || dir === 'bottom', (f) => value(1 - ((edgeAtZero ? f : 1 - f) * reach) / R));
 };
 
 /** Radial around the arc centre, `value(q)` with q = distance / R. */
 export const cornerTile = (key: Corner, value: (q: number) => number) => {
   const [cx, cy] = cornerCenters(1)[key];
+
   return grayPng(CORNER_TEX, CORNER_TEX, (x, y) => value(Math.min(1, Math.hypot((x + 0.5) / CORNER_TEX - cx, (y + 0.5) / CORNER_TEX - cy))));
 };
 
@@ -154,11 +172,13 @@ export const productTile = (key: Corner, magnitude: (q: number) => number, axis:
   const [cx, cy] = cornerCenters(1)[key];
   const v0 = direction(0);
   const v1 = direction(R);
+
   return grayPng(CORNER_TEX, CORNER_TEX, (x, y) => {
     const q = Math.min(1, Math.hypot((x + 0.5) / CORNER_TEX - cx, (y + 0.5) / CORNER_TEX - cy));
     const A = Math.max(0, Math.min(255, magnitude(q))) / 255;
     const f = ((axis === 'x' ? x : y) + 0.5) / CORNER_TEX;
     const D = Math.max(0, Math.min(255, v0 + (v1 - v0) * f)) / 255;
+
     return (0.5 + A * (D - 0.5)) * 255;
   });
 };
@@ -173,6 +193,7 @@ export const perCorner = (tile: (key: Corner) => string) => ({ tl: tile('tl'), t
  */
 export function sliceRect(slot: Slot, w: number, h: number, r: number, reach: number, ox = 0, oy = 0): SliceRect {
   r = Math.max(0.01, Math.min(r, w / 2, h / 2));
+
   const mid = Math.max(0.01, w - 2 * r);
   const col = Math.max(0.01, h - 2 * r);
   const d = Math.max(0.01, Math.min(reach, Math.min(w, h) / 2));
@@ -213,6 +234,7 @@ export const refrProfile = (q: number) => {
 
   const cap = q * REFR_REACH;
   const x = d / cap;
+
   return (cap * x) / Math.pow(1 + x ** 4, 0.25);
 };
 
@@ -220,6 +242,7 @@ export const refrProfile = (q: number) => {
 export const tiltGain = (map: RefractionMap, w: number, h: number) => {
   const r = Math.max(0.01, Math.min(map.slice.r, w / 2, h / 2));
   const straight = Math.max(0, Math.min(1, (w / 2 - r) / r));
+
   return (REFR_TILT * straight * REFR_MAG_PEAK) / (REFR_PEAK * REFR_HEAD);
 };
 
@@ -234,6 +257,7 @@ export function buildRefraction(short: number, radius: number): RefractionMap {
   // the right edge (outward normal +1) means below 128.
   const edge = (dir: Edge) => {
     const n = dir === 'left' || dir === 'top' ? -1 : 1;
+
     return edgeTile(dir, reach, R, (q) => 128 - n * (refrProfile(q) / (REFR_PEAK * REFR_HEAD)) * 127.5);
   };
 
@@ -241,6 +265,7 @@ export function buildRefraction(short: number, radius: number): RefractionMap {
   const centers = cornerCenters(R);
   const dir = (axis: Axis) => (key: Corner) => {
     const c = centers[key][axis === 'x' ? 0 : 1];
+
     return productTile(key, magnitude, axis, (p) => (0.5 + (0.5 * (c - p)) / R) * 255, R);
   };
 
@@ -269,6 +294,7 @@ export const dot3 = (a: V3, b: V3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
 export const norm3 = (a: V3): V3 => {
   const l = Math.hypot(a[0], a[1], a[2]) || 1;
+
   return [a[0] / l, a[1] / l, a[2] / l];
 };
 
@@ -280,11 +306,13 @@ export const refract3 = (i: V3, n: V3, eta: number): V3 | null => {
   if (k < 0) return null;
 
   const f = eta * cosi - Math.sqrt(k);
+
   return [eta * i[0] + f * n[0], eta * i[1] + f * n[1], eta * i[2] + f * n[2]];
 };
 
 export const smootherstep = (t: number) => {
   const c = Math.min(1, Math.max(0, t));
+
   return c * c * c * (c * (c * 6 - 15) + 10);
 };
 
@@ -297,6 +325,7 @@ export const reflectionScale = (map: ReflectionMap, w: number, h: number) => (ma
 export const reflectionPad = (short: number, avail: ReflectAvail): ReflectAvail => {
   const L = Math.min(REFL_REACH * short, REFL_REACH_MAX);
   const cap = (a: number) => Math.max(0, Math.floor(Math.min(L, a)));
+
   return [cap(avail[0]), cap(avail[1]), cap(avail[2]), cap(avail[3])];
 };
 
@@ -325,14 +354,17 @@ export function buildReflection(width: number, height: number, radius: number, r
   const tanT = Math.tan(REFL_CURVE);
   const reachAt = (D: number) => {
     const u = Math.min(1, Math.max(0, D / ring));
+
     return REFL_CURVE > 1e-4 ? Math.atan(u * tanT) / REFL_CURVE : u;
   };
+
   const reflProfile = (q: number) => (L / R) * reachAt(R * (1 - q));
 
   // Behind the fade the weight is 0, so the corner magnitude may run out
   // towards the centre instead of blowing up with 1/q.
   const qMin = Math.max(0.15, 1 - fadeEnd / R - 0.05);
   const cornerMag = (q: number) => reflProfile(q) / Math.max(q, qMin);
+
   let peak = 1e-6;
 
   for (let i = 0; i <= 1000; i++) peak = Math.max(peak, cornerMag(i / 1000));
@@ -348,12 +380,14 @@ export function buildReflection(width: number, height: number, radius: number, r
     const fres = R0 + (1 - R0) * Math.pow(1 - cosT, 5);
 
     let tir = 1;
+
     const into = refract3([-v[0], -v[1], -v[2]], n, 1 / IOR);
 
     if (into) tir = Math.min(1, Math.max(0, (Math.hypot(into[0], into[1]) - SIN_CRIT * 0.94) / (SIN_CRIT * 0.12)));
 
     // Nothing in the outermost ring: there the edge layers own the look.
     const inner = D <= rimW ? 0 : fadeEnd > rimW ? REFL_INNER * (1 - smootherstep((D - rimW) / (fadeEnd - rimW))) : 0;
+
     return Math.min(1, Math.max(REFL_FLOOR, fres + (1 - fres) * tir) * strength * inner);
   };
 
@@ -376,11 +410,14 @@ export function buildReflection(width: number, height: number, radius: number, r
     for (let i = 0; i <= RSTOPS; i++) {
       const f = i / RSTOPS;
       const [ex, ey] = def.at(f * maskReach);
+
       stops.push({ o: flip ? 1 - f : f, wgt: weight(ex, ey, def.gx, def.gy, f * maskReach) });
     }
 
     stops.sort((a, b) => a.o - b.o);
+
     const direction = key === 'top' || key === 'bottom' ? 'to bottom' : 'to right';
+
     return `linear-gradient(${direction},${stops.map(({ o, wgt }) => `rgb(255 255 255 / ${wgt.toFixed(4)}) ${(o * 100).toFixed(4)}%`).join(',')})`;
   };
 
@@ -405,6 +442,7 @@ export function buildReflection(width: number, height: number, radius: number, r
 
       for (let i = 0; i <= CSTOPS; i++) {
         const rho = cornerAt(i) * R;
+
         stops.push(weight(def.ecx + gx * rho, def.ecy + gy * rho, gx, gy, R - rho));
       }
 
@@ -412,6 +450,7 @@ export function buildReflection(width: number, height: number, radius: number, r
     }
 
     const n = Math.max(8, Math.min(128, Math.ceil(R * 2)));
+
     return maskPng(n, n, (x, y) => {
       const dx = ((x + 0.5) / n) * R - def.cx;
       const dy = ((y + 0.5) / n) * R - def.cy;
@@ -420,12 +459,14 @@ export function buildReflection(width: number, height: number, radius: number, r
       if (rho >= R) return 0;
 
       let t = Math.atan2(dy, dx) - def.a0;
+
       t = ((t % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
 
       if (t > Math.PI / 2) t = t > Math.PI + Math.PI / 4 ? 0 : Math.PI / 2;
 
       const stops = wedgeStops[Math.round((t / (Math.PI / 2)) * (WEDGES - 1))];
       const f = rho / R;
+
       let i = 0;
 
       while (i < CSTOPS - 1 && cornerAt(i + 1) < f) i++;
@@ -433,6 +474,7 @@ export function buildReflection(width: number, height: number, radius: number, r
       const f0 = cornerAt(i);
       const f1 = cornerAt(i + 1);
       const u = f1 > f0 ? Math.min(1, Math.max(0, (f - f0) / (f1 - f0))) : 0;
+
       return stops[i] + (stops[i + 1] - stops[i]) * u;
     });
   };
@@ -443,6 +485,7 @@ export function buildReflection(width: number, height: number, radius: number, r
   const kEdge = { top: kT, right: kR, bottom: kB, left: kL };
   const offEdge = (key: Edge) => {
     const sign = key === 'top' || key === 'left' ? -1 : 1;
+
     return edgeTile(key, reach, R, (q) => 128 + sign * ((kEdge[key] * reflProfile(q)) / peak) * 127.5);
   };
 
@@ -451,6 +494,7 @@ export function buildReflection(width: number, height: number, radius: number, r
   const offDir = (axis: Axis) => (key: Corner) => {
     const c = centers[key][axis === 'x' ? 0 : 1];
     const k = axis === 'x' ? (key === 'tl' || key === 'bl' ? kL : kR) : key === 'tl' || key === 'tr' ? kT : kB;
+
     return productTile(key, offMag, axis, (p) => (0.5 + (0.5 * k * (p - c)) / R) * 255, R);
   };
 
@@ -487,8 +531,10 @@ export function buildBevelArcs(width: number, height: number) {
   const glint = (deg: number) => {
     const r = (deg * Math.PI) / 180;
     const n = ((Math.atan2(Math.sin(r) * ax, Math.cos(r) * by) * 180) / Math.PI + 360) % 360;
+
     return (1 + Math.cos((2 * (n - ARC_PEAK) * Math.PI) / 180)) / 2;
   };
+
   const stop = (v: number, deg: number) => `${v >= 0.9995 ? '#000' : v <= 0.0005 ? 'transparent' : `rgba(0,0,0,${+v.toFixed(3)})`} ${deg}deg`;
   const build = (fn: (deg: number) => number) => {
     const parts = ['from 0deg'];
@@ -503,5 +549,6 @@ export function buildBevelArcs(width: number, height: number) {
   if (ARC_CACHE.size >= 48) ARC_CACHE.delete(ARC_CACHE.keys().next().value as string);
 
   ARC_CACHE.set(key, res);
+
   return res;
 }

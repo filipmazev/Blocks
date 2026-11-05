@@ -1,6 +1,7 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
 import { IconName, IconSize } from '@filip.mazev/blocks/icons';
-import { TagColor, TagSize, TagVariant } from '../types/tag.types';
+
+import { TagColor, TagSize, TagVariant } from '@primitives/components/tag/types/tag.types';
 
 /** Reusable tag appearance; direct component inputs override these optional values. */
 export interface ITagConfig {

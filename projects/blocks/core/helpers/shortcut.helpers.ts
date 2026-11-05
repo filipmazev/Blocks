@@ -1,5 +1,6 @@
-import { SHORTCUT_KEY_ALIASES } from '../constants/shortcut.constants';
-import type { IOSShortcut } from '../interfaces/ios-shortcut.interface';
+import type { IOSShortcut } from '@core/interfaces/ios-shortcut.interface';
+
+import { SHORTCUT_KEY_ALIASES } from '@core/constants/shortcut.constants';
 
 export function isOSShortcut(value: unknown): value is IOSShortcut {
   return typeof value === 'object' && value !== null && !Array.isArray(value) && 'default' in value;

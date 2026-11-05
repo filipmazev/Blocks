@@ -1,110 +1,56 @@
+import type { IEntry } from '@effects/runtime/interfaces/ientry.interface';
+import type { ILightContribution } from '@effects/runtime/interfaces/ilight-contribution.interface';
+import type { ILighting } from '@effects/runtime/interfaces/ilighting.interface';
+import type { IPointLight } from '@effects/runtime/interfaces/ipoint-light.interface';
+import type { IReflection } from '@effects/runtime/interfaces/ireflection.interface';
+import type { ISceneEntry } from '@effects/runtime/interfaces/iscene-entry.interface';
+import type { ISurfaceHooks } from '@effects/runtime/interfaces/isurface-hooks.interface';
+
+import { ACTIVE_SURFACE_STATE_SELECTOR } from '@effects/runtime/constants/surface-interaction.constants';
+import { SURFACE_RENDERED_STYLES } from '@effects/runtime/constants/surface-style.constants';
+import { projectLight } from '@effects/runtime/helpers/light-projection.helpers';
+import { isSurfaceActivationKey } from '@effects/runtime/helpers/surface-interaction.helpers';
+
+import type { IGlassLight, IGlassReflector, IGlassScene, IGlassSceneOptions } from './types';
+
 import { AmbientSampler } from './ambient';
 import { configurationEvent } from './configuration';
 import { finiteClamp } from './dom';
 import { subscribeFrame } from './scheduler';
 import { lightBoundarySelector, lightingOrigin, lightingVisibility } from './visibility';
-import type { GlassLight, GlassReflector, GlassScene, GlassSceneOptions } from './types';
-import { ACTIVE_SURFACE_STATE_SELECTOR } from './constants/surface-interaction.constants';
-import { isSurfaceActivationKey } from './helpers/surface-interaction.helpers';
-import { SURFACE_RENDERED_STYLES } from './constants/surface-style.constants';
-import { projectLight } from './helpers/light-projection.helpers';
+export type { ILightContribution } from '@effects/runtime/interfaces/ilight-contribution.interface';
+/** @deprecated Use ILightContribution; the historical type name remains available for compatibility. */
+export type { ILightContribution as LightContribution } from '@effects/runtime/interfaces/ilight-contribution.interface';
 
-export interface LightContribution {
-  key: string;
-  x: number;
-  y: number;
-  color: string;
-  strength: number;
-  edgeStrength: number;
-  ambient?: boolean;
-  spread?: number;
-}
-export interface Lighting {
-  /** First paint and viewport re-entry already have a current sample and must not fade in. */
-  immediate?: boolean;
-  x: number;
-  y: number;
-  strength: number;
-  color: string;
-  rim: string;
-  contributions: LightContribution[];
-  reflection: string;
-  reflectionStrength: number;
-  reflectionX: number;
-  reflectionY: number;
-}
-interface SurfaceHooks {
-  hitTarget?: HTMLElement;
-  light(value: Lighting): void;
-  interactive(): boolean;
-  emission?(): string | undefined;
-  /** Resolve source-local CSS colors before projecting them into another element's variable scope. */
-  resolveEmission?(color: string): string;
-  focusEmission?(): string | undefined;
-  emit?(active: boolean, color?: string): void;
-  press(): void;
-  release(): void;
-  sync(): void;
-  visibility?(visible: boolean): void;
-}
-interface Entry {
-  id: number;
-  element: HTMLElement;
-  hooks: SurfaceHooks;
-  visible: boolean;
-  bounds?: DOMRect;
-  lastLighting?: Lighting;
-  resuming?: boolean;
-  painted?: boolean;
-}
-interface SceneEntry {
-  id: number;
-  root: HTMLElement;
-  options: GlassSceneOptions;
-}
-export interface PointLight {
-  key: string;
-  bounds?: DOMRect;
-  source?: HTMLElement;
-  ambient?: boolean;
-  spread?: number;
-  excludeSource?: boolean;
-  excludeElement?: HTMLElement;
-  x: number;
-  y: number;
-  z: number;
-  color: string;
-  intensity: number;
-  radius: number;
-}
-interface Reflection {
-  source: HTMLElement;
-  x: number;
-  y: number;
-  depth: number;
-  color: string;
-  intensity: number;
-  radius: number;
-}
+export type { ILighting } from '@effects/runtime/interfaces/ilighting.interface';
+/** @deprecated Use ILighting; the historical type name remains available for compatibility. */
+export type { ILighting as Lighting } from '@effects/runtime/interfaces/ilighting.interface';
+
+export type { IPointLight } from '@effects/runtime/interfaces/ipoint-light.interface';
+/** @deprecated Use IPointLight; the historical type name remains available for compatibility. */
+export type { IPointLight as PointLight } from '@effects/runtime/interfaces/ipoint-light.interface';
+
 const runtimes = new WeakMap<Document, SceneRuntime>();
 const disabledSelector = ':disabled, [aria-disabled="true"], .is-disabled, [inert]';
 
 function runtimeFor(doc: Document): SceneRuntime {
   let runtime = runtimes.get(doc);
+
   if (!runtime) {
     runtime = new SceneRuntime(doc);
     runtimes.set(doc, runtime);
   }
+
   return runtime;
 }
 
 /** One delegated pointer stream and visibility observer per document, never per control. */
-export function registerSurface(element: HTMLElement, hooks: SurfaceHooks): () => void {
+export function registerSurface(element: HTMLElement, hooks: ISurfaceHooks): () => void {
   return runtimeFor(element.ownerDocument).register(element, hooks);
 }
 
 /** Receive scene lighting for a native pseudo-element without inserting decoration into its host. */
-export function observeGlassLighting(element: HTMLElement, light: (value: Lighting) => void, hitTarget: HTMLElement = element): () => void {
+export function observeGlassLighting(element: HTMLElement, light: (value: ILighting) => void, hitTarget: HTMLElement = element): () => void {
   return registerSurface(element, { light, hitTarget, interactive: () => false, press() {}, release() {}, sync() {} });
 }
 
@@ -114,66 +60,68 @@ export function refreshGlassLighting(element: HTMLElement): void {
 }
 
 /** Light fields are explicit; surfaces also sample nearby visual sources for ambient edge color. */
-export function mountGlassScene(root: HTMLElement, options: GlassSceneOptions = {}): GlassScene {
+export function mountGlassScene(root: HTMLElement, options: IGlassSceneOptions = {}): IGlassScene {
   return runtimeFor(root.ownerDocument).scene(root, options);
 }
 
 class SceneRuntime {
-  private readonly renderedStyles = SURFACE_RENDERED_STYLES;
-  private entries = new Map<HTMLElement, Entry>();
-  private scenes = new Set<SceneEntry>();
+  private readonly renderedStyles: WeakMap<HTMLElement, string | null> = SURFACE_RENDERED_STYLES;
+
+  private entries: Map<HTMLElement, IEntry> = new Map<HTMLElement, IEntry>();
+  private scenes: Set<ISceneEntry> = new Set<ISceneEntry>();
   private observer?: IntersectionObserver;
   private stateObserver?: MutationObserver;
-  private selected = new Set<Entry>();
-  private pressed?: Entry;
+  private selected: Set<IEntry> = new Set<IEntry>();
+  private pressed?: IEntry;
   private pressedPointer?: number;
   private pressedKey?: string;
-  private hovered?: Entry;
-  private focused?: Entry;
+  private hovered?: IEntry;
+  private focused?: IEntry;
   private focusedTarget?: Element;
-  private emitting = new Map<Entry, string>();
-  private nextId = 0;
-  private lightIds = new WeakMap<HTMLElement, number>();
-  private queue = new Set<Entry>();
+  private emitting: Map<IEntry, string> = new Map<IEntry, string>();
+  private nextId: number = 0;
+  private lightIds: WeakMap<HTMLElement, number> = new WeakMap<HTMLElement, number>();
+  private queue: Set<IEntry> = new Set<IEntry>();
   private stopFrame?: () => void;
-  private connected = false;
+  private connected: boolean = false;
   private motion: MediaQueryList;
   private transparency: MediaQueryList;
   private contrast: MediaQueryList;
   private view: Window;
   private ambient: AmbientSampler;
-
-  private assetLoad = (event: Event) => {
+  private assetLoad: (event: Event) => void = (event: Event) => {
     const target = event.target as Element | null;
+
     if (target && /^(IMG|VIDEO)$/.test(target.tagName)) this.ambient.assetChanged(target);
   };
-
-  private visibilityChange = () => {
+  private visibilityChange: () => void = () => {
     if (!this.doc.hidden) this.refresh();
     else this.blur();
+
     this.ambient.resume();
   };
-
-  private down = (event: PointerEvent) => {
+  private down: (event: PointerEvent) => void = (event: PointerEvent) => {
     if (event.button !== 0 || !event.isPrimary) return;
+
     this.up();
+
     if (event.pointerType === 'touch') this.hovered = undefined;
+
     this.pressedPointer = event.pointerId;
     this.pressed = this.find(event);
     this.pressed?.hooks.press();
     this.updateEmitter();
   };
-
-  private up = (event?: PointerEvent) => {
+  private up: (event?: PointerEvent) => void = (event?: PointerEvent) => {
     if (event && event.pointerId !== this.pressedPointer) return;
+
     this.pressed?.hooks.release();
     this.pressed = undefined;
     this.pressedPointer = undefined;
     this.pressedKey = undefined;
     this.updateEmitter();
   };
-
-  private keydown = (event: KeyboardEvent) => {
+  private keydown: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     const target = event.target as Element | null;
 
     if (
@@ -187,74 +135,74 @@ class SceneRuntime {
       !isSurfaceActivationKey(target, event.key)
     )
       return;
+
     const entry = this.find(event);
 
     if (!entry) return;
+
     this.up();
     this.pressed = entry;
     this.pressedKey = event.key;
     entry.hooks.press();
     this.updateEmitter();
   };
-
-  private keyup = (event: KeyboardEvent) => {
+  private keyup: (event: KeyboardEvent) => void = (event: KeyboardEvent) => {
     if (event.key === this.pressedKey) this.up();
   };
-
-  private leave = () => {
+  private leave: () => void = () => {
     if (this.pressedPointer !== undefined) this.up();
+
     this.hovered = undefined;
     this.updateEmitter();
   };
-
-  private blur = () => {
+  private blur: () => void = () => {
     this.up();
     this.hovered = this.focused = undefined;
     this.focusedTarget = undefined;
     this.updateEmitter();
   };
-
-  private over = (event: PointerEvent) => {
+  private over: (event: PointerEvent) => void = (event: PointerEvent) => {
     if (event.pointerType === 'touch') return;
+
     const found = this.find(event);
     const next = found?.hooks.emission?.() ? found : undefined;
+
     if (next !== this.hovered) {
       this.hovered = next;
       this.updateEmitter();
     }
   };
-
-  private out = (event: PointerEvent) => {
+  private out: (event: PointerEvent) => void = (event: PointerEvent) => {
     const target = this.hovered?.element.closest('label') ?? this.hovered?.element;
+
     if (target && !target.contains(event.relatedTarget as Node | null)) {
       this.hovered = undefined;
       this.updateEmitter();
     }
   };
-
-  private focus = (event: Event) => {
+  private focus: (event: Event) => void = (event: Event) => {
     const target = event.target as Element;
     const visual = target.matches('input[type="checkbox"], input[type="radio"]')
       ? target.closest('label')?.querySelector<HTMLElement>('[data-bx-surface]')
       : undefined;
+
     this.focused = visual ? this.entries.get(visual) : this.find(event);
     this.focusedTarget = target;
     this.updateEmitter();
   };
-
-  private unfocus = () => {
+  private unfocus: () => void = () => {
     if (this.pressedKey !== undefined) this.up();
+
     this.focused = undefined;
     this.focusedTarget = undefined;
     this.updateEmitter();
   };
-
-  private change = () => {
+  private change: () => void = () => {
     for (const entry of this.entries.values()) this.updateSelected(entry);
+
     this.updateEmitter();
   };
-
-  private sync = () => {
+  private sync: () => void = () => {
     // Children inherit resolved material preferences from their nearest surface.
     // Angular mounts child surfaces first, so registration order is insufficient.
     const ordered = [...this.entries.values()].sort((a, b) => {
@@ -267,32 +215,40 @@ class SceneRuntime {
       entry.hooks.sync();
       this.updateSelected(entry);
     }
+
     this.updateEmitter();
     this.refresh();
   };
-
-  private refresh = () => {
+  private refresh: () => void = () => {
     this.refreshEntries([...this.entries.values()]);
   };
-
-  private scroll = (event: Event) => {
+  private scroll: (event: Event) => void = (event: Event) => {
     const root = event.target as HTMLElement | null;
+
     if (root?.nodeType !== 1) {
       this.refresh();
+
       return;
     }
+
     const area = root.getBoundingClientRect();
-    const nearby: Entry[] = [];
+    const nearby: IEntry[] = [];
+
     this.refreshEntries(
       [...this.entries.values()].filter((entry) => {
         if (!entry.visible) return false;
+
         if (root.contains(entry.element)) return true;
+
         const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+
         // Prioritize controls over the scrolling pixels. Nearby surfaces still
         // refresh, but must not crowd those controls out of every sample batch.
         if (bounds.right > area.left && bounds.left < area.right && bounds.bottom > area.top && bounds.top < area.bottom) return true;
+
         if (bounds.right >= area.left - 160 && bounds.left <= area.right + 160 && bounds.bottom >= area.top - 160 && bounds.top <= area.bottom + 160)
           nearby.push(entry);
+
         return false;
       })
     );
@@ -301,14 +257,17 @@ class SceneRuntime {
 
   constructor(private doc: Document) {
     const view = doc.defaultView;
+
     if (!view) throw new Error('Glass scenes require a browser document.');
+
     this.view = view;
     this.ambient = new AmbientSampler(
       doc,
       view,
       (entry) => {
         if (this.entries.get(entry.element) !== entry) return;
-        this.queue.add(entry as Entry);
+
+        this.queue.add(entry as IEntry);
         this.schedule();
       },
       (root) => this.observeState(root)
@@ -316,49 +275,66 @@ class SceneRuntime {
     this.motion = view.matchMedia('(prefers-reduced-motion: reduce)');
     this.transparency = view.matchMedia('(prefers-reduced-transparency: reduce)');
     this.contrast = view.matchMedia('(prefers-contrast: more), (forced-colors: active)');
+
     if (typeof view.IntersectionObserver === 'function')
       this.observer = new view.IntersectionObserver(
         (records) => {
           for (const record of records) {
             const entry = this.entries.get(record.target as HTMLElement);
+
             if (!entry) continue;
+
             if (record.isIntersecting && !entry.visible) entry.resuming = true;
+
             entry.visible = record.isIntersecting;
             entry.hooks.visibility?.(entry.visible);
             this.ambient.invalidate(entry, true);
+
             if (entry.visible) {
               entry.bounds = undefined;
               this.queue.add(entry);
             }
           }
+
           this.schedule();
         },
         { rootMargin: '64px' }
       );
+
     // Watch semantic and visual source changes once per document. Lighting's
     // own decoration writes are excluded so sampling cannot trigger a loop.
     if (typeof view.MutationObserver === 'function')
       this.stateObserver = new view.MutationObserver((records) => {
-        const changed = new Set<Entry>();
+        const changed = new Set<IEntry>();
+
         let visualChanged = false;
+
         const themeChanged = records.some(
           (record) => record.target === this.doc.documentElement && (record.attributeName === 'class' || record.attributeName === 'data-theme')
         );
+
         for (const record of records) {
           if (record.type === 'childList') {
             if (record.target.nodeType === 1 && this.isLightingDecoration(record.target)) continue;
+
             if ([...record.addedNodes, ...record.removedNodes].some((node) => !this.isLightingDecoration(node))) {
               visualChanged = true;
               this.ambient.sourcesChanged(record);
             }
+
             continue;
           }
+
           const target = record.target as HTMLElement;
+
           if (record.attributeName === 'style' && this.renderedStyles.get(target) === target.getAttribute('style')) continue;
+
           if (record.attributeName === 'class') {
             const entry = this.entries.get(target);
+
             if (entry) changed.add(entry);
           }
+
           if (
             record.attributeName === 'class' ||
             record.attributeName === 'style' ||
@@ -371,42 +347,55 @@ class SceneRuntime {
           ) {
             if (!this.isLightingDecoration(target)) {
               visualChanged = true;
+
               if (/^(src|srcset|width|height)$/.test(record.attributeName ?? '')) this.ambient.assetChanged(target);
             }
+
             continue;
           }
+
           const visual = target.matches('input[type="checkbox"], input[type="radio"]')
             ? target.closest('label')?.querySelector<HTMLElement>('[data-bx-surface]')
             : undefined;
           const entry = this.entries.get(target) ?? (visual ? this.entries.get(visual) : undefined);
+
           if (entry) changed.add(entry);
+
           if (record.attributeName === 'data-bx-field-invalid') {
             for (const surface of target.querySelectorAll<HTMLElement>('[data-bx-surface]')) {
               const child = this.entries.get(surface);
+
               if (child) changed.add(child);
             }
           }
         }
+
         if (visualChanged) {
           for (const entry of this.entries.values()) {
             entry.bounds = undefined;
             entry.lastLighting = undefined;
           }
+
           this.ambient.invalidate();
         }
 
         // Angular can mount a child before its parent. Reconcile newly nested materials before the next paint.
         if (themeChanged || records.some((record) => record.attributeName === 'data-bx-surface')) this.sync();
+
         if (!changed.size && !visualChanged) return;
+
         for (const entry of changed) this.updateSelected(entry);
+
         this.updateEmitter();
       });
   }
 
-  public register(element: HTMLElement, hooks: SurfaceHooks): () => void {
+  public register(element: HTMLElement, hooks: ISurfaceHooks): () => void {
     this.connect();
-    const entry: Entry = { id: this.nextId++, element, hooks, visible: true };
+
+    const entry: IEntry = { id: this.nextId++, element, hooks, visible: true };
     const overlay = lightingVisibility(this.doc, this.view).boundary(element) !== this.doc.documentElement;
+
     this.entries.set(element, entry);
     this.ambient.add(entry);
     this.observer?.observe(element);
@@ -414,29 +403,40 @@ class SceneRuntime {
     this.updateEmitter();
     this.queue.add(entry);
     this.schedule();
+
     // New overlays can cover receivers which already have highlights. Re-evaluate those as well.
     if (overlay) this.refresh();
+
     return () => {
       this.observer?.unobserve(element);
       this.entries.delete(element);
       this.ambient.remove(entry);
       this.queue.delete(entry);
       this.selected.delete(entry);
+
       if (this.pressed === entry) this.up();
+
       if (this.hovered === entry || this.focused === entry || this.emitting.has(entry)) {
         if (this.hovered === entry) this.hovered = undefined;
+
         if (this.focused === entry) this.focused = undefined;
+
         this.updateEmitter();
       }
+
       if (overlay) this.refresh();
+
       this.disconnectIfEmpty();
     };
   }
 
   public refreshElement(element: HTMLElement): void {
     const entry = this.entries.get(element);
+
     if (entry) this.updateSelected(entry);
+
     this.updateEmitter();
+
     if (entry) {
       this.ambient.invalidate(entry, true);
       entry.bounds = undefined;
@@ -446,12 +446,16 @@ class SceneRuntime {
     }
   }
 
-  public scene(root: HTMLElement, options: GlassSceneOptions): GlassScene {
+  public scene(root: HTMLElement, options: IGlassSceneOptions): IGlassScene {
     this.connect();
+
     const entry = { id: this.nextId++, root, options };
+
     this.scenes.add(entry);
     this.refreshRoot(root);
+
     let disposed = false;
+
     return {
       update: (next) => {
         if (!disposed) {
@@ -467,6 +471,7 @@ class SceneRuntime {
       },
       destroy: () => {
         if (disposed) return;
+
         disposed = true;
         this.scenes.delete(entry);
         this.refreshRoot(root);
@@ -475,34 +480,47 @@ class SceneRuntime {
     };
   }
 
-  private refreshEntries(entries: Entry[]): void {
+  //#region Helpers
+
+  private refreshEntries(entries: IEntry[]): void {
     this.ambient.invalidate(entries, true);
+
     for (const entry of entries) {
       entry.bounds = undefined;
+
       if (entry.visible) this.queue.add(entry);
     }
+
     this.schedule();
   }
 
   private isLightingDecoration(node: Node): boolean {
     if (node.nodeType !== node.ELEMENT_NODE) return true;
+
     const element = node as Element;
+
     return !!element.closest('.bx-glass-decoration, .bx-glass-rim, .bx-refraction-layer, .bx-refraction-defs, .bx-refraction-cover, .bx-refraction-tick');
   }
 
-  private find(event: Event): Entry | undefined {
+  private find(event: Event): IEntry | undefined {
     for (const node of event.composedPath()) {
       const found = this.entries.get(node as HTMLElement);
+
       if (!found) continue;
+
       if (found.element.closest(disabledSelector)) return undefined;
+
       // A decorative surface inside a button/link is still part of that action.
       if (found.hooks.interactive()) return found;
     }
+
     const target = event.target as Element;
     const label = target.closest('label');
     const visual = label?.control?.matches('input[type="checkbox"], input[type="radio"]') ? label.querySelector<HTMLElement>('[data-bx-surface]') : undefined;
     const found = visual ? this.entries.get(visual) : undefined;
+
     if (found && !found.element.closest(disabledSelector) && !label?.control?.matches(disabledSelector) && found.hooks.interactive()) return found;
+
     return undefined;
   }
 
@@ -511,24 +529,37 @@ class SceneRuntime {
   }
 
   private updateEmitter(): void {
-    const next = new Map<Entry, string>();
-    const enabled = (entry: Entry) =>
+    const next = new Map<IEntry, string>();
+    const enabled = (entry: IEntry) =>
       entry.hooks.interactive() && !entry.element.closest(disabledSelector) && !entry.element.closest('label')?.control?.matches(disabledSelector);
+
     for (const entry of [...this.selected, this.hovered, this.pressed]) {
       const color = entry && enabled(entry) ? entry.hooks.emission?.() : undefined;
+
       if (entry && color) next.set(entry, color);
     }
+
     const focusColor = this.focused?.hooks.focusEmission?.() ?? (this.focusedTarget?.matches(':focus-visible') ? this.focused?.hooks.emission?.() : undefined);
+
     if (this.focused && enabled(this.focused) && focusColor) next.set(this.focused, focusColor);
+
     const previous = this.emitting;
+
     if (previous.size === next.size && [...next].every(([entry, color]) => previous.get(entry) === color)) return;
+
     for (const entry of previous.keys()) if (!next.has(entry)) entry.hooks.emit?.(false);
+
     this.emitting = next;
+
     for (const [entry, color] of next) entry.hooks.emit?.(true, color);
+
     const sources = [...new Set([...previous.keys(), ...next.keys()])];
+
     for (const entry of this.entries.values()) {
       if (!entry.visible) continue;
+
       const affected = sources.some((source) => this.scope(source.element) === this.scope(entry.element));
+
       // A panel may have finished its opening animation since its surfaces were registered.
       if (affected) {
         entry.bounds = undefined;
@@ -536,12 +567,14 @@ class SceneRuntime {
         this.queue.add(entry);
       }
     }
+
     this.schedule();
   }
 
-  private updateSelected(entry: Entry): void {
+  private updateSelected(entry: IEntry): void {
     const control = entry.element.closest('label')?.control;
     const checked = control?.matches('input[type="checkbox"]:is(:checked, :indeterminate), input[type="radio"]:checked');
+
     if (entry.hooks.emission?.() && (entry.element.matches(ACTIVE_SURFACE_STATE_SELECTOR) || checked)) this.selected.add(entry);
     else this.selected.delete(entry);
   }
@@ -549,12 +582,15 @@ class SceneRuntime {
   private refreshRoot(root: HTMLElement, measure = true): void {
     for (const entry of this.entries.values()) {
       if (!root.contains(lightingOrigin(entry.element))) continue;
+
       if (measure) {
         entry.bounds = undefined;
         entry.lastLighting = undefined;
       }
+
       if (entry.visible) this.queue.add(entry);
     }
+
     this.schedule();
   }
 
@@ -596,6 +632,7 @@ class SceneRuntime {
 
   private connect(): void {
     if (this.connected) return;
+
     this.connected = true;
     this.observeState(this.doc.documentElement);
     this.doc.addEventListener('pointerdown', this.down, { passive: true, capture: true });
@@ -626,6 +663,7 @@ class SceneRuntime {
 
   private disconnectIfEmpty(): void {
     if (this.entries.size || this.scenes.size) return;
+
     this.ambient.destroy();
     this.stopFrame?.();
     this.stopFrame = undefined;
@@ -662,6 +700,7 @@ class SceneRuntime {
 
   private schedule(): void {
     if (this.stopFrame || !this.queue.size) return;
+
     this.stopFrame = subscribeFrame(() => {
       // Bound lighting work when hundreds of components become visible or a global setting changes.
       const batch = Array.from(this.queue).slice(0, 24);
@@ -670,6 +709,7 @@ class SceneRuntime {
         const bounds = emitter.element.getBoundingClientRect();
         const exposed =
           visibility.exposed(emitter.element, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds) && !emitter.element.closest(disabledSelector);
+
         return { emitter, color: exposed ? (emitter.hooks.resolveEmission?.(color) ?? color) : color, exposed };
       });
       const activeLights = emissions
@@ -678,34 +718,44 @@ class SceneRuntime {
           emitter,
           light: this.lightPoint({ element: emitter.element, color, excludeSource: true, z: 24, intensity: 0.85, radius: 120 }, `hover:${emitter.id}`, true)
         }));
-      const sceneData = new Map<SceneEntry, { lights: PointLight[]; reflections: Reflection[] }>();
+      const sceneData = new Map<ISceneEntry, { lights: IPointLight[]; reflections: IReflection[] }>();
       // Read only scenes used by this batch; avoid measuring offscreen or unrelated objects.
       const projections = batch
         .filter((entry) => {
           if (!entry.visible || !entry.element.isConnected || (entry.resuming && this.ambient.isPending(entry))) return false;
+
           const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
           const visible = bounds.bottom > 0 && bounds.right > 0 && bounds.top < this.view.innerHeight && bounds.left < this.view.innerWidth;
+
           if (!visible) entry.resuming = true;
+
           return visible;
         })
         .map((entry) => {
           entry.bounds ??= entry.element.getBoundingClientRect();
+
           const origin = lightingOrigin(entry.element) as HTMLElement;
-          let nearest: SceneEntry | undefined;
+
+          let nearest: ISceneEntry | undefined;
+
           for (const candidate of this.scenes) if (candidate.root.contains(origin) && (!nearest || nearest.root.contains(candidate.root))) nearest = candidate;
+
           if (nearest && !sceneData.has(nearest)) {
             const scene = nearest;
+
             sceneData.set(scene, {
               lights: (scene.options.lights ?? []).map((light, index) => this.lightPoint(light, `${scene.id}:${index}`)),
               reflections: (scene.options.reflectors ?? []).slice(0, 4).map((reflection) => this.reflectionPoint(reflection))
             });
           }
+
           const data = nearest ? sceneData.get(nearest) : undefined;
           const sceneRoot = nearest?.root ?? entry.element;
           // Explicit scene lights and an active semantic element share the same spatial model.
           const boundary = visibility.boundary(entry.element);
           const candidates = (data?.lights ?? []).filter((light) => visibility.boundary(light.source ?? sceneRoot) === boundary);
           const lights = this.selectSceneLights(entry, candidates, visibility);
+
           for (const { emitter, light } of activeLights) {
             if (
               this.scope(emitter.element) === this.scope(entry.element) &&
@@ -715,32 +765,46 @@ class SceneRuntime {
             )
               lights.push(light);
           }
+
           lights.push(...this.ambient.lights(entry));
+
           const reflections = (data?.reflections ?? []).filter((reflection) => visibility.boundary(reflection.source) === boundary);
           const lighting = this.project(entry, lights, reflections, visibility);
+
           lighting.immediate = entry.resuming || !entry.painted;
           entry.resuming = false;
+
           return [entry, lighting] as const;
         });
+
       for (const entry of batch) this.queue.delete(entry);
+
       // The browser clips each active border; source occlusion only gates light cast onto other surfaces.
       for (const { emitter, color } of emissions) emitter.hooks.emit?.(true, color);
+
       for (const [entry, lighting] of projections) {
         if (this.sameLighting(entry.lastLighting, lighting)) continue;
+
         entry.lastLighting = lighting;
         entry.painted = true;
+
         const before = entry.element.getAttribute('style');
+
         entry.hooks.light(lighting);
+
         const after = entry.element.getAttribute('style');
+
         // Native receivers (e.g. the slider thumb) paint on their host, not a decoration child.
         if (before !== after) this.renderedStyles.set(entry.element, after);
       }
+
       if (!this.queue.size) this.stopFrame = undefined;
+
       return this.queue.size > 0;
     });
   }
 
-  private sameLighting(previous: Lighting | undefined, next: Lighting): boolean {
+  private sameLighting(previous: ILighting | undefined, next: ILighting): boolean {
     if (
       !previous ||
       previous.x !== next.x ||
@@ -755,8 +819,10 @@ class SceneRuntime {
       previous.contributions.length !== next.contributions.length
     )
       return false;
+
     return previous.contributions.every((light, index) => {
       const other = next.contributions[index];
+
       return (
         light.key === other.key &&
         light.x === other.x &&
@@ -770,12 +836,15 @@ class SceneRuntime {
     });
   }
 
-  private lightPoint(light: GlassLight, key: string, border = false): PointLight {
+  private lightPoint(light: IGlassLight, key: string, border = false): IPointLight {
     const rect = light.element?.getBoundingClientRect();
+
     if (light.element && !border) {
       if (!this.lightIds.has(light.element)) this.lightIds.set(light.element, this.nextId++);
+
       key = `scene:${this.lightIds.get(light.element)}`;
     }
+
     return {
       key,
       bounds: rect && light.edge === 'bottom' ? new DOMRect(rect.left, rect.bottom, rect.width, 0) : border ? rect : undefined,
@@ -791,8 +860,9 @@ class SceneRuntime {
     };
   }
 
-  private reflectionPoint(reflector: GlassReflector): Reflection {
+  private reflectionPoint(reflector: IGlassReflector): IReflection {
     const rect = reflector.element.getBoundingClientRect();
+
     return {
       source: reflector.element,
       x: rect.left + rect.width / 2,
@@ -804,16 +874,14 @@ class SceneRuntime {
     };
   }
 
-  //#region Helpers
-
-  private selectSceneLights(entry: Entry, lights: PointLight[], visibility: ReturnType<typeof lightingVisibility>): PointLight[] {
+  private selectSceneLights(entry: IEntry, lights: IPointLight[], visibility: ReturnType<typeof lightingVisibility>): IPointLight[] {
     const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
     const ranked = lights
       .filter((light) => !(light.excludeSource && light.source === entry.element) && light.excludeElement !== entry.element)
       .map((light) => ({ light, projection: projectLight(light, bounds) }))
       .filter(({ projection }) => projection.edgeWeight > 0.01 || projection.weight > 0.001)
       .sort((a, b) => Math.max(b.projection.weight, b.projection.edgeWeight) - Math.max(a.projection.weight, a.projection.edgeWeight));
-    const selected: PointLight[] = [];
+    const selected: IPointLight[] = [];
 
     for (const { light, projection } of ranked) {
       if (!visibility.exposed(entry.hooks.hitTarget ?? entry.element, projection.x, projection.y, bounds)) continue;
@@ -832,12 +900,11 @@ class SceneRuntime {
     return selected;
   }
 
-  //#endregion
-
-  private project(entry: Entry, lights: PointLight[], reflectors: Reflection[], visibility: ReturnType<typeof lightingVisibility>): Lighting {
+  private project(entry: IEntry, lights: IPointLight[], reflectors: IReflection[], visibility: ReturnType<typeof lightingVisibility>): ILighting {
     const b = (entry.bounds ??= entry.element.getBoundingClientRect());
     const cx = b.left + b.width / 2,
       cy = b.top + b.height / 2;
+
     let x = 25,
       y = 0,
       strength = 0.04,
@@ -846,25 +913,34 @@ class SceneRuntime {
       weightedX = 0,
       weightedY = 0,
       totalWeight = 0;
+
     const rims: string[] = [];
-    const contributions: LightContribution[] = [];
+    const contributions: ILightContribution[] = [];
+
     for (const light of lights) {
       if ((light.excludeSource && light.source === entry.element) || light.excludeElement === entry.element) continue;
+
       // Semantic borders emit from their closest edge, so large buttons still have a short reach.
       const { x: lx, y: ly, weight, edgeWeight } = projectLight(light, b);
       // Project actual viewport coordinates into this surface, without a perspective speed-up.
       const localX = Math.max(0, Math.min(100, ((lx - b.left) / Math.max(1, b.width)) * 100));
       const localY = Math.max(0, Math.min(100, ((ly - b.top) / Math.max(1, b.height)) * 100));
+
       if (edgeWeight <= 0.01 && weight <= 0.001) continue;
+
       if (!light.ambient && !visibility.exposed(entry.hooks.hitTarget ?? entry.element, lx, ly, b)) continue;
+
       if (!light.ambient && light.source) {
         const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
+
         if (!visibility.exposed(source, lx, ly, source.getBoundingClientRect())) continue;
       }
+
       if (edgeWeight > 0.01)
         rims.push(
           `radial-gradient(${light.spread ? `circle ${light.spread}px` : 'ellipse farthest-side'} at ${localX.toFixed(2)}% ${localY.toFixed(2)}%, color-mix(in srgb, ${light.color} ${(edgeWeight * 100).toFixed(2)}%, transparent), transparent 75%)`
         );
+
       if (edgeWeight > 0.01 || weight > 0.001)
         contributions.push({
           key: light.key,
@@ -876,39 +952,51 @@ class SceneRuntime {
           ambient: light.ambient,
           spread: light.spread
         });
+
       if (!light.ambient) {
         weightedX += localX * weight;
         weightedY += localY * weight;
         totalWeight += weight;
+
         if (weight > strongest) {
           strongest = weight;
           color = light.color;
         }
       }
     }
+
     if (totalWeight > 0.001) {
       x = weightedX / totalWeight;
       y = weightedY / totalWeight;
       strength = Math.min(0.4, 0.04 + totalWeight * 0.4);
     }
+
     let reflectionStrength = 0,
       reflection = 'transparent',
       reflectionX = 50,
       reflectionY = 50;
+
     for (const reflector of reflectors) {
       if (!visibility.exposed(entry.hooks.hitTarget ?? entry.element, reflector.x, reflector.y, b)) continue;
+
       const distance = Math.hypot(reflector.x - cx, reflector.y - cy, reflector.depth);
       const weight = reflector.intensity * Math.max(0, 1 - distance / (reflector.radius * 2));
+
       if (weight > reflectionStrength) {
         reflectionStrength = weight;
         reflection = reflector.color;
+
         // Signed depth gives background and foreground proxies opposite parallax around the surface normal.
         const direction = reflector.depth < 0 ? 1 : -1;
         const perspective = Math.max(80, Math.abs(reflector.depth) + reflector.radius * 0.5);
+
         reflectionX = Math.max(0, Math.min(100, 50 + ((reflector.x - cx) / perspective) * 45 * direction));
         reflectionY = Math.max(0, Math.min(100, 50 + ((reflector.y - cy) / perspective) * 45 * direction));
       }
     }
+
     return { x, y, strength, color, rim: rims.join(', ') || 'none', contributions, reflection, reflectionStrength, reflectionX, reflectionY };
   }
+
+  //#endregion
 }

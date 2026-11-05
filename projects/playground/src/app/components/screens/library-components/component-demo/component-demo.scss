@@ -155,6 +155,7 @@ output {
 
 .context-target,
 .tooltip-hold-target {
+    /* stylelint-disable-next-line property-no-vendor-prefix -- Retain selection suppression in Safari. */
     -webkit-user-select: none;
     user-select: none;
     -webkit-touch-callout: none;

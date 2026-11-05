@@ -167,15 +167,8 @@
     color: inherit;
 }
 
-// Animate the content inside a stationary hit area, using the shared glass pressure spring.
-:host(
-    .bx-btn-animated:not(
-        .bx-btn-non-interactive,
-        [disabled],
-        [aria-disabled='true'],
-        [data-bx-reduced-motion='true']
-    )
-) {
+/* IMPORTANT: Animate the content inside a stationary hit area, using the shared glass pressure spring. */
+:host(.bx-btn-animated:not(.bx-btn-non-interactive, [disabled], [aria-disabled='true'], [data-bx-reduced-motion='true'])) {
     .bx-btn-content-wrapper {
         transform: translateY(calc(var(--bx-button-pressure) * var(--bx-button-press-offset, 1px)))
             scale(calc(1 - var(--bx-button-pressure) * var(--bx-button-press-compression, 0.035)));
@@ -187,7 +180,6 @@
     transition: none;
 }
 
-// Text actions and buttons with runtime effects disabled retain native press feedback.
 :host(:not([data-bx-surface])),
 :host(.bx-btn-text) {
     &.bx-btn-animated .bx-btn-content-wrapper {
@@ -218,14 +210,7 @@
     @supports (background: color-mix(in srgb, white, transparent)) {
         background: color-mix(
             in srgb,
-            var(--bx-glass-surface)
-                calc(
-                    max(
-                            var(--bx-glass-min-opacity, 0),
-                            var(--bx-glass-opacity, var(--bx-glass-material-opacity, 0.5))
-                        ) *
-                        100%
-                ),
+            var(--bx-glass-surface) calc(max(var(--bx-glass-min-opacity, 0), var(--bx-glass-opacity, var(--bx-glass-material-opacity, 0.5))) * 100%),
             transparent
         );
     }
@@ -286,7 +271,6 @@
     box-shadow: var(--bx-glass-shadow);
 }
 
-// Standard control state drives the shared material and emitted border light.
 :host(
     :is(
         [aria-pressed='true'],
@@ -298,7 +282,6 @@
     --bx-glass-surface: var(--btn-selected-surface, var(--bx-bg-neutral-active));
 }
 
-// Tonal actions use their semantic tint, including selected/open states.
 :host(.bx-btn-tonal) {
     --bx-glass-surface: var(--btn-theme-tonal-bg);
     --btn-selected-surface: var(--btn-theme-tonal-bg);
@@ -314,19 +297,12 @@
     }
 }
 
-// Filled actions retain their intent color in every material. Keep enough tint
-// for the paired foreground token to remain legible over either light or dark content.
-:host(
-    :is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(
-        .bx-btn-is-outlined
-    )
-) {
+/* IMPORTANT: Filled actions retain their intent color in every material. Keep enough tint for the paired foreground token to remain legible over either light or dark content. */
+:host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined)) {
     --bx-glass-surface: var(--btn-theme-base);
     --btn-selected-surface: var(--btn-theme-base);
     --bx-glass-text: var(--btn-theme-text);
     --bx-glass-min-opacity: 1;
-
-    // Opaque intent fills use their pressed color, without a glass wash or inset ring.
     --bx-glass-press-opacity: 0;
     --bx-button-press-shadow: none;
 
@@ -345,8 +321,7 @@
     }
 }
 
-// Text actions are link-like in every material and interaction state. Hide the
-// decorative layers too, so incoming lighting cannot paint a border or backing.
+/* IMPORTANT: Text actions are link-like in every material and interaction state. Hide the decorative layers too, so incoming lighting cannot paint a border or backing. */
 :host(.bx-btn-text) {
     background: transparent !important;
     border: 0;

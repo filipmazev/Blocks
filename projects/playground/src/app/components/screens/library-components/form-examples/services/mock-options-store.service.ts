@@ -1,21 +1,32 @@
+import type { WritableSignal } from '@angular/core';
+
 import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+
 import { IBxSelectOption, ILoadMoreConfig, ILoadMoreRequest } from '@filip.mazev/blocks/forms';
+
 import { MockFormsApi } from './mock-forms-api.service';
 
 @Injectable()
 export class MockOptionsStore {
   private readonly api = inject(MockFormsApi);
-  public readonly options = signal<readonly IBxSelectOption<string>[]>([]);
-  public readonly loading = signal(false);
-  public readonly hasMore = signal(true);
-  public readonly total = signal<number | undefined>(undefined);
-  public readonly selectableTotal = signal<number | undefined>(undefined);
-  public readonly error = signal<string | undefined>(undefined);
-  public readonly query = signal('');
-  public readonly pageSize = signal(3);
-  public readonly failNext = signal(false);
-  public readonly requests = signal<readonly string[]>([]);
-  public readonly config = signal<ILoadMoreConfig>({
+
+  public readonly options: WritableSignal<readonly IBxSelectOption<string>[]> = signal<readonly IBxSelectOption<string>[]>([]);
+
+  public readonly loading: WritableSignal<boolean> = signal(false);
+  public readonly hasMore: WritableSignal<boolean> = signal(true);
+
+  public readonly total: WritableSignal<number | undefined> = signal<number | undefined>(undefined);
+  public readonly selectableTotal: WritableSignal<number | undefined> = signal<number | undefined>(undefined);
+  public readonly error: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
+
+  public readonly query: WritableSignal<string> = signal('');
+
+  public readonly pageSize: WritableSignal<number> = signal(3);
+
+  public readonly failNext: WritableSignal<boolean> = signal(false);
+
+  public readonly requests: WritableSignal<readonly string[]> = signal<readonly string[]>([]);
+  public readonly config: WritableSignal<ILoadMoreConfig> = signal<ILoadMoreConfig>({
     buttonMode: 'auto',
     text: { key: 'loadMore' },
     loadingText: { key: 'loading' },
@@ -24,7 +35,7 @@ export class MockOptionsStore {
     color: 'accent'
   });
 
-  private requestId = 0;
+  private requestId: number = 0;
   private controller?: AbortController;
 
   constructor() {
@@ -36,9 +47,11 @@ export class MockOptionsStore {
     if (this.loading() || (!this.hasMore() && !this.error())) return;
 
     this.controller?.abort();
+
     const controller = new AbortController();
     const id = ++this.requestId;
     const fail = this.failNext();
+
     this.controller = controller;
     this.failNext.set(false);
     this.loading.set(true);

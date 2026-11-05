@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import type { Radio } from '../radio-button';
+
+import type { Radio } from '@forms/components/radio-button/radio-button';
 
 @Injectable({ providedIn: 'root' })
 export class RadioRegistry {
-  public readonly radios = new Set<Radio>();
+  public readonly radios: Set<Radio> = new Set<Radio>();
 
   public select(radio: Radio): void {
     for (const peer of this.radios) {

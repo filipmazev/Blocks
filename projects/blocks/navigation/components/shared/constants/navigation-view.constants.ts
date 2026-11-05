@@ -1,5 +1,6 @@
 import { IsActiveMatchOptions } from '@angular/router';
-import { INavigationViewConfig } from '../interfaces/inavigation-view-config.interface';
+
+import { INavigationViewConfig } from '@navigation/components/shared/interfaces/inavigation-view-config.interface';
 
 export const NAVIGATION_VIEW_DEFAULTS = {
   side: 'left',

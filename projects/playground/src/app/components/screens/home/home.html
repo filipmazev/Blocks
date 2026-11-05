@@ -1,15 +1,15 @@
-<oddity-canvas [config]="look()" class="oddity-canvas" />
+<oddity-canvas class="oddity-canvas" [config]="look()" />
 
 <div #lightGarden class="home-container light-garden">
     <header class="hero">
         <div class="hero-content">
             <p class="eyebrow">Blocks · Angular components</p>
-            <h1>Build with clarity.<br><span>Give it depth.</span></h1>
-            <p class="hero-subtitle">A modular UI library with shared theming, accessible controls, and materials that
-                feel at home throughout your application.</p>
+            <h1>Build with clarity.<br /><span>Give it depth.</span></h1>
+            <p class="hero-subtitle">
+                A modular UI library with shared theming, accessible controls, and materials that feel at home throughout your application.
+            </p>
             <div class="hero-actions">
-                <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon
-                        name="arrow-right" size="20" /></a>
+                <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon name="arrow-right" size="20" /></a>
                 <a bx-button variant="tonal" color="accent" routerLink="/components">Browse components</a>
             </div>
         </div>
@@ -18,33 +18,32 @@
         <div class="features-heading">
             <div class="features-title" [attr.data-bx-reduced-motion]="reducedMotion()">
                 <h2 id="features-title">Built on the Blocks foundations</h2>
-                <span class="orb-hint" [class.is-visible]="orb.showWakeHint()" [inert]="!orb.showWakeHint()"
-                    [attr.aria-hidden]="!orb.showWakeHint()" [attr.tabindex]="orb.showWakeHint() ? 0 : -1"
+                <span
+                    class="orb-hint"
                     bxTooltip="Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces."
-                    placement="top">Hover on the orb to wake it up</span>
+                    placement="top"
+                    [class.is-visible]="orb.showWakeHint()"
+                    [inert]="!orb.showWakeHint()"
+                    [attr.aria-hidden]="!orb.showWakeHint()"
+                    [attr.tabindex]="orb.showWakeHint() ? 0 : -1"
+                    >Hover on the orb to wake it up</span
+                >
             </div>
             <app-light-orb #orb [stage]="lightGarden" [cards]="featureGrid" />
         </div>
         <div #featureGrid class="feature-grid">
             @for (feature of features; track feature.title) {
-            <a bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="enhanced" class="feature-card"
-                [routerLink]="feature.route"><bx-icon [name]="feature.icon" size="24" color="text-accent" />
-                @if (feature.icon === 'palette') {
-                <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span
-                        class="orb-nest-label">Primary</span></span>
-                }
-                <h3>{{ feature.title }}</h3>
-                <p>{{ feature.description }}</p><span class="feature-link">Explore<bx-icon name="arrow-up-right"
-                        size="16" /></span>
-            </a>
+                <a bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="auto" class="feature-card" [routerLink]="feature.route"
+                    ><bx-icon size="24" color="text-accent" [name]="feature.icon" />
+                    @if (feature.icon === 'palette') {
+                        <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
+                    }
+                    <h3>{{ feature.title }}</h3>
+                    <p>{{ feature.description }}</p>
+                    <span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span>
+                </a>
             }
         </div>
-    </section>
-    <section class="home-links" aria-label="Explore Blocks"><a bx-button variant="text" routerLink="/modal">Modal
-            playground<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text" routerLink="/toastr">Toast
-            playground<bx-icon name="arrow-right" size="16" /></a><a bx-button variant="text"
-            routerLink="/icon-catalog">Icon catalog<bx-icon name="arrow-right" size="16" /></a><a bx-button
-            variant="text" routerLink="/release-notes">Release notes<bx-icon name="arrow-right" size="16" /></a>
     </section>
     <footer class="home-footer">
         <span>Designed &amp; developed by Filip Mazev</span>
@@ -52,12 +51,18 @@
         <span>Blocks {{ version }}</span>
 
         <div class="footer-links">
-            <a bx-button variant="text" color="primary" href="https://www.npmjs.com/package/@filip.mazev/blocks"
-                target="_blank" rel="noopener noreferrer">npm
-                package <bx-icon name="arrow-up-right" size="16" /></a>
-            <a bx-button variant="text" color="primary"
-                href="https://github.com/filipmazev/Blocks/tree/main/projects/blocks" target="_blank"
-                rel="noopener noreferrer">GitHub <bx-icon name="arrow-up-right" size="16" /></a>
+            <a bx-button variant="text" color="primary" target="_blank" rel="noopener noreferrer" [href]="releases.npmPackageUrl()"
+                >npm package <bx-icon name="arrow-up-right" size="16"
+            /></a>
+            <a
+                bx-button
+                variant="text"
+                color="primary"
+                href="https://github.com/filipmazev/Blocks/tree/main/projects/blocks"
+                target="_blank"
+                rel="noopener noreferrer"
+                >GitHub <bx-icon name="arrow-up-right" size="16"
+            /></a>
         </div>
     </footer>
 </div>

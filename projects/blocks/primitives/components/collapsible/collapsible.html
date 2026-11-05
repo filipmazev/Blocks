@@ -1,14 +1,29 @@
 <div class="bx-collapsible" bxSurface [bxSurfaceInteractive]="false">
     <div role="heading" [attr.aria-level]="level()">
-        <button type="button" class="bx-collapsible-trigger" data-bx-collapsible-trigger [id]="triggerId()" [disabled]="disabled()"
-            [attr.aria-disabled]="isReadonly() ? 'true' : null" [attr.aria-expanded]="expanded()" [attr.aria-controls]="panelId()" (click)="toggle()">
-            <span>{{ resolvedTitle() }}</span><bx-icon [name]="expanded() ? 'chevron-up' : 'chevron-down'" size="20" />
+        <button
+            type="button"
+            class="bx-collapsible-trigger"
+            data-bx-collapsible-trigger
+            [id]="triggerId()"
+            [disabled]="disabled()"
+            [attr.aria-disabled]="isReadonly() ? 'true' : null"
+            [attr.aria-expanded]="expanded()"
+            [attr.aria-controls]="panelId()"
+            (click)="toggle()">
+            <span>{{ resolvedTitle() }}</span
+            ><bx-icon size="20" [name]="expanded() ? 'chevron-up' : 'chevron-down'" />
         </button>
     </div>
-    <div class="bx-collapsible-content" [id]="panelId()" [hidden]="!expanded()" [attr.inert]="expanded() ? null : ''"
-        [attr.role]="region() ? 'region' : null" [attr.aria-labelledby]="region() ? triggerId() : null">
+    <div
+        class="bx-collapsible-content"
+        [id]="panelId()"
+        [hidden]="!expanded()"
+        [attr.inert]="expanded() ? null : ''"
+        [attr.role]="region() ? 'region' : null"
+        [attr.aria-labelledby]="region() ? triggerId() : null">
         <ng-content />
-        @if (expanded() && contentTemplate(); as template) { <ng-container [ngTemplateOutlet]="template" /> }
+        @if (expanded() && contentTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template" />
+        }
     </div>
 </div>
-

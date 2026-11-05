@@ -99,7 +99,7 @@ $required-theme-keys: (
     $weights: (
         'red': 0.2126,
         'green': 0.7152,
-        'blue': 0.0722,
+        'blue': 0.0722
     );
 
     @each $channel, $weight in $weights {
@@ -201,13 +201,10 @@ $required-theme-keys: (
         'scroll-thumb': get-color-from-palette($brand, _mode($dark, 700, 400)),
         'scroll-thumb-hover': get-color-from-palette($brand, _mode($dark, 800, 300)),
         'meta-brand-palette': $brand,
-        'meta-accent-palette': $accent,
+        'meta-accent-palette': $accent
     );
 
-    @each $status,
-        $palette
-            in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger')
-    {
+    @each $status, $palette in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger') {
         $base: map.merge(
             $base,
             (
@@ -217,7 +214,7 @@ $required-theme-keys: (
                 'bg-#{$status}-hover': get-color-from-palette($palette, _mode($dark, 200, 800)),
                 'bg-#{$status}-active': get-color-from-palette($palette, _mode($dark, 300, 700)),
                 'bg-#{$status}-disabled': get-color-from-palette($palette, _mode($dark, 50, 1000)),
-                'bg-#{$status}-subtle': get-color-from-palette($palette, _mode($dark, 50, 1000)),
+                'bg-#{$status}-subtle': get-color-from-palette($palette, _mode($dark, 50, 1000))
             )
         );
     }

@@ -36,8 +36,7 @@
     padding: 0;
 
     &:focus-visible {
-        outline: 2px solid
-            var(--bx-card-focus-color, var(--bx-card-highlight, var(--bx-border-brand)));
+        outline: 2px solid var(--bx-card-focus-color, var(--bx-card-highlight, var(--bx-border-brand)));
         outline-offset: 2px;
     }
 
@@ -56,10 +55,7 @@
 
 :host([data-selected='true']) {
     --bx-glass-surface: var(--bx-card-selected-background, var(--bx-bg-element-active));
-    --bx-glass-edge: var(
-        --bx-card-selected-border,
-        var(--bx-card-border, var(--bx-border-default))
-    );
+    --bx-glass-edge: var(--bx-card-selected-border, var(--bx-card-border, var(--bx-border-default)));
 }
 
 :host(.is-disabled) {

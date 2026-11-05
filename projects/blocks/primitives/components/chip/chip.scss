@@ -97,10 +97,7 @@ button {
     }
 
     &:hover:not(:disabled, [aria-disabled='true'])::before {
-        background: var(
-            --bx-chip-hover-background,
-            color-mix(in srgb, currentcolor 10%, transparent)
-        );
+        background: var(--bx-chip-hover-background, color-mix(in srgb, currentcolor 10%, transparent));
     }
 
     > * {
@@ -129,11 +126,7 @@ button {
     background: var(--bx-chip-remove-background, var(--bx-glass-surface));
 
     &:hover:not(:disabled, [aria-disabled='true']) {
-        background: color-mix(
-            in srgb,
-            currentcolor 10%,
-            var(--bx-chip-remove-background, var(--bx-glass-surface))
-        );
+        background: color-mix(in srgb, currentcolor 10%, var(--bx-chip-remove-background, var(--bx-glass-surface)));
     }
 }
 

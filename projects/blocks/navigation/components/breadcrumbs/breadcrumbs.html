@@ -1,12 +1,12 @@
-@if(showBreadcumbs()) {
-<nav class="breadcrumbs" [attr.aria-label]="ariaLabel()">
-    @for (crumb of current().breadcrumbs; track crumb.route; let last = $last) {
-        @if (last) {
-        <span class="crumb last" aria-current="page">{{ crumb.label }}</span>
-        } @else {
-        <a class="crumb" [routerLink]="crumb.route">{{ crumb.label }}</a>
-        <bx-icon [name]="divider()" size="16" class="breadcrumb-separator" />
+@if (showBreadcumbs()) {
+    <nav class="breadcrumbs" [attr.aria-label]="ariaLabel()">
+        @for (crumb of current().breadcrumbs; track crumb.route; let last = $last) {
+            @if (last) {
+                <span class="crumb last" aria-current="page">{{ crumb.label }}</span>
+            } @else {
+                <a class="crumb" [routerLink]="crumb.route">{{ crumb.label }}</a>
+                <bx-icon size="16" class="breadcrumb-separator" [name]="divider()" />
+            }
         }
-    }
-</nav>
+    </nav>
 }

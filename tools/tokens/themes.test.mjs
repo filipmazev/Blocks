@@ -1,10 +1,12 @@
-import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { test } from 'node:test';
+
 import { build } from 'esbuild';
-import * as sass from 'sass';
 import postcss from 'postcss';
+
+import * as sass from 'sass';
 
 const require = createRequire(import.meta.url);
 async function sourceModule(entry) {
@@ -20,14 +22,19 @@ const { Tree } = require('@angular-devkit/schematics');
 const schema = JSON.parse(readFileSync('projects/blocks/schematics/ng-add/schema.json', 'utf8'));
 const appearances = ['light', 'dark'];
 const ids = [...THEME_PALETTES.map(({ id }) => id), 'high-contrast'];
-const css = sass.compileString(`@use 'index' as bx;\n${ids.flatMap((id) => appearances.map((mode) => `.fixture-${id}-${mode} { @include bx.bx-theme(bx.$${id}-${mode}-theme); }`)).join('\n')}`, {
-  loadPaths: ['projects/blocks/core/styles'],
-}).css;
+const css = sass.compileString(
+  `@use 'index' as bx;\n${ids.flatMap((id) => appearances.map((mode) => `.fixture-${id}-${mode} { @include bx.bx-theme(bx.$${id}-${mode}-theme); }`)).join('\n')}`,
+  {
+    loadPaths: ['node_modules', 'projects/blocks/core/styles']
+  }
+).css;
 const fixtures = new Map();
 postcss.parse(css).walkRules((rule) => {
   if (!rule.selector.startsWith('.fixture-')) return;
   const tokens = {};
-  rule.walkDecls((declaration) => { tokens[declaration.prop.replace('--bx-', '')] = declaration.value; });
+  rule.walkDecls((declaration) => {
+    tokens[declaration.prop.replace('--bx-', '')] = declaration.value;
+  });
   fixtures.set(rule.selector.slice('.fixture-'.length), tokens);
 });
 function rgb(value) {
@@ -37,13 +44,18 @@ function rgb(value) {
     return [0, 2, 4].map((index) => parseInt(hex.slice(index, index + 2), 16));
   }
   assert.match(value, /^rgb\(/, value);
-  return value.match(/[\d.]+%?/g).slice(0, 3).map((part) => parseFloat(part) * (part.endsWith('%') ? 2.55 : 1));
+  return value
+    .match(/[\d.]+%?/g)
+    .slice(0, 3)
+    .map((part) => parseFloat(part) * (part.endsWith('%') ? 2.55 : 1));
 }
 function luminance(value) {
-  return rgb(value).map((part) => {
-    const channel = part / 255;
-    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-  }).reduce((total, channel, index) => total + channel * [0.2126, 0.7152, 0.0722][index], 0);
+  return rgb(value)
+    .map((part) => {
+      const channel = part / 255;
+      return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+    })
+    .reduce((total, channel, index) => total + channel * [0.2126, 0.7152, 0.0722][index], 0);
 }
 function contrast(first, second) {
   const [low, high] = [luminance(first), luminance(second)].sort((a, b) => a - b);
@@ -51,7 +63,10 @@ function contrast(first, second) {
 }
 function install(theme) {
   const tree = Tree.empty();
-  tree.create('/angular.json', JSON.stringify({ projects: { demo: { projectType: 'application', architect: { build: { options: { styles: ['src/styles.scss'] } } } } } }));
+  tree.create(
+    '/angular.json',
+    JSON.stringify({ projects: { demo: { projectType: 'application', architect: { build: { options: { styles: ['src/styles.scss'] } } } } } })
+  );
   tree.create('/src/styles.scss', '');
   ngAdd({ theme })(tree, { logger: { info() {}, warn() {} } });
   return tree;
@@ -82,7 +97,10 @@ test('every palette emits both roles, neutral canvases, solid scrollbars and pai
         }
         assert.ok(tokens[`color-${role}-500`]);
       }
-      assert.equal(Object.keys(tokens).some((key) => key.startsWith('meta-')), false);
+      assert.equal(
+        Object.keys(tokens).some((key) => key.startsWith('meta-')),
+        false
+      );
     }
   }
 });
@@ -106,7 +124,25 @@ test('only current palette IDs resolve', () => {
   for (const { id } of THEME_PALETTES) {
     assert.equal(resolveThemeId(id), id);
   }
-  for (const invalid of [undefined, null, '', 'invalid', '__proto__', 'toString', 'graphite-sky-blue', 'azure-coral', 'scarlet-cyan', 'ink-jade', 'carbon-denim', 'white', 'blue', 'purple', 'orange', 'red', 'green']) {
+  for (const invalid of [
+    undefined,
+    null,
+    '',
+    'invalid',
+    '__proto__',
+    'toString',
+    'graphite-sky-blue',
+    'azure-coral',
+    'scarlet-cyan',
+    'ink-jade',
+    'carbon-denim',
+    'white',
+    'blue',
+    'purple',
+    'orange',
+    'red',
+    'green'
+  ]) {
     assert.equal(resolveThemeId(invalid), undefined);
   }
 });
@@ -115,7 +151,7 @@ test('approved palettes retain their light anchors and tuned dark action colors'
   const approved = {
     'carbon-cobalt': { light: ['#292a2d', '#356fe8'], dark: ['#e2e2e0', '#6d9aff'] },
     'azure-ember': { light: ['#217eff', '#d85a1a'], dark: ['#72a7ff', '#f27b35'] },
-    'brick-rose-cyan': { light: ['#b64a50', '#0891b2'], dark: ['#d36b77', '#22b8d0'] },
+    'brick-rose-cyan': { light: ['#b64a50', '#0891b2'], dark: ['#d36b77', '#22b8d0'] }
   };
   for (const [id, modes] of Object.entries(approved)) {
     for (const [mode, colors] of Object.entries(modes)) {
@@ -129,8 +165,14 @@ test('approved palettes retain their light anchors and tuned dark action colors'
 test('ng add offers only current palettes and generates compilable Sass for every choice', () => {
   const options = schema.properties.theme;
   assert.match(options['x-prompt'].message, /palette/i);
-  assert.deepEqual(options['x-prompt'].items, THEME_PALETTES.map(({ id, label }) => ({ value: id, label })));
-  assert.deepEqual(options.enum, THEME_PALETTES.map(({ id }) => id));
+  assert.deepEqual(
+    options['x-prompt'].items,
+    THEME_PALETTES.map(({ id, label }) => ({ value: id, label }))
+  );
+  assert.deepEqual(
+    options.enum,
+    THEME_PALETTES.map(({ id }) => id)
+  );
   assert.equal(options.default, 'carbon-cobalt');
   for (const theme of [undefined, ...THEME_PALETTES.map(({ id }) => id)]) {
     const tree = install(theme);
@@ -138,7 +180,13 @@ test('ng add offers only current palettes and generates compilable Sass for ever
     const styles = tree.read('/src/styles.scss').toString();
     assert.ok(styles.includes(`$${id}-light-theme`), `${theme} light`);
     assert.ok(styles.includes(`$${id}-dark-theme`), `${theme} dark`);
-    assert.doesNotThrow(() => sass.compileString(styles.replace("@use '@filip.mazev/blocks' as *;", "@use 'index' as *;"), { loadPaths: ['projects/blocks/core/styles'] }), theme);
+    assert.doesNotThrow(
+      () =>
+        sass.compileString(styles.replace("@use '@filip.mazev/blocks' as *;", "@use 'index' as *;"), {
+          loadPaths: ['node_modules', 'projects/blocks/core/styles']
+        }),
+      theme
+    );
     const angular = JSON.parse(tree.read('/angular.json').toString());
     assert.ok(angular.projects.demo.architect.build.options.styles.includes('node_modules/@filip.mazev/blocks/effects/effects.css'));
   }

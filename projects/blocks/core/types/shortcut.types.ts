@@ -1,4 +1,4 @@
-import type { IOSShortcut } from '../interfaces/ios-shortcut.interface';
+import type { IOSShortcut } from '@core/interfaces/ios-shortcut.interface';
 
 /** One displayed key or an ordered combination, for example ['mod', 'shift', 'k']. Arrays are not sequences. */
 export type ShortcutKey = string | readonly string[];

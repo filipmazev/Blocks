@@ -1,4 +1,4 @@
-import { SelectAllChangeReason } from '../types/multi-select.types';
+import { SelectAllChangeReason } from '@forms/components/multi-select/types/multi-select.types';
 
 /** Describes select-all intent independently from the finite loaded selection. */
 export interface ISelectAllChange<T> {

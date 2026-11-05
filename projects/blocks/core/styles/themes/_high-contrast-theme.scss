@@ -75,7 +75,7 @@ $high-contrast-light-theme: validate-theme(
         'scroll-thumb': $hc-black,
         'scroll-thumb-hover': get-color-from-palette('neutral', 700),
         'meta-brand-palette': 'neutral',
-        'meta-accent-palette': 'neutral',
+        'meta-accent-palette': 'neutral'
     ),
     'high-contrast-light'
 ) !default;
@@ -154,7 +154,7 @@ $high-contrast-dark-theme: validate-theme(
         'scroll-thumb': $hc-white,
         'scroll-thumb-hover': get-color-from-palette('neutral', 300),
         'meta-brand-palette': 'neutral',
-        'meta-accent-palette': 'neutral',
+        'meta-accent-palette': 'neutral'
     ),
     'high-contrast-dark'
 ) !default;

@@ -1,29 +1,66 @@
 <div class="demo-language-row">
-  <bx-select [label]="text().language" [clearable]="false" [options]="translations.languages" [value]="translations.language()" (selectionChange)="translations.setLanguage($event.value)" subscriptSizing="dynamic" />
+    <bx-select
+        subscriptSizing="dynamic"
+        [label]="text().language"
+        [clearable]="false"
+        [options]="translations.languages"
+        [value]="translations.language()"
+        (selectionChange)="translations.setLanguage($event.value)" />
 </div>
 <div class="nav-demo-controls">
-  <bx-checkbox [label]="text().right" [(checked)]="right" />
-  <bx-checkbox [label]="text().rail" [checked]="collapsed() ?? false" (checkedChange)="collapsed.set($event)" />
-  <bx-checkbox [label]="text().mobile" [(checked)]="mobile" />
-  <bx-checkbox [label]="text().adjacent" [(checked)]="adjacent" />
-  <bx-checkbox [label]="text().search" [(checked)]="searchable" />
-  <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
-  <bx-checkbox [label]="text().custom" [(checked)]="custom" />
-  <bx-input-field [label]="text().height" type="number" [min]="200" [max]="700" [(value)]="height" />
+    <bx-checkbox [label]="text().right" [(checked)]="right" />
+    <bx-checkbox [label]="text().rail" [checked]="collapsed()" (checkedChange)="collapsed.set($event)" />
+    <bx-checkbox [label]="text().mobile" [(checked)]="mobile" />
+    <bx-checkbox [label]="text().adjacent" [(checked)]="adjacent" />
+    <bx-checkbox [label]="text().search" [(checked)]="searchable" />
+    <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
+    <bx-checkbox [label]="text().custom" [(checked)]="custom" />
+    <bx-input-field type="number" [label]="text().height" [min]="200" [max]="700" [(value)]="height" />
 </div>
 <p>{{ text().instructions }}</p>
 <div class="nav-demo-frame" [class.right]="right()" [attr.dir]="rtl() ? 'rtl' : 'ltr'" [style.--bx-side-nav-height]="height() + 'px'">
-  <bx-side-nav #nav [config]="config()" [groups]="groups()" [(collapsed)]="collapsed" [itemTemplate]="custom() ? customItem : undefined" (itemSelected)="select($event)">
-    <ng-template bxSideNavHeader let-compact let-mobile="mobile"><bx-icon name="blocks" />@if (!compact && !mobile) { <strong>{{ text().studio }}</strong> }</ng-template>
-    <ng-template bxSideNavFooter let-compact><bx-icon name="circle-user-round" />@if (!compact) { <span>{{ text().admin }}</span> }</ng-template>
-  </bx-side-nav>
-  <div class="nav-demo-content">
-    <h3>{{ text().title }}</h3><p>{{ text().description }}</p>
-    @if (nav.isMobile()) { <button bx-button variant="tonal" (click)="nav.open($event)">{{ text().open }}</button> }
-    <output aria-live="polite">{{ selection() }}</output>
-    <p>{{ text().keyboard }}</p>
-    <p>{{ nav.isInlineSubmenus() ? text().inlineMode : text().flyoutMode }}</p>
-  </div>
+    <bx-side-nav
+        #nav
+        [config]="config()"
+        [groups]="groups()"
+        [itemTemplate]="custom() ? customItem : undefined"
+        [(collapsed)]="collapsed"
+        (itemSelected)="select($event)">
+        <ng-template let-compact let-mobile="mobile" bxSideNavHeader
+            ><bx-icon name="blocks" />
+            @if (!compact && !mobile) {
+                <strong>{{ text().studio }}</strong>
+            }
+        </ng-template>
+        <ng-template let-compact bxSideNavFooter
+            ><bx-icon name="circle-user-round" />
+            @if (!compact) {
+                <span>{{ text().admin }}</span>
+            }
+        </ng-template>
+    </bx-side-nav>
+    <div class="nav-demo-content">
+        <h3>{{ text().title }}</h3>
+        <p>{{ text().description }}</p>
+        @if (nav.isMobile()) {
+            <button type="button" bx-button variant="tonal" (click)="nav.open($event)">{{ text().open }}</button>
+        }
+        <output aria-live="polite">{{ selection() }}</output>
+        <p>{{ text().keyboard }}</p>
+        <p>{{ nav.isInlineSubmenus() ? text().inlineMode : text().flyoutMode }}</p>
+    </div>
 </div>
-<ng-template #customItem let-item let-compact="collapsed"><bx-icon [name]="item.icon?.name ?? 'circle'" size="20" />@if (!compact) { <span>{{ item.label }}</span><small aria-hidden="true">↗</small> }</ng-template>
-<details class="nav-route-example"><summary>{{ text().routes }}</summary><pre class="playground-code-block" tabindex="0" aria-label="TypeScript navigation configuration"><code language="typescript" [highlight]="routeExample"></code></pre></details>
+<ng-template #customItem let-item let-compact="collapsed"
+    ><bx-icon size="20" [name]="item.icon?.name ?? 'circle'" />
+    @if (!compact) {
+        <span>{{ item.label }}</span
+        ><small aria-hidden="true">↗</small>
+    }
+</ng-template>
+<details class="nav-route-example">
+    <summary>{{ text().routes }}</summary>
+    <pre
+        class="playground-code-block"
+        tabindex="0"
+        aria-label="TypeScript navigation configuration"><code language="typescript" [highlight]="routeExample"></code></pre>
+</details>

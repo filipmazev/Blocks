@@ -1,4 +1,4 @@
-import { IFormFieldDefaults } from '../interfaces/iform-field-defaults.interface';
+import { IFormFieldDefaults } from '@forms/components/shared/interfaces/iform-field-defaults.interface';
 
 export const DEFAULT_FORM_FIELD_OPTIONS: IFormFieldDefaults = {
   errorPolicy: 'touched',

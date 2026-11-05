@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { IChipConfig } from '../interfaces/ichip-config.interface';
+
+import { IChipConfig } from '@primitives/components/chip/interfaces/ichip-config.interface';
 
 export const BX_CHIP_DEFAULTS = new InjectionToken<IChipConfig>('BX_CHIP_DEFAULTS');

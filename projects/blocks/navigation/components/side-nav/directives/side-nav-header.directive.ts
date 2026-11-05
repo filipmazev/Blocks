@@ -1,6 +1,7 @@
 import { DestroyRef, Directive, inject, TemplateRef } from '@angular/core';
-import { SideNav } from '../side-nav';
-import { ISideNavSlotContext } from '../interfaces/iside-nav-slot-context.interface';
+
+import { ISideNavSlotContext } from '@navigation/components/side-nav/interfaces/iside-nav-slot-context.interface';
+import { SideNav } from '@navigation/components/side-nav/side-nav';
 
 /** Registers an ng-template with the containing side-nav, following the modal slot contract. */
 @Directive({ selector: '[bxSideNavHeader]' })

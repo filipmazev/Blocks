@@ -1,6 +1,6 @@
 import type { BxAppearanceConfig, DeviceTheme } from '@filip.mazev/blocks/core';
 import type { GlassinessMode } from '@filip.mazev/blocks/effects/runtime';
-import type { IAppearanceChoice } from '../interfaces/iappearance-choice.interface';
+import type { IAppearanceChoice } from '@playground/components/screens/appearance/interfaces/iappearance-choice.interface';
 
 export const APPEARANCE_MODES: readonly IAppearanceChoice<DeviceTheme | 'auto'>[] = [
   { value: 'light', label: 'Light' },

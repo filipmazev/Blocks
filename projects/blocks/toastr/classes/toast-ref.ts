@@ -1,15 +1,18 @@
+import type { Observable } from 'rxjs';
+
 import { Subject } from 'rxjs';
-import { IToastConfig } from '../interfaces/itoast-config.interface';
+
+import { IToastConfig } from '@toastr/interfaces/itoast-config.interface';
 
 export class ToastRef<D = undefined, R = unknown> {
-  private readonly afterClosedSubject = new Subject<R | undefined>();
+  private readonly afterClosedSubject: Subject<R | undefined> = new Subject<R | undefined>();
+  private readonly pauseSubject: Subject<void> = new Subject<void>();
+  private readonly resumeSubject: Subject<void> = new Subject<void>();
 
-  private readonly pauseSubject = new Subject<void>();
-  private readonly resumeSubject = new Subject<void>();
+  public readonly afterClosed$: Observable<R | undefined> = this.afterClosedSubject.asObservable();
+  public readonly onPause$: Observable<void> = this.pauseSubject.asObservable();
+  public readonly onResume$: Observable<void> = this.resumeSubject.asObservable();
 
-  public readonly afterClosed$ = this.afterClosedSubject.asObservable();
-  public readonly onPause$ = this.pauseSubject.asObservable();
-  public readonly onResume$ = this.resumeSubject.asObservable();
   public config!: IToastConfig<D>;
 
   public close(result?: R): void {

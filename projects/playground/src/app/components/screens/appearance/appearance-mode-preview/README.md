@@ -14,11 +14,13 @@ import { AppearanceModePreview } from './appearance-mode-preview/appearance-mode
 
 ## API and appearance
 
-`mode` is required and accepts `light` or `dark`. The miniature uses the selected palette's existing theme class, responds to palette/high-contrast changes, and preserves its own color mode. The parent combines two previews for Auto.
+`mode` is required and accepts `light` or `dark`. The miniature uses the selected palette's existing theme class, responds to palette/high-contrast changes, and
+preserves its own color mode. The parent combines two previews for Auto.
 
 ## Accessibility and behavior
 
-The preview is inert, hidden from assistive technology and contains no working actions. Its parent clickable Card owns the mode action and accessible label. It performs no animated demonstration.
+The preview is inert, hidden from assistive technology and contains no working actions. Its parent clickable Card owns the mode action and accessible label. It
+performs no animated demonstration.
 
 ## Playground
 

@@ -1,7 +1,7 @@
-import { INavigationTreeGroup } from '../../../interfaces/inavigation-tree-group.interface';
-import { INavigationItem } from '../../../interfaces/inavigation-item.interface';
-import { INavigationSearchEntry } from '../interfaces/inavigation-search-entry.interface';
-import { INavigationSearchResult } from '../interfaces/inavigation-search-result.interface';
+import { INavigationSearchEntry } from '@navigation/components/shared/interfaces/inavigation-search-entry.interface';
+import { INavigationSearchResult } from '@navigation/components/shared/interfaces/inavigation-search-result.interface';
+import { INavigationItem } from '@navigation/interfaces/inavigation-item.interface';
+import { INavigationTreeGroup } from '@navigation/interfaces/inavigation-tree-group.interface';
 
 /** Accent-insensitive normalization shared by fuzzy labels and keywords. */
 export function normalizeNavText(value: string): string {
@@ -14,7 +14,9 @@ export function navMatchScore(label: string, query: string): number {
   const term = normalizeNavText(query);
 
   if (!term) return 0;
+
   if (text === term) return 1000;
+
   if (text.includes(term)) return Math.max(600, 800 - text.indexOf(term) - (text.length - term.length));
 
   let index = 0;
@@ -26,21 +28,27 @@ export function navMatchScore(label: string, query: string): number {
   }
 
   if (index === term.length) return Math.max(1, 500 - gaps - text.length);
+
   if (term.length < 4) return -1;
 
   for (const word of text.split(/\s+/)) {
     if (Math.abs(word.length - term.length) > 1) continue;
+
     const previous = Array.from({ length: term.length + 1 }, (_, i) => i);
 
     for (let row = 1; row <= word.length; row++) {
       let diagonal = previous[0];
+
       previous[0] = row;
+
       for (let column = 1; column <= term.length; column++) {
         const saved = previous[column];
+
         previous[column] = Math.min(previous[column] + 1, previous[column - 1] + 1, diagonal + (word[row - 1] === term[column - 1] ? 0 : 1));
         diagonal = saved;
       }
     }
+
     if (previous[term.length] <= 1) return 250;
   }
 
@@ -50,6 +58,7 @@ export function navMatchScore(label: string, query: string): number {
 /** Ranks direct matches without opening menus or dropping the context of nested results. */
 export function searchNavigation(groups: readonly INavigationTreeGroup[], query: string): INavigationSearchResult {
   if (!query.trim()) return { entries: [] };
+
   const entries: INavigationSearchEntry[] = [];
   const visit = (items: INavigationItem[], ancestors: INavigationItem[], sectionTitle: string): void => {
     for (const item of items) {
@@ -72,6 +81,7 @@ export function searchNavigation(groups: readonly INavigationTreeGroup[], query:
   for (const group of groups) visit(group.items, [], group.title);
 
   entries.sort((a, b) => b.score - a.score);
+
   const best = entries.find((entry) => !entry.item.data?.disabled);
 
   return { entries, label: best?.item.label };
@@ -84,6 +94,7 @@ export function findNavigationPath(groups: readonly INavigationTreeGroup[], id: 
       const next = [...path, item.id];
 
       if (item.id === id) return next;
+
       const found = visit(item.children ?? [], next);
 
       if (found) return found;
@@ -91,6 +102,7 @@ export function findNavigationPath(groups: readonly INavigationTreeGroup[], id: 
 
     return undefined;
   };
+
   for (const group of groups) {
     const result = visit(group.items, []);
 

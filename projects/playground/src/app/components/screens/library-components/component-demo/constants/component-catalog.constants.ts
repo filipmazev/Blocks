@@ -1,4 +1,4 @@
-import type { IComponentExample } from '../interfaces/icomponent-example.interface';
+import type { IComponentExample } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-example.interface';
 
 export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   {

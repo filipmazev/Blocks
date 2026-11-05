@@ -1,14 +1,22 @@
+import type { WritableSignal } from '@angular/core';
+
 import { Injectable, signal } from '@angular/core';
+
+import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+
 import { IBxI18nAdapter } from '@filip.mazev/blocks/core';
-import { DEMO_TRANSLATIONS } from '../constants/demo-translations.constants';
-import { DEMO_LANGUAGE_OPTIONS } from '../../shared/i18n/constants/demo-language.constants';
-import { DemoLanguage } from '../../shared/i18n/types/demo-language.types';
+
+import { DEMO_TRANSLATIONS } from '@playground/components/screens/library-components/form-examples/constants/demo-translations.constants';
+import { DEMO_LANGUAGE_OPTIONS } from '@playground/components/screens/library-components/shared/i18n/constants/demo-language.constants';
+import { DemoLanguage } from '@playground/components/screens/library-components/shared/i18n/types/demo-language.types';
 
 @Injectable()
 export class DemoI18nService implements IBxI18nAdapter {
-  public readonly language = signal<DemoLanguage>('en');
-  public readonly languages = DEMO_LANGUAGE_OPTIONS;
-  public readonly version = signal(0);
+  public readonly language: WritableSignal<DemoLanguage> = signal<DemoLanguage>('en');
+
+  public readonly languages: readonly BxSelectOption<DemoLanguage>[] = DEMO_LANGUAGE_OPTIONS;
+
+  public readonly version: WritableSignal<number> = signal(0);
 
   public translate(key: string, params?: Record<string, unknown>): string {
     let text = DEMO_TRANSLATIONS[this.language()]?.[key] ?? key;

@@ -1,6 +1,7 @@
 import { Directive, forwardRef } from '@angular/core';
-import { BxControlState } from '../components/shared/classes/bx-control-state';
-import { BX_FORM_FIELD_CONTROL } from '../components/shared/tokens/form-field-control.token';
+
+import { BxControlState } from '@forms/components/shared/classes/bx-control-state';
+import { BX_FORM_FIELD_CONTROL } from '@forms/components/shared/tokens/form-field-control.token';
 
 /** Connects a native input, textarea, or select to the Blocks field frame. */
 @Directive({

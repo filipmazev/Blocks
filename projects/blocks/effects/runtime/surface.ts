@@ -1,18 +1,21 @@
-import { rememberAttributes, rememberStyles, finiteClamp } from './dom';
-import { isFieldSurface, isSurfaceInteractionBlocked } from './helpers/surface-interaction.helpers';
-import { rememberRenderedSurfaceStyles } from './helpers/surface-style.helpers';
+import type { GlassinessMode } from '@effects/runtime/refraction/types/refraction.types';
+
+import { isFieldSurface, isSurfaceInteractionBlocked } from '@effects/runtime/helpers/surface-interaction.helpers';
+import { rememberRenderedSurfaceStyles } from '@effects/runtime/helpers/surface-style.helpers';
+import { DetailedRefractiveSurface } from '@effects/runtime/refraction/classes/detailed-refractive-surface';
+import { RefractiveSurface } from '@effects/runtime/refraction/classes/refractive-surface';
+import { hasRefractionGeometry, supportsRefraction } from '@effects/runtime/refraction/helpers/refraction.helpers';
+
+import type { ILightContribution, ILighting } from './scene';
+import type { IGlassSurface, ISurfaceOptions } from './types';
+
 import { inheritedAttribute } from './configuration';
-import { registerSurface, refreshGlassLighting } from './scene';
-import type { Lighting, LightContribution } from './scene';
+import { finiteClamp, rememberAttributes, rememberStyles } from './dom';
+import { refreshGlassLighting, registerSurface } from './scene';
 import { subscribeFrame } from './scheduler';
 import { Spring } from './spring';
-import type { GlassSurface, SurfaceOptions } from './types';
-import { RefractiveSurface } from './refraction/classes/refractive-surface';
-import { DetailedRefractiveSurface } from './refraction/classes/detailed-refractive-surface';
-import { hasRefractionGeometry, supportsRefraction } from './refraction/helpers/refraction.helpers';
-import type { GlassinessMode } from './refraction/types/refraction.types';
 
-const mounted = new WeakMap<HTMLElement, GlassSurface>();
+const mounted = new WeakMap<HTMLElement, IGlassSurface>();
 
 /** Structural surfaces receive light; controls and actionable surfaces also emit it. */
 function isActionSurface(element: HTMLElement): boolean {
@@ -25,17 +28,23 @@ function isActionSurface(element: HTMLElement): boolean {
     return true;
 
   if (element.closest('label')?.control) return true;
+
   if (!element.closest('bx-form-field')) return false;
+
   const controls = element.querySelectorAll('input:not([type="hidden"]), select, textarea');
+
   return controls.length === 1 && controls[0].closest('[data-bx-surface]') === element;
 }
 
 /** Enhance a native DOM element. Omitted options inherit configureAppearance() and Blocks theme tokens. */
-export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {}): GlassSurface {
+export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}): IGlassSurface {
   if (mounted.has(element)) throw new Error('A glass surface is already mounted on this element.');
+
   const doc = element.ownerDocument;
   const view = doc.defaultView;
+
   if (!view) throw new Error('Glass surfaces must be mounted in a browser document.');
+
   const ownProperties = [
     'position',
     '--bx-glass-press',
@@ -61,27 +70,36 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   );
 
   const decoration = doc.createElement('span');
+
   decoration.className = 'bx-glass-decoration';
   decoration.setAttribute('aria-hidden', 'true');
 
   const light = doc.createElement('span');
+
   light.className = 'bx-glass-light';
 
   const rim = doc.createElement('span');
+
   rim.className = 'bx-glass-rim';
   rim.setAttribute('aria-hidden', 'true');
   element.append(rim);
 
   const environment = doc.createElement('span');
+
   environment.className = 'bx-glass-contribution bx-glass-environment';
   rim.append(environment);
+
   let environmentImage = 'none';
+
   const environmentLayers = new Map<number, string>();
   const environmentColors = new Map<number, string>();
 
   const ambient = doc.createElement('span');
+
   ambient.className = 'bx-glass-ambient';
+
   const compression = doc.createElement('span');
+
   compression.className = 'bx-glass-pressure';
   decoration.append(light);
   element.append(decoration);
@@ -102,6 +120,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   let visible = true;
 
   const interactive = () => (options.interactive ?? isActionSurface(element)) && !isSurfaceInteractionBlocked(element);
+
   let emitting = false;
   let emittingColor: string | undefined;
   let sourceColor: string | undefined;
@@ -119,13 +138,18 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
 
   const fadeLayer = (key: string, layer: Layer, visible: boolean) => {
     const opacity = view.getComputedStyle(layer.edge).opacity;
+
     layer.animations.forEach((animation) => animation.cancel());
     layer.leaving = !visible;
+
     for (const node of [layer.edge, layer.glow]) node.style.opacity = visible ? '1' : '0';
+
     if (reducedMotion) {
       if (!visible) removeLayer(key, layer);
+
       return;
     }
+
     layer.animations = [layer.edge, layer.glow].map((node) => node.animate([{ opacity }, { opacity: visible ? 1 : 0 }], { duration: 200, easing: 'ease-out' }));
     void Promise.all(layer.animations.map((animation) => animation.finished))
       .then(() => {
@@ -136,12 +160,15 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       });
   };
 
-  const setLayer = (value: LightContribution, source = false) => {
+  const setLayer = (value: ILightContribution, source = false) => {
     let layer = layers.get(value.key);
+
     const fresh = !layer;
+
     if (!layer) {
       const edge = doc.createElement('span'),
         glow = doc.createElement('span');
+
       edge.className = glow.className = 'bx-glass-contribution';
       edge.dataset['bxLightSource'] = glow.dataset['bxLightSource'] = value.key;
       edge.style.opacity = glow.style.opacity = '0';
@@ -150,17 +177,22 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       layer = { edge, glow, animations: [], leaving: false };
       layers.set(value.key, layer);
     }
+
     const at = `${value.x.toFixed(2)}% ${value.y.toFixed(2)}%`;
 
     const edgeColor = `color-mix(in srgb, ${value.color} ${(value.edgeStrength * 100).toFixed(2)}%, transparent)`;
+
     layer.edge.style.backgroundImage = source
       ? `linear-gradient(${edgeColor}, ${edgeColor})`
       : `radial-gradient(ellipse farthest-side at ${at}, ${edgeColor}, transparent 75%)`;
     layer.glow.style.backgroundImage = `radial-gradient(ellipse at ${at}, color-mix(in srgb, ${value.color} ${(value.strength * 100).toFixed(2)}%, transparent), transparent 68%)`;
+
     if (fresh || layer.leaving) fadeLayer(value.key, layer, true);
+
     if (layers.size > 8)
       for (const [key, old] of layers) {
         if (old.leaving) removeLayer(key, old);
+
         if (layers.size <= 8) break;
       }
   };
@@ -173,9 +205,11 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
   const emit = (active: boolean, color = emissionColor()) => {
     emitting = active;
     emittingColor = color;
+
     if (active && color) setLayer({ key: 'emitter', color, x: 50, y: 50, strength: 0, edgeStrength: 0.8 }, true);
     else {
       const layer = layers.get('emitter');
+
       if (layer && !layer.leaving) fadeLayer('emitter', layer, false);
     }
   };
@@ -190,6 +224,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     decoration.style.setProperty('--bx-glass-light-x', `${x.value.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-light-y', `${y.value.toFixed(2)}%`);
     decoration.style.setProperty('--bx-glass-light-strength', strength.value.toFixed(3));
+
     const value = finiteClamp(pressure.value, 0, 1.1, 0).toFixed(4);
 
     if (value !== paintedPressure) {
@@ -201,24 +236,31 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
 
   const animate = () => {
     if (disposed || unsubscribe) return;
+
     if (reducedMotion || typeof requestAnimationFrame !== 'function') {
       x.snap(x.target);
       y.snap(y.target);
       strength.snap(strength.target);
       pressure.snap(pressed && interactive() ? 1 : 0);
       paint();
+
       return;
     }
+
     unsubscribe = subscribeFrame((dt) => {
       if (disposed) return false;
+
       const moving = [x.step(dt), y.step(dt), strength.step(dt), pressure.step(dt)].some(Boolean);
+
       paint();
+
       if (!moving) unsubscribe = undefined;
+
       return moving;
     });
   };
 
-  const lighting = (value: Lighting) => {
+  const lighting = (value: ILighting) => {
     x.snap(value.x);
     y.snap(value.y);
     strength.target = value.strength;
@@ -229,13 +271,17 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       // the entire silhouette. Small attached shapes can share a facing edge.
       const edgeAt = (x: number, y: number) => {
         let edge = 'var(--bx-border-default, GrayText)';
+
         for (const source of sources) {
           const distance = Math.hypot((x - source.x) / Math.max(1, source.x, 100 - source.x), (y - source.y) / Math.max(1, source.y, 100 - source.y));
           const strength = finiteClamp(source.edgeStrength, 0, 0.85, 0) * 0.35 * Math.max(0, 1 - distance / 0.75);
+
           if (strength > 0.001) edge = `color-mix(in srgb, ${source.color} ${(strength * 100).toFixed(2)}%, ${edge})`;
         }
+
         return edge;
       };
+
       element.style.setProperty('--bx-glass-lit-edge', edgeAt(50, 50));
       element.style.setProperty('--bx-glass-lit-edge-top', edgeAt(50, 0));
       element.style.setProperty('--bx-glass-lit-edge-right', edgeAt(100, 50));
@@ -244,34 +290,44 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     }
 
     const activeEnvironment = new Set<number>();
+
     for (const contribution of value.contributions) {
       if (!contribution.ambient) continue;
+
       const slot = Number(contribution.key.split(':').pop());
+
       if (!Number.isInteger(slot) || slot < 0 || slot >= 16) continue;
+
       activeEnvironment.add(slot);
+
       const property = `--bx-glass-environment-color-${slot}`;
       const color = `color-mix(in srgb, ${contribution.color} ${(contribution.edgeStrength * 100).toFixed(2)}%, transparent)`;
+
       if (environmentColors.get(slot) !== color) {
         environment.style.setProperty(property, color);
         environmentColors.set(slot, color);
       }
+
       environmentLayers.set(
         slot,
         `radial-gradient(circle ${contribution.spread}px at ${contribution.x.toFixed(2)}% ${contribution.y.toFixed(2)}%, var(${property}), transparent 75%)`
       );
     }
+
     for (const slot of environmentColors.keys()) {
       if (!activeEnvironment.has(slot) && environmentColors.get(slot) !== 'transparent') {
         environment.style.setProperty(`--bx-glass-environment-color-${slot}`, 'transparent');
         environmentColors.set(slot, 'transparent');
       }
     }
+
     const ambientImage = [...environmentLayers.values()].join(', ') || 'none';
 
     if (ambientImage !== environmentImage) {
       environmentImage = ambientImage;
       environment.style.backgroundImage = ambientImage;
     }
+
     // Finish only environmental transitions when an already-lit element returns.
     // During motion, typed colors retarget continuously from their rendered value.
     if (value.immediate || reducedMotion) for (const animation of environment.getAnimations()) animation.finish();
@@ -280,7 +336,9 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     const active = new Set(contributions.map((contribution) => contribution.key));
 
     for (const contribution of contributions) setLayer(contribution);
+
     for (const [key, layer] of layers) if (key !== 'emitter' && !active.has(key) && !layer.leaving) fadeLayer(key, layer, false);
+
     decoration.style.setProperty('--bx-glass-light-color', value.color);
     decoration.style.setProperty('--bx-glass-reflection-color', value.reflection);
     decoration.style.setProperty('--bx-glass-reflection-strength', String(value.reflectionStrength));
@@ -289,14 +347,20 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     refraction?.refresh();
     animate();
   };
+
   const sync = () => {
     if (element.getAttribute('data-bx-surface') !== 'glass') element.setAttribute('data-bx-surface', 'glass');
+
     const inheritedMotion = globalValue('data-bx-reduced-motion') ?? originalAttributes.get('data-bx-reduced-motion');
     const inheritedTransparency = globalValue('data-bx-reduced-transparency') ?? originalAttributes.get('data-bx-reduced-transparency');
+
     reducedMotion = options.reducedMotion ?? (inheritedMotion === null || inheritedMotion === undefined ? motion.matches : inheritedMotion === 'true');
+
     const reducedTransparency = options.reducedTransparency ?? (inheritedTransparency === 'true' || transparency.matches);
+
     element.setAttribute('data-bx-reduced-transparency', String(reducedTransparency));
     element.setAttribute('data-bx-reduced-motion', String(reducedMotion));
+
     const applicationQuality = inheritedAttribute(element, 'data-bx-glass-quality') ?? 'auto';
     const quality = applicationQuality === 'baseline' ? 'baseline' : (options.quality ?? applicationQuality);
     const supported =
@@ -309,7 +373,9 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       (view.navigator.hardwareConcurrency > 0 && view.navigator.hardwareConcurrency <= 4) ||
       view.matchMedia('(pointer: coarse)').matches;
     const enhanced = quality !== 'baseline' && supported && (quality === 'enhanced' || !economical);
+
     element.setAttribute('data-bx-glass-renderer', enhanced ? 'enhanced' : 'baseline');
+
     if (options.translucency !== undefined) element.style.setProperty('--bx-translucency', String(finiteClamp(options.translucency, 0, 1, 0.5)));
     else restoreProperty('--bx-translucency');
 
@@ -317,6 +383,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     // host's real border so their inherited outer radius describes the same curve.
     // Borderless and one-sided surfaces must never grow beyond their border box.
     const style = view.getComputedStyle(element);
+
     unifiedLighting = style.getPropertyValue('--bx-glass-unified-lighting').trim() === '1';
 
     const policy = (inheritedAttribute(element, 'data-bx-glassiness-mode') as GlassinessMode | null) ?? 'auto';
@@ -339,6 +406,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
 
     if (refractionEnabled) {
       element.setAttribute('data-bx-refraction', 'true');
+
       const detailed = quality === 'enhanced';
 
       if (refraction && detailed !== detailedRefraction) {
@@ -350,6 +418,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
 
       if (refraction) refraction.update();
       else refraction = detailed ? new DetailedRefractiveSurface(element) : new RefractiveSurface(element);
+
       refraction.setVisible(visible);
     } else {
       refraction?.destroy();
@@ -360,11 +429,14 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     for (const side of ['top', 'right', 'bottom', 'left']) {
       const width = style.getPropertyValue(`border-${side}-width`);
       const inset = `${-parseFloat(width || '0')}px`;
+
       for (const layer of [decoration, rim]) {
         if (layer.style.getPropertyValue(side) !== inset) layer.style.setProperty(side, inset);
       }
     }
+
     if (!interactive()) pressed = false;
+
     if (reducedMotion || !interactive()) {
       unsubscribe?.();
       unsubscribe = undefined;
@@ -374,22 +446,29 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       pressure.snap(pressed ? 1 : 0);
       paint();
     }
+
     if (reducedMotion)
       for (const [key, layer] of layers) {
         if (layer.leaving) removeLayer(key, layer);
         else layer.animations.forEach((animation) => animation.cancel());
       }
+
     if (emitting) emit(true, emittingColor);
   };
+
   function restoreProperty(property: string): void {
     const original = originals.get(property);
+
     if (original?.value) element.style.setProperty(property, original.value, original.priority);
     else element.style.removeProperty(property);
   }
+
   paint();
   sync();
+
   // Apply the material before the first style read to avoid transitioning from legacy colors.
   if (view.getComputedStyle(element).position === 'static') element.style.position = 'relative';
+
   const unregister = registerSurface(element, {
     light: lighting,
     sync,
@@ -414,6 +493,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     emit,
     press() {
       if (!interactive()) return;
+
       pressed = true;
       // Give even a quick tap visible compression before the shared spring returns to rest.
       pressure.snap(reducedMotion ? 1 : Math.max(0.4, pressure.value));
@@ -427,7 +507,7 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
       animate();
     }
   });
-  const controller: GlassSurface = {
+  const controller: IGlassSurface = {
     update(next) {
       if (!disposed) {
         options = { ...next };
@@ -437,18 +517,23 @@ export function mountSurface(element: HTMLElement, initial: SurfaceOptions = {})
     },
     destroy() {
       if (disposed) return;
+
       disposed = true;
       unsubscribe?.();
       unregister();
       refraction?.destroy();
       decoration.remove();
       rim.remove();
+
       for (const [key, layer] of layers) removeLayer(key, layer);
+
       restoreStyles();
       restoreAttributes();
       mounted.delete(element);
     }
   };
+
   mounted.set(element, controller);
+
   return controller;
 }

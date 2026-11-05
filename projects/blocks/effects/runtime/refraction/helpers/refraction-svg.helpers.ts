@@ -1,6 +1,8 @@
-import { CORNERS, EDGES, PACK_Y, UNPACK } from '../constants/refraction-maps.constants';
+import type { Axis, Corner, Edge, RefractionField, SliceRect, Tiles } from '@effects/runtime/refraction/types/refraction-maps.types';
+
+import { CORNERS, EDGES, PACK_Y, UNPACK } from '@effects/runtime/refraction/constants/refraction-maps.constants';
+
 import { sliceRect } from './refraction-maps.helpers';
-import type { Axis, Corner, Edge, SliceRect, Tiles, RefractionField } from '../types/refraction-maps.types';
 
 export function el<K extends keyof SVGElementTagNameMap>(parent: Element | DocumentFragment, tag: K, attrs: Record<string, string | number> = {}) {
   const node = parent.ownerDocument.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -8,14 +10,17 @@ export function el<K extends keyof SVGElementTagNameMap>(parent: Element | Docum
   for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
 
   parent.appendChild(node);
+
   return node;
 }
 
 export function layer(parent: Element | DocumentFragment, cls: string) {
   const node = parent.ownerDocument.createElement('span');
+
   node.className = cls;
   node.setAttribute('aria-hidden', 'true');
   parent.appendChild(node);
+
   return node;
 }
 
@@ -46,6 +51,7 @@ export const setBackdrop = (node: HTMLElement, value: string) => {
 
 export function buildField(filter: SVGFilterElement, p: string): RefractionField {
   el(filter, 'feFlood', { 'flood-color': 'rgb(128,128,128)', result: `${p}base` });
+
   const edges = {} as RefractionField['edges'];
 
   for (const slot of EDGES) edges[slot] = el(filter, 'feImage', { preserveAspectRatio: 'none', result: `${p}${slot}` });
@@ -56,6 +62,7 @@ export function buildField(filter: SVGFilterElement, p: string): RefractionField
     for (const c of CORNERS) corners[`${axis}${c}`] = el(filter, 'feImage', { preserveAspectRatio: 'none', result: `${p}c${axis}${c}` });
 
     const merge = el(filter, 'feMerge', { result: `${p}${axis}` });
+
     el(merge, 'feMergeNode', { in: `${p}base` });
 
     for (const c of CORNERS) el(merge, 'feMergeNode', { in: `${p}c${axis}${c}` });
@@ -71,6 +78,7 @@ export function packField(filter: SVGFilterElement, x: string, y: string, out: s
   el(filter, 'feColorMatrix', { in: y, type: 'matrix', values: PACK_Y, result: `${out}ya` });
   el(filter, 'feComposite', { in: x, in2: `${out}ya`, operator: 'in', result: `${out}xy` });
   el(filter, 'feColorMatrix', { in: `${out}xy`, type: 'matrix', values: UNPACK, result: out });
+
   return el(filter, 'feDisplacementMap', {
     in: 'SourceGraphic',
     in2: out,
@@ -91,6 +99,7 @@ export function layField(field: RefractionField, tiles: Tiles, w: number, h: num
 
   for (const c of CORNERS) {
     const rect = sliceRect(c, w, h, tiles.r, tiles.reach, ox, oy);
+
     setRect(field.corners[`x${c}`], rect);
     setRect(field.corners[`y${c}`], rect);
   }

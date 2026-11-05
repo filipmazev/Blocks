@@ -1,15 +1,21 @@
+import type { InputSignal, ModelSignal, Signal, WritableSignal } from '@angular/core';
+
 import { computed, Directive, input, model, signal } from '@angular/core';
 import { FormCheckboxControl } from '@angular/forms/signals';
+
+import { LabelPosition } from '@forms/components/shared/types/validation.types';
+
 import { BxControlState } from './bx-control-state';
-import { LabelPosition } from '../types/validation.types';
 
 @Directive()
 export abstract class BxCheckedControl extends BxControlState implements FormCheckboxControl {
-  private readonly draft = signal<boolean | undefined>(undefined);
-  protected readonly displayedChecked = computed(() => this.draft() ?? this.checked());
+  private readonly draft: WritableSignal<boolean | undefined> = signal<boolean | undefined>(undefined);
 
-  public readonly checked = model(false);
-  public readonly labelPosition = input<LabelPosition>('after');
+  protected readonly displayedChecked: Signal<boolean> = computed(() => this.draft() ?? this.checked());
+
+  public readonly checked: ModelSignal<boolean> = model(false);
+
+  public readonly labelPosition: InputSignal<LabelPosition> = input<LabelPosition>('after');
 
   public override reset(): void {
     super.reset();
@@ -34,6 +40,7 @@ export abstract class BxCheckedControl extends BxControlState implements FormChe
 
     if (this.disabled() || this.isReadonly()) {
       target.checked = this.checked();
+
       return;
     }
 

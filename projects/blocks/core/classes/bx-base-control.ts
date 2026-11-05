@@ -1,49 +1,52 @@
+import type { InputSignal, InputSignalWithTransform, Signal, WritableSignal } from '@angular/core';
+
+import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   afterNextRender,
+  booleanAttribute,
+  computed,
   DestroyRef,
   Directive,
+  effect,
   ElementRef,
   inject,
   input,
-  signal,
-  OnInit,
   isDevMode,
-  effect,
-  computed,
-  booleanAttribute
+  OnInit,
+  signal
 } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { ResolvableText, ValidatorKey } from '../types/core.types';
+
+import { ResolvableText, ValidatorKey } from '@core/types/core.types';
 
 @Directive({ host: { '[class.bx-readonly]': 'isReadonly()', '(pointerdown)': 'onControlPointerDown()' } })
 export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
   private readonly focusMonitor = inject(FocusMonitor);
   private readonly focusElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly destroyRef = inject(DestroyRef);
-  protected readonly internalValue = signal<T | null>(null);
-  protected readonly isTouched = signal<boolean>(false);
-  protected readonly isDisabled = signal<boolean>(false);
-  protected readonly keyboardFocused = signal(false);
+
   public readonly ngControl = inject(NgControl, { optional: true, self: true });
 
-  public readonly label = input<ResolvableText | undefined>(undefined);
+  protected readonly internalValue: WritableSignal<T | null> = signal<T | null>(null);
 
-  public readonly placeholder = input<ResolvableText | undefined>(undefined);
+  protected readonly isTouched: WritableSignal<boolean> = signal<boolean>(false);
+  protected readonly isDisabled: WritableSignal<boolean> = signal<boolean>(false);
+  protected readonly keyboardFocused: WritableSignal<boolean> = signal(false);
 
-  public readonly tooltip = input<ResolvableText | undefined>(undefined);
-  public readonly dataTestId = input<string | undefined>(undefined);
-  public readonly ariaLabel = input<string | undefined>(undefined);
+  public readonly isReadonly: Signal<boolean> = computed(() => this.readonly() || this.readOnly());
 
-  public readonly errorMessages = input<Partial<Record<ValidatorKey, ResolvableText>>>({});
-
-  public readonly required = input<boolean>(false);
-  public readonly readonly = input(false, { transform: booleanAttribute });
-  public readonly readOnly = input(false, { transform: booleanAttribute });
-  public readonly isReadonly = computed(() => this.readonly() || this.readOnly());
-  public readonly loading = input<boolean>(false);
-  public readonly disabled = input<boolean>(false);
+  public readonly label: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly placeholder: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly tooltip: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly dataTestId: InputSignal<string | undefined> = input<string | undefined>(undefined);
+  public readonly ariaLabel: InputSignal<string | undefined> = input<string | undefined>(undefined);
+  public readonly errorMessages: InputSignal<Partial<Record<ValidatorKey, ResolvableText>>> = input<Partial<Record<ValidatorKey, ResolvableText>>>({});
+  public readonly required: InputSignal<boolean> = input<boolean>(false);
+  public readonly readonly: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  public readonly readOnly: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+  public readonly loading: InputSignal<boolean> = input<boolean>(false);
+  public readonly disabled: InputSignal<boolean> = input<boolean>(false);
 
   protected onChange: (value: T | null) => void = () => {};
   protected onTouched: () => void = () => {};
@@ -56,16 +59,17 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
         .subscribe((origin) => this.keyboardFocused.set(origin === 'keyboard'));
       this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.focusElement));
     });
+
     effect(() => {
       this.isDisabled.set(this.disabled() || this.ngControl?.disabled === true);
     });
+
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
   }
 
   public ngOnInit(): void {
-    // Forms may call setDisabledState before ngOnInit. Preserve that state.
     this.isDisabled.set(this.disabled() || this.ngControl?.disabled === true);
   }
 
@@ -87,6 +91,7 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
 
   protected updateValue(value: T | null): void {
     if (this.isDisabled() || this.isReadonly()) return;
+
     this.internalValue.set(value);
     this.onChange(value);
   }
@@ -106,11 +111,10 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
     return this.required() || !!control?.hasValidator?.(Validators.required) || !!control?.hasValidator?.(Validators.requiredTrue);
   }
 
-  //#region Helpers
-
   protected get errorMessage(): ResolvableText | undefined {
     if (this.ngControl?.invalid && (this.ngControl.touched || this.ngControl.dirty)) {
       const errors = this.ngControl.errors;
+
       if (!errors) return undefined;
 
       const firstKey = Object.keys(errors)[0] as ValidatorKey;
@@ -123,6 +127,7 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
       const error: unknown = errors[firstKey as string];
 
       if (typeof error === 'string') return error;
+
       if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') return error.message;
 
       if (isDevMode()) {
@@ -131,7 +136,7 @@ export abstract class BxBaseControl<T> implements ControlValueAccessor, OnInit {
 
       return `[Missing error message: ${firstKey}]`;
     }
+
     return undefined;
   }
-  //#endregion
 }

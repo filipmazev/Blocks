@@ -1,16 +1,17 @@
-import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { marked } from 'marked';
+import { fileURLToPath } from 'node:url';
+
 import hljs from 'highlight.js/lib/core';
-import typescript from 'highlight.js/lib/languages/typescript';
-import xml from 'highlight.js/lib/languages/xml';
-import scss from 'highlight.js/lib/languages/scss';
 import bash from 'highlight.js/lib/languages/bash';
 import json from 'highlight.js/lib/languages/json';
-import prettier from 'prettier';
+import scss from 'highlight.js/lib/languages/scss';
+import typescript from 'highlight.js/lib/languages/typescript';
+import xml from 'highlight.js/lib/languages/xml';
+import { marked } from 'marked';
 import ts from 'typescript';
-import { typescriptFormatOptions } from '../typescript-format-options.mjs';
+
+import { formatGeneratedTypeScript } from '../helpers/generated-typescript.helpers.mjs';
 
 for (const [language, grammar] of Object.entries({ typescript, xml, scss, bash, json })) hljs.registerLanguage(language, grammar);
 
@@ -44,33 +45,38 @@ async function collect(directory) {
 }
 await collect('projects/blocks');
 await collect('documentation');
+await collect('projects/playground/src/app/components/screens/appearance');
 files.sort();
 const documents = {};
-const catalogSource = await readFile(path.join(root, 'projects/playground/src/app/components/screens/library-components/component-demo/constants/component-catalog.constants.ts'), 'utf8');
+const catalogSource = await readFile(
+  path.join(root, 'projects/playground/src/app/components/screens/library-components/component-demo/constants/component-catalog.constants.ts'),
+  'utf8'
+);
 // Read the TypeScript literal without executing it. Quotes, comments, property
 // formatting and trailing commas must not affect documentation generation.
 const catalogFile = ts.createSourceFile('component-catalog.ts', catalogSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 const catalogDeclaration = catalogFile.statements
   .filter(ts.isVariableStatement)
-  .flatMap(statement => [...statement.declarationList.declarations])
-  .find(declaration => ts.isIdentifier(declaration.name) && declaration.name.text === 'COMPONENT_EXAMPLES');
+  .flatMap((statement) => [...statement.declarationList.declarations])
+  .find((declaration) => ts.isIdentifier(declaration.name) && declaration.name.text === 'COMPONENT_EXAMPLES');
 const catalogArray = catalogDeclaration?.initializer;
 if (!catalogArray || !ts.isArrayLiteralExpression(catalogArray)) throw new Error('COMPONENT_EXAMPLES must be an array literal.');
-const catalog = catalogArray.elements.map(entry => {
+const catalog = catalogArray.elements.map((entry) => {
   if (!ts.isObjectLiteralExpression(entry)) throw new Error('Component catalog entries must be object literals.');
-  const readString = name => {
-    const property = entry.properties.find(property => ts.isPropertyAssignment(property) &&
-      (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) && property.name.text === name);
+  const readString = (name) => {
+    const property = entry.properties.find(
+      (property) => ts.isPropertyAssignment(property) && (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) && property.name.text === name
+    );
     if (!property || !ts.isStringLiteralLike(property.initializer)) throw new Error(`Catalog ${name} must be a string literal.`);
     return property.initializer.text;
   };
   return { id: readString('id'), readme: readString('readme') };
 });
-const routes = new Map(catalog.map(entry => [entry.readme, `components/${entry.id}`]));
-routes.set('documentation/appearance/README.md', 'appearance');
-routes.set('documentation/modal/README.md', 'modal');
-routes.set('documentation/toastr/README.md', 'toastr');
-routes.set('documentation/core/README.md', 'components');
+const routes = new Map(catalog.map((entry) => [entry.readme, `components/${entry.id}`]));
+routes.set('projects/playground/src/app/components/screens/appearance/README.md', 'appearance');
+routes.set('projects/blocks/modal/README.md', 'modal');
+routes.set('projects/blocks/toastr/README.md', 'toastr');
+routes.set('projects/blocks/core/README.md', 'components');
 routes.set('projects/blocks/README.md', 'home');
 for (const file of files) {
   const release = /^documentation\/releases\/([^/]+)\/README\.md$/.exec(file);
@@ -112,19 +118,25 @@ const liveExamples = {
 };
 for (const [key, source] of Object.entries(liveExamples)) {
   let text = await readFile(path.join(root, 'projects/playground/src/app/components/screens/library-components', source), 'utf8');
-  text = text.replace(/'@(modal|toastr|forms)\/[^']+'/g, (_, entry) => `'@filip.mazev/blocks/${entry}'`)
+  text = text
+    .replace(/'@(modal|toastr|forms)\/[^']+'/g, (_, entry) => `'@filip.mazev/blocks/${entry}'`)
     .replace(/@use 'core\/styles\/helpers'/g, "@use '@filip.mazev/blocks/core/styles/helpers'");
   snippets[`assets/code-snippets/${key}`] = text;
 }
 const aliases = {
-  'assets/modal-readme/README.md': 'documentation/modal/README.md',
-  'assets/toastr-readme/README.md': 'documentation/toastr/README.md',
-  'assets/blocks-core-readme/README.md': 'documentation/core/README.md',
-  'assets/core-readme/README.md': 'documentation/core/README.md'
+  'documentation/core/README.md': 'projects/blocks/core/README.md',
+  'documentation/modal/README.md': 'projects/blocks/modal/README.md',
+  'documentation/toastr/README.md': 'projects/blocks/toastr/README.md',
+  'documentation/appearance/README.md': 'projects/playground/src/app/components/screens/appearance/README.md',
+
+  'assets/modal-readme/README.md': 'projects/blocks/modal/README.md',
+  'assets/toastr-readme/README.md': 'projects/blocks/toastr/README.md',
+  'assets/blocks-core-readme/README.md': 'projects/blocks/core/README.md',
+  'assets/core-readme/README.md': 'projects/blocks/core/README.md'
 };
 const target = path.join(root, 'projects/playground/src/app/generated/documentation.ts');
 await mkdir(path.dirname(target), { recursive: true });
 const generated = `// Generated by tools/docs/build-docs.mjs. Do not edit.\nexport const DOCUMENTATION: Readonly<Record<string, string>> = ${JSON.stringify(documents, null, 2)};\nexport const DOCUMENTATION_ALIASES: Readonly<Record<string, string>> = ${JSON.stringify(aliases, null, 2)};\nexport const CODE_SNIPPETS: Readonly<Record<string, string>> = ${JSON.stringify(snippets, null, 2)};\n`;
-const formatted = await prettier.format(generated, { ...typescriptFormatOptions, filepath: target });
+const formatted = await formatGeneratedTypeScript(generated, target);
 await writeFile(target, formatted);
 console.log(`Bundled ${files.length} rendered documentation pages.`);

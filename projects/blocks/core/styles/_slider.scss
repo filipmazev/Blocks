@@ -2,15 +2,11 @@
 @use 'motion' as *;
 @use 'slider-rail' as *;
 
-// Native range pseudo-elements differ across engines and must remain separate rules.
+/* IMPORTANT: Native range pseudo-elements differ across engines and must remain separate rules. */
 @mixin track {
     @include slider-rail;
 
-    background: linear-gradient(
-        to right,
-        var(--bx-accent) 0 var(--bx-slider-progress, 50%),
-        var(--bx-bg-neutral) var(--bx-slider-progress, 50%) 100%
-    );
+    background: linear-gradient(to right, var(--bx-accent) 0 var(--bx-slider-progress, 50%), var(--bx-bg-neutral) var(--bx-slider-progress, 50%) 100%);
 }
 
 @mixin thumb {
@@ -21,20 +17,16 @@
     border-radius: radius(pill);
     border: 1px solid var(--bx-border-strong);
     background: var(--bx-bg-surface);
-    background:
-        radial-gradient(circle at 35% 0%, rgb(255 255 255 / 24%), transparent 65%),
-        var(--bx-bg-surface);
+    background: radial-gradient(circle at 35% 0%, rgb(255 255 255 / 24%), transparent 65%), var(--bx-bg-surface);
     border-color: color-mix(
         in srgb,
-        var(--bx-slider-light-color, var(--bx-accent))
-            calc(var(--bx-slider-light-strength, 0.18) * 100%),
+        var(--bx-slider-light-color, var(--bx-accent)) calc(var(--bx-slider-light-strength, 0.18) * 100%),
         var(--bx-border-strong)
     );
     backdrop-filter: none;
     box-shadow:
         inset 0 1px 1px rgb(255 255 255 / 45%),
-        inset 0 -1px 2px
-            color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) 30%, transparent),
+        inset 0 -1px 2px color-mix(in srgb, var(--bx-slider-light-color, var(--bx-accent)) 30%, transparent),
         0 2px 5px rgb(0 0 0 / 18%);
 }
 
@@ -79,7 +71,7 @@
         background: var(--bx-bg-neutral);
     }
 
-    // The native thumb remains the hit target; the decorative lens paints over it.
+    /* IMPORTANT: The native thumb remains the hit target; the decorative lens paints over it. */
     input.bx-slider::-webkit-slider-thumb {
         background: transparent;
         border-color: transparent;
@@ -102,37 +94,22 @@
     position: absolute;
     top: var(--bx-slider-center-y, 50%);
     left: calc(
-        var(--bx-slider-track-start, 0px) +
-            var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) *
+        var(--bx-slider-track-start, 0px) + var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) *
             (var(--bx-slider-track-width, 100%) - var(--bx-slider-thumb-size, #{spacing(6)}))
     );
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 2;
     overflow: hidden;
-    background:
-        radial-gradient(circle at 35% 0%, rgb(255 255 255 / 45%), transparent 65%),
-        color-mix(in srgb, var(--bx-bg-surface) 24%, transparent);
+    background: radial-gradient(circle at 35% 0%, rgb(255 255 255 / 45%), transparent 65%), color-mix(in srgb, var(--bx-bg-surface) 24%, transparent);
     border-color: color-mix(in srgb, var(--bx-text-primary) 35%, var(--bx-border-strong));
     backdrop-filter: blur(var(--bx-slider-lens-blur, 1.5px));
 
-    --bx-slider-lens-width: calc(
-        var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5)
-    );
-    --bx-slider-lens-inset: calc(
-        var(--bx-slider-thumb-size, #{spacing(6)}) / 2 * var(--bx-slider-magnification, 1.5)
-    );
-    --bx-slider-lens-travel: calc(
-        (var(--bx-slider-track-width) - var(--bx-slider-thumb-size, #{spacing(6)})) *
-            var(--bx-slider-magnification, 1.5)
-    );
-    --bx-slider-lens-start-offset: calc(
-        var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel)
-    );
-    --bx-slider-lens-end-offset: calc(
-        var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) *
-            var(--bx-slider-lens-travel)
-    );
+    --bx-slider-lens-width: calc(var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5));
+    --bx-slider-lens-inset: calc(var(--bx-slider-thumb-size, #{spacing(6)}) / 2 * var(--bx-slider-magnification, 1.5));
+    --bx-slider-lens-travel: calc((var(--bx-slider-track-width) - var(--bx-slider-thumb-size, #{spacing(6)})) * var(--bx-slider-magnification, 1.5));
+    --bx-slider-lens-start-offset: calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel));
+    --bx-slider-lens-end-offset: calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel));
 
     &:dir(rtl) {
         --bx-slider-physical-position: calc(1 - var(--bx-slider-position, 0.5));
@@ -160,19 +137,14 @@
     }
 }
 
-// Reuse the rail geometry in CSS instead of sampling screen pixels on drag.
-// A separate rounded fill keeps the magnified selection's end caps curved.
+/* IMPORTANT: Reuse the rail geometry in CSS instead of sampling screen pixels on drag. A separate rounded fill keeps the magnified selection's end caps curved. */
 .bx-slider-lens {
     display: var(--bx-slider-lens-display, block);
     position: absolute;
     top: 50%;
     left: calc(
         var(--bx-slider-thumb-size, #{spacing(6)}) / 2 -
-            1px - var(--bx-slider-lens-inset) - var(
-                --bx-slider-physical-position,
-                var(--bx-slider-position, 0.5)
-            ) *
-            var(--bx-slider-lens-travel)
+            1px - var(--bx-slider-lens-inset) - var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel)
     );
     width: var(--bx-slider-lens-width);
     height: calc(#{spacing(2)} * var(--bx-slider-magnification, 1.5));
@@ -185,8 +157,7 @@
         content: '';
         position: absolute;
         inset-block: 0;
-        inset-inline: var(--bx-slider-lens-start-offset)
-            calc(var(--bx-slider-lens-width) - var(--bx-slider-lens-end-offset));
+        inset-inline: var(--bx-slider-lens-start-offset) calc(var(--bx-slider-lens-width) - var(--bx-slider-lens-end-offset));
         background: var(--bx-accent);
         border-radius: inherit;
     }

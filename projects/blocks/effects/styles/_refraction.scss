@@ -1,22 +1,9 @@
-// SVG displacement and bevel masks adapted from Nordify (MIT).
-// Imported once through effects.scss; component styles must not emit these rules.
-// Preferences override the material even before the runtime's change listener runs.
+/* IMPORTANT: SVG displacement and bevel masks adapted from Nordify (MIT). Imported once through effects.scss; component styles must not emit these rules. Preferences override the material even before the runtime's change listener runs. */
 [data-bx-refraction='true'] {
-    // Keep a readable backing with stable theme foregrounds, including at zero.
-    --bx-refraction-material-opacity: clamp(
-        0,
-        var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469),
-        1
-    );
+    --bx-refraction-material-opacity: clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1);
     --bx-refraction-blur: max(
         var(--bx-refraction-min-blur, 0.5px),
-        var(
-            --bx-glass-blur,
-            calc(
-                0.5px + 12px * var(--bx-glass-material-strength, 0.1469) *
-                    var(--bx-glass-material-strength, 0.1469)
-            )
-        )
+        var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469)))
     );
     --bx-refraction-spec: calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)));
     --bx-refraction-glint-exp: calc(1.35 + 0.1 * var(--bx-refraction-dark, 0));
@@ -42,7 +29,6 @@
     [aria-checked='true'],
     [aria-expanded='true'][aria-haspopup]:not([aria-haspopup='false'])
 ) {
-    // Selected semantic inks and pressed fills need a stronger static backing.
     --bx-refraction-state-opacity: 0.9;
 }
 
@@ -94,36 +80,12 @@
     border: calc(9px * var(--bx-refraction-s, 1)) solid var(--bx-refraction-caustic, #ffffff);
     opacity: var(--bx-refraction-caustic-o, 0.7);
     -webkit-mask-image:
-        radial-gradient(
-            70% 120% at 78% 0%,
-            rgb(0 0 0 / 58%) 0%,
-            rgb(0 0 0 / 42%) 35%,
-            rgb(0 0 0 / 18%) 62%,
-            transparent 85%
-        ),
-        radial-gradient(
-            70% 120% at 22% 100%,
-            rgb(0 0 0 / 58%) 0%,
-            rgb(0 0 0 / 42%) 35%,
-            rgb(0 0 0 / 18%) 62%,
-            transparent 85%
-        ),
+        radial-gradient(70% 120% at 78% 0%, rgb(0 0 0 / 58%) 0%, rgb(0 0 0 / 42%) 35%, rgb(0 0 0 / 18%) 62%, transparent 85%),
+        radial-gradient(70% 120% at 22% 100%, rgb(0 0 0 / 58%) 0%, rgb(0 0 0 / 42%) 35%, rgb(0 0 0 / 18%) 62%, transparent 85%),
         linear-gradient(rgb(0 0 0 / 40%) 0 0);
     mask-image:
-        radial-gradient(
-            70% 120% at 78% 0%,
-            rgb(0 0 0 / 58%) 0%,
-            rgb(0 0 0 / 42%) 35%,
-            rgb(0 0 0 / 18%) 62%,
-            transparent 85%
-        ),
-        radial-gradient(
-            70% 120% at 22% 100%,
-            rgb(0 0 0 / 58%) 0%,
-            rgb(0 0 0 / 42%) 35%,
-            rgb(0 0 0 / 18%) 62%,
-            transparent 85%
-        ),
+        radial-gradient(70% 120% at 78% 0%, rgb(0 0 0 / 58%) 0%, rgb(0 0 0 / 42%) 35%, rgb(0 0 0 / 18%) 62%, transparent 85%),
+        radial-gradient(70% 120% at 22% 100%, rgb(0 0 0 / 58%) 0%, rgb(0 0 0 / 42%) 35%, rgb(0 0 0 / 18%) 62%, transparent 85%),
         linear-gradient(rgb(0 0 0 / 40%) 0 0);
     -webkit-mask-composite: source-over, source-over;
     mask-composite: add, add;
@@ -131,10 +93,7 @@
 
 .bx-refraction-pane {
     transform: translateZ(0);
-    background-image: linear-gradient(
-        var(--bx-refraction-tint, transparent),
-        var(--bx-refraction-tint, transparent)
-    );
+    background-image: linear-gradient(var(--bx-refraction-tint, transparent), var(--bx-refraction-tint, transparent));
 }
 
 .bx-refraction-edge {
@@ -142,33 +101,14 @@
     transform: translateZ(0);
 
     --bx-refraction-edge-width: calc(var(--bx-refraction-rim-w, 0.7px) * var(--bx-refraction-s, 1));
-    --bx-refraction-edge-depth: calc(
-        var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1)
-    );
+    --bx-refraction-edge-depth: calc(var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1));
     --bx-refraction-edge-radius: var(--bx-refraction-r);
 
     -webkit-mask-image:
-        var(--bx-refraction-arc),
-        linear-gradient(
-            to bottom,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
-        linear-gradient(
-            to top,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
-        linear-gradient(
-            to right,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
-        linear-gradient(
-            to left,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
+        var(--bx-refraction-arc), linear-gradient(to bottom, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
+        linear-gradient(to top, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
+        linear-gradient(to right, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
+        linear-gradient(to left, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
         radial-gradient(
             circle var(--bx-refraction-edge-radius) at 100% 100%,
             transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
@@ -190,27 +130,10 @@
             #000000 calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-width))
         );
     mask-image:
-        var(--bx-refraction-arc),
-        linear-gradient(
-            to bottom,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
-        linear-gradient(
-            to top,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
-        linear-gradient(
-            to right,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
-        linear-gradient(
-            to left,
-            #000000 var(--bx-refraction-edge-width),
-            transparent var(--bx-refraction-edge-depth)
-        ),
+        var(--bx-refraction-arc), linear-gradient(to bottom, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
+        linear-gradient(to top, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
+        linear-gradient(to right, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
+        linear-gradient(to left, #000000 var(--bx-refraction-edge-width), transparent var(--bx-refraction-edge-depth)),
         radial-gradient(
             circle var(--bx-refraction-edge-radius) at 100% 100%,
             transparent calc(var(--bx-refraction-edge-radius) - var(--bx-refraction-edge-depth)),
@@ -272,9 +195,7 @@
         0 100%,
         100% 100%;
     mask-repeat: no-repeat;
-    -webkit-mask-composite:
-        source-in, source-over, source-over, source-over, source-over, source-over, source-over,
-        source-over, source-over;
+    -webkit-mask-composite: source-in, source-over, source-over, source-over, source-over, source-over, source-over, source-over, source-over;
     mask-composite: intersect, add, add, add, add, add, add, add, add;
 }
 

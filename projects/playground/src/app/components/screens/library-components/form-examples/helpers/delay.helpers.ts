@@ -5,6 +5,7 @@ export function delay(milliseconds: number, signal?: AbortSignal): Promise<void>
       clearTimeout(timer);
       reject(new DOMException('Request cancelled', 'AbortError'));
     };
+
     const timer = setTimeout(() => {
       signal?.removeEventListener('abort', cancel);
       resolve();

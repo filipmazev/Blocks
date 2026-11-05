@@ -130,13 +130,6 @@
     color: var(--bx-text-brand);
 }
 
-.home-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: spacing(4);
-    margin-bottom: spacing(8);
-}
-
 .home-footer {
     display: flex;
     justify-content: space-between;
@@ -255,7 +248,6 @@
 
 .home-container > .hero,
 .home-container > .features,
-.home-container > .home-links,
 .home-container > .home-footer {
     max-width: 80rem;
     margin-inline: auto;

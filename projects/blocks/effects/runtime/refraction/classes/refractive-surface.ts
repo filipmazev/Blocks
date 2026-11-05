@@ -1,8 +1,8 @@
-import { rememberStyles } from '../../dom';
-import { SLOTS } from '../constants/refraction-maps.constants';
-import { cachedRefraction, readRadius } from '../helpers/refraction.helpers';
-import { createRefractionFilter, layoutRefractionFilter } from '../helpers/refraction-filter.helpers';
-import { el, layer, setAttr, setBackdrop, setFieldImages, setStyle } from '../helpers/refraction-svg.helpers';
+import { rememberStyles } from '@effects/runtime/dom';
+import { SLOTS } from '@effects/runtime/refraction/constants/refraction-maps.constants';
+import { cachedRefraction, readRadius } from '@effects/runtime/refraction/helpers/refraction.helpers';
+import { createRefractionFilter, layoutRefractionFilter } from '@effects/runtime/refraction/helpers/refraction-filter.helpers';
+import { el, layer, setAttr, setBackdrop, setFieldImages, setStyle } from '@effects/runtime/refraction/helpers/refraction-svg.helpers';
 
 /** One live backdrop pass; lighting stays in the existing shared Blocks decorations. */
 export class RefractiveSurface {
@@ -12,12 +12,13 @@ export class RefractiveSurface {
   private readonly filter: ReturnType<typeof createRefractionFilter>;
   private readonly observer: ResizeObserver;
   private readonly restore: () => void;
-  private static instances = 0;
-  private visible = true;
-  private disposed = false;
-  private width = 0;
-  private height = 0;
-  private radius = -1;
+
+  private static instances: number = 0;
+  private visible: boolean = true;
+  private disposed: boolean = false;
+  private width: number = 0;
+  private height: number = 0;
+  private radius: number = -1;
 
   constructor(private readonly host: HTMLElement) {
     const doc = host.ownerDocument;
@@ -27,8 +28,10 @@ export class RefractiveSurface {
 
     this.view = view;
     this.restore = rememberStyles(host, ['--bx-refraction-r']);
+
     const root = doc.createDocumentFragment();
     const id = `bx-refraction-balanced-${++RefractiveSurface.instances}`;
+
     this.defs = el(root, 'svg', { class: 'bx-refraction-defs', width: 0, height: 0, 'aria-hidden': 'true', focusable: 'false' });
     this.filter = createRefractionFilter(this.defs, id);
     this.pane = layer(root, 'bx-refraction-layer bx-refraction-pane');
@@ -64,7 +67,9 @@ export class RefractiveSurface {
     this.width = width;
     this.height = height;
     this.radius = radius;
+
     const map = cachedRefraction(Math.min(width, height), radius);
+
     setFieldImages(this.filter.refrField, map);
 
     for (const slot of SLOTS) setAttr(this.filter.tiltTiles[slot], 'href', map.tilt.img[slot]);
@@ -72,6 +77,7 @@ export class RefractiveSurface {
     setAttr(this.filter.tiltRamp, 'href', map.tiltRamp);
     layoutRefractionFilter(this.filter, map, width, height);
     this.host.style.setProperty('--bx-refraction-r', `${Math.max(0.01, Math.min(radius, width / 2, height / 2))}px`);
+
     const style = this.view.getComputedStyle(this.host);
 
     for (const side of ['top', 'right', 'bottom', 'left']) {

@@ -1,3 +1,5 @@
+import type { InputSignalWithTransform, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
 import { afterEveryRender, afterNextRender, booleanAttribute, DestroyRef, Directive, ElementRef, inject, input, NgZone, output, signal } from '@angular/core';
 
 /** Single-line ellipsis styling and reactive measurement of the rendered text. */
@@ -13,18 +15,23 @@ export class TruncateDirective {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly destroyRef = inject(DestroyRef);
   private readonly zone = inject(NgZone);
-  private readonly clipped = signal(false);
-  private readonly content = signal('');
-  /** Enables single-line ellipsis and measurement. Defaults to true. */
-  public readonly enabled = input(true, { alias: 'bxTruncate', transform: booleanAttribute });
-  /** Whether the rendered content currently overflows its visible box. False during server rendering. */
-  public readonly truncated = this.clipped.asReadonly();
-  /** Current rendered text, or a native input's value/placeholder, for custom feedback and projected content. */
-  public readonly text = this.content.asReadonly();
-  /** Emits only when the measured truncation state changes. */
-  public readonly truncatedChange = output<boolean>();
 
-  private rendered = false;
+  private readonly clipped: WritableSignal<boolean> = signal(false);
+
+  private readonly content: WritableSignal<string> = signal('');
+
+  /** Whether the rendered content currently overflows its visible box. False during server rendering. */
+  public readonly truncated: Signal<boolean> = this.clipped.asReadonly();
+  /** Current rendered text, or a native input's value/placeholder, for custom feedback and projected content. */
+  public readonly text: Signal<string> = this.content.asReadonly();
+
+  /** Enables single-line ellipsis and measurement. Defaults to true. */
+  public readonly enabled: InputSignalWithTransform<boolean, unknown> = input(true, { alias: 'bxTruncate', transform: booleanAttribute });
+
+  /** Emits only when the measured truncation state changes. */
+  public readonly truncatedChange: OutputEmitterRef<boolean> = output<boolean>();
+
+  private rendered: boolean = false;
   private frame?: number;
   private resize?: ResizeObserver;
   private mutations?: MutationObserver;
@@ -76,11 +83,13 @@ export class TruncateDirective {
 
     // Native input values are not DOM text nodes and scrollWidth is inconsistent across engines.
     const style = this.element.ownerDocument.defaultView?.getComputedStyle(this.element);
+
     this.textContext ??= this.element.ownerDocument.createElement('canvas').getContext('2d');
 
     if (!style || !this.textContext) return this.element.scrollWidth > this.element.clientWidth;
 
     this.textContext.font = style.font || `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+
     const letterSpacing = parseFloat(style.letterSpacing) || 0;
     const wordSpacing = parseFloat(style.wordSpacing) || 0;
     const width = this.textContext.measureText(text).width + letterSpacing * Math.max(0, [...text].length - 1) + wordSpacing * (text.match(/\s/g)?.length ?? 0);
@@ -107,11 +116,16 @@ export class TruncateDirective {
       }
 
       const listeners = new AbortController();
+
       this.listeners = listeners;
+
       const options = { passive: true, signal: listeners.signal };
+
       view.addEventListener('resize', () => this.scheduleMeasure(), options);
       view.visualViewport?.addEventListener('resize', () => this.scheduleMeasure(), options);
+
       const fonts = this.element.ownerDocument.fonts;
+
       fonts?.addEventListener('loadingdone', () => this.scheduleMeasure(), options);
       void fonts?.ready.then(() => this.scheduleMeasure());
       this.scheduleMeasure();

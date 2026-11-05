@@ -1,8 +1,12 @@
+import type { InputSignal, InputSignalWithTransform } from '@angular/core';
+
 import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, DestroyRef, Directive, effect, ElementRef, inject, input, NgZone, PLATFORM_ID } from '@angular/core';
+
 import { BxA11yService } from '@filip.mazev/blocks/core';
 import { GlassinessMode, GlassQuality, mountSurface, SurfaceOptions } from '@filip.mazev/blocks/effects/runtime';
-import { optionalBoolean, optionalNumber } from './helpers/surface-input.helpers';
+
+import { optionalBoolean, optionalNumber } from '@effects/directives/helpers/surface-input.helpers';
 
 /** Adds a decorative material without replacing native controls or their content. */
 @Directive({
@@ -14,15 +18,21 @@ export class BxSurfaceDirective implements AfterViewInit {
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly a11y = inject(BxA11yService);
   private readonly zone = inject(NgZone);
-  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  public readonly bxSurfaceInteractive = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
-  public readonly bxSurfaceTranslucency = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
+
+  private readonly isBrowser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
+
+  public readonly bxSurfaceInteractive: InputSignalWithTransform<boolean | undefined, unknown> = input<boolean | undefined, unknown>(undefined, {
+    transform: optionalBoolean
+  });
+  public readonly bxSurfaceTranslucency: InputSignalWithTransform<number | undefined, unknown> = input<number | undefined, unknown>(undefined, {
+    transform: optionalNumber
+  });
   /** Opt this surface into SVG refraction; omitted surfaces retain the existing material. Global Off and accessibility settings still win. */
-  public readonly bxSurfaceGlassiness = input<GlassinessMode | undefined>();
-  public readonly bxSurfaceQuality = input<GlassQuality | undefined>();
-  public readonly bxSurfaceEmission = input<string | undefined>();
-  public readonly bxSurfaceFocusEmission = input<string | undefined>();
-  public readonly bxReducedTransparency = input<boolean | undefined, unknown>(undefined, {
+  public readonly bxSurfaceGlassiness: InputSignal<GlassinessMode | undefined> = input<GlassinessMode | undefined>();
+  public readonly bxSurfaceQuality: InputSignal<GlassQuality | undefined> = input<GlassQuality | undefined>();
+  public readonly bxSurfaceEmission: InputSignal<string | undefined> = input<string | undefined>();
+  public readonly bxSurfaceFocusEmission: InputSignal<string | undefined> = input<string | undefined>();
+  public readonly bxReducedTransparency: InputSignalWithTransform<boolean | undefined, unknown> = input<boolean | undefined, unknown>(undefined, {
     transform: optionalBoolean
   });
 
@@ -31,6 +41,7 @@ export class BxSurfaceDirective implements AfterViewInit {
   constructor() {
     effect(() => {
       const options = this.options();
+
       this.zone.runOutsideAngular(() => this.surface?.update(options));
     });
 
@@ -43,6 +54,7 @@ export class BxSurfaceDirective implements AfterViewInit {
   public ngAfterViewInit(): void {
     if (this.isBrowser) {
       const options = this.options();
+
       this.surface = this.zone.runOutsideAngular(() => mountSurface(this.element.nativeElement, options));
     }
   }

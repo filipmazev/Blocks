@@ -1,4 +1,3 @@
-// Shared ellipsis mechanics. Include through helpers when styling a text surface.
 @mixin truncate-text {
     min-inline-size: 0;
     overflow: hidden;

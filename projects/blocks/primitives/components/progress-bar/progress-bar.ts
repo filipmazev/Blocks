@@ -1,6 +1,10 @@
+import type { InputSignal, Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+
 import { BX_I18N, BxA11yService, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { ProgressBarMode } from './types/progress-bar.types';
+
+import { ProgressBarMode } from '@primitives/components/progress-bar/types/progress-bar.types';
 
 @Component({
   selector: 'bx-progress-bar',
@@ -20,17 +24,18 @@ import { ProgressBarMode } from './types/progress-bar.types';
 })
 export class ProgressBar {
   private readonly i18n = inject(BX_I18N, { optional: true });
+
   protected readonly a11y = inject(BxA11yService);
-  protected readonly resolvedLabel = computed(() => resolveText(this.label(), this.i18n));
-  protected readonly progress = computed(() => (Number.isFinite(this.value()) ? Math.min(100, Math.max(0, this.value())) : 0));
-  protected readonly buffer = computed(() =>
+
+  protected readonly resolvedLabel: Signal<string> = computed(() => resolveText(this.label(), this.i18n));
+  protected readonly progress: Signal<number> = computed(() => (Number.isFinite(this.value()) ? Math.min(100, Math.max(0, this.value())) : 0));
+  protected readonly buffer: Signal<number> = computed(() =>
     Math.max(this.progress(), Number.isFinite(this.bufferValue()) ? Math.min(100, Math.max(0, this.bufferValue())) : 0)
   );
+  protected readonly indeterminate: Signal<boolean> = computed(() => this.mode() === 'indeterminate' || this.mode() === 'query');
 
-  protected readonly indeterminate = computed(() => this.mode() === 'indeterminate' || this.mode() === 'query');
-
-  public readonly mode = input<ProgressBarMode>('determinate');
-  public readonly value = input(0);
-  public readonly bufferValue = input(100);
-  public readonly label = input<ResolvableText>('Progress');
+  public readonly mode: InputSignal<ProgressBarMode> = input<ProgressBarMode>('determinate');
+  public readonly value: InputSignal<number> = input(0);
+  public readonly bufferValue: InputSignal<number> = input(100);
+  public readonly label: InputSignal<ResolvableText> = input<ResolvableText>('Progress');
 }

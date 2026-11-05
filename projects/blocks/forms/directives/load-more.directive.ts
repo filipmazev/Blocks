@@ -1,3 +1,5 @@
+import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
 import {
   afterNextRender,
   afterRenderEffect,
@@ -14,12 +16,14 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
+
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { LoadMoreFooter } from '../components/shared/load-more/load-more-footer';
-import { ILoadMoreConfig } from '../components/shared/load-more/interfaces/iload-more-config.interface';
-import { ILoadMoreContext } from '../components/shared/load-more/interfaces/iload-more-context.interface';
-import { ILoadMoreRequest } from '../components/shared/load-more/interfaces/iload-more-request.interface';
-import { LoadMoreSource } from '../components/shared/load-more/types/load-more.types';
+
+import { ILoadMoreConfig } from '@forms/components/shared/load-more/interfaces/iload-more-config.interface';
+import { ILoadMoreContext } from '@forms/components/shared/load-more/interfaces/iload-more-context.interface';
+import { ILoadMoreRequest } from '@forms/components/shared/load-more/interfaces/iload-more-request.interface';
+import { LoadMoreFooter } from '@forms/components/shared/load-more/load-more-footer';
+import { LoadMoreSource } from '@forms/components/shared/load-more/types/load-more.types';
 
 /** Append to a scroll container, not a native table/list element with restricted children. */
 @Directive({ selector: '[bxLoadMore]', exportAs: 'bxLoadMore' })
@@ -28,30 +32,32 @@ export class LoadMoreDirective {
   private readonly views = inject(ViewContainerRef);
   private readonly zone = inject(NgZone);
   private readonly destroy = inject(DestroyRef);
-  private readonly overflowing = signal(false);
-  private readonly requested = signal(false);
-  private readonly retrying = signal(false);
-  private readonly keepVisible = signal(false);
 
-  public readonly loadMoreHasMore = input(false);
-  public readonly loadMoreLoading = input(false);
-  public readonly loadMoreSuppressed = input(false);
-  public readonly loadMoreDisabled = input(false);
-  public readonly loadMoreError = input<ResolvableText | undefined>(undefined);
-  public readonly loadMoreConfig = input<ILoadMoreConfig>({});
-  public readonly loadMoreTemplate = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
-  public readonly loadMoreRevision = input<unknown>(undefined);
-  public readonly loadMore = output<ILoadMoreRequest>();
+  private readonly overflowing: WritableSignal<boolean> = signal(false);
+  private readonly requested: WritableSignal<boolean> = signal(false);
+  private readonly retrying: WritableSignal<boolean> = signal(false);
+  private readonly keepVisible: WritableSignal<boolean> = signal(false);
 
-  public readonly actionVisible = computed(
+  public readonly actionVisible: Signal<boolean> = computed(
     () =>
       !this.loadMoreSuppressed() &&
       (this.loadMoreHasMore() || !!this.loadMoreError() || (this.keepVisible() && this.loadMoreLoading())) &&
       (this.loadMoreConfig().buttonMode === 'always' || !this.overflowing() || this.keepVisible() || !!this.loadMoreError())
   );
 
+  public readonly loadMoreHasMore: InputSignal<boolean> = input(false);
+  public readonly loadMoreLoading: InputSignal<boolean> = input(false);
+  public readonly loadMoreSuppressed: InputSignal<boolean> = input(false);
+  public readonly loadMoreDisabled: InputSignal<boolean> = input(false);
+  public readonly loadMoreError: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly loadMoreConfig: InputSignal<ILoadMoreConfig> = input<ILoadMoreConfig>({});
+  public readonly loadMoreTemplate: InputSignal<TemplateRef<ILoadMoreContext> | undefined> = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
+  public readonly loadMoreRevision: InputSignal<unknown> = input<unknown>(undefined);
+
+  public readonly loadMore: OutputEmitterRef<ILoadMoreRequest> = output<ILoadMoreRequest>();
+
   private footer?: ComponentRef<LoadMoreFooter>;
-  private wasLoading = false;
+  private wasLoading: boolean = false;
   private previousRevision: unknown;
 
   constructor() {
@@ -79,7 +85,9 @@ export class LoadMoreDirective {
   /** The shared request guard is also available to custom footer templates. */
   public request(source: LoadMoreSource = 'button'): void {
     if (this.loadMoreSuppressed()) return;
+
     if ((!this.loadMoreHasMore() && !this.loadMoreError()) || this.loadMoreDisabled() || this.loadMoreLoading() || this.requested()) return;
+
     if (source === 'scroll' && this.loadMoreError()) return;
 
     this.requested.set(true);
@@ -94,6 +102,7 @@ export class LoadMoreDirective {
     this.footer = this.views.createComponent(LoadMoreFooter);
     this.host.append(this.footer.location.nativeElement);
     this.footer.instance.request.subscribe(() => this.request());
+
     const measure = () => this.measure();
     const onScroll = () => {
       const footerHeight = (this.footer?.location.nativeElement as HTMLElement | undefined)?.offsetHeight ?? 0;
@@ -111,7 +120,9 @@ export class LoadMoreDirective {
 
         this.measure();
       };
+
       const mutation = new MutationObserver(observeContent);
+
       resize.observe(this.host);
       observeContent();
       mutation.observe(this.host, { childList: true, subtree: true, characterData: true });
@@ -148,6 +159,7 @@ export class LoadMoreDirective {
 
     if (!visible && footerElement.contains(this.host.ownerDocument.activeElement)) {
       if (!this.host.hasAttribute('tabindex')) this.host.setAttribute('tabindex', '-1');
+
       this.host.focus({ preventScroll: true });
     }
 

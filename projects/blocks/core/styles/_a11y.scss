@@ -2,7 +2,7 @@
 
 @forward 'motion';
 
-// Emit the CDK utility once through the shared global accessibility entry point.
+/* IMPORTANT: Emit the CDK utility once through the shared global accessibility entry point. */
 @include cdk.a11y-visually-hidden;
 
 :root {

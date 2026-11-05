@@ -1,4 +1,4 @@
-import { INavigationItemContext } from '../../shared/interfaces/inavigation-item-context.interface';
+import { INavigationItemContext } from '@navigation/components/shared/interfaces/inavigation-item-context.interface';
 
 /** Side-nav item context; retains the public interface while sharing navigation presentation contracts. */
 export interface ISideNavItemContext extends INavigationItemContext {

@@ -1,8 +1,8 @@
-import type { PointLight } from '../scene';
-import type { ILightProjection } from '../interfaces/ilight-projection.interface';
+import type { ILightProjection } from '@effects/runtime/interfaces/ilight-projection.interface';
+import type { IPointLight } from '@effects/runtime/scene';
 
 /** Share the exact influence calculation between the source budget and final rendering. */
-export function projectLight(light: PointLight, bounds: DOMRect): ILightProjection {
+export function projectLight(light: IPointLight, bounds: DOMRect): ILightProjection {
   const cx = bounds.left + bounds.width / 2;
   const cy = bounds.top + bounds.height / 2;
   const lx = light.bounds ? Math.max(light.bounds.left, Math.min(cx, light.bounds.right)) : light.x;

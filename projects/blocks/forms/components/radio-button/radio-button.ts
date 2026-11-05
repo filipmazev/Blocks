@@ -1,50 +1,57 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { Component, computed, DestroyRef, ElementRef, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import type { InputSignal, Signal } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input } from '@angular/core';
+
 import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
-import { LabelPosition, SubscriptSizing } from '../shared/types/validation.types';
-import { RadioRegistry } from './services/radio-registry.service';
-import { BX_RADIO_GROUP } from '../radio-group/tokens/radio-group.token';
-import { FormField } from '../form-field/form-field';
-import { FormSettingsService } from '../shared/services/form-settings.service';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+
+import { FormField } from '@forms/components/form-field/form-field';
+import { RadioRegistry } from '@forms/components/radio-button/services/radio-registry.service';
+import { BX_RADIO_GROUP } from '@forms/components/radio-group/tokens/radio-group.token';
+import { FormSettingsService } from '@forms/components/shared/services/form-settings.service';
+import { LabelPosition, SubscriptSizing } from '@forms/components/shared/types/validation.types';
 
 @Component({
   selector: 'bx-radio',
   standalone: true,
   imports: [BxSurfaceDirective, CommonModule, FormField],
   templateUrl: './radio-button.html',
+  // External NgControl validation/touched changes are read by inherited getters without signal notifications.
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './radio-button.scss'
 })
 export class Radio extends BxBaseControl<unknown> {
-  protected readonly group = inject(BX_RADIO_GROUP, { optional: true });
   private readonly registry = inject(RadioRegistry);
   private readonly defaults = inject(FormSettingsService);
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-
   private readonly i18n = inject(BX_I18N, { optional: true });
-  protected readonly inputId = computed(() => `bx-radio-${uuidv4()}`);
-  protected readonly resolvedLabel = computed(() => {
+
+  protected readonly group = inject(BX_RADIO_GROUP, { optional: true });
+
+  protected readonly inputId: Signal<string> = computed(() => `bx-radio-${uuidv4()}`);
+  protected readonly resolvedLabel: Signal<string | undefined> = computed(() => {
     this.i18n?.version?.();
+
     const l = this.label();
+
     if (!l) return undefined;
+
     return isTextWithKey(l) ? (this.i18n?.translate(l.key) ?? l.key) : l;
   });
+  protected readonly effectiveDisabled: Signal<boolean> = computed(() => this.isDisabled() || !!this.group?.disabled());
+  protected readonly effectiveName: Signal<string> = computed(() => this.group?.groupName() ?? this.name());
+  protected readonly selected: Signal<boolean> = computed(() => (this.group ? this.group.value() : this.internalValue()) === this.value());
 
-  protected readonly effectiveDisabled = computed(() => this.isDisabled() || !!this.group?.disabled());
-  protected readonly effectiveName = computed(() => this.group?.groupName() ?? this.name());
-  protected readonly selected = computed(() => (this.group ? this.group.value() : this.internalValue()) === this.value());
+  public readonly resolvedSubscriptSizing: Signal<SubscriptSizing> = computed(() => this.subscriptSizing() ?? this.defaults.settings().subscriptSizing);
 
-  public readonly labelPosition = input<LabelPosition>('after');
-  public readonly subscriptSizing = input<SubscriptSizing | undefined>(undefined);
+  public readonly labelPosition: InputSignal<LabelPosition> = input<LabelPosition>('after');
+  public readonly subscriptSizing: InputSignal<SubscriptSizing | undefined> = input<SubscriptSizing | undefined>(undefined);
+  public readonly value: InputSignal<unknown> = input.required<unknown>();
+  public readonly name: InputSignal<string> = input<string>('');
 
-  public readonly resolvedSubscriptSizing = computed(() => this.subscriptSizing() ?? this.defaults.settings().subscriptSizing);
+  protected showTooltip: boolean = false;
 
-  public readonly value = input.required<unknown>();
-
-  public readonly name = input<string>('');
-
-  protected showTooltip = false;
   constructor() {
     super();
     this.registry.radios.add(this);
@@ -54,7 +61,9 @@ export class Radio extends BxBaseControl<unknown> {
   /** Match native form/name groups and radios bound to one reactive control. */
   public sharesGroup(other: Radio): boolean {
     const control = this.ngControl?.control;
+
     if (control && control === other.ngControl?.control) return true;
+
     return (
       !!this.name() &&
       this.name() === other.name() &&

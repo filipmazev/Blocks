@@ -1,6 +1,7 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { IErrorState } from '../interfaces/ierror-state.interface';
-import { IValidationMessageContext } from '../interfaces/ivalidation-message-context.interface';
+
+import { IErrorState } from '@forms/components/shared/interfaces/ierror-state.interface';
+import { IValidationMessageContext } from '@forms/components/shared/interfaces/ivalidation-message-context.interface';
 
 export type ValidationMessage = ResolvableText | ((context: IValidationMessageContext) => ResolvableText);
 export type ValidationMessages = Readonly<Record<string, ValidationMessage | undefined>>;

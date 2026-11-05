@@ -1,4 +1,4 @@
-import type { ShortcutKey } from '../types/shortcut.types';
+import type { ShortcutKey } from '@core/types/shortcut.types';
 
 /** Optional platform-specific combinations. Unspecified platforms use the required default. */
 export interface IOSShortcut {

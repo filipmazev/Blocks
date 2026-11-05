@@ -2,7 +2,7 @@
     {{ data }}
 </div>
 
-<div class="button-container" *appModalFooter>
-    <button bx-button (click)="confirm()" variant="filled" color="success">Confirm</button>
-    <button bx-button (click)="close()" variant="filled" color="danger">Cancel</button>
+<div *appModalFooter class="button-container">
+    <button type="button" bx-button variant="filled" color="success" (click)="confirm()">Confirm</button>
+    <button type="button" bx-button variant="filled" color="danger" (click)="close()">Cancel</button>
 </div>

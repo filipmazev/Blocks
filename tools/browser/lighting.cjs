@@ -11,7 +11,7 @@ before(async () => {
     entryPoints: ['projects/blocks/effects/runtime/index.ts'],
     bundle: true,
     format: 'esm',
-    write: false,
+    write: false
   });
   const css = readFileSync('projects/blocks/effects/effects.css', 'utf8');
   server = createServer((req, res) => {
@@ -42,15 +42,12 @@ before(async () => {
         if (mount) handles.push(runtime.mountSurface(receiver));
         else handles.push({ destroy: runtime.observeGlassLighting(receiver, value => { window.lighting = value; metrics.lights++; }) });
       };
-    </script>`,
+    </script>`
     );
   });
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   origin = `http://127.0.0.1:${server.address().port}`;
-  browser =
-    process.env.BLOCKS_BROWSER === 'webkit'
-      ? await webkit.launch()
-      : await chromium.launch({ channel: 'chrome' });
+  browser = process.env.BLOCKS_BROWSER === 'webkit' ? await webkit.launch() : await chromium.launch({ channel: 'chrome' });
 });
 after(async () => {
   await browser?.close();
@@ -62,19 +59,12 @@ async function pageFor(t, canvas = false, mount = false) {
   await page.goto(origin);
   await page.waitForFunction(() => window.fixture);
   await page.evaluate(([canvas, mount]) => fixture(canvas, mount), [canvas, mount]);
-  if (mount)
-    await page.waitForFunction(() =>
-      [...document.querySelectorAll('.bx-glass-environment')].some(
-        (node) => node.style.backgroundImage,
-      ),
-    );
-  else
-    await page.waitForFunction(() => window.lighting?.contributions.some((light) => light.ambient));
+  if (mount) await page.waitForFunction(() => [...document.querySelectorAll('.bx-glass-environment')].some((node) => node.style.backgroundImage));
+  else await page.waitForFunction(() => window.lighting?.contributions.some((light) => light.ambient));
   await page.waitForTimeout(250);
   return page;
 }
-const ambient = (page) =>
-  page.evaluate(() => lighting.contributions.filter((light) => light.ambient));
+const ambient = (page) => page.evaluate(() => lighting.contributions.filter((light) => light.ambient));
 
 test('scrolling updates image lighting within three frames even during the sampling cooldown', async (t) => {
   const page = await pageFor(t);
@@ -97,7 +87,7 @@ test('scrolling updates image lighting within three frames even during the sampl
     await image.decode();
     document.body.prepend(image);
   });
-  await page.waitForFunction(() => lighting.contributions.some(light => light.color.startsWith('rgb(255 0 0')));
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color.startsWith('rgb(255 0 0')));
   const colors = await page.evaluate(async () => {
     const colors = [];
     // Start a fresh sample so subsequent scrolls must bypass the cooldown.
@@ -106,13 +96,13 @@ test('scrolling updates image lighting within three frames even during the sampl
     for (const top of [700, 0, 700, 0]) {
       scrollTo(0, top);
       for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
-      colors.push(lighting.contributions.filter(light => light.ambient).map(light => light.color));
+      colors.push(lighting.contributions.filter((light) => light.ambient).map((light) => light.color));
     }
     return colors;
   });
   for (let index = 0; index < colors.length; index++) {
     const expected = index % 2 === 0 ? 'rgb(0 0 255' : 'rgb(255 0 0';
-    assert.ok(colors[index].length && colors[index].every(color => color.startsWith(expected)), JSON.stringify(colors));
+    assert.ok(colors[index].length && colors[index].every((color) => color.startsWith(expected)), JSON.stringify(colors));
   }
 });
 
@@ -121,7 +111,10 @@ test('offscreen receivers retain their last paint and return with current lighti
   const result = await page.evaluate(async () => {
     document.body.style.height = '2400px';
     const environment = receiver.querySelector('.bx-glass-environment');
-    const colors = () => [...environment.style].filter(property => property.startsWith('--bx-glass-environment-color-')).map(property => environment.style.getPropertyValue(property));
+    const colors = () =>
+      [...environment.style]
+        .filter((property) => property.startsWith('--bx-glass-environment-color-'))
+        .map((property) => environment.style.getPropertyValue(property));
     const previous = colors();
     // Fully outside the viewport but inside the observer's optimization margin.
     scrollTo(0, 400);
@@ -133,9 +126,11 @@ test('offscreen receivers retain their last paint and return with current lighti
     scrollTo(0, 0);
     for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
     return {
-      previous, outside, returned: colors().join(','),
+      previous,
+      outside,
+      returned: colors().join(','),
       opacity: getComputedStyle(environment).opacity,
-      animations: environment.getAnimations().length,
+      animations: environment.getAnimations().length
     };
   });
   assert.ok(result.previous.length);
@@ -170,12 +165,12 @@ test('image lighting interpolates smoothly between cached raster pixels while sc
     for (let top = 278; top <= 300; top += 2) {
       scrollTo(0, top);
       for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
-      colors.push(lighting.contributions.find(light => light.key.endsWith(':4'))?.color);
+      colors.push(lighting.contributions.find((light) => light.key.endsWith(':4'))?.color);
     }
     return colors;
   });
   assert.ok(new Set(colors).size >= 10, JSON.stringify(colors));
-  const red = colors.map(color => Number(color.match(/^rgb\((\d+)/)[1]));
+  const red = colors.map((color) => Number(color.match(/^rgb\((\d+)/)[1]));
   for (let index = 1; index < red.length; index++) assert.ok(Math.abs(red[index] - red[index - 1]) < 32, JSON.stringify(colors));
 });
 
@@ -198,14 +193,16 @@ test('environmental colors blend continuously while visible and finish promptly'
   const page = await pageFor(t, false, true);
   const result = await page.evaluate(async () => {
     const environment = receiver.querySelector('.bx-glass-environment');
-    const property = [...environment.style].find(property => environment.style.getPropertyValue(property).includes('255, 0, 0'));
+    const property = [...environment.style].find((property) => environment.style.getPropertyValue(property).includes('255, 0, 0'));
     const before = getComputedStyle(environment).getPropertyValue(property);
     document.getElementById('left').style.backgroundColor = '#00ff00';
     runtime.refreshGlassLighting(receiver);
     for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
     return {
-      property, before, rendered: getComputedStyle(environment).getPropertyValue(property),
-      transitions: environment.getAnimations().filter(animation => animation.transitionProperty === property).length,
+      property,
+      before,
+      rendered: getComputedStyle(environment).getPropertyValue(property),
+      transitions: environment.getAnimations().filter((animation) => animation.transitionProperty === property).length
     };
   });
   assert.equal(result.transitions, 1, JSON.stringify(result));
@@ -222,10 +219,10 @@ test('overlay fades use native animation, reverse continuously and clean up with
     document.body.append(target);
     const transition = runtime.createGlassTransition(receiver, target);
     const mutations = [];
-    const observer = new MutationObserver(records => mutations.push(...records));
-    observer.observe(target, { attributes:true, attributeFilter:['style'] });
+    const observer = new MutationObserver((records) => mutations.push(...records));
+    observer.observe(target, { attributes: true, attributeFilter: ['style'] });
     const opening = transition.enter();
-    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     const duringOpen = Number(getComputedStyle(target).opacity);
     const closing = transition.exit();
     const afterReverse = Number(getComputedStyle(target).opacity);
@@ -238,7 +235,18 @@ test('overlay fades use native animation, reverse continuously and clean up with
     const opacityWritten = target.style.opacity !== '0.8';
     transition.destroy();
     observer.disconnect();
-    return { duringOpen, afterReverse, cancelled, closed, hidden, reopened, opacity, opacityWritten, mutations:mutations.length, animations:target.getAnimations().length };
+    return {
+      duringOpen,
+      afterReverse,
+      cancelled,
+      closed,
+      hidden,
+      reopened,
+      opacity,
+      opacityWritten,
+      mutations: mutations.length,
+      animations: target.getAnimations().length
+    };
   });
   assert.ok(result.duringOpen > 0 && result.duringOpen < 0.8, JSON.stringify(result));
   assert.ok(Math.abs(result.duringOpen - result.afterReverse) < 0.05, JSON.stringify(result));
@@ -257,7 +265,7 @@ test('overlay fades settle for reduced motion and cancel safely on destroy', asy
   const result = await page.evaluate(async () => {
     const target = document.createElement('div');
     document.body.append(target);
-    const reduced = runtime.createGlassTransition(receiver, target, { reducedMotion:true });
+    const reduced = runtime.createGlassTransition(receiver, target, { reducedMotion: true });
     const opened = await reduced.enter();
     const closed = await reduced.exit();
     const hidden = target.style.visibility;
@@ -265,9 +273,9 @@ test('overlay fades settle for reduced motion and cancel safely on destroy', asy
     const transition = runtime.createGlassTransition(receiver, target);
     const pending = transition.enter();
     transition.destroy();
-    return { opened, closed, hidden, pending:await pending, animations:target.getAnimations().length, visibility:target.style.visibility };
+    return { opened, closed, hidden, pending: await pending, animations: target.getAnimations().length, visibility: target.style.visibility };
   });
-  assert.deepEqual(result, { opened:'finished', closed:'finished', hidden:'hidden', pending:'cancelled', animations:0, visibility:'' });
+  assert.deepEqual(result, { opened: 'finished', closed: 'finished', hidden: 'hidden', pending: 'cancelled', animations: 0, visibility: '' });
 });
 
 test('nearby red and blue backgrounds light opposite edges with distance falloff', async (t) => {
@@ -281,9 +289,7 @@ test('nearby red and blue backgrounds light opposite edges with distance falloff
   await page.evaluate(() => (document.getElementById('left').style.left = '110px'));
   await page.waitForTimeout(300);
   lights = await ambient(page);
-  assert.ok(
-    lights.find((light) => light.color === 'rgb(255, 0, 0)').edgeStrength < red.edgeStrength,
-  );
+  assert.ok(lights.find((light) => light.color === 'rgb(255, 0, 0)').edgeStrength < red.edgeStrength);
   await page.evaluate(() => (document.getElementById('left').style.left = '0px'));
   await page.waitForTimeout(300);
   assert.ok(!(await ambient(page)).some((light) => light.color === 'rgb(255, 0, 0)'));
@@ -301,13 +307,9 @@ test('canvas preserves spatial colors; unchanged media does no receiver resampli
   await page.waitForFunction(
     () =>
       lighting.contributions.some((light) => light.color.startsWith('rgb(255 0 0')) &&
-      lighting.contributions.some((light) => light.color.startsWith('rgb(0 0 255')),
+      lighting.contributions.some((light) => light.color.startsWith('rgb(0 0 255'))
   );
-  assert.equal(
-    await page.evaluate(() => metrics.hits),
-    initialHits,
-    'canvas color changes reuse source bindings',
-  );
+  assert.equal(await page.evaluate(() => metrics.hits), initialHits, 'canvas color changes reuse source bindings');
   await page.waitForTimeout(300);
   const start = await page.evaluate(() => ({ ...metrics }));
   await page.waitForTimeout(1600);
@@ -326,21 +328,17 @@ test('hover, focus and explicit sources coexist above bounded ambient layers', a
     handles.push(runtime.mountSurface(left, { emission: '#ff3300', focusEmission: '#ff3300' }));
     handles.push(
       runtime.mountGlassScene(document.body, {
-        lights: [{ x: 650, y: 250, z: 24, color: '#3355ff', radius: 400 }],
-      }),
+        lights: [{ x: 650, y: 250, z: 24, color: '#3355ff', radius: 400 }]
+      })
     );
   });
   await page.locator('#left').hover();
   await page.waitForFunction(() => receiver.querySelector('[data-bx-light-source^="hover:"]'));
   await page.waitForTimeout(300);
   const structure = await page.evaluate(() => ({
-    keys: [...receiver.querySelector('.bx-glass-rim').children].map(
-      (node) => node.dataset.bxLightSource ?? 'ambient',
-    ),
+    keys: [...receiver.querySelector('.bx-glass-rim').children].map((node) => node.dataset.bxLightSource ?? 'ambient'),
     ambientNodes: receiver.querySelectorAll('.bx-glass-environment').length,
-    semantic: [...receiver.querySelectorAll('.bx-glass-rim [data-bx-light-source]')].map(
-      (node) => node.style.backgroundImage,
-    ),
+    semantic: [...receiver.querySelectorAll('.bx-glass-rim [data-bx-light-source]')].map((node) => node.style.backgroundImage)
   }));
   assert.equal(structure.ambientNodes, 1);
   assert.equal(structure.keys[0], 'ambient');
@@ -350,11 +348,7 @@ test('hover, focus and explicit sources coexist above bounded ambient layers', a
   await page.mouse.move(400, 50);
   await page.locator('#left').focus();
   await page.waitForTimeout(240);
-  assert.equal(
-    await page.evaluate(() => metrics.hits),
-    before.hits,
-    'focus/hover must use cached ambient samples',
-  );
+  assert.equal(await page.evaluate(() => metrics.hits), before.hits, 'focus/hover must use cached ambient samples');
   assert.ok(await page.locator('#receiver [data-bx-light-source^="hover:"]').count());
 });
 
@@ -372,8 +366,7 @@ async function checkedControlsFor(t) {
     }
     for (const id of ['radio-a', 'radio-b', 'toggle']) {
       const element = document.getElementById(id);
-      element.style.cssText =
-        'display:block;flex:none;width:20px;height:20px;border-radius:10px;background:#222';
+      element.style.cssText = 'display:block;flex:none;width:20px;height:20px;border-radius:10px;background:#222';
       handles.push(runtime.mountSurface(element, { emission: '#ff3300' }));
     }
   });
@@ -381,11 +374,7 @@ async function checkedControlsFor(t) {
 }
 
 const waitForEmission = (page, id, active) =>
-  page.waitForFunction(
-    ([id, active]) =>
-      !!document.querySelector(`#${id} .bx-glass-rim [data-bx-light-source="emitter"]`) === active,
-    [id, active],
-  );
+  page.waitForFunction(([id, active]) => !!document.querySelector(`#${id} .bx-glass-rim [data-bx-light-source="emitter"]`) === active, [id, active]);
 
 test('checked native radios and switches keep emitting after release and blur, and radio peers stop', async (t) => {
   const page = await checkedControlsFor(t);
@@ -500,9 +489,7 @@ test('selected child tabs illuminate their tablist without lighting ordinary anc
     receiver.append(tab);
     handles.push(runtime.mountSurface(tab, { emission: '#ff3300' }));
   });
-  await page.waitForFunction(() =>
-    receiver.querySelector(':scope > .bx-glass-rim [data-bx-light-source^="hover:"]'),
-  );
+  await page.waitForFunction(() => receiver.querySelector(':scope > .bx-glass-rim [data-bx-light-source^="hover:"]'));
   await page.mouse.move(900, 650);
   await page.evaluate(() => document.activeElement.blur());
   assert.ok(await page.locator('#selected-tab [data-bx-light-source="emitter"]').count());
@@ -510,9 +497,7 @@ test('selected child tabs illuminate their tablist without lighting ordinary anc
     receiver.setAttribute('role', 'group');
     runtime.refreshGlassLighting(receiver);
   });
-  await page.waitForFunction(
-    () => !receiver.querySelector(':scope > .bx-glass-rim [data-bx-light-source^="hover:"]'),
-  );
+  await page.waitForFunction(() => !receiver.querySelector(':scope > .bx-glass-rim [data-bx-light-source^="hover:"]'));
 });
 
 test('lighting boundaries isolate overlays and removing sources clears their colors', async (t) => {
@@ -542,12 +527,7 @@ test('offscreen media is never read and destroying receivers stops all sampling'
   const start = await page.evaluate(() => ({ ...metrics }));
   await page.waitForTimeout(1100);
   assert.deepEqual(await page.evaluate(() => ({ ...metrics })), start);
-  await page.evaluate(
-    () =>
-      (handles = [
-        { destroy: runtime.observeGlassLighting(receiver, (value) => (window.lighting = value)) },
-      ]),
-  );
+  await page.evaluate(() => (handles = [{ destroy: runtime.observeGlassLighting(receiver, (value) => (window.lighting = value)) }]));
   await page.waitForTimeout(300);
   assert.ok((await ambient(page)).length);
 });
@@ -562,8 +542,8 @@ test('native lighting callbacks cannot invalidate their own host styles forever'
           metrics.lights++;
           receiver.style.setProperty('--native-light-color', light.color);
           receiver.style.setProperty('--native-light-x', `${light.x}%`);
-        }),
-      },
+        })
+      }
     ];
   });
   await page.waitForTimeout(500);
@@ -589,8 +569,7 @@ test('failed media readbacks are cached without contaminating other sources', as
     const failed = document.createElement('canvas');
     failed.width = 1000;
     failed.height = 600;
-    failed.style.cssText =
-      'position:absolute;inset:0;width:1000px;height:600px;pointer-events:none';
+    failed.style.cssText = 'position:absolute;inset:0;width:1000px;height:600px;pointer-events:none';
     window.failures = 0;
     const original = CanvasRenderingContext2D.prototype.drawImage;
     CanvasRenderingContext2D.prototype.drawImage = function (source, ...args) {
@@ -628,29 +607,20 @@ test('image object positioning and letterboxing sample the displayed pixels', as
     image.id = 'photo';
     image.src = canvas.toDataURL();
     await image.decode();
-    image.style.cssText =
-      'position:absolute;left:300px;top:180px;width:320px;height:180px;object-fit:cover;object-position:0% 50%;pointer-events:none';
+    image.style.cssText = 'position:absolute;left:300px;top:180px;width:320px;height:180px;object-fit:cover;object-position:0% 50%;pointer-events:none';
     document.body.prepend(image);
   });
-  await page.waitForFunction(() =>
-    lighting.contributions.some((light) => light.color.startsWith('rgb(255 0 255')),
-  );
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color.startsWith('rgb(255 0 255')));
   let lights = await ambient(page);
   assert.ok(!lights.some((light) => light.color.startsWith('rgb(0 255 255')));
   await page.evaluate(() => (document.getElementById('photo').style.objectPosition = '100% 50%'));
-  await page.waitForFunction(() =>
-    lighting.contributions.some((light) => light.color.startsWith('rgb(0 255 255')),
-  );
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color.startsWith('rgb(0 255 255')));
   lights = await ambient(page);
   assert.ok(!lights.some((light) => light.color.startsWith('rgb(255 0 255')));
   await page.evaluate(() => (document.getElementById('photo').style.objectFit = 'contain'));
   await page.waitForTimeout(300);
   lights = await ambient(page);
-  assert.ok(
-    !lights.some(
-      (light) => light.color.startsWith('rgb(0 255 255') || light.color.startsWith('rgb(255 0 255'),
-    ),
-  );
+  assert.ok(!lights.some((light) => light.color.startsWith('rgb(0 255 255') || light.color.startsWith('rgb(255 0 255')));
 });
 
 test('new media inserted into an open shadow root is discovered and updates', async (t) => {
@@ -666,33 +636,26 @@ test('new media inserted into an open shadow root is discovered and updates', as
     const canvas = document.createElement('canvas');
     canvas.width = 1000;
     canvas.height = 600;
-    canvas.style.cssText =
-      'position:absolute;inset:0;width:1000px;height:600px;pointer-events:none';
+    canvas.style.cssText = 'position:absolute;inset:0;width:1000px;height:600px;pointer-events:none';
     const context = canvas.getContext('2d');
     context.fillStyle = '#ff8800';
     context.fillRect(0, 0, 1000, 600);
     shadow.append(canvas);
   });
-  await page.waitForFunction(() =>
-    lighting.contributions.some((light) => light.color.startsWith('rgb(255 136 0')),
-  );
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color.startsWith('rgb(255 136 0')));
 });
 
 test('canvas transparency changes rediscover the newly visible layer', async (t) => {
   const page = await pageFor(t, true);
   const before = await page.evaluate(() => metrics.hits);
   await page.evaluate(() => context.clearRect(0, 0, 1000, 600));
-  await page.waitForFunction(() =>
-    lighting.contributions.every((light) => !light.color.startsWith('rgb(0 200 120')),
-  );
+  await page.waitForFunction(() => lighting.contributions.every((light) => !light.color.startsWith('rgb(0 200 120')));
   assert.ok((await page.evaluate(() => metrics.hits)) > before);
   await page.evaluate(() => {
     context.fillStyle = '#aa00ff';
     context.fillRect(0, 0, 1000, 600);
   });
-  await page.waitForFunction(() =>
-    lighting.contributions.some((light) => light.color.startsWith('rgb(170 0 255')),
-  );
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color.startsWith('rgb(170 0 255')));
 });
 
 test('explicit edge sources, exclusions and reflections retain independent behavior', async (t) => {
@@ -703,43 +666,34 @@ test('explicit edge sources, exclusions and reflections retain independent behav
       edge: 'bottom',
       z: 24,
       color: '#ff4400',
-      radius: 400,
+      radius: 400
     };
     window.rightLight = {
       element: document.getElementById('right'),
       z: 24,
       color: '#0044ff',
-      radius: 400,
+      radius: 400
     };
     window.scene = runtime.mountGlassScene(document.body, {
       lights: [leftLight, rightLight],
-      reflectors: [{ element: leftLight.element, color: '#aa33cc', depth: -80 }],
+      reflectors: [{ element: leftLight.element, color: '#aa33cc', depth: -80 }]
     });
     handles.push(scene);
   });
-  await page.waitForFunction(
-    () => lighting.contributions.filter((light) => !light.ambient).length === 2,
-  );
+  await page.waitForFunction(() => lighting.contributions.filter((light) => !light.ambient).length === 2);
   const result = await page.evaluate(() => ({
     lights: lighting.contributions.filter((light) => !light.ambient),
     reflection: lighting.reflection,
-    strength: lighting.reflectionStrength,
+    strength: lighting.reflectionStrength
   }));
   const bottom = result.lights.find((light) => light.color === '#ff4400');
   assert.equal(bottom.x, 0);
   assert.equal(bottom.y, 100);
   assert.equal(result.reflection, '#aa33cc');
   assert.ok(result.strength > 0);
-  await page.evaluate(() =>
-    scene.update({ lights: [{ ...leftLight, excludeElement: receiver }, rightLight] }),
-  );
-  await page.waitForFunction(
-    () => lighting.contributions.filter((light) => !light.ambient).length === 1,
-  );
-  assert.equal(
-    await page.evaluate(() => lighting.contributions.find((light) => !light.ambient).color),
-    '#0044ff',
-  );
+  await page.evaluate(() => scene.update({ lights: [{ ...leftLight, excludeElement: receiver }, rightLight] }));
+  await page.waitForFunction(() => lighting.contributions.filter((light) => !light.ambient).length === 1);
+  assert.equal(await page.evaluate(() => lighting.contributions.find((light) => !light.ambient).color), '#0044ff');
   await page.evaluate(() => scene.destroy());
   await page.waitForFunction(() => lighting.contributions.every((light) => light.ambient));
 });
@@ -765,14 +719,12 @@ test('light-only updates can reuse receiver geometry and skip identical paints w
   await page.evaluate(() => {
     window.options = {
       reuseGeometry: true,
-      lights: [{ x: 670, y: 260, z: 30, color: '#ff00ff', radius: 400 }],
+      lights: [{ x: 670, y: 260, z: 30, color: '#ff00ff', radius: 400 }]
     };
     window.scene = runtime.mountGlassScene(document.body, options);
     handles.push(scene);
   });
-  await page.waitForFunction(() =>
-    lighting.contributions.some((light) => light.color === '#ff00ff'),
-  );
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === '#ff00ff'));
   await page.waitForTimeout(300);
   const before = await page.evaluate(() => ({ ...metrics }));
   await page.evaluate(async () => {
@@ -790,14 +742,8 @@ test('light-only updates can reuse receiver geometry and skip identical paints w
     receiver.style.left = '350px';
     scene.update(options);
   });
-  await page.waitForFunction(
-    (before) => metrics.rects > before.rects && metrics.lights > before.lights,
-    before,
-  );
+  await page.waitForFunction((before) => metrics.rects > before.rects && metrics.lights > before.lights, before);
   const moved = await page.evaluate(() => ({ ...metrics }));
   await page.evaluate(() => scene.update({ ...options, reuseGeometry: false }));
-  await page.waitForFunction(
-    (before) => metrics.rects > before.rects && metrics.lights > before.lights,
-    moved,
-  );
+  await page.waitForFunction((before) => metrics.rects > before.rects && metrics.lights > before.lights, moved);
 });

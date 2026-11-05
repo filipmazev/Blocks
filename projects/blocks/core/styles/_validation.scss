@@ -1,13 +1,10 @@
 @use 'field-state' as *;
 @use 'mixins' as *;
 
-// A projected surface inside a form field receives the complete field material,
-// including its valid focus state, without application-specific effects CSS.
 .bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)) {
     @include glass-field;
 }
 
-// Projected native controls receive the same error treatment as Blocks controls.
 .bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface] {
     @include invalid-glass-field;
 }
@@ -60,11 +57,9 @@
 }
 
 .bx-field-prefix {
-    padding-inline: var(--bx-field-adornment-padding, #{spacing(3)})
-        var(--bx-field-adornment-gap, #{spacing(2)});
+    padding-inline: var(--bx-field-adornment-padding, #{spacing(3)}) var(--bx-field-adornment-gap, #{spacing(2)});
 }
 
 .bx-field-suffix {
-    padding-inline: var(--bx-field-adornment-gap, #{spacing(2)})
-        var(--bx-field-adornment-padding, #{spacing(3)});
+    padding-inline: var(--bx-field-adornment-gap, #{spacing(2)}) var(--bx-field-adornment-padding, #{spacing(3)});
 }

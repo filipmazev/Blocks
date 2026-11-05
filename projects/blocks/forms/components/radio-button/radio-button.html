@@ -1,25 +1,48 @@
-<bx-form-field [inline]="true" [tooltip]="tooltip()" [error]="errorMessage" [loading]="loading()" [forId]="inputId()"
+<bx-form-field
+    [inline]="true"
+    [tooltip]="tooltip()"
+    [error]="errorMessage"
+    [loading]="loading()"
+    [forId]="inputId()"
     [subscriptSizing]="resolvedSubscriptSizing()">
-    <label class="bx-inline-wrapper" [class.is-disabled]="effectiveDisabled()"
-        [class.is-readonly]="isReadonly() || !!group?.isReadonly()" [class.is-keyboard-focused]="keyboardFocused()"
+    <label
+        class="bx-inline-wrapper"
+        [class.is-disabled]="effectiveDisabled()"
+        [class.is-readonly]="isReadonly() || !!group?.isReadonly()"
+        [class.is-keyboard-focused]="keyboardFocused()"
         [class.label-before]="labelPosition() === 'before'">
-        <input type="radio" class="bx-visually-hidden" [attr.id]="inputId()" [attr.name]="effectiveName() || null"
-            [attr.data-testid]="dataTestId()" [attr.aria-label]="ariaLabel()"
-            [attr.aria-readonly]="isReadonly() || !!group?.isReadonly()" [attr.aria-describedby]="group?.describedBy()"
-            [required]="required() || !!group?.required()" [disabled]="effectiveDisabled()" [checked]="selected()"
-            (click)="onReadonlyClick($event)" (change)="onSelect()" (blur)="onBlur()">
+        <input
+            type="radio"
+            class="bx-visually-hidden"
+            [attr.id]="inputId()"
+            [attr.name]="effectiveName() || null"
+            [attr.data-testid]="dataTestId()"
+            [attr.aria-label]="ariaLabel()"
+            [attr.aria-readonly]="isReadonly() || !!group?.isReadonly()"
+            [attr.aria-describedby]="group?.describedBy()"
+            [required]="required() || !!group?.required()"
+            [disabled]="effectiveDisabled()"
+            [checked]="selected()"
+            (click)="onReadonlyClick($event)"
+            (change)="onSelect()"
+            (blur)="onBlur()" />
 
-        <div class="bx-radio-circle" bxSurface
+        <div
+            class="bx-radio-circle"
+            bxSurface
             [bxSurfaceEmission]="errorMessage ? 'var(--bx-text-danger)' : 'var(--bx-accent)'"
-            [class.is-checked]="selected()" [class.is-invalid]="!!errorMessage">
+            [class.is-checked]="selected()"
+            [class.is-invalid]="!!errorMessage">
             <div class="bx-radio-inner"></div>
         </div>
 
         @if (resolvedLabel()) {
-        <span class="bx-inline-label">
-            <ng-content />{{ resolvedLabel() }}
-            @if (isFieldRequired() || group?.required()) { <span class="bx-inline-required">*</span> }
-        </span>
+            <span class="bx-inline-label">
+                <ng-content />{{ resolvedLabel() }}
+                @if (isFieldRequired() || group?.required()) {
+                    <span class="bx-inline-required">*</span>
+                }
+            </span>
         }
     </label>
 </bx-form-field>

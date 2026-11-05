@@ -2,20 +2,20 @@
  * Public API Surface of toastr
  */
 
-export * from './services/toastr.service';
-export * from './services/toastr-global-settings.service';
+export * from '@toastr/services/toastr-global-settings.service';
+export * from '@toastr/services/toastr.service';
 
-export * from './components/toast-core';
-export * from './components/views/simple-toast/simple-toast';
+export * from '@toastr/components/toast-core';
+export * from '@toastr/components/views/simple-toast/simple-toast';
 
-export * from './interfaces/itoast-config.interface';
-export * from './interfaces/itoast.interface';
-export * from './interfaces/isimple-toast.interface';
+export * from '@toastr/interfaces/isimple-toast.interface';
+export * from '@toastr/interfaces/itoast-config.interface';
+export * from '@toastr/interfaces/itoast.interface';
 
-export * from './types/toastr.types';
+export * from '@toastr/types/toastr.types';
 
-export * from './tokens/toast-data.token';
+export * from '@toastr/tokens/toast-data.token';
 
-export * from './classes/toast-ref';
-export * from './classes/toast';
-export type { IToastrGlobalSettings } from './interfaces/itoastr-global-settings.interface';
+export * from '@toastr/classes/toast';
+export * from '@toastr/classes/toast-ref';
+export type { IToastrGlobalSettings } from '@toastr/interfaces/itoastr-global-settings.interface';

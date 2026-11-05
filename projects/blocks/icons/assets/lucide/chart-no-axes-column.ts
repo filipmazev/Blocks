@@ -1,4 +1,4 @@
-import { defineIcon } from '../../helpers/define-icon';
+import { defineIcon } from '@icons/helpers/define-icon';
 
 export const lucideChartNoAxesColumn = defineIcon({
   name: 'chart-no-axes-column',

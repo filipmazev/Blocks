@@ -1,6 +1,8 @@
-import { ThemedColor } from '@filip.mazev/blocks/core';
-import { ToastPosition } from '../types/toastr.types';
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
+
+import { ThemedColor } from '@filip.mazev/blocks/core';
+
+import { ToastPosition } from '@toastr/types/toastr.types';
 
 /** Toast presentation and lifetime. D is the application-owned data passed to the mounted toast component. */
 export interface IToastConfig<D = unknown> {

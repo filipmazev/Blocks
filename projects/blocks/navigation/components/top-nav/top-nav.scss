@@ -4,14 +4,8 @@
     --bx-nav-item-radius: var(--bx-top-nav-item-radius, #{radius(md)});
     --bx-nav-item-gap: var(--bx-top-nav-item-gap, #{spacing(2)});
     --bx-nav-item-background: var(--bx-top-nav-item-background, transparent);
-    --bx-nav-item-hover-background: var(
-        --bx-top-nav-item-hover-background,
-        var(--bx-accent-subtle)
-    );
-    --bx-nav-item-active-background: var(
-        --bx-top-nav-item-active-background,
-        var(--bx-accent-subtle)
-    );
+    --bx-nav-item-hover-background: var(--bx-top-nav-item-hover-background, var(--bx-accent-subtle));
+    --bx-nav-item-active-background: var(--bx-top-nav-item-active-background, var(--bx-accent-subtle));
 
     display: block;
     min-width: 0;
@@ -110,10 +104,7 @@
     min-height: 0;
     width: var(--bx-top-nav-panel-width, 24rem);
     max-width: calc(100dvw - #{spacing(4)});
-    max-height: min(
-        var(--bx-top-nav-panel-max-height, 32rem),
-        var(--bx-top-nav-available-height, calc(100dvh - #{spacing(4)}))
-    );
+    max-height: min(var(--bx-top-nav-panel-max-height, 32rem), var(--bx-top-nav-available-height, calc(100dvh - #{spacing(4)})));
     overflow: hidden;
     background: var(--bx-bg-surface);
     color: var(--bx-text-primary);

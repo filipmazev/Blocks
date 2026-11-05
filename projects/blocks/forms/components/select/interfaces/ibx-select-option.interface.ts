@@ -1,6 +1,6 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { ITagConfig } from '@filip.mazev/blocks/primitives';
 import { IconName } from '@filip.mazev/blocks/icons';
+import { ITagConfig } from '@filip.mazev/blocks/primitives';
 
 /** An option whose value is independent from its translated presentation. */
 export interface IBxSelectOption<T> {

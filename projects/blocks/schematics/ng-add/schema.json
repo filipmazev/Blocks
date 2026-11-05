@@ -7,15 +7,7 @@
         "theme": {
             "type": "string",
             "description": "Select a Blocks palette for your UI.",
-            "enum": [
-                "carbon-cobalt",
-                "azure-ember",
-                "violet-teal",
-                "tangerine-indigo",
-                "brick-rose-cyan",
-                "lime-violet",
-                "cyberpunk"
-            ],
+            "enum": ["carbon-cobalt", "azure-ember", "violet-teal", "tangerine-indigo", "brick-rose-cyan", "lime-violet", "cyberpunk"],
             "x-prompt": {
                 "message": "Which palette would you like to use?",
                 "type": "list",

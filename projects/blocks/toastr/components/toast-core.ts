@@ -1,34 +1,42 @@
-import { BxGlassLight, BxGlassLightingService, BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import {
-  Component,
-  ViewChild,
-  ViewContainerRef,
-  ComponentRef,
-  ElementRef,
-  OnInit,
-  OnDestroy,
-  signal,
-  computed,
-  AfterViewInit,
-  HostListener,
-  NgZone,
-  inject,
-  ChangeDetectionStrategy
-} from '@angular/core';
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { NgClass } from '@angular/common';
-import { IToastConfig } from '../interfaces/itoast-config.interface';
-import { ToastRef } from '../classes/toast-ref';
-import { IToast } from '../interfaces/itoast.interface';
-import { Icon } from '@filip.mazev/blocks/icons';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ComponentRef,
+  computed,
+  ElementRef,
+  HostListener,
+  inject,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  signal,
+  viewChild,
+  ViewContainerRef
+} from '@angular/core';
+
 import { Subscription } from 'rxjs';
+
+import type { ThemedColor } from '@filip.mazev/blocks/core';
+
 import { BxA11yService, Color, getComplementaryToken, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
-import { ToastrGlobalSettingsService } from '../services/toastr-global-settings.service';
-import { SimpleToast } from './views/simple-toast/simple-toast';
+import { BxGlassLightingService, BxSurfaceDirective, IBxGlassLight } from '@filip.mazev/blocks/effects';
+import { Icon } from '@filip.mazev/blocks/icons';
+
+import { ToastRef } from '@toastr/classes/toast-ref';
+import { SimpleToast } from '@toastr/components/views/simple-toast/simple-toast';
+import { IToast } from '@toastr/interfaces/itoast.interface';
+import { IToastConfig } from '@toastr/interfaces/itoast-config.interface';
+import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-settings.service';
 
 @Component({
   selector: 'bx-toast-core',
   imports: [BxSurfaceDirective, NgClass, Icon],
   templateUrl: './toast-core.html',
+  // The service assigns configuration, content and ToastRef through the existing imperative API.
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './toast-core.scss'
 })
@@ -38,64 +46,48 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   private readonly a11y = inject(BxA11yService);
   private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
 
-  public componentRef!: ComponentRef<C>;
-  public config?: IToastConfig<D>;
-  public toastRef!: ToastRef<D, R>;
-  public isVisible = signal(false);
-  public currentTranslateY = signal(0);
-  public isSwipingFinished = signal(false);
-  public isCollapsing = signal(false);
-
-  protected showCloseButton = computed(() => this.config?.showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton());
-  protected closeButtonColor = computed(() => this.config?.closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor());
-
-  protected showProgressBar = computed(() => {
+  protected readonly showCloseButton: Signal<boolean> = computed(() => this.config?.showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton());
+  protected readonly closeButtonColor: Signal<ThemedColor | undefined> = computed(
+    () => this.config?.closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor()
+  );
+  protected readonly showProgressBar: Signal<boolean> = computed(() => {
     if (this.config?.showProgressBar === false) return false;
 
     return this.config?.showProgressBar === true || this.config?.progressBarColor !== undefined;
   });
-
-  protected progressBarColor = computed(() => {
+  protected readonly progressBarColor: Signal<Color | undefined> = computed(() => {
     return this.showProgressBar() ? ((this.config?.progressBarColor ?? this.toastrGlobalSettingsService.progressBarColor()) as Color) : undefined;
   });
-
-  protected progressBarCssVar = computed(() => {
+  protected readonly progressBarCssVar: Signal<string | undefined> = computed(() => {
     const progressBarColor = this.progressBarColor();
+
     return progressBarColor ? resolveTokenToCssVar(progressBarColor) : undefined;
   });
-
-  protected progressBarBgCssVar = computed(() => {
+  protected readonly progressBarBgCssVar: Signal<string | undefined> = computed(() => {
     const progressBarColor = this.progressBarColor();
+
     return progressBarColor ? resolveTokenToCssVar(getComplementaryToken(progressBarColor)) : undefined;
   });
-
-  protected isAnimated = computed(() => !this.a11y.isReducedMotion() && this.config?.animate !== false);
-  protected isBottom = computed(() => (this.config?.position ?? this.toastrGlobalSettingsService.position()).includes('bottom'));
-  @ViewChild('dynamicContainer', { read: ViewContainerRef, static: true })
-  protected dynamicContainer!: ViewContainerRef;
-
-  @ViewChild('toastSwipeTarget', { static: true }) protected toastSwipeTarget!: ElementRef;
-  @ViewChild('animatorWrapper', { static: true }) protected animatorWrapper!: ElementRef;
-  @ViewChild('progressBar') protected progressBar?: ElementRef<HTMLElement>;
-
-  protected simpleToastSurface = computed(() => {
+  protected readonly isAnimated: Signal<boolean> = computed(() => !this.a11y.isReducedMotion() && this.config?.animate !== false);
+  protected readonly isBottom: Signal<boolean> = computed(() => (this.config?.position ?? this.toastrGlobalSettingsService.position()).includes('bottom'));
+  protected readonly simpleToastSurface: Signal<string | null> = computed(() => {
     const instance = this.componentRef?.instance;
+
     return instance instanceof SimpleToast ? `color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-bg-${instance.data.type}))` : null;
   });
-
-  protected emissionColor = computed(() => {
+  protected readonly emissionColor: Signal<string | undefined> = computed(() => {
     const instance = this.componentRef?.instance;
+
     return instance instanceof SimpleToast ? `var(--bx-text-${instance.data.type})` : this.progressBarCssVar();
   });
-
-  protected wrapperClasses = computed(() => {
+  protected readonly wrapperClasses: Signal<string> = computed(() => {
     const isTop = (this.config?.position ?? 'top-right').includes('top');
     const animClass = isTop ? 'anim-dir-top' : 'anim-dir-bottom';
     const wrapperClass = this.config?.wrapperClass ?? 'default-wrapper' + (this.config?.hasDefaultBackground === false ? ' no-bg' : '');
+
     return `${animClass} ${wrapperClass}`;
   });
-
-  protected toastrTransform = computed(() => {
+  protected readonly toastrTransform: Signal<string | null> = computed(() => {
     if (!this.isAnimated()) return null;
 
     const isTop = (this.config?.position ?? 'top-right').includes('top');
@@ -111,37 +103,51 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     return null;
   });
 
-  private light?: BxGlassLight;
+  protected readonly dynamicContainer: Signal<ViewContainerRef> = viewChild.required('dynamicContainer', {
+    read: ViewContainerRef
+  });
+  protected readonly toastSwipeTarget: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('toastSwipeTarget');
+  protected readonly animatorWrapper: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('animatorWrapper');
+  protected readonly progressBar: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('progressBar');
+
+  public readonly isVisible: WritableSignal<boolean> = signal(false);
+
+  public readonly currentTranslateY: WritableSignal<number> = signal(0);
+
+  public readonly isSwipingFinished: WritableSignal<boolean> = signal(false);
+  public readonly isCollapsing: WritableSignal<boolean> = signal(false);
+
+  public componentRef!: ComponentRef<C>;
+  public config?: IToastConfig<D>;
+  public toastRef!: ToastRef<D, R>;
+
+  private light?: IBxGlassLight;
   private lightFrame?: number;
-  private lastLightProgress = -1;
-  private destroyed = false;
-
+  private lastLightProgress: number = -1;
+  private destroyed: boolean = false;
   private progressAnimation?: Animation;
-  private subs = new Subscription();
-
-  private remainingMs = 0;
-
-  private timerStartTime = 0;
-
+  private subs: Subscription = new Subscription();
+  private remainingMs: number = 0;
+  private timerStartTime: number = 0;
   private originalCloseFn!: (result?: R) => void;
   private closeResult?: R;
-
-  private isTrackingSwipe = false;
-  private isTouchActive = false;
+  private isTrackingSwipe: boolean = false;
+  private isTouchActive: boolean = false;
   private autoCloseTimeout?: ReturnType<typeof setTimeout>;
-  private hasEmittedClose = false;
-
+  private hasEmittedClose: boolean = false;
   private cleanupListeners: Array<() => void> = [];
   private swipeCleanupListeners: (() => void) | null = null;
   private globalResizeCleanup: (() => void) | null = null;
 
   public ngOnInit(): void {
-    this.dynamicContainer.insert(this.componentRef.hostView);
-
     this.originalCloseFn = this.toastRef.close.bind(this.toastRef);
     this.toastRef.close = (result?: R) => {
       this.closeToast(result);
     };
+  }
+
+  public ngAfterViewInit(): void {
+    this.dynamicContainer().insert(this.componentRef.hostView);
 
     setTimeout(() => this.isVisible.set(true), 10);
 
@@ -150,10 +156,11 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       this.monitorInputType();
     }
 
-    const animatorTarget = this.animatorWrapper.nativeElement;
+    const animatorTarget = this.animatorWrapper().nativeElement;
 
     const onAnimatorTransitionEnd = (event: TransitionEvent) => {
       if (event.target !== animatorTarget || event.propertyName !== 'grid-template-rows') return;
+
       if (this.isCollapsing() && !this.hasEmittedClose) {
         this.hasEmittedClose = true;
         this.originalCloseFn(this.closeResult);
@@ -162,9 +169,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     animatorTarget.addEventListener('transitionend', onAnimatorTransitionEnd);
     this.cleanupListeners.push(() => animatorTarget.removeEventListener('transitionend', onAnimatorTransitionEnd));
-  }
 
-  public ngAfterViewInit(): void {
     const duration = this.config?.durationInMs;
 
     if (duration) {
@@ -172,8 +177,10 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       this.startTimer();
     }
 
-    if (duration && this.progressBar?.nativeElement) {
-      this.progressAnimation = this.progressBar.nativeElement.animate([{ width: '100%' }, { width: '0%' }], { duration, fill: 'forwards' });
+    const progressBar = this.progressBar()?.nativeElement;
+
+    if (duration && progressBar) {
+      this.progressAnimation = progressBar.animate([{ width: '100%' }, { width: '0%' }], { duration, fill: 'forwards' });
 
       this.subs.add(
         this.toastRef.onPause$.subscribe(() => {
@@ -182,6 +189,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
           this.stopLightFrame();
         })
       );
+
       this.subs.add(
         this.toastRef.onResume$.subscribe(() => {
           this.progressAnimation?.play();
@@ -189,6 +197,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
         })
       );
     }
+
     this.startLightFrame();
   }
 
@@ -219,6 +228,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
         this.hasEmittedClose = true;
         this.originalCloseFn(this.closeResult);
       }
+
       return;
     }
 
@@ -245,18 +255,25 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     }
   }
 
+  //#region Helpers
+
   private paintLight(): void {
-    const surface = this.toastSwipeTarget.nativeElement as HTMLElement;
+    const surface = this.toastSwipeTarget().nativeElement as HTMLElement;
     const color = this.emissionColor();
     const root = surface.closest<HTMLElement>('.toast-container');
+
     if (!color || !root || this.destroyed) return;
+
     const bounds = surface.getBoundingClientRect();
-    const bar = this.progressBar?.nativeElement as HTMLElement | undefined;
+    const bar = this.progressBar()?.nativeElement as HTMLElement | undefined;
     const edge = bar?.getBoundingClientRect();
     const progress = edge && bounds.width ? (edge.right - bounds.left) / bounds.width : 0.5;
+
     if (Math.abs(progress - this.lastLightProgress) < 0.0001) return;
+
     this.lastLightProgress = progress;
     surface.style.setProperty('--bx-toast-light-x', `${progress * 100}%`);
+
     const light = {
       element: bar ?? surface,
       offsetX: bar ? 1 : 0.5,
@@ -267,39 +284,47 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       intensity: 1.1,
       radius: 360
     };
+
     if (this.light) this.light.update(light);
     else this.light = this.lighting.register(root, light);
   }
 
   private startLightFrame(): void {
     this.paintLight();
+
     if (this.lightFrame !== undefined || !this.progressAnimation || this.destroyed || !this.isAnimated()) return;
+
     this.zone.runOutsideAngular(() => {
       const frame = () => {
         this.lightFrame = undefined;
+
         if (this.destroyed || this.isCollapsing() || !this.isAnimated()) return;
+
         this.paintLight();
+
         if (this.progressAnimation?.playState === 'running') this.lightFrame = requestAnimationFrame(frame);
       };
+
       this.lightFrame = requestAnimationFrame(frame);
     });
   }
 
   private stopLightFrame(): void {
     if (this.lightFrame !== undefined) cancelAnimationFrame(this.lightFrame);
+
     this.lightFrame = undefined;
   }
-
-  //#region Swipe Logic
 
   private startVerticalSwipeDetection(): void {
     if (this.isTrackingSwipe) return;
 
     const hasTouch = typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0);
+
     if (!hasTouch) return;
 
     this.isTrackingSwipe = true;
-    const target = this.toastSwipeTarget.nativeElement;
+
+    const target = this.toastSwipeTarget().nativeElement;
     const isTop = (this.config?.position ?? 'top-right').includes('top');
 
     let startY = 0;
@@ -311,6 +336,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
       if (event.button !== 0 && event.pointerType === 'mouse') return;
 
       const toastHeight = target.offsetHeight || 0;
+
       limit = toastHeight / 3;
 
       isPointerDown = true;
@@ -323,16 +349,19 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
     const pointerMove = (event: PointerEvent) => {
       if (!isPointerDown) return;
+
       const currentY = event.clientY - startY;
 
       if ((isTop && currentY < 0) || (!isTop && currentY > 0)) {
         if (event.cancelable) event.preventDefault();
+
         this.currentTranslateY.set(currentY);
       }
     };
 
     const pointerUp = (event: PointerEvent) => {
       if (!isPointerDown) return;
+
       isPointerDown = false;
       target.releasePointerCapture(event.pointerId);
 
@@ -394,10 +423,6 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.globalResizeCleanup = () => window.removeEventListener('pointerdown', handler);
   }
 
-  //#endregion
-
-  //#region Timer Logic
-
   private startTimer(): void {
     if (this.remainingMs <= 0) return;
 
@@ -412,6 +437,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.autoCloseTimeout = undefined;
 
     const elapsed = Date.now() - this.timerStartTime;
+
     this.remainingMs -= elapsed;
 
     this.toastRef.pause();

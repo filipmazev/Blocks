@@ -28,13 +28,9 @@
         position: absolute;
         inset-block: 0;
         inset-inline: calc(
-                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 - 1px + var(--bx-range-start) *
-                    (100% + 2px - var(--bx-slider-thumb-size, #{spacing(6)}))
+                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 - 1px + var(--bx-range-start) * (100% + 2px - var(--bx-slider-thumb-size, #{spacing(6)}))
             )
-            calc(
-                var(--bx-slider-thumb-size, #{spacing(6)}) / 2 - 1px + (1 - var(--bx-range-end)) *
-                    (100% + 2px - var(--bx-slider-thumb-size, #{spacing(6)}))
-            );
+            calc(var(--bx-slider-thumb-size, #{spacing(6)}) / 2 - 1px + (1 - var(--bx-range-end)) * (100% + 2px - var(--bx-slider-thumb-size, #{spacing(6)})));
         background: var(--bx-accent);
         border-radius: inherit;
     }
@@ -79,8 +75,6 @@
     inset-inline: calc(var(--bx-slider-thumb-size, #{spacing(6)}) / 2);
     inset-block-start: 50%;
     pointer-events: none;
-
-    // Keep interval markers visible at the selected values, above the glass lenses.
     z-index: 3;
 }
 

@@ -1,4 +1,4 @@
-import { SideNavSide } from '../types/side-nav.types';
+import { SideNavSide } from '@navigation/components/side-nav/types/side-nav.types';
 
 /** Resolved layout state for application shells and future top-bar integration. */
 export interface ISideNavLayout {

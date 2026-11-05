@@ -1,9 +1,13 @@
 import { ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { ROUTES } from '@playground/app.routes';
-import { provideHighlightOptions } from 'ngx-highlightjs';
-import { provideNavigation } from '@filip.mazev/blocks/navigation';
+
 import { resolveThemeId, ThemingService } from '@filip.mazev/blocks/core';
+import { provideNavigation } from '@filip.mazev/blocks/navigation';
+
+import { ROUTES } from '@playground/app.routes';
+
+import { provideHighlightOptions } from 'ngx-highlightjs';
+
 import { APP_NAVIGATION } from './app.navigation';
 
 /* As demo for navigation i18n capabilities, you can use the following function to provide a translation adapter for your translation service. 
@@ -36,14 +40,18 @@ export const APP_CONFIG: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideAppInitializer(() => {
       const document = inject(DOCUMENT);
+
       let savedPalette: string | null = null;
+
       try {
         savedPalette = document.defaultView?.localStorage.getItem('theme-palette') ?? null;
       } catch {
         /* The playground default also applies when storage is unavailable. */
       }
+
       // Read the preference before the shared service initializes its library default.
       const theme = inject(ThemingService);
+
       if (!resolveThemeId(savedPalette)) theme.setPalette('carbon-cobalt');
     }),
     provideRouter(ROUTES, withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })),

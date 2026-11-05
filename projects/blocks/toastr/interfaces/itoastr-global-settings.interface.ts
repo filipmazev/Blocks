@@ -1,6 +1,6 @@
 import type { ThemedColor } from '@filip.mazev/blocks/core';
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
-import type { ToastPosition } from '../types/toastr.types';
+import type { ToastPosition } from '@toastr/types/toastr.types';
 
 /** Shared toast defaults. update() merges a partial value and per-toast configuration takes precedence. */
 export interface IToastrGlobalSettings {

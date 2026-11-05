@@ -1,40 +1,43 @@
-import { InputSignal, OutputEmitterRef, QueryList, Signal, TemplateRef } from '@angular/core';
-import { ModalConfig } from '../classes/modal-config';
-import { ModalBottomSheet } from '../components/views/bottom-sheet/modal-bottom-sheet';
-import { ModalCloseMode } from '../types/modal.types';
+import { InputSignal, OutputEmitterRef, Signal, TemplateRef } from '@angular/core';
+
+import { ModalConfig } from '@modal/classes/modal-config';
+import { ModalBottomSheet } from '@modal/components/views/bottom-sheet/modal-bottom-sheet';
+import { ModalCloseMode } from '@modal/types/modal.types';
 
 /**
  * Interface for the Modal View
- * @param D The type of data passed to the modal
- * @param {InputSignal<TemplateRef<void> | null>} headerTemplate The input signal for the header template of the modal
- * @param {InputSignal<TemplateRef<void> | null>} footerTemplate The input signal for the footer template of the modal
- * @param {InputSignal<ModalConfig<D> | undefined>} config The input signal for the modal configuration
- * @param {InputSignal<boolean>} isOpen The input signal indicating whether the modal is open
- * @param {InputSignal<boolean>} isAnimated The input signal indicating whether the modal has animations enabled
- * @param {InputSignal<boolean>} isBottomSheetModalActive The input signal indicating whether the bottom sheet modal is active
- * @param {InputSignal<number>} animationDuration The input signal for the animation duration of the modal
- * @param {InputSignal<boolean>} hasDefaultContentWrapperClass The input signal indicating whether the modal has default content wrapper class
- * @param {InputSignal<boolean>} hasBanner The input signal indicating whether the modal has a banner
- * @param {OutputEmitterRef<ModalCloseMode | undefined>} close The output emitter reference for the close event of the modal
- * @param {QueryList<ModalBottomSheet>} bottomSheet The query list of bottom sheet modals
- * @param {Signal<{ [key: string]: boolean }>} modalClasses The signal for the modal CSS classes
+ * @typeParam D The type of data passed to the modal
+ * @typeParam R Type represented by R.
  */
 export interface IModalView<D, R> {
+  /** The input signal for the header template of the modal */
   headerTemplate: InputSignal<TemplateRef<void> | null>;
+  /** The input signal for the footer template of the modal */
   footerTemplate: InputSignal<TemplateRef<void> | null>;
 
+  /** The input signal for the modal configuration */
   config: InputSignal<ModalConfig<D, R> | undefined>;
+  /** Stable identifier used to distinguish this item from its peers. */
   id: InputSignal<string | null>;
+  /** The input signal indicating whether the modal is open */
   isOpen: InputSignal<boolean>;
+  /** The input signal indicating whether the modal has animations enabled */
   isAnimated: InputSignal<boolean>;
+  /** The input signal indicating whether the bottom sheet modal is active */
   isBottomSheetModalActive: InputSignal<boolean>;
+  /** The input signal for the animation duration of the modal */
   animationDuration: InputSignal<number>;
+  /** The input signal indicating whether the modal has default content wrapper class */
   hasDefaultContentWrapperClass: InputSignal<boolean>;
+  /** The input signal indicating whether the modal has a banner */
   hasBanner: InputSignal<boolean>;
 
+  /** The output emitter reference for the close event of the modal */
   close: OutputEmitterRef<ModalCloseMode | undefined>;
 
-  bottomSheet: QueryList<ModalBottomSheet>;
+  /** The signal containing the bottom sheet modal components */
+  bottomSheet: Signal<readonly ModalBottomSheet[]>;
 
+  /** The signal for the modal CSS classes */
   modalClasses: Signal<{ [key: string]: boolean }>;
 }

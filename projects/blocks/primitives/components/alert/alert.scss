@@ -6,14 +6,8 @@
 }
 
 .bx-alert {
-    --bx-glass-surface: var(
-        --bx-alert-background,
-        color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-alert-role-background))
-    );
-    --bx-glass-edge: var(
-        --bx-alert-border,
-        color-mix(in srgb, var(--bx-alert-role-border) 44.8%, transparent)
-    );
+    --bx-glass-surface: var(--bx-alert-background, color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-alert-role-background)));
+    --bx-glass-edge: var(--bx-alert-border, color-mix(in srgb, var(--bx-alert-role-border) 44.8%, transparent));
     --bx-glass-text: var(--bx-alert-color, var(--bx-alert-role-color));
     --bx-glass-radius: var(--bx-alert-radius, #{radius(lg)});
     --bx-glass-shadow: var(--bx-alert-shadow, #{shadow(sm)});
@@ -35,11 +29,7 @@
 }
 
 .bx-alert.has-emission {
-    --bx-glass-shadow: var(
-        --bx-alert-shadow,
-        #{shadow(sm)},
-        0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 44%, transparent)
-    );
+    --bx-glass-shadow: var(--bx-alert-shadow, #{shadow(sm)}, 0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 44%, transparent));
 
     &::after {
         content: '';
@@ -48,11 +38,7 @@
         z-index: -1;
         border-radius: inherit;
         pointer-events: none;
-        background: radial-gradient(
-            ellipse at 50% 100%,
-            color-mix(in srgb, var(--bx-alert-emission) 6.4%, transparent),
-            transparent 70%
-        );
+        background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--bx-alert-emission) 6.4%, transparent), transparent 70%);
     }
 }
 

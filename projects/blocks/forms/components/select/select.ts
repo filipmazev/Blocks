@@ -1,16 +1,20 @@
+import type { OutputEmitterRef } from '@angular/core';
+
+import { OverlayModule } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
-import { OverlayModule } from '@angular/cdk/overlay';
+
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingIndicator, LoadingSpinner, Tag, TooltipDirective, TruncateDirective } from '@filip.mazev/blocks/primitives';
-import { Button } from '../button/button';
-import { FormField } from '../form-field/form-field';
-import { SearchInput } from '../search-input/search-input';
-import { LoadMoreDirective } from '../../directives/load-more.directive';
-import { BxSelectBase } from './classes/bx-select-base';
-import { IBxSelectOption } from './interfaces/ibx-select-option.interface';
-import { ISelectionChange } from './interfaces/iselection-change.interface';
+
+import { Button } from '@forms/components/button/button';
+import { FormField } from '@forms/components/form-field/form-field';
+import { SearchInput } from '@forms/components/search-input/search-input';
+import { BxSelectBase } from '@forms/components/select/classes/bx-select-base';
+import { IBxSelectOption } from '@forms/components/select/interfaces/ibx-select-option.interface';
+import { ISelectionChange } from '@forms/components/select/interfaces/iselection-change.interface';
+import { LoadMoreDirective } from '@forms/directives/load-more.directive';
 
 @Component({
   selector: 'bx-select',
@@ -34,7 +38,7 @@ import { ISelectionChange } from './interfaces/iselection-change.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Select<T> extends BxSelectBase<T, T> {
-  public readonly selectionChange = output<ISelectionChange<T | null>>();
+  public readonly selectionChange: OutputEmitterRef<ISelectionChange<T | null>> = output<ISelectionChange<T | null>>();
 
   public clearSelection(): void {
     if (!this.clearSelectedValue(null)) return;

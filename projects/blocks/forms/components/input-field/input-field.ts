@@ -1,14 +1,19 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, viewChild } from '@angular/core';
+import type { InputSignal, InputSignalWithTransform, Signal, WritableSignal } from '@angular/core';
+import type { TransformedValueSignal } from '@angular/forms/signals';
+
 import { CdkAutofill, CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, signal, viewChild } from '@angular/core';
 import { transformedValue } from '@angular/forms/signals';
+
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { FormField } from '../form-field/form-field';
-import { BxValueControl } from '../shared/classes/bx-value-control';
-import { InputFieldTypes } from '../../types/form.types';
-import { numericConstraint } from './helpers/numeric-constraint.helpers';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
+
+import { FormField } from '@forms/components/form-field/form-field';
+import { numericConstraint } from '@forms/components/input-field/helpers/numeric-constraint.helpers';
+import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
+import { InputFieldTypes } from '@forms/types/form.types';
 
 @Component({
   selector: 'bx-input-field',
@@ -19,13 +24,19 @@ import { TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.m
 })
 export class InputField extends BxValueControl<string | number> {
   private readonly i18n = inject(BX_I18N, { optional: true });
-  private readonly editingRaw = signal<string | undefined>(undefined);
-  private readonly badInput = signal(false);
-  private readonly labelText = viewChild(TruncateDirective);
-  protected readonly labelTruncated = computed(() => this.labelText()?.truncated() ?? false);
-  protected readonly isFocused = signal(false);
-  protected readonly autofilled = signal(false);
-  protected readonly rawValue = transformedValue(this.value, {
+
+  private readonly editingRaw: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
+
+  private readonly badInput: WritableSignal<boolean> = signal(false);
+
+  private readonly labelText: Signal<TruncateDirective | undefined> = viewChild(TruncateDirective);
+
+  protected readonly labelTruncated: Signal<boolean> = computed(() => this.labelText()?.truncated() ?? false);
+
+  protected readonly isFocused: WritableSignal<boolean> = signal(false);
+  protected readonly autofilled: WritableSignal<boolean> = signal(false);
+
+  protected readonly rawValue: TransformedValueSignal<string> = transformedValue(this.value, {
     parse: (raw: string) => {
       if (this.type() !== 'number') return { value: raw };
 
@@ -36,10 +47,14 @@ export class InputField extends BxValueControl<string | number> {
     format: (value) => value?.toString() ?? ''
   });
 
-  protected readonly displayedValue = computed(() => this.editingRaw() ?? this.rawValue());
-  protected readonly isSpinDownDisabled = computed(() => this.disabled() || this.isReadonly() || Number(this.value() ?? 0) <= (this.min() ?? -Infinity));
-  protected readonly isSpinUpDisabled = computed(() => this.disabled() || this.isReadonly() || Number(this.value() ?? 0) >= (this.max() ?? Infinity));
-  protected readonly isFloating = computed(
+  protected readonly displayedValue: Signal<string> = computed(() => this.editingRaw() ?? this.rawValue());
+  protected readonly isSpinDownDisabled: Signal<boolean> = computed(
+    () => this.disabled() || this.isReadonly() || Number(this.value() ?? 0) <= (this.min() ?? -Infinity)
+  );
+  protected readonly isSpinUpDisabled: Signal<boolean> = computed(
+    () => this.disabled() || this.isReadonly() || Number(this.value() ?? 0) >= (this.max() ?? Infinity)
+  );
+  protected readonly isFloating: Signal<boolean> = computed(
     () =>
       this.resolvedFloatLabel() === 'always' ||
       this.isFocused() ||
@@ -48,29 +63,34 @@ export class InputField extends BxValueControl<string | number> {
       this.multiline() ||
       ['date', 'time', 'datetime-local'].includes(this.type())
   );
+  protected readonly resolvedDecreaseLabel: Signal<string> = computed(() => resolveText(this.decreaseLabel(), this.i18n));
+  protected readonly resolvedIncreaseLabel: Signal<string> = computed(() => resolveText(this.increaseLabel(), this.i18n));
 
-  protected readonly resolvedDecreaseLabel = computed(() => resolveText(this.decreaseLabel(), this.i18n));
-  protected readonly resolvedIncreaseLabel = computed(() => resolveText(this.increaseLabel(), this.i18n));
+  public readonly type: InputSignal<InputFieldTypes> = input<InputFieldTypes>('text');
+  public readonly min: InputSignalWithTransform<number | undefined, string | number | undefined> = input<number | undefined, string | number | undefined>(
+    undefined,
+    { transform: numericConstraint }
+  );
+  public readonly max: InputSignalWithTransform<number | undefined, string | number | undefined> = input<number | undefined, string | number | undefined>(
+    undefined,
+    { transform: numericConstraint }
+  );
+  public readonly minLength: InputSignal<number | undefined> = input<number | undefined>(undefined);
+  public readonly maxLength: InputSignal<number | undefined> = input<number | undefined>(undefined);
+  public readonly pattern: InputSignal<readonly RegExp[]> = input<readonly RegExp[]>([]);
+  public readonly step: InputSignal<number | 'any'> = input<number | 'any'>(1);
+  public readonly autocomplete: InputSignal<string | undefined> = input<string | undefined>(undefined);
+  public readonly inputmode: InputSignal<string | undefined> = input<string | undefined>(undefined);
+  public readonly spellcheck: InputSignal<boolean> = input(true);
+  public readonly multiline: InputSignal<boolean> = input(false);
+  public readonly rows: InputSignal<number> = input(3);
+  public readonly autosize: InputSignal<boolean> = input(true);
+  public readonly minRows: InputSignal<number> = input(2);
+  public readonly maxRows: InputSignal<number> = input(8);
+  public readonly decreaseLabel: InputSignal<ResolvableText> = input<ResolvableText>('Decrease value');
+  public readonly increaseLabel: InputSignal<ResolvableText> = input<ResolvableText>('Increase value');
 
-  public readonly type = input<InputFieldTypes>('text');
-  public readonly min = input<number | undefined, string | number | undefined>(undefined, { transform: numericConstraint });
-  public readonly max = input<number | undefined, string | number | undefined>(undefined, { transform: numericConstraint });
-  public readonly minLength = input<number | undefined>(undefined);
-  public readonly maxLength = input<number | undefined>(undefined);
-  public readonly pattern = input<readonly RegExp[]>([]);
-  public readonly step = input<number | 'any'>(1);
-  public readonly autocomplete = input<string | undefined>(undefined);
-  public readonly inputmode = input<string | undefined>(undefined);
-  public readonly spellcheck = input(true);
-  public readonly multiline = input(false);
-  public readonly rows = input(3);
-  public readonly autosize = input(true);
-  public readonly minRows = input(2);
-  public readonly maxRows = input(8);
-  public readonly decreaseLabel = input<ResolvableText>('Decrease value');
-  public readonly increaseLabel = input<ResolvableText>('Increase value');
-
-  private composing = false;
+  private composing: boolean = false;
   private spinTimeout?: ReturnType<typeof setTimeout>;
   private spinInterval?: ReturnType<typeof setInterval>;
 
@@ -112,7 +132,9 @@ export class InputField extends BxValueControl<string | number> {
     if (this.composing || this.disabled() || this.isReadonly()) return;
 
     const target = event.target as HTMLInputElement;
+
     this.badInput.set(target.validity.badInput);
+
     const updateOn = this.ngControl?.control?.updateOn;
 
     if (updateOn === 'blur' || updateOn === 'submit') this.editingRaw.set(target.value);

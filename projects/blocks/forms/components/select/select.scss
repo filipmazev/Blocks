@@ -387,7 +387,6 @@
     flex: 0 0 auto;
 }
 
-// Keep rounded selection surfaces distinct, including adjacent selected options.
 [role='listbox'] {
     display: flex;
     flex-direction: column;
@@ -413,14 +412,11 @@
     inset-inline-end: spacing(8);
 }
 
-// A sibling of the combobox avoids nesting interactive controls inside a button.
 .bx-select-clear.bx-btn {
     @include field-clear-action;
 
     position: absolute;
     inset-block-start: 50%;
-
-    // Account for the trigger border, trailing padding, caret width and icon gap.
     inset-inline-end: calc(1px + #{spacing(3)} + #{spacing(4)} + #{spacing(2)});
     transform: translateY(-50%);
     z-index: 3;

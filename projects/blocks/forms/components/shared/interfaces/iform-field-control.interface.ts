@@ -1,4 +1,5 @@
 import { Signal } from '@angular/core';
+
 import { ResolvableText } from '@filip.mazev/blocks/core';
 
 /** Registration contract for a custom control projected into a Blocks form field. */

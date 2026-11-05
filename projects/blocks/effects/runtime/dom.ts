@@ -5,6 +5,7 @@ export function rememberStyles(element: HTMLElement, properties: readonly string
     value: element.style.getPropertyValue(property),
     priority: element.style.getPropertyPriority(property)
   }));
+
   return () => {
     for (const item of values) {
       if (item.value) element.style.setProperty(item.property, item.value, item.priority);
@@ -15,6 +16,7 @@ export function rememberStyles(element: HTMLElement, properties: readonly string
 
 export function rememberAttributes(element: HTMLElement, attributes: readonly string[]): () => void {
   const values = attributes.map((attribute) => [attribute, element.getAttribute(attribute)] as const);
+
   return () => {
     for (const [attribute, value] of values) {
       if (value === null) element.removeAttribute(attribute);
@@ -29,5 +31,6 @@ export function finiteClamp(value: number | undefined, low: number, high: number
 
 export function smoothstep(low: number, high: number, value: number): number {
   const t = Math.min(1, Math.max(0, (value - low) / (high - low)));
+
   return t * t * (3 - 2 * t);
 }

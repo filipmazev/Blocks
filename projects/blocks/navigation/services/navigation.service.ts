@@ -1,18 +1,21 @@
 import { computed, inject, Injectable, Signal } from '@angular/core';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, Routes } from '@angular/router';
-import { NAVIGATION_CONFIG } from '../tokens/navigation-config.token';
-import { IResolvedNavigation } from '../interfaces/iresolved-navigation.interface';
-import { filter } from 'rxjs';
-import { IBreadcrumbItem } from '../interfaces/ibreadcrumb-item.interface';
-import { INavMeta } from '../interfaces/inav-meta.interface';
-import { INavigationItem } from '../interfaces/inavigation-item.interface';
-import { NAVIGATION_ACCESS_ADAPTER } from '../tokens/navigation-access-adapter.token';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { INavContext } from '../interfaces/inav-context.interface';
+import { ActivatedRouteSnapshot, NavigationEnd, Router, Routes } from '@angular/router';
+
+import { filter } from 'rxjs';
+
 import { BX_I18N, isTextWithKey, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { NavText } from '../types/navigation.types';
-import { INavigationGroup } from '../interfaces/inavigation-group.interface';
-import { INavigationTreeGroup } from '../interfaces/inavigation-tree-group.interface';
+
+import { IBreadcrumbItem } from '@navigation/interfaces/ibreadcrumb-item.interface';
+import { INavContext } from '@navigation/interfaces/inav-context.interface';
+import { INavMeta } from '@navigation/interfaces/inav-meta.interface';
+import { INavigationGroup } from '@navigation/interfaces/inavigation-group.interface';
+import { INavigationItem } from '@navigation/interfaces/inavigation-item.interface';
+import { INavigationTreeGroup } from '@navigation/interfaces/inavigation-tree-group.interface';
+import { IResolvedNavigation } from '@navigation/interfaces/iresolved-navigation.interface';
+import { NAVIGATION_ACCESS_ADAPTER } from '@navigation/tokens/navigation-access-adapter.token';
+import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
+import { NavText } from '@navigation/types/navigation.types';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -21,25 +24,24 @@ export class NavigationService {
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly accessAdapter = inject(NAVIGATION_ACCESS_ADAPTER, { optional: true });
 
-  private readonly navEnd = toSignal(this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)));
+  private readonly navEnd: Signal<NavigationEnd | undefined> = toSignal(this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)));
 
-  public readonly current = computed<IResolvedNavigation>(() => {
+  public readonly current: Signal<IResolvedNavigation> = computed<IResolvedNavigation>(() => {
     this.navEnd();
     this.i18n?.version?.();
+
     return this.resolveCurrent(this.router.routerState.snapshot.root);
   });
-
-  public readonly routeBase = computed<string | undefined>(() => {
+  public readonly routeBase: Signal<string | undefined> = computed<string | undefined>(() => {
     return this.accessAdapter?.resolveBaseRoute();
   });
-
   public readonly routes: Signal<INavigationItem[]> = computed(() => {
     this.navEnd();
     this.i18n?.version?.();
+
     return this.extractRoutes(this.router.config);
   });
-
-  public readonly baseRoute = computed<string | undefined>(() => {
+  public readonly baseRoute: Signal<string | undefined> = computed<string | undefined>(() => {
     const viewableRoutes = this.routes();
 
     const primaryPrefix = this.routeBase();
@@ -60,9 +62,11 @@ export class NavigationService {
 
         if (item.children?.length) {
           const childRoot = findRootRoute(item.children);
+
           if (childRoot) return childRoot;
         }
       }
+
       return undefined;
     };
 
@@ -70,10 +74,8 @@ export class NavigationService {
 
     return perfectMatch ?? firstFoundRoot ?? primaryPrefix;
   });
-
-  public readonly menu = computed(() => this.buildMenu(this.routes()));
-
-  public readonly menuGroups = computed<INavigationGroup[]>(() => {
+  public readonly menu: Signal<INavigationItem[]> = computed(() => this.buildMenu(this.routes()));
+  public readonly menuGroups: Signal<INavigationGroup[]> = computed<INavigationGroup[]>(() => {
     const sections = [...(this.config?.sections ?? [])].sort((a, b) => (a.order ?? Number.POSITIVE_INFINITY) - (b.order ?? Number.POSITIVE_INFINITY));
     const groups = new Map<string, INavigationGroup>(
       sections.map((section) => [section.id, { id: section.id, title: resolveText(section.title ?? section.id, this.i18n), items: [] }])
@@ -83,20 +85,23 @@ export class NavigationService {
       if (!item.visible || item.data?.menu === false) continue;
 
       const id = item.section ?? '';
+
       let group = groups.get(id);
+
       if (!group) {
         group = { id, title: id, items: [] };
         groups.set(id, group);
       }
+
       group.items.push({ ...item, children: undefined });
     }
 
     return [...groups.values()].filter((group) => group.items.length > 0);
   });
-
   /** Hierarchical sections; menuGroups retains its existing flat contract. */
-  public readonly menuTreeGroups = computed<INavigationTreeGroup[]>(() => {
+  public readonly menuTreeGroups: Signal<INavigationTreeGroup[]> = computed<INavigationTreeGroup[]>(() => {
     this.i18n?.version?.();
+
     const sections = [...(this.config?.sections ?? [])].sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
     const groups = new Map<string, INavigationTreeGroup>(
       sections.map((section) => [
@@ -110,6 +115,7 @@ export class NavigationService {
     );
 
     this.groupTree(this.menu(), groups);
+
     return [...groups.values()].filter((group) => group.items.length > 0);
   });
 
@@ -118,6 +124,7 @@ export class NavigationService {
 
     if (breadcrumbs.length > 1) {
       const previousBreadcrumb = breadcrumbs[breadcrumbs.length - 2];
+
       this.router.navigateByUrl(previousBreadcrumb.route);
     } else {
       this.router.navigateByUrl(this.routeBase() ?? '/');
@@ -129,6 +136,7 @@ export class NavigationService {
   private groupTree(items: INavigationItem[], groups: Map<string, INavigationTreeGroup>, inheritedSection = '', parent?: INavigationItem): void {
     for (const item of items) {
       const section = item.section ?? inheritedSection;
+
       let group = groups.get(section);
 
       if (!group) {
@@ -145,6 +153,7 @@ export class NavigationService {
 
       const entry: INavigationItem = { ...item, section, children: [] };
       const destination = parent && section === inheritedSection ? (parent.children ??= []) : group.items;
+
       destination.push(entry);
       this.groupTree(item.children ?? [], groups, section, entry);
     }
@@ -154,6 +163,7 @@ export class NavigationService {
     if (item.data?.hidden && !this.config?.includeHiddenInBreadcrumbs) return false;
 
     const section = this.config?.sections?.find((candidate) => candidate.id === item.section);
+
     return item.showInBreadcrumbs ?? item.data?.showInBreadcrumbs ?? section?.showInBreadcrumbs ?? true;
   }
 
@@ -205,10 +215,12 @@ export class NavigationService {
 
     while (currentNode) {
       const next: ActivatedRouteSnapshot | null = currentNode.children.find((child) => child.outlet === 'primary') ?? null;
+
       if (!next) {
         finalSnapshot = currentNode;
         break;
       }
+
       currentNode = next;
     }
 
@@ -218,6 +230,7 @@ export class NavigationService {
 
     const breadcrumbs: IBreadcrumbItem[] = [];
     const allItems = this.flattenRoutes(this.routes());
+
     let currentUrl = '';
 
     for (const segment of urlSegments) {
@@ -289,17 +302,21 @@ export class NavigationService {
       const orderB = b.data?.order ?? Number.POSITIVE_INFINITY;
 
       if (orderA !== orderB) return orderA - orderB;
+
       return a.label.localeCompare(b.label);
     });
   }
 
   private matchRouteToUrl(items: INavigationItem[], url: string): INavigationItem | undefined {
     const exactMatch = items.find((i) => i.route === url);
+
     if (exactMatch) return exactMatch;
 
     return items.find((i) => {
       if (!i.route.includes(':')) return false;
+
       const routeRegex = new RegExp('^' + i.route.replace(/:[^\s/]+/g, '([^/]+)') + '$');
+
       return routeRegex.test(url);
     });
   }
@@ -307,7 +324,9 @@ export class NavigationService {
   private flattenRoutes(items: INavigationItem[]): INavigationItem[] {
     return items.reduce((acc, item) => {
       acc.push(item);
+
       if (item.children) acc.push(...this.flattenRoutes(item.children));
+
       return acc;
     }, [] as INavigationItem[]);
   }

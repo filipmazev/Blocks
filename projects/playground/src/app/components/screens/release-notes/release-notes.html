@@ -1,44 +1,72 @@
 <article class="release-page">
-  <header class="page-heading">
-    <p class="eyebrow">Blocks library</p>
-    <h1>Release notes</h1>
-    <p>Explore additions, improvements and migration notes for each version of Blocks.</p>
-  </header>
+    @if (releases.unpublished()) {
+        <bx-alert class="unpublished-banner" tone="info" announcement="polite" [message]="unpublishedMessage" [dismissible]="false" />
+    }
+    <header class="page-heading">
+        <p class="eyebrow">Blocks library</p>
+        <h1>Release notes</h1>
+        <p>Explore additions, improvements and migration notes for each version of Blocks.</p>
+    </header>
 
-  <div class="release-controls">
-    <bx-select class="version-select" label="Version" placeholder="Choose a version" [options]="versions"
-      [value]="selectedVersion()" [clearable]="false" (selectionChange)="selectVersion($event.value)" />
-    <p class="current-version">Current package <code>{{ currentVersion }}</code></p>
-  </div>
+    <div class="release-controls">
+        <bx-select
+            class="channel-select"
+            label="Channel"
+            [options]="channels"
+            [value]="selectedChannel()"
+            [clearable]="false"
+            (selectionChange)="selectChannel($event.value)" />
+        <bx-select
+            class="version-select"
+            label="Version"
+            placeholder="Choose a version"
+            [options]="versions()"
+            [value]="selectedVersion()"
+            [clearable]="false"
+            (selectionChange)="selectVersion($event.value)" />
+        <p class="current-version">
+            Playground build <code>{{ currentVersion }}</code>
+        </p>
+    </div>
 
-  @if (release(); as entry) {
-    <section bxSurface class="release-summary" aria-labelledby="release-title">
-      <div class="release-title">
-        <h2 id="release-title">Blocks {{ entry.version }}</h2>
-        <bx-tag [text]="releaseLabel()" [color]="releaseColor()" size="small" [focusable]="false" />
-      </div>
-      <p>{{ entry.summary }}</p>
-      @if (entry.status === 'draft') {
-        <p class="draft-notice">These notes are a preview and may change before this version is published.</p>
-      }
-      @if (entry.toCommit; as toCommit) {
-        <a bx-button [href]="compareUrl()" target="_blank" rel="noopener noreferrer">
-          View changes on GitHub<bx-icon name="arrow-up-right" size="20" />
-        </a>
-        <p class="comparison"><span>Comparison</span> <code>{{ entry.fromCommit.slice(0, 7) }}</code><span>to</span>
-          <code>{{ toCommit.slice(0, 7) }}</code></p>
-      }
-    </section>
+    @if (release(); as entry) {
+        <section bxSurface class="release-summary" aria-labelledby="release-title">
+            <div class="release-title">
+                <h2 id="release-title">Blocks {{ entry.version }}</h2>
+                <bx-tag size="small" [text]="releaseLabel()" [color]="releaseColor()" [focusable]="false" />
+            </div>
+            <p>{{ entry.summary }}</p>
+            @if (entry.status === 'draft') {
+                <p class="draft-notice">These notes are a preview and may change before this version is published.</p>
+            }
+            @if (npmVersionUrl(); as npmUrl) {
+                <a bx-button target="_blank" rel="noopener noreferrer" [href]="npmUrl">
+                    View v{{ entry.version }} on NPM<bx-icon name="arrow-up-right" size="20" />
+                </a>
+            }
+            @if (entry.toCommit; as toCommit) {
+                <a bx-button target="_blank" rel="noopener noreferrer" [href]="compareUrl()">
+                    View changes on GitHub<bx-icon name="arrow-up-right" size="20" />
+                </a>
+                <p class="comparison">
+                    <span>Comparison</span> <code>{{ entry.fromCommit.slice(0, 7) }}</code
+                    ><span>to</span> <code>{{ toCommit.slice(0, 7) }}</code>
+                </p>
+            }
+        </section>
 
-    <section class="release-documentation" aria-label="Changes and migration notes">
-      <app-readme [path]="entry.readme" />
-    </section>
-  } @else {
-    <section bxSurface class="release-summary missing-release" aria-labelledby="missing-release-title">
-      <bx-icon name="file-search" size="32" />
-      <h2 id="missing-release-title">Release notes unavailable</h2>
-      <p>No notes are available for <strong>{{ requestedVersion() }}</strong>. Choose an available version above or view the latest notes.</p>
-      <a bx-button variant="tonal" [routerLink]="['/release-notes', latestVersion]">View latest notes<bx-icon name="arrow-right" size="20" /></a>
-    </section>
-  }
+        <section class="release-documentation" aria-label="Changes and migration notes">
+            <app-readme [path]="entry.readme" />
+        </section>
+    } @else {
+        <section bxSurface class="release-summary missing-release" aria-labelledby="missing-release-title">
+            <bx-icon name="file-search" size="32" />
+            <h2 id="missing-release-title">Release notes unavailable</h2>
+            <p>
+                No notes are available for <strong>{{ requestedVersion() }}</strong
+                >. Choose an available version above or view the latest notes.
+            </p>
+            <a bx-button variant="tonal" [routerLink]="['/release-notes', latestVersion]">View latest notes<bx-icon name="arrow-right" size="20" /></a>
+        </section>
+    }
 </article>

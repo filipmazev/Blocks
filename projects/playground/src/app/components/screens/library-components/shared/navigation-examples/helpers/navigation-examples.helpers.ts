@@ -1,10 +1,12 @@
 import { IBxI18nAdapter } from '@filip.mazev/blocks/core';
 import { INavigationItem, INavigationTreeGroup } from '@filip.mazev/blocks/navigation';
-import { NAVIGATION_DEMO_GROUPS } from '../constants/navigation-examples.constants';
+
+import { NAVIGATION_DEMO_GROUPS } from '@playground/components/screens/library-components/shared/navigation-examples/constants/navigation-examples.constants';
 
 /** Shares one four-level tree and language adapter between the side- and top-navigation demos. */
 export function navigationDemoGroups(basePath: string, adapter: IBxI18nAdapter): INavigationTreeGroup[] {
   adapter.version?.();
+
   return NAVIGATION_DEMO_GROUPS.map((group) => ({
     ...group,
     title: adapter.translate(`nav.${group.id}`),

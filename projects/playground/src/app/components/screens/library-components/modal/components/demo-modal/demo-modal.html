@@ -2,21 +2,26 @@
     {{ data.title }}
 </div>
 
-<div class="demo-modal-content-class" [ngClass]="{
-    'side-modal': isSideModal(), 
-    'center-modal': isCenteredModal() }">
+<div
+    class="demo-modal-content-class"
+    [ngClass]="{
+        'side-modal': isSideModal(),
+        'center-modal': isCenteredModal()
+    }">
     <div>
         {{ data.body }}
     </div>
     <section class="modal-menu-demo" aria-label="Menus inside this modal">
         <h3>Menus inside the modal</h3>
-        <button bx-button type="button" variant="tonal" color="primary" [bxDropdown]="dropdownActions" placement="bottom">
+        <button bx-button type="button" variant="tonal" color="primary" placement="bottom" [bxDropdown]="dropdownActions">
             Open actions<bx-icon name="chevron-down" size="16" />
         </button>
-        <button bx-button type="button" variant="tonal" color="grayscale" [bxContextMenu]="contextActions" class="modal-context-target">
+        <button bx-button type="button" variant="tonal" color="grayscale" class="modal-context-target" [bxContextMenu]="contextActions">
             <bx-icon name="mouse-pointer-2" size="16" />Right-click or hold for more actions
         </button>
-        <p class="menu-hint">On touch screens, touch and hold for more actions. With a keyboard, focus the example and press Shift + F10. Escape closes the menu first.</p>
+        <p class="menu-hint">
+            On touch screens, touch and hold for more actions. With a keyboard, focus the example and press Shift + F10. Escape closes the menu first.
+        </p>
         <p class="menu-status" role="status">{{ menuStatus() }}</p>
     </section>
 </div>
@@ -35,7 +40,7 @@
     </bx-menu>
 </ng-template>
 
-<div class="button-container" *appModalFooter>
-    <button bx-button (click)="confirm()" variant="filled" color="success">Confirm</button>
-    <button bx-button (click)="close()" variant="filled" color="danger">Cancel</button>
+<div *appModalFooter class="button-container">
+    <button type="button" bx-button variant="filled" color="success" (click)="confirm()">Confirm</button>
+    <button type="button" bx-button variant="filled" color="danger" (click)="close()">Cancel</button>
 </div>

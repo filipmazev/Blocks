@@ -1,5 +1,7 @@
-import { IconData } from '@filip.mazev/blocks/icons';
-import { NavText } from '../types/navigation.types';
+import { IIconData } from '@filip.mazev/blocks/icons';
+
+import { NavText } from '@navigation/types/navigation.types';
+
 import { INavTag } from './inav-tag.interface';
 
 /** Route UI metadata. TSection restricts section IDs when used with defineNavigation. */
@@ -10,9 +12,9 @@ export interface INavMeta<TSection extends string = string> {
   breadcrumb?: NavText;
 
   /** Optional leading icon. */
-  icon?: IconData;
+  icon?: IIconData;
   /** Optional trailing icon, independent of the submenu disclosure. */
-  endIcon?: IconData;
+  endIcon?: IIconData;
   /** Optional noninteractive Blocks tags. Defaults to no tags. */
   tags?: readonly INavTag[];
   /** Optional additional translated terms used by side-nav search. */

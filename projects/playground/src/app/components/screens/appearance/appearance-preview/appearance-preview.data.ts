@@ -3,6 +3,7 @@
 // Detail photos: Shar_Mountain/shar_mountain_3.webp and Korab/korab_6.webp.
 function photo(name: string, width: number, height: number, alt: string) {
   const base = `assets/images/appearance/${name}`;
+
   return { src: `${base}.webp`, srcset: `${base}-640.webp 640w, ${base}.webp ${width}w`, width, height, alt };
 }
 

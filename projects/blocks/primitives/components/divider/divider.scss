@@ -13,8 +13,7 @@
     &.has-label::after {
         content: '';
         flex: 1 1 0;
-        border-block-start: var(--bx-divider-thickness, 1px) var(--bx-divider-style, solid)
-            var(--bx-divider-color, var(--bx-border-default));
+        border-block-start: var(--bx-divider-thickness, 1px) var(--bx-divider-style, solid) var(--bx-divider-color, var(--bx-border-default));
     }
 }
 
@@ -29,8 +28,7 @@
     &::before,
     &.has-label::after {
         border-block-start: 0;
-        border-inline-start: var(--bx-divider-thickness, 1px) var(--bx-divider-style, solid)
-            var(--bx-divider-color, var(--bx-border-default));
+        border-inline-start: var(--bx-divider-thickness, 1px) var(--bx-divider-style, solid) var(--bx-divider-color, var(--bx-border-default));
     }
 }
 

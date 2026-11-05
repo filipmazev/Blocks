@@ -1,10 +1,12 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { IModal } from '../../interfaces/imodal.interface';
-import { ModalCloseGuard } from '../modal-close-guard';
-import { IModalConfig } from '../../interfaces/imodal-config.interface';
-import { ModalService } from '../../services/modal.service';
+
 import { map, Observable } from 'rxjs';
-import { IModalCloseResult } from '../../public-api';
+
+import { ModalCloseGuard } from '@modal/classes/modal-close-guard';
+import { IModal } from '@modal/interfaces/imodal.interface';
+import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
+import { IModalConfig } from '@modal/interfaces/imodal-config.interface';
+import { ModalService } from '@modal/services/modal.service';
 
 /**
  * Modal Close Guard that opens a confirmation modal before allowing the original modal to close.

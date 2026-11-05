@@ -29,7 +29,7 @@ $blue-palette: (
     700: #1350b5,
     800: #15418d,
     900: #16386f,
-    1000: #0c1f40,
+    1000: #0c1f40
 ) !default;
 $orange-palette: (
     50: #fff7ed,
@@ -42,7 +42,7 @@ $orange-palette: (
     700: #ca3500,
     800: #9f2d00,
     900: #551111,
-    1000: #441306,
+    1000: #441306
 ) !default;
 $purple-palette: (
     50: #f4ebff,
@@ -55,7 +55,7 @@ $purple-palette: (
     700: #410099,
     800: #2c0066,
     900: #160033,
-    1000: #0b001a,
+    1000: #0b001a
 ) !default;
 $red-palette: (
     50: #fdf1f0,
@@ -68,7 +68,7 @@ $red-palette: (
     700: #991009,
     800: #750904,
     900: #520401,
-    1000: #2e0200,
+    1000: #2e0200
 ) !default;
 $green-palette: (
     50: #f7fce8,
@@ -81,7 +81,7 @@ $green-palette: (
     700: #718f10,
     800: #556d0c,
     900: #3c4e08,
-    1000: #212c03,
+    1000: #212c03
 ) !default;
 $danger-palette: (
     50: #fffcfc,
@@ -94,7 +94,7 @@ $danger-palette: (
     700: #ba2e2e,
     800: #722222,
     900: #2b1717,
-    1000: #0e0c0c,
+    1000: #0e0c0c
 ) !default;
 $warn-palette: (
     50: #fffefb,
@@ -107,7 +107,7 @@ $warn-palette: (
     700: #a96d18,
     800: #6a4817,
     900: #2b2317,
-    1000: #0e0d0c,
+    1000: #0e0d0c
 ) !default;
 $success-palette: (
     50: #fcfffc,
@@ -120,7 +120,7 @@ $success-palette: (
     700: #1e8f2d,
     800: #1a5d22,
     900: #172b18,
-    1000: #0c0e0c,
+    1000: #0c0e0c
 ) !default;
 $information-palette: (
     50: #fbfdff,
@@ -133,7 +133,7 @@ $information-palette: (
     700: #1e69a7,
     800: #1a4469,
     900: #17202b,
-    1000: #0c0d0e,
+    1000: #0c0d0e
 ) !default;
 $neutral-palette: (
     50: #fafafa,
@@ -146,7 +146,7 @@ $neutral-palette: (
     700: #404040,
     800: #262626,
     900: #171717,
-    1000: #0b0b0b,
+    1000: #0b0b0b
 ) !default;
 $cyber-yellow-palette: (
     50: #fffef2,
@@ -159,7 +159,7 @@ $cyber-yellow-palette: (
     700: #998e00,
     800: #665e00,
     900: #332f00,
-    1000: #141300,
+    1000: #141300
 ) !default;
 $cyber-slate-palette: (
     50: #ebeff2,
@@ -172,7 +172,7 @@ $cyber-slate-palette: (
     700: #1b2936,
     800: #121a21,
     900: #0b1015,
-    1000: #05080a,
+    1000: #05080a
 ) !default;
 $hc-black: #000000;
 $hc-white: #ffffff;
@@ -180,8 +180,6 @@ $hc-yellow: #e4d500;
 $hc-cyan: #00f3f3;
 $hc-red: #ff0000;
 $hc-green: #00ff00;
-
-// Tune the upper tones explicitly so dark actions retain their color character.
 $carbon-palette: map.merge(
     _tonal-palette(#292a2d),
     (
@@ -189,7 +187,7 @@ $carbon-palette: map.merge(
         100: #f7f7f5,
         200: #efefed,
         300: #e2e2e0,
-        400: #77797d,
+        400: #77797d
     )
 ) !default;
 $cobalt-palette: map.merge(
@@ -197,7 +195,7 @@ $cobalt-palette: map.merge(
     (
         200: #abc5ff,
         300: #6d9aff,
-        400: #4c82f2,
+        400: #4c82f2
     )
 ) !default;
 $ember-palette: map.merge(
@@ -205,7 +203,7 @@ $ember-palette: map.merge(
     (
         200: #f5a365,
         300: #f27b35,
-        400: #e96926,
+        400: #e96926
     )
 ) !default;
 $brick-rose-palette: map.merge(
@@ -213,13 +211,13 @@ $brick-rose-palette: map.merge(
     (
         200: #e69ba4,
         300: #d36b77,
-        400: #c55964,
+        400: #c55964
     )
 ) !default;
 $azure-palette: map.merge(
     $blue-palette,
     (
-        300: #72a7ff,
+        300: #72a7ff
     )
 ) !default;
 $violet-palette: $purple-palette !default;
@@ -231,7 +229,7 @@ $cyan-palette: map.merge(
     (
         200: #78d8e6,
         300: #22b8d0,
-        400: #12a4bf,
+        400: #12a4bf
     )
 ) !default;
 $lime-palette: _tonal-palette(#c4f53d) !default;
@@ -261,7 +259,7 @@ $all-palettes: (
     'neutral': $neutral-palette,
 
     'cyber-yellow': $cyber-yellow-palette,
-    'cyber-slate': $cyber-slate-palette,
+    'cyber-slate': $cyber-slate-palette
 ) !default;
 
 @function get-palette($name) {

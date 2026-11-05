@@ -1,18 +1,22 @@
 <div class="modal-top-banner-container">
     @let headerData = header();
-    @if(headerData) {
-    <div class="modal-top-banner-title-container">
-        @if(headerData.icon) {
-        <bx-icon [name]="headerData.icon.name" [size]="headerData.icon.size ?? '24'" [color]="headerData.icon.color"
-            [bgColor]="headerData.icon.bgColor" [strokeWidth]="headerData.icon.strokeWidth" />
-        }
-        @if (resolvedText()) {
-        {{ resolvedText() }}
-        }
-    </div>
+    @if (headerData) {
+        <div class="modal-top-banner-title-container">
+            @if (headerData.icon) {
+                <bx-icon
+                    [name]="headerData.icon.name"
+                    [size]="headerData.icon.size ?? '24'"
+                    [color]="headerData.icon.color"
+                    [bgColor]="headerData.icon.bgColor"
+                    [strokeWidth]="headerData.icon.strokeWidth" />
+            }
+            @if (resolvedText()) {
+                {{ resolvedText() }}
+            }
+        </div>
     }
 
-    @if(showCloseButton()) {
-    <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')"><bx-icon name="x" /></button>
+    @if (showCloseButton()) {
+        <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')"><bx-icon name="x" /></button>
     }
 </div>

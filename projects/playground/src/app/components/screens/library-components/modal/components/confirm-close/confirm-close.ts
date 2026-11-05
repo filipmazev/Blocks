@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { Button } from '@forms/components/button/button';
 import { Modal } from '@modal/classes/modal';
 import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
@@ -7,7 +8,7 @@ import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
   selector: 'app-confirm-close',
   imports: [ModalFooterDirective, Button],
   templateUrl: './confirm-close.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './confirm-close.scss'
 })
 export class ConfirmClose extends Modal<string, undefined> {

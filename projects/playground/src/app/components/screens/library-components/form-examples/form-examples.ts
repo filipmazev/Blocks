@@ -1,4 +1,6 @@
-import { Highlight } from 'ngx-highlightjs';
+import type { InputSignal, Signal, WritableSignal } from '@angular/core';
+import type { FieldTree } from '@angular/forms/signals';
+
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, resource, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +19,11 @@ import {
   validate,
   validateAsync
 } from '@angular/forms/signals';
+
+import type { ValidationMessage } from '@filip.mazev/blocks/forms';
+import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+
+import { BX_I18N, ResolvableText } from '@filip.mazev/blocks/core';
 import {
   Button,
   BxError,
@@ -39,20 +46,22 @@ import {
   SlideToggle,
   SuffixDirective
 } from '@filip.mazev/blocks/forms';
-import { LoadingIndicator, LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
-import { BX_I18N, ResolvableText } from '@filip.mazev/blocks/core';
-import { DemoI18nService } from './services/demo-i18n.service';
 import { Icon } from '@filip.mazev/blocks/icons';
+import { LoadingIndicator, LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
+
 import {
-  INITIAL_REGISTRATION,
+  DEMO_ALL_SELECTED_TOOLTIP_OPTIONS,
   DEMO_DESTINATIONS,
-  DEMO_PROJECT_MESSAGES,
   DEMO_PAGE_SIZES,
-  DEMO_ALL_SELECTED_TOOLTIP_OPTIONS
-} from './constants/form-examples.constants';
-import { IRegistrationData } from './interfaces/iregistration-data.interface';
-import { MockFormsApi } from './services/mock-forms-api.service';
-import { MockOptionsStore } from './services/mock-options-store.service';
+  DEMO_PROJECT_MESSAGES,
+  INITIAL_REGISTRATION
+} from '@playground/components/screens/library-components/form-examples/constants/form-examples.constants';
+import { IRegistrationData } from '@playground/components/screens/library-components/form-examples/interfaces/iregistration-data.interface';
+import { DemoI18nService } from '@playground/components/screens/library-components/form-examples/services/demo-i18n.service';
+import { MockFormsApi } from '@playground/components/screens/library-components/form-examples/services/mock-forms-api.service';
+import { MockOptionsStore } from '@playground/components/screens/library-components/form-examples/services/mock-options-store.service';
+
+import { Highlight } from 'ngx-highlightjs';
 
 @Component({
   selector: 'app-form-examples',
@@ -93,25 +102,37 @@ import { MockOptionsStore } from './services/mock-options-store.service';
 export class FormExamples {
   private readonly api = inject(MockFormsApi);
   private readonly translations = inject(DemoI18nService);
+
   protected readonly remote = inject(MockOptionsStore);
-  protected readonly model = signal<IRegistrationData>({ ...INITIAL_REGISTRATION, categories: [] });
-  protected readonly locked = signal(false);
-  protected readonly readOnly = signal(false);
-  protected readonly policy = signal<ErrorDisplayPolicy>('touched');
-  protected readonly status = signal('Complete the form to submit.');
-  protected readonly events = signal<readonly string[]>([]);
-  protected readonly selected = signal<string[] | null>([]);
-  protected readonly destination = signal<string | null>(null);
-  protected readonly useTags = signal(false);
-  protected readonly allowClearing = signal(true);
-  protected readonly allSelectedTooltipMode = signal<string | null>('total');
-  protected readonly allSelectedTooltipText = signal('All matching locations');
-  protected readonly allSelectedTooltipOptions = DEMO_ALL_SELECTED_TOOLTIP_OPTIONS;
-  protected readonly allSelectedTooltip = computed<ResolvableText | false | undefined>(() => {
+
+  protected readonly model: WritableSignal<IRegistrationData> = signal<IRegistrationData>({ ...INITIAL_REGISTRATION, categories: [] });
+
+  protected readonly locked: WritableSignal<boolean> = signal(false);
+  protected readonly readOnly: WritableSignal<boolean> = signal(false);
+
+  protected readonly policy: WritableSignal<ErrorDisplayPolicy> = signal<ErrorDisplayPolicy>('touched');
+  protected readonly status: WritableSignal<string> = signal('Complete the form to submit.');
+
+  protected readonly events: WritableSignal<readonly string[]> = signal<readonly string[]>([]);
+  protected readonly selected: WritableSignal<string[] | null> = signal<string[] | null>([]);
+
+  protected readonly destination: WritableSignal<string | null> = signal<string | null>(null);
+
+  protected readonly useTags: WritableSignal<boolean> = signal(false);
+  protected readonly allowClearing: WritableSignal<boolean> = signal(true);
+
+  protected readonly allSelectedTooltipMode: WritableSignal<string | null> = signal<string | null>('total');
+  protected readonly allSelectedTooltipText: WritableSignal<string> = signal('All matching locations');
+
+  protected readonly allSelectedTooltipOptions: readonly BxSelectOption<string>[] = DEMO_ALL_SELECTED_TOOLTIP_OPTIONS;
+
+  protected readonly allSelectedTooltip: Signal<false | ResolvableText | undefined> = computed<ResolvableText | false | undefined>(() => {
     const mode = this.allSelectedTooltipMode();
 
     if (mode === 'custom') return this.allSelectedTooltipText();
+
     if (mode === 'loaded') return undefined;
+
     if (mode === 'disabled' || this.remote.selectableTotal() === undefined) return false;
 
     this.translations.version();
@@ -119,20 +140,31 @@ export class FormExamples {
     return this.translations.translate('allLocationsTooltip', { total: this.remote.selectableTotal() });
   });
 
-  protected readonly visibleTagLimit = signal(1);
-  protected readonly searchLoadingText = signal(false);
-  protected readonly summaryLimit = signal(2);
-  protected readonly range = signal<[number, number] | null>([20, 80]);
-  protected readonly loadingAction = signal(false);
-  protected readonly progress = signal(0);
-  protected readonly blurControl = new FormControl('', { nonNullable: true, updateOn: 'blur' });
-  protected readonly submitForm = new FormGroup({ name: new FormControl('', { nonNullable: true, updateOn: 'submit' }) });
-  protected readonly submitSnapshot = signal('');
-  protected readonly templateValue = signal('');
-  protected readonly pageSizes = DEMO_PAGE_SIZES;
-  protected readonly options = DEMO_DESTINATIONS;
-  protected readonly projectMessages = DEMO_PROJECT_MESSAGES;
-  protected readonly registration = form(
+  protected readonly visibleTagLimit: WritableSignal<number> = signal(1);
+
+  protected readonly searchLoadingText: WritableSignal<boolean> = signal(false);
+
+  protected readonly summaryLimit: WritableSignal<number> = signal(2);
+
+  protected readonly range: WritableSignal<[number, number] | null> = signal<[number, number] | null>([20, 80]);
+
+  protected readonly loadingAction: WritableSignal<boolean> = signal(false);
+
+  protected readonly progress: WritableSignal<number> = signal(0);
+
+  protected readonly blurControl: FormControl<string> = new FormControl('', { nonNullable: true, updateOn: 'blur' });
+  protected readonly submitForm: FormGroup<{ name: FormControl<string> }> = new FormGroup({
+    name: new FormControl('', { nonNullable: true, updateOn: 'submit' })
+  });
+
+  protected readonly submitSnapshot: WritableSignal<string> = signal('');
+  protected readonly templateValue: WritableSignal<string> = signal('');
+
+  protected readonly pageSizes: readonly BxSelectOption<number>[] = DEMO_PAGE_SIZES;
+  protected readonly options: readonly BxSelectOption<string>[] = DEMO_DESTINATIONS;
+  protected readonly projectMessages: Readonly<Record<string, ValidationMessage | undefined>> = DEMO_PROJECT_MESSAGES;
+
+  protected readonly registration: FieldTree<IRegistrationData, string | number, 'writable'> = form(
     this.model,
     (p) => {
       required(p.project, { message: 'Enter a project name.' });
@@ -171,6 +203,7 @@ export class FormExamples {
           if (!saved) return { kind: 'server', message: 'The server rejected this email. Edit it and retry.', fieldTree: field.email };
 
           this.status.set('Saved successfully.');
+
           return null;
         },
         onInvalid: (field) => {
@@ -181,12 +214,12 @@ export class FormExamples {
     }
   );
 
-  protected readonly canSubmit = computed(() => this.registration().valid() && !this.registration().submitting() && !this.locked());
-  protected readonly validationStatus = computed(() =>
+  protected readonly canSubmit: Signal<boolean> = computed(() => this.registration().valid() && !this.registration().submitting() && !this.locked());
+  protected readonly validationStatus: Signal<'Checking availability' | 'Ready to submit' | 'Needs attention'> = computed(() =>
     this.registration().pending() ? 'Checking availability' : this.registration().valid() ? 'Ready to submit' : 'Needs attention'
   );
 
-  public readonly example = input('signal-forms');
+  public readonly example: InputSignal<string> = input('signal-forms');
 
   constructor() {
     effect(() => {

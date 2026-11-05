@@ -14,8 +14,8 @@ Add the standalone component to your component's `imports`.
 
 ```html
 <bx-form-field label="Reference" forId="reference">
-  <input id="reference" aria-describedby="reference-error" />
-  <bx-error id="reference-error">Enter at least three characters.</bx-error>
+    <input id="reference" aria-describedby="reference-error" />
+    <bx-error id="reference-error">Enter at least three characters.</bx-error>
 </bx-form-field>
 ```
 
@@ -25,7 +25,8 @@ Add the standalone component to your component's `imports`.
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -39,11 +40,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Render only when validation should be shown. Tie the input to the error ID with `aria-describedby` and update `aria-invalid` as needed. This component does not run validation.
+Render only when validation should be shown. Tie the input to the error ID with `aria-describedby` and update `aria-invalid` as needed. This component does not
+run validation.
 
 ## Playground
 

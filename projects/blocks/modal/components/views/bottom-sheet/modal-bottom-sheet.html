@@ -1,55 +1,42 @@
 <div
-  bxSurface
-  data-bx-light-scope
-  [id]="id() ?? ''"
-  [class]="config()?.style?.wrapperClasses ?? ''"
-  [style]="config()?.style?.wrapperStyles ?? ''"
-  [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"
-  [style.transform]="modalTransform()"
-  [style.transition]="isAnimated() && !isSwipingVertically() ? 'transform 300ms ease-in-out' : ''"
-  [ngClass]="{
-    'opened-bottom-sheet-modal': isAnimated(),
-  }"
-  #elementRef
-  class="bottom-sheet-modal-style"
->
-  <button
-    #verticalSwipeTarget
-    type="button"
-    aria-label="Close dialog"
-    class="touch-hitbox bottom-sheet-modal-top-bar"
-    (click)="onDismissClick($event)"
-  >
-    <div class="swipe-line"></div>
-  </button>
+    #elementRef
+    bxSurface
+    data-bx-light-scope
+    class="bottom-sheet-modal-style"
+    [id]="id() ?? ''"
+    [class]="config()?.style?.wrapperClasses ?? ''"
+    [style]="config()?.style?.wrapperStyles ?? ''"
+    [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"
+    [style.transform]="modalTransform()"
+    [style.transition]="isAnimated() && !isSwipingVertically() ? 'transform 300ms ease-in-out' : ''"
+    [ngClass]="{
+        'opened-bottom-sheet-modal': isAnimated()
+    }">
+    <button #verticalSwipeTarget type="button" aria-label="Close dialog" class="touch-hitbox bottom-sheet-modal-top-bar" (click)="onDismissClick($event)">
+        <div class="swipe-line"></div>
+    </button>
 
-  <div class="bottom-sheet-modal-inner-content-container">
-    <div class="bottom-sheet-modal-top-group">
-      @if (hasBanner()) {
-        <bx-modal-banner
-          [header]="config()?.header"
-          [showCloseButton]="false"
-        ></bx-modal-banner>
-      }
+    <div class="bottom-sheet-modal-inner-content-container">
+        <div class="bottom-sheet-modal-top-group">
+            @if (hasBanner()) {
+                <bx-modal-banner [header]="config()?.header" [showCloseButton]="false"></bx-modal-banner>
+            }
 
-      @if (headerTemplate()) {
-        <div class="bottom-sheet-modal-header">
-          <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
+            @if (headerTemplate()) {
+                <div class="bottom-sheet-modal-header">
+                    <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
+                </div>
+            }
+
+            <div class="bottom-sheet-modal-main-content-container" [style.animationDuration]="isAnimated() ? animationDuration() + 'ms' : '0ms'">
+                <ng-content></ng-content>
+            </div>
         </div>
-      }
 
-      <div
-        class="bottom-sheet-modal-main-content-container"
-        [style.animationDuration]="isAnimated() ? animationDuration() + 'ms' : '0ms'"
-      >
-        <ng-content></ng-content>
-      </div>
+        @if (footerTemplate()) {
+            <div class="bottom-sheet-modal-footer">
+                <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+            </div>
+        }
     </div>
-
-    @if (footerTemplate()) {
-      <div class="bottom-sheet-modal-footer">
-        <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
-      </div>
-    }
-  </div>
 </div>

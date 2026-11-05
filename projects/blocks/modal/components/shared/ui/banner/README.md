@@ -18,11 +18,13 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-Required inputs: `header` (header config or undefined), `showCloseButton` (boolean). `close` emits a modal close mode or undefined. Header supports text and an optional icon configuration.
+Required inputs: `header` (header config or undefined), `showCloseButton` (boolean). `close` emits a modal close mode or undefined. Header supports text and an
+optional icon configuration.
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -36,11 +38,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Prefer configuring `header` on ModalService for a normal dialog. Direct use is available for custom composition; ensure the surrounding dialog has an accessible name and handle close output.
+Prefer configuring `header` on ModalService for a normal dialog. Direct use is available for custom composition; ensure the surrounding dialog has an accessible
+name and handle close output.
 
 ## Playground
 

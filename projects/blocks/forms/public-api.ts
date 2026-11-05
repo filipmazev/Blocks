@@ -2,58 +2,58 @@
  * Public API Surface of toastr
  */
 
-export * from './components/button/button';
-export * from './components/checkbox/checkbox';
-export * from './components/form-field/form-field';
-export * from './components/input-field/input-field';
-export * from './components/radio-button/radio-button';
-export * from './components/search-input/search-input';
-export * from './components/search-input/interfaces/isearch-retry-config.interface';
-export * from './components/select/select';
-export * from './components/slide-toggle/slide-toggle';
+export * from '@forms/components/button/button';
+export * from '@forms/components/checkbox/checkbox';
+export * from '@forms/components/form-field/form-field';
+export * from '@forms/components/input-field/input-field';
+export * from '@forms/components/radio-button/radio-button';
+export * from '@forms/components/search-input/interfaces/isearch-retry-config.interface';
+export * from '@forms/components/search-input/search-input';
+export * from '@forms/components/select/select';
+export * from '@forms/components/slide-toggle/slide-toggle';
 
-export * from './interfaces/ibx-select-option.interface';
+export * from '@forms/interfaces/ibx-select-option.interface';
 
-export * from './directives/bx-error.directive';
+export * from '@forms/directives/bx-error.directive';
 
-export * from './types/form.types';
-export * from './directives/slider.directive';
+export * from '@forms/directives/slider.directive';
+export * from '@forms/types/form.types';
 
-export * from './components/radio-group/radio-group';
-export * from './components/button/directives/button-icon.directive';
-export * from './directives/load-more.directive';
-export * from './directives/prefix.directive';
-export * from './directives/suffix.directive';
-export * from './directives/hint/hint';
-export * from './components/shared/load-more/interfaces/iload-more-config.interface';
-export * from './components/shared/load-more/interfaces/iload-more-context.interface';
-export * from './components/shared/load-more/interfaces/iload-more-request.interface';
-export * from './components/shared/load-more/types/load-more.types';
-export * from './components/shared/interfaces/ierror-state.interface';
-export * from './components/shared/interfaces/ivalidation-message-context.interface';
-export * from './components/shared/interfaces/iform-field-defaults.interface';
-export * from './components/shared/interfaces/iform-field-control.interface';
-export * from './components/shared/types/validation.types';
-export * from './components/shared/services/form-settings.service';
-export * from './components/shared/tokens/form-field-control.token';
-export * from './components/checkbox/types/checkbox.types';
+export * from '@forms/components/button/directives/button-icon.directive';
+export * from '@forms/components/checkbox/types/checkbox.types';
+export * from '@forms/components/radio-group/radio-group';
+export * from '@forms/components/shared/interfaces/ierror-state.interface';
+export * from '@forms/components/shared/interfaces/iform-field-control.interface';
+export * from '@forms/components/shared/interfaces/iform-field-defaults.interface';
+export * from '@forms/components/shared/interfaces/ivalidation-message-context.interface';
+export * from '@forms/components/shared/load-more/interfaces/iload-more-config.interface';
+export * from '@forms/components/shared/load-more/interfaces/iload-more-context.interface';
+export * from '@forms/components/shared/load-more/interfaces/iload-more-request.interface';
+export * from '@forms/components/shared/load-more/types/load-more.types';
+export * from '@forms/components/shared/services/form-settings.service';
+export * from '@forms/components/shared/tokens/form-field-control.token';
+export * from '@forms/components/shared/types/validation.types';
+export * from '@forms/directives/hint/hint';
+export * from '@forms/directives/load-more.directive';
+export * from '@forms/directives/prefix.directive';
+export * from '@forms/directives/suffix.directive';
 
-export * from './components/multi-select/multi-select';
-export * from './components/multi-select/interfaces/iselect-all-change.interface';
-export * from './components/select/interfaces/ibx-select-option.interface';
-export * from './components/select/interfaces/iselection-change.interface';
-export * from './components/select/interfaces/iselect-option-context.interface';
-export * from './components/select/interfaces/iselect-trigger-context.interface';
-export * from './components/select/types/select.types';
+export * from '@forms/components/multi-select/interfaces/iselect-all-change.interface';
+export * from '@forms/components/multi-select/multi-select';
+export * from '@forms/components/select/interfaces/ibx-select-option.interface';
+export * from '@forms/components/select/interfaces/iselect-option-context.interface';
+export * from '@forms/components/select/interfaces/iselect-trigger-context.interface';
+export * from '@forms/components/select/interfaces/iselection-change.interface';
+export * from '@forms/components/select/types/select.types';
 
-export * from './directives/native-control.directive';
+export * from '@forms/directives/native-control.directive';
 
-export * from './components/range-slider/range-slider';
+export * from '@forms/components/range-slider/range-slider';
 
-export * from './components/multi-select/types/multi-select.types';
+export * from '@forms/components/multi-select/types/multi-select.types';
 
-export * from './components/checkbox-indicator/checkbox-indicator';
+export * from '@forms/components/checkbox-indicator/checkbox-indicator';
 
-export * from './components/autocomplete/autocomplete';
-export * from './components/autocomplete/interfaces/iautocomplete-option.interface';
-export * from './components/autocomplete/interfaces/iautocomplete-option-context.interface';
+export * from '@forms/components/autocomplete/autocomplete';
+export * from '@forms/components/autocomplete/interfaces/iautocomplete-option-context.interface';
+export * from '@forms/components/autocomplete/interfaces/iautocomplete-option.interface';

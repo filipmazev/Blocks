@@ -1,8 +1,12 @@
+import type { InputSignal, Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, input, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 import { BLOCKS_RELEASE_CHANNEL } from '@filip.mazev/blocks';
-import { SideNav, SideNavHeaderDirective, ISideNavConfig } from '@filip.mazev/blocks/navigation';
+import { ISideNavConfig, SideNav, SideNavHeaderDirective } from '@filip.mazev/blocks/navigation';
 import { Tag } from '@filip.mazev/blocks/primitives';
+
 import { BlocksLogo } from './blocks-logo';
 
 @Component({
@@ -13,10 +17,13 @@ import { BlocksLogo } from './blocks-logo';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Sidenav {
-  private readonly sideNav = viewChild(SideNav);
+  private readonly sideNav: Signal<SideNav | undefined> = viewChild(SideNav);
+
   protected readonly releaseChannel: string = BLOCKS_RELEASE_CHANNEL;
-  protected readonly releaseLabel = this.releaseChannel === 'alpha' ? 'Alpha' : this.releaseChannel === 'beta' ? 'Beta' : '';
-  protected readonly brandLabel = computed(() => `${this.title()}${this.releaseLabel ? ` ${this.releaseChannel}` : ''}`);
+  protected readonly releaseLabel: '' | 'Alpha' | 'Beta' = this.releaseChannel === 'alpha' ? 'Alpha' : this.releaseChannel === 'beta' ? 'Beta' : '';
+
+  protected readonly brandLabel: Signal<string> = computed(() => `${this.title()}${this.releaseLabel ? ` ${this.releaseChannel}` : ''}`);
+
   protected readonly config: ISideNavConfig = {
     persistenceKey: 'blocks.playground.navigation.v1',
     ariaLabel: 'Component documentation',
@@ -26,11 +33,11 @@ export class Sidenav {
     showSectionIcons: false
   };
 
-  public readonly mobile = computed(() => this.sideNav()?.isMobile() ?? false);
-  public readonly open = computed(() => this.sideNav()?.mobileOpen() ?? false);
-  public readonly panelId = computed(() => this.sideNav()?.panelId);
+  public readonly mobile: Signal<boolean> = computed(() => this.sideNav()?.isMobile() ?? false);
+  public readonly open: Signal<boolean> = computed(() => this.sideNav()?.mobileOpen() ?? false);
+  public readonly panelId: Signal<string | undefined> = computed(() => this.sideNav()?.panelId);
 
-  public readonly title = input.required<string>();
+  public readonly title: InputSignal<string> = input.required<string>();
 
   public toggle(event: Event): void {
     this.sideNav()?.toggle(event);

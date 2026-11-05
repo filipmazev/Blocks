@@ -1,6 +1,10 @@
+import type { InputSignal, InputSignalWithTransform, Signal } from '@angular/core';
+
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { DividerOrientation, DividerStyle } from './types/divider.types';
+
+import { DividerOrientation, DividerStyle } from '@primitives/components/divider/types/divider.types';
 
 @Component({
   selector: 'bx-divider',
@@ -19,9 +23,11 @@ import { DividerOrientation, DividerStyle } from './types/divider.types';
 })
 export class Divider {
   private readonly i18n = inject(BX_I18N, { optional: true });
-  protected readonly resolvedLabel = computed(() => resolveText(this.label(), this.i18n));
-  public readonly orientation = input<DividerOrientation>('horizontal');
-  public readonly lineStyle = input<DividerStyle>('solid');
-  public readonly label = input<ResolvableText | undefined>(undefined);
-  public readonly decorative = input(false, { transform: booleanAttribute });
+
+  protected readonly resolvedLabel: Signal<string> = computed(() => resolveText(this.label(), this.i18n));
+
+  public readonly orientation: InputSignal<DividerOrientation> = input<DividerOrientation>('horizontal');
+  public readonly lineStyle: InputSignal<DividerStyle> = input<DividerStyle>('solid');
+  public readonly label: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly decorative: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 }

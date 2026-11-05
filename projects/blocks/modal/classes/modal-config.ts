@@ -1,31 +1,25 @@
-import { IModalConfig } from '../interfaces/imodal-config.interface';
-import { ModalStyleConfig } from './modal-style.config';
-import { ModalCloseGuard } from './modal-close-guard';
-import { IModalCloseResult } from '../public-api';
 import { Observable } from 'rxjs';
+
+import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
+import { IModalConfig } from '@modal/interfaces/imodal-config.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
+
+import { ModalCloseGuard } from './modal-close-guard';
+import { ModalStyleConfig } from './modal-style.config';
 
 export class ModalConfig<D, R> {
   public open: boolean;
-
   public afterClose?: () => Observable<IModalCloseResult<R | undefined>>;
-
   public closeGuard?: ModalCloseGuard;
   public closeGuardOnlyOnCancel?: boolean;
-
   public disableClose: boolean;
   public disableCloseOnBackdropClick: boolean;
   public disableCloseOnNavigation: boolean;
-
   public data: D | null;
-
   public style: ModalStyleConfig;
-
   public header?: IModalHeaderConfig;
-
   public contentClasses: string;
   public contentStyles: string;
-
   public id?: string;
 
   constructor(config?: IModalConfig<D, R>) {

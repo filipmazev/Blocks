@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import type { MenuTriggerDirective } from '../menu-trigger.directive';
+
+import type { MenuTriggerDirective } from '@primitives/directives/menu-trigger/menu-trigger.directive';
 
 /** Coordinates a single open menu path, allowing arbitrary nesting without sibling overlays accumulating. */
 @Injectable({ providedIn: 'root' })
 export class MenuCascadeService {
-  private readonly entries = new Set<MenuTriggerDirective>();
+  private readonly entries: Set<MenuTriggerDirective> = new Set<MenuTriggerDirective>();
 
   public activate(trigger: MenuTriggerDirective): void {
     const ancestors = new Set<MenuTriggerDirective>();
+
     let parent = trigger.menuParent();
 
     while (parent) {
@@ -48,6 +50,7 @@ export class MenuCascadeService {
 
   public closeAll(restoreFocus = false): void {
     const root = [...this.entries].find((entry) => !entry.menuParent());
+
     root?.close(restoreFocus);
   }
 }

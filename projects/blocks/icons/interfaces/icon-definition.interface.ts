@@ -1,8 +1,3 @@
-import { ICON_BRAND } from '../constants/icon.constants';
-
-export interface IconDefinition {
-  readonly name: string;
-  readonly viewBox: string;
-  readonly svgContent: string;
-  readonly [ICON_BRAND]: true;
-}
+export type { IIconDefinition } from './iicon-definition.interface';
+/** @deprecated Use IIconDefinition; the historical type name remains available for compatibility. */
+export type { IIconDefinition as IconDefinition } from './iicon-definition.interface';

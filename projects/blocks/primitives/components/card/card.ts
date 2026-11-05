@@ -1,8 +1,12 @@
+import type { InputSignal, InputSignalWithTransform, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, output, signal } from '@angular/core';
+
 import { BX_I18N, Color, ResolvableText, resolveText, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
 import { injectComponentSurface } from '@filip.mazev/blocks/effects';
-import { CardVariant } from './types/card.types';
-import { CARD_NESTED_ACTION_SELECTOR } from './constants/card.constants';
+
+import { CARD_NESTED_ACTION_SELECTOR } from '@primitives/components/card/constants/card.constants';
+import { CardVariant } from '@primitives/components/card/types/card.types';
 
 @Component({
   selector: 'bx-card, button[bx-card]',
@@ -35,53 +39,60 @@ import { CARD_NESTED_ACTION_SELECTOR } from './constants/card.constants';
 export class Card {
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-  protected readonly originalRole = this.element.getAttribute('role');
-  protected readonly originalTabIndex = this.element.getAttribute('tabindex');
-  protected readonly originalAriaLabel = this.element.getAttribute('aria-label');
-  protected readonly originalAriaLabelledBy = this.element.getAttribute('aria-labelledby');
-  protected readonly originalAriaDescribedBy = this.element.getAttribute('aria-describedby');
-  protected readonly nativeButton = this.element.tagName === 'BUTTON';
-  protected readonly keyboardPressed = signal(false);
-  protected readonly resolvedTitle = computed(() => resolveText(this.title(), this.i18n));
-  protected readonly resolvedSubtitle = computed(() => resolveText(this.subtitle(), this.i18n));
-  protected readonly level = computed(() => (Number.isFinite(this.headingLevel()) ? Math.max(1, Math.min(6, Math.floor(this.headingLevel()))) : 3));
-  protected readonly resolvedAriaLabel = computed(() => resolveText(this.ariaLabel(), this.i18n));
-  protected readonly resolvedHighlight = computed(() => {
+
+  protected readonly originalRole: string | null = this.element.getAttribute('role');
+  protected readonly originalTabIndex: string | null = this.element.getAttribute('tabindex');
+  protected readonly originalAriaLabel: string | null = this.element.getAttribute('aria-label');
+  protected readonly originalAriaLabelledBy: string | null = this.element.getAttribute('aria-labelledby');
+  protected readonly originalAriaDescribedBy: string | null = this.element.getAttribute('aria-describedby');
+  protected readonly nativeButton: boolean = this.element.tagName === 'BUTTON';
+
+  protected readonly keyboardPressed: WritableSignal<boolean> = signal(false);
+
+  protected readonly resolvedTitle: Signal<string> = computed(() => resolveText(this.title(), this.i18n));
+  protected readonly resolvedSubtitle: Signal<string> = computed(() => resolveText(this.subtitle(), this.i18n));
+  protected readonly level: Signal<number> = computed(() =>
+    Number.isFinite(this.headingLevel()) ? Math.max(1, Math.min(6, Math.floor(this.headingLevel()))) : 3
+  );
+  protected readonly resolvedAriaLabel: Signal<string> = computed(() => resolveText(this.ariaLabel(), this.i18n));
+  protected readonly resolvedHighlight: Signal<string | null> = computed(() => {
     const color = this.highlightColor();
 
     return color ? resolveTokenToCssVar(color) : null;
   });
 
-  public readonly title = input<ResolvableText | undefined>(undefined);
-  public readonly subtitle = input<ResolvableText | undefined>(undefined);
-  public readonly headingLevel = input(3);
-  public readonly variant = input<CardVariant>('outlined');
+  public readonly isClickable: Signal<boolean> = computed(() => this.clickable() || this.nativeButton);
+  public readonly isReadonly: Signal<boolean> = computed(() => this.readonly() || this.readOnly());
+
+  public readonly title: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly subtitle: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly headingLevel: InputSignal<number> = input(3);
+  public readonly variant: InputSignal<CardVariant> = input<CardVariant>('outlined');
   /** Optional opaque presentation. Absent follows the global appearance. */
-  public readonly opaque = input<boolean | undefined>(undefined);
+  public readonly opaque: InputSignal<boolean | undefined> = input<boolean | undefined>(undefined);
   /** Make the whole card an action. Defaults to false; button[bx-card] is always clickable. */
-  public readonly clickable = input(false, { transform: booleanAttribute });
-  public readonly isClickable = computed(() => this.clickable() || this.nativeButton);
+  public readonly clickable: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Controlled selection. Omit for a plain action; bind selectedChange or use [(selected)] to accept toggle requests. */
-  public readonly selected = input<boolean | undefined>();
+  public readonly selected: InputSignal<boolean | undefined> = input<boolean | undefined>();
   /** Suppress card activation and remove it from keyboard navigation. Defaults to false. */
-  public readonly disabled = input(false, { transform: booleanAttribute });
+  public readonly disabled: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Preserve focus and selected appearance while preventing activation and selection changes. */
-  public readonly readonly = input(false, { transform: booleanAttribute });
+  public readonly readonly: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Consumer-facing alias of readonly. Defaults to false. */
-  public readonly readOnly = input(false, { transform: booleanAttribute });
-  public readonly isReadonly = computed(() => this.readonly() || this.readOnly());
+  public readonly readOnly: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Optional semantic or palette token for selected, hover and focus lighting. Defaults to --bx-card-highlight, then primary. */
-  public readonly highlightColor = input<Color>();
+  public readonly highlightColor: InputSignal<Color | undefined> = input<Color>();
   /** Optional translated accessible name for a clickable card; otherwise projected content names the action. */
-  public readonly ariaLabel = input<ResolvableText>();
+  public readonly ariaLabel: InputSignal<ResolvableText | undefined> = input<ResolvableText>();
   /** Optional IDs that label the card action. */
-  public readonly ariaLabelledBy = input<string>();
+  public readonly ariaLabelledBy: InputSignal<string | undefined> = input<string>();
   /** Optional IDs describing the card action. */
-  public readonly ariaDescribedBy = input<string>();
+  public readonly ariaDescribedBy: InputSignal<string | undefined> = input<string>();
+
   /** Emitted once for enabled pointer, Enter or Space activation. */
-  public readonly activated = output();
+  public readonly activated: OutputEmitterRef<void> = output();
   /** Requested next selection; consumers own the selected input. Not emitted for plain action cards. */
-  public readonly selectedChange = output<boolean>();
+  public readonly selectedChange: OutputEmitterRef<boolean> = output<boolean>();
 
   constructor() {
     injectComponentSurface(() => ({
@@ -113,6 +124,7 @@ export class Card {
     if (this.disabled() || this.isReadonly()) {
       event.preventDefault();
       event.stopImmediatePropagation();
+
       return;
     }
 
@@ -124,6 +136,7 @@ export class Card {
 
     if (this.disabled() || this.isReadonly()) {
       event.preventDefault();
+
       return;
     }
 
@@ -131,6 +144,7 @@ export class Card {
     if (this.nativeButton) return;
 
     if (event.key === ' ') event.preventDefault();
+
     if (event.repeat) return;
 
     this.keyboardPressed.set(true);
@@ -142,6 +156,7 @@ export class Card {
     if (event.target !== this.element || this.nativeButton || !['Enter', ' '].includes(event.key)) return;
 
     const pressed = this.keyboardPressed();
+
     this.keyboardPressed.set(false);
 
     if (event.key === ' ' && pressed) this.activate();

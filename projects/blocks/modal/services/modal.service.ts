@@ -1,18 +1,22 @@
-import { Injectable, inject, Injector, ApplicationRef, EnvironmentInjector, createComponent, RendererFactory2, Renderer2, Type } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
-import { BehaviorSubject, filter, skip } from 'rxjs';
-import { ModalConfig } from '../classes/modal-config';
-import { ModalRef } from '../classes/modal-ref';
-import { ModalCore } from '../components/modal-core';
-import { IModalConfig } from '../interfaces/imodal-config.interface';
-import { IModalService } from '../interfaces/imodal-service.interface';
-import { MODAL_DATA } from '../tokens/modal-data.token';
 import { ComponentType } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
+import { ApplicationRef, createComponent, EnvironmentInjector, inject, Injectable, Injector, Renderer2, RendererFactory2, Type } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IModal } from '../interfaces/imodal.interface';
-import { ModalGlobalSettingsService } from './modal-global-settings.service';
+import { NavigationEnd, Router } from '@angular/router';
+
+import { BehaviorSubject, filter, skip } from 'rxjs';
+
 import { BxA11yService } from '@filip.mazev/blocks/core';
+
+import { ModalConfig } from '@modal/classes/modal-config';
+import { ModalRef } from '@modal/classes/modal-ref';
+import { ModalCore } from '@modal/components/modal-core';
+import { IModal } from '@modal/interfaces/imodal.interface';
+import { IModalConfig } from '@modal/interfaces/imodal-config.interface';
+import { IModalService } from '@modal/interfaces/imodal-service.interface';
+import { MODAL_DATA } from '@modal/tokens/modal-data.token';
+
+import { ModalGlobalSettingsService } from './modal-global-settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,41 +28,18 @@ export class ModalService implements IModalService {
   private readonly environmentInjector = inject(EnvironmentInjector);
   private readonly rendererFactory = inject(RendererFactory2);
   private readonly document = inject(DOCUMENT);
-  private readonly renderer: Renderer2;
   private readonly globalSettings = inject(ModalGlobalSettingsService);
   private readonly a11y = inject(BxA11yService);
 
-  //#region Properties
+  private readonly renderer: Renderer2;
 
   private modals: Set<ModalRef> = new Set();
-  private modalsSubject = new BehaviorSubject<Set<ModalRef>>(this.modals);
-
-  //#endregion
+  private modalsSubject: BehaviorSubject<Set<ModalRef<unknown, unknown, IModal<unknown, unknown>>>> = new BehaviorSubject<Set<ModalRef>>(this.modals);
 
   constructor() {
     this.renderer = this.rendererFactory.createRenderer(null, null);
     this.createSubscriptions();
   }
-
-  //#region Subscription Methods
-
-  private createSubscriptions(): void {
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        skip(1),
-        takeUntilDestroyed()
-      )
-      .subscribe(() => {
-        if (this.modalsCount() > 0) {
-          this.closeAll(true);
-        }
-      });
-  }
-
-  //#endregion
-
-  //#region Public Methods
 
   /**
    * Opens a modal with the specified component and configuration.
@@ -108,6 +89,7 @@ export class ModalService implements IModalService {
     });
 
     const modalElement = modal.componentRef.location.nativeElement;
+
     this.renderer.setStyle(modalElement, 'height', '97%');
     this.renderer.setStyle(modalElement, 'width', '100%');
     this.renderer.setStyle(modalElement, 'display', 'flex');
@@ -161,6 +143,7 @@ export class ModalService implements IModalService {
         return true;
       }
     }
+
     return false;
   }
 
@@ -172,9 +155,21 @@ export class ModalService implements IModalService {
     return this.modals.size;
   }
 
-  //#endregion
+  //#region Helpers
 
-  //#region Helper Methods
+  private createSubscriptions(): void {
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        skip(1),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => {
+        if (this.modalsCount() > 0) {
+          this.closeAll(true);
+        }
+      });
+  }
 
   private isIModal<D, R>(component: unknown): component is IModal<D, R> {
     return typeof component === 'object' && component !== null && 'onModalInit' in component && typeof (component as IModal<D, R>).onModalInit === 'function';

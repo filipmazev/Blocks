@@ -7,8 +7,6 @@
     position: relative;
     padding: spacing(4);
     border-radius: radius(md);
-
-    // The parent toast owns elevation and backdrop; content supplies semantic foreground.
     background: transparent;
     border: 0;
     overflow: hidden;

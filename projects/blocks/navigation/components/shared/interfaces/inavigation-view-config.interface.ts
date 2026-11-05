@@ -1,5 +1,6 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { NavigationSide } from '../types/navigation-view.types';
+
+import { NavigationSide } from '@navigation/components/shared/types/navigation-view.types';
 
 /** Text, icons, and item presentation shared by Blocks navigation views. All properties are optional. */
 export interface INavigationViewConfig {
@@ -11,7 +12,7 @@ export interface INavigationViewConfig {
   showItemIcons?: boolean;
   /** Show icons beside expanded section headings. Defaults to true; compact section triggers always retain an icon. */
   showSectionIcons?: boolean;
-  /** @deprecated Search guides have been removed. Retained for compatibility; this option has no effect. */
+  /** Whether the navigation search guide is shown. Optional. */
   showSearchGuide?: boolean;
   /** Optional translated back action for nested navigation. Defaults to Back. */
   backLabel?: ResolvableText;

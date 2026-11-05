@@ -2,7 +2,9 @@
 
 A notification with a semantic icon, optional title and message.
 
-The toast wrapper uses enhanced glassiness on supported browsers, with shared translucency and accessibility preferences. Text retains its semantic foreground as the background scrolls; the material keeps a minimum tint and blur for readability. Progress and border lighting retain the notification type. Use toast configuration or global toast settings to select automatic detail, or disable glassiness.
+The toast wrapper uses enhanced glassiness on supported browsers, with shared translucency and accessibility preferences. Text retains its semantic foreground
+as the background scrolls; the material keeps a minimum tint and blur for readability. Progress and border lighting retain the notification type. Use toast
+configuration or global toast settings to select automatic detail, or disable glassiness.
 
 ## Import
 
@@ -20,11 +22,13 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-Use `toastr.queueSuccess({ title: "Saved", message: "Your settings are up to date." })`. Equivalent methods queueInfo, queueWarning and queueDanger set the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).
+Use `toastr.queueSuccess({ title: "Saved", message: "Your settings are up to date." })`. Equivalent methods queueInfo, queueWarning and queueDanger set the
+semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -38,11 +42,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Write a concise message with a clear outcome. Use a modal or an inline message when acknowledgement or a long interaction is required. Simple toast content shares the parent toast glass surface.
+Write a concise message with a clear outcome. Use a modal or an inline message when acknowledgement or a long interaction is required. Simple toast content
+shares the parent toast glass surface.
 
 ## Playground
 

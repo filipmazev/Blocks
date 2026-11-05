@@ -1,5 +1,8 @@
+import type { InputSignal, InputSignalWithTransform } from '@angular/core';
+
 import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { LayoutAlign, LayoutGap, LayoutJustify, StackDirection } from '../shared/types/layout.types';
+
+import { LayoutAlign, LayoutGap, LayoutJustify, StackDirection } from '@primitives/components/shared/types/layout.types';
 
 @Component({
   selector: 'bx-stack',
@@ -15,9 +18,9 @@ import { LayoutAlign, LayoutGap, LayoutJustify, StackDirection } from '../shared
   }
 })
 export class Stack {
-  public readonly direction = input<StackDirection>('vertical');
-  public readonly gap = input<LayoutGap>(4);
-  public readonly align = input<LayoutAlign>('stretch');
-  public readonly justify = input<LayoutJustify>('start');
-  public readonly wrap = input(false, { transform: booleanAttribute });
+  public readonly direction: InputSignal<StackDirection> = input<StackDirection>('vertical');
+  public readonly gap: InputSignal<LayoutGap> = input<LayoutGap>(4);
+  public readonly align: InputSignal<LayoutAlign> = input<LayoutAlign>('stretch');
+  public readonly justify: InputSignal<LayoutJustify> = input<LayoutJustify>('start');
+  public readonly wrap: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 }

@@ -1,4 +1,4 @@
-import type { ShortcutPlatform } from '../types/shortcut.types';
+import type { ShortcutPlatform } from '@core/types/shortcut.types';
 
 /** Controls matching of one keyboard event; applications retain ownership of listeners, scopes and actions. */
 export interface IShortcutMatchOptions {

@@ -1,4 +1,4 @@
-import { CodeLanguage } from '../types/common.types';
+import { CodeLanguage } from '@playground/types/common.types';
 
 export interface ICodeFile {
   title: string;

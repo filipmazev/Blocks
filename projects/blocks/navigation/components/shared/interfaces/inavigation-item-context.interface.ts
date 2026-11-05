@@ -1,4 +1,4 @@
-import { INavigationItem } from '../../../interfaces/inavigation-item.interface';
+import { INavigationItem } from '@navigation/interfaces/inavigation-item.interface';
 
 /** Item presentation context. The surrounding link/button retains routing, semantics and keyboard behavior. */
 export interface INavigationItemContext {

@@ -1,13 +1,13 @@
 <bx-side-nav [config]="config" [collapsed]="false">
-  <ng-template bxSideNavHeader>
-    <a class="brand" routerLink="/home" [attr.aria-label]="brandLabel()">
-      <app-blocks-logo />
-      <span class="brand-name">
-        <span>{{ title() }}</span>
-        @if (releaseLabel) {
-          <bx-tag class="brand-release" [text]="releaseLabel" size="small" color="neutral" [opaque]="true" [focusable]="false" />
-        }
-      </span>
-    </a>
-  </ng-template>
+    <ng-template bxSideNavHeader>
+        <a class="brand" routerLink="/home" [attr.aria-label]="brandLabel()">
+            <app-blocks-logo />
+            <span class="brand-name">
+                <span>{{ title() }}</span>
+                @if (releaseLabel) {
+                    <bx-tag class="brand-release" size="small" color="neutral" [text]="releaseLabel" [opaque]="true" [focusable]="false" />
+                }
+            </span>
+        </a>
+    </ng-template>
 </bx-side-nav>

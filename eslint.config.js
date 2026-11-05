@@ -1,177 +1,118 @@
-import { parser as _parser } from "typescript-eslint";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import angular from "angular-eslint";
-import sortClassMembers from "eslint-plugin-sort-class-members";
-import prettierPlugin from "eslint-plugin-prettier";
-import preferArrow from "eslint-plugin-prefer-arrow";
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import { typescriptFormatOptions } from './tools/typescript-format-options.mjs';
+const eslint = require('@eslint/js');
+const angular = require('angular-eslint');
+const prettierRecommended = require('eslint-plugin-prettier/recommended');
+const tseslint = require('typescript-eslint');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const { default: blocks } = require('./tools/eslint/plugin.mjs');
+const { IMPORT_GROUPS } = require('./tools/eslint/constants/import-order.constants.mjs');
+const { readPathAliases } = require('./tools/paths/helpers/path-alias.helpers.mjs');
 
-export default [
-    { ...eslint.configs.recommended, files: ["**/*.ts"] },
-    ...tseslint.configs.strict.map(config => ({ ...config, files: ["**/*.ts"] })),
-    ...angular.configs.tsRecommended.map(config => ({ ...config, files: ["**/*.ts"] })),
-    {
-        ignores: [
-            ".angular/**",
-            "dist/**",
-            "coverage/**",
-            "node_modules/**",
-            "scripts/**",
-            "out-tsc/**"
-        ]
+const tsFiles = ['**/*.ts'];
+const htmlFiles = ['**/*.html'];
+
+module.exports = [
+  {
+    ignores: ['.angular/**', 'dist/**', 'coverage/**', 'node_modules/**', 'scripts/**', 'out-tsc/**', 'tmp/**', 'playwright-report/**', 'test-results/**']
+  },
+  { ...eslint.configs.recommended, files: tsFiles },
+  ...tseslint.configs.strict.map((config) => ({ ...config, files: tsFiles })),
+  ...angular.configs.tsRecommended.map((config) => ({ ...config, files: tsFiles })),
+  { ...prettierRecommended, files: [...tsFiles, ...htmlFiles, '**/*.{js,mjs,cjs}'] },
+  {
+    files: tsFiles,
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.eslint.json'],
+        tsconfigRootDir: __dirname
+      }
     },
-    {
-        files: ["**/*.ts"],
-        languageOptions: {
-            parser: _parser,
-            parserOptions: {
-                project: ['./tsconfig.eslint.json'],
-                tsconfigRootDir: __dirname,
-            },
-        },
-        plugins: {
-            "@angular-eslint": angular.tsPlugin,
-            "sort-class-members": sortClassMembers,
-            "prettier": prettierPlugin,
-            "prefer-arrow": preferArrow,
-        },
-        processor: angular.processInlineTemplates,
-        rules: {
-            // Eager remains valid for components with imperative or mutable update paths.
-            "@angular-eslint/prefer-on-push-component-change-detection": "off",
-            "@typescript-eslint/member-ordering": "off",
-            "lines-between-class-members": [
-                "error",
-                "always",
-                { "exceptAfterSingleLine": true }
-            ],
-            "prettier/prettier": ["error", typescriptFormatOptions],
-            "@typescript-eslint/naming-convention": [
-                "error",
-                {
-                    selector: "classProperty",
-                    modifiers: ["private"],
-                    format: ["camelCase"],
-                    leadingUnderscore: "allow"
-                },
-                {
-                    selector: "classProperty",
-                    modifiers: ["protected"],
-                    format: ["camelCase"],
-                    leadingUnderscore: "allow"
-                },
-                {
-                    selector: "variable",
-                    modifiers: ["const", "global"],
-                    format: ["camelCase", "UPPER_CASE"]
-                },
-                {
-                    selector: "variable",
-                    format: ["camelCase", "UPPER_CASE"],
-                    leadingUnderscore: "allow"
-                }
-            ],
-            "sort-class-members/sort-class-members": [
-                "error",
-                {
-                    accessorPairPositioning: "getThenSet",
-                    order: [
-                        "[private-readonly-properties]",
-                        "[protected-readonly-properties]",
-                        "[public-readonly-properties]",
-                        "[static-properties]",
-                        "[private-readonly-properties]",
-                        "[public-properties]",
-                        "[protected-properties]",
-                        "[private-properties]",
-                        "[properties]",
-                        "[lifecycle-methods]",
-                        "[initialization-methods]",
-                        "[subscription-methods]",
-                        "[public-methods]",
-                        "[protected-methods]",
-                        "[private-methods]"
-                    ],
-                    groups: {
-                        "private-readonly-properties": [{ type: "property", accessibility: "private", readonly: true }],
-                        "protected-readonly-properties": [{ type: "property", accessibility: "protected", readonly: true }],
-                        "public-readonly-properties": [{ type: "property", accessibility: "public", readonly: true }],
-                        "static-properties": [{ type: "property", static: true }],
-                        "public-properties": [{ type: "property", accessibility: "public" }],
-                        "protected-properties": [{ type: "property", accessibility: "protected" }],
-                        "private-properties": [{ type: "property", accessibility: "private" }],
-                        "lifecycle-methods": [
-                            { name: "constructor", type: "method" },
-                            { name: "ngOnChanges", type: "method" },
-                            { name: "ngOnInit", type: "method" },
-                            { name: "ngDoCheck", type: "method" },
-                            { name: "ngAfterContentInit", type: "method" },
-                            { name: "ngAfterContentChecked", type: "method" },
-                            { name: "ngAfterViewInit", type: "method" },
-                            { name: "ngAfterViewChecked", type: "method" },
-                            { name: "ngOnDestroy", type: "method" }
-                        ],
-                        "initialization-methods": [
-                            { name: "/^(init|initialize|initComponent)$/", type: "method" }
-                        ],
-                        "subscription-methods": [
-                            { name: "createSubscriptions", type: "method" }
-                        ],
-                        "public-methods": [
-                            {
-                                type: "method",
-                                accessibility: "public",
-                                name: "/^(?!(ngOnChanges|ngOnInit|ngDoCheck|ngAfterContentInit|ngAfterContentChecked|ngAfterViewInit|ngAfterViewChecked|ngOnDestroy|init|initialize|initComponent|createSubscriptions|constructor)).*$/"
-                            }
-                        ],
-                        "protected-methods": [
-                            {
-                                type: "method",
-                                accessibility: "protected",
-                                name: "/^(?!(ngOnChanges|ngOnInit|ngDoCheck|ngAfterContentInit|ngAfterContentChecked|ngAfterViewInit|ngAfterViewChecked|ngOnDestroy|init|initialize|initComponent|createSubscriptions|constructor)).*$/"
-                            }
-                        ],
-                        "private-methods": [
-                            {
-                                type: "method",
-                                accessibility: "private",
-                                name: "/^(?!(ngOnChanges|ngOnInit|ngDoCheck|ngAfterContentInit|ngAfterContentChecked|ngAfterViewInit|ngAfterViewChecked|ngOnDestroy|init|initialize|initComponent|createSubscriptions|constructor)).*$/"
-
-                            }
-                        ]
-                    }
-                }
-            ],
-            "max-params": "off",
-            "@typescript-eslint/explicit-member-accessibility": [
-                "error",
-                {
-                    accessibility: "explicit",
-                    overrides: {
-                        constructors: "no-public"
-                    }
-                }
-            ],
-            "@typescript-eslint/no-unused-vars": [
-                "warn",
-                { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
-            ],
-            "@angular-eslint/directive-selector": [
-                "error",
-                { type: "attribute", prefix: ["app", "bx"], style: "camelCase" }
-            ],
-            "@angular-eslint/component-selector": [
-                "error",
-                { type: "element", prefix: ["app", "bx"], style: "kebab-case" }
-            ],
+    plugins: { blocks },
+    processor: angular.processInlineTemplates,
+    linterOptions: { reportUnusedDisableDirectives: 'error' },
+    rules: {
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+      '@angular-eslint/prefer-inject': 'error',
+      '@angular-eslint/prefer-signals': ['error', { useTypeChecking: true }],
+      '@angular-eslint/prefer-output-emitter-ref': 'error',
+      '@angular-eslint/prefer-output-readonly': 'error',
+      '@angular-eslint/no-uncalled-signals': 'error',
+      '@angular-eslint/directive-selector': ['error', { type: 'attribute', prefix: ['app', 'bx'], style: 'camelCase' }],
+      '@angular-eslint/component-selector': ['error', { type: 'element', prefix: ['app', 'bx'], style: 'kebab-case' }],
+      '@typescript-eslint/member-ordering': 'off',
+      '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'explicit', overrides: { constructors: 'no-public' } }],
+      '@typescript-eslint/typedef': ['error', { propertyDeclaration: true }],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          reportUsedIgnorePattern: true
         }
-    },
-    ...angular.configs.templateRecommended.map(config => ({ ...config, files: ["**/*.html"] })),
-    ...angular.configs.templateAccessibility.map(config => ({ ...config, files: ["**/*.html"] }))
+      ],
+      'no-unused-private-class-members': 'off',
+      '@typescript-eslint/no-unused-private-class-members': 'error',
+      '@typescript-eslint/naming-convention': [
+        'error',
+        { selector: 'classProperty', modifiers: ['private'], format: ['camelCase'], leadingUnderscore: 'allow' },
+        { selector: 'classProperty', modifiers: ['protected'], format: ['camelCase'], leadingUnderscore: 'allow' },
+        { selector: 'interface', format: ['PascalCase'], custom: { regex: '^I[A-Z]', match: true } },
+        { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' }
+      ],
+      'blocks/member-ordering': 'error',
+      'blocks/member-spacing': 'error',
+      'blocks/block-indentation': 'error',
+      'blocks/explicit-property-types': 'error',
+      'blocks/modern-angular-apis': 'error',
+      'blocks/helpers-regions': 'error',
+      'blocks/ordered-imports': ['error', { groups: IMPORT_GROUPS }],
+      'sort-imports': 'off',
+      'no-duplicate-imports': ['error', { allowSeparateTypeImports: true }],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'prefer-object-spread': 'error',
+      'no-else-return': 'error',
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: ['const', 'let', 'var'] },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'any', prev: 'const', next: 'const' },
+        { blankLine: 'any', prev: 'let', next: 'let' },
+        { blankLine: 'any', prev: 'var', next: 'var' },
+        { blankLine: 'always', prev: '*', next: ['if', 'for', 'while', 'do', 'switch', 'try', 'return', 'throw'] },
+        { blankLine: 'always', prev: ['block-like', 'if', 'for', 'while', 'do', 'switch', 'try'], next: '*' }
+      ],
+      'lines-between-class-members': 'off'
+    }
+  },
+  {
+    files: ['**/*.{js,mjs,cjs}'],
+    plugins: { blocks },
+    rules: { 'blocks/ordered-imports': ['error', { groups: IMPORT_GROUPS }] }
+  },
+  {
+    files: ['projects/blocks/**/*.ts'],
+    rules: { 'blocks/documented-interfaces': 'error' }
+  },
+  {
+    files: ['projects/**/*.ts'],
+    rules: { 'blocks/prefer-path-aliases': ['error', { aliases: readPathAliases(__dirname) }] }
+  },
+  ...angular.configs.templateRecommended.map((config) => ({ ...config, files: htmlFiles })),
+  ...angular.configs.templateAccessibility.map((config) => ({ ...config, files: htmlFiles })),
+  {
+    files: htmlFiles,
+    rules: {
+      '@angular-eslint/template/attributes-order': 'error',
+      '@angular-eslint/template/button-has-type': 'error',
+      '@angular-eslint/template/no-any': 'error',
+      '@angular-eslint/template/no-duplicate-attributes': ['error', { allowStylePrecedenceDuplicates: true }],
+      '@angular-eslint/template/no-interpolation-in-attributes': 'error',
+      '@angular-eslint/template/prefer-control-flow': 'error',
+      '@angular-eslint/template/prefer-static-string-properties': 'error'
+    }
+  }
 ];

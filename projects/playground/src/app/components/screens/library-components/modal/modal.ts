@@ -1,41 +1,44 @@
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { RouterLink } from '@angular/router';
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { DemoModal } from '@playground/components/screens/library-components/modal/components/demo-modal/demo-modal';
-import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
-import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
-import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ModalConfigFormControls } from '@playground/types/form.types';
+import type { WritableSignal } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { ICodeFile } from '@playground/interfaces/icode-file.interface';
-import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
-import { ConfirmClose } from './components/confirm-close/confirm-close';
-import { ModalService } from '@modal/services/modal.service';
-import { ModalLayout } from '@modal/types/modal.types';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+
 import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
+import { Button } from '@forms/components/button/button';
+import { Checkbox } from '@forms/components/checkbox/checkbox';
+import { InputField } from '@forms/components/input-field/input-field';
+import { Select } from '@forms/components/select/select';
+import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
-import { Button } from '@forms/components/button/button';
-import { Checkbox } from '@forms/components/checkbox/checkbox';
-import { Select } from '@forms/components/select/select';
-import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
-import { InputField } from '@forms/components/input-field/input-field';
+import { ModalService } from '@modal/services/modal.service';
+import { ModalLayout } from '@modal/types/modal.types';
+import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
+import { ConfirmClose } from '@playground/components/screens/library-components/modal/components/confirm-close/confirm-close';
+import { DemoModal } from '@playground/components/screens/library-components/modal/components/demo-modal/demo-modal';
+import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
+import { ICodeFile } from '@playground/interfaces/icode-file.interface';
+import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
+import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
+import { ModalConfigFormControls } from '@playground/types/form.types';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
   imports: [BxSurfaceDirective, RouterLink, CommonModule, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './modal.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './modal.scss'
 })
 export class Modal {
   private readonly modals = inject(ModalService);
 
   protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
-
   protected readonly layoutSelectOptions: BxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
     label: layout
       .split('-')
@@ -43,14 +46,12 @@ export class Modal {
       .join(' '),
     value: layout
   }));
-
   protected readonly breakpointSelectOptions: BxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];
-
-  protected readonly breakpointKeys = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
+  protected readonly breakpointKeys: ('sm' | 'md' | 'lg' | 'xl' | 'xs' | '2xl' | '3xl' | '4xl')[] = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
   protected readonly form: FormGroup<ModalConfigFormControls>;
 
-  protected readonly resultMessage = signal('Open a modal to preview its layout and close behavior.');
-  protected modalReadmePath = signal<string>('assets/modal-readme/README.md');
+  protected readonly resultMessage: WritableSignal<string> = signal('Open a modal to preview its layout and close behavior.');
+  protected readonly modalReadmePath: WritableSignal<string> = signal<string>('projects/blocks/modal/README.md');
 
   protected codeFiles: ICodeFile[] = [
     {
@@ -79,7 +80,7 @@ export class Modal {
     { title: 'styles.scss', path: 'assets/code-snippets/modal/styles.scss.txt', language: 'scss' }
   ];
 
-  private openedCount = 0;
+  private openedCount: number = 0;
 
   constructor() {
     const controls = {
@@ -96,7 +97,9 @@ export class Modal {
 
     this.breakpointKeys.forEach((bp) => {
       let defaultVal = 'none';
+
       if (bp === 'sm') defaultVal = 'bottom-sheet';
+
       if (bp === 'xl') defaultVal = 'center';
 
       controls[bp] = new FormControl(defaultVal);
@@ -107,6 +110,7 @@ export class Modal {
 
   protected openModal(): void {
     const request = this.createRequest();
+
     if (!request) return;
 
     const headerText = request.headerText === '' ? null : request.headerText;
@@ -160,6 +164,8 @@ export class Modal {
     });
   }
 
+  //#region Helpers
+
   private createRequest(): ModalConfigRequest | undefined {
     if (this.form.invalid) return undefined;
 
@@ -175,6 +181,7 @@ export class Modal {
 
     this.breakpointKeys.forEach((key) => {
       const val = request[key];
+
       if (val && val !== 'none') {
         breakpoints[key] = val as ModalLayout;
       }
@@ -182,4 +189,6 @@ export class Modal {
 
     return breakpoints;
   }
+
+  //#endregion
 }

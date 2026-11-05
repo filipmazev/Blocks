@@ -1,11 +1,12 @@
-import { ModalCloseMode } from '../types/modal.types';
+import { ModalCloseMode } from '@modal/types/modal.types';
 
 /**
  * Interface for the Modal Close Result
- * @param R data (optional) The result data returned when the modal is closed
- * @param {ModalCloseMode} state (required) The state of the modal close (e.g., 'confirm', 'cancel')
+ * @typeParam R Type of data returned when the modal closes.
  */
 export interface IModalCloseResult<R> {
+  /** Optional result data returned by the modal content. */
   data?: R;
+  /** Close reason distinguishing confirmation from cancellation. */
   state: ModalCloseMode;
 }

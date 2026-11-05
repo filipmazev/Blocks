@@ -2,7 +2,6 @@
 @use './styles/common' as *;
 @use './styles/code';
 
-// Page menus sit below sticky navigation; top-layer dialog overlays remain independent.
 .cdk-overlay-container {
     z-index: z(dropdown);
 }

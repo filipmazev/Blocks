@@ -18,11 +18,13 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`minimumBreadcrumbs` defaults to 2; values below 1 are clamped. `divider` accepts an icon name. Route labels come from `withNav` metadata and `NavigationService`.
+`minimumBreadcrumbs` defaults to 2; values below 1 are clamped. `divider` accepts an icon name. Route labels come from `withInAppNavigation` metadata and
+`NavigationService`.
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -36,11 +38,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Register metadata with `withNav` and provide navigation in application configuration. Breadcrumbs navigate using the router and update after navigation. This demo lives under Components so the trail has a real parent route.
+Register metadata with `withInAppNavigation` and provide navigation in application configuration. Breadcrumbs navigate using the router and update after
+navigation. This demo lives under Components so the trail has a real parent route.
 
 ## Playground
 

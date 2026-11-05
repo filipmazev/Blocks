@@ -18,11 +18,14 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-The control uses Angular 22 native signal control contracts. Use `[formField]`, `[formControl]`, `formControlName`, `[(ngModel)]`, or standalone `[(checked)]`. Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the [forms guide](../../README.md) for validation, submission, translations and compatibility.
+The control uses Angular 22 native signal control contracts. Use `[formField]`, `[formControl]`, `formControlName`, `[(ngModel)]`, or standalone `[(checked)]`.
+Shared presentation includes labels, hints, tooltips, required/readonly/disabled state, error policies and typed message resolvers. See the
+[forms guide](../../README.md) for validation, submission, translations and compatibility.
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
 ```ts
 import { inject } from '@angular/core';
@@ -36,11 +39,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Use a visible label. Space toggles the native input; focus and checked state remain visible in glass and solid modes. The control supports validation and touched state.
+Use a visible label. Space toggles the native input; focus and checked state remain visible in glass and solid modes. The control supports validation and
+touched state.
 
 ## Playground
 
@@ -48,8 +53,13 @@ Open `/components/checkbox` for a working example and its current value or actio
 
 ## Selection configuration
 
-`indeterminate` is a boolean model with `indeterminateChange`. `clickAction` supports `check-indeterminate` (default), `check`, and `noop`. `labelPosition` is `before` or `after`. Use `checkedChange` or the Angular field value to observe changes. Required-true validation is reflected in required decoration and accessible state.
+`indeterminate` is a boolean model with `indeterminateChange`. `clickAction` supports `check-indeterminate` (default), `check`, and `noop`. `labelPosition` is
+`before` or `after`. Use `checkedChange` or the Angular field value to observe changes. Required-true validation is reflected in required decoration and
+accessible state.
 
-`emissive` defaults to `true`. Hover, keyboard focus, checked and indeterminate states use the shared accent lighting; invalid controls use validation colors. Disabled and readonly checkboxes remain passive. Set `[emissive]="false"` to keep the themed face without emitting light. Multiselect indicators are passive by default and retain their row's selection appearance.
+`emissive` defaults to `true`. Hover, keyboard focus, checked and indeterminate states use the shared accent lighting; invalid controls use validation colors.
+Disabled and readonly checkboxes remain passive. Set `[emissive]="false"` to keep the themed face without emitting light. Multiselect indicators are passive by
+default and retain their row's selection appearance.
 
-The checkbox face is shared with multiselect through the public [CheckboxIndicator](../checkbox-indicator/README.md) component. `--bx-checkbox-size` changes its dimensions (default `1.125rem`).
+The checkbox face is shared with multiselect through the public [CheckboxIndicator](../checkbox-indicator/README.md) component. `--bx-checkbox-size` changes its
+dimensions (default `1.125rem`).

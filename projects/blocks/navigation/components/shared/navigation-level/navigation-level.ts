@@ -1,13 +1,17 @@
+import type { OutputEmitterRef, Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
 import { BxA11yService } from '@filip.mazev/blocks/core';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { navigateMenuKey } from '@filip.mazev/blocks/primitives';
-import { NavigationStateService } from '../services/navigation-state.service';
-import { NavigationItem } from '../navigation-item/navigation-item';
-import { INavigationLevelBreadcrumb } from '../interfaces/inavigation-level-breadcrumb.interface';
-import { INavigationLevelRequest } from '../interfaces/inavigation-level-request.interface';
+
+import { INavigationLevelBreadcrumb } from '@navigation/components/shared/interfaces/inavigation-level-breadcrumb.interface';
+import { INavigationLevelRequest } from '@navigation/components/shared/interfaces/inavigation-level-request.interface';
+import { NavigationItem } from '@navigation/components/shared/navigation-item/navigation-item';
+import { NavigationStateService } from '@navigation/components/shared/services/navigation-state.service';
 
 /** One reusable browsing level. Its owner decides whether it appears inline or in the shared overlay. */
 @Component({
@@ -19,11 +23,14 @@ import { INavigationLevelRequest } from '../interfaces/inavigation-level-request
 })
 export class NavigationLevel {
   private readonly a11y = inject(BxA11yService);
+
   protected readonly state = inject(NavigationStateService);
-  protected readonly frames = computed(() => [this.state.levelKey()]);
-  protected readonly animated = computed(() => !this.a11y.isReducedMotion());
-  public readonly back = output<MouseEvent | KeyboardEvent>();
-  public readonly navigate = output<INavigationLevelRequest>();
+
+  protected readonly frames: Signal<string[]> = computed(() => [this.state.levelKey()]);
+  protected readonly animated: Signal<boolean> = computed(() => !this.a11y.isReducedMotion());
+
+  public readonly back: OutputEmitterRef<MouseEvent | KeyboardEvent> = output<MouseEvent | KeyboardEvent>();
+  public readonly navigate: OutputEmitterRef<INavigationLevelRequest> = output<INavigationLevelRequest>();
 
   protected requestBack(event: MouseEvent | KeyboardEvent): void {
     this.back.emit(event);
@@ -35,6 +42,7 @@ export class NavigationLevel {
 
   protected levelKey(event: KeyboardEvent): void {
     if (event.defaultPrevented) return;
+
     const backKey = this.state.config().side === 'right' ? 'ArrowRight' : 'ArrowLeft';
 
     if (event.key === 'Escape' || event.key === backKey) this.back.emit(event);

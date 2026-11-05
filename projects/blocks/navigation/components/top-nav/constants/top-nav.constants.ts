@@ -1,5 +1,5 @@
-import { NAVIGATION_VIEW_DEFAULTS } from '../../shared/constants/navigation-view.constants';
-import { ITopNavConfig } from '../interfaces/itop-nav-config.interface';
+import { NAVIGATION_VIEW_DEFAULTS } from '@navigation/components/shared/constants/navigation-view.constants';
+import { ITopNavConfig } from '@navigation/components/top-nav/interfaces/itop-nav-config.interface';
 
 export const TOP_NAV_DEFAULTS = {
   ...NAVIGATION_VIEW_DEFAULTS,

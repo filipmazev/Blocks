@@ -1,5 +1,10 @@
+import type { InputSignal, Signal, WritableSignal } from '@angular/core';
+
 import { afterNextRender, ChangeDetectionStrategy, Component, effect, inject, Injector, input, signal, viewChildren } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+
 import { Color } from '@filip.mazev/blocks/core';
 import { Autocomplete, Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import {
@@ -17,9 +22,10 @@ import {
   Skeleton,
   Stack
 } from '@filip.mazev/blocks/primitives';
-import { AutocompleteDemoService } from './services/autocomplete-demo.service';
-import { AUTOCOMPLETE_PAGE_SIZES } from './constants/autocomplete-options.constants';
-import { CARD_HIGHLIGHT_OPTIONS } from './constants/card-options.constants';
+
+import { AUTOCOMPLETE_PAGE_SIZES } from '@playground/components/screens/library-components/essentials-examples/constants/autocomplete-options.constants';
+import { CARD_HIGHLIGHT_OPTIONS } from '@playground/components/screens/library-components/essentials-examples/constants/card-options.constants';
+import { AutocompleteDemoService } from '@playground/components/screens/library-components/essentials-examples/services/autocomplete-demo.service';
 
 @Component({
   selector: 'app-essentials-examples',
@@ -51,27 +57,39 @@ import { CARD_HIGHLIGHT_OPTIONS } from './constants/card-options.constants';
 })
 export class EssentialsExamples {
   private readonly injector = inject(Injector);
-  private readonly chips = viewChildren(Chip);
+
   protected readonly remote = inject(AutocompleteDemoService);
-  protected readonly pageSizes = AUTOCOMPLETE_PAGE_SIZES;
-  protected readonly selected = signal(false);
-  protected readonly removableChips = signal(['Angular', 'Design', 'Accessibility']);
+
+  private readonly chips: Signal<readonly Chip[]> = viewChildren(Chip);
+
+  protected readonly pageSizes: readonly BxSelectOption<number>[] = AUTOCOMPLETE_PAGE_SIZES;
+
+  protected readonly selected: WritableSignal<boolean> = signal(false);
+
+  protected readonly removableChips: WritableSignal<string[]> = signal(['Angular', 'Design', 'Accessibility']);
+
   protected readonly tones: readonly AlertTone[] = ['default', 'info', 'danger', 'warning', 'success'];
-  protected readonly skeletonVisible = signal(true);
-  protected readonly expanded = signal(false);
-  protected readonly multiple = signal(false);
-  protected readonly readOnly = signal(false);
-  protected readonly alertVisible = signal(true);
-  protected readonly status = signal('Ready');
-  protected readonly destination = new FormControl<string | null>('');
-  protected readonly chipConfig = { color: 'accent' as const };
-  protected readonly cardHighlightOptions = CARD_HIGHLIGHT_OPTIONS;
-  protected readonly cardHighlight = signal<Color>('accent');
-  protected readonly cardClickable = signal(true);
-  protected readonly cardDisabled = signal(false);
-  protected readonly cardReadOnly = signal(false);
-  protected readonly cardSelected = signal(false);
-  public readonly example = input.required<string>();
+
+  protected readonly skeletonVisible: WritableSignal<boolean> = signal(true);
+  protected readonly expanded: WritableSignal<boolean> = signal(false);
+  protected readonly multiple: WritableSignal<boolean> = signal(false);
+  protected readonly readOnly: WritableSignal<boolean> = signal(false);
+  protected readonly alertVisible: WritableSignal<boolean> = signal(true);
+
+  protected readonly status: WritableSignal<string> = signal('Ready');
+
+  protected readonly destination: FormControl<string | null> = new FormControl<string | null>('');
+  protected readonly chipConfig: { color: 'accent' } = { color: 'accent' as const };
+  protected readonly cardHighlightOptions: readonly BxSelectOption<Color>[] = CARD_HIGHLIGHT_OPTIONS;
+
+  protected readonly cardHighlight: WritableSignal<Color> = signal<Color>('accent');
+
+  protected readonly cardClickable: WritableSignal<boolean> = signal(true);
+  protected readonly cardDisabled: WritableSignal<boolean> = signal(false);
+  protected readonly cardReadOnly: WritableSignal<boolean> = signal(false);
+  protected readonly cardSelected: WritableSignal<boolean> = signal(false);
+
+  public readonly example: InputSignal<string> = input.required<string>();
 
   constructor() {
     effect(() => {
@@ -81,11 +99,13 @@ export class EssentialsExamples {
 
   protected removeChip(label: string): void {
     const index = this.removableChips().indexOf(label);
+
     this.removableChips.update((chips) => chips.filter((chip) => chip !== label));
     this.status.set('Removed ' + label);
     afterNextRender(
       () => {
         const chips = this.chips().slice(1);
+
         chips[Math.min(index, chips.length - 1)]?.focus();
       },
       { injector: this.injector }

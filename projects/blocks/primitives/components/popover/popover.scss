@@ -25,7 +25,7 @@
     overflow-wrap: anywhere;
 }
 
-// Keep material decorations outside the scroller so their border insets cannot create scrollbars.
+/* IMPORTANT: Keep material decorations outside the scroller so their border insets cannot create scrollbars. */
 .bx-popover-content {
     box-sizing: border-box;
     min-inline-size: 0;

@@ -1,4 +1,7 @@
+import type { InputSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 @Component({
@@ -11,5 +14,5 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 })
 export class Popover {
   /** Optional opaque presentation; absent follows the application appearance. */
-  public readonly opaque = input<boolean | undefined>(undefined);
+  public readonly opaque: InputSignal<boolean | undefined> = input<boolean | undefined>(undefined);
 }

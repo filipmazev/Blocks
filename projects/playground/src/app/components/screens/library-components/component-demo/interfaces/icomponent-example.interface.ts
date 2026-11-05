@@ -1,4 +1,4 @@
-import type { AppNavigationSection } from '../../../../../app.navigation';
+import type { AppNavigationSection } from '@playground/app.navigation';
 
 export interface IComponentExample {
   id: string;

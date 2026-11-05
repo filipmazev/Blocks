@@ -1,5 +1,6 @@
-import { DemoLanguage } from '../../i18n/types/demo-language.types';
 import { INavigationItem, INavigationTreeGroup } from '@filip.mazev/blocks/navigation';
+
+import { DemoLanguage } from '@playground/components/screens/library-components/shared/i18n/types/demo-language.types';
 
 export const NAVIGATION_DEMO_GROUPS: readonly INavigationTreeGroup[] = [
   {
@@ -145,7 +146,7 @@ export const NAVIGATION_DEMO_TRANSLATIONS: Readonly<Record<DemoLanguage, Readonl
     'demo.select': 'Select a page to see its stable ID here.',
     'demo.keyboard':
       'Use arrow keys and Home/End within a list. Enter or Space activates a disclosure. Back, Escape, or the opposite arrow returns one level; Escape at the root closes the mobile drawer.',
-    'demo.routes': 'Configure real routes with withNav',
+    'demo.routes': 'Configure real routes with withInAppNavigation',
     'nav.palette': 'palette',
     'nav.variables': 'color variables',
     'nav.pattern-0': 'Pattern 1',
@@ -231,7 +232,7 @@ export const NAVIGATION_DEMO_TRANSLATIONS: Readonly<Record<DemoLanguage, Readonl
     'demo.select': 'Selecciona una página para ver aquí su identificador estable.',
     'demo.keyboard':
       'Usa las flechas e Inicio/Fin en una lista. Intro o Espacio activa la expansión. Atrás, Escape o la flecha opuesta retrocede un nivel; Escape en la raíz cierra el panel móvil.',
-    'demo.routes': 'Configura rutas reales con withNav',
+    'demo.routes': 'Configura rutas reales con withInAppNavigation',
     'nav.palette': 'paleta',
     'nav.variables': 'variables de color',
     'nav.pattern-0': 'Patrón 1',
@@ -317,7 +318,7 @@ export const NAVIGATION_DEMO_TRANSLATIONS: Readonly<Record<DemoLanguage, Readonl
     'demo.select': 'Sélectionnez une page pour voir ici son identifiant stable.',
     'demo.keyboard':
       'Utilisez les flèches et Début/Fin dans une liste. Entrée ou Espace active le déploiement. Retour, Échap ou la flèche opposée remonte d’un niveau ; Échap à la racine ferme le panneau mobile.',
-    'demo.routes': 'Configurer des routes réelles avec withNav',
+    'demo.routes': 'Configurer des routes réelles avec withInAppNavigation',
     'nav.palette': 'palette',
     'nav.variables': 'variables de couleur',
     'nav.pattern-0': 'Motif 1',
@@ -403,7 +404,7 @@ export const NAVIGATION_DEMO_TRANSLATIONS: Readonly<Record<DemoLanguage, Readonl
     'demo.select': 'Wähle eine Seite, um hier ihre stabile ID zu sehen.',
     'demo.keyboard':
       'Verwende Pfeiltasten und Pos1/Ende innerhalb einer Liste. Eingabe oder Leertaste klappt Unterseiten auf. Zurück, Escape oder der entgegengesetzte Pfeil führt eine Ebene zurück; Escape auf der obersten Ebene schließt die mobile Seitenleiste.',
-    'demo.routes': 'Echte Routen mit withNav konfigurieren',
+    'demo.routes': 'Echte Routen mit withInAppNavigation konfigurieren',
     'nav.palette': 'Palette',
     'nav.variables': 'Farbvariablen',
     'nav.pattern-0': 'Muster 1',

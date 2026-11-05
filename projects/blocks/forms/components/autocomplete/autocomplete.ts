@@ -1,7 +1,9 @@
-import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkAutofill } from '@angular/cdk/text-field';
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,21 +22,28 @@ import {
   viewChild,
   ViewContainerRef
 } from '@angular/core';
+
+import { Subscription } from 'rxjs';
+
+import type { IAutocompleteCompletionOptionState } from '@forms/components/autocomplete/interfaces/iautocomplete-completion-option-state.interface';
+import type { IAutocompleteFilteredOptionsState } from '@forms/components/autocomplete/interfaces/iautocomplete-filtered-options-state.interface';
+import type { IAutocompleteResolvedOptionsState } from '@forms/components/autocomplete/interfaces/iautocomplete-resolved-options-state.interface';
+
 import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { BX_OVERLAY_CONTEXT, LoadingIndicator, LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
-import { Subscription } from 'rxjs';
-import { LoadMoreDirective } from '../../directives/load-more.directive';
-import { FormField } from '../form-field/form-field';
-import { Button } from '../button/button';
-import { BxValueControl } from '../shared/classes/bx-value-control';
-import { ILoadMoreConfig } from '../shared/load-more/interfaces/iload-more-config.interface';
-import { ILoadMoreContext } from '../shared/load-more/interfaces/iload-more-context.interface';
-import { ILoadMoreRequest } from '../shared/load-more/interfaces/iload-more-request.interface';
-import { IAutocompleteOption } from './interfaces/iautocomplete-option.interface';
-import { IAutocompleteOptionContext } from './interfaces/iautocomplete-option-context.interface';
+
+import { IAutocompleteOption } from '@forms/components/autocomplete/interfaces/iautocomplete-option.interface';
+import { IAutocompleteOptionContext } from '@forms/components/autocomplete/interfaces/iautocomplete-option-context.interface';
+import { Button } from '@forms/components/button/button';
+import { FormField } from '@forms/components/form-field/form-field';
+import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
+import { ILoadMoreConfig } from '@forms/components/shared/load-more/interfaces/iload-more-config.interface';
+import { ILoadMoreContext } from '@forms/components/shared/load-more/interfaces/iload-more-context.interface';
+import { ILoadMoreRequest } from '@forms/components/shared/load-more/interfaces/iload-more-request.interface';
+import { LoadMoreDirective } from '@forms/directives/load-more.directive';
 
 @Component({
   selector: 'bx-autocomplete',
@@ -62,53 +71,57 @@ export class Autocomplete extends BxValueControl<string> {
   private readonly positions = inject(BxOverlayPositionService);
   private readonly vcr = inject(ViewContainerRef);
   private readonly zone = inject(NgZone);
-  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly destroy = inject(DestroyRef);
-  private readonly panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
-  private readonly anchor = viewChild.required<ElementRef<HTMLElement>>('anchor');
-  private readonly nativeInput = viewChild.required<ElementRef<HTMLInputElement>>('nativeInput');
-  private readonly pagination = viewChild(LoadMoreDirective);
-  private readonly labelText = viewChild(TruncateDirective);
-  private readonly opened = signal(false);
-  private readonly inputFocused = signal(false);
-  private readonly composing = signal(false);
-  private readonly caretAtEnd = signal(false);
-  protected readonly activeIndex = signal(-1);
-  protected readonly autofilled = signal(false);
-  protected readonly labelTruncated = computed(() => this.labelText()?.truncated() ?? false);
-  protected readonly isBusy = computed(() => this.searching() || this.loading() || this.pending());
-  protected readonly showClear = computed(() => this.clearable() && !!this.internalValue() && !this.isReadonly());
-  protected readonly resolvedClearLabel = computed(() => resolveText(this.clearLabel(), this.i18n));
-  protected readonly resolvedClearTooltip = computed(() => resolveText(this.clearTooltip() ?? this.clearLabel(), this.i18n));
-  protected readonly isFloating = computed(
+
+  private readonly browser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
+
+  private readonly opened: WritableSignal<boolean> = signal(false);
+  private readonly inputFocused: WritableSignal<boolean> = signal(false);
+  private readonly composing: WritableSignal<boolean> = signal(false);
+  private readonly caretAtEnd: WritableSignal<boolean> = signal(false);
+
+  private readonly panelTemplate: Signal<TemplateRef<unknown>> = viewChild.required<TemplateRef<unknown>>('panelTemplate');
+  private readonly anchor: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('anchor');
+  private readonly nativeInput: Signal<ElementRef<HTMLInputElement>> = viewChild.required<ElementRef<HTMLInputElement>>('nativeInput');
+  private readonly pagination: Signal<LoadMoreDirective | undefined> = viewChild(LoadMoreDirective);
+  private readonly labelText: Signal<TruncateDirective | undefined> = viewChild(TruncateDirective);
+
+  protected readonly activeIndex: WritableSignal<number> = signal(-1);
+
+  protected readonly autofilled: WritableSignal<boolean> = signal(false);
+
+  protected readonly labelTruncated: Signal<boolean> = computed(() => this.labelText()?.truncated() ?? false);
+  protected readonly isBusy: Signal<boolean> = computed(() => this.searching() || this.loading() || this.pending());
+  protected readonly showClear: Signal<boolean> = computed(() => this.clearable() && !!this.internalValue() && !this.isReadonly());
+  protected readonly resolvedClearLabel: Signal<string> = computed(() => resolveText(this.clearLabel(), this.i18n));
+  protected readonly resolvedClearTooltip: Signal<string> = computed(() => resolveText(this.clearTooltip() ?? this.clearLabel(), this.i18n));
+  protected readonly isFloating: Signal<boolean> = computed(
     () => this.resolvedFloatLabel() === 'always' || this.inputFocused() || this.isOpen() || this.autofilled() || !!this.internalValue()
   );
 
-  protected readonly inputScroll = signal(0);
-  protected readonly resolvedEmptyText = computed(() => resolveText(this.emptyText(), this.i18n));
-  protected readonly resolvedOptions = computed(() =>
+  protected readonly inputScroll: WritableSignal<number> = signal(0);
+
+  protected readonly resolvedEmptyText: Signal<string> = computed(() => resolveText(this.emptyText(), this.i18n));
+  protected readonly resolvedOptions: Signal<IAutocompleteResolvedOptionsState[]> = computed(() =>
     this.options().map((option) => ({
       ...option,
       labelText: resolveText(option.label ?? option.value, this.i18n)
     }))
   );
-
-  protected readonly filteredOptions = computed(() => {
+  protected readonly filteredOptions: Signal<IAutocompleteFilteredOptionsState[]> = computed(() => {
     const query = (this.internalValue() ?? '').toLocaleLowerCase();
 
     return this.externalFiltering() || !query
       ? this.resolvedOptions()
       : this.resolvedOptions().filter((option) => option.labelText.toLocaleLowerCase().includes(query) || option.value.toLocaleLowerCase().includes(query));
   });
-
-  protected readonly activeId = computed(() =>
+  protected readonly activeId: Signal<string | null> = computed(() =>
     this.isOpen() && !this.searching() && this.filteredOptions()[this.activeIndex()] && !this.filteredOptions()[this.activeIndex()].disabled
       ? this.controlId() + '-option-' + this.activeIndex()
       : null
   );
-
-  protected readonly completionOption = computed(() => {
+  protected readonly completionOption: Signal<IAutocompleteCompletionOptionState | undefined> = computed(() => {
     const value = this.internalValue() ?? '';
 
     if (
@@ -139,40 +152,44 @@ export class Autocomplete extends BxValueControl<string> {
       ? candidate
       : undefined;
   });
+  protected readonly completionSuffix: Signal<string> = computed(() => this.completionOption()?.value.slice((this.internalValue() ?? '').length) ?? '');
 
-  protected readonly completionSuffix = computed(() => this.completionOption()?.value.slice((this.internalValue() ?? '').length) ?? '');
+  public readonly isOpen: Signal<boolean> = this.opened.asReadonly();
 
-  public readonly options = input<readonly IAutocompleteOption[]>([]);
+  public readonly options: InputSignal<readonly IAutocompleteOption[]> = input<readonly IAutocompleteOption[]>([]);
   /** Show a muted, uncommitted suffix for a matching suggestion. Accept with the forward arrow, End or Enter. Defaults to true. */
-  public readonly inlineCompletion = input(true);
+  public readonly inlineCompletion: InputSignal<boolean> = input(true);
   /** Shows the shared clear action for nonempty editable text. Defaults to true; hidden while readonly. */
-  public readonly clearable = input(true);
+  public readonly clearable: InputSignal<boolean> = input(true);
   /** Translated accessible name for the clear action. Defaults to Clear selection. */
-  public readonly clearLabel = input<ResolvableText>('Clear selection');
+  public readonly clearLabel: InputSignal<ResolvableText> = input<ResolvableText>('Clear selection');
   /** Optional translated tooltip; defaults to clearLabel. An empty string suppresses the tooltip. */
-  public readonly clearTooltip = input<ResolvableText | undefined>(undefined);
+  public readonly clearTooltip: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
   /** True when the application supplies filtered options, including remote search. Defaults to false. */
-  public readonly externalFiltering = input(false);
+  public readonly externalFiltering: InputSignal<boolean> = input(false);
   /** Suppresses stale results and pagination while a replacement query is pending. */
-  public readonly searching = input(false);
-  public readonly hasMore = input(false);
-  public readonly loadError = input<ResolvableText | undefined>(undefined);
-  public readonly loadMoreConfig = input<ILoadMoreConfig>({});
-  public readonly loadMoreTemplate = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
-  public readonly loadMoreRevision = input<unknown>(undefined);
-  public readonly optionTemplate = input<TemplateRef<IAutocompleteOptionContext> | undefined>(undefined);
-  public readonly emptyText = input<ResolvableText>('No suggestions. You can enter your own value.');
-  public readonly loadingText = input<ResolvableText>('Loading suggestions');
-  public readonly autocomplete = input('off');
-  public readonly isOpen = this.opened.asReadonly();
+  public readonly searching: InputSignal<boolean> = input(false);
+  public readonly hasMore: InputSignal<boolean> = input(false);
+  public readonly loadError: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  public readonly loadMoreConfig: InputSignal<ILoadMoreConfig> = input<ILoadMoreConfig>({});
+  public readonly loadMoreTemplate: InputSignal<TemplateRef<ILoadMoreContext> | undefined> = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
+  public readonly loadMoreRevision: InputSignal<unknown> = input<unknown>(undefined);
+  public readonly optionTemplate: InputSignal<TemplateRef<IAutocompleteOptionContext> | undefined> = input<TemplateRef<IAutocompleteOptionContext> | undefined>(
+    undefined
+  );
+  public readonly emptyText: InputSignal<ResolvableText> = input<ResolvableText>('No suggestions. You can enter your own value.');
+  public readonly loadingText: InputSignal<ResolvableText> = input<ResolvableText>('Loading suggestions');
+  public readonly autocomplete: InputSignal<string> = input('off');
+
   /** Emitted for user text edits. The application owns debounce, cancellation and remote requests. */
-  public readonly queryChange = output<string>();
+  public readonly queryChange: OutputEmitterRef<string> = output<string>();
   /** Emitted only when the user chooses a suggestion. Free text remains a valid value. */
-  public readonly optionSelected = output<IAutocompleteOption>();
-  public readonly loadMore = output<ILoadMoreRequest>();
-  public readonly openedChange = output<boolean>();
+  public readonly optionSelected: OutputEmitterRef<IAutocompleteOption> = output<IAutocompleteOption>();
+  public readonly loadMore: OutputEmitterRef<ILoadMoreRequest> = output<ILoadMoreRequest>();
+  public readonly openedChange: OutputEmitterRef<boolean> = output<boolean>();
+
   private overlayRef?: OverlayRef;
-  private subscriptions = new Subscription();
+  private subscriptions: Subscription = new Subscription();
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
 
@@ -200,6 +217,7 @@ export class Autocomplete extends BxValueControl<string> {
       scrollStrategy: this.overlay.scrollStrategies.noop(),
       usePopover: !!this.context?.useTopLayer || !!origin.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]')
     });
+
     this.overlayRef = overlay;
     this.opened.set(true);
     this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(origin, overlay.overlayElement));
@@ -222,7 +240,9 @@ export class Autocomplete extends BxValueControl<string> {
       })
     );
     this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onPanelKey(event)));
+
     const view = overlay.attach(new TemplatePortal(this.panelTemplate(), this.vcr));
+
     view.detectChanges();
     overlay.updatePosition();
     this.openedChange.emit(true);
@@ -260,6 +280,7 @@ export class Autocomplete extends BxValueControl<string> {
     if (this.composing() || this.effectiveDisabled() || this.isReadonly()) return;
 
     const value = (event.target as HTMLInputElement).value;
+
     this.updateValue(value);
     this.activeIndex.set(-1);
     this.updateCompletionPosition();
@@ -284,6 +305,7 @@ export class Autocomplete extends BxValueControl<string> {
 
   protected updateCompletionPosition(): void {
     const input = this.nativeInput().nativeElement;
+
     this.caretAtEnd.set(input.selectionStart === input.value.length && input.selectionEnd === input.value.length);
     this.inputScroll.set(input.scrollLeft);
   }
@@ -311,6 +333,7 @@ export class Autocomplete extends BxValueControl<string> {
     if (this.composing() || event.isComposing || this.effectiveDisabled() || this.isReadonly()) return;
 
     this.updateCompletionPosition();
+
     const completion = this.completionOption();
     const direction = this.nativeInput().nativeElement.ownerDocument.defaultView?.getComputedStyle(this.nativeInput().nativeElement).direction;
     const forwardKey = direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
@@ -340,6 +363,7 @@ export class Autocomplete extends BxValueControl<string> {
       const current = enabled.indexOf(this.activeIndex());
       const next =
         event.key === 'ArrowDown' ? (current + 1) % enabled.length : current < 0 ? enabled.length - 1 : (current - 1 + enabled.length) % enabled.length;
+
       this.activeIndex.set(enabled[next] ?? -1);
       this.overlayRef?.overlayElement.querySelector<HTMLElement>('#' + this.activeId())?.scrollIntoView({ block: 'nearest' });
     } else if (event.key === 'Enter' && this.isOpen() && this.activeId()) {

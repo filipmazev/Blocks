@@ -5,10 +5,7 @@ const { chromium, webkit } = require(process.env.BLOCKS_PLAYWRIGHT_PATH || 'play
 const origin = process.env.BLOCKS_PLAYGROUND_URL || 'http://localhost:8080';
 let browser;
 before(async () => {
-  browser =
-    process.env.BLOCKS_BROWSER === 'webkit'
-      ? await webkit.launch()
-      : await chromium.launch({ channel: 'chrome' });
+  browser = process.env.BLOCKS_BROWSER === 'webkit' ? await webkit.launch() : await chromium.launch({ channel: 'chrome' });
 });
 after(async () => browser?.close());
 
@@ -16,7 +13,7 @@ async function pageFor(t, path = '/components/tabs', options = {}) {
   const page = await browser.newPage({
     viewport: { width: 1440, height: 1100 },
     colorScheme: 'dark',
-    ...options,
+    ...options
   });
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
@@ -29,8 +26,7 @@ async function pageFor(t, path = '/components/tabs', options = {}) {
   await page.locator('.app-toolbar').waitFor();
   return page;
 }
-const header = (page, label = 'Project information') =>
-  page.getByRole('tablist', { name: label, exact: true });
+const header = (page, label = 'Project information') => page.getByRole('tablist', { name: label, exact: true });
 async function selected(list, label) {
   await list.getByRole('tab', { name: label, exact: true, selected: true }).waitFor();
 }
@@ -43,9 +39,9 @@ async function checkRelationships(list) {
         role: panel?.getAttribute('role'),
         hidden: panel?.hidden,
         selected: element.getAttribute('aria-selected') === 'true',
-        tabIndex: element.tabIndex,
+        tabIndex: element.tabIndex
       };
-    }),
+    })
   );
   assert.equal(tabs.filter((tab) => tab.selected).length, 1);
   assert.equal(tabs.filter((tab) => tab.tabIndex === 0).length, 1);
@@ -68,18 +64,12 @@ test('tabs support roving focus, wrapping, disabled tabs and lazy panel state', 
   await selected(list, 'Activity');
   await list.getByRole('tab', { name: 'Activity', exact: true }).press('ArrowRight');
   await selected(list, 'Overview');
-  assert.equal(
-    await page.getByRole('textbox', { name: 'Project note' }).inputValue(),
-    'Persistent project note',
-  );
+  assert.equal(await page.getByRole('textbox', { name: 'Project note' }).inputValue(), 'Persistent project note');
   await list.getByRole('tab', { name: 'Overview', exact: true }).press('ArrowLeft');
   await selected(list, 'Activity');
   await list.getByRole('tab', { name: 'Activity', exact: true }).press('Home');
   await selected(list, 'Overview');
-  assert.equal(
-    await list.getByRole('tab', { name: 'Unavailable', exact: true }).isDisabled(),
-    true,
-  );
+  assert.equal(await list.getByRole('tab', { name: 'Unavailable', exact: true }).isDisabled(), true);
   await checkRelationships(list);
 });
 
@@ -90,9 +80,7 @@ test('selection falls back when a tab is disabled or removed and both appearance
   await selected(list, 'Details');
   await page.getByRole('button', { name: 'Disable details', exact: true }).click();
   await selected(list, 'Overview');
-  await page.waitForFunction(() =>
-    document.querySelector('.demo-stage output').textContent.includes('overview'),
-  );
+  await page.waitForFunction(() => document.querySelector('.demo-stage output').textContent.includes('overview'));
   await list.getByRole('tab', { name: 'Activity', exact: true }).click();
   await selected(list, 'Activity');
   await page.getByRole('button', { name: 'Show activity', exact: true }).click();
@@ -108,11 +96,7 @@ test('tab headers avoid spurious scrollbars and selected primary light persists 
   const list = header(page);
   await selected(list, 'Overview');
   await page.mouse.move(250, 90);
-  await page.waitForFunction(() =>
-    document.querySelector(
-      '.demo-stage .bx-tab-trigger.is-selected .bx-glass-rim [data-bx-light-source="emitter"]',
-    ),
-  );
+  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-trigger.is-selected .bx-glass-rim [data-bx-light-source="emitter"]'));
   const geometry = await list.evaluate((element) => {
     const inner = element.querySelector('.bx-tab-list');
     return {
@@ -120,7 +104,7 @@ test('tab headers avoid spurious scrollbars and selected primary light persists 
       y: inner.scrollHeight - inner.clientHeight,
       outerX: getComputedStyle(element).overflowX,
       outerY: getComputedStyle(element).overflowY,
-      background: getComputedStyle(element.querySelector('[aria-selected="true"]')).backgroundColor,
+      background: getComputedStyle(element.querySelector('[aria-selected="true"]')).backgroundColor
     };
   });
   assert.ok(geometry.x <= 1, JSON.stringify(geometry));
@@ -128,22 +112,12 @@ test('tab headers avoid spurious scrollbars and selected primary light persists 
   assert.equal(geometry.outerX, 'visible');
   assert.equal(geometry.outerY, 'visible');
   assert.match(geometry.background, /rgba|\/\s*0\./);
-  await page.waitForFunction(() =>
-    document.querySelector(
-      '.demo-stage .bx-tab-header > .bx-glass-rim [data-bx-light-source^="hover:"]',
-    ),
-  );
+  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-header > .bx-glass-rim [data-bx-light-source^="hover:"]'));
   await list.getByRole('tab', { name: 'Details', exact: true }).click();
   await selected(list, 'Details');
-  await list
-    .getByRole('tab', { name: 'Details', exact: true })
-    .evaluate((element) => element.blur());
+  await list.getByRole('tab', { name: 'Details', exact: true }).evaluate((element) => element.blur());
   await page.mouse.move(250, 90);
-  await page.waitForFunction(() =>
-    document.querySelector(
-      '.demo-stage .bx-tab-trigger.is-selected .bx-glass-rim [data-bx-light-source="emitter"]',
-    ),
-  );
+  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-trigger.is-selected .bx-glass-rim [data-bx-light-source="emitter"]'));
 });
 
 test('initial tab frames use their glass styles without an opaque button-color flash', async (t) => {
@@ -157,8 +131,8 @@ test('initial tab frames use their glass styles without an opaque button-color f
           tabs.map((tab) => ({
             skin: tab.hasAttribute('data-bx-surface'),
             background: getComputedStyle(tab).backgroundColor,
-            selected: tab.getAttribute('aria-selected') === 'true',
-          })),
+            selected: tab.getAttribute('aria-selected') === 'true'
+          }))
         );
       if (window.initialTabPaints.length < 12) requestAnimationFrame(sample);
     };
@@ -170,9 +144,7 @@ test('initial tab frames use their glass styles without an opaque button-color f
   for (const frame of frames)
     for (const tab of frame) {
       assert.equal(tab.skin, true);
-      const match = tab.background.match(
-        /\/\s*([\d.]+)\s*\)|rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\)/,
-      );
+      const match = tab.background.match(/\/\s*([\d.]+)\s*\)|rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\)/);
       const alpha = match ? Number(match[1] ?? match[2]) : 1;
       assert.ok(alpha <= (tab.selected ? 0.5 : 0.01), JSON.stringify(tab));
     }
@@ -181,7 +153,7 @@ test('initial tab frames use their glass styles without an opaque button-color f
 test('RTL navigation and narrow headers preserve page width and hide vertical header overflow', async (t) => {
   const page = await pageFor(t, '/components/tabs', {
     viewport: { width: 390, height: 844 },
-    reducedMotion: 'reduce',
+    reducedMotion: 'reduce'
   });
   const list = header(page);
   await list.evaluate((element) => {
@@ -193,11 +165,9 @@ test('RTL navigation and narrow headers preserve page width and hide vertical he
   await selected(list, 'Overview');
   const geometry = await list.evaluate((element) => ({
     overflow: getComputedStyle(element.querySelector('.bx-tab-list')).overflowY,
-    y:
-      element.querySelector('.bx-tab-list').scrollHeight -
-      element.querySelector('.bx-tab-list').clientHeight,
+    y: element.querySelector('.bx-tab-list').scrollHeight - element.querySelector('.bx-tab-list').clientHeight,
     right: element.getBoundingClientRect().right,
-    containerRight: element.closest('.demo-stage').getBoundingClientRect().right,
+    containerRight: element.closest('.demo-stage').getBoundingClientRect().right
   }));
   assert.equal(geometry.overflow, 'hidden');
   assert.ok(geometry.y <= 1, JSON.stringify(geometry));
@@ -225,16 +195,9 @@ test('individual tab colors, highlight overrides, panel text and both icons are 
   await selected(list, 'Activity');
   const activity = list.getByRole('tab', { name: 'Activity', exact: true });
   assert.equal(await activity.evaluate(matchesToken, 'text-warn'), true);
-  assert.equal(
-    await page
-      .locator('.demo-stage [role="tabpanel"]:not([hidden])')
-      .evaluate(matchesToken, 'text-info'),
-    true,
-  );
+  assert.equal(await page.locator('.demo-stage [role="tabpanel"]:not([hidden])').evaluate(matchesToken, 'text-info'), true);
   await page.waitForFunction(() => {
-    const emitter = document.querySelector(
-      '.demo-stage .bx-tab-trigger.is-selected [data-bx-light-source="emitter"]',
-    );
+    const emitter = document.querySelector('.demo-stage .bx-tab-trigger.is-selected [data-bx-light-source="emitter"]');
     return emitter?.style.backgroundImage.includes('--bx-text-warn');
   });
 });
@@ -244,7 +207,7 @@ test('narrow tab headers scroll independently and unbounded panels stay in page 
   const page = await pageFor(t, '/components/tabs', {
     viewport: { width: 390, height: 844 },
     hasTouch: true,
-    isMobile: mobile,
+    isMobile: mobile
   });
   const list = page.locator('.demo-stage .bx-tab-list');
   await list.scrollIntoViewIfNeeded();
@@ -252,7 +215,7 @@ test('narrow tab headers scroll independently and unbounded panels stay in page 
     width: element.clientWidth,
     content: element.scrollWidth,
     panelOverflow: getComputedStyle(element.closest('bx-tabs').querySelector('.bx-tab-panels')).overflow,
-    pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
   }));
   assert.ok(geometry.content > geometry.width, JSON.stringify(geometry));
   assert.equal(geometry.panelOverflow, 'visible');
@@ -296,14 +259,12 @@ for (const route of ['/modal', '/toastr']) {
     await selected(files, first);
     await page.locator('app-code code.hljs').waitFor();
     assert.equal(await page.locator('app-code pre').count(), 1);
-    assert.equal(await page.locator('app-code code.hljs').evaluate(element => getComputedStyle(element).overflowX), 'visible');
+    assert.equal(await page.locator('app-code code.hljs').evaluate((element) => getComputedStyle(element).overflowX), 'visible');
     await checkRelationships(outer);
     await checkRelationships(files);
     const unique = await page
       .locator('[role="tab"], [role="tabpanel"]')
-      .evaluateAll(
-        (elements) => new Set(elements.map((element) => element.id)).size === elements.length,
-      );
+      .evaluateAll((elements) => new Set(elements.map((element) => element.id)).size === elements.length);
     assert.equal(unique, true);
     await outer.getByRole('tab', { name: 'Code Examples', exact: true }).press('ArrowLeft');
     await selected(outer, 'Documentation');

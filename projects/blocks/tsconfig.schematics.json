@@ -1,5 +1,6 @@
 {
-    "compilerOptions": { 
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
         "rootDir": "schematics",
         "outDir": "../../dist/blocks/schematics",
         "module": "node16",

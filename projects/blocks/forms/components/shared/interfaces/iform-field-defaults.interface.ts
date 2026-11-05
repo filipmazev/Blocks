@@ -1,4 +1,11 @@
-import { ErrorDisplayMode, ErrorDisplayPolicy, FloatLabel, FormFieldAppearance, SubscriptSizing, ValidationMessages } from '../types/validation.types';
+import {
+  ErrorDisplayMode,
+  ErrorDisplayPolicy,
+  FloatLabel,
+  FormFieldAppearance,
+  SubscriptSizing,
+  ValidationMessages
+} from '@forms/components/shared/types/validation.types';
 
 /** Application-wide presentation defaults; instance inputs take precedence. */
 export interface IFormFieldDefaults {

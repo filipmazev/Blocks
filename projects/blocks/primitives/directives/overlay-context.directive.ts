@@ -1,4 +1,7 @@
+import type { InputSignal } from '@angular/core';
+
 import { Directive, forwardRef, input } from '@angular/core';
+
 import { BX_OVERLAY_CONTEXT, IBxOverlayContext } from './overlay-context.token';
 
 @Directive({
@@ -7,7 +10,7 @@ import { BX_OVERLAY_CONTEXT, IBxOverlayContext } from './overlay-context.token';
   providers: [{ provide: BX_OVERLAY_CONTEXT, useExisting: forwardRef(() => BxOverlayContextDirective) }]
 })
 export class BxOverlayContextDirective implements IBxOverlayContext {
-  public readonly bxOverlayContext = input<IBxOverlayContext>({});
+  public readonly bxOverlayContext: InputSignal<IBxOverlayContext> = input<IBxOverlayContext>({});
 
   public get useTopLayer(): boolean | undefined {
     return this.bxOverlayContext().useTopLayer;

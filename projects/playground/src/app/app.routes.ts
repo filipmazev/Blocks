@@ -1,26 +1,28 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { APP_NAVIGATION } from './app.navigation';
-import { COMPONENT_EXAMPLES } from './components/screens/library-components/component-demo/component-catalog';
-import { RELEASE_NOTES } from './components/screens/release-notes/constants/release-notes.constants';
+import { RouterModule, Routes } from '@angular/router';
 
-const { withNav } = APP_NAVIGATION;
+import { COMPONENT_EXAMPLES } from '@playground/components/screens/library-components/component-demo/component-catalog';
+import { DEFAULT_RELEASE_VERSION } from '@playground/components/screens/release-notes/constants/release-notes.constants';
+
+import { APP_NAVIGATION } from './app.navigation';
+
+const { withInAppNavigation } = APP_NAVIGATION;
 
 const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
-  withNav(
+  withInAppNavigation(
     {
       path: entry.id,
       loadComponent:
         entry.id === 'side-nav' || entry.id === 'top-nav'
           ? undefined
-          : () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
+          : () => import('@playground/components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
       children:
         entry.id === 'side-nav' || entry.id === 'top-nav'
           ? [
               { path: '', pathMatch: 'full', redirectTo: 'overview' },
               {
                 path: ':navId',
-                loadComponent: () => import('./components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
+                loadComponent: () => import('@playground/components/screens/library-components/component-demo/component-demo').then((m) => m.ComponentDemo),
                 data: { componentId: entry.id }
               }
             ]
@@ -34,15 +36,19 @@ const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
 
 export const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
-  withNav(
-    { path: 'home', loadComponent: () => import('./components/screens/home/home').then((m) => m.Home), title: 'Blocks' },
-    { label: 'Overview', breadcrumb: 'Home', section: 'Start', icon: { name: 'house' }, menu: true, root: true, order: 1 }
+  withInAppNavigation(
+    { path: 'home', loadComponent: () => import('@playground/components/screens/home/home').then((m) => m.Home), title: 'Blocks' },
+    { label: 'Home', breadcrumb: 'Home', section: 'Start', icon: { name: 'house' }, menu: true, root: true, order: 1 }
   ),
-  withNav(
-    { path: 'appearance', loadComponent: () => import('./components/screens/appearance/appearance').then((m) => m.Appearance), title: 'Appearance · Blocks' },
+  withInAppNavigation(
+    {
+      path: 'appearance',
+      loadComponent: () => import('@playground/components/screens/appearance/appearance').then((m) => m.Appearance),
+      title: 'Appearance · Blocks'
+    },
     { label: 'Appearance', breadcrumb: 'Appearance', section: 'Start', menu: true, order: 2 }
   ),
-  withNav(
+  withInAppNavigation(
     {
       path: 'components',
       title: 'Components · Blocks',
@@ -50,47 +56,47 @@ export const ROUTES: Routes = [
         {
           path: '',
           pathMatch: 'full',
-          loadComponent: () => import('./components/screens/library-components/component-demo/component-index').then((m) => m.ComponentIndex)
+          loadComponent: () => import('@playground/components/screens/library-components/component-demo/component-index').then((m) => m.ComponentIndex)
         },
         ...componentRoutes
       ]
     },
     { label: 'All components', breadcrumb: 'Components', section: 'Start', menu: true, order: 3 }
   ),
-  withNav(
+  withInAppNavigation(
     {
       path: 'release-notes',
       title: 'Release notes · Blocks',
       children: [
-        { path: '', pathMatch: 'full', redirectTo: RELEASE_NOTES[0].version },
+        { path: '', pathMatch: 'full', redirectTo: DEFAULT_RELEASE_VERSION },
         {
           path: ':version',
-          loadComponent: () => import('./components/screens/release-notes/release-notes').then((m) => m.ReleaseNotes)
+          loadComponent: () => import('@playground/components/screens/release-notes/release-notes').then((m) => m.ReleaseNotes)
         }
       ]
     },
     { label: 'Release notes', breadcrumb: 'Release notes', section: 'Start', icon: { name: 'history' }, menu: true, order: 4 }
   ),
-  withNav(
+  withInAppNavigation(
     {
       path: 'icon-catalog',
-      loadComponent: () => import('./components/screens/icon-catalog/icon-catalog').then((m) => m.IconCatalog),
+      loadComponent: () => import('@playground/components/screens/icon-catalog/icon-catalog').then((m) => m.IconCatalog),
       title: 'Icon catalog · Blocks'
     },
     { label: 'Icon catalog', breadcrumb: 'Icon catalog', section: 'Tools', menu: true, order: 4 }
   ),
-  withNav(
+  withInAppNavigation(
     {
       path: 'modal',
-      loadComponent: () => import('./components/screens/library-components/modal/modal').then((m) => m.Modal),
+      loadComponent: () => import('@playground/components/screens/library-components/modal/modal').then((m) => m.Modal),
       title: 'Modal configurator · Blocks'
     },
     { label: 'Modal configurator', breadcrumb: 'Modal configurator', section: 'Tools', menu: true, order: 5 }
   ),
-  withNav(
+  withInAppNavigation(
     {
       path: 'toastr',
-      loadComponent: () => import('./components/screens/library-components/toastr/toastr').then((m) => m.Toastr),
+      loadComponent: () => import('@playground/components/screens/library-components/toastr/toastr').then((m) => m.Toastr),
       title: 'Toast configurator · Blocks'
     },
     { label: 'Toast configurator', breadcrumb: 'Toast configurator', section: 'Tools', menu: true, order: 6 }

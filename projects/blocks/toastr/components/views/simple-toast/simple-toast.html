@@ -1,10 +1,10 @@
 <div class="simple-toast" [ngClass]="data.type">
     <div class="simple-toast-content">
-        @if(resolvedTitle()) {
-        <h4 class="simple-toast-title">{{ resolvedTitle() }}</h4>
-        <p class="simple-toast-message">{{ resolvedMessage() }}</p>
+        @if (resolvedTitle()) {
+            <h4 class="simple-toast-title">{{ resolvedTitle() }}</h4>
+            <p class="simple-toast-message">{{ resolvedMessage() }}</p>
         } @else {
-        <p class="simple-toast-message large-message">{{ resolvedMessage() }}</p>
+            <p class="simple-toast-message large-message">{{ resolvedMessage() }}</p>
         }
     </div>
 </div>

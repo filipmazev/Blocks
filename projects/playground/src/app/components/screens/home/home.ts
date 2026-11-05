@@ -1,15 +1,23 @@
+import type { Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BLOCKS_RELEASE_CHANNEL, BLOCKS_VERSION_LABEL } from '@filip.mazev/blocks';
+
+import type { IHomeFeaturesState } from '@playground/components/screens/home/interfaces/ihome-features-state.interface';
+import type { IHomeLookState } from '@playground/components/screens/home/interfaces/ihome-look-state.interface';
+
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { Icon } from '@icons/components/icon';
-import { IconName } from '@icons/types/icon.types';
-import { Button } from '@forms/components/button/button';
-import { OddityCanvas } from 'oddity-angular';
-import { ThemingService } from '@core/services/theming.service';
-import { BxA11yService } from '@core/services/bx-a11y.service';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
-import { LightOrb } from './light-orb/light-orb';
+
+import { BxA11yService } from '@core/services/bx-a11y.service';
+import { ThemingService } from '@core/services/theming.service';
+import { Button } from '@forms/components/button/button';
+import { Icon } from '@icons/components/icon';
+import { LightOrb } from '@playground/components/screens/home/light-orb/light-orb';
+import { PLAYGROUND_VERSION } from '@playground/generated/release';
+import { PackageReleaseService } from '@playground/services/package-release.service';
+
+import { OddityCanvas } from 'oddity-angular';
 
 @Component({
   selector: 'app-home',
@@ -19,17 +27,16 @@ import { LightOrb } from './light-orb/light-orb';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Home {
-  protected readonly version = BLOCKS_VERSION_LABEL;
-  protected readonly npmPackageUrl = `https://www.npmjs.com/package/@filip.mazev/blocks/v/${encodeURIComponent(BLOCKS_RELEASE_CHANNEL)}`;
-
-  protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
-
-  private readonly lightOrb = viewChild(LightOrb);
-  private readonly wakeHint = viewChild(TooltipDirective);
-
   private readonly themingService = inject(ThemingService);
 
-  protected readonly features: { title: string; description: string; icon: IconName; route: string }[] = [
+  protected readonly releases = inject(PackageReleaseService);
+  protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
+
+  private readonly lightOrb: Signal<LightOrb | undefined> = viewChild(LightOrb);
+  private readonly wakeHint: Signal<TooltipDirective | undefined> = viewChild(TooltipDirective);
+
+  protected readonly version: string = `v${PLAYGROUND_VERSION}`;
+  protected readonly features: IHomeFeaturesState[] = [
     {
       title: 'One shared material',
       description: 'Set appearance once. Buttons, fields, menus, dialogs, and notifications share your application settings.',
@@ -46,12 +53,13 @@ export class Home {
       title: 'Familiar interactions',
       description: 'Keep native controls, keyboard navigation, and reduced motion while adding fluid transitions.',
       icon: 'accessibility',
-      route: '/modal'
+      route: '/components/side-nav'
     }
   ];
 
-  protected readonly look = computed(() => {
+  protected readonly look: Signal<IHomeLookState> = computed(() => {
     this.themingService.palette();
+
     const theme = this.themingService.activeTheme();
 
     const primaryColor = window.getComputedStyle(document.body).getPropertyValue('--bx-primary');

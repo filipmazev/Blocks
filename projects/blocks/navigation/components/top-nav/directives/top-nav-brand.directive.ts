@@ -1,6 +1,7 @@
 import { DestroyRef, Directive, inject, TemplateRef } from '@angular/core';
-import { TopNav } from '../top-nav';
-import { ITopNavSlotContext } from '../interfaces/itop-nav-slot-context.interface';
+
+import { ITopNavSlotContext } from '@navigation/components/top-nav/interfaces/itop-nav-slot-context.interface';
+import { TopNav } from '@navigation/components/top-nav/top-nav';
 
 /** Registers the top navigation's brand slot without exposing implementation elements. */
 @Directive({ selector: '[bxTopNavBrand]' })

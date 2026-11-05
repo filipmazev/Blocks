@@ -1,43 +1,51 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
+import { NgTemplateOutlet } from '@angular/common';
 import {
-  Component,
-  inject,
-  ComponentRef,
-  ViewChild,
-  ElementRef,
-  ViewChildren,
-  QueryList,
-  TemplateRef,
-  ViewContainerRef,
-  signal,
-  effect,
-  OnInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ComponentRef,
   computed,
   DestroyRef,
-  ChangeDetectionStrategy,
-  OnDestroy
+  effect,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  TemplateRef,
+  viewChild,
+  viewChildren,
+  ViewContainerRef
 } from '@angular/core';
-import { Subject, Observable, fromEvent, filter, take, from, of } from 'rxjs';
-import { NgTemplateOutlet } from '@angular/common';
-import { ModalConfig } from '../classes/modal-config';
-import { IModalComponent } from '../interfaces/imodal-component.interface';
-import { ModalService } from '../services/modal.service';
-import { ModalBackdrop } from './shared/ui/backdrop/modal-backdrop';
-import { ModalCentered } from './views/centered/modal-centered';
-import { ModalSide } from './views/side/modal-side';
-import { ModalBottomSheet } from './views/bottom-sheet/modal-bottom-sheet';
-import { BreakpointKey, ModalCloseMode, ModalLayout } from '../types/modal.types';
-import { IModalCloseResult } from '../interfaces/imodal-close-result.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ModalGlobalSettingsService } from '../services/modal-global-settings.service';
-import { IModal } from '../interfaces/imodal.interface';
+
+import { filter, from, fromEvent, Observable, of, Subject, take } from 'rxjs';
+
+import type { IWindowDimensions } from '@filip.mazev/blocks/core';
+
 import { isTextWithKey, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
-import * as animConst from '../constants/modal-animation.constants';
+
+import { ModalConfig } from '@modal/classes/modal-config';
+import { ModalBackdrop } from '@modal/components/shared/ui/backdrop/modal-backdrop';
+import { ModalBottomSheet } from '@modal/components/views/bottom-sheet/modal-bottom-sheet';
+import { ModalCentered } from '@modal/components/views/centered/modal-centered';
+import { ModalSide } from '@modal/components/views/side/modal-side';
+import { IModal } from '@modal/interfaces/imodal.interface';
+import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
+import { IModalComponent } from '@modal/interfaces/imodal-component.interface';
+import { ModalService } from '@modal/services/modal.service';
+import { ModalGlobalSettingsService } from '@modal/services/modal-global-settings.service';
+import { BreakpointKey, ModalCloseMode, ModalLayout } from '@modal/types/modal.types';
+
+import * as animConst from '@modal/constants/modal-animation.constants';
 
 @Component({
   selector: 'bx-modal',
   imports: [NgTemplateOutlet, ModalCentered, ModalSide, ModalBackdrop],
   templateUrl: './modal-core.html',
+  // ModalRef assigns configuration and component references through the existing imperative API.
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './modal-core.scss'
 })
@@ -48,40 +56,46 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   private readonly windowDimensionsService = inject(WindowDimensionsService);
   private readonly destroyRef = inject(DestroyRef);
 
+  private readonly sideModalComponents: Signal<readonly ModalSide<unknown, unknown>[]> = viewChildren(ModalSide);
+  private readonly centeredModalComponents: Signal<readonly ModalCentered<unknown, unknown>[]> = viewChildren(ModalCentered);
+
+  protected readonly headerTemplate: WritableSignal<TemplateRef<void> | null> = signal<TemplateRef<void> | null>(null);
+  protected readonly footerTemplate: WritableSignal<TemplateRef<void> | null> = signal<TemplateRef<void> | null>(null);
+  protected readonly id: WritableSignal<string | null> = signal<string | null>(null);
+
+  protected readonly isBottomSheetModalActive: WritableSignal<boolean> = signal<boolean>(false);
+
+  protected readonly windowDimensions: Signal<IWindowDimensions> = this.windowDimensionsService.dimensions;
+
+  protected readonly modalContainer: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef>('modalContainer');
+  protected readonly contentTemplate: Signal<TemplateRef<HTMLElement> | undefined> = viewChild<TemplateRef<HTMLElement>>('contentTemplate');
+  protected readonly dynamicContainer: Signal<ViewContainerRef | undefined> = viewChild('dynamicContainer', {
+    read: ViewContainerRef
+  });
+
   public readonly animationDuration: number = animConst.MODAL_DEFAULT_ANIM_DURATION;
+
+  public readonly isOpen: WritableSignal<boolean> = signal<boolean>(true);
+
+  public readonly effectiveLayout: WritableSignal<ModalLayout> = signal<ModalLayout>('center');
+
+  public readonly isCentered: WritableSignal<boolean> = signal<boolean>(false);
+  public readonly isSide: WritableSignal<boolean> = signal<boolean>(false);
+
+  public readonly isAnimated: Signal<boolean> = computed(() => this.config?.style.animate ?? this.globalSettings.animate());
 
   public componentRef: ComponentRef<C> = {} as ComponentRef<C>;
   public config?: ModalConfig<D, R>;
   public closeFunction?: (data: IModalCloseResult<R | undefined>) => void;
-  public backdropClickSubject = new Subject<MouseEvent>();
+  public backdropClickSubject: Subject<MouseEvent> = new Subject<MouseEvent>();
   public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
-  public isOpen = signal<boolean>(true);
-  public effectiveLayout = signal<ModalLayout>('center');
-  public isCentered = signal<boolean>(false);
-  public isSide = signal<boolean>(false);
-  public isAnimated = computed(() => this.config?.style.animate ?? this.globalSettings.animate());
 
-  protected headerTemplate = signal<TemplateRef<void> | null>(null);
-  protected footerTemplate = signal<TemplateRef<void> | null>(null);
-  protected id = signal<string | null>(null);
-  protected isBottomSheetModalActive = signal<boolean>(false);
   protected hasBanner: boolean = false;
-
   protected hasDefaultContentWrapperClass: boolean = false;
-
-  protected windowDimensions = this.windowDimensionsService.dimensions;
-
-  @ViewChild('modalContainer', { static: false }) protected modalContainer?: ElementRef;
-  @ViewChild('contentTemplate') protected contentTemplate?: TemplateRef<HTMLElement>;
-
-  @ViewChildren(ModalSide) private sideModalComponents?: QueryList<ModalSide>;
-  @ViewChildren(ModalCentered) private centeredModalComponents?: QueryList<ModalCentered>;
 
   private isConfirmCloseModalOpen: boolean = false;
   private scrollLockId: string = uuidv4();
-
   private _sortedBreakpoints: Array<{ width: number; layout: ModalLayout }> = [];
-
   private _currentVcr: ViewContainerRef | null = null;
 
   constructor() {
@@ -89,7 +103,20 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
 
     effect(() => {
       const width = this.windowDimensions().width;
+
       this.handleLayout(width);
+    });
+
+    effect(() => {
+      const vcr = this.dynamicContainer();
+
+      if (vcr && this.componentRef) {
+        this._currentVcr = vcr;
+
+        if (vcr.indexOf(this.componentRef.hostView) === -1) {
+          vcr.insert(this.componentRef.hostView);
+        }
+      }
     });
   }
 
@@ -105,33 +132,29 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   }
 
   public ngAfterViewInit(): void {
-    if (!this.componentRef) return;
-    this.dynamicContainer?.insert(this.componentRef.hostView);
-
     const width = this.windowDimensionsService.dimensions().width;
+
     this.handleLayout(width);
   }
 
   public ngOnDestroy(): void {
     this.componentRef?.destroy();
-    this.dynamicContainer?.clear();
+    this.dynamicContainer()?.clear();
     this.scrollLockService.enableScroll(this.scrollLockId);
   }
 
-  //#region Public Template Methods
   public setHeaderTemplate(template: TemplateRef<void>) {
     this.headerTemplate.set(template);
   }
 
-  //#endregion
   public setFooterTemplate(template: TemplateRef<void>) {
     this.footerTemplate.set(template);
   }
 
-  //#region Closing Methods
   public close(state: ModalCloseMode = 'cancel', result: R | undefined = undefined, fromInsideInteraction: boolean = false, forceClose: boolean = false): void {
     if (forceClose) {
       this.handleClose(state, result);
+
       return;
     }
 
@@ -155,13 +178,13 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
           this.handleClose(state, result);
         }
       });
+
       return;
     }
 
     this.handleClose(state, result);
   }
 
-  //#endregion
   protected onBackdropClick(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
@@ -177,15 +200,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
     }
   }
 
-  @ViewChild('dynamicContainer', { read: ViewContainerRef })
-  protected set dynamicContainer(vcr: ViewContainerRef | undefined) {
-    if (vcr && this.componentRef) {
-      this._currentVcr = vcr;
-      vcr.insert(this.componentRef.hostView);
-    }
-  }
-
-  //#region Subscription Methods
+  //#region Helpers
 
   private initKeyboardSubscription(): void {
     fromEvent<KeyboardEvent>(document, 'keydown')
@@ -200,16 +215,14 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
       });
   }
 
-  //#endregion
-
-  //#region Initialization Methods
-
   private initParamsFromConfig() {
     this.id.set(this.config?.id ?? this.scrollLockId);
 
     let hasHeaderText = false;
+
     if (this.config?.header?.text) {
       const text = this.config.header.text;
+
       hasHeaderText = isTextWithKey(text) ? !!text.key : text.length > 0;
     }
 
@@ -250,10 +263,6 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
     }
   }
 
-  //#endregion
-
-  //#region Helper Methods
-
   private handleLayout(width: number): void {
     if (!this.config) return;
 
@@ -272,6 +281,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
 
     if (layoutTypeChanged && this._currentVcr && this.componentRef) {
       const index = this._currentVcr.indexOf(this.componentRef.hostView);
+
       if (index !== -1) {
         this._currentVcr.detach(index);
       }
@@ -292,11 +302,12 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   }
 
   private getBottomSheetModal(): ModalBottomSheet | undefined {
-    return this.sideModalComponents?.first?.bottomSheet?.first ?? this.centeredModalComponents?.first?.bottomSheet?.first;
+    return this.sideModalComponents()[0]?.bottomSheet()[0] ?? this.centeredModalComponents()[0]?.bottomSheet()[0];
   }
 
   private resetBottomSheetModalLayout(): void {
     const bottomSheet = this.getBottomSheetModal();
+
     if (bottomSheet) {
       bottomSheet.currentTranslateY.set(0);
     }
@@ -304,9 +315,11 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
 
   private setBottomSheetModalFinishedState(isFinished: boolean): void {
     const bottomSheet = this.getBottomSheetModal();
+
     if (bottomSheet) {
       bottomSheet.isSwipingVerticallyFinished.set(isFinished);
     }
+
     this.isBottomSheetModalActive.set(false);
   }
 

@@ -1,11 +1,16 @@
+import type { Signal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { HighlightLoader } from 'ngx-highlightjs';
-import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
-import { Icon } from '@icons/components/icon';
+
+import { INavigationTreeGroup, ITopNavConfig, TopNav, TopNavActionsDirective, TopNavBrandDirective } from '@filip.mazev/blocks/navigation';
+
 import { ThemingService } from '@core/services/theming.service';
 import { Button } from '@forms/components/button/button';
-import { INavigationTreeGroup, ITopNavConfig, TopNav, TopNavBrandDirective, TopNavActionsDirective } from '@filip.mazev/blocks/navigation';
+import { Icon } from '@icons/components/icon';
+import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
+
+import { HighlightLoader } from 'ngx-highlightjs';
 
 @Component({
   selector: 'app-root',
@@ -17,15 +22,20 @@ import { INavigationTreeGroup, ITopNavConfig, TopNav, TopNavBrandDirective, TopN
 export class App {
   private readonly document = inject(DOCUMENT);
   private readonly highlight = inject(HighlightLoader);
+
   protected readonly theme = inject(ThemingService);
+
   protected readonly toolbarConfig: ITopNavConfig = { position: 'sticky', searchable: false, ariaLabel: 'Playground controls' };
   protected readonly toolbarGroups: readonly INavigationTreeGroup[] = [];
-  protected readonly isDarkMode = computed(() => this.theme.activeTheme() === 'dark');
+
+  protected readonly isDarkMode: Signal<boolean> = computed(() => this.theme.activeTheme() === 'dark');
 
   constructor() {
     effect(() => {
       const dark = this.isDarkMode();
+
       this.document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+
       if (this.document.defaultView) this.highlight.setTheme(dark ? 'assets/styles/vs2015.css' : 'assets/styles/github.css');
     });
   }

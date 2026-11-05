@@ -1,5 +1,5 @@
-import { ISideNavConfig } from '../interfaces/iside-nav-config.interface';
-import { NAVIGATION_VIEW_DEFAULTS } from '../../shared/constants/navigation-view.constants';
+import { NAVIGATION_VIEW_DEFAULTS } from '@navigation/components/shared/constants/navigation-view.constants';
+import { ISideNavConfig } from '@navigation/components/side-nav/interfaces/iside-nav-config.interface';
 
 export const SIDE_NAV_DEFAULTS = {
   ...NAVIGATION_VIEW_DEFAULTS,

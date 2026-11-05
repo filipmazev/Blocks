@@ -1,19 +1,24 @@
-import { ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
+import type { InputSignal } from '@angular/core';
+
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
+
 import {
   BX_I18N,
   BxA11yService,
-  BxPlacement,
   BxOverlayPositionService,
+  BxPlacement,
   inheritOverlayTheme,
   isTextWithKey,
   ResolvableText,
   uuidv4
 } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
-import { Tooltip } from '../components/tooltip/tooltip';
+
+import { Tooltip } from '@primitives/components/tooltip/tooltip';
+
 import { ContextMenuDirective } from './context-menu.directive';
 
 @Directive({ selector: '[bxTooltip]' })
@@ -27,11 +32,14 @@ export class TooltipDirective {
   private readonly describer = inject(AriaDescriber);
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly contextMenu = inject(ContextMenuDirective, { optional: true });
-  private readonly id = `bx-tooltip-${uuidv4()}`;
-  public readonly bxTooltip = input.required<ResolvableText>();
-  public readonly placement = input<BxPlacement>('bottom');
-  public readonly bxTooltipTouch = input<'none' | 'longpress' | 'tap'>('none');
-  public readonly bxTooltipHover = input(true);
+
+  private readonly id: string = `bx-tooltip-${uuidv4()}`;
+
+  public readonly bxTooltip: InputSignal<ResolvableText> = input.required<ResolvableText>();
+  public readonly placement: InputSignal<BxPlacement> = input<BxPlacement>('bottom');
+  public readonly bxTooltipTouch: InputSignal<'none' | 'longpress' | 'tap'> = input<'none' | 'longpress' | 'tap'>('none');
+  public readonly bxTooltipHover: InputSignal<boolean> = input(true);
+
   private overlayRef: OverlayRef | null = null;
   private tooltipComponent?: ComponentRef<Tooltip>;
   private transition?: ReturnType<typeof createGlassTransition>;
@@ -39,15 +47,15 @@ export class TooltipDirective {
   private disconnectLighting?: () => void;
   private positionSubscription?: { unsubscribe(): void };
   private keyboardSubscription?: { unsubscribe(): void };
-  private revision = 0;
-  private hovered = false;
-  private focused = false;
-  private lastPointerType = '';
+  private revision: number = 0;
+  private hovered: boolean = false;
+  private focused: boolean = false;
+  private lastPointerType: string = '';
   private touchEvents?: AbortController;
   private holdTimer?: number;
   private touchHideTimer?: number;
-  private touchVisible = false;
-  private closeTouchTap = false;
+  private touchVisible: boolean = false;
+  private closeTouchTap: boolean = false;
 
   constructor() {
     const source = this.elementRef.nativeElement;
@@ -55,6 +63,7 @@ export class TooltipDirective {
       ? this.focusMonitor.monitor(source, true).subscribe((origin) =>
           this.zone.run(() => {
             this.focused = origin === 'keyboard';
+
             if (this.focused) {
               this.clearTouchInteraction();
               this.show();
@@ -62,12 +71,16 @@ export class TooltipDirective {
           })
         )
       : undefined;
+
     effect((onCleanup) => {
       this.i18n?.version?.();
+
       const text = this.bxTooltip();
       const description = isTextWithKey(text) ? (this.i18n?.translate(text.key) ?? text.key) : text;
+
       if (!description) {
         if (this.overlayRef) this.hide();
+
         return;
       }
 
@@ -81,7 +94,9 @@ export class TooltipDirective {
     inject(DestroyRef).onDestroy(() => {
       ++this.revision;
       focus?.unsubscribe();
+
       if (focus) this.focusMonitor.stopMonitoring(source);
+
       this.clearTouchInteraction();
       this.dispose();
     });
@@ -89,9 +104,12 @@ export class TooltipDirective {
 
   public show(): void {
     if (!this.bxTooltip()) return;
+
     const revision = ++this.revision;
+
     if (!this.overlayRef) {
       const strategy = this.positionBuilder.getElementStrategy(this.elementRef.nativeElement, this.placement()).withFlexibleDimensions(false);
+
       this.overlayRef = this.overlay.create({
         positionStrategy: strategy,
         scrollStrategy: this.overlay.scrollStrategies.reposition(),
@@ -100,6 +118,7 @@ export class TooltipDirective {
       });
 
       const pane = this.overlayRef.overlayElement;
+
       pane.id = this.id;
       pane.setAttribute('role', 'tooltip');
       // AriaDescriber supplies the description even when the visual tooltip is hidden.
@@ -108,6 +127,7 @@ export class TooltipDirective {
       this.disconnectLighting = inheritGlassLighting(pane, this.elementRef.nativeElement);
 
       const component = this.overlayRef.attach(new ComponentPortal(Tooltip));
+
       this.tooltipComponent = component;
       // CDK enables pane pointer events during attach. Reset afterwards so the
       // emerging tooltip cannot steal hover from small or nested triggers.
@@ -115,13 +135,16 @@ export class TooltipDirective {
       this.keyboardSubscription = this.overlayRef.keydownEvents().subscribe((event) => this.onEscape(event));
       component.setInput('text', this.bxTooltip());
       component.changeDetectorRef.detectChanges();
+
       const positionArrow = () => {
         const trigger = this.elementRef.nativeElement.getBoundingClientRect();
         const bounds = pane.getBoundingClientRect();
+
         pane.style.setProperty('--bx-tooltip-arrow-x', `${trigger.left + trigger.width / 2 - bounds.left}px`);
         pane.style.setProperty('--bx-tooltip-arrow-y', `${trigger.top + trigger.height / 2 - bounds.top}px`);
         this.transition?.refresh();
       };
+
       this.positionSubscription = strategy.positionChanges.subscribe(positionArrow);
       this.overlayRef.updatePosition();
       positionArrow();
@@ -141,9 +164,13 @@ export class TooltipDirective {
 
   public hide(): void {
     this.clearTouchInteraction();
+
     const revision = ++this.revision;
+
     if (!this.overlayRef) return;
+
     const transition = this.transition;
+
     if (transition && !this.a11y.isReducedMotion()) {
       void this.zone
         .runOutsideAngular(() => transition.exit())
@@ -159,6 +186,7 @@ export class TooltipDirective {
   @HostListener('pointerenter', ['$event'])
   protected onEnter(event: PointerEvent): void {
     if (event.pointerType !== 'mouse' || !this.bxTooltipHover()) return;
+
     this.clearTouchInteraction();
     this.hovered = true;
     this.show();
@@ -167,29 +195,38 @@ export class TooltipDirective {
   @HostListener('pointerleave', ['$event'])
   protected onLeave(event: PointerEvent): void {
     if (event.pointerType !== 'mouse') return;
+
     this.hovered = false;
+
     if (!this.focused) this.hide();
   }
 
   @HostListener('pointerdown', ['$event'])
   protected onPointerDown(event: PointerEvent): void {
     this.lastPointerType = event.pointerType;
+
     if (event.pointerType !== 'touch') return;
+
     this.closeTouchTap = this.touchVisible && this.bxTooltipTouch() === 'tap';
     this.hovered = false;
     this.focused = false;
     this.hide();
+
     if (this.bxTooltipTouch() !== 'longpress' || !event.isPrimary || event.button !== 0 || !this.canUseTouch(event)) return;
+
     this.zone.runOutsideAngular(() => this.startTouchInteraction(event));
   }
 
   @HostListener('click', ['$event'])
   protected onClick(event: MouseEvent): void {
     if (event.detail === 0 || this.lastPointerType !== 'touch' || this.bxTooltipTouch() !== 'tap' || !this.canUseTouch(event)) return;
+
     if (this.closeTouchTap) {
       this.closeTouchTap = false;
+
       return;
     }
+
     this.zone.runOutsideAngular(() => this.startTouchInteraction());
   }
 
@@ -207,14 +244,18 @@ export class TooltipDirective {
 
   private canUseTouch(event: Event): boolean {
     if (this.contextMenu && this.bxTooltipTouch() === 'longpress') return false;
+
     const source = this.elementRef.nativeElement;
+
     if (source.closest(':disabled, [aria-disabled="true"], [inert]')) return false;
+
     return !event.composedPath().some((node) => node instanceof HTMLElement && (node.isContentEditable || node.matches('input, textarea, select')));
   }
 
   private hasTextSelection(): boolean {
     const source = this.elementRef.nativeElement;
     const selection = source.ownerDocument.getSelection();
+
     return !!selection && !selection.isCollapsed && (source.contains(selection.anchorNode) || source.contains(selection.focusNode));
   }
 
@@ -222,17 +263,25 @@ export class TooltipDirective {
     const source = this.elementRef.nativeElement;
     const doc = source.ownerDocument;
     const win = doc.defaultView;
+
     if (!win || this.hasTextSelection()) return;
+
     this.clearTouchInteraction();
+
     const events = new AbortController();
+
     this.touchEvents = events;
+
     const options = { capture: true, passive: true, signal: events.signal };
     const dismiss = () => this.zone.run(() => this.hide());
+
     let suppressReleaseClick = false;
+
     doc.addEventListener(
       'pointerdown',
       (event) => {
         if (!press && event.target instanceof Node && source.contains(event.target)) return;
+
         dismiss();
       },
       options
@@ -246,11 +295,14 @@ export class TooltipDirective {
       options
     );
     win.addEventListener('blur', dismiss, { signal: events.signal });
+
     if (!press) {
       this.touchVisible = true;
       this.zone.run(() => this.show());
+
       return;
     }
+
     doc.addEventListener(
       'pointermove',
       (event) => {
@@ -263,6 +315,7 @@ export class TooltipDirective {
       'pointerup',
       (event) => {
         if (event.pointerId !== press.pointerId) return;
+
         if (!this.touchVisible) dismiss();
         else this.touchHideTimer = win.setTimeout(dismiss, 1500);
       },
@@ -279,6 +332,7 @@ export class TooltipDirective {
       'click',
       (event) => {
         if (!suppressReleaseClick || event.detail === 0) return;
+
         event.preventDefault();
         event.stopImmediatePropagation();
         suppressReleaseClick = false;
@@ -300,8 +354,10 @@ export class TooltipDirective {
         this.hasTextSelection()
       ) {
         dismiss();
+
         return;
       }
+
       this.touchVisible = true;
       suppressReleaseClick = true;
       this.zone.run(() => this.show());
@@ -311,7 +367,9 @@ export class TooltipDirective {
   private clearTouchInteraction(): void {
     this.touchEvents?.abort();
     this.touchEvents = undefined;
+
     const win = this.elementRef.nativeElement.ownerDocument.defaultView;
+
     win?.clearTimeout(this.holdTimer);
     win?.clearTimeout(this.touchHideTimer);
     this.holdTimer = undefined;

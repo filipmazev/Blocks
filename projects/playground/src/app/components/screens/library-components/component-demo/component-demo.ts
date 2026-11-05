@@ -1,38 +1,47 @@
-import { Highlight } from 'ngx-highlightjs';
-import { ChangeDetectionStrategy, Component, ViewChild, computed, inject, signal } from '@angular/core';
+import type { Signal, WritableSignal } from '@angular/core';
+import type { Data } from '@angular/router';
+
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Button, Checkbox, CheckboxIndicator, FormField, InputField, Radio, SliderDirective, SlideToggle, BxError } from '@filip.mazev/blocks/forms';
+
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { Button, BxError, Checkbox, CheckboxIndicator, FormField, InputField, Radio, SliderDirective, SlideToggle } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { ModalBanner, ModalService } from '@filip.mazev/blocks/modal';
+import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
 import {
+  ContextMenuDirective,
+  DropdownDirective,
   Menu,
   MenuItem,
-  Tooltip,
-  DropdownDirective,
-  ContextMenuDirective,
-  TooltipDirective,
-  Tabs,
   Tab,
   TabContentDirective,
-  TabsVariant
+  Tabs,
+  TabsVariant,
+  Tooltip,
+  TooltipDirective
 } from '@filip.mazev/blocks/primitives';
-import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
-import { Icon } from '@filip.mazev/blocks/icons';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { ModalService, ModalBanner } from '@filip.mazev/blocks/modal';
 import { ToastrService } from '@filip.mazev/blocks/toastr';
-import { Readme } from '../../../shared/readme/readme';
-import { TopNavExamples } from '../top-nav-examples/top-nav-examples';
-import { SideNavExamples } from '../side-nav-examples/side-nav-examples';
-import { TagExamples } from '../tag-examples/tag-examples';
-import { TruncationExamples } from '../truncation-examples/truncation-examples';
-import { FormExamples } from '../form-examples/form-examples';
-import { MenuShortcutExamples } from '../menu-shortcut-examples/menu-shortcut-examples';
-import { SearchExamples } from '../search-examples/search-examples';
-import { EssentialsExamples } from '../essentials-examples/essentials-examples';
-import { ComponentDialog } from './component-dialog';
-import { IComponentDialogData } from './interfaces/icomponent-dialog-data.interface';
+
+import { IComponentDialogData } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-dialog-data.interface';
+import { EssentialsExamples } from '@playground/components/screens/library-components/essentials-examples/essentials-examples';
+import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
+import { MenuShortcutExamples } from '@playground/components/screens/library-components/menu-shortcut-examples/menu-shortcut-examples';
+import { SearchExamples } from '@playground/components/screens/library-components/search-examples/search-examples';
+import { SideNavExamples } from '@playground/components/screens/library-components/side-nav-examples/side-nav-examples';
+import { TagExamples } from '@playground/components/screens/library-components/tag-examples/tag-examples';
+import { TopNavExamples } from '@playground/components/screens/library-components/top-nav-examples/top-nav-examples';
+import { TruncationExamples } from '@playground/components/screens/library-components/truncation-examples/truncation-examples';
+import { Readme } from '@playground/components/shared/readme/readme';
+
+import { Highlight } from 'ngx-highlightjs';
+
+import type { ComponentExample } from './component-catalog';
+
 import { COMPONENT_EXAMPLES } from './component-catalog';
+import { ComponentDialog } from './component-dialog';
 
 @Component({
   selector: 'app-component-demo',
@@ -78,39 +87,54 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
 })
 export class ComponentDemo {
   private readonly route = inject(ActivatedRoute);
-  private readonly routeData = toSignal(this.route.data, { initialValue: this.route.snapshot.data });
   private readonly modals = inject(ModalService);
   private readonly toasts = inject(ToastrService);
-  protected readonly entry = computed(() => COMPONENT_EXAMPLES.find((item) => item.id === this.routeData()['componentId']) ?? COMPONENT_EXAMPLES[0]);
-  protected readonly count = signal(0);
-  protected readonly status = signal('Ready to try.');
-  protected readonly fieldValue = signal('');
-  protected readonly showError = signal(false);
-  protected readonly fieldError = computed(() => (this.showError() && this.fieldValue().trim().length < 3 ? 'Enter at least three characters.' : undefined));
-  protected readonly name = new FormControl('Blocks workspace', { nonNullable: true, validators: Validators.required });
-  protected readonly email = new FormControl('', { nonNullable: true, validators: Validators.email });
-  protected readonly volume = new FormControl(50, { nonNullable: true });
-  protected readonly quantity = new FormControl(3, { nonNullable: true });
-  protected readonly checked = new FormControl(true, { nonNullable: true });
-  protected readonly secondChecked = new FormControl(false, { nonNullable: true });
-  protected readonly disabledCheck = new FormControl({ value: false, disabled: true }, { nonNullable: true });
-  protected readonly frequency = new FormControl('weekly', { nonNullable: true });
-  protected readonly destination = new FormControl('skopje', { nonNullable: true });
-  protected readonly enabled = new FormControl(true, { nonNullable: true });
-  protected readonly bannerVisible = signal(true);
-  protected readonly selectedTab = signal<string | null>('overview');
-  protected readonly tabsVariant = signal<TabsVariant>('segmented');
-  protected readonly detailsDisabled = signal(false);
-  protected readonly showActivity = signal(true);
-  protected readonly tabNote = new FormControl('', { nonNullable: true });
-  protected readonly options = [
+
+  private readonly routeData: Signal<Data> = toSignal(this.route.data, { initialValue: this.route.snapshot.data });
+
+  private readonly contextMenu: Signal<ContextMenuDirective | undefined> = viewChild(ContextMenuDirective);
+
+  protected readonly entry: Signal<ComponentExample> = computed(
+    () => COMPONENT_EXAMPLES.find((item) => item.id === this.routeData()['componentId']) ?? COMPONENT_EXAMPLES[0]
+  );
+
+  protected readonly count: WritableSignal<number> = signal(0);
+
+  protected readonly status: WritableSignal<string> = signal('Ready to try.');
+  protected readonly fieldValue: WritableSignal<string> = signal('');
+
+  protected readonly showError: WritableSignal<boolean> = signal(false);
+
+  protected readonly fieldError: Signal<'Enter at least three characters.' | undefined> = computed(() =>
+    this.showError() && this.fieldValue().trim().length < 3 ? 'Enter at least three characters.' : undefined
+  );
+
+  protected readonly name: FormControl<string> = new FormControl('Blocks workspace', { nonNullable: true, validators: Validators.required });
+  protected readonly email: FormControl<string> = new FormControl('', { nonNullable: true, validators: Validators.email });
+  protected readonly volume: FormControl<number> = new FormControl(50, { nonNullable: true });
+  protected readonly quantity: FormControl<number> = new FormControl(3, { nonNullable: true });
+  protected readonly checked: FormControl<boolean> = new FormControl(true, { nonNullable: true });
+  protected readonly secondChecked: FormControl<boolean> = new FormControl(false, { nonNullable: true });
+  protected readonly disabledCheck: FormControl<boolean> = new FormControl({ value: false, disabled: true }, { nonNullable: true });
+  protected readonly frequency: FormControl<string> = new FormControl('weekly', { nonNullable: true });
+  protected readonly destination: FormControl<string> = new FormControl('skopje', { nonNullable: true });
+  protected readonly enabled: FormControl<boolean> = new FormControl(true, { nonNullable: true });
+
+  protected readonly bannerVisible: WritableSignal<boolean> = signal(true);
+
+  protected readonly selectedTab: WritableSignal<string | null> = signal<string | null>('overview');
+  protected readonly tabsVariant: WritableSignal<TabsVariant> = signal<TabsVariant>('segmented');
+
+  protected readonly detailsDisabled: WritableSignal<boolean> = signal(false);
+  protected readonly showActivity: WritableSignal<boolean> = signal(true);
+
+  protected readonly tabNote: FormControl<string> = new FormControl('', { nonNullable: true });
+  protected readonly options: ({ label: string; value: string; disabled?: undefined } | { label: string; value: string; disabled: boolean })[] = [
     { label: 'Skopje', value: 'skopje' },
     { label: 'Ohrid', value: 'ohrid' },
     { label: 'Bitola', value: 'bitola' },
     { label: 'Unavailable destination', value: 'unavailable', disabled: true }
   ];
-
-  @ViewChild(ContextMenuDirective) private contextMenu?: ContextMenuDirective;
 
   protected activate(label: string): void {
     this.count.update((count) => count + 1);
@@ -123,8 +147,10 @@ export class ComponentDemo {
 
   protected openContextMenu(event: MouseEvent | KeyboardEvent): void {
     event.preventDefault();
+
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    this.contextMenu?.open(new MouseEvent('contextmenu', { clientX: rect.left + 16, clientY: rect.bottom + 4 }));
+
+    this.contextMenu()?.open(new MouseEvent('contextmenu', { clientX: rect.left + 16, clientY: rect.bottom + 4 }));
   }
 
   protected openModal(layout?: 'center' | 'left' | 'right' | 'bottom-sheet'): void {
@@ -137,6 +163,7 @@ export class ComponentDemo {
       header: { text: this.entry().title },
       style: { layout: selected, hasBackdrop: true, animate: true, showCloseButton: true }
     });
+
     ref.afterClosed().subscribe((result) => this.status.set(result.state === 'confirm' ? `Saved: ${result.data}` : 'Dialog dismissed.'));
   }
 
@@ -146,6 +173,7 @@ export class ComponentDemo {
       message: 'This notification follows the application theme and appearance settings.',
       durationInMs: 4500
     };
+
     switch (intent) {
       case 'success':
         this.toasts.queueSuccess(request);
@@ -160,6 +188,7 @@ export class ComponentDemo {
         this.toasts.queueDanger(request);
         break;
     }
+
     this.status.set(`${intent} notification queued.`);
   }
 }

@@ -1,8 +1,12 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+
 import { BX_I18N } from '@filip.mazev/blocks/core';
 import { Button, Checkbox, ISearchRetryConfig, SearchInput } from '@filip.mazev/blocks/forms';
-import { DemoI18nService } from '../form-examples/services/demo-i18n.service';
-import { MockSearchStore } from './services/mock-search-store.service';
+
+import { DemoI18nService } from '@playground/components/screens/library-components/form-examples/services/demo-i18n.service';
+import { MockSearchStore } from '@playground/components/screens/library-components/search-examples/services/mock-search-store.service';
 
 @Component({
   selector: 'app-search-examples',
@@ -14,11 +18,14 @@ import { MockSearchStore } from './services/mock-search-store.service';
 })
 export class SearchExamples {
   private readonly i18n = inject(DemoI18nService);
+
   protected readonly remote = inject(MockSearchStore);
-  protected readonly showLoadingText = signal(false);
-  protected readonly readOnly = signal(false);
-  protected readonly disabled = signal(false);
-  protected readonly emptyText = computed(() => {
+
+  protected readonly showLoadingText: WritableSignal<boolean> = signal(false);
+  protected readonly readOnly: WritableSignal<boolean> = signal(false);
+  protected readonly disabled: WritableSignal<boolean> = signal(false);
+
+  protected readonly emptyText: Signal<string> = computed(() => {
     this.i18n.version();
 
     return this.i18n.translate('searchEmpty');

@@ -5,17 +5,14 @@ const { chromium, webkit } = require(process.env.BLOCKS_PLAYWRIGHT_PATH || 'play
 const origin = process.env.BLOCKS_PLAYGROUND_URL || 'http://localhost:8080';
 let browser;
 before(async () => {
-  browser =
-    process.env.BLOCKS_BROWSER === 'webkit'
-      ? await webkit.launch()
-      : await chromium.launch({ channel: 'chrome' });
+  browser = process.env.BLOCKS_BROWSER === 'webkit' ? await webkit.launch() : await chromium.launch({ channel: 'chrome' });
 });
 after(async () => browser?.close());
 async function overview(t, options = {}) {
   const page = await browser.newPage({
     viewport: { width: 1440, height: 1200 },
     colorScheme: 'dark',
-    ...options,
+    ...options
   });
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
@@ -30,18 +27,11 @@ async function overview(t, options = {}) {
     KeyframeEffect.prototype.setKeyframes = function (...args) {
       if (this.target?.classList.contains('light-orb')) {
         orbMetrics.paints++;
-        const rotations = [
-          ...String(args[0]?.[0]?.transform || '').matchAll(/rotate\(([-\d.]+)rad\)/g),
-        ];
-        if (rotations.length)
-          orbMetrics.angle = rotations.reduce((sum, match) => sum + Number(match[1]), 0);
+        const rotations = [...String(args[0]?.[0]?.transform || '').matchAll(/rotate\(([-\d.]+)rad\)/g)];
+        if (rotations.length) orbMetrics.angle = rotations.reduce((sum, match) => sum + Number(match[1]), 0);
         const transform = args[0]?.[0]?.transform || '';
         const scale = transform.match(/scale\(([\d.]+),\s*([\d.]+)\)/);
-        if (scale)
-          orbMetrics.squash = Math.max(
-            orbMetrics.squash,
-            Math.abs(Number(scale[1]) - Number(scale[2])),
-          );
+        if (scale) orbMetrics.squash = Math.max(orbMetrics.squash, Math.abs(Number(scale[1]) - Number(scale[2])));
       }
       return keyframes.apply(this, args);
     };
@@ -58,9 +48,7 @@ async function overview(t, options = {}) {
   });
   await page.goto(`${origin}/home`);
   await page.waitForSelector('.orb-ready');
-  await page.waitForFunction(
-    () => document.querySelector('.light-orb')?.getBoundingClientRect().width > 30,
-  );
+  await page.waitForFunction(() => document.querySelector('.light-orb')?.getBoundingClientRect().width > 30);
   await page.waitForTimeout(300);
   return page;
 }
@@ -72,17 +60,12 @@ const pose = (page) =>
       y: r.y + r.height / 2,
       color: getComputedStyle(el).color,
       state: el.dataset.state,
-      mood: el.dataset.mood,
+      mood: el.dataset.mood
     };
   });
-const charge = (page) =>
-  page.locator('.orb-charge').evaluate((el) => Number(getComputedStyle(el).opacity));
+const charge = (page) => page.locator('.orb-charge').evaluate((el) => Number(getComputedStyle(el).opacity));
 const waitState = (page, state, timeout = 10000) =>
-  page.waitForFunction(
-    (state) => document.querySelector('.light-orb').dataset.state === state,
-    state,
-    { timeout },
-  );
+  page.waitForFunction((state) => document.querySelector('.light-orb').dataset.state === state, state, { timeout });
 async function wake(page) {
   await page.locator('.light-orb').hover();
   await waitState(page, 'flying');
@@ -108,10 +91,7 @@ async function expectHome(page) {
   await waitState(page, 'asleep');
   const p = await pose(page),
     home = await page.locator('.orb-nest-well').boundingBox();
-  assert.ok(
-    Math.hypot(p.x - home.x - home.width / 2, p.y - home.y - home.height / 2) < 2,
-    JSON.stringify({ p, home }),
-  );
+  assert.ok(Math.hypot(p.x - home.x - home.width / 2, p.y - home.y - home.height / 2) < 2, JSON.stringify({ p, home }));
 }
 
 test('the unlit swatch sleeps in its well and charges gradually when waking itself', async (t) => {
@@ -126,24 +106,17 @@ test('the unlit swatch sleeps in its well and charges gradually when waking itse
       const orb = document.querySelector('.light-orb');
       chargeSamples.push({
         state: orb.dataset.state,
-        charge: Number(getComputedStyle(orb.querySelector('.orb-charge')).opacity),
+        charge: Number(getComputedStyle(orb.querySelector('.orb-charge')).opacity)
       });
       if (performance.now() - start < 6500) requestAnimationFrame(watch);
     };
     requestAnimationFrame(watch);
   });
   await waitState(page, 'flying', 9000);
-  const ramp = await page.evaluate(() =>
-    chargeSamples.filter((sample) => sample.state === 'waking'),
-  );
-  assert.ok(
-    ramp.length >= 3 && ramp[0].charge < 0.3 && ramp[ramp.length - 1].charge > ramp[0].charge,
-    JSON.stringify(ramp),
-  );
+  const ramp = await page.evaluate(() => chargeSamples.filter((sample) => sample.state === 'waking'));
+  assert.ok(ramp.length >= 3 && ramp[0].charge < 0.3 && ramp[ramp.length - 1].charge > ramp[0].charge, JSON.stringify(ramp));
   await waitState(page, 'flying');
-  await page.waitForFunction(
-    () => Number(getComputedStyle(document.querySelector('.orb-charge')).opacity) > 0.9,
-  );
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.orb-charge')).opacity) > 0.9);
 });
 
 test('liquid-light ribbons change their 3D shape and light the sphere without ambient rescans', async (t) => {
@@ -151,8 +124,7 @@ test('liquid-light ribbons change their 3D shape and light the sphere without am
   await wake(page);
   await page.waitForFunction(() => {
     const now = performance.now();
-    if (!window.orbQuiet || orbQuiet.hits !== orbMetrics.hits)
-      window.orbQuiet = { hits: orbMetrics.hits, time: now };
+    if (!window.orbQuiet || orbQuiet.hits !== orbMetrics.hits) window.orbQuiet = { hits: orbMetrics.hits, time: now };
     return now - orbQuiet.time > 500;
   });
   const first = await page.locator('.ribbon-core').getAttribute('d');
@@ -189,10 +161,7 @@ test('a real flick retains momentum, bounces, squashes, falls and shakes itself 
   assert.ok(await page.evaluate(() => orbMetrics.squash > 0.25));
   const a = await page.locator('.light-orb').evaluate((el) => getComputedStyle(el).transform);
   await page.waitForTimeout(350);
-  assert.notEqual(
-    await page.locator('.light-orb').evaluate((el) => getComputedStyle(el).transform),
-    a,
-  );
+  assert.notEqual(await page.locator('.light-orb').evaluate((el) => getComputedStyle(el).transform), a);
   await waitState(page, 'flying');
 });
 
@@ -209,12 +178,8 @@ test('gentle handling glows success and existing cards receive the same current 
   const result = await page.evaluate(() => {
     const orb = document.querySelector('.light-orb');
     const color = getComputedStyle(orb).color;
-    const expected = getComputedStyle(
-      document.querySelector('.orb-color-probes').children[1],
-    ).color;
-    const lights = [
-      ...document.querySelectorAll('.feature-card .bx-glass-rim [data-bx-light-source]'),
-    ]
+    const expected = getComputedStyle(document.querySelector('.orb-color-probes').children[1]).color;
+    const lights = [...document.querySelectorAll('.feature-card .bx-glass-rim [data-bx-light-source]')]
       .filter((el) => /^\d+:\d+$/.test(el.dataset.bxLightSource) && el.style.opacity === '1')
       .map((el) => el.style.backgroundImage.match(/rgb\([^)]+\)/)?.[0]);
     return { color, expected, lights };
@@ -226,14 +191,12 @@ test('gentle handling glows success and existing cards receive the same current 
       .map(Number);
   assert.ok(
     channels(result.color).every((value, i) => Math.abs(value - channels(result.expected)[i]) < 4),
-    JSON.stringify(result),
+    JSON.stringify(result)
   );
   assert.ok(result.lights.length > 0, JSON.stringify(result));
   assert.ok(
-    result.lights.every((light) =>
-      channels(light).every((value, i) => Math.abs(value - channels(result.color)[i]) < 4),
-    ),
-    JSON.stringify(result),
+    result.lights.every((light) => channels(light).every((value, i) => Math.abs(value - channels(result.color)[i]) < 4)),
+    JSON.stringify(result)
   );
 });
 
@@ -246,9 +209,7 @@ test('repeated throws create red frantic bounces, block recall, then cool and re
     await page.waitForTimeout(80);
   }
   await page.waitForFunction(() => document.querySelector('.light-orb').dataset.mood === 'danger');
-  assert.ok(
-    await page.getByRole('button', { name: 'Bring the light home', exact: true }).isDisabled(),
-  );
+  assert.ok(await page.getByRole('button', { name: 'Bring the light home', exact: true }).isDisabled());
   await page.keyboard.press('Escape');
   assert.notEqual((await pose(page)).state, 'returning');
   const before = await page.evaluate(() => orbMetrics.impacts);
@@ -260,20 +221,10 @@ test('repeated throws create red frantic bounces, block recall, then cool and re
     .nth(3)
     .evaluate((el) => getComputedStyle(el).color);
   assert.equal(color.color, expected);
-  await page.waitForFunction(
-    () => document.querySelector('.light-orb').dataset.mood === 'info',
-    null,
-    { timeout: 9000 },
-  );
-  assert.ok(
-    await page.getByRole('button', { name: 'Bring the light home', exact: true }).isEnabled(),
-  );
+  await page.waitForFunction(() => document.querySelector('.light-orb').dataset.mood === 'info', null, { timeout: 9000 });
+  assert.ok(await page.getByRole('button', { name: 'Bring the light home', exact: true }).isEnabled());
   await expectHome(page);
-  await page.waitForFunction(
-    () => Number(getComputedStyle(document.querySelector('.orb-charge')).opacity) === 0,
-    null,
-    { timeout: 4000 },
-  );
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.orb-charge')).opacity) === 0, null, { timeout: 4000 });
 });
 
 test('Bring home guides it to the well, fades out and leaves it resting', async (t) => {
@@ -282,11 +233,7 @@ test('Bring home guides it to the well, fades out and leaves it resting', async 
   await page.getByRole('button', { name: 'Bring the light home', exact: true }).click();
   await waitState(page, 'returning');
   await expectHome(page);
-  await page.waitForFunction(
-    () => Number(getComputedStyle(document.querySelector('.orb-charge')).opacity) === 0,
-    null,
-    { timeout: 4000 },
-  );
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.orb-charge')).opacity) === 0, null, { timeout: 4000 });
   const start = await pose(page),
     paints = await page.evaluate(() => orbMetrics.paints);
   await page.waitForTimeout(4700);
@@ -316,7 +263,7 @@ test('mobile touch wakes the swatch and preserves the page boundaries', async (t
   const page = await overview(t, {
     viewport: { width: 390, height: 844 },
     hasTouch: true,
-    isMobile: true,
+    isMobile: true
   });
   await page.locator('.light-orb').scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
@@ -361,9 +308,7 @@ test('a circular drag released near its starting point retains spin instead of b
     await page.waitForTimeout(12);
   }
   await page.mouse.up();
-  await page.waitForFunction(() =>
-    ['coasting', 'falling'].includes(document.querySelector('.light-orb').dataset.state),
-  );
+  await page.waitForFunction(() => ['coasting', 'falling'].includes(document.querySelector('.light-orb').dataset.state));
   const angle = await page.evaluate(() => orbMetrics.angle);
   await page.waitForTimeout(140);
   assert.ok(Math.abs((await page.evaluate(() => orbMetrics.angle)) - angle) > 0.5);

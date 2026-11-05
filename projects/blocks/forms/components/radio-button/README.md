@@ -19,15 +19,18 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-Legacy individually bound radios support `[formControl]`, `formControlName`, and `[(ngModel)]`. For new forms, bind a `RadioGroup` with `[formField]` or an existing Angular form directive, and keep each radio value as its option value. See the [radio-group guide](../radio-group/README.md).
+Legacy individually bound radios support `[formControl]`, `formControlName`, and `[(ngModel)]`. For new forms, bind a `RadioGroup` with `[formField]` or an
+existing Angular form directive, and keep each radio value as its option value. See the [radio-group guide](../radio-group/README.md).
 
 `value` is required and identifies this option. `name` groups the native radio inputs.
 
 ## Appearance
 
-Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
+Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
+translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
-Selected radios keep emitting the theme color after pointer release and blur. Hovering the circle or its label highlights the surface and emits color; disabled controls do neither.
+Selected radios keep emitting the theme color after pointer release and blur. Hovering the circle or its label highlights the surface and emits color; disabled
+controls do neither.
 
 ```ts
 import { inject } from '@angular/core';
@@ -41,11 +44,13 @@ this.theme.setAppearance({ translucency: 0.5 });
 this.theme.setAppearance({ reducedTransparency: true });
 ```
 
-`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels, focus states, or semantic control states.
+`BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
+focus states, or semantic control states.
 
 ## Behavior and accessibility
 
-Use the same form control and name for mutually exclusive options, distinct values, and visible labels. A fieldset with a legend gives the group an accessible name.
+Use the same form control and name for mutually exclusive options, distinct values, and visible labels. A fieldset with a legend gives the group an accessible
+name.
 
 ## Playground
 

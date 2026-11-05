@@ -1,11 +1,3 @@
-import { ThemedColor } from '@filip.mazev/blocks/core';
-import { IconName, IconSize, IconStrokeWidth } from '../types/icon.types';
-
-export interface IconData {
-  name: IconName;
-  size?: IconSize;
-  strokeWidth?: IconStrokeWidth;
-
-  color?: ThemedColor;
-  bgColor?: ThemedColor | 'auto';
-}
+export type { IIconData } from './iicon-data.interface';
+/** @deprecated Use IIconData; the historical type name remains available for compatibility. */
+export type { IIconData as IconData } from './iicon-data.interface';

@@ -3,12 +3,10 @@ const assert = require('node:assert/strict');
 const { buildSync } = require('esbuild');
 const { runInNewContext } = require('node:vm');
 const result = buildSync({
-  entryPoints: [
-    'projects/playground/src/app/components/screens/home/light-orb/light-orb-physics.ts',
-  ],
+  entryPoints: ['projects/playground/src/app/components/screens/home/light-orb/light-orb-physics.ts'],
   bundle: true,
   format: 'cjs',
-  write: false,
+  write: false
 });
 const compiled = { exports: {} };
 runInNewContext(result.outputFiles[0].text, { module: compiled, exports: compiled.exports });
@@ -168,7 +166,7 @@ test('release velocity preserves a flick despite a delayed pointerup', () => {
   const samples = [
     { x: 0, y: 0, time: 0 },
     { x: 20, y: 8, time: 20 },
-    { x: 40, y: 16, time: 40 },
+    { x: 40, y: 16, time: 40 }
   ];
   const velocity = orbReleaseVelocity(samples, 100);
   assert.ok(Math.abs(velocity[0] - 1000) < 1);
@@ -205,7 +203,7 @@ test('release follows the final acceleration and the tangent of a circular swing
   const accelerating = [0, 20, 40, 60].map((time) => ({
     time,
     x: 10000 * (time / 1000) ** 2,
-    y: 0,
+    y: 0
   }));
   const a = orbReleaseMotion(accelerating, 60);
   assert.ok(a.vx > 1100 && a.vx < 1300);
@@ -213,7 +211,7 @@ test('release follows the final acceleration and the tangent of a circular swing
   const circle = Array.from({ length: 9 }, (_, i) => ({
     time: i * 10,
     x: 50 * Math.cos(i * 0.2),
-    y: 50 * Math.sin(i * 0.2),
+    y: 50 * Math.sin(i * 0.2)
   }));
   const circular = orbReleaseMotion(circle, 80);
   assert.ok(circular.vx < -700);
@@ -305,7 +303,7 @@ test('a decelerating nudge retains some recent motion without inventing a hard t
     { time: 0, x: 0, y: 0 },
     { time: 30, x: 9, y: 0 },
     { time: 60, x: 15, y: 0 },
-    { time: 90, x: 18, y: 0 },
+    { time: 90, x: 18, y: 0 }
   ];
   const motion = orbReleaseMotion(samples, 140);
   assert.ok(motion.vx >= 80);

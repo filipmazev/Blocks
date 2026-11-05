@@ -1,8 +1,11 @@
-import { DOCUMENT, inject, Injectable } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { DOCUMENT, inject, Injectable } from '@angular/core';
+
 import { uuidv4 } from '@filip.mazev/blocks/core';
+
+import { INavigationLevelPosition } from '@navigation/components/shared/interfaces/inavigation-level-position.interface';
+
 import { NavigationStateService } from './navigation-state.service';
-import { INavigationLevelPosition } from '../interfaces/inavigation-level-position.interface';
 
 /** Scoped focus and scroll bookmarks shared by side and top navigation. Owners schedule calls after rendering. */
 @Injectable()
@@ -10,13 +13,16 @@ export class NavigationFocusService {
   private readonly document = inject(DOCUMENT);
   private readonly monitor = inject(FocusMonitor);
   private readonly state = inject(NavigationStateService);
-  private readonly positions = new Map<string, INavigationLevelPosition>();
-  public readonly rootScrollId = `bx-navigation-root-${uuidv4()}`;
+
+  private readonly positions: Map<string, INavigationLevelPosition> = new Map<string, INavigationLevelPosition>();
+
+  public readonly rootScrollId: string = `bx-navigation-root-${uuidv4()}`;
 
   public remember(origin?: HTMLElement): void {
     const scroller = origin?.closest<HTMLElement>('[data-bx-nav-scroll]') ?? this.activeScroller();
 
     if (!scroller) return;
+
     const element = origin ?? (this.document.activeElement as HTMLElement | null);
     const row = element?.closest<HTMLElement>('[data-nav-id]');
     const section = element?.closest<HTMLElement>('[data-section-id]');
@@ -33,8 +39,11 @@ export class NavigationFocusService {
     const scroller = this.activeScroller();
 
     if (!scroller) return;
+
     const position = restore ? this.positions.get(this.positionKey(scroller)) : undefined;
+
     scroller.scrollTop = position?.scrollTop ?? 0;
+
     const revealId = this.state.query().trim() ? undefined : this.state.revealItemId();
     const rows = Array.from(scroller.querySelectorAll<HTMLElement>('[data-nav-id]'));
     const revealed = revealId ? rows.find((element) => element.getAttribute('data-nav-id') === revealId) : undefined;
@@ -57,6 +66,7 @@ export class NavigationFocusService {
     }
 
     if (!focus) return;
+
     const row = revealed ?? rows.find((element) => element.getAttribute('data-nav-id') === position?.itemId);
     const section = Array.from(scroller.querySelectorAll<HTMLElement>('[data-section-id]')).find(
       (element) => element.getAttribute('data-section-id') === position?.sectionId
@@ -71,6 +81,7 @@ export class NavigationFocusService {
   }
 
   //#region Helpers
+
   private activeScroller(): HTMLElement | undefined {
     const level = !this.state.query().trim() && this.state.hasLevel() ? this.document.getElementById(`${this.state.levelId}-scroll`) : null;
 
@@ -79,9 +90,11 @@ export class NavigationFocusService {
 
   private positionKey(scroller: HTMLElement): string {
     if (this.state.query().trim()) return `search:${this.state.query()}`;
+
     return scroller.id === this.rootScrollId
       ? JSON.stringify([undefined, []])
       : (scroller.querySelector('[data-nav-level-key]')?.getAttribute('data-nav-level-key') ?? this.state.levelKey());
   }
+
   //#endregion
 }

@@ -1,5 +1,6 @@
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { ButtonColor, ButtonVariant } from '../../../types/form.types';
+
+import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
 
 /** Optional presentation for the search request's retry action. */
 export interface ISearchRetryConfig {

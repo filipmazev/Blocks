@@ -1,7 +1,8 @@
+import { ISideNavConfig } from '@navigation/components/side-nav/interfaces/iside-nav-config.interface';
+import { ITopNavConfig } from '@navigation/components/top-nav/interfaces/itop-nav-config.interface';
+
 import { INavigationItem } from './inavigation-item.interface';
 import { INavigationSectionConfig } from './inavigation-section-config.interface';
-import { ITopNavConfig } from '../components/top-nav/interfaces/itop-nav-config.interface';
-import { ISideNavConfig } from '../components/side-nav/interfaces/iside-nav-config.interface';
 
 /** Application-wide navigation defaults supplied with provideNavigation. */
 export interface INavigationConfig {

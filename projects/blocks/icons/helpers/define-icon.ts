@@ -1,6 +1,6 @@
-import { ICON_BRAND } from '../constants/icon.constants';
-import { IconDefinition } from '../interfaces/icon-definition.interface';
+import { ICON_BRAND } from '@icons/constants/icon.constants';
+import { IIconDefinition } from '@icons/interfaces/icon-definition.interface';
 
-export function defineIcon(input: Omit<IconDefinition, typeof ICON_BRAND>): IconDefinition {
-  return input as IconDefinition;
+export function defineIcon(input: Omit<IIconDefinition, typeof ICON_BRAND>): IIconDefinition {
+  return input as IIconDefinition;
 }

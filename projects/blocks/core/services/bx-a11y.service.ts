@@ -1,5 +1,7 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +10,15 @@ export class BxA11yService {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
 
-  private readonly osPrefersReducedMotion = signal(false);
-  private readonly manualOverride = signal<boolean | null>(null);
+  private readonly osPrefersReducedMotion: WritableSignal<boolean> = signal(false);
 
-  public readonly isReducedMotion = computed(() => {
+  private readonly manualOverride: WritableSignal<boolean | null> = signal<boolean | null>(null);
+
+  public readonly isReducedMotion: Signal<boolean> = computed(() => {
     const manual = this.manualOverride();
+
     if (manual !== null) return manual;
+
     return this.osPrefersReducedMotion();
   });
 
@@ -32,9 +37,11 @@ export class BxA11yService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     this.osPrefersReducedMotion.set(mediaQuery.matches);
 
     const listener = (e: MediaQueryListEvent) => this.osPrefersReducedMotion.set(e.matches);
+
     mediaQuery.addEventListener('change', listener);
     inject(DestroyRef).onDestroy(() => mediaQuery.removeEventListener('change', listener));
   }

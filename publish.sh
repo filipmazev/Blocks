@@ -23,7 +23,8 @@ while [[ "$#" -gt 0 ]]; do
         --retry) RETRY=true; shift ;;
         --help|-h)
             echo "Usage: bash publish.sh [--bump patch|minor|major | --retry] [--token TOKEN]"
-            echo "Defaults to a patch bump. --retry publishes the existing version without a bump."
+            echo "Defaults to release.config.json nextVersion, or the next patch in the configured channel."
+            echo "--bump overrides the target; --retry publishes the current version without a bump."
             echo "The package's publishConfig.tag selects the npm channel (alpha, beta or latest)."
             exit 0
             ;;
@@ -66,7 +67,11 @@ if ! npm whoami >/dev/null; then
 fi
 
 if [[ "$RETRY" == false ]]; then
-    npm run version:blocks -- "$BUMP"
+    if [[ "$BUMP_SET" == true ]]; then
+        npm run version:blocks -- "$BUMP"
+    else
+        npm run version:blocks
+    fi
 fi
 
 npm run build:blocks

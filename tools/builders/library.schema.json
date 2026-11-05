@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+        "project": { "type": "string", "description": "Workspace-relative path to ng-package.json." },
+        "tsConfig": { "type": "string", "description": "Workspace-relative path to the library TypeScript configuration." },
+        "watch": { "type": "boolean", "default": false, "description": "Rebuild the library after source changes." },
+        "poll": { "type": "number", "description": "Optional file-watcher polling interval in milliseconds." }
+    },
+    "additionalProperties": false
+}

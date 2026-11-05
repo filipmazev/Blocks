@@ -1,10 +1,16 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+
+import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+
 import { BX_I18N } from '@filip.mazev/blocks/core';
 import { Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Tag, TagColor, TagVariant } from '@filip.mazev/blocks/primitives';
-import { TAG_COLOR_OPTIONS, TAG_VARIANT_OPTIONS } from './constants/tag-examples.constants';
-import { DemoI18nService } from '../form-examples/services/demo-i18n.service';
-import { TruncationExamples } from '../truncation-examples/truncation-examples';
+
+import { DemoI18nService } from '@playground/components/screens/library-components/form-examples/services/demo-i18n.service';
+import { TAG_COLOR_OPTIONS, TAG_VARIANT_OPTIONS } from '@playground/components/screens/library-components/tag-examples/constants/tag-examples.constants';
+import { TruncationExamples } from '@playground/components/screens/library-components/truncation-examples/truncation-examples';
 
 @Component({
   selector: 'app-tag-examples',
@@ -16,17 +22,23 @@ import { TruncationExamples } from '../truncation-examples/truncation-examples';
 })
 export class TagExamples {
   protected readonly translations = inject(DemoI18nService);
-  protected readonly label = signal<string | number | null>('Skopje');
-  protected readonly text = computed(() => String(this.label() ?? ''));
-  protected readonly color = signal<TagColor | null>('accent');
-  protected readonly variant = signal<TagVariant | null>('tonal');
-  protected readonly disabled = signal(false);
-  protected readonly leadingIcon = signal(true);
-  protected readonly trailingIcon = signal(true);
-  protected readonly leadingCount = signal(false);
-  protected readonly trailingCount = signal(true);
-  protected readonly leftNumber = signal<string | number | null>(3);
-  protected readonly rightNumber = signal<string | number | null>(12);
-  protected readonly colors = TAG_COLOR_OPTIONS;
-  protected readonly variants = TAG_VARIANT_OPTIONS;
+
+  protected readonly label: WritableSignal<string | number | null> = signal<string | number | null>('Skopje');
+
+  protected readonly text: Signal<string> = computed(() => String(this.label() ?? ''));
+
+  protected readonly color: WritableSignal<TagColor | null> = signal<TagColor | null>('accent');
+  protected readonly variant: WritableSignal<TagVariant | null> = signal<TagVariant | null>('tonal');
+
+  protected readonly disabled: WritableSignal<boolean> = signal(false);
+  protected readonly leadingIcon: WritableSignal<boolean> = signal(true);
+  protected readonly trailingIcon: WritableSignal<boolean> = signal(true);
+  protected readonly leadingCount: WritableSignal<boolean> = signal(false);
+  protected readonly trailingCount: WritableSignal<boolean> = signal(true);
+
+  protected readonly leftNumber: WritableSignal<string | number | null> = signal<string | number | null>(3);
+  protected readonly rightNumber: WritableSignal<string | number | null> = signal<string | number | null>(12);
+
+  protected readonly colors: readonly BxSelectOption<TagColor>[] = TAG_COLOR_OPTIONS;
+  protected readonly variants: readonly BxSelectOption<TagVariant>[] = TAG_VARIANT_OPTIONS;
 }

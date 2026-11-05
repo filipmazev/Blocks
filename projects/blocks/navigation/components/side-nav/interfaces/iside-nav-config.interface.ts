@@ -1,6 +1,7 @@
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
-import { INavigationViewConfig } from '../../shared/interfaces/inavigation-view-config.interface';
-import { SideNavSubmenuMode } from '../types/side-nav.types';
+
+import { INavigationViewConfig } from '@navigation/components/shared/interfaces/inavigation-view-config.interface';
+import { SideNavSubmenuMode } from '@navigation/components/side-nav/types/side-nav.types';
 
 /** Shared or per-instance side-nav configuration. Instance values override application defaults. */
 export interface ISideNavConfig extends INavigationViewConfig {

@@ -58,8 +58,7 @@
     border-color: var(--bx-border-brand);
 }
 
-// Dense result tiles use the containing page's material instead of mounting
-// separate animated lighting receivers and backdrop filters for every icon.
+/* IMPORTANT: Dense result tiles use the containing page's material instead of mounting separate animated lighting receivers and backdrop filters for every icon. */
 .icon-card:hover,
 .icon-card.selected {
     background: var(--bx-bg-surface-alt);

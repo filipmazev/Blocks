@@ -176,12 +176,8 @@
 }
 
 .bx-nav-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: z(fixed);
-    border: 0;
-    background: var(--bx-side-nav-backdrop, var(--bx-backdrop-color, rgb(0 0 0 / 40%)));
-    cursor: pointer;
+    --bx-modal-backdrop-z-index: #{z(fixed)};
+    --bx-modal-backdrop-background: var(--bx-side-nav-backdrop, var(--bx-backdrop-color));
 }
 
 .bx-nav-hamburger {
@@ -204,11 +200,7 @@
 
 :host(.is-animated:not(.is-mobile)) {
     .bx-nav-panel {
-        @include bx-transition(
-            width,
-            var(--bx-side-nav-duration, 250ms),
-            var(--bx-side-nav-easing, ease)
-        );
+        @include bx-transition(width, var(--bx-side-nav-duration, 250ms), var(--bx-side-nav-easing, ease));
     }
 }
 
@@ -306,7 +298,7 @@
     width: 100%;
     height: 100%;
 
-    // Off-screen transforms must not enlarge a containing preview's scrollable area.
+    /* IMPORTANT: Off-screen transforms must not enlarge a containing preview's scrollable area. */
     overflow: clip;
     pointer-events: none;
 
@@ -321,8 +313,7 @@
     }
 
     .bx-nav-backdrop {
-        position: absolute;
-        pointer-events: auto;
+        --bx-modal-backdrop-position: absolute;
     }
 
     .bx-nav-hamburger {
@@ -337,11 +328,6 @@
     .bx-nav-panel,
     .bx-nav-hamburger {
         border: 1px solid CanvasText;
-    }
-
-    .bx-nav-backdrop {
-        background: Canvas;
-        opacity: 0.7;
     }
 }
 

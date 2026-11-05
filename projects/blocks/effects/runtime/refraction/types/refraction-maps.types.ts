@@ -1,5 +1,5 @@
 // Adapted from Nordify refraction (MIT). See effects/THIRD_PARTY_NOTICES.md.
-import type { SLOTS, CORNERS, EDGES } from '../constants/refraction-maps.constants';
+import type { CORNERS, EDGES, SLOTS } from '@effects/runtime/refraction/constants/refraction-maps.constants';
 
 export type Slot = (typeof SLOTS)[number];
 

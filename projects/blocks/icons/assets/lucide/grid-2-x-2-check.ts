@@ -1,4 +1,4 @@
-import { defineIcon } from '../../helpers/define-icon';
+import { defineIcon } from '@icons/helpers/define-icon';
 
 export const lucideGrid2X2Check = defineIcon({
   name: 'grid-2-x-2-check',

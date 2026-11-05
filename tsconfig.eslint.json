@@ -1,18 +1,16 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "include": [
-    "*.ts",
-    "projects/blocks/**/*.ts",
-    "projects/playground/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".angular",
-    "coverage",
-    "out-tsc"
-  ]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true
+    },
+    "include": ["*.ts", "projects/blocks/**/*.ts", "projects/playground/**/*.ts"],
+    "exclude": ["node_modules", "dist", ".angular", "coverage", "out-tsc"],
+    "angularCompilerOptions": {
+        "extendedDiagnostics": {
+            "defaultCategory": "error",
+            "checks": {
+                "unusedStandaloneImports": "error"
+            }
+        }
+    }
 }

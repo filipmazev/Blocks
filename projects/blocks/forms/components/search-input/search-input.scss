@@ -69,7 +69,7 @@
     font-size: 0.875rem;
     color: var(--bx-text-heading);
 
-    // Blocks owns the clear action; WebKit and Chromium also supply a native one for search inputs.
+    /* IMPORTANT: Blocks owns the clear action; WebKit and Chromium also supply a native one for search inputs. */
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
         appearance: none;
@@ -129,7 +129,6 @@
     }
 }
 
-// Size the row for both messages, including wrapped translations, before a retry starts.
 .bx-search-status-reserve {
     visibility: hidden;
 }

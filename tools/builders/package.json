@@ -1,0 +1,6 @@
+{
+    "name": "blocks-builders",
+    "private": true,
+    "type": "module",
+    "builders": "./builders.json"
+}

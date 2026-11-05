@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+
 import { IBxSelectOption } from '@filip.mazev/blocks/forms';
-import { IPageResult } from '../interfaces/ipage-result.interface';
-import { IRegistrationData } from '../interfaces/iregistration-data.interface';
-import { DEMO_DESTINATIONS } from '../constants/form-examples.constants';
-import { delay } from '../helpers/delay.helpers';
+
+import { DEMO_DESTINATIONS } from '@playground/components/screens/library-components/form-examples/constants/form-examples.constants';
+import { delay } from '@playground/components/screens/library-components/form-examples/helpers/delay.helpers';
+import { IPageResult } from '@playground/components/screens/library-components/form-examples/interfaces/ipage-result.interface';
+import { IRegistrationData } from '@playground/components/screens/library-components/form-examples/interfaces/iregistration-data.interface';
 
 @Injectable({ providedIn: 'root' })
 export class MockFormsApi {

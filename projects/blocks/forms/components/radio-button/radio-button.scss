@@ -118,8 +118,7 @@
     }
 }
 
-.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover
-    .bx-radio-circle[data-bx-surface]:not(.is-invalid) {
+.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-radio-circle[data-bx-surface]:not(.is-invalid) {
     --bx-glass-surface: var(--bx-bg-neutral-hover);
     --bx-glass-edge: var(--bx-border-accent);
 

@@ -1,4 +1,7 @@
+import type { InputSignal } from '@angular/core';
+
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 
@@ -13,13 +16,13 @@ import { Icon } from '@filip.mazev/blocks/icons';
 })
 export class CheckboxIndicator {
   /** Whether the owning control is checked. Defaults to false. */
-  public readonly checked = input(false);
+  public readonly checked: InputSignal<boolean> = input(false);
   /** Displays the partial-selection mark in preference to checked. Defaults to false. */
-  public readonly indeterminate = input(false);
+  public readonly indeterminate: InputSignal<boolean> = input(false);
   /** Matches the owning control's validation appearance. Defaults to false. */
-  public readonly invalid = input(false);
+  public readonly invalid: InputSignal<boolean> = input(false);
   /** Suppresses the active surface finish when the owner is disabled. Defaults to false. */
-  public readonly disabled = input(false);
+  public readonly disabled: InputSignal<boolean> = input(false);
   /** Enables the owning control's interactive lighting. Defaults to false for decorative indicators, including multiselect options. */
-  public readonly emissive = input(false);
+  public readonly emissive: InputSignal<boolean> = input(false);
 }

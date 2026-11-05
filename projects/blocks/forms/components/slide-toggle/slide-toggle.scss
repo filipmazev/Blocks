@@ -145,8 +145,7 @@
     }
 }
 
-.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover
-    .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid) {
+.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid) {
     --bx-glass-surface: var(--bx-bg-neutral-hover);
     --bx-glass-edge: var(--bx-border-accent);
 
@@ -155,7 +154,6 @@
     }
 }
 
-// Match the slider's quiet highlight; the checked thumb follows the accent palette.
 .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid) {
     --bx-glass-rim-visibility: 0.25;
     --bx-toggle-thumb-surface: var(--bx-color-neutral-200);
@@ -171,12 +169,7 @@
 
     .bx-slide-toggle-thumb {
         background:
-            radial-gradient(
-                circle at 35% 0%,
-                color-mix(in srgb, var(--bx-color-neutral-50) 24%, transparent),
-                transparent 65%
-            ),
-            var(--bx-toggle-thumb-surface);
+            radial-gradient(circle at 35% 0%, color-mix(in srgb, var(--bx-color-neutral-50) 24%, transparent), transparent 65%), var(--bx-toggle-thumb-surface);
         border-color: var(--bx-toggle-thumb-edge);
 
         @include choice-flat-accessibility;

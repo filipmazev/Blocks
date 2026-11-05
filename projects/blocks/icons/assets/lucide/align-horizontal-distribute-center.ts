@@ -1,4 +1,4 @@
-import { defineIcon } from '../../helpers/define-icon';
+import { defineIcon } from '@icons/helpers/define-icon';
 
 export const lucideAlignHorizontalDistributeCenter = defineIcon({
   name: 'align-horizontal-distribute-center',

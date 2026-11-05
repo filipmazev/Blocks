@@ -1,4 +1,4 @@
-import { defineIcon } from '../../helpers/define-icon';
+import { defineIcon } from '@icons/helpers/define-icon';
 
 export const lucideMousePointer2Off = defineIcon({
   name: 'mouse-pointer-2-off',

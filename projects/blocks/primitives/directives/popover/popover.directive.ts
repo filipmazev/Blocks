@@ -1,7 +1,9 @@
-import { isPlatformBrowser } from '@angular/common';
+import type { InputSignal, InputSignalWithTransform, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+
 import { InteractivityChecker } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { isPlatformBrowser } from '@angular/common';
 import {
   booleanAttribute,
   computed,
@@ -18,12 +20,17 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
+
+import { Subscription } from 'rxjs';
+
+import type { IPopoverDirectiveSettingsState } from '@primitives/directives/popover/interfaces/ipopover-directive-settings-state.interface';
+
 import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, resolveText, trackOverlayOrigin, uuidv4 } from '@filip.mazev/blocks/core';
 import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
-import { Subscription } from 'rxjs';
-import { BX_OVERLAY_CONTEXT } from '../overlay-context.token';
-import { IPopoverConfig } from './interfaces/ipopover-config.interface';
-import { BX_POPOVER_DEFAULTS } from './tokens/popover-defaults.token';
+
+import { BX_OVERLAY_CONTEXT } from '@primitives/directives/overlay-context.token';
+import { IPopoverConfig } from '@primitives/directives/popover/interfaces/ipopover-config.interface';
+import { BX_POPOVER_DEFAULTS } from '@primitives/directives/popover/tokens/popover-defaults.token';
 
 @Directive({
   selector: '[bxPopover]',
@@ -46,9 +53,12 @@ export class PopoverDirective {
   private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly defaults = inject(BX_POPOVER_DEFAULTS, { optional: true });
-  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
-  private readonly opened = signal(false);
-  private readonly settings = computed(() => {
+
+  private readonly browser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
+
+  private readonly opened: WritableSignal<boolean> = signal(false);
+
+  private readonly settings: Signal<IPopoverDirectiveSettingsState> = computed(() => {
     const config = this.popoverConfig();
 
     return {
@@ -61,16 +71,20 @@ export class PopoverDirective {
       closeOnFocusOutside: config.closeOnFocusOutside ?? this.defaults?.closeOnFocusOutside ?? true
     };
   });
+  private readonly accessibleName: Signal<string> = computed(() => resolveText(this.settings().ariaLabel ?? 'Details', this.i18n));
 
-  private readonly accessibleName = computed(() => resolveText(this.settings().ariaLabel ?? 'Details', this.i18n));
-  protected readonly panelId = 'bx-popover-' + uuidv4();
-  public readonly bxPopover = input.required<TemplateRef<unknown>>();
-  public readonly popoverConfig = input<IPopoverConfig>({});
-  public readonly popoverDisabled = input(false, { transform: booleanAttribute });
-  public readonly isOpen = this.opened.asReadonly();
-  public readonly openedChange = output<boolean>();
+  protected readonly panelId: string = 'bx-popover-' + uuidv4();
+
+  public readonly isOpen: Signal<boolean> = this.opened.asReadonly();
+
+  public readonly bxPopover: InputSignal<TemplateRef<unknown>> = input.required<TemplateRef<unknown>>();
+  public readonly popoverConfig: InputSignal<IPopoverConfig> = input<IPopoverConfig>({});
+  public readonly popoverDisabled: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
+
+  public readonly openedChange: OutputEmitterRef<boolean> = output<boolean>();
+
   private overlayRef?: OverlayRef;
-  private subscriptions = new Subscription();
+  private subscriptions: Subscription = new Subscription();
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
   private disconnectOrigin?: () => void;
@@ -107,9 +121,12 @@ export class PopoverDirective {
       scrollStrategy: this.overlay.scrollStrategies.noop(),
       usePopover: !!this.context?.useTopLayer || !!this.element.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]')
     });
+
     this.overlayRef = overlay;
     this.opened.set(true);
+
     const pane = overlay.overlayElement;
+
     pane.id = this.panelId;
     pane.tabIndex = -1;
     pane.setAttribute('role', 'dialog');
@@ -123,7 +140,9 @@ export class PopoverDirective {
       })
     );
     this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onPanelKey(event)));
+
     const view = overlay.attach(new TemplatePortal(this.bxPopover(), this.vcr));
+
     view.detectChanges();
     overlay.updatePosition();
 
@@ -176,6 +195,7 @@ export class PopoverDirective {
       const atBoundary = !items.length || (event.shiftKey ? active === items[0] : active === items[items.length - 1]);
 
       if (!atBoundary) return;
+
       if (event.shiftKey) event.preventDefault();
 
       this.close();

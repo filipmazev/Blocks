@@ -1,21 +1,37 @@
+import type { Signal, WritableSignal } from '@angular/core';
+
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
-import { IAutocompleteOption, ILoadMoreConfig, ILoadMoreRequest } from '@filip.mazev/blocks/forms';
+
 import { ResolvableText } from '@filip.mazev/blocks/core';
-import { AUTOCOMPLETE_OPTIONS } from '../constants/autocomplete-options.constants';
+import { IAutocompleteOption, ILoadMoreConfig, ILoadMoreRequest } from '@filip.mazev/blocks/forms';
+
+import { AUTOCOMPLETE_OPTIONS } from '@playground/components/screens/library-components/essentials-examples/constants/autocomplete-options.constants';
 
 @Injectable()
 export class AutocompleteDemoService {
   private readonly destroy = inject(DestroyRef);
-  private readonly query = signal('');
-  private readonly matches = computed(() => AUTOCOMPLETE_OPTIONS.filter((option) => option.value.toLowerCase().includes(this.query().toLowerCase())));
-  public readonly options = signal<readonly IAutocompleteOption[]>([]);
-  public readonly loading = signal(false);
-  public readonly searching = signal(false);
-  public readonly error = signal<ResolvableText | undefined>(undefined);
-  public readonly hasMore = computed(() => this.options().length < this.matches().length);
-  public readonly pageSize = signal(3);
-  public readonly failNext = signal(false);
-  public readonly status = signal('Ready');
+
+  private readonly query: WritableSignal<string> = signal('');
+
+  private readonly matches: Signal<IAutocompleteOption[]> = computed(() =>
+    AUTOCOMPLETE_OPTIONS.filter((option) => option.value.toLowerCase().includes(this.query().toLowerCase()))
+  );
+
+  public readonly options: WritableSignal<readonly IAutocompleteOption[]> = signal<readonly IAutocompleteOption[]>([]);
+
+  public readonly loading: WritableSignal<boolean> = signal(false);
+  public readonly searching: WritableSignal<boolean> = signal(false);
+
+  public readonly error: WritableSignal<ResolvableText | undefined> = signal<ResolvableText | undefined>(undefined);
+
+  public readonly hasMore: Signal<boolean> = computed(() => this.options().length < this.matches().length);
+
+  public readonly pageSize: WritableSignal<number> = signal(3);
+
+  public readonly failNext: WritableSignal<boolean> = signal(false);
+
+  public readonly status: WritableSignal<string> = signal('Ready');
+
   public readonly loadMoreConfig: ILoadMoreConfig = {
     text: 'Load more suggestions',
     loadingText: 'Loading suggestions',
@@ -51,7 +67,9 @@ export class AutocompleteDemoService {
     this.loading.set(true);
     this.error.set(undefined);
     this.status.set('Request source: ' + request.source);
+
     const fail = this.failNext() && request.source !== 'retry';
+
     this.failNext.set(false);
     this.timer = setTimeout(() => {
       if (fail) {
@@ -68,6 +86,7 @@ export class AutocompleteDemoService {
 
   public setPageSize(value: string | number | null): void {
     const size = Number(value);
+
     this.pageSize.set(Number.isFinite(size) ? Math.max(1, Math.min(24, Math.floor(size))) : 3);
     this.search(this.query());
   }

@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Tabs, Tab, TabContentDirective } from '@filip.mazev/blocks/primitives';
+import { ChangeDetectionStrategy, Component, input, InputSignal } from '@angular/core';
+
+import { Tab, TabContentDirective, Tabs } from '@filip.mazev/blocks/primitives';
+
+import { CODE_SNIPPETS } from '@playground/generated/documentation';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
+
 import { Highlight } from 'ngx-highlightjs';
-import { CODE_SNIPPETS } from '../../../generated/documentation';
 
 @Component({
   selector: 'app-code',
@@ -12,7 +15,7 @@ import { CODE_SNIPPETS } from '../../../generated/documentation';
   styleUrl: './code.scss'
 })
 export class Code {
-  public readonly files = input.required<ICodeFile[]>();
+  public readonly files: InputSignal<ICodeFile[]> = input.required<ICodeFile[]>();
 
   protected codeContent(file: ICodeFile): string {
     return CODE_SNIPPETS[file.path.replace(/^\/+/, '')] ?? `This snippet is unavailable: ${file.title}`;

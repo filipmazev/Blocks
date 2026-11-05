@@ -1,5 +1,6 @@
 import { IBxSelectOption, ValidationMessages } from '@filip.mazev/blocks/forms';
-import { IRegistrationData } from '../interfaces/iregistration-data.interface';
+
+import { IRegistrationData } from '@playground/components/screens/library-components/form-examples/interfaces/iregistration-data.interface';
 
 export const INITIAL_REGISTRATION: IRegistrationData = {
   project: '',
