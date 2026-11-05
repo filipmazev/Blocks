@@ -1,4 +1,4 @@
-import{Dr as m,Ft as Re,Gi as zi,H,I as Fr,Ii as ye,It as Rg,K as J,Tn as b,Zn as fn,et as Kn,ur as hn,x as D,zr as p}from"./chunk-Cmma2g1C.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
+import{Bt as Re,C as D,Ht as Rg,Kr as p,Mn as b,Pr as m,R as Fr,W as H,Wi as ye,X as J,Xi as zi,hr as hn,it as Kn,rr as fn}from"./chunk-CoBsbWg5.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
 <p>Published October 31, 2026 on the Release channel (<code>latest</code>). Install this exact version with <code>npm install @filip.mazev/blocks@1.4.20</code>.</p>
 <p><a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.4.20">View version 1.4.20 on NPM</a>.</p>
 <p>Blocks 1.4.20 brings together the unified Angular UI package, semantic themes, appearance effects, forms, navigation, notifications and icons developed leading
@@ -542,7 +542,7 @@ positioning, design tokens, and scroll locking.</p>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ResponsiveExample</span> {
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> windowDimensionsService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">WindowDimensionsService</span>);
 
-    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> compact = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">windowDimensionsService</span>().<span class="hljs-property">width</span> &lt;= <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-property">breakpoints</span>.<span class="hljs-property">sm</span>);
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> compact = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">isBelow</span>(<span class="hljs-string">&#x27;sm&#x27;</span>));
 
     <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
         <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ThemingService</span>).<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-literal">null</span>);
@@ -670,8 +670,9 @@ application-wide rendering configuration.</p>
 SSR. Clean up locks, observers, listeners, subscriptions, timers, and asynchronous work with their owning view. Respect reduced motion, reduced transparency,
 forced colors, native semantics, focus visibility, and accessible naming in custom integrations.</p>
 <h2>Playground</h2>
-<p>Open <code>/components</code> for the component catalog, <code>/appearance</code> for shared preferences, <code>/components/menu-item</code> for shortcuts, and <code>/components/side-nav</code> or
-<code>/modal</code> for coordinated overlays and scroll locking.</p>
+<p>Open <code>/utilities</code> for the cumulative <a href="utilities">utilities playground guide</a>, including viewport and
+device detection, independent scroll-lock owners, UUIDs, color-token helpers, and overlay infrastructure. Open <code>/components</code> for the component catalog,
+<code>/appearance</code> for shared preferences, <code>/components/menu-item</code> for shortcuts, and <code>/components/side-nav</code> or <code>/modal</code> for coordinated overlays.</p>
 `,"projects/blocks/effects/README.md":`<h1>Appearance effects</h1>
 <p>Blocks components use glass through the existing theme system. The <code>BxSurfaceDirective</code> applies the same material to custom containers. Labels, inputs and icon
 paths retain their native rendering; decorative lighting and blur sit behind content.</p>
@@ -5489,7 +5490,362 @@ preserves its own color mode. The parent combines two previews for Auto.</p>
 performs no animated demonstration.</p>
 <h2>Playground</h2>
 <p><code>/appearance</code>, in the Light, Dark and Auto choices.</p>
-`};var k={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var q={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
+`,"projects/playground/src/app/components/screens/utilities/README.md":`<h1>Utilities playground</h1>
+<p>A cumulative playground for public Core utilities that previously had only brief infrastructure summaries or no practical guide. Open <code>/utilities</code> from <strong>Tools
+\u2192 Utilities</strong>. The <a href="components">Core guide</a> remains the entry-point reference.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> {
+    <span class="hljs-title class_">BxOverlayPositionService</span>,
+    <span class="hljs-title class_">DeviceTypeService</span>,
+    getComplementaryToken,
+    inheritOverlayTheme,
+    invertPaletteToken,
+    isOverlayOriginVisible,
+    isPaletteToken,
+    isThemedColor,
+    resolveThemeId,
+    resolveTokenToCssVar,
+    <span class="hljs-title class_">ScrollLockService</span>,
+    trackOverlayOrigin,
+    uuidv4,
+    <span class="hljs-title class_">WindowDimensionsService</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<p>The services are provided in root. Inject them in your application; supporting types such as <code>BreakpointKey</code>, <code>IDeviceState</code>, <code>IWindowDimensions</code>,
+<code>IScrollLockConfig</code>, <code>Color</code>, <code>ThemedColor</code>, <code>BxPlacement</code>, and <code>OverlayOriginTracker</code> come from the same public entry point.</p>
+<h2>Usage</h2>
+<h3>Responsive values</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">Signal</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, computed, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">WindowDimensionsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-responsive-summary&#x27;</span>,
+    <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;p&gt;{{ width() }} CSS pixels \xB7 {{ columns() }} columns&lt;/p&gt;&#x27;</span>,
+    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ResponsiveSummary</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> windowDimensionsService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">WindowDimensionsService</span>);
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">width</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">dimensions</span>().<span class="hljs-property">width</span>);
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">columns</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">resolveResponsiveValue</span>({ <span class="hljs-attr">md</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">xl</span>: <span class="hljs-number">3</span> }, <span class="hljs-number">1</span>));
+}</code></pre>
+<h3>Owner-scoped scroll locking</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, <span class="hljs-title class_">DestroyRef</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ScrollLockService</span>, uuidv4 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-scroll-lock-example&#x27;</span>,
+    <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">Button</span>],
+    <span class="hljs-attr">template</span>: <span class="hljs-string">\`
+        &lt;button bx-button type=&quot;button&quot; (click)=&quot;lock()&quot;&gt;Lock page&lt;/button&gt;
+        &lt;button bx-button type=&quot;button&quot; (click)=&quot;unlock()&quot;&gt;Release my lock&lt;/button&gt;
+    \`</span>,
+    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrollLockExample</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> scrollLockService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ScrollLockService</span>);
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">lockId</span>: <span class="hljs-built_in">string</span> = <span class="hljs-title function_">uuidv4</span>();
+
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">DestroyRef</span>).<span class="hljs-title function_">onDestroy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">unlock</span>());
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-title function_">lock</span>(): <span class="hljs-built_in">void</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">disableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockId</span>, { <span class="hljs-attr">handleTouchInput</span>: <span class="hljs-literal">false</span> });
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-title function_">unlock</span>(): <span class="hljs-built_in">void</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">enableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockId</span>);
+    }
+}</code></pre>
+<p>Keep release actions reachable while the page is locked. Release on close and presentation changes as well as destruction. Repeated acquisition with the same ID
+updates that owner&#39;s lock. Releasing an unknown ID does nothing, and releasing your ID preserves other owners&#39; locks.</p>
+<h3>Color-token mapping</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-title function_">resolveTokenToCssVar</span>(<span class="hljs-string">&#x27;primary&#x27;</span>); <span class="hljs-comment">// var(--bx-primary)</span>
+<span class="hljs-title function_">resolveTokenToCssVar</span>(<span class="hljs-string">&#x27;orange-500&#x27;</span>); <span class="hljs-comment">// var(--bx-color-orange-500)</span>
+<span class="hljs-title function_">getComplementaryToken</span>(<span class="hljs-string">&#x27;text-primary&#x27;</span>); <span class="hljs-comment">// bg-element</span>
+<span class="hljs-title function_">getComplementaryToken</span>(<span class="hljs-string">&#x27;orange-500&#x27;</span>); <span class="hljs-comment">// orange-50</span>
+<span class="hljs-title function_">invertPaletteToken</span>(<span class="hljs-string">&#x27;blue-100&#x27;</span>); <span class="hljs-comment">// blue-900</span>
+<span class="hljs-title function_">isPaletteToken</span>(<span class="hljs-string">&#x27;primary&#x27;</span>); <span class="hljs-comment">// false</span>
+<span class="hljs-title function_">isThemedColor</span>({ <span class="hljs-attr">light</span>: <span class="hljs-string">&#x27;primary&#x27;</span>, <span class="hljs-attr">dark</span>: <span class="hljs-string">&#x27;accent&#x27;</span> }); <span class="hljs-comment">// true</span>
+<span class="hljs-title function_">resolveThemeId</span>(<span class="hljs-string">&#x27;carbon-cobalt&#x27;</span>); <span class="hljs-comment">// carbon-cobalt</span>
+<span class="hljs-title function_">resolveThemeId</span>(<span class="hljs-string">&#x27;retired-palette&#x27;</span>); <span class="hljs-comment">// undefined</span></code></pre>
+<h2>API</h2>
+<h3>Coverage audit</h3>
+<p>The Core overview already mentioned viewport/device services and scroll locks, but lacked a cumulative interactive reference. The following groups now share
+this page and guide:</p>
+<table>
+<thead>
+<tr>
+<th>Utilities</th>
+<th>Demo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>WindowDimensionsService</code>, <code>BREAKPOINTS</code></td>
+<td>Live width/height, breakpoint minimums, range queries, responsive columns</td>
+</tr>
+<tr>
+<td><code>DeviceTypeService</code>, device/OS contracts</td>
+<td>Device category, desktop/mobile OS, platform flags, orientation, explicit refresh</td>
+</tr>
+<tr>
+<td><code>ScrollLockService</code>, <code>IScrollLockConfig</code></td>
+<td>Two independent owners, remaining-owner behavior, visible status, release and navigation cleanup</td>
+</tr>
+<tr>
+<td><code>uuidv4()</code></td>
+<td>Regenerate a UUID independently of stable scroll-lock owner IDs</td>
+</tr>
+<tr>
+<td>Color-token helpers, <code>resolveThemeId()</code></td>
+<td>Choose a semantic/palette token; inspect CSS, complementary/inverted mappings and saved palette validation</td>
+</tr>
+<tr>
+<td><code>BxOverlayPositionService</code>, origin/theme helpers</td>
+<td>Preferred placement, viewport fallback, tracked origin, inherited theme and teardown</td>
+</tr>
+</tbody></table>
+<p>Other public utilities retain their established guides:</p>
+<table>
+<thead>
+<tr>
+<th>Utilities</th>
+<th>Existing coverage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ThemingService</code>, appearance/palette configuration</td>
+<td><a href="appearance">Appearance</a>, <code>/appearance</code></td>
+</tr>
+<tr>
+<td><code>BxA11yService</code> and reduced motion</td>
+<td><a href="appearance#behavior-and-accessibility">Appearance accessibility preferences</a>, <code>/appearance</code></td>
+</tr>
+<tr>
+<td><code>BxShortcutService</code>, shortcut helpers and contracts</td>
+<td><a href="components/menu-item">Menu item</a>, <code>/components/menu-item</code></td>
+</tr>
+<tr>
+<td><code>BX_I18N</code>, <code>ResolvableText</code>, <code>resolveText()</code>, <code>isTextWithKey()</code></td>
+<td><a href="components#translation-and-overlays">Core translation integration</a> and <a href="components/signal-forms">Forms</a></td>
+</tr>
+<tr>
+<td>Form state/defaults, <code>BxBaseControl</code>, <code>FormSettingsService</code></td>
+<td><a href="components/signal-forms">Forms</a> and <a href="components/truncate">Truncate</a></td>
+</tr>
+<tr>
+<td>Navigation, modal, notification and effects services</td>
+<td>Their <a href="../../../../../../blocks/navigation/README.md">Navigation</a>, <a href="modal">Modal</a>, <a href="toastr">Toastr</a>, and <a href="components/surface">Effects</a> guides</td>
+</tr>
+</tbody></table>
+<p>Internal coordination services, implementation classes, and type-only contracts do not receive separate playground pages.</p>
+<h3>Viewport dimensions</h3>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dimensions(): IWindowDimensions</code></td>
+<td>Readonly signal with <code>width</code> and <code>height</code> in CSS pixels; resize updates are coalesced to animation frames</td>
+</tr>
+<tr>
+<td><code>breakpoints</code> / <code>BREAKPOINTS</code></td>
+<td>Shared minimums: xs 360, sm 640, md 768, lg 1024, xl 1280, 2xl 1536, 3xl 1920, 4xl 2560</td>
+</tr>
+<tr>
+<td><code>currentBreakpoint()</code></td>
+<td>Largest matching breakpoint; widths below 360 still report <code>xs</code>; undefined during SSR</td>
+</tr>
+<tr>
+<td><code>currentBreakpointValue()</code></td>
+<td>Minimum for the reported breakpoint, not the actual viewport width; undefined during SSR</td>
+</tr>
+<tr>
+<td><code>isBelow(key)</code> / <code>isAtLeast(key)</code></td>
+<td>Strict upper bound / inclusive lower bound</td>
+</tr>
+<tr>
+<td><code>isBetween(min, max)</code></td>
+<td>Inclusive minimum and exclusive maximum</td>
+</tr>
+<tr>
+<td><code>resolveResponsiveValue&lt;T&gt;(values, fallback)</code></td>
+<td>Value at the highest configured matching breakpoint, otherwise the fallback; always the fallback during SSR</td>
+</tr>
+<tr>
+<td><code>isBrowser</code></td>
+<td>Whether browser viewport observation is available</td>
+</tr>
+</tbody></table>
+<p>Convenience signals cover <code>isXsMobile</code> (below sm), <code>isSmMobile</code> (sm\u2013md), <code>isMobile</code> (below md), <code>isTablet</code> (md\u2013lg), <code>isSmallLaptop</code> (lg\u2013xl), <code>isDesktop</code>
+(xl\u20132xl), <code>isLargeDesktop</code> (2xl\u20133xl), and <code>isUltraWide</code> (3xl and above). Upper bounds are exclusive. <code>isTabletAndBelow</code>, <code>isSmallLaptopAndBelow</code>,
+<code>isDesktopAndBelow</code>, and <code>isLargeDesktopAndBelow</code> are below lg, xl, 2xl, and 3xl respectively.</p>
+<p>SSR dimensions are zero. Simple range predicates compare against zero there; do not interpret them as actual device detection. Responsive values describe
+viewport width, even when the component occupies a smaller container. Browser zoom can change CSS-pixel dimensions.</p>
+<h3>Device categories</h3>
+<p><code>getDeviceState(): IDeviceState</code> returns a snapshot of mobile/tablet/desktop and OS detection based on browser identity, including iPadOS desktop identity with
+touch hardware. It exposes <code>isDesktop</code>, <code>isMobile</code>, <code>isTablet</code>, <code>desktopOS</code>, <code>mobileOS</code>, <code>isAppleDevice</code>, <code>isAndroidDevice</code>, <code>isWindowsDesktop</code>,
+<code>isLinuxOrUnixDesktop</code>, and <code>isUnknownMobileDevice</code>.</p>
+<p><code>isLandscapeOrientation()</code> and <code>isPortraitOrientation()</code> are available on both the service and the returned state. They read the latest tracked <strong>screen</strong>
+orientation. They are ordinary methods, not Angular signals. This page refreshes its snapshot on Screen Orientation change events and offers an explicit refresh
+action. Without that browser API, the service initializes orientation from a media query; live screen rotation is not tracked there.</p>
+<p>Viewport resizing does not change device categories. Device detection is heuristic and browser identity can be overridden. Use capabilities for interaction
+decisions and viewport signals for layout. During SSR, identity is unavailable: the current fallback reports desktop/unknown OS and portrait orientation.</p>
+<h3>Scroll-lock configuration</h3>
+<p><code>isScrollDisabled()</code> is a readonly signal indicating that any owner holds a lock. Observe it instead of writing to the backing signal.
+<code>disableScroll(id, config)</code> requires an owner ID and configuration; <code>enableScroll(id)</code> releases that owner. The legacy optional second argument to
+<code>enableScroll</code> is accepted but does not change final cleanup.</p>
+<table>
+<thead>
+<tr>
+<th><code>IScrollLockConfig</code> member</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>handleTouchInput</code></td>
+<td><code>false</code> preserves touch gestures; <code>true</code> enables touchmove prevention. Omission still applies <code>touch-action: none</code>, without adding a touchmove listener by itself</td>
+</tr>
+<tr>
+<td><code>allowTouchInputOn</code></td>
+<td>Elements whose descendants may receive touch input; absent/empty lists permit targets through the touchmove handler</td>
+</tr>
+<tr>
+<td><code>mobileOnlyTouchPrevention</code></td>
+<td>Limits the touchmove handler to detected mobile devices; tablets use their separate category</td>
+</tr>
+<tr>
+<td><code>handleExtremeOverflow</code></td>
+<td>Adds global wheel/scroll prevention listeners; leave unset for ordinary pages and panels</td>
+</tr>
+<tr>
+<td><code>animationDuration</code></td>
+<td>Milliseconds before installing prevention listeners, plus the service&#39;s 10 ms coordination delay; omitted means zero before that delay</td>
+</tr>
+</tbody></table>
+<p>Any active owner requesting touch/extreme prevention keeps it enabled. Touch allow-list details follow the most recently inserted owner whose <code>handleTouchInput</code>
+is not false; reacquiring an existing ID updates its options without changing its insertion order. The maximum active animation duration controls listener
+installation. Original inline body overflow, right padding, touch action and priorities are restored after the final lock releases.</p>
+<p>The demo uses <code>{ handleTouchInput: false }</code> for both owners so touch users can reach every action. It does not enable extreme overflow handling. Lock
+acquisition and release are no-ops during SSR.</p>
+<h3>Identifiers and color helpers</h3>
+<p><code>uuidv4(): string</code> uses <code>crypto.getRandomValues()</code> to generate a version-4 UUID. It requires that runtime API. Generate once per owning instance; avoid calling
+it from templates or computed values that may regenerate an owner ID. Coordinate server/client IDs explicitly when stable hydration identity is required.</p>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resolveTokenToCssVar(token)</code></td>
+<td>Maps a typed semantic or palette color to a CSS <code>var(...)</code> reference; it does not resolve an RGB value</td>
+</tr>
+<tr>
+<td><code>isPaletteToken(token)</code></td>
+<td>Detects the numeric shade suffix of a typed <code>Color</code>; not a validator for arbitrary untrusted strings</td>
+</tr>
+<tr>
+<td><code>getComplementaryToken(token)</code></td>
+<td>Looks up semantic pairs (falling back to <code>surface</code>) or chooses palette shade 50 for shades above 400, otherwise 900</td>
+</tr>
+<tr>
+<td><code>invertPaletteToken(token)</code></td>
+<td>Mirrors a palette shade, including 50\u2192900 and 1000\u219250; leaves semantic tokens or unsupported results unchanged</td>
+</tr>
+<tr>
+<td><code>isThemedColor(value)</code></td>
+<td>Narrows non-null objects with a <code>light</code> member; does not validate individual token values or choose a theme</td>
+</tr>
+<tr>
+<td><code>resolveThemeId(value)</code></td>
+<td>Accepts current palette IDs; returns undefined for absent, unknown or retired IDs</td>
+</tr>
+</tbody></table>
+<p>These helpers do not guarantee contrast. <code>Color</code>, <code>ThemeColorToken</code>, <code>SemanticColorToken</code>, and <code>ThemedColor</code> describe typed consumer configuration. Prefer
+semantic tokens for values that should follow theme and palette changes.</p>
+<h3>Overlay extension points</h3>
+<table>
+<thead>
+<tr>
+<th>Utility</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getElementStrategy(element, placement, offset = 8)</code></td>
+<td>Connected CDK strategy with alternative sides, viewport push and an 8 CSS-pixel viewport margin</td>
+</tr>
+<tr>
+<td><code>getSubmenuStrategy(element, side, offset = 4)</code></td>
+<td>Physical left/right preference with opposite-side fallback and fixed dimensions</td>
+</tr>
+<tr>
+<td><code>getCoordinateStrategy(x, y)</code></td>
+<td>Client-coordinate anchor, initially below with a 2 CSS-pixel offset, then fallback positions</td>
+</tr>
+<tr>
+<td><code>trackOverlayOrigin(overlay, origin, options?)</code></td>
+<td>Tracks an attached connected overlay with native anchoring where available, otherwise measured fallback; returns callable cleanup with <code>reposition()</code></td>
+</tr>
+<tr>
+<td><code>isOverlayOriginVisible(origin)</code></td>
+<td>Checks viewport intersection and clipping ancestors; disconnected or zero-size origins return false</td>
+</tr>
+<tr>
+<td><code>inheritOverlayTheme(source, pane)</code></td>
+<td>Copies inherited theme/appearance context and observes relevant scope attributes; returns observer cleanup</td>
+</tr>
+</tbody></table>
+<p><code>IOverlayOriginOptions</code> can disable native anchoring with <code>nativeAnchoring: false</code>, run <code>onPosition</code> after positioning, or run <code>onOriginHidden</code> when the anchor
+leaves view. The owner decides whether to dismiss. Attach content before tracking so size measurement is meaningful. Call both returned cleanup functions before
+disposing the overlay; the owner also cleans up its subscriptions and portal.</p>
+<p>The demo is an informational preview with focus kept on its trigger. It directly uses an element strategy, visibility guard, origin tracker and inherited theme.
+Coordinate and submenu strategies are documented extension points; ready-made
+<a href="components/context-menu">Context menu</a> and <a href="components/menu">Menu</a>
+demonstrate their intended interactions. Prefer the public overlay components and directives when their existing focus, dismissal and accessibility behavior
+meets your needs.</p>
+<h2>Appearance and customization</h2>
+<p>The page uses Blocks containers, buttons, selects, documentation tabs, semantic CSS variables and shared Sass spacing/radius/responsive helpers. It follows
+application appearance without changing preferences. The color-token swatch is decorative; text exposes every result independently of color.</p>
+<p>The grid starts with one column and uses the shared xl breakpoint for two columns. The scroll-lock panel spans both columns so its release actions stay
+together. The overlay preview is constrained to the viewport and scrolls if text enlargement requires more space. Supporting demo controls use public Blocks
+APIs.</p>
+<h2>Behavior and accessibility</h2>
+<ul>
+<li>Viewport and token changes derive from signals under OnPush. Device orientation explicitly bridges browser events to a signal and tears down its subscription.</li>
+<li>Each scroll-lock owner has a stable ID. Release actions and page destruction release only these two IDs, preserving locks held by navigation or other
+overlays.</li>
+<li>Lock status is announced politely. Rapid viewport resizing is displayed without a live announcement on every frame. UUID regeneration has a named live output.</li>
+<li>The position preview supports pointer and keyboard activation. Escape, blur, outside pointer input, hidden origins and page destruction close it. Focus
+remains on the trigger; there are no interactive controls inside the preview.</li>
+<li>The page adds no decorative animation and respects the shared components&#39; reduced-motion, forced-colors and reduced-transparency behavior. Labels and results
+remain visible as text. Device and OS values are informational and do not restrict access to controls.</li>
+<li>Demo text is English. Library translation integration remains in the linked Core and Forms guides; this page introduces no translation adapter.</li>
+</ul>
+<h2>Playground</h2>
+<p>Open <code>/utilities</code>. On a first visit, expand <strong>Tools</strong> in the side navigation; later visits respect your saved section states. Suggested checks:</p>
+<ol>
+<li>Resize across md and xl, then compare viewport flags with the device category. Check breakpoint equality at the inclusive minimum.</li>
+<li>Acquire both locks, release the first, then release the second. Acquire again and navigate away to observe cleanup.</li>
+<li>Generate another UUID and verify that the active lock owners still release correctly.</li>
+<li>Choose semantic and palette tokens, then change appearance through the playground toolbar to see CSS variables follow the theme.</li>
+<li>Open the position preview near a viewport boundary, press Escape, reopen, move focus away, and scroll its origin out of view.</li>
+<li>Try a narrow viewport, enlarged text, keyboard-only navigation, and the shared accessibility preferences.</li>
+</ol>
+<p>The <strong>Documentation</strong> tab renders this cumulative README. <strong>Code Examples</strong> bundles the current TypeScript, HTML and SCSS sources during
+<code>npm run tools:build-docs</code>; do not edit generated snippets. The TypeScript example imports its typed option data and owner type from the colocated <code>constants</code>
+and <code>types</code> folders.</p>
+`};var k={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
 
@@ -5807,7 +6163,649 @@ export class ToastExample {
     // this.toastrService.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`};var w=class c{document=p(J);router=p(Fr);readmeContent=b(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=H({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&ye(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(fn(0,`div`,0)(1,`div`,1)(2,`span`),Re(3,`Documentation`),hn()(),Kn(4,`article`,2),hn()),a&2&&(D(4),zi(`innerHTML`,s.readmeContent(),Rg))},styles:[`
+`,"assets/code-snippets/utilities/utilities.ts.txt":`import type { Signal, TemplateRef, WritableSignal } from '@angular/core';
+
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  DOCUMENT,
+  inject,
+  signal,
+  viewChild,
+  ViewContainerRef
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+
+import { fromEvent } from 'rxjs';
+
+import type { BxPlacement, Color, IDeviceState, OverlayOriginTracker } from '@filip.mazev/blocks/core';
+import type { UtilityLockOwner } from '@playground/components/screens/utilities/types/utilities.types';
+import type { ICodeFile } from '@playground/interfaces/icode-file.interface';
+
+import {
+  BxOverlayPositionService,
+  DeviceTypeService,
+  getComplementaryToken,
+  inheritOverlayTheme,
+  invertPaletteToken,
+  isOverlayOriginVisible,
+  isPaletteToken,
+  isThemedColor,
+  resolveThemeId,
+  resolveTokenToCssVar,
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4,
+  WindowDimensionsService
+} from '@filip.mazev/blocks/core';
+import { Button, Select } from '@filip.mazev/blocks/forms';
+import { Container } from '@filip.mazev/blocks/primitives';
+
+import { UTILITY_COLOR_TOKENS, UTILITY_PLACEMENTS } from '@playground/components/screens/utilities/constants/utilities.constants';
+import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
+
+@Component({
+  selector: 'app-utilities',
+  imports: [Button, ComponentInfo, Container, RouterLink, Select],
+  templateUrl: './utilities.html',
+  styleUrl: './utilities.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Utilities {
+  private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceTypeService = inject(DeviceTypeService);
+  private readonly document = inject(DOCUMENT);
+  private readonly overlay = inject(Overlay);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+
+  protected readonly scrollLockService = inject(ScrollLockService);
+  protected readonly windowDimensionsService = inject(WindowDimensionsService);
+
+  private readonly lockIds: Readonly<Record<UtilityLockOwner, string>> = { first: uuidv4(), second: uuidv4() };
+
+  private readonly overlayTemplate: Signal<TemplateRef<unknown> | undefined> = viewChild<TemplateRef<unknown>>('overlayTemplate');
+
+  protected readonly deviceState: WritableSignal<IDeviceState> = signal(this.deviceTypeService.getDeviceState());
+  protected readonly locks: WritableSignal<readonly UtilityLockOwner[]> = signal<readonly UtilityLockOwner[]>([]);
+  protected readonly identifier: WritableSignal<string> = signal(uuidv4());
+
+  protected readonly overlayOpen: WritableSignal<boolean> = signal(false);
+
+  protected readonly placement: WritableSignal<BxPlacement> = signal('bottom');
+  protected readonly colorToken: WritableSignal<Color> = signal('primary');
+
+  protected readonly columns: Signal<number> = computed(() => this.windowDimensionsService.resolveResponsiveValue({ md: 2, xl: 3 }, 1));
+  protected readonly deviceCategory: Signal<string> = computed(() => {
+    const state = this.deviceState();
+
+    return state.isTablet ? 'Tablet' : state.isMobile ? 'Mobile' : 'Desktop';
+  });
+  protected readonly orientation: Signal<string> = computed(() => (this.deviceState().isLandscapeOrientation() ? 'Landscape' : 'Portrait'));
+  protected readonly cssVariable: Signal<string> = computed(() => resolveTokenToCssVar(this.colorToken()));
+  protected readonly complementaryToken: Signal<Color> = computed(() => getComplementaryToken(this.colorToken()));
+  protected readonly invertedToken: Signal<Color> = computed(() => invertPaletteToken(this.colorToken()));
+  protected readonly paletteToken: Signal<boolean> = computed(() => isPaletteToken(this.colorToken()));
+  protected readonly themedColor: Signal<boolean> = computed(() => isThemedColor({ light: this.colorToken(), dark: this.invertedToken() }));
+
+  protected readonly breakpointEntries: [string, number][] = Object.entries(this.windowDimensionsService.breakpoints);
+  protected readonly previewItems: readonly number[] = [1, 2, 3, 4, 5, 6];
+  protected readonly placements: typeof UTILITY_PLACEMENTS = UTILITY_PLACEMENTS;
+  protected readonly colorTokens: typeof UTILITY_COLOR_TOKENS = UTILITY_COLOR_TOKENS;
+  protected readonly overlayId: string = 'utilities-overlay-' + uuidv4();
+  protected readonly restoredPalette: string = resolveThemeId('carbon-cobalt') ?? 'Unrecognized palette';
+  protected readonly unknownPalette: string = resolveThemeId('unknown-palette') ?? 'Unrecognized palette';
+  protected readonly codeFiles: ICodeFile[] = [
+    { title: 'utilities.ts', path: 'assets/code-snippets/utilities/utilities.ts.txt', language: 'typescript' },
+    { title: 'utilities.html', path: 'assets/code-snippets/utilities/utilities.html.txt', language: 'html' },
+    { title: 'utilities.scss', path: 'assets/code-snippets/utilities/utilities.scss.txt', language: 'scss' },
+    { title: 'utilities.constants.ts', path: 'assets/code-snippets/utilities/constants/utilities.constants.ts.txt', language: 'typescript' },
+    { title: 'utilities.types.ts', path: 'assets/code-snippets/utilities/types/utilities.types.ts.txt', language: 'typescript' }
+  ];
+
+  private overlayRef: OverlayRef | undefined;
+  private disconnectOrigin: OverlayOriginTracker | undefined;
+  private disconnectTheme: (() => void) | undefined;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.releaseLocks();
+      this.closeOverlay();
+    });
+    afterNextRender(() => {
+      const orientation = this.document.defaultView?.screen.orientation;
+
+      this.refreshDevice();
+
+      if (orientation)
+        fromEvent(orientation, 'change')
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.refreshDevice());
+    });
+  }
+
+  protected refreshDevice(): void {
+    this.deviceState.set(this.deviceTypeService.getDeviceState());
+  }
+
+  protected toggleLock(owner: UtilityLockOwner): void {
+    if (this.locks().includes(owner)) {
+      this.scrollLockService.enableScroll(this.lockIds[owner]);
+      this.locks.update((owners) => owners.filter((current) => current !== owner));
+    } else {
+      this.scrollLockService.disableScroll(this.lockIds[owner], { handleTouchInput: false });
+      this.locks.update((owners) => [...owners, owner]);
+    }
+  }
+
+  protected releaseLocks(): void {
+    this.scrollLockService.enableScroll(this.lockIds.first);
+    this.scrollLockService.enableScroll(this.lockIds.second);
+    this.locks.set([]);
+  }
+
+  protected generateIdentifier(): void {
+    this.identifier.set(uuidv4());
+  }
+
+  protected setColorToken(color: Color | null): void {
+    this.colorToken.set(color ?? 'primary');
+  }
+
+  protected setPlacement(placement: BxPlacement | null): void {
+    this.closeOverlay();
+    this.placement.set(placement ?? 'bottom');
+  }
+
+  protected toggleOverlay(event: MouseEvent): void {
+    if (this.overlayOpen()) {
+      this.closeOverlay();
+
+      return;
+    }
+
+    const origin = event.currentTarget;
+    const template = this.overlayTemplate();
+
+    if (!(origin instanceof HTMLElement) || !template || !this.windowDimensionsService.isBrowser || !isOverlayOriginVisible(origin)) return;
+
+    const overlayRef = this.overlay.create({
+      positionStrategy: this.bxOverlayPositionService.getElementStrategy(origin, this.placement()),
+      scrollStrategy: this.overlay.scrollStrategies.noop()
+    });
+
+    this.overlayRef = overlayRef;
+    this.overlayOpen.set(true);
+    origin.focus({ preventScroll: true });
+
+    const view = overlayRef.attach(new TemplatePortal(template, this.viewContainerRef));
+
+    view.detectChanges();
+    this.disconnectTheme = inheritOverlayTheme(origin, overlayRef.overlayElement);
+    this.disconnectOrigin = trackOverlayOrigin(overlayRef, origin, { onOriginHidden: () => this.closeOverlay() });
+    overlayRef
+      .outsidePointerEvents()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((outsideEvent) => {
+        if (outsideEvent.target instanceof Node && origin.contains(outsideEvent.target)) return;
+
+        this.closeOverlay();
+      });
+    overlayRef
+      .keydownEvents()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          this.closeOverlay();
+        }
+      });
+  }
+
+  protected closeOverlay(): void {
+    this.disconnectOrigin?.();
+    this.disconnectTheme?.();
+    this.overlayRef?.dispose();
+    this.disconnectOrigin = undefined;
+    this.disconnectTheme = undefined;
+    this.overlayRef = undefined;
+    this.overlayOpen.set(false);
+  }
+}
+`,"assets/code-snippets/utilities/utilities.html.txt":`<article class="utilities" aria-labelledby="utilities-title">
+    <header class="page-heading">
+        <p class="eyebrow">Blocks foundations</p>
+        <h1 id="utilities-title">Utilities</h1>
+        <p>Explore viewport signals, device detection, shared scroll locks, identifiers, color tokens, and overlay positioning in one place.</p>
+        <p>
+            Related guides: <a routerLink="/appearance">appearance and reduced motion</a>, <a routerLink="/components/menu-item">keyboard shortcuts</a>, and
+            <a routerLink="/components/form-field">form integration</a>.
+        </p>
+    </header>
+
+    <div class="demo-grid">
+        <section aria-labelledby="viewport-title">
+            <bx-container size="full" class="demo-panel">
+                <h2 id="viewport-title">Viewport and breakpoints</h2>
+                <p>Resize the window or change browser zoom. Values are CSS pixels and describe the viewport.</p>
+                <dl>
+                    <div>
+                        <dt>Width</dt>
+                        <dd data-viewport-width>{{ windowDimensionsService.dimensions().width }} px</dd>
+                    </div>
+                    <div>
+                        <dt>Height</dt>
+                        <dd>{{ windowDimensionsService.dimensions().height }} px</dd>
+                    </div>
+                    <div>
+                        <dt>Current breakpoint</dt>
+                        <dd data-breakpoint>{{ windowDimensionsService.currentBreakpoint() ?? 'Unavailable during SSR' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Breakpoint minimum</dt>
+                        <dd>{{ windowDimensionsService.currentBreakpointValue() ?? 'Unavailable' }} px</dd>
+                    </div>
+                    <div>
+                        <dt>Mobile viewport (below md)</dt>
+                        <dd>{{ windowDimensionsService.isMobile() ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Between md and xl</dt>
+                        <dd>{{ windowDimensionsService.isBetween('md', 'xl') ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>At least lg</dt>
+                        <dd>{{ windowDimensionsService.isAtLeast('lg') ? 'Yes' : 'No' }}</dd>
+                    </div>
+                </dl>
+                <ul class="breakpoints" aria-label="Shared breakpoint minimums">
+                    @for (entry of breakpointEntries; track entry[0]) {
+                        <li [class.current]="windowDimensionsService.currentBreakpoint() === entry[0]">
+                            <strong>{{ entry[0] }}</strong> {{ entry[1] }} px
+                            @if (windowDimensionsService.currentBreakpoint() === entry[0]) {
+                                <span>(current)</span>
+                            }
+                        </li>
+                    }
+                </ul>
+                <h3>Responsive value</h3>
+                <p>
+                    <code>resolveResponsiveValue({{ '{ md: 2, xl: 3 }' }}, 1)</code> selects {{ columns() }} columns.
+                </p>
+                <div class="responsive-preview" [style.grid-template-columns]="'repeat(' + columns() + ', minmax(0, 1fr))'">
+                    @for (item of previewItems; track item) {
+                        <span>{{ item }}</span>
+                    }
+                </div>
+            </bx-container>
+        </section>
+
+        <section aria-labelledby="device-title">
+            <bx-container size="full" class="demo-panel">
+                <h2 id="device-title">Device detection</h2>
+                <p>
+                    Device categories use browser identity and touch hints. Resizing a desktop window changes viewport signals, while its device category stays
+                    desktop.
+                </p>
+                <dl>
+                    <div>
+                        <dt>Device category</dt>
+                        <dd data-device-category>{{ deviceCategory() }}</dd>
+                    </div>
+                    <div>
+                        <dt>Desktop OS</dt>
+                        <dd>{{ deviceState().desktopOS ?? 'Not detected' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Mobile OS</dt>
+                        <dd>{{ deviceState().mobileOS ?? 'Not detected' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Apple device</dt>
+                        <dd>{{ deviceState().isAppleDevice ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Android device</dt>
+                        <dd>{{ deviceState().isAndroidDevice ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Windows desktop</dt>
+                        <dd>{{ deviceState().isWindowsDesktop ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Linux or Unix desktop</dt>
+                        <dd>{{ deviceState().isLinuxOrUnixDesktop ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Unknown mobile OS</dt>
+                        <dd>{{ deviceState().isUnknownMobileDevice ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Screen orientation</dt>
+                        <dd data-orientation>{{ orientation() }}</dd>
+                    </div>
+                </dl>
+                <button bx-button type="button" variant="tonal" (click)="refreshDevice()">Refresh detection</button>
+                <p>
+                    Screen Orientation change events refresh this demo. The service returns snapshots and orientation methods, so OnPush consumers own refresh
+                    triggers.
+                </p>
+            </bx-container>
+        </section>
+
+        <section class="scroll-demo" aria-labelledby="scroll-title">
+            <bx-container size="full" class="demo-panel">
+                <h2 id="scroll-title">Shared scroll locking</h2>
+                <p>Acquire both locks, then release one. Page scrolling stays locked until the final owner releases it.</p>
+                <div class="actions" role="group" aria-label="Demo scroll lock owners">
+                    <button bx-button type="button" [attr.aria-pressed]="locks().includes('first')" (click)="toggleLock('first')">
+                        {{ locks().includes('first') ? 'Release first lock' : 'Acquire first lock' }}
+                    </button>
+                    <button bx-button type="button" [attr.aria-pressed]="locks().includes('second')" (click)="toggleLock('second')">
+                        {{ locks().includes('second') ? 'Release second lock' : 'Acquire second lock' }}
+                    </button>
+                    <button bx-button type="button" variant="text" [disabled]="locks().length === 0" (click)="releaseLocks()">Release demo locks</button>
+                </div>
+                <p class="status" role="status">
+                    Demo owners: {{ locks().length }}. Page scrolling: {{ scrollLockService.isScrollDisabled() ? 'locked' : 'available' }}.
+                </p>
+                <p>Touch input remains enabled for this example. Leaving this page releases its two locks; other overlays keep their own locks.</p>
+            </bx-container>
+        </section>
+
+        <section aria-labelledby="identifier-title">
+            <bx-container size="full" class="demo-panel">
+                <h2 id="identifier-title">Stable owner identifiers</h2>
+                <p>
+                    <code>uuidv4()</code> creates an ID for a control, overlay, or scroll-lock owner. Generate each owner's ID once and reuse it through
+                    cleanup.
+                </p>
+                <output class="identifier" aria-label="Generated UUID" aria-live="polite">{{ identifier() }}</output>
+                <button bx-button type="button" variant="tonal" (click)="generateIdentifier()">Generate another UUID</button>
+                <p>This preview changes independently of the scroll-lock IDs.</p>
+            </bx-container>
+        </section>
+
+        <section aria-labelledby="tokens-title">
+            <bx-container size="full" class="demo-panel">
+                <h2 id="tokens-title">Color-token helpers</h2>
+                <bx-select label="Color token" [options]="colorTokens" [value]="colorToken()" (valueChange)="setColorToken($event)" />
+                <div class="token-swatch" aria-hidden="true" [style.background]="cssVariable()"></div>
+                <dl>
+                    <div>
+                        <dt>CSS variable</dt>
+                        <dd>{{ cssVariable() }}</dd>
+                    </div>
+                    <div>
+                        <dt>Palette token</dt>
+                        <dd>{{ paletteToken() ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Complementary token</dt>
+                        <dd>{{ complementaryToken() }}</dd>
+                    </div>
+                    <div>
+                        <dt>Inverted palette token</dt>
+                        <dd>{{ invertedToken() }}</dd>
+                    </div>
+                    <div>
+                        <dt>Recognizes light/dark object</dt>
+                        <dd>{{ themedColor() ? 'Yes' : 'No' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Restore carbon-cobalt</dt>
+                        <dd>{{ restoredPalette }}</dd>
+                    </div>
+                    <div>
+                        <dt>Restore unknown-palette</dt>
+                        <dd>{{ unknownPalette }}</dd>
+                    </div>
+                </dl>
+                <p>Semantic CSS variables follow the active theme. Helper results are token mappings; check contrast in your application.</p>
+            </bx-container>
+        </section>
+
+        <section aria-labelledby="overlay-title">
+            <bx-container size="full" class="demo-panel">
+                <h2 id="overlay-title">Overlay infrastructure</h2>
+                <p>Preview a connected position strategy with origin tracking and inherited theme. Available viewport space can change the final placement.</p>
+                <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
+                <div class="overlay-origin">
+                    <button
+                        bx-button
+                        type="button"
+                        variant="tonal"
+                        [attr.aria-expanded]="overlayOpen()"
+                        [attr.aria-describedby]="overlayOpen() ? overlayId : null"
+                        (click)="toggleOverlay($event)"
+                        (blur)="closeOverlay()">
+                        {{ overlayOpen() ? 'Hide position preview' : 'Show position preview' }}
+                    </button>
+                </div>
+                <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
+                <p>
+                    Use <a routerLink="/components/popover">Popover</a>, <a routerLink="/components/dropdown">Dropdown</a>, or
+                    <a routerLink="/components/tooltip-directive">Tooltip</a> for ready-made interactions.
+                </p>
+            </bx-container>
+        </section>
+    </div>
+
+    <section class="documentation" aria-label="Utilities documentation and source">
+        <app-component-info readmePath="projects/playground/src/app/components/screens/utilities/README.md" [codeFiles]="codeFiles" />
+    </section>
+</article>
+
+<ng-template #overlayTemplate>
+    <bx-container size="full" class="utility-overlay">
+        <div role="tooltip" [id]="overlayId">
+            <strong>Positioned with Core utilities</strong>
+            <p>This surface follows its origin and inherits the active Blocks theme. Preferred placement: {{ placement() }}.</p>
+        </div>
+    </bx-container>
+</ng-template>
+`,"assets/code-snippets/utilities/utilities.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.utilities {
+    max-inline-size: 80rem;
+    margin-inline: auto;
+    overflow-wrap: anywhere;
+}
+
+.demo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: spacing(5);
+
+    > section {
+        min-inline-size: 0;
+    }
+}
+
+.demo-panel {
+    --bx-container-padding: #{spacing(5)};
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(4);
+    block-size: 100%;
+    padding: spacing(5);
+    background: var(--bx-bg-surface);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+}
+
+h2,
+h3,
+p,
+dl {
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1rem;
+}
+
+p {
+    color: var(--bx-text-secondary);
+    line-height: 1.65;
+}
+
+a {
+    color: var(--bx-text-brand);
+    text-underline-offset: 0.2em;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--bx-border-brand);
+    outline-offset: 3px;
+}
+
+dl {
+    display: grid;
+    gap: spacing(3);
+
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: spacing(1) spacing(4);
+    }
+}
+
+dt {
+    color: var(--bx-text-secondary);
+}
+
+dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.actions,
+.breakpoints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(3);
+}
+
+.breakpoints {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+        padding: spacing(2) spacing(3);
+        border: 1px solid var(--bx-border-default);
+        border-radius: radius(md);
+        font-size: 0.875rem;
+    }
+
+    .current {
+        border-color: var(--bx-border-brand);
+    }
+}
+
+.responsive-preview {
+    display: grid;
+    gap: spacing(2);
+
+    span {
+        padding: spacing(3);
+        background: var(--bx-bg-element);
+        border: 1px solid var(--bx-border-default);
+        border-radius: radius(md);
+        text-align: center;
+    }
+}
+
+.identifier {
+    display: block;
+    padding: spacing(4);
+    background: var(--bx-bg-element);
+    border-radius: radius(md);
+    font-family: monospace;
+    overflow-wrap: anywhere;
+}
+
+.token-swatch {
+    block-size: spacing(12);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+}
+
+.overlay-origin {
+    display: flex;
+    justify-content: center;
+    padding-block: spacing(5);
+}
+
+.utility-overlay {
+    --bx-container-padding: #{spacing(4)};
+
+    display: block;
+    inline-size: min(20rem, calc(100vw - #{spacing(8)}));
+    max-block-size: calc(100dvh - #{spacing(8)});
+    overflow: auto;
+    padding: spacing(4);
+    background: var(--bx-bg-surface);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+
+    p {
+        margin-block-start: spacing(2);
+    }
+}
+
+.documentation {
+    margin-block-start: spacing(8);
+}
+
+@include respond-up(xl) {
+    .demo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .scroll-demo {
+        grid-column: 1 / -1;
+    }
+}
+`,"assets/code-snippets/utilities/constants/utilities.constants.ts.txt":`import type { BxPlacement, Color } from '@filip.mazev/blocks/core';
+import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
+
+export const UTILITY_PLACEMENTS: IBxSelectOption<BxPlacement>[] = [
+  { label: 'Bottom', value: 'bottom' },
+  { label: 'Top', value: 'top' },
+  { label: 'Left', value: 'left' },
+  { label: 'Right', value: 'right' }
+];
+
+export const UTILITY_COLOR_TOKENS: IBxSelectOption<Color>[] = [
+  { label: 'Primary', value: 'primary' },
+  { label: 'Accent', value: 'accent' },
+  { label: 'Surface', value: 'bg-surface' },
+  { label: 'Primary text', value: 'text-primary' },
+  { label: 'Orange 500', value: 'orange-500' },
+  { label: 'Blue 100', value: 'blue-100' }
+];
+`,"assets/code-snippets/utilities/types/utilities.types.ts.txt":`export type UtilityLockOwner = 'first' | 'second';
+`};var w=class c{document=p(J);router=p(Fr);readmeContent=b(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=H({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&ye(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(fn(0,`div`,0)(1,`div`,1)(2,`span`),Re(3,`Documentation`),hn()(),Kn(4,`article`,2),hn()),a&2&&(D(4),zi(`innerHTML`,s.readmeContent(),Rg))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
@@ -5886,4 +6884,4 @@ export class ToastExample {
   padding-left: 1rem;
   border-left: 3px solid var(--%NS%bx-border-brand);
   color: var(--%NS%bx-text-secondary);
-}`]})};export{w as n,q as t};
+}`]})};export{w as n,S as t};
