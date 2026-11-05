@@ -21,6 +21,7 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
         <p class="eyebrow">Blocks reference</p>
         <h1>Components</h1>
         <p>Explore the controls, surfaces and interactions that make up Blocks. Every example follows your active theme and global appearance configuration.</p>
+        <p>For viewport signals, device detection, scroll locking and shared helpers, explore the <a routerLink="/utilities">Utilities playground</a>.</p>
       </header>
       <div class="catalog-search">
         <bx-search-input label="Find a component" placeholder="Search by name or purpose" [ngModel]="query()" (ngModelChange)="query.set($event)" />

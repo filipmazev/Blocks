@@ -25,7 +25,7 @@ import { ThemingService, WindowDimensionsService } from '@filip.mazev/blocks/cor
 export class ResponsiveExample {
     private readonly windowDimensionsService = inject(WindowDimensionsService);
 
-    protected readonly compact = computed(() => this.windowDimensionsService.windowDimensionsService().width <= this.windowDimensionsService.breakpoints.sm);
+    protected readonly compact = computed(() => this.windowDimensionsService.isBelow('sm'));
 
     constructor() {
         inject(ThemingService).setApplicationTheme(null);
@@ -158,5 +158,6 @@ forced colors, native semantics, focus visibility, and accessible naming in cust
 
 ## Playground
 
-Open `/components` for the component catalog, `/appearance` for shared preferences, `/components/menu-item` for shortcuts, and `/components/side-nav` or
-`/modal` for coordinated overlays and scroll locking.
+Open `/utilities` for the cumulative [utilities playground guide](../../playground/src/app/components/screens/utilities/README.md), including viewport and
+device detection, independent scroll-lock owners, UUIDs, color-token helpers, and overlay infrastructure. Open `/components` for the component catalog,
+`/appearance` for shared preferences, `/components/menu-item` for shortcuts, and `/components/side-nav` or `/modal` for coordinated overlays.

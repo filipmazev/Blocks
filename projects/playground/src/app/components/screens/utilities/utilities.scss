@@ -1,0 +1,176 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.utilities {
+    max-inline-size: 80rem;
+    margin-inline: auto;
+    overflow-wrap: anywhere;
+}
+
+.demo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: spacing(5);
+
+    > section {
+        min-inline-size: 0;
+    }
+}
+
+.demo-panel {
+    --bx-container-padding: #{spacing(5)};
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(4);
+    block-size: 100%;
+    padding: spacing(5);
+    background: var(--bx-bg-surface);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+}
+
+h2,
+h3,
+p,
+dl {
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1rem;
+}
+
+p {
+    color: var(--bx-text-secondary);
+    line-height: 1.65;
+}
+
+a {
+    color: var(--bx-text-brand);
+    text-underline-offset: 0.2em;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--bx-border-brand);
+    outline-offset: 3px;
+}
+
+dl {
+    display: grid;
+    gap: spacing(3);
+
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: spacing(1) spacing(4);
+    }
+}
+
+dt {
+    color: var(--bx-text-secondary);
+}
+
+dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.actions,
+.breakpoints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(3);
+}
+
+.breakpoints {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    li {
+        padding: spacing(2) spacing(3);
+        border: 1px solid var(--bx-border-default);
+        border-radius: radius(md);
+        font-size: 0.875rem;
+    }
+
+    .current {
+        border-color: var(--bx-border-brand);
+    }
+}
+
+.responsive-preview {
+    display: grid;
+    gap: spacing(2);
+
+    span {
+        padding: spacing(3);
+        background: var(--bx-bg-element);
+        border: 1px solid var(--bx-border-default);
+        border-radius: radius(md);
+        text-align: center;
+    }
+}
+
+.identifier {
+    display: block;
+    padding: spacing(4);
+    background: var(--bx-bg-element);
+    border-radius: radius(md);
+    font-family: monospace;
+    overflow-wrap: anywhere;
+}
+
+.token-swatch {
+    block-size: spacing(12);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+}
+
+.overlay-origin {
+    display: flex;
+    justify-content: center;
+    padding-block: spacing(5);
+}
+
+.utility-overlay {
+    --bx-container-padding: #{spacing(4)};
+
+    display: block;
+    inline-size: min(20rem, calc(100vw - #{spacing(8)}));
+    max-block-size: calc(100dvh - #{spacing(8)});
+    overflow: auto;
+    padding: spacing(4);
+    background: var(--bx-bg-surface);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+
+    p {
+        margin-block-start: spacing(2);
+    }
+}
+
+.documentation {
+    margin-block-start: spacing(8);
+}
+
+@include respond-up(xl) {
+    .demo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .scroll-demo {
+        grid-column: 1 / -1;
+    }
+}

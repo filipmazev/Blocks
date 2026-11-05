@@ -240,6 +240,10 @@ reorganizing unrelated code.
 
 - Every new component needs a colocated `README.md` and a reachable playground page. Update existing documentation and demos whenever their public API or
   behavior changes.
+- When adding or changing public shared utilities without an existing focused guide/demo, update the cumulative utilities guide at
+  `projects/playground/src/app/components/screens/utilities/README.md` and its `/utilities` playground page in the same folder. Keep its coverage audit, API,
+  examples, interactive results, and generated documentation current. Link to established feature guides for utilities already covered there instead of creating
+  separate pages for individual services or helpers.
 - Follow the established README structure: purpose, public import, working usage, API, appearance/customization, behavior/accessibility, and playground route.
   Include asynchronous integration and configuration examples when relevant.
 - Use Blocks components and directives throughout the playground wherever an equivalent exists, including supporting demo controls such as actions, selection,

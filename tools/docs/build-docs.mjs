@@ -46,6 +46,7 @@ async function collect(directory) {
 await collect('projects/blocks');
 await collect('documentation');
 await collect('projects/playground/src/app/components/screens/appearance');
+await collect('projects/playground/src/app/components/screens/utilities');
 files.sort();
 const documents = {};
 const catalogSource = await readFile(
@@ -74,6 +75,7 @@ const catalog = catalogArray.elements.map((entry) => {
 });
 const routes = new Map(catalog.map((entry) => [entry.readme, `components/${entry.id}`]));
 routes.set('projects/playground/src/app/components/screens/appearance/README.md', 'appearance');
+routes.set('projects/playground/src/app/components/screens/utilities/README.md', 'utilities');
 routes.set('projects/blocks/modal/README.md', 'modal');
 routes.set('projects/blocks/toastr/README.md', 'toastr');
 routes.set('projects/blocks/core/README.md', 'components');
@@ -122,6 +124,10 @@ for (const [key, source] of Object.entries(liveExamples)) {
     .replace(/'@(modal|toastr|forms)\/[^']+'/g, (_, entry) => `'@filip.mazev/blocks/${entry}'`)
     .replace(/@use 'core\/styles\/helpers'/g, "@use '@filip.mazev/blocks/core/styles/helpers'");
   snippets[`assets/code-snippets/${key}`] = text;
+}
+for (const file of ['utilities.ts', 'utilities.html', 'utilities.scss', 'constants/utilities.constants.ts', 'types/utilities.types.ts']) {
+  const source = await readFile(path.join(root, 'projects/playground/src/app/components/screens/utilities', file), 'utf8');
+  snippets[`assets/code-snippets/utilities/${file}.txt`] = source.replace(/@use 'core\/styles\/helpers'/g, "@use '@filip.mazev/blocks/core/styles/helpers'");
 }
 const aliases = {
   'projects/blocks/forms/components/button/directives/README.md': 'projects/blocks/forms/directives/button-icon/README.md',

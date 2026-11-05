@@ -79,6 +79,14 @@ export const ROUTES: Routes = [
   ),
   withInAppNavigation(
     {
+      path: 'utilities',
+      loadComponent: () => import('@playground/components/screens/utilities/utilities').then((m) => m.Utilities),
+      title: 'Utilities · Blocks'
+    },
+    { label: 'Utilities', breadcrumb: 'Utilities', section: 'Tools', icon: { name: 'wrench' }, menu: true, order: 7 }
+  ),
+  withInAppNavigation(
+    {
       path: 'icon-catalog',
       loadComponent: () => import('@playground/components/screens/icon-catalog/icon-catalog').then((m) => m.IconCatalog),
       title: 'Icon catalog · Blocks'

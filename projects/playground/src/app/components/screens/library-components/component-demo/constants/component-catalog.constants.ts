@@ -2,6 +2,17 @@ import type { IComponentExample } from '@playground/components/screens/library-c
 
 export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   {
+    id: 'icon',
+    title: 'Icon',
+    group: 'Primitives',
+    readme: 'projects/blocks/icons/components/icon/README.md',
+    symbol: 'Icon',
+    package: '@filip.mazev/blocks/icons',
+    selector: 'bx-icon',
+    description: 'An asynchronously loaded SVG icon using semantic foreground and background tokens.',
+    example: '<bx-icon name="sparkles" size="32" color="text-accent" [decorative]="false" ariaLabel="Highlights" />'
+  },
+  {
     id: 'divider',
     title: 'Divider',
     group: 'Primitives',
@@ -536,17 +547,6 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     selector: 'bx-breadcrumbs',
     description: 'A route-aware trail derived from Blocks navigation metadata.',
     example: '<bx-breadcrumbs [minimumBreadcrumbs]="1" divider="chevron-right" />'
-  },
-  {
-    id: 'icon',
-    title: 'Icon',
-    group: 'Icons',
-    readme: 'projects/blocks/icons/components/icon/README.md',
-    symbol: 'Icon',
-    package: '@filip.mazev/blocks/icons',
-    selector: 'bx-icon',
-    description: 'An asynchronously loaded SVG icon using semantic foreground and background tokens.',
-    example: '<bx-icon name="sparkles" size="32" color="text-accent" [decorative]="false" ariaLabel="Highlights" />'
   },
   {
     id: 'modal-core',
