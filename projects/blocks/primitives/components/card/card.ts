@@ -5,8 +5,8 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, computed, effect,
 import { BX_I18N, Color, ResolvableText, resolveText, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
 import { injectComponentSurface } from '@filip.mazev/blocks/effects';
 
-import { CARD_NESTED_ACTION_SELECTOR } from '@primitives/components/card/constants/card.constants';
-import { CardVariant } from '@primitives/components/card/types/card.types';
+import { CARD_NESTED_ACTION_SELECTOR } from '@primitives/constants/card.constants';
+import { CardVariant } from '@primitives/types/card.types';
 
 @Component({
   selector: 'bx-card, button[bx-card]',
@@ -38,14 +38,14 @@ import { CardVariant } from '@primitives/components/card/types/card.types';
 })
 export class Card {
   private readonly i18n = inject(BX_I18N, { optional: true });
-  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
-  protected readonly originalRole: string | null = this.element.getAttribute('role');
-  protected readonly originalTabIndex: string | null = this.element.getAttribute('tabindex');
-  protected readonly originalAriaLabel: string | null = this.element.getAttribute('aria-label');
-  protected readonly originalAriaLabelledBy: string | null = this.element.getAttribute('aria-labelledby');
-  protected readonly originalAriaDescribedBy: string | null = this.element.getAttribute('aria-describedby');
-  protected readonly nativeButton: boolean = this.element.tagName === 'BUTTON';
+  protected readonly originalRole: string | null = this.nativeElement.getAttribute('role');
+  protected readonly originalTabIndex: string | null = this.nativeElement.getAttribute('tabindex');
+  protected readonly originalAriaLabel: string | null = this.nativeElement.getAttribute('aria-label');
+  protected readonly originalAriaLabelledBy: string | null = this.nativeElement.getAttribute('aria-labelledby');
+  protected readonly originalAriaDescribedBy: string | null = this.nativeElement.getAttribute('aria-describedby');
+  protected readonly nativeButton: boolean = this.nativeElement.tagName === 'BUTTON';
 
   protected readonly keyboardPressed: WritableSignal<boolean> = signal(false);
 
@@ -61,12 +61,18 @@ export class Card {
     return color ? resolveTokenToCssVar(color) : null;
   });
 
+  /** Whether the card exposes interactive activation semantics. */
   public readonly isClickable: Signal<boolean> = computed(() => this.clickable() || this.nativeButton);
+  /** Whether edits are blocked while preserving focus and enabled presentation; combines readonly and readOnly inputs. */
   public readonly isReadonly: Signal<boolean> = computed(() => this.readonly() || this.readOnly());
 
+  /** Heading text displayed by the component; supports shared translation keys where configurable. Optional; omission leaves the value undefined. */
   public readonly title: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  /** Supporting text displayed beneath the card title. Optional; omission leaves the value undefined. */
   public readonly subtitle: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  /** Semantic heading level for the component title, preserving the surrounding document hierarchy. Defaults to `3`. */
   public readonly headingLevel: InputSignal<number> = input(3);
+  /** Card material/presentation variant using the shared Blocks semantic styles. Defaults to `'outlined'`. */
   public readonly variant: InputSignal<CardVariant> = input<CardVariant>('outlined');
   /** Optional opaque presentation. Absent follows the global appearance. */
   public readonly opaque: InputSignal<boolean | undefined> = input<boolean | undefined>(undefined);
@@ -106,6 +112,7 @@ export class Card {
     });
   }
 
+  /** Activate an enabled clickable card, update editable selection, and emit the activation event. */
   public activate(): void {
     if (!this.isClickable() || this.disabled() || this.isReadonly()) return;
 
@@ -114,8 +121,13 @@ export class Card {
     this.activated.emit();
   }
 
+  /**
+   * Move focus to the component's native control using the supplied browser focus options.
+   *
+   * @param options - Browser focus options, including preventScroll when focus should not move the page. Optional.
+   */
   public focus(options?: FocusOptions): void {
-    if (this.isClickable() && !this.disabled()) this.element.focus?.(options);
+    if (this.isClickable() && !this.disabled()) this.nativeElement.focus?.(options);
   }
 
   protected onClick(event: MouseEvent): void {
@@ -132,7 +144,8 @@ export class Card {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
-    if (event.target !== this.element || !this.isClickable() || !['Enter', ' '].includes(event.key) || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.target !== this.nativeElement || !this.isClickable() || !['Enter', ' '].includes(event.key) || event.altKey || event.ctrlKey || event.metaKey)
+      return;
 
     if (this.disabled() || this.isReadonly()) {
       event.preventDefault();
@@ -153,7 +166,7 @@ export class Card {
   }
 
   protected onKeyup(event: KeyboardEvent): void {
-    if (event.target !== this.element || this.nativeButton || !['Enter', ' '].includes(event.key)) return;
+    if (event.target !== this.nativeElement || this.nativeButton || !['Enter', ' '].includes(event.key)) return;
 
     const pressed = this.keyboardPressed();
 
@@ -167,7 +180,7 @@ export class Card {
   private isNestedAction(target: EventTarget | null): boolean {
     const action = (target as Element | null)?.closest?.(CARD_NESTED_ACTION_SELECTOR);
 
-    return !!action && action !== this.element && this.element.contains(action);
+    return !!action && action !== this.nativeElement && this.nativeElement.contains(action);
   }
 
   //#endregion

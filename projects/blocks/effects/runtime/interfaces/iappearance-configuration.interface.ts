@@ -1,4 +1,4 @@
-import type { GlassQuality } from '@effects/runtime/types';
+import type { GlassQuality } from '@effects/runtime/types/runtime.types';
 
 import type { ISurfaceOptions } from './isurface-options.interface';
 /**

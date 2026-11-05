@@ -25,29 +25,29 @@ import { Highlight } from 'ngx-highlightjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideNavExamples {
-  protected readonly translations = inject(SideNavDemoI18nService);
+  protected readonly navigationDemoI18nService = inject(SideNavDemoI18nService);
 
-  protected readonly groups: Signal<INavigationTreeGroup[]> = computed(() => navigationDemoGroups('/components/side-nav', this.translations));
+  protected readonly groups: Signal<INavigationTreeGroup[]> = computed(() => navigationDemoGroups('/components/side-nav', this.navigationDemoI18nService));
   protected readonly text: Signal<ISideNavExamplesTextState> = computed(() => ({
-    right: this.translations.translate('demo.right'),
-    rail: this.translations.translate('demo.rail'),
-    mobile: this.translations.translate('demo.mobile'),
-    adjacent: this.translations.translate('demo.adjacent'),
-    inlineMode: this.translations.translate('demo.inlineMode'),
-    flyoutMode: this.translations.translate('demo.flyoutMode'),
-    search: this.translations.translate('demo.search'),
-    rtl: this.translations.translate('demo.rtl'),
-    custom: this.translations.translate('demo.custom'),
-    height: this.translations.translate('demo.height'),
-    language: this.translations.translate('demo.language'),
-    instructions: this.translations.translate('demo.instructions'),
-    studio: this.translations.translate('demo.studio'),
-    admin: this.translations.translate('demo.admin'),
-    title: this.translations.translate('demo.title'),
-    description: this.translations.translate('demo.description'),
-    open: this.translations.translate('demo.open'),
-    keyboard: this.translations.translate('demo.keyboard'),
-    routes: this.translations.translate('demo.routes')
+    right: this.navigationDemoI18nService.translate('demo.right'),
+    rail: this.navigationDemoI18nService.translate('demo.rail'),
+    mobile: this.navigationDemoI18nService.translate('demo.mobile'),
+    adjacent: this.navigationDemoI18nService.translate('demo.adjacent'),
+    inlineMode: this.navigationDemoI18nService.translate('demo.inlineMode'),
+    flyoutMode: this.navigationDemoI18nService.translate('demo.flyoutMode'),
+    search: this.navigationDemoI18nService.translate('demo.search'),
+    rtl: this.navigationDemoI18nService.translate('demo.rtl'),
+    custom: this.navigationDemoI18nService.translate('demo.custom'),
+    height: this.navigationDemoI18nService.translate('demo.height'),
+    language: this.navigationDemoI18nService.translate('demo.language'),
+    instructions: this.navigationDemoI18nService.translate('demo.instructions'),
+    studio: this.navigationDemoI18nService.translate('demo.studio'),
+    admin: this.navigationDemoI18nService.translate('demo.admin'),
+    title: this.navigationDemoI18nService.translate('demo.title'),
+    description: this.navigationDemoI18nService.translate('demo.description'),
+    open: this.navigationDemoI18nService.translate('demo.open'),
+    keyboard: this.navigationDemoI18nService.translate('demo.keyboard'),
+    routes: this.navigationDemoI18nService.translate('demo.routes')
   }));
 
   protected readonly routeExample: "const navigation = defineNavigation({\n  sections: [{ id: 'workspace', title: 'Workspace', icon: { name: 'building-2' },\n    collapsible: true, showInBreadcrumbs: true }],\n  sideNav: { side: 'left', persistenceKey: 'my-app.navigation' }\n});\nconst { withInAppNavigation } = navigation;\nexport const routes: Routes = [withInAppNavigation({ path: 'projects', children: [\n  withInAppNavigation({ path: 'tokens', loadComponent: () => import('./tokens').then(m => m.Tokens) },\n    { label: { key: 'nav.tokens' }, icon: { name: 'swatch-book' },\n      keywords: ['palette'], tags: [{ text: 'New' }], showInBreadcrumbs: false })\n]}, { label: 'Projects', section: 'workspace', icon: { name: 'folder' } })];\n// In application providers:\nprovideRouter(routes), provideNavigation(navigation.config)\n// In your shell: <bx-side-nav />" =
@@ -68,7 +68,7 @@ export class SideNavExamples {
   protected readonly selection: Signal<string> = computed(() => {
     const item = this.selected();
 
-    return item ? `${this.translations.translate(`nav.${item.id}`)} · ${item.id}` : this.translations.translate('demo.select');
+    return item ? `${this.navigationDemoI18nService.translate(`nav.${item.id}`)} · ${item.id}` : this.navigationDemoI18nService.translate('demo.select');
   });
   protected readonly config: Signal<ISideNavConfig> = computed<ISideNavConfig>(() => ({
     position: 'inline',

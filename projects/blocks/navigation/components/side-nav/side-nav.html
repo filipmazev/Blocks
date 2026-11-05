@@ -7,7 +7,7 @@
         class="bx-nav-hamburger"
         type="button"
         [class.is-open]="mobileOpen()"
-        [attr.aria-label]="state.text().openLabel"
+        [attr.aria-label]="navigationStateService.text().openLabel"
         [attr.aria-hidden]="mobileOpen() ? true : null"
         [attr.inert]="mobileOpen() ? '' : null"
         [attr.aria-expanded]="mobileOpen()"
@@ -17,7 +17,12 @@
     </button>
 }
 @if (isMobile() && mobileOpen()) {
-    <bx-modal-backdrop class="bx-nav-backdrop" [isOpen]="true" [label]="state.text().closeLabel" [tabIndex]="-1" (click)="closeFromControl($event)" />
+    <bx-modal-backdrop
+        class="bx-nav-backdrop"
+        [isOpen]="true"
+        [label]="navigationStateService.text().closeLabel"
+        [tabIndex]="-1"
+        (click)="closeFromControl($event)" />
 }
 <aside
     #panel
@@ -30,24 +35,24 @@
     [menuHover]="false"
     [menuPinned]="true"
     [menuSide]="resolvedConfig().side === 'right' ? 'left' : 'right'"
-    [menuLabel]="state.parent()?.label ?? state.currentGroup()?.title ?? state.text().ariaLabel"
+    [menuLabel]="navigationStateService.parent()?.label ?? navigationStateService.currentGroup()?.title ?? navigationStateService.text().ariaLabel"
     [bxSurfaceInteractive]="false"
     [id]="id"
     [class.is-open]="!isMobile() || mobileOpen()"
     [attr.role]="isMobile() ? 'dialog' : null"
     [attr.aria-modal]="isMobile() && mobileOpen() ? true : null"
-    [attr.aria-label]="state.text().ariaLabel"
+    [attr.aria-label]="navigationStateService.text().ariaLabel"
     [attr.inert]="isMobile() && !mobileOpen() ? '' : null"
     [attr.aria-hidden]="isMobile() && !mobileOpen() ? true : null"
     [cdkTrapFocus]="isMobile() && mobileOpen()"
-    (menuOpened)="state.submenuVisible.set(true)"
-    (menuClosed)="state.submenuVisible.set(false)"
+    (menuOpened)="navigationStateService.submenuVisible.set(true)"
+    (menuClosed)="navigationStateService.submenuVisible.set(false)"
     (keydown)="panelKey($event)">
     <div class="bx-nav-header">
         @if (headerTemplate(); as template) {
             <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
         } @else if (!isCollapsed()) {
-            <strong>{{ state.text().ariaLabel }}</strong>
+            <strong>{{ navigationStateService.text().ariaLabel }}</strong>
         }
         @if (isMobile()) {
             <button
@@ -56,7 +61,7 @@
                 color="grayscale"
                 class="bx-nav-panel-toggle"
                 type="button"
-                [attr.aria-label]="state.text().closeLabel"
+                [attr.aria-label]="navigationStateService.text().closeLabel"
                 (click)="closeFromControl($event)">
                 <bx-icon name="x" size="20" />
             </button>
@@ -67,7 +72,7 @@
                 color="grayscale"
                 class="bx-nav-panel-toggle"
                 type="button"
-                [attr.aria-label]="isCollapsed() ? state.text().expandLabel : state.text().collapseLabel"
+                [attr.aria-label]="isCollapsed() ? navigationStateService.text().expandLabel : navigationStateService.text().collapseLabel"
                 [attr.aria-expanded]="!isCollapsed()"
                 (click)="toggleCollapsed()">
                 <bx-icon size="20" [name]="(resolvedConfig().side === 'left') !== isCollapsed() ? 'panel-left-close' : 'panel-right-close'" />
@@ -82,7 +87,7 @@
                 color="grayscale"
                 type="button"
                 class="bx-nav-search-toggle"
-                [attr.aria-label]="state.text().searchLabel"
+                [attr.aria-label]="navigationStateService.text().searchLabel"
                 (click)="expandSearch()">
                 <bx-icon name="search" size="20" />
             </button>
@@ -90,29 +95,34 @@
             <bx-search-input
                 class="bx-nav-search"
                 subscriptSizing="dynamic"
-                [placeholder]="state.text().searchPlaceholder"
-                [ariaLabel]="state.text().searchLabel"
-                [clearLabel]="state.text().clearSearchLabel"
+                [placeholder]="navigationStateService.text().searchPlaceholder"
+                [ariaLabel]="navigationStateService.text().searchLabel"
+                [clearLabel]="navigationStateService.text().clearSearchLabel"
                 [ngModel]="query()"
                 (ngModelChange)="search($event)" />
         }
     }
-    @if (!query().trim() && isInlineSubmenus() && state.hasLevel()) {
+    @if (!query().trim() && isInlineSubmenus() && navigationStateService.hasLevel()) {
         <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
     } @else {
-        <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="focusState.rootScrollId">
-            <nav [attr.aria-label]="state.text().ariaLabel">
+        <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
+            <nav [attr.aria-label]="navigationStateService.text().ariaLabel">
                 @if (query().trim()) {
-                    <div class="bx-nav-items" role="menu" tabindex="-1" [attr.aria-label]="state.text().resultLabel" (keydown)="menuKey($event)">
-                        @for (entry of state.searchResult().entries; track entry.item.id) {
+                    <div
+                        class="bx-nav-items"
+                        role="menu"
+                        tabindex="-1"
+                        [attr.aria-label]="navigationStateService.text().resultLabel"
+                        (keydown)="menuKey($event)">
+                        @for (entry of navigationStateService.searchResult().entries; track entry.item.id) {
                             <bx-navigation-item [item]="entry.item" [context]="entry.context" />
                         } @empty {
-                            <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p>
+                            <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                         }
                     </div>
                 } @else {
                     @for (group of visibleGroups(); track group.id) {
-                        <section class="bx-nav-section" [attr.aria-label]="group.title || state.text().ariaLabel">
+                        <section class="bx-nav-section" [attr.aria-label]="group.title || navigationStateService.text().ariaLabel">
                             @if (group.title) {
                                 @if (isCollapsed()) {
                                     <button
@@ -121,8 +131,8 @@
                                         [class.is-active]="sectionActive(group)"
                                         [attr.aria-label]="group.title"
                                         [attr.data-section-id]="group.id"
-                                        [attr.aria-expanded]="state.submenuVisible() && state.currentGroup()?.id === group.id"
-                                        [attr.aria-controls]="state.submenuVisible() ? state.levelId : null"
+                                        [attr.aria-expanded]="navigationStateService.submenuVisible() && navigationStateService.currentGroup()?.id === group.id"
+                                        [attr.aria-controls]="navigationStateService.submenuVisible() ? navigationStateService.levelId : null"
                                         (click)="openSection(group, $event)">
                                         <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
                                     </button>
@@ -153,7 +163,7 @@
                                 class="bx-nav-items"
                                 role="menu"
                                 tabindex="-1"
-                                [attr.aria-label]="group.title || state.text().ariaLabel"
+                                [attr.aria-label]="group.title || navigationStateService.text().ariaLabel"
                                 [id]="id + '-section-' + $index"
                                 [hidden]="sectionCollapsed(group)"
                                 (keydown)="menuKey($event)">
@@ -163,7 +173,7 @@
                             </div>
                         </section>
                     } @empty {
-                        <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p>
+                        <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                     }
                 }
             </nav>
@@ -173,8 +183,8 @@
         <footer class="bx-nav-footer"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></footer>
     }
     <span class="cdk-visually-hidden" role="status" aria-live="polite">
-        @if (state.searchResult().label) {
-            {{ state.text().resultLabel }}: {{ state.searchResult().label }}
+        @if (navigationStateService.searchResult().label) {
+            {{ navigationStateService.text().resultLabel }}: {{ navigationStateService.searchResult().label }}
         }
     </span>
 </aside>

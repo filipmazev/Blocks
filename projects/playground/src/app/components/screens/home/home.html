@@ -16,7 +16,7 @@
     </header>
     <section class="features" aria-labelledby="features-title">
         <div class="features-heading">
-            <div class="features-title" [attr.data-bx-reduced-motion]="reducedMotion()">
+            <div class="features-title" [attr.data-bx-reduced-motion]="isReducedMotion()">
                 <h2 id="features-title">Built on the Blocks foundations</h2>
                 <span
                     class="orb-hint"
@@ -51,7 +51,7 @@
         <span>Blocks {{ version }}</span>
 
         <div class="footer-links">
-            <a bx-button variant="text" color="primary" target="_blank" rel="noopener noreferrer" [href]="releases.npmPackageUrl()"
+            <a bx-button variant="text" color="primary" target="_blank" rel="noopener noreferrer" [href]="packageReleaseService.npmPackageUrl()"
                 >npm package <bx-icon name="arrow-up-right" size="16"
             /></a>
             <a

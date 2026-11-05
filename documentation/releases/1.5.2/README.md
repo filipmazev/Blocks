@@ -75,8 +75,8 @@ automatically. Applications using the old numeric API should update these names:
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';
 
-const theme = inject(ThemingService);
-theme.setAppearance({ translucency: 0.5, glassiness: 'auto' });
+const themingService = inject(ThemingService);
+themingService.setAppearance({ translucency: 0.5, glassiness: 'auto' });
 ```
 
 ```html

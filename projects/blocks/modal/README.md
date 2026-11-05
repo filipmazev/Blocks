@@ -48,11 +48,11 @@ import { MessageDialog } from './message-dialog';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Example {
-    private readonly modals = inject(ModalService);
+    private readonly modalService = inject(ModalService);
     private readonly destroyRef = inject(DestroyRef);
 
     protected open(): void {
-        const ref = this.modals.open<string, boolean>(MessageDialog, {
+        const ref = this.modalService.open<string, boolean>(MessageDialog, {
             data: 'Save these changes?',
             header: { text: 'Confirm changes' },
             style: { layout: 'center', breakpoints: { sm: 'bottom-sheet' } }

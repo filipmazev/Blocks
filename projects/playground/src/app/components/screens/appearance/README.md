@@ -54,10 +54,10 @@ import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';
 
 export class Settings {
-    readonly theme = inject(ThemingService);
+    readonly themingService = inject(ThemingService);
 
     setAppearance() {
-        this.theme.setAppearance({
+        this.themingService.setAppearance({
             translucency: 0.5,
             quality: 'auto'
         });
@@ -69,11 +69,12 @@ There is no global semantic-emission setting. Interactive lights use the color o
 scene automatically. Neutral edges and restrained highlights define the material. Glass buttons follow the full translucency range; fields and filled actions
 retain their own legibility constraints.
 
-`theme.appearance()` is the current typed configuration; `theme.resetAppearance()` restores defaults. Changes apply to existing components and open overlays.
-`translucency` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light blur, while the
-maximum caps tint near 72.5% to retain a glassy appearance. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen translucency for
-when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system transparency and contrast
-preferences remain respected. Previously saved tint preferences migrate to translucency, and a saved solid preference becomes reduced transparency.
+`themingService.appearance()` is the current typed configuration; `themingService.resetAppearance()` restores defaults. Changes apply to existing components and
+open overlays. `translucency` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light
+blur, while the maximum caps tint near 72.5% to retain a glassy appearance. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen
+translucency for when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system
+transparency and contrast preferences remain respected. Previously saved tint preferences migrate to translucency, and a saved solid preference becomes reduced
+transparency.
 
 The global styles are required once. `ng add @filip.mazev/blocks` adds the distributed material stylesheet to the application build. For an existing
 application, add `node_modules/@filip.mazev/blocks/effects/effects.css` to `angular.json` styles before the application stylesheet, or import
@@ -150,9 +151,9 @@ individually: Cobalt provides a clear blue accent, Ember stays orange, and Brick
 independent of these palette families.
 
 ```ts
-const theme = inject(ThemingService);
-theme.setPalette('violet-teal');
-theme.setApplicationTheme('dark');
+const themingService = inject(ThemingService);
+themingService.setPalette('violet-teal');
+themingService.setApplicationTheme('dark');
 ```
 
 Use the palette IDs above in `ThemingService.setPalette()` and `ng add --theme`. Sass exports follow the same names, such as `$carbon-cobalt-light-theme` and
@@ -171,10 +172,10 @@ transparency** for opaque surfaces.
 <section bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="enhanced">…</section>
 ```
 
-`theme.setAppearance({ translucency: 0.5, glassiness: 'auto' })` sets the shared scale and browser policy. It does not select every component. Off disables
-selected glassiness; browser opt-in allows testing future support. Automatic uses one refraction pass. Enhanced adds full reflection and bevel layers, with a
-bounded reflection region and throttled invalidation. The five Appearance preview controls use the automatic path; the three overview feature cards and toast
-wrappers request Enhanced. Device budgets, baseline quality and accessibility still take precedence.
+`themingService.setAppearance({ translucency: 0.5, glassiness: 'auto' })` sets the shared scale and browser policy. It does not select every component. Off
+disables selected glassiness; browser opt-in allows testing future support. Automatic uses one refraction pass. Enhanced adds full reflection and bevel layers,
+with a bounded reflection region and throttled invalidation. The five Appearance preview controls use the automatic path; the three overview feature cards and
+toast wrappers request Enhanced. Device budgets, baseline quality and accessibility still take precedence.
 
 Text, placeholders and icons keep their theme or component foreground colors while scrolling. Active refraction retains a default minimum of 72% tint for
 readability, increasing to about 74.9% tint at the slider midpoint and 89% at maximum. Blur starts at 0.5px, reaches about 0.8px at the midpoint and 9.2px at
@@ -252,8 +253,8 @@ color-scheme changes, including after a reload. Clickable Blocks cards choose th
 selected card uses the shared emissive highlight, and Auto joins its light/dark preview halves without inner corner rounding.
 
 ```ts
-theme.setApplicationTheme('dark');
-theme.setApplicationTheme(null); // Follow the system appearance.
+themingService.setApplicationTheme('dark');
+themingService.setApplicationTheme(null); // Follow the system appearance.
 ```
 
 The Surfaces section places its Surface Appearance title beside the scrolling journal on wide layouts and above it on smaller screens. The padded pill slider
@@ -261,8 +262,8 @@ sits below the demo, followed by its description; Reset restores surface prefere
 options. Rendering, glassiness, translucency and reduced transparency are saved together in `blocks-appearance` and restored on refresh, including Enhanced.
 Baseline temporarily sets Glassiness to Off and disables all glassiness choices, including browser opt-in. Switching back to Automatic or Enhanced restores the
 previous Automatic or browser opt-in policy; an explicitly chosen Off remains Off. Enhanced stays available from Baseline when the remembered policy permits it.
-This also applies to `theme.setAppearance()` and restored preferences. `theme.preferredGlassiness()` exposes the requested policy while
-`theme.appearance().glassiness` reflects the effective value. Turning Glassiness Off intentionally returns Enhanced to Automatic. Theme palettes and
+This also applies to `themingService.setAppearance()` and restored preferences. `themingService.preferredGlassiness()` exposes the requested policy while
+`themingService.appearance().glassiness` reflects the effective value. Turning Glassiness Off intentionally returns Enhanced to Automatic. Theme palettes and
 accessibility preferences have independent sections; resetting surfaces changes only surface preferences.
 
 The top bar provides a single Appearance link. On wide screens, selectable Blocks cards offer Light, Dark and Auto. On screens at the shared `sm` breakpoint or

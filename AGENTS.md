@@ -20,9 +20,14 @@ reorganizing unrelated code.
 
 - Keep one primary component, directive, service, or class declaration per file. Do not place supporting interfaces, type aliases, enums, constants, free
   functions, or additional classes in that file, even when they are not exported.
-- Place supporting declarations in dedicated folders under the owning component. For example, `components/component-name/types/component-name.types.ts`. Place
-  declarations shared across components in a shared location within the owning feature's component hierarchy; use existing shared infrastructure rather than
-  duplicating it.
+- Place supporting declarations in the owning library entry point's top-level category folders, following Modal's structure. For example,
+  `projects/blocks/primitives/types/dropdown.types.ts`, `primitives/interfaces/ibx-overlay-context.interface.ts`, and
+  `primitives/tokens/overlay-context.token.ts`. Types, interfaces, constants, helpers, services, classes, enums, and tokens are siblings of `components` and
+  `directives`; do not nest these category folders inside a component or directive folder. Related generated data may use a namespace inside its category, such
+  as `icons/constants/lucide`. A secondary entry point such as `effects/runtime` owns its own category folders.
+- Keep each concrete component or directive's implementation, template, styles, existing specs, and README together in its own folder below `components` or
+  `directives`. Do not leave the implementation beside a separate documentation folder. Shared slot directives belong in the entry point's `directives` folder;
+  form hint/error components belong in `components`, even if older filenames called them directives.
 - Use these declaration categories:
 
     | Declaration      | Folder       | Filename                                    |
@@ -43,6 +48,15 @@ reorganizing unrelated code.
 - Give exported library interfaces a descriptive JSDoc comment and document every member with JSDoc immediately above that member. For configuration properties,
   explain purpose, optionality, defaults, and relevant behavior. Use `@typeParam` for generic parameters; do not collect property descriptions in
   interface-level `@param` tags. Document event payloads when their meaning is not obvious.
+- Document every public method, accessor, and property of exported library components, directives, and services with descriptive JSDoc immediately above the
+  declaration. Explain purpose and observable behavior, rather than restating the member name. This includes signal inputs/models, outputs, public state,
+  lifecycle hooks, and public injected references. Document property defaults, optionality, units, translation support, event payload meaning, and relevant
+  disabled/readonly or asynchronous behavior where applicable.
+- Document every exported library helper, including function-valued exports, with descriptive JSDoc. Public methods and exported helpers require a descriptive
+  `@param` tag for each formal parameter and `@typeParam` for each generic parameter. Explain optional/default values and meaningful result/error behavior; add
+  `@returns` when the result is not clear from the summary. Getter comments describe the readable value; setter comments also document the incoming parameter.
+  Keep existing useful documentation, examples, and compatibility notes when extending comments. Review prose for accuracy; lint validates structure and
+  parameter coverage, not whether a description matches the implementation.
 - Extract named public configuration and data contracts instead of embedding substantial anonymous object types in component or service APIs.
 - Put reusable, stateless functions in helpers when their logic is shared across components. Use services for dependency injection, shared state, lifecycle, or
   coordinated behavior. Keep component-specific implementation as private methods.
@@ -61,6 +75,14 @@ reorganizing unrelated code.
   `viewChildren()` APIs instead of `@Input`, `@Output`, `@ViewChild` and `@ViewChildren`; use signal content queries too. Keep signal and output references
   `readonly` and use signals for component state that affects rendering. Use `computed()` for derivation and effects for side effects rather than copying
   derived state between signals.
+- Name injected class references after the injected class in lower camel case, preserving the full name and suffix: `inject(PackageReleaseService)` is
+  `packageReleaseService`, `inject(BxA11yService)` is `bxA11yService`, and `inject(ActivatedRoute)` is `activatedRoute`. Apply this to class fields and local
+  variables, including aliased imports. Class-token references such as `ElementRef` and `ViewContainerRef` follow the same rule. Injection-token constants
+  retain meaningful consumer names such as `i18n` for `BX_I18N`.
+- Name direct injected member projections exactly after the projected member: `inject(BxA11yService).isReducedMotion` is `isReducedMotion`, and
+  `inject(ElementRef).nativeElement` is `nativeElement`. Keep optional access and type assertions consistent with the same naming contract. Method invocation
+  results are ordinary derived values, not direct member references. Reuse an inherited injected reference instead of redeclaring the same dependency under an
+  alias. Update TypeScript references, templates, host bindings, examples, and generated documentation when renaming.
 - Explicitly declare `ChangeDetectionStrategy.OnPush` in every new component and design its state and asynchronous updates for OnPush. This is a development
   rule, not an ESLint requirement. Preserve existing change detection until its update paths have been reviewed; do not switch existing components mechanically.
 - Keep configuration typed and centralized. Resolve defaults in a predictable order: explicit instance configuration, shared application settings, then library

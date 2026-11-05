@@ -21,20 +21,22 @@ export const RELEASE_NOTES: readonly IReleaseNotes[] = [
   },
   {
     version: '1.5.0',
-    summary: 'One Angular library with shared semantic themes, glass effects, forms, navigation, notifications and accessible interactions.',
+    summary:
+      'Top navigation, editable autocomplete, layout and feedback primitives, interactive popovers, platform-aware shortcuts and refined press feedback.',
     status: 'released',
     channel: 'beta',
     readme: 'documentation/releases/1.5.0/README.md',
-    fromCommit: 'f9bf13b2bb6914c26d11639076006bd1dcc5a851',
+    fromCommit: 'b18ac855a86e7ad9fe77d1d4944f069ccde309ba',
     toCommit: '55b915c819525cfa365d4b59389a765233b2cd35'
   },
   {
     version: '1.4.20',
-    summary: 'Responsive side navigation, single-panel submenu browsing, contextual search, and reliable drawer focus and overlay behavior.',
+    summary:
+      'Cumulative changes through 1.4.20: unified Angular package, semantic themes, glass effects, forms, notifications, icons and responsive side navigation.',
     status: 'released',
     channel: 'latest',
     readme: 'documentation/releases/1.4.20/README.md',
-    fromCommit: 'df09eebe3e867a2fbf83462164bb3bb8ace80b5b',
+    fromCommit: 'f9bf13b2bb6914c26d11639076006bd1dcc5a851',
     toCommit: 'b18ac855a86e7ad9fe77d1d4944f069ccde309ba'
   }
 ];

@@ -30,7 +30,7 @@ import {
   }
 })
 export class MenuShortcutExamples {
-  protected readonly shortcuts = inject(BxShortcutService);
+  protected readonly bxShortcutService = inject(BxShortcutService);
 
   private readonly menu: Signal<MenuTriggerDirective | undefined> = viewChild(MenuTriggerDirective);
 
@@ -54,7 +54,7 @@ export class MenuShortcutExamples {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
-    if (this.shortcuts.matches(event, this.openShortcut)) {
+    if (this.bxShortcutService.matches(event, this.openShortcut)) {
       event.preventDefault();
       this.resetSequence();
       this.menu()?.open(true);
@@ -63,7 +63,7 @@ export class MenuShortcutExamples {
       return;
     }
 
-    if (this.shortcuts.matches(event, this.sequencePrefix)) {
+    if (this.bxShortcutService.matches(event, this.sequencePrefix)) {
       event.preventDefault();
       this.resetSequence();
       this.waitingForView.set(true);
@@ -76,7 +76,7 @@ export class MenuShortcutExamples {
     if (this.waitingForView()) {
       if (['Meta', 'Control', 'Alt', 'Shift'].includes(event.key) || event.repeat) return;
 
-      const completed = this.shortcuts.matches(event, 'v');
+      const completed = this.bxShortcutService.matches(event, 'v');
 
       this.resetSequence();
 
@@ -89,10 +89,10 @@ export class MenuShortcutExamples {
       }
     }
 
-    if (!this.viewDisabled.value && this.shortcuts.matches(event, this.viewShortcut)) {
+    if (!this.viewDisabled.value && this.bxShortcutService.matches(event, this.viewShortcut)) {
       event.preventDefault();
       this.activate('View opened');
-    } else if (this.shortcuts.matches(event, this.duplicateShortcut)) {
+    } else if (this.bxShortcutService.matches(event, this.duplicateShortcut)) {
       event.preventDefault();
       this.activate('Project duplicated');
     }

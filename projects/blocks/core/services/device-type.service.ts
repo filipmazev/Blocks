@@ -38,14 +38,17 @@ export class DeviceTypeService {
     }
   }
 
+  /** Return whether the tracked screen orientation is landscape. */
   public isLandscapeOrientation(): boolean {
     return ['landscape-primary', 'landscape-secondary'].includes(this.screenOrientation);
   }
 
+  /** Return whether the tracked screen orientation is portrait. */
   public isPortraitOrientation(): boolean {
     return ['portrait-primary', 'portrait-secondary'].includes(this.screenOrientation);
   }
 
+  /** Return the detected device/OS categories and accessors for the latest tracked screen orientation. */
   public getDeviceState(): IDeviceState {
     const isMobile = this.isMobileDevice();
     const isTablet = this.isTabletDevice();

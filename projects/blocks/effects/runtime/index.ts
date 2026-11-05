@@ -1,12 +1,12 @@
-export { mountSurface } from './surface';
-export { configureAppearance } from './configuration';
-export { mountGlassScene, observeGlassLighting, refreshGlassLighting } from './scene';
-export { inheritGlassLighting } from './visibility';
+export { mountSurface } from '@effects/runtime/helpers/surface.helpers';
+export { configureAppearance } from '@effects/runtime/helpers/appearance-configuration.helpers';
+export { mountGlassScene, observeGlassLighting, refreshGlassLighting } from '@effects/runtime/helpers/scene.helpers';
+export { inheritGlassLighting } from '@effects/runtime/helpers/lighting-visibility.helpers';
 export { getGlassLightRoot } from '@effects/runtime/helpers/light-root.helpers';
-export { createGlassTransition } from './transition';
-export { Spring } from './spring';
-export type { GlassinessMode } from '@effects/runtime/refraction/types/refraction.types';
-export type { ISpringOptions, ISpringOptions as SpringOptions } from './spring';
+export { createGlassTransition } from '@effects/runtime/helpers/glass-transition.helpers';
+export { Spring } from '@effects/runtime/classes/spring';
+export type { GlassinessMode } from '@effects/runtime/types/refraction.types';
+export type { ISpringOptions, ISpringOptions as SpringOptions } from '@effects/runtime/classes/spring';
 export type {
   GlassQuality,
   ISurfaceOptions,
@@ -30,5 +30,5 @@ export type {
   IGlassSceneOptions as GlassSceneOptions,
   IGlassScene,
   IGlassScene as GlassScene
-} from './types';
-export type { ILighting as GlassLighting } from './scene';
+} from '@effects/runtime/types/runtime.types';
+export type { ILighting as GlassLighting } from '@effects/runtime/helpers/scene.helpers';

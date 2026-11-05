@@ -30,13 +30,13 @@ export * from '@core/types/core.types';
 export * from '@core/types/theme.types';
 export * from '@core/types/tokens.types';
 
-export * from '@core/helpers/core-functions';
-export * from '@core/helpers/overlay-origin';
-export * from '@core/helpers/overlay-theme';
+export * from '@core/helpers/core-functions.helpers';
+export * from '@core/helpers/overlay-origin.helpers';
+export * from '@core/helpers/overlay-theme.helpers';
 export * from '@core/helpers/resolve-text.helpers';
-export * from '@core/helpers/theme-functions';
-export * from '@core/helpers/token-functions';
-export * from '@core/helpers/uui4';
+export * from '@core/helpers/theme-functions.helpers';
+export * from '@core/helpers/token-functions.helpers';
+export * from '@core/helpers/uuid.helpers';
 export * from '@core/tokens/bx-i18n.token';
 export * from '@core/types/appearance.types';
 
@@ -47,3 +47,6 @@ export * from '@core/types/overlay-origin.types';
 export * from '@core/interfaces/ios-shortcut.interface';
 export * from '@core/interfaces/ishortcut-match-options.interface';
 export type { ShortcutPlatform } from '@core/types/shortcut.types';
+
+export * from '@core/constants/theme-palettes.constants';
+export * from '@core/interfaces/itheming-service-palettes-state.interface';

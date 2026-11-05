@@ -35,7 +35,7 @@
                 label="Automatic"
                 labelPosition="before"
                 subscriptSizing="dynamic"
-                [ngModel]="theme.applicationTheme() === null"
+                [ngModel]="themingService.applicationTheme() === null"
                 (ngModelChange)="setAutomaticMode($event)" />
         }
     </div>
@@ -102,7 +102,7 @@
                                     subscriptSizing="dynamic"
                                     [label]="option.label"
                                     [value]="option.value"
-                                    [disabled]="option.value === 'enhanced' && theme.preferredGlassiness() === 'off'"
+                                    [disabled]="option.value === 'enhanced' && themingService.preferredGlassiness() === 'off'"
                                     [ngModel]="appearance().quality"
                                     (ngModelChange)="updateAppearance({ quality: $event })" />
                             }
@@ -145,14 +145,14 @@
             </div>
         </header>
         <div class="palette-picker">
-            @for (palette of theme.palettes; track palette.id) {
+            @for (palette of themingService.palettes; track palette.id) {
                 <button
                     bx-button
                     type="button"
                     variant="tonal"
-                    [color]="theme.palette() === palette.id ? 'accent' : 'grayscale'"
-                    [attr.aria-pressed]="theme.palette() === palette.id"
-                    (click)="theme.setPalette(palette.id)">
+                    [color]="themingService.palette() === palette.id ? 'accent' : 'grayscale'"
+                    [attr.aria-pressed]="themingService.palette() === palette.id"
+                    (click)="themingService.setPalette(palette.id)">
                     <span class="palette-swatches" aria-hidden="true"
                         ><span [style.background-color]="palette.colors[0]"></span><span [style.background-color]="palette.colors[1]"></span></span
                     >{{ palette.label }}
@@ -184,8 +184,8 @@
                 <bx-slide-toggle
                     label="High contrast"
                     subscriptSizing="dynamic"
-                    [ngModel]="theme.highContrast()"
-                    (ngModelChange)="theme.setHighContrast($event)" />
+                    [ngModel]="themingService.highContrast()"
+                    (ngModelChange)="themingService.setHighContrast($event)" />
                 <p class="section-note">Strengthen the separation between content and its background.</p>
             </div>
         </div>

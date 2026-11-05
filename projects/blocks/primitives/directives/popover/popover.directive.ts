@@ -23,14 +23,14 @@ import {
 
 import { Subscription } from 'rxjs';
 
-import type { IPopoverDirectiveSettingsState } from '@primitives/directives/popover/interfaces/ipopover-directive-settings-state.interface';
+import type { IPopoverDirectiveSettingsState } from '@primitives/interfaces/ipopover-directive-settings-state.interface';
 
 import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, resolveText, trackOverlayOrigin, uuidv4 } from '@filip.mazev/blocks/core';
 import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
-import { BX_OVERLAY_CONTEXT } from '@primitives/directives/overlay-context.token';
-import { IPopoverConfig } from '@primitives/directives/popover/interfaces/ipopover-config.interface';
-import { BX_POPOVER_DEFAULTS } from '@primitives/directives/popover/tokens/popover-defaults.token';
+import { IPopoverConfig } from '@primitives/interfaces/ipopover-config.interface';
+import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
+import { BX_POPOVER_DEFAULTS } from '@primitives/tokens/popover-defaults.token';
 
 @Directive({
   selector: '[bxPopover]',
@@ -44,12 +44,12 @@ import { BX_POPOVER_DEFAULTS } from '@primitives/directives/popover/tokens/popov
   }
 })
 export class PopoverDirective {
-  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly overlay = inject(Overlay);
-  private readonly positions = inject(BxOverlayPositionService);
-  private readonly vcr = inject(ViewContainerRef);
-  private readonly zone = inject(NgZone);
-  private readonly checker = inject(InteractivityChecker);
+  private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly ngZone = inject(NgZone);
+  private readonly interactivityChecker = inject(InteractivityChecker);
   private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly defaults = inject(BX_POPOVER_DEFAULTS, { optional: true });
@@ -75,12 +75,17 @@ export class PopoverDirective {
 
   protected readonly panelId: string = 'bx-popover-' + uuidv4();
 
+  /** Current open state of the overlay. */
   public readonly isOpen: Signal<boolean> = this.opened.asReadonly();
 
+  /** Template rendered inside the popover overlay. Required input. */
   public readonly bxPopover: InputSignal<TemplateRef<unknown>> = input.required<TemplateRef<unknown>>();
+  /** Instance content, placement, accessibility, and appearance settings for the popover. Defaults to an empty configuration. */
   public readonly popoverConfig: InputSignal<IPopoverConfig> = input<IPopoverConfig>({});
+  /** Whether popover opening is suppressed. Defaults to `false`. */
   public readonly popoverDisabled: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 
+  /** Emits the new open state after an overlay presentation changes. */
   public readonly openedChange: OutputEmitterRef<boolean> = output<boolean>();
 
   private overlayRef?: OverlayRef;
@@ -101,25 +106,28 @@ export class PopoverDirective {
       if (overlay) {
         overlay.overlayElement.setAttribute('aria-label', name);
         this.disconnectOrigin?.();
-        overlay.updatePositionStrategy(this.positions.getElementStrategy(this.element, config.placement ?? 'bottom', config.offset ?? 8));
-        this.disconnectOrigin = this.zone.runOutsideAngular(() => trackOverlayOrigin(overlay, this.element));
+        overlay.updatePositionStrategy(this.bxOverlayPositionService.getElementStrategy(this.nativeElement, config.placement ?? 'bottom', config.offset ?? 8));
+        this.disconnectOrigin = this.ngZone.runOutsideAngular(() => trackOverlayOrigin(overlay, this.nativeElement));
       }
     });
   }
 
+  /** Toggle the component's open state through the same guards used by open() and close(). */
   public toggle(): void {
     if (this.isOpen()) this.close();
     else this.open();
   }
 
+  /** Open the component's overlay using its current configuration and shared positioning/focus mechanisms. */
   public open(): void {
-    if (!this.browser || this.isOpen() || this.popoverDisabled() || this.element.matches(':disabled, [aria-disabled="true"]')) return;
+    if (!this.browser || this.isOpen() || this.popoverDisabled() || this.nativeElement.matches(':disabled, [aria-disabled="true"]')) return;
 
     const config = this.settings();
     const overlay = this.overlay.create({
-      positionStrategy: this.positions.getElementStrategy(this.element, config.placement ?? 'bottom', config.offset ?? 8),
+      positionStrategy: this.bxOverlayPositionService.getElementStrategy(this.nativeElement, config.placement ?? 'bottom', config.offset ?? 8),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      usePopover: !!this.context?.useTopLayer || !!this.element.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]')
+      usePopover:
+        !!this.context?.useTopLayer || !!this.nativeElement.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]')
     });
 
     this.overlayRef = overlay;
@@ -131,17 +139,17 @@ export class PopoverDirective {
     pane.tabIndex = -1;
     pane.setAttribute('role', 'dialog');
     pane.setAttribute('aria-label', this.accessibleName());
-    this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(this.element, pane));
-    this.disconnectLighting = inheritGlassLighting(pane, this.element);
-    this.disconnectOrigin = this.zone.runOutsideAngular(() => trackOverlayOrigin(overlay, this.element));
+    this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(this.nativeElement, pane));
+    this.disconnectLighting = inheritGlassLighting(pane, this.nativeElement);
+    this.disconnectOrigin = this.ngZone.runOutsideAngular(() => trackOverlayOrigin(overlay, this.nativeElement));
     this.subscriptions.add(
       overlay.outsidePointerEvents().subscribe((event) => {
-        if ((this.settings().closeOnOutside ?? true) && !this.element.contains(event.target as Node)) this.close(false);
+        if ((this.settings().closeOnOutside ?? true) && !this.nativeElement.contains(event.target as Node)) this.close(false);
       })
     );
     this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onPanelKey(event)));
 
-    const view = overlay.attach(new TemplatePortal(this.bxPopover(), this.vcr));
+    const view = overlay.attach(new TemplatePortal(this.bxPopover(), this.viewContainerRef));
 
     view.detectChanges();
     overlay.updatePosition();
@@ -151,13 +159,17 @@ export class PopoverDirective {
     this.openedChange.emit(true);
   }
 
-  /** Restores trigger focus by default when focus is inside the panel. */
+  /**
+   * Restores trigger focus by default when focus is inside the panel.
+   *
+   * @param restoreFocus - Whether focus should return to the opening control after closing. Defaults to `true`.
+   */
   public close(restoreFocus = true): void {
     if (!this.overlayRef) return;
 
     const pane = this.overlayRef.overlayElement;
 
-    if (restoreFocus && pane.contains(this.element.ownerDocument.activeElement)) this.element.focus({ preventScroll: true });
+    if (restoreFocus && pane.contains(this.nativeElement.ownerDocument.activeElement)) this.nativeElement.focus({ preventScroll: true });
 
     this.dispose();
     this.openedChange.emit(false);
@@ -173,7 +185,7 @@ export class PopoverDirective {
       this.isOpen() &&
       (this.settings().closeOnFocusOutside ?? true) &&
       target &&
-      !this.element.contains(target) &&
+      !this.nativeElement.contains(target) &&
       !this.overlayRef?.overlayElement.contains(target)
     ) {
       this.close(false);
@@ -191,7 +203,7 @@ export class PopoverDirective {
       this.close();
     } else if (event.key === 'Tab') {
       const items = this.tabbableElements();
-      const active = this.element.ownerDocument.activeElement;
+      const active = this.nativeElement.ownerDocument.activeElement;
       const atBoundary = !items.length || (event.shiftKey ? active === items[0] : active === items[items.length - 1]);
 
       if (!atBoundary) return;
@@ -204,7 +216,7 @@ export class PopoverDirective {
 
   private tabbableElements(): HTMLElement[] {
     return Array.from(this.overlayRef?.overlayElement.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]') ?? []).filter(
-      (element) => this.checker.isTabbable(element)
+      (element) => this.interactivityChecker.isTabbable(element)
     );
   }
 

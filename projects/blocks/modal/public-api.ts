@@ -2,7 +2,7 @@
  * Public API Surface of modal
  */
 
-export * from '@modal/components/modal-core';
+export * from '@modal/components/modal-core/modal-core';
 export * from '@modal/components/shared/ui/backdrop/modal-backdrop';
 export * from '@modal/components/shared/ui/banner/modal-banner';
 export * from '@modal/components/views/bottom-sheet/modal-bottom-sheet';
@@ -32,8 +32,8 @@ export * from '@modal/constants/modal-bottom-sheet.constants';
 export * from '@modal/enums/modal-state.enum';
 export * from '@modal/enums/modal-warnings.enum';
 
-export * from '@modal/directives/modal-footer.directive';
-export * from '@modal/directives/modal-header.directive';
+export * from '@modal/directives/footer/modal-footer.directive';
+export * from '@modal/directives/header/modal-header.directive';
 
 export * from '@modal/tokens/modal-data.token';
 

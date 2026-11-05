@@ -18,14 +18,13 @@ export abstract class Toast<D = unknown, R = unknown> implements IToast<D, R> {
    */
   public toast!: ToastRef<D, R>;
 
-  /**
-   * Called when the toast is initialized.
-   */
+  /** Called when the toast is initialized. */
   public onToastInit(): void {}
 
   /**
    * Closes the toast with an optional result.
-   * @param result The result to be passed when closing the toast.
+   *
+   * @param result - The result to be passed when closing the toast.
    */
   public close(result?: R): void {
     this.toast?.close(result);

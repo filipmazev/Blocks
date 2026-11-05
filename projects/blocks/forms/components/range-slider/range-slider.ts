@@ -4,9 +4,9 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 
+import { BxValueControl } from '@forms/classes/bx-value-control';
 import { FormField } from '@forms/components/form-field/form-field';
-import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
-import { SliderDirective } from '@forms/directives/slider.directive';
+import { SliderDirective } from '@forms/directives/slider/slider.directive';
 
 @Component({
   selector: 'bx-range-slider',
@@ -41,13 +41,21 @@ export class RangeSlider extends BxValueControl<[number, number]> {
     return count > 0 ? Array.from({ length: count + 1 }, (_, index) => ((Math.round((index * intervals) / count) * step) / span) * 100) : [];
   });
 
+  /** Minimum permitted numeric or range value. Defaults to `0`. */
   public readonly min: InputSignal<number> = input(0);
+  /** Maximum permitted numeric or range value. Defaults to `100`. */
   public readonly max: InputSignal<number> = input(100);
+  /** Increment used for numeric adjustments and range selection. Defaults to `1`. */
   public readonly step: InputSignal<number> = input(1);
+  /** Whether the slider snaps to its configured step values. Defaults to `false`. */
   public readonly discrete: InputSignal<boolean> = input(false);
+  /** Whether discrete slider tick marks are rendered. Defaults to `false`. */
   public readonly showTickMarks: InputSignal<boolean> = input(false);
+  /** Formatter for the user-visible slider value; omission uses the default numeric presentation. */
   public readonly displayWith: InputSignal<(value: number) => string> = input<(value: number) => string>(String);
+  /** Accessible label of the lower-value range thumb. Defaults to `'Minimum value'`. */
   public readonly startLabel: InputSignal<ResolvableText> = input<ResolvableText>('Minimum value');
+  /** Accessible label of the upper-value range thumb. Defaults to `'Maximum value'`. */
   public readonly endLabel: InputSignal<ResolvableText> = input<ResolvableText>('Maximum value');
 
   protected onRangeInput(event: Event, thumb: 'start' | 'end'): void {

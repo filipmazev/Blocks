@@ -1,4 +1,8 @@
-/** Whether an overlay origin still intersects the viewport and every ancestor that clips its contents. */
+/**
+ * Whether an overlay origin still intersects the viewport and every ancestor that clips its contents.
+ *
+ * @param origin - Native anchor checked against its viewport and clipping ancestors.
+ */
 export function isOverlayOriginVisible(origin: HTMLElement): boolean {
   const view = origin.ownerDocument.defaultView;
 

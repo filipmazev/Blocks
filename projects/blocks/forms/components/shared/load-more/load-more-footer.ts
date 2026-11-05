@@ -7,8 +7,8 @@ import { BX_I18N, isTextWithKey, ResolvableText, resolveText } from '@filip.maze
 import { Icon } from '@filip.mazev/blocks/icons';
 
 import { Button } from '@forms/components/button/button';
-import { ILoadMoreConfig } from '@forms/components/shared/load-more/interfaces/iload-more-config.interface';
-import { ILoadMoreContext } from '@forms/components/shared/load-more/interfaces/iload-more-context.interface';
+import { ILoadMoreConfig } from '@forms/interfaces/iload-more-config.interface';
+import { ILoadMoreContext } from '@forms/interfaces/iload-more-context.interface';
 
 @Component({
   selector: 'bx-load-more-footer',
@@ -39,13 +39,24 @@ export class LoadMoreFooter {
     request: () => this.request.emit()
   }));
 
+  /** Whether the shared load-more footer presents its retry state. Defaults to `false`. */
   public readonly retry: InputSignal<boolean> = input(false);
+  /** Whether the component is currently shown. Defaults to `false`. */
   public readonly visible: InputSignal<boolean> = input(false);
+  /** Whether asynchronous work is in progress; the owning control renders its appropriate busy feedback. Defaults to `false`. */
   public readonly loading: InputSignal<boolean> = input(false);
+  /** Whether user interaction is disabled; disabled controls do not accept ordinary activation or edits. Defaults to `false`. */
   public readonly disabled: InputSignal<boolean> = input(false);
+  /** Explicit validation or request-error text; supports shared translation keys. Optional; omission leaves the value undefined. */
   public readonly error: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  /** Resolved text, accessibility, and button appearance settings supplied by LoadMoreDirective. Defaults to an empty configuration. */
   public readonly config: InputSignal<ILoadMoreConfig> = input<ILoadMoreConfig>({});
+  /**
+   * Optional template customizing the shared load-more action while retaining its guarded request context. Optional; omission leaves the value
+   * undefined.
+   */
   public readonly buttonTemplate: InputSignal<TemplateRef<ILoadMoreContext> | undefined> = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
 
+  /** Emits activation of the shared load-more footer action. */
   public readonly request: OutputEmitterRef<void> = output();
 }

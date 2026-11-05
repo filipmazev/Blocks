@@ -5,10 +5,10 @@
 export * from '@toastr/services/toastr-global-settings.service';
 export * from '@toastr/services/toastr.service';
 
-export * from '@toastr/components/toast-core';
+export * from '@toastr/components/toast-core/toast-core';
 export * from '@toastr/components/views/simple-toast/simple-toast';
 
-export * from '@toastr/interfaces/isimple-toast.interface';
+export * from '@toastr/interfaces/isimple-toast-data.interface';
 export * from '@toastr/interfaces/itoast-config.interface';
 export * from '@toastr/interfaces/itoast.interface';
 

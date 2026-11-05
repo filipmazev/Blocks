@@ -19,6 +19,8 @@ export class LoadingIndicator {
 
   protected readonly resolvedLabel: Signal<string> = computed(() => resolveText(this.label(), this.i18n));
 
+  /** Visible or accessible label for the component; translation-key values resolve through BX_I18N. Defaults to `'Loading'`. */
   public readonly label: InputSignal<ResolvableText> = input<ResolvableText>('Loading');
+  /** Diameter of the loading spinner in CSS pixels. Defaults to `20`. */
   public readonly size: InputSignal<number> = input(20);
 }

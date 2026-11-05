@@ -8,14 +8,15 @@ import type { Observable } from 'rxjs';
 
 import type { IBxAppearanceConfig } from '@core/interfaces/ibx-appearance-config.interface';
 import type { IStoredAppearancePreferences } from '@core/interfaces/istored-appearance-preferences.interface';
-import type { IThemingServicePalettesState } from '@core/services/interfaces/itheming-service-palettes-state.interface';
+import type { IThemingServicePalettesState } from '@core/interfaces/itheming-service-palettes-state.interface';
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
 
 import { configureAppearance } from '@filip.mazev/blocks/effects/runtime';
 
 import { DEFAULT_APPEARANCE_CONFIG } from '@core/constants/appearance.constants';
-import { resolveThemeId } from '@core/helpers/theme-functions';
-import { BxAppearanceConfig, BxThemeId, THEME_PALETTES } from '@core/types/appearance.types';
+import { THEME_PALETTES } from '@core/constants/theme-palettes.constants';
+import { resolveThemeId } from '@core/helpers/theme-functions.helpers';
+import { BxAppearanceConfig, BxThemeId } from '@core/types/appearance.types';
 import { DeviceTheme } from '@core/types/core.types';
 
 import { BxA11yService } from './bx-a11y.service';
@@ -25,7 +26,7 @@ import { BxA11yService } from './bx-a11y.service';
 })
 export class ThemingService implements OnDestroy {
   private readonly document = inject(DOCUMENT);
-  private readonly a11y = inject(BxA11yService);
+  private readonly bxA11yService = inject(BxA11yService);
   private readonly platformId = inject(PLATFORM_ID);
 
   private readonly _appearance: WritableSignal<IBxAppearanceConfig> = signal<BxAppearanceConfig>({ ...DEFAULT_APPEARANCE_CONFIG });
@@ -44,18 +45,26 @@ export class ThemingService implements OnDestroy {
   private readonly systemTheme$: Observable<DeviceTheme> = toObservable(this._systemTheme);
   private readonly applicationTheme$: Observable<DeviceTheme | null> = toObservable(this._applicationTheme);
 
+  /** Current resolved application appearance preferences; updates propagate to mounted surfaces and overlays. */
   public readonly appearance: Signal<IBxAppearanceConfig> = this._appearance.asReadonly();
   /** Requested glassiness policy, defaulting to 'auto'. Baseline temporarily forces appearance().glassiness off while preserving this choice. */
   public readonly preferredGlassiness: Signal<GlassinessMode> = this._preferredGlassiness.asReadonly();
+  /** Supported palette definitions with stable IDs, labels, and associated theme classes. */
   public readonly palettes: readonly IThemingServicePalettesState[] = THEME_PALETTES;
+  /** Current palette ID, restored from saved preferences when available. */
   public readonly palette: Signal<BxThemeId> = this._palette.asReadonly();
 
+  /** Display label of the currently selected palette. */
   public readonly paletteLabel: Signal<string> = computed(() => this.palettes.find((item) => item.id === this.palette())?.label ?? this.palettes[0].label);
 
+  /** Whether the application explicitly requests the shared high-contrast presentation. */
   public readonly highContrast: Signal<boolean> = this._highContrast.asReadonly();
+  /** Current system light/dark color-scheme preference. */
   public readonly systemTheme: Signal<DeviceTheme> = this._systemTheme.asReadonly();
+  /** Explicit light/dark preference, or null to follow the system theme. */
   public readonly applicationTheme: Signal<DeviceTheme | null> = this._applicationTheme.asReadonly();
 
+  /** Effective light/dark mode after combining the explicit preference with the system theme. */
   public readonly activeTheme: Signal<DeviceTheme> = computed(() => this.applicationTheme() ?? this.systemTheme());
 
   private appearanceController?: ReturnType<typeof configureAppearance>;
@@ -64,7 +73,7 @@ export class ThemingService implements OnDestroy {
 
   constructor() {
     effect(() => {
-      const reducedMotion = this.a11y.isReducedMotion();
+      const reducedMotion = this.bxA11yService.isReducedMotion();
 
       this.appearanceController?.update({ reducedMotion });
     });
@@ -81,7 +90,10 @@ export class ThemingService implements OnDestroy {
 
       this.setPalette(resolveThemeId(palette) ?? 'carbon-cobalt');
       this.setHighContrast(storedHighContrast === null ? palette === 'high-contrast' : storedHighContrast === 'true');
-      this.appearanceController = configureAppearance(this.document.documentElement, { ...this.appearance(), reducedMotion: this.a11y.isReducedMotion() });
+      this.appearanceController = configureAppearance(this.document.documentElement, {
+        ...this.appearance(),
+        reducedMotion: this.bxA11yService.isReducedMotion()
+      });
 
       if (storedTheme === 'dark' || storedTheme === 'light') {
         this._applicationTheme.set(storedTheme);
@@ -91,6 +103,7 @@ export class ThemingService implements OnDestroy {
     }
   }
 
+  /** Destroy the appearance controller and remove the owned system color-scheme listener. */
   public ngOnDestroy(): void {
     this.appearanceController?.destroy();
 
@@ -99,7 +112,11 @@ export class ThemingService implements OnDestroy {
     }
   }
 
-  /** Set an explicit appearance, or null to follow live system color-scheme changes. */
+  /**
+   * Set an explicit appearance, or null to follow live system color-scheme changes.
+   *
+   * @param theme - Explicit light/dark mode, or null to follow live system color-scheme changes.
+   */
   public setApplicationTheme(theme: DeviceTheme | null): void {
     this._applicationTheme.set(theme);
 
@@ -108,6 +125,11 @@ export class ThemingService implements OnDestroy {
     }
   }
 
+  /**
+   * Apply a supported palette to the document and persist its ID; unsupported IDs are ignored.
+   *
+   * @param palette - Stable supported palette ID to apply to application surfaces and overlays.
+   */
   public setPalette(palette: BxThemeId): void {
     const id = resolveThemeId(palette);
 
@@ -120,6 +142,11 @@ export class ThemingService implements OnDestroy {
     if (this.isBrowser) this.writeStored('theme-palette', id);
   }
 
+  /**
+   * Update explicit high-contrast presentation and persist the preference in a browser.
+   *
+   * @param enabled - Whether the application should use the shared high-contrast theme override.
+   */
   public setHighContrast(enabled: boolean): void {
     this._highContrast.set(enabled);
 
@@ -129,6 +156,11 @@ export class ThemingService implements OnDestroy {
     this.writeStored('theme-high-contrast', String(enabled));
   }
 
+  /**
+   * Merge appearance preferences, normalize rendering constraints, update mounted surfaces, and persist the result.
+   *
+   * @param settings - Partial appearance preferences; omitted values remain unchanged and accessibility/rendering constraints still take precedence.
+   */
   public setAppearance(settings: Partial<BxAppearanceConfig>): void {
     const current = this.appearance();
     const translucency = settings.translucency ?? current.translucency;
@@ -155,14 +187,17 @@ export class ThemingService implements OnDestroy {
     if (this.isBrowser) this.writeStored('blocks-appearance', JSON.stringify({ ...next, preferredGlassiness: this.preferredGlassiness() }));
   }
 
+  /** Restore the library appearance defaults through the same normalization and persistence path as setAppearance(). */
   public resetAppearance(): void {
     this.setAppearance({ ...DEFAULT_APPEARANCE_CONFIG });
   }
 
+  /** Observe live operating-system light/dark preference updates. */
   public getSystemTheme$() {
     return this.systemTheme$;
   }
 
+  /** Observe the explicit application mode; null means the application follows the system preference. */
   public getApplicationTheme$() {
     return this.applicationTheme$;
   }

@@ -22,7 +22,7 @@
             (click)="select($event)"
             (keydown)="openOnArrow($event)">
             <span class="bx-nav-presentation">
-                @if (state.itemTemplate(); as template) {
+                @if (navigationStateService.itemTemplate(); as template) {
                     <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item(), active: active(), collapsed: compact() }" />
                 } @else {
                     <ng-container [ngTemplateOutlet]="label" />
@@ -41,10 +41,10 @@
             [class.bx-nav-link]="compact()"
             [class.is-active]="compact() && active()"
             [disabled]="item().data?.disabled"
-            [attr.aria-label]="state.text().submenuLabel + ': ' + item().label"
+            [attr.aria-label]="navigationStateService.text().submenuLabel + ': ' + item().label"
             [attr.aria-expanded]="expanded()"
             [attr.aria-haspopup]="horizontal() ? 'dialog' : null"
-            [attr.aria-controls]="expanded() ? state.levelId : null"
+            [attr.aria-controls]="expanded() ? navigationStateService.levelId : null"
             (click)="expand($event)"
             (keydown)="openOnArrow($event)">
             @if (compact()) {
@@ -58,7 +58,7 @@
     }
 </div>
 <ng-template #label>
-    @if (compact() || state.config().showItemIcons !== false) {
+    @if (compact() || navigationStateService.config().showItemIcons !== false) {
         <bx-icon
             class="bx-nav-icon"
             [name]="item().icon?.name ?? item().data?.icon?.name ?? 'circle'"

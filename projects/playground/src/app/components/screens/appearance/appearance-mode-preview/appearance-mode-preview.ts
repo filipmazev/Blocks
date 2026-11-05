@@ -22,10 +22,13 @@ import { Card, ProgressBar, Tag } from '@filip.mazev/blocks/primitives';
   }
 })
 export class AppearanceModePreview {
-  private readonly theme = inject(ThemingService);
+  private readonly themingService = inject(ThemingService);
 
   protected readonly paletteClass: Signal<string> = computed(() =>
-    [this.theme.palettes.find((palette) => palette.id === this.theme.palette())?.className, this.theme.highContrast() ? 'high-contrast' : ''].join(' ')
+    [
+      this.themingService.palettes.find((palette) => palette.id === this.themingService.palette())?.className,
+      this.themingService.highContrast() ? 'high-contrast' : ''
+    ].join(' ')
   );
 
   public readonly mode: InputSignal<DeviceTheme> = input.required<DeviceTheme>();

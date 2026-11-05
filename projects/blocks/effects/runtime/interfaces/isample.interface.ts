@@ -1,4 +1,4 @@
-import type { IPointLight } from '@effects/runtime/scene';
+import type { IPointLight } from '@effects/runtime/helpers/scene.helpers';
 
 /**
  * Describes the sample contract.

@@ -26,7 +26,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 
-import type { ITopNavResolvedConfigState } from '@navigation/components/top-nav/interfaces/itop-nav-resolved-config-state.interface';
+import type { ITopNavResolvedConfigState } from '@navigation/interfaces/itop-nav-resolved-config-state.interface';
 
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -34,20 +34,20 @@ import { Button, SearchInput } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { BxOverlayContextDirective, MenuTriggerDirective, navigateMenuKey, TooltipDirective } from '@filip.mazev/blocks/primitives';
 
-import { definedNavigationConfig } from '@navigation/components/shared/helpers/navigation-config.helpers';
-import { INavigationExpandRequest } from '@navigation/components/shared/interfaces/inavigation-expand-request.interface';
-import { INavigationItemContext } from '@navigation/components/shared/interfaces/inavigation-item-context.interface';
-import { INavigationLevelRequest } from '@navigation/components/shared/interfaces/inavigation-level-request.interface';
 import { NavigationItem } from '@navigation/components/shared/navigation-item/navigation-item';
 import { NavigationLevel } from '@navigation/components/shared/navigation-level/navigation-level';
-import { NavigationFocusService } from '@navigation/components/shared/services/navigation-focus.service';
-import { NavigationStateService } from '@navigation/components/shared/services/navigation-state.service';
-import { TOP_NAV_DEFAULTS } from '@navigation/components/top-nav/constants/top-nav.constants';
-import { ITopNavConfig } from '@navigation/components/top-nav/interfaces/itop-nav-config.interface';
-import { ITopNavSlotContext } from '@navigation/components/top-nav/interfaces/itop-nav-slot-context.interface';
+import { TOP_NAV_DEFAULTS } from '@navigation/constants/top-nav.constants';
+import { definedNavigationConfig } from '@navigation/helpers/navigation-config.helpers';
+import { INavigationExpandRequest } from '@navigation/interfaces/inavigation-expand-request.interface';
 import { INavigationItem } from '@navigation/interfaces/inavigation-item.interface';
+import { INavigationItemContext } from '@navigation/interfaces/inavigation-item-context.interface';
+import { INavigationLevelRequest } from '@navigation/interfaces/inavigation-level-request.interface';
 import { INavigationTreeGroup } from '@navigation/interfaces/inavigation-tree-group.interface';
+import { ITopNavConfig } from '@navigation/interfaces/itop-nav-config.interface';
+import { ITopNavSlotContext } from '@navigation/interfaces/itop-nav-slot-context.interface';
 import { NavigationService } from '@navigation/services/navigation.service';
+import { NavigationFocusService } from '@navigation/services/navigation-focus.service';
+import { NavigationStateService } from '@navigation/services/navigation-state.service';
 import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
 
 @Component({
@@ -78,25 +78,25 @@ import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
   }
 })
 export class TopNav {
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly injector = inject(Injector);
-  private readonly dimensions = inject(WindowDimensionsService);
-  private readonly navigation = inject(NavigationService);
+  private readonly windowDimensionsService = inject(WindowDimensionsService);
+  private readonly navigationService = inject(NavigationService);
   private readonly router = inject(Router);
   private readonly defaults = inject(NAVIGATION_CONFIG, { optional: true });
-  private readonly monitor = inject(FocusMonitor);
+  private readonly focusMonitor = inject(FocusMonitor);
 
-  protected readonly state = inject(NavigationStateService);
-  protected readonly focusState = inject(NavigationFocusService);
+  protected readonly navigationStateService = inject(NavigationStateService);
+  protected readonly navigationFocusService = inject(NavigationFocusService);
 
   private readonly measuredWidth: WritableSignal<number | undefined> = signal<number | undefined>(undefined);
 
   private readonly overflowing: WritableSignal<boolean> = signal(false);
   private readonly rtl: WritableSignal<boolean> = signal(false);
 
-  private readonly viewportHeight: Signal<number> = computed(() => this.dimensions.dimensions().height);
+  private readonly viewportHeight: Signal<number> = computed(() => this.windowDimensionsService.dimensions().height);
 
   private readonly bar: Signal<ElementRef<HTMLElement> | undefined> = viewChild<HTMLElement, ElementRef<HTMLElement>>('bar', { read: ElementRef });
   private readonly primary: Signal<ElementRef<HTMLElement> | undefined> = viewChild<HTMLElement, ElementRef<HTMLElement>>('primary', { read: ElementRef });
@@ -111,29 +111,34 @@ export class TopNav {
   protected readonly brandTemplate: WritableSignal<TemplateRef<ITopNavSlotContext> | null> = signal<TemplateRef<ITopNavSlotContext> | null>(null);
   protected readonly actionsTemplate: WritableSignal<TemplateRef<ITopNavSlotContext> | null> = signal<TemplateRef<ITopNavSlotContext> | null>(null);
 
-  protected readonly rootItems: Signal<INavigationItem[]> = computed(() => this.state.groups().flatMap((group) => group.items));
+  protected readonly rootItems: Signal<INavigationItem[]> = computed(() => this.navigationStateService.groups().flatMap((group) => group.items));
   protected readonly slotContext: Signal<ITopNavSlotContext> = computed<ITopNavSlotContext>(() => ({
     $implicit: this.isCompact(),
     compact: this.isCompact(),
     open: this.opened()
   }));
 
-  public readonly panelId: string = `bx-top-nav-panel-${this.state.levelId}`;
-  public readonly query: Signal<string> = this.state.query.asReadonly();
+  /** Stable content-panel identifier used by triggers and accessible control relationships. */
+  public readonly panelId: string = `bx-top-nav-panel-${this.navigationStateService.levelId}`;
+  /** Current navigation search text. */
+  public readonly query: Signal<string> = this.navigationStateService.query.asReadonly();
 
+  /** Effective navigation settings after merging instance values, application defaults, and library defaults. */
   public readonly resolvedConfig: Signal<ITopNavResolvedConfigState> = computed(() => ({
     ...TOP_NAV_DEFAULTS,
     ...definedNavigationConfig(this.defaults?.topNav),
     ...definedNavigationConfig(this.config())
   }));
+  /** Whether the top navigation uses its compact overflow presentation. */
   public readonly isCompact: Signal<boolean> = computed(() => {
     const config = this.resolvedConfig();
-    const viewport = this.dimensions.dimensions().width;
+    const viewport = this.windowDimensionsService.dimensions().width;
     const width = Math.min(viewport, this.measuredWidth() ?? viewport);
 
-    return this.overflowing() || (config.compact ?? width <= this.dimensions.breakpoints[config.compactBreakpoint]);
+    return this.overflowing() || (config.compact ?? width <= this.windowDimensionsService.breakpoints[config.compactBreakpoint]);
   });
 
+  /** Instance top-navigation overrides; explicit values take precedence over application and library defaults. */
   public readonly config: InputSignal<ITopNavConfig> = input<ITopNavConfig>({});
   /** Omit to share NavigationService's hierarchical route sections with side navigation and breadcrumbs. */
   public readonly groups: InputSignal<readonly INavigationTreeGroup[] | undefined> = input<readonly INavigationTreeGroup[] | undefined>(undefined);
@@ -145,6 +150,7 @@ export class TopNav {
   /** Controlled or internally managed panel state. Never persisted. */
   public readonly opened: ModelSignal<boolean> = model(false);
 
+  /** Emits the navigation item activated by the user. */
   public readonly itemSelected: OutputEmitterRef<INavigationItem> = output<INavigationItem>();
 
   private returnOrigin?: HTMLElement;
@@ -159,10 +165,10 @@ export class TopNav {
 
   constructor() {
     effect(() => {
-      this.state.config.set({ ...this.resolvedConfig(), side: this.rtl() ? 'right' : 'left' });
-      this.state.sourceGroups.set(this.groups() ?? this.navigation.menuTreeGroups());
-      this.state.itemTemplate.set(this.itemTemplate());
-      this.state.inlineLevels.set(false);
+      this.navigationStateService.config.set({ ...this.resolvedConfig(), side: this.rtl() ? 'right' : 'left' });
+      this.navigationStateService.sourceGroups.set(this.groups() ?? this.navigationService.menuTreeGroups());
+      this.navigationStateService.itemTemplate.set(this.itemTemplate());
+      this.navigationStateService.inlineLevels.set(false);
     });
     effect(() => {
       const open = this.opened();
@@ -182,7 +188,7 @@ export class TopNav {
         if (!this.opened()) return;
 
         this.focusSearchNext = this.document.getElementById(this.panelId)?.querySelector('input') === this.document.activeElement;
-        this.focusState.remember();
+        this.navigationFocusService.remember();
         this.relocate();
         this.returnOrigin = compact && this.rootItems().length ? this.menuButton()?.nativeElement : this.bar()?.nativeElement;
         this.renderPanel(true, false, true);
@@ -194,7 +200,7 @@ export class TopNav {
       untracked(() => {
         if (!this.opened()) return;
 
-        this.focusState.remember();
+        this.navigationFocusService.remember();
         this.renderPanel(true, false, false);
       });
     });
@@ -204,20 +210,20 @@ export class TopNav {
       if (!searchable)
         untracked(() => {
           this.focusSearchNext = false;
-          this.state.search('');
+          this.navigationStateService.search('');
 
           if (this.opened()) this.renderPanel(true, false, true);
         });
     });
     afterRenderEffect(() => {
       this.rootItems();
-      this.state.activeItem();
+      this.navigationStateService.activeItem();
       this.isCompact();
       untracked(() => this.syncTabStops());
     });
     afterNextRender(() => this.observeLayout());
-    this.state.expansionRequested.pipe(takeUntilDestroyed()).subscribe((request) => this.openChildren(request));
-    this.state.activated.pipe(takeUntilDestroyed()).subscribe((item) => {
+    this.navigationStateService.expansionRequested.pipe(takeUntilDestroyed()).subscribe((request) => this.openChildren(request));
+    this.navigationStateService.activated.pipe(takeUntilDestroyed()).subscribe((item) => {
       this.itemSelected.emit(item);
       this.close(false);
     });
@@ -226,19 +232,39 @@ export class TopNav {
     });
   }
 
+  /**
+   * Register or clear the template displayed in the top-navigation brand slot.
+   *
+   * @param template - Brand-slot template; null restores the default brand presentation.
+   */
   public setBrandTemplate(template: TemplateRef<ITopNavSlotContext> | null): void {
     this.brandTemplate.set(template);
   }
 
+  /**
+   * Register or clear the template displayed in the top-navigation actions slot.
+   *
+   * @param template - Actions-slot template; null removes custom actions.
+   */
   public setActionsTemplate(template: TemplateRef<ITopNavSlotContext> | null): void {
     this.actionsTemplate.set(template);
   }
 
-  /** Open the shared panel. Pass the originating click event or element for reliable positioning and focus return. */
+  /**
+   * Open the shared panel. Pass the originating click event or element for reliable positioning and focus return.
+   *
+   * @param origin - Optional opening element or event used to preserve the focus-return target.
+   * @param focusSearch - Whether to place keyboard focus in the panel's search field. Defaults to `false`.
+   */
   public open(origin?: HTMLElement | Event, focusSearch = false): void {
     this.show(this.resolveOrigin(origin), focusSearch, true, this.isKeyboard(origin));
   }
 
+  /**
+   * Close the component's overlay and apply its configured focus-restoration behavior.
+   *
+   * @param restoreFocus - Whether focus should return to the opening control after closing. Defaults to `true`.
+   */
   public close(restoreFocus = true): void {
     ++this.renderRevision;
     this.opened.set(false);
@@ -247,18 +273,27 @@ export class TopNav {
     if (restoreFocus) this.restoreOrigin();
   }
 
+  /**
+   * Toggle the component's open state through the same guards used by open() and close().
+   *
+   * @param origin - Opening element or interaction event used for focus restoration. Optional.
+   */
   public toggle(origin?: HTMLElement | Event): void {
     if (this.opened()) this.close();
     else this.open(origin);
   }
 
-  /** Clearing search reveals a successfully selected result, or restores the previous browsing path and scroll position. */
+  /**
+   * Clearing search reveals a successfully selected result, or restores the previous browsing path and scroll position.
+   *
+   * @param query - Search text to apply to the currently supplied navigation tree.
+   */
   public search(query: string): void {
     const wasSearching = !!this.query().trim();
 
-    if (!wasSearching) this.focusState.remember();
+    if (!wasSearching) this.navigationFocusService.remember();
 
-    this.state.search(query);
+    this.navigationStateService.search(query);
     this.focusSearchNext = true;
     this.restoreNext = wasSearching && !query.trim();
 
@@ -269,25 +304,25 @@ export class TopNav {
   protected back(event: MouseEvent | KeyboardEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.focusState.remember();
-    this.state.back();
+    this.navigationFocusService.remember();
+    this.navigationStateService.back();
     this.focusSearchNext = false;
     this.renderPanel(true, event instanceof KeyboardEvent || event.detail === 0, true);
   }
 
   protected navigateLevel(request: INavigationLevelRequest): void {
-    this.focusState.remember();
-    this.state.navigateLevel(request.breadcrumb);
+    this.navigationFocusService.remember();
+    this.navigationStateService.navigateLevel(request.breadcrumb);
     this.focusSearchNext = false;
     this.renderPanel(true, request.keyboard, true);
   }
 
   protected panelOpened(): void {
-    this.state.submenuVisible.set(true);
+    this.navigationStateService.submenuVisible.set(true);
   }
 
   protected panelClosed(): void {
-    this.state.submenuVisible.set(false);
+    this.navigationStateService.submenuVisible.set(false);
 
     if (this.relocating) return;
 
@@ -319,7 +354,7 @@ export class TopNav {
 
   protected rootKey(event: KeyboardEvent): void {
     const menu = this.primary()?.nativeElement;
-    const rtl = this.document.defaultView?.getComputedStyle(this.host).direction === 'rtl';
+    const rtl = this.document.defaultView?.getComputedStyle(this.nativeElement).direction === 'rtl';
 
     if (menu) navigateMenuKey(event, menu, { orientation: 'horizontal', rtl });
   }
@@ -334,29 +369,29 @@ export class TopNav {
   }
 
   protected sectionActive(group: INavigationTreeGroup): boolean {
-    return group.items.some((item) => this.state.activeIds().has(item.id));
+    return group.items.some((item) => this.navigationStateService.activeIds().has(item.id));
   }
 
   //#region Helpers
 
   private openChildren(request: INavigationExpandRequest): void {
-    if (!request.inLevel && !this.query().trim() && this.opened() && this.state.path()[0] === request.item.id) {
+    if (!request.inLevel && !this.query().trim() && this.opened() && this.navigationStateService.path()[0] === request.item.id) {
       this.keyboardOrigin = request.keyboard;
       this.close();
 
       return;
     }
 
-    this.focusState.remember(request.origin);
+    this.navigationFocusService.remember(request.origin);
 
     const origin = request.inLevel ? this.returnOrigin : request.origin;
 
-    this.state.enter(request.item);
+    this.navigationStateService.enter(request.item);
     this.show(origin, false, false, request.keyboard);
   }
 
   private show(origin: HTMLElement | undefined, search: boolean, restore: boolean, keyboard: boolean): void {
-    if (!this.dimensions.isBrowser) return;
+    if (!this.windowDimensionsService.isBrowser) return;
 
     if (origin && origin !== this.returnOrigin && this.trigger()?.isOpen()) this.relocate();
 
@@ -397,12 +432,12 @@ export class TopNav {
         }
 
         this.trigger()?.open(false, origin);
-        this.focusState.restore(restore, keyboard, focus && !this.focusSearchNext);
+        this.navigationFocusService.restore(restore, keyboard, focus && !this.focusSearchNext);
 
         if (focus && this.focusSearchNext) {
           const search = this.document.getElementById(this.panelId)?.querySelector<HTMLInputElement>('input');
 
-          if (search) this.monitor.focusVia(search, keyboard ? 'keyboard' : 'program', { preventScroll: true });
+          if (search) this.focusMonitor.focusVia(search, keyboard ? 'keyboard' : 'program', { preventScroll: true });
         }
 
         this.trigger()?.reposition();
@@ -419,7 +454,7 @@ export class TopNav {
       this.document.defaultView?.getComputedStyle(this.returnOrigin).visibility !== 'hidden';
     const target = visible ? this.returnOrigin : fallback;
 
-    if (target) this.monitor.focusVia(target, this.keyboardOrigin ? 'keyboard' : 'program', { preventScroll: true });
+    if (target) this.focusMonitor.focusVia(target, this.keyboardOrigin ? 'keyboard' : 'program', { preventScroll: true });
   }
 
   private resolveOrigin(origin: HTMLElement | Event | undefined): HTMLElement | undefined {
@@ -470,7 +505,7 @@ export class TopNav {
       this.previousCompactLayout = compactLayout;
       this.measuredWidth.set(width);
       this.overflowing.set(primary.scrollWidth + chrome + (compactLayout ? this.compactAdjustment : 0) > width + 1);
-      this.rtl.set(view.getComputedStyle(this.host).direction === 'rtl');
+      this.rtl.set(view.getComputedStyle(this.nativeElement).direction === 'rtl');
     };
 
     const resize = new view.ResizeObserver(measure);
@@ -481,7 +516,7 @@ export class TopNav {
 
     const direction = new view.MutationObserver(measure);
 
-    for (let element: HTMLElement | null = this.host; element; element = element.parentElement)
+    for (let element: HTMLElement | null = this.nativeElement; element; element = element.parentElement)
       direction.observe(element, { attributes: true, attributeFilter: ['dir'] });
 
     measure();

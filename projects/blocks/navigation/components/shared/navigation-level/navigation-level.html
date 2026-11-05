@@ -6,15 +6,15 @@
             color="grayscale"
             class="bx-nav-back"
             type="button"
-            [attr.aria-label]="state.text().backLabel"
+            [attr.aria-label]="navigationStateService.text().backLabel"
             (click)="requestBack($event)">
-            <bx-icon size="16" [name]="state.config().side === 'right' ? 'arrow-right' : 'arrow-left'" />
+            <bx-icon size="16" [name]="navigationStateService.config().side === 'right' ? 'arrow-right' : 'arrow-left'" />
         </button>
         <div class="bx-nav-level-heading">
-            @if (state.breadcrumbs().length) {
-                <nav class="bx-nav-path" [attr.aria-label]="state.text().pathLabel">
+            @if (navigationStateService.breadcrumbs().length) {
+                <nav class="bx-nav-path" [attr.aria-label]="navigationStateService.text().pathLabel">
                     <ol>
-                        @for (crumb of state.breadcrumbs(); track $index; let last = $last) {
+                        @for (crumb of navigationStateService.breadcrumbs(); track $index; let last = $last) {
                             <li>
                                 <button
                                     bx-button
@@ -33,35 +33,35 @@
                     </ol>
                 </nav>
             }
-            @if (state.parent(); as parent) {
+            @if (navigationStateService.parent(); as parent) {
                 <a
                     class="bx-nav-parent-link"
                     [routerLink]="parent.route"
-                    [attr.aria-current]="state.isCurrent(parent) ? 'page' : null"
-                    (click)="state.select(parent)"
+                    [attr.aria-current]="navigationStateService.isCurrent(parent) ? 'page' : null"
+                    (click)="navigationStateService.select(parent)"
                     >{{ parent.label }}</a
                 >
             } @else {
-                <strong>{{ state.currentGroup()?.title }}</strong>
+                <strong>{{ navigationStateService.currentGroup()?.title }}</strong>
             }
         </div>
     </div>
-    <div class="bx-nav-scroll" data-bx-nav-scroll [id]="state.levelId + '-scroll'">
+    <div class="bx-nav-scroll" data-bx-nav-scroll [id]="navigationStateService.levelId + '-scroll'">
         @for (key of frames(); track key) {
             <div
                 class="bx-nav-items bx-nav-level-items"
                 role="menu"
                 tabindex="-1"
-                [id]="state.levelId"
-                [attr.aria-label]="state.parent()?.label ?? state.currentGroup()?.title"
+                [id]="navigationStateService.levelId"
+                [attr.aria-label]="navigationStateService.parent()?.label ?? navigationStateService.currentGroup()?.title"
                 [attr.data-nav-level-key]="key"
                 [class.is-animated]="animated()"
-                [class.is-backward]="state.backward()"
+                [class.is-backward]="navigationStateService.backward()"
                 (keydown)="menuKey($event)">
-                @for (item of state.levelItems(); track item.id) {
+                @for (item of navigationStateService.levelItems(); track item.id) {
                     <bx-navigation-item [item]="item" [inLevel]="true" />
                 } @empty {
-                    <p class="bx-nav-empty" role="status">{{ state.text().emptyText }}</p>
+                    <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                 }
             </div>
         }

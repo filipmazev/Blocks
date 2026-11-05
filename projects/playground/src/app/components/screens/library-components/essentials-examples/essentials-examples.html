@@ -47,16 +47,16 @@
                 loadingText="Loading suggestions"
                 emptyText="No suggestions. Enter your own destination."
                 [formControl]="destination"
-                [options]="remote.options()"
+                [options]="autocompleteDemoService.options()"
                 [externalFiltering]="true"
-                [searching]="remote.searching()"
-                [loading]="remote.loading()"
-                [hasMore]="remote.hasMore()"
-                [loadError]="remote.error()"
+                [searching]="autocompleteDemoService.searching()"
+                [loading]="autocompleteDemoService.loading()"
+                [hasMore]="autocompleteDemoService.hasMore()"
+                [loadError]="autocompleteDemoService.error()"
                 [readOnly]="readOnly()"
-                [loadMoreConfig]="remote.loadMoreConfig"
-                (queryChange)="remote.search($event)"
-                (loadMore)="remote.loadMore($event)"
+                [loadMoreConfig]="autocompleteDemoService.loadMoreConfig"
+                (queryChange)="autocompleteDemoService.search($event)"
+                (loadMore)="autocompleteDemoService.loadMore($event)"
                 (optionSelected)="status.set('Chose ' + $event.value)" />
             <bx-stack direction="horizontal" align="center" [wrap]="true" [gap]="2">
                 <button
@@ -64,11 +64,13 @@
                     type="button"
                     variant="tonal"
                     color="danger"
-                    [disabled]="remote.loading() || !remote.hasMore()"
-                    (click)="remote.failNext.set(true)">
+                    [disabled]="autocompleteDemoService.loading() || !autocompleteDemoService.hasMore()"
+                    (click)="autocompleteDemoService.failNext.set(true)">
                     Fail next page
                 </button>
-                <button bx-button type="button" variant="text" [disabled]="remote.loading()" (click)="remote.search('')">Reload suggestions</button>
+                <button bx-button type="button" variant="text" [disabled]="autocompleteDemoService.loading()" (click)="autocompleteDemoService.search('')">
+                    Reload suggestions
+                </button>
                 <bx-checkbox label="Read only" subscriptSizing="dynamic" [(checked)]="readOnly" />
                 <bx-select
                     class="autocomplete-page-size"
@@ -76,12 +78,12 @@
                     subscriptSizing="dynamic"
                     [clearable]="false"
                     [options]="pageSizes"
-                    [value]="remote.pageSize()"
-                    (selectionChange)="remote.setPageSize($event.value)" />
+                    [value]="autocompleteDemoService.pageSize()"
+                    (selectionChange)="autocompleteDemoService.setPageSize($event.value)" />
             </bx-stack>
             <output
-                >Value: {{ destination.value || '(empty)' }} · {{ remote.options().length }} suggestions loaded · {{ remote.status()
-                }}{{ remote.failNext() ? ' · Next page will fail' : '' }}</output
+                >Value: {{ destination.value || '(empty)' }} · {{ autocompleteDemoService.options().length }} suggestions loaded ·
+                {{ autocompleteDemoService.status() }}{{ autocompleteDemoService.failNext() ? ' · Next page will fail' : '' }}</output
             >
             <p>
                 Choose Fail next page, load another page, then Retry request. Existing suggestions remain visible. Small pages show the load-more action; larger

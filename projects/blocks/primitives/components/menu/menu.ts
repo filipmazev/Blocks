@@ -11,9 +11,10 @@ import { BxA11yService } from '@filip.mazev/blocks/core';
   styleUrl: './menu.scss'
 })
 export class Menu {
-  private readonly a11y = inject(BxA11yService);
+  private readonly bxA11yService = inject(BxA11yService);
 
+  /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */
   public readonly isAnimated: Signal<boolean> = computed(() => {
-    return !this.a11y.isReducedMotion();
+    return !this.bxA11yService.isReducedMotion();
   });
 }

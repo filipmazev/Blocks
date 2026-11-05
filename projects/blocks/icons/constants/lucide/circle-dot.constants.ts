@@ -1,0 +1,7 @@
+import { defineIcon } from '@icons/helpers/define-icon.helpers';
+
+export const lucideCircleDot = defineIcon({
+  name: 'circle-dot',
+  viewBox: '0 0 24 24',
+  svgContent: `<circle cx="12" cy="12" r="1" /><circle cx="12" cy="12" r="10" />`
+} as const);

@@ -1,3 +1,5 @@
+import { getDocumentation, hasDescription } from '../helpers/documentation.helpers.mjs';
+
 export default {
   meta: {
     type: 'suggestion',
@@ -49,28 +51,3 @@ export default {
     };
   }
 };
-
-function getDocumentation(sourceCode, node) {
-  const comments = sourceCode.getCommentsBefore(node);
-  let index = comments.length - 1;
-
-  while (index >= 0 && comments[index].type === 'Line' && /^\s*eslint-(?:disable|enable)/.test(comments[index].value)) {
-    index--;
-  }
-
-  const comment = comments[index];
-  const controls = comments.length - index - 1;
-
-  return comment?.type === 'Block' && comment.value.startsWith('*') && node.loc.start.line - comment.loc.end.line === controls + 1 ? comment : undefined;
-}
-
-function hasDescription(comment) {
-  if (!comment) {
-    return false;
-  }
-
-  const text = comment.value.replace(/^\s*\*\s?/gm, '').trim();
-  const description = text.split(/(?:^|\n)\s*@/)[0].trim();
-
-  return /[a-zA-Z]/.test(description);
-}

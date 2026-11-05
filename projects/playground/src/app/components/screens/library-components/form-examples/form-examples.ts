@@ -21,7 +21,7 @@ import {
 } from '@angular/forms/signals';
 
 import type { ValidationMessage } from '@filip.mazev/blocks/forms';
-import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import type { BxSelectOption } from '@forms/types/select-option.types';
 
 import { BX_I18N, ResolvableText } from '@filip.mazev/blocks/core';
 import {
@@ -100,10 +100,10 @@ import { Highlight } from 'ngx-highlightjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormExamples {
-  private readonly api = inject(MockFormsApi);
-  private readonly translations = inject(DemoI18nService);
+  private readonly mockFormsApi = inject(MockFormsApi);
+  private readonly demoI18nService = inject(DemoI18nService);
 
-  protected readonly remote = inject(MockOptionsStore);
+  protected readonly mockOptionsStore = inject(MockOptionsStore);
 
   protected readonly model: WritableSignal<IRegistrationData> = signal<IRegistrationData>({ ...INITIAL_REGISTRATION, categories: [] });
 
@@ -133,11 +133,11 @@ export class FormExamples {
 
     if (mode === 'loaded') return undefined;
 
-    if (mode === 'disabled' || this.remote.selectableTotal() === undefined) return false;
+    if (mode === 'disabled' || this.mockOptionsStore.selectableTotal() === undefined) return false;
 
-    this.translations.version();
+    this.demoI18nService.version();
 
-    return this.translations.translate('allLocationsTooltip', { total: this.remote.selectableTotal() });
+    return this.demoI18nService.translate('allLocationsTooltip', { total: this.mockOptionsStore.selectableTotal() });
   });
 
   protected readonly visibleTagLimit: WritableSignal<number> = signal(1);
@@ -172,7 +172,7 @@ export class FormExamples {
       validateAsync(p.project, {
         params: ({ value }) => value(),
         debounce: 300,
-        factory: (params) => resource({ params, loader: ({ params, abortSignal }) => this.api.available(params, abortSignal) }),
+        factory: (params) => resource({ params, loader: ({ params, abortSignal }) => this.mockFormsApi.available(params, abortSignal) }),
         onSuccess: (available) => (available ? null : { kind: 'taken', message: 'That project name is already used. Try another.' }),
         onError: () => ({ kind: 'availability', message: 'Availability could not be checked.' })
       });
@@ -198,7 +198,7 @@ export class FormExamples {
       submission: {
         ignoreValidators: 'none',
         action: async (field) => {
-          const saved = await this.api.save(field().value());
+          const saved = await this.mockFormsApi.save(field().value());
 
           if (!saved) return { kind: 'server', message: 'The server rejected this email. Edit it and retry.', fieldTree: field.email };
 
@@ -276,8 +276,8 @@ export class FormExamples {
   }
 
   protected changePageSize(value: number | null): void {
-    this.remote.pageSize.set(value ?? 3);
-    this.remote.search(this.remote.query());
+    this.mockOptionsStore.pageSize.set(value ?? 3);
+    this.mockOptionsStore.search(this.mockOptionsStore.query());
   }
 
   protected async runAction(): Promise<void> {
@@ -285,9 +285,9 @@ export class FormExamples {
 
     this.loadingAction.set(true);
     this.progress.set(15);
-    await this.api.available('demo', new AbortController().signal);
+    await this.mockFormsApi.available('demo', new AbortController().signal);
     this.progress.set(70);
-    await this.api.save(this.model());
+    await this.mockFormsApi.save(this.model());
     this.progress.set(100);
     this.loadingAction.set(false);
   }

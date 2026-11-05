@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 
-import { ContainerSize } from '@primitives/components/shared/types/layout.types';
+import { ContainerSize } from '@primitives/types/layout.types';
 
 @Component({
   selector: 'bx-container',
@@ -22,8 +22,10 @@ export class Container {
 
   protected readonly resolvedLabel: Signal<string> = computed(() => resolveText(this.ariaLabel(), this.i18n));
 
+  /** Maximum-width preset for the centered content container. Defaults to `'lg'`. */
   public readonly size: InputSignal<ContainerSize> = input<ContainerSize>('lg');
   /** Optional semantic landmark. Use main once per page, region for named sections. */
   public readonly landmark: InputSignal<'main' | 'region' | 'complementary' | undefined> = input<'main' | 'region' | 'complementary' | undefined>(undefined);
+  /** Optional accessible name when visible text does not provide an appropriate control name. Optional; omission leaves the value undefined. */
   public readonly ariaLabel: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
 }

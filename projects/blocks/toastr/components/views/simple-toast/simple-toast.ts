@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { BX_I18N, isTextWithKey } from '@filip.mazev/blocks/core';
 
 import { Toast } from '@toastr/classes/toast';
-import { ISimpleToastData } from '@toastr/interfaces/isimple-toast.interface';
+import { ISimpleToastData } from '@toastr/interfaces/isimple-toast-data.interface';
 
 @Component({
   selector: 'bx-simple-toast',

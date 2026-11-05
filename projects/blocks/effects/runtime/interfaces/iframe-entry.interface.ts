@@ -1,4 +1,4 @@
-import type { FrameCallback } from '@effects/runtime/scheduler';
+import type { FrameCallback } from '@effects/runtime/types/frame-scheduler.types';
 /**
  * Describes the frame entry contract.
  */

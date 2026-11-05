@@ -9,9 +9,9 @@ paths retain their native rendering; decorative lighting and blur sit behind con
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';
 
-private readonly theme = inject(ThemingService);
+private readonly themingService = inject(ThemingService);
 
-this.theme.setAppearance({
+this.themingService.setAppearance({
   translucency: 0.5,    // 0–1; the midpoint balances clarity and tint
   quality: 'auto',    // auto | baseline | enhanced
   glassiness: 'auto', // auto | off | on
@@ -19,8 +19,8 @@ this.theme.setAppearance({
 });
 
 // Read the current configuration or return to defaults.
-const current = this.theme.appearance();
-this.theme.resetAppearance();
+const current = this.themingService.appearance();
+this.themingService.resetAppearance();
 ```
 
 Global settings apply throughout the application, including mounted controls and overlays. Color comes from the active Blocks palette and semantic tokens;
@@ -68,10 +68,10 @@ Glassiness is an opt-in enhancement. Ordinary components keep the existing mater
 <section bxSurface bxSurfaceGlassiness="auto">…</section>
 ```
 
-`theme.setAppearance({ glassiness: 'auto' })` sets the browser policy for selected elements; it never enables every surface. Automatic works on supported
-browsers and preserves the existing look elsewhere. `off` is an application-wide switch. `on` allows testing SVG backdrop support on another browser and
-bypasses automatic device hints; it cannot add missing rendering support. Enhanced returns to Automatic when Glassiness is Off, and the playground disables that
-option until glassiness is enabled. Baseline, opaque intent fills, nested-surface guards and accessibility preferences still win. Asymmetric or elliptical
+`themingService.setAppearance({ glassiness: 'auto' })` sets the browser policy for selected elements; it never enables every surface. Automatic works on
+supported browsers and preserves the existing look elsewhere. `off` is an application-wide switch. `on` allows testing SVG backdrop support on another browser
+and bypasses automatic device hints; it cannot add missing rendering support. Enhanced returns to Automatic when Glassiness is Off, and the playground disables
+that option until glassiness is enabled. Baseline, opaque intent fills, nested-surface guards and accessibility preferences still win. Asymmetric or elliptical
 corners keep their existing material.
 
 Automatic rendering uses one SVG backdrop pass per selected element, with the existing Blocks lighting. Enhanced adds the reference's reflection and bevel

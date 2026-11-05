@@ -7,7 +7,7 @@ import { INavigationTreeGroup, ITopNavConfig, TopNav, TopNavActionsDirective, To
 
 import { ThemingService } from '@core/services/theming.service';
 import { Button } from '@forms/components/button/button';
-import { Icon } from '@icons/components/icon';
+import { Icon } from '@icons/components/icon/icon';
 import { Sidenav } from '@playground/components/shared/sidenav/sidenav';
 
 import { HighlightLoader } from 'ngx-highlightjs';
@@ -21,14 +21,14 @@ import { HighlightLoader } from 'ngx-highlightjs';
 })
 export class App {
   private readonly document = inject(DOCUMENT);
-  private readonly highlight = inject(HighlightLoader);
+  private readonly highlightLoader = inject(HighlightLoader);
 
-  protected readonly theme = inject(ThemingService);
+  protected readonly themingService = inject(ThemingService);
 
   protected readonly toolbarConfig: ITopNavConfig = { position: 'sticky', searchable: false, ariaLabel: 'Playground controls' };
   protected readonly toolbarGroups: readonly INavigationTreeGroup[] = [];
 
-  protected readonly isDarkMode: Signal<boolean> = computed(() => this.theme.activeTheme() === 'dark');
+  protected readonly isDarkMode: Signal<boolean> = computed(() => this.themingService.activeTheme() === 'dark');
 
   constructor() {
     effect(() => {
@@ -36,7 +36,7 @@ export class App {
 
       this.document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
 
-      if (this.document.defaultView) this.highlight.setTheme(dark ? 'assets/styles/vs2015.css' : 'assets/styles/github.css');
+      if (this.document.defaultView) this.highlightLoader.setTheme(dark ? 'assets/styles/vs2015.css' : 'assets/styles/github.css');
     });
   }
 }

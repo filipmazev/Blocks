@@ -13,7 +13,7 @@ import { BxA11yService } from '@core/services/bx-a11y.service';
 import { ThemingService } from '@core/services/theming.service';
 import { WindowDimensionsService } from '@core/services/window-dimension.service';
 import { Button } from '@forms/components/button/button';
-import { Icon } from '@icons/components/icon';
+import { Icon } from '@icons/components/icon/icon';
 import { LightOrb } from '@playground/components/screens/home/light-orb/light-orb';
 import { PLAYGROUND_VERSION } from '@playground/generated/release';
 import { PackageReleaseService } from '@playground/services/package-release.service';
@@ -29,13 +29,13 @@ import { OddityCanvas } from 'oddity-angular';
 })
 export class Home {
   private readonly themingService = inject(ThemingService);
-  private readonly windowDimensionService = inject(WindowDimensionsService);
+  private readonly windowDimensionsService = inject(WindowDimensionsService);
 
-  protected readonly releases = inject(PackageReleaseService);
-  protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
+  protected readonly packageReleaseService = inject(PackageReleaseService);
+  protected readonly isReducedMotion = inject(BxA11yService).isReducedMotion;
 
   private readonly glassCount: Signal<number> = computed(() =>
-    this.windowDimensionService.resolveResponsiveValue(
+    this.windowDimensionsService.resolveResponsiveValue(
       {
         xs: 20,
         sm: 30,
@@ -116,7 +116,7 @@ export class Home {
       pointerMode: 2,
       pointerDamping: 1,
       pointerFlip: true,
-      animate: !this.reducedMotion()
+      animate: !this.isReducedMotion()
     };
   });
 

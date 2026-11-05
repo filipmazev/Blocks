@@ -15,9 +15,9 @@ async function sourceModule(entry) {
   new Function('require', 'module', 'exports', result.outputFiles[0].text)(require, module, module.exports);
   return module.exports;
 }
-const { THEME_PALETTES } = await sourceModule('projects/blocks/core/types/appearance.types.ts');
-const { resolveThemeId } = await sourceModule('projects/blocks/core/helpers/theme-functions.ts');
-const { ngAdd } = await sourceModule('projects/blocks/schematics/ng-add/index.ts');
+const { THEME_PALETTES } = await sourceModule('projects/blocks/core/constants/theme-palettes.constants.ts');
+const { resolveThemeId } = await sourceModule('projects/blocks/core/helpers/theme-functions.helpers.ts');
+const { ngAdd } = await sourceModule('projects/blocks/schematics/ng-add/helpers/ng-add.helpers.ts');
 const { Tree } = require('@angular-devkit/schematics');
 const schema = JSON.parse(readFileSync('projects/blocks/schematics/ng-add/schema.json', 'utf8'));
 const appearances = ['light', 'dark'];

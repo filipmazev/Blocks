@@ -13,29 +13,46 @@ import { ToastPosition } from '@toastr/types/toastr.types';
   providedIn: 'root'
 })
 export class ToastrGlobalSettingsService {
+  /** Screen placement for notifications created without an instance override. Initially `'top-right'`. */
   public readonly position: WritableSignal<ToastPosition> = signal<ToastPosition>('top-right');
 
+  /** Default motion preference; shared reduced-motion settings take precedence. */
   public readonly animate: WritableSignal<boolean> = signal<boolean>(true);
 
+  /** Optional CSS class override applied to newly created toast wrappers. */
   public readonly wrapperClass: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
+  /** Default toast lifetime in milliseconds; zero keeps a notification open until explicitly dismissed. */
   public readonly durationInMs: WritableSignal<number> = signal<number>(5000);
 
+  /** Whether toast wrappers accept a vertical dismissal swipe. Initially `true`. */
   public readonly swipeToDismiss: WritableSignal<boolean> = signal<boolean>(true);
 
+  /** Maximum number of simultaneously displayed toast notifications across positions; excess requests remain queued. Initially `4`. */
   public readonly maxOpened: WritableSignal<number> = signal<number>(4);
 
+  /** Default refraction policy for toast surfaces, subject to application and accessibility limits. */
   public readonly glassiness: WritableSignal<GlassinessMode> = signal<GlassinessMode>('auto');
+  /** Default toast material detail, constrained by shared rendering and device policies. */
   public readonly glassQuality: WritableSignal<GlassQuality> = signal<GlassQuality>('enhanced');
 
+  /** Whether the overlay includes its built-in close action. Initially `true`. */
   public readonly showCloseButton: WritableSignal<boolean> = signal<boolean>(true);
 
+  /** Semantic color used by the default toast close action. */
   public readonly closeButtonColor: WritableSignal<ThemedColor | undefined> = signal<ThemedColor | undefined>('text-primary');
 
+  /** Whether toast wrappers display remaining lifetime as a progress bar. Initially `true`. */
   public readonly showProgressBar: WritableSignal<boolean> = signal<boolean>(true);
 
+  /** Semantic color of the toast lifetime progress indicator. Initially `'text-primary'`. */
   public readonly progressBarColor: WritableSignal<ThemedColor | undefined> = signal<ThemedColor | undefined>('text-primary');
 
+  /**
+   * Merge partial toast defaults without mutating consumer configuration or discarding unrelated settings.
+   *
+   * @param settings - Toast default overrides to merge; omitted settings retain their existing values.
+   */
   public update(settings: Partial<IToastrGlobalSettings>): void {
     if (settings.position !== undefined) this.position.set(settings.position);
 

@@ -47,14 +47,41 @@ state; signal and output references are readonly. Necessary unused parameters/ca
 Unavoidable `any` requires a narrow ESLint suppression explaining the external constraint. OnPush for new components is documented in `AGENTS.md` and is
 intentionally not enforced by ESLint.
 
+`blocks/injected-reference-names` requires an injected class reference to use the class's full lower-camel-case name: `packageReleaseService` for
+`inject(PackageReleaseService)`, `bxA11yService` for `inject(BxA11yService)`, and `activatedRoute` for `inject(ActivatedRoute)`. Angular references such as
+`ElementRef` and `ViewContainerRef` follow the same convention. The rule checks fields and local variables, resolves aliased/namespace imports through
+TypeScript, and recognizes aliased or namespace imports of Angular's `inject`. Constants such as `BX_I18N` remain outside the class-token naming rule.
+
+Direct injected property projections use the projected member's exact name: `isReducedMotion = inject(BxA11yService).isReducedMotion` and
+`nativeElement = inject(ElementRef).nativeElement`. Optional access, non-null assertions, and type assertions preserve this contract; called method results are
+ordinary derived values. Renaming is diagnostic only because changing a declaration requires updates to TypeScript references, external/inline templates, host
+expressions, subclasses, and examples. Reuse inherited dependencies when canonical names reveal duplicate injections. Generators use imported canonical names
+when no TypeScript project is available.
+
 Public/protected class members can be consumed by templates, subclasses or application code; ESLint cannot prove that they are globally unused. Review those
 manually. The Angular compiler check (`npm run lint:angular`) rejects unused standalone component imports and validates external and inline templates; unused
 TypeScript imports are checked separately by ESLint.
+
+`blocks/declaration-layout` checks Blocks source against the owning entry point's category folders. Types, interfaces, constants, helpers, tokens, enums,
+services, and classes belong beside `components` and `directives`, rather than inside them. Secondary entry points such as `effects/runtime` own their own
+categories. Related generated constants may use a namespace such as `icons/constants/lucide`. Files cannot mix declaration categories or add supporting
+declarations beside a primary class. Concrete components and directives need their own folder and colocated README; abstract directive bases belong in
+`classes`. Supporting filenames follow the category suffixes, and interface filenames match their `I`-prefixed declaration. Existing specs and pure re-export
+facades are excluded from declaration checks. The rule reports migrations without moving files automatically, because imports, resources, generators, and
+consumer documentation must move together.
 
 `blocks/documented-interfaces` applies to interfaces exported from library source files, including file-local export lists. It requires a descriptive interface
 JSDoc and descriptive JSDoc immediately above every member. Interface-level property `@param` lists are rejected; use property comments and `@typeParam` for
 generic parameters. The linter verifies the presence and placement of descriptions; reviewers verify accuracy, defaults, optionality, behavior, and generic
 documentation. Playground-only interfaces are outside this documentation rule.
+
+`blocks/documented-public-api` checks exported library components, directives, and services, including aliases and namespace imports of Angular decorators.
+Every public field, accessor, and method needs adjacent descriptive JSDoc; inputs, models, outputs, public state, lifecycle methods, and public injected
+references are included. Private/protected members and constructors remain outside this rule. It also checks exported helper functions and function-valued
+exports, including file-local export lists. Public methods and helpers require descriptive `@param` tags for their formal parameters and `@typeParam` tags for
+generic parameters. Optional/rest syntax is accepted, and bare tags without descriptions fail. Document defaults, units, translation, event payloads, and
+significant lifecycle or asynchronous behavior where applicable. The shared JSDoc reader preserves the interface rule's existing handling of adjacent ESLint
+control comments. These are diagnostic-only rules: writing an accurate public contract requires reviewing the implementation.
 
 HTML rules cover semantic/accessibility checks, attribute/binding order, explicit button types, duplicate attributes, `$any`, interpolation in attributes,
 modern control flow, and static string attributes. Plain strings, translation contracts, signals, templates, accessibility preferences and theming still follow

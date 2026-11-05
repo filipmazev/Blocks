@@ -1,0 +1,7 @@
+import { defineIcon } from '@icons/helpers/define-icon.helpers';
+
+export const lucideLetterA = defineIcon({
+  name: 'letter-a',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M17.117 14H6.883" /><path d="m4 20 7.55-15.712a.5.5 0 01.9 0L20 20" />`
+} as const);

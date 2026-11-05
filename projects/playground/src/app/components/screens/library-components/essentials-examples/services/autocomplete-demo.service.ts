@@ -9,7 +9,7 @@ import { AUTOCOMPLETE_OPTIONS } from '@playground/components/screens/library-com
 
 @Injectable()
 export class AutocompleteDemoService {
-  private readonly destroy = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly query: WritableSignal<string> = signal('');
 
@@ -43,7 +43,7 @@ export class AutocompleteDemoService {
   private timer?: ReturnType<typeof setTimeout>;
 
   constructor() {
-    this.destroy.onDestroy(() => clearTimeout(this.timer));
+    this.destroyRef.onDestroy(() => clearTimeout(this.timer));
   }
 
   public search(query: string): void {

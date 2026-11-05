@@ -16,7 +16,7 @@ import { ICodeFile } from '@playground/interfaces/icode-file.interface';
   styleUrl: './component-info.scss'
 })
 export class ComponentInfo {
-  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   public readonly matchHeight: InputSignal<HTMLElement | undefined> = input<HTMLElement>();
   public readonly codeFiles: InputSignal<ICodeFile[]> = input.required<ICodeFile[]>();
@@ -28,7 +28,7 @@ export class ComponentInfo {
 
       if (!target) return;
 
-      const resize = () => (this.element.style.height = `${target.getBoundingClientRect().height}px`);
+      const resize = () => (this.nativeElement.style.height = `${target.getBoundingClientRect().height}px`);
 
       resize();
 
@@ -37,7 +37,7 @@ export class ComponentInfo {
       observer.observe(target);
       onCleanup(() => {
         observer.disconnect();
-        this.element.style.removeProperty('height');
+        this.nativeElement.style.removeProperty('height');
       });
     });
   }

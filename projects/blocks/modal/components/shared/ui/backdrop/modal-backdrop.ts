@@ -20,9 +20,12 @@ export class ModalBackdrop {
   public readonly label: InputSignal<ResolvableText> = input<ResolvableText>('Close dialog');
   /** Backdrop tab order. Defaults to 0; drawer owners can use -1 when a close action is provided in the panel. */
   public readonly tabIndex: InputSignal<number> = input(0);
+  /** Whether decorative motion is enabled after applying shared reduced-motion preferences. Defaults to `false`. */
   public readonly isAnimated: InputSignal<boolean> = input(false);
+  /** Current open state of the overlay. Defaults to `false`. */
   public readonly isOpen: InputSignal<boolean> = input(false);
 
+  /** Emits pointer activation of the dismissal backdrop. */
   // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the existing modal backdrop click event.
   public readonly click: OutputEmitterRef<MouseEvent> = output<MouseEvent>();
 }

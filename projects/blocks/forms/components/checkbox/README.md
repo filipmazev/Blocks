@@ -31,12 +31,12 @@ translucency updates existing components and overlays. Content-only parts share 
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';
 
-private readonly theme = inject(ThemingService);
+private readonly themingService = inject(ThemingService);
 
 // Application-wide, including open overlays.
-this.theme.setAppearance({ translucency: 0.5 });
+this.themingService.setAppearance({ translucency: 0.5 });
 // Opaque presentation retains the same layout and component API.
-this.theme.setAppearance({ reducedTransparency: true });
+this.themingService.setAppearance({ reducedTransparency: true });
 ```
 
 `BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,

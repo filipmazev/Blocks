@@ -34,19 +34,30 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   protected readonly verticalSwipeTarget: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef>('verticalSwipeTarget');
   protected readonly elementRef: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef>('elementRef');
 
+  /** Current vertical swipe displacement in CSS pixels, used to render the overlay transform. Initially `0`. */
   public readonly currentTranslateY: WritableSignal<number> = signal(0);
 
+  /** Whether the bottom-sheet dismissal swipe has completed and should render its exit position. Initially `false`. */
   public readonly isSwipingVerticallyFinished: WritableSignal<boolean> = signal(false);
 
+  /** Modal DOM identifier supplied by the lifecycle host; null leaves the identifier unset. Required input. */
   public readonly id: InputSignal<string | null> = input.required<string | null>();
+  /** Custom modal header template registered with the lifecycle host; null uses the configured banner. Required input. */
   public readonly headerTemplate: InputSignal<TemplateRef<void> | null> = input.required<TemplateRef<void> | null>();
+  /** Custom modal footer template registered with the lifecycle host; null omits custom footer content. Required input. */
   public readonly footerTemplate: InputSignal<TemplateRef<void> | null> = input.required<TemplateRef<void> | null>();
+  /** Resolved modal configuration supplied by the modal lifecycle host. Required input. */
   public readonly config: InputSignal<ModalConfig<D, R> | undefined> = input.required<ModalConfig<D, R> | undefined>();
+  /** Current open state of the overlay. Required input. */
   public readonly isOpen: InputSignal<boolean> = input.required<boolean>();
+  /** Whether decorative motion is enabled after applying shared reduced-motion preferences. Required input. */
   public readonly isAnimated: InputSignal<boolean> = input.required<boolean>();
+  /** Whether the modal renders its configured heading and close-action banner. Required input. */
   public readonly hasBanner: InputSignal<boolean> = input.required<boolean>();
+  /** Duration of overlay entrance and exit motion in milliseconds. Required input. */
   public readonly animationDuration: InputSignal<number> = input.required<number>();
 
+  /** Emits a requested modal close mode; the lifecycle host performs guarded dismissal. */
   // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the public modal close event name.
   public readonly close: OutputEmitterRef<ModalCloseMode | undefined> = output<ModalCloseMode | undefined>();
 
@@ -58,11 +69,13 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   private cleanupListeners: (() => void) | null = null;
   private globalResizeCleanup: (() => void) | null = null;
 
+  /** Initialize swipe-to-dismiss behavior and track touch versus precise-pointer input. */
   public ngOnInit(): void {
     this.startVerticalSwipeDetection();
     this.monitorInputType();
   }
 
+  /** Remove swipe and viewport listeners owned by the bottom-sheet view. */
   public ngOnDestroy(): void {
     this.stopVerticalSwipeDetection();
     this.globalResizeCleanup?.();

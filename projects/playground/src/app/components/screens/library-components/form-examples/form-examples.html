@@ -110,17 +110,17 @@
                     [clearTooltip]="{ key: 'clearSelectionTooltip' }"
                     [selectionDisplay]="useTags() ? 'tags' : 'text'"
                     [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined"
-                    [searchValue]="remote.query()"
-                    [options]="remote.options()"
+                    [searchValue]="mockOptionsStore.query()"
+                    [options]="mockOptionsStore.options()"
                     [isSearchable]="true"
                     [externalFiltering]="true"
-                    [loading]="remote.loading()"
-                    [hasMore]="remote.hasMore()"
-                    [loadError]="remote.error()"
-                    [loadMoreConfig]="remote.config()"
+                    [loading]="mockOptionsStore.loading()"
+                    [hasMore]="mockOptionsStore.hasMore()"
+                    [loadError]="mockOptionsStore.error()"
+                    [loadMoreConfig]="mockOptionsStore.config()"
                     [(value)]="destination"
-                    (loadMore)="remote.load($event)"
-                    (search)="remote.search($event)" />
+                    (loadMore)="mockOptionsStore.load($event)"
+                    (search)="mockOptionsStore.search($event)" />
                 <bx-checkbox label="Show selected tag" subscriptSizing="dynamic" [(checked)]="useTags" />
                 <bx-checkbox label="Allow clearing selection" subscriptSizing="dynamic" [(checked)]="allowClearing" />
             </div>
@@ -135,23 +135,23 @@
                     [selectionDisplay]="useTags() ? 'tags' : 'text'"
                     [visibleTagCount]="visibleTagLimit()"
                     [loadingLabel]="searchLoadingText() ? { key: 'loading' } : undefined"
-                    [searchValue]="remote.query()"
+                    [searchValue]="mockOptionsStore.query()"
                     [summaryThreshold]="summaryLimit()"
                     [allSelectedText]="{ key: 'allLocations' }"
                     [selectedCountText]="{ key: 'locationsSelected' }"
-                    [options]="remote.options()"
+                    [options]="mockOptionsStore.options()"
                     [isSearchable]="true"
                     [externalFiltering]="true"
-                    [loading]="remote.loading()"
-                    [hasMore]="remote.hasMore()"
-                    [loadError]="remote.error()"
-                    [loadMoreConfig]="remote.config()"
+                    [loading]="mockOptionsStore.loading()"
+                    [hasMore]="mockOptionsStore.hasMore()"
+                    [loadError]="mockOptionsStore.error()"
+                    [loadMoreConfig]="mockOptionsStore.config()"
                     [allSelectedTooltip]="allSelectedTooltip()"
                     [selectAllLabel]="{ key: 'selectAll' }"
-                    [selectionScope]="remote.query()"
+                    [selectionScope]="mockOptionsStore.query()"
                     [(value)]="selected"
-                    (loadMore)="remote.load($event)"
-                    (search)="remote.search($event)"
+                    (loadMore)="mockOptionsStore.load($event)"
+                    (search)="mockOptionsStore.search($event)"
                     (selectAllIntentChange)="recordIntent($event)"
                     (selectionChange)="recordSelection($event)" />
                 <bx-checkbox label="Show selected tags" subscriptSizing="dynamic" [(checked)]="useTags" />
@@ -165,31 +165,37 @@
                 aria-label="Paginated locations"
                 tabindex="0"
                 bxLoadMore
-                [loadMoreHasMore]="remote.hasMore()"
-                [loadMoreLoading]="remote.loading()"
-                [loadMoreError]="remote.error()"
-                [loadMoreConfig]="remote.config()"
-                [loadMoreRevision]="remote.options()"
-                (loadMore)="remote.load($event)">
+                [loadMoreHasMore]="mockOptionsStore.hasMore()"
+                [loadMoreLoading]="mockOptionsStore.loading()"
+                [loadMoreError]="mockOptionsStore.error()"
+                [loadMoreConfig]="mockOptionsStore.config()"
+                [loadMoreRevision]="mockOptionsStore.options()"
+                (loadMore)="mockOptionsStore.load($event)">
                 <ul>
-                    @for (option of remote.options(); track option.value) {
+                    @for (option of mockOptionsStore.options(); track option.value) {
                         <li>{{ option.label }}</li>
                     }
                 </ul>
-                @if (remote.loading() && !standalonePagination.actionVisible()) {
+                @if (mockOptionsStore.loading() && !standalonePagination.actionVisible()) {
                     <div class="collection-loading"><bx-loading-indicator [size]="16" [label]="{ key: 'loading' }" /></div>
                 }
-                @if (!remote.loading() && !remote.options().length && !remote.error()) {
+                @if (!mockOptionsStore.loading() && !mockOptionsStore.options().length && !mockOptionsStore.error()) {
                     <p>No locations match.</p>
                 }
             </div>
         }
         <div class="actions pagination-actions">
             <div class="pagination-buttons">
-                <button bx-button type="button" variant="tonal" color="danger" [disabled]="remote.loading() || !remote.hasMore()" (click)="remote.fail()">
+                <button
+                    bx-button
+                    type="button"
+                    variant="tonal"
+                    color="danger"
+                    [disabled]="mockOptionsStore.loading() || !mockOptionsStore.hasMore()"
+                    (click)="mockOptionsStore.fail()">
                     Fail next page now
                 </button>
-                <button bx-button type="button" [disabled]="remote.loading()" (click)="remote.search('')">Reset pages</button>
+                <button bx-button type="button" [disabled]="mockOptionsStore.loading()" (click)="mockOptionsStore.search('')">Reset pages</button>
             </div>
             <div class="pagination-options">
                 @if (example() === 'multi-select') {
@@ -225,31 +231,31 @@
                     subscriptSizing="dynamic"
                     [clearable]="false"
                     [options]="pageSizes"
-                    [value]="remote.pageSize()"
+                    [value]="mockOptionsStore.pageSize()"
                     (selectionChange)="changePageSize($event.value)" />
             </div>
         </div>
         <p role="status">
             {{
-                remote.loading()
+                mockOptionsStore.loading()
                     ? 'Loading: the request takes 800ms.'
-                    : remote.error()
+                    : mockOptionsStore.error()
                       ? 'Failed: use Retry request at the bottom.'
-                      : remote.hasMore()
+                      : mockOptionsStore.hasMore()
                         ? 'Ready to load more.'
                         : 'All pages loaded.'
             }}
         </p>
         <p>Small pages show the button without a scrollbar. More items enable scrolling. Failure retains existing items and reveals Retry request.</p>
         <ul class="event-log" aria-label="Request events">
-            @for (event of remote.requests(); track $index) {
+            @for (event of mockOptionsStore.requests(); track $index) {
                 <li>{{ event }}</li>
             }
         </ul>
         @if (example() === 'multi-select') {
             <output
-                >Selectable locations: {{ remote.selectableTotal() ?? '…' }} of {{ remote.total() ?? '…' }} results. Disabled options and groups are
-                excluded.</output
+                >Selectable locations: {{ mockOptionsStore.selectableTotal() ?? '…' }} of {{ mockOptionsStore.total() ?? '…' }} results. Disabled options and
+                groups are excluded.</output
             >
         }
         @if (example() === 'multi-select') {

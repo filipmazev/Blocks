@@ -2,9 +2,9 @@ import type { InputSignalWithTransform, Signal } from '@angular/core';
 
 import { booleanAttribute, ChangeDetectionStrategy, Component, contentChildren, effect, forwardRef, input, untracked } from '@angular/core';
 
-import { IAccordionCoordinator } from '@primitives/components/accordion/interfaces/iaccordion-coordinator.interface';
-import { BX_ACCORDION_COORDINATOR } from '@primitives/components/accordion/tokens/accordion-coordinator.token';
 import { Collapsible } from '@primitives/components/collapsible/collapsible';
+import { IAccordionCoordinator } from '@primitives/interfaces/iaccordion-coordinator.interface';
+import { BX_ACCORDION_COORDINATOR } from '@primitives/tokens/accordion-coordinator.token';
 
 @Component({
   selector: 'bx-accordion',
@@ -17,6 +17,7 @@ import { Collapsible } from '@primitives/components/collapsible/collapsible';
 export class Accordion implements IAccordionCoordinator {
   private readonly items: Signal<readonly Collapsible[]> = contentChildren(Collapsible);
 
+  /** Whether several accordion panels may remain expanded simultaneously. Defaults to `false`. */
   public readonly multiple: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 
   private previousOpened: readonly Collapsible[] = [];
@@ -35,6 +36,11 @@ export class Accordion implements IAccordionCoordinator {
     });
   }
 
+  /**
+   * Coordinate sibling expansion when a panel opens and multiple-open presentation is disabled.
+   *
+   * @param panelId - Stable ID of the panel requesting expansion.
+   */
   public requestExpansion(panelId: string): void {
     if (this.multiple()) return;
 
@@ -43,6 +49,7 @@ export class Accordion implements IAccordionCoordinator {
       .forEach((item) => item.expanded.set(false));
   }
 
+  /** Collapse all registered accordion panels through their controlled expansion state. */
   public collapseAll(): void {
     this.items().forEach((item) => item.expanded.set(false));
   }

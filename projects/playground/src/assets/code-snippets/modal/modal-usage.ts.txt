@@ -13,11 +13,11 @@ import { IDemoModalResult } from './idemo-modal-result.interface';
     <p role="status">{{ status() }}</p>`
 })
 export class ModalExample {
-  private readonly modals = inject(ModalService);
+  private readonly modalService = inject(ModalService);
   protected readonly status = signal('');
 
   protected open(): void {
-    const ref = this.modals.open<IDemoModalData, IDemoModalResult>(DemoModal, {
+    const ref = this.modalService.open<IDemoModalData, IDemoModalResult>(DemoModal, {
       header: { text: 'Workspace settings' },
       data: { title: 'Review your changes', body: 'Confirm to apply the example.', openedCount: 0 },
       style: { layout: 'center', breakpoints: { sm: 'bottom-sheet' } },

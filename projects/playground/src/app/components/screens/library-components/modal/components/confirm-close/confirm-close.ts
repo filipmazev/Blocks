@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Button } from '@forms/components/button/button';
 import { Modal } from '@modal/classes/modal';
-import { ModalFooterDirective } from '@modal/directives/modal-footer.directive';
+import { ModalFooterDirective } from '@modal/directives/footer/modal-footer.directive';
 
 @Component({
   selector: 'app-confirm-close',

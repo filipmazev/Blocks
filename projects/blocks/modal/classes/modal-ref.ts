@@ -3,7 +3,7 @@ import { ComponentRef, Type } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { ModalCore } from '@modal/components/modal-core';
+import { ModalCore } from '@modal/components/modal-core/modal-core';
 import { ModalState } from '@modal/enums/modal-state.enum';
 import { IModal } from '@modal/interfaces/imodal.interface';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';

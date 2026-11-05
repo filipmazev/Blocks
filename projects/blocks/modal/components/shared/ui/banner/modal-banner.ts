@@ -32,9 +32,12 @@ export class ModalBanner {
     return headerData.text;
   });
 
+  /** Modal heading text and optional semantic icon; undefined omits configured heading content. Required input. */
   public readonly header: InputSignal<IModalHeaderConfig | undefined> = input.required<IModalHeaderConfig | undefined>();
+  /** Whether the overlay includes its built-in close action. Required input. */
   public readonly showCloseButton: InputSignal<boolean> = input.required<boolean>();
 
+  /** Emits a requested modal close mode; the lifecycle host performs guarded dismissal. */
   // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the public modal close event name.
   public readonly close: OutputEmitterRef<ModalCloseMode | undefined> = output<ModalCloseMode | undefined>();
 }

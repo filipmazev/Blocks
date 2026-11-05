@@ -1,6 +1,10 @@
 import { FIELD_SURFACE_SELECTOR, NONINTERACTIVE_SURFACE_SELECTOR } from '@effects/runtime/constants/surface-interaction.constants';
 
-/** Resolves state for a surface, its owning label, or a native control within a projected field. */
+/**
+ * Resolves state for a surface, its owning label, or a native control within a projected field.
+ *
+ * @param element - Surface host checked for disabled, readonly, inert, or noninteractive state.
+ */
 export function isSurfaceInteractionBlocked(element: HTMLElement): boolean {
   if (element.closest(NONINTERACTIVE_SURFACE_SELECTOR) || element.closest('label')?.control?.matches(NONINTERACTIVE_SURFACE_SELECTOR)) return true;
 
@@ -9,7 +13,11 @@ export function isSurfaceInteractionBlocked(element: HTMLElement): boolean {
   return !!control && control.closest('[data-bx-surface]') === element && control.matches(NONINTERACTIVE_SURFACE_SELECTOR);
 }
 
-/** Fields illuminate for pointer focus as well as keyboard focus, including projected native controls. */
+/**
+ * Fields illuminate for pointer focus as well as keyboard focus, including projected native controls.
+ *
+ * @param element - Surface host inspected for editable field semantics.
+ */
 export function isFieldSurface(element: HTMLElement): boolean {
   if (element.matches(FIELD_SURFACE_SELECTOR)) return true;
 
@@ -18,7 +26,12 @@ export function isFieldSurface(element: HTMLElement): boolean {
   return !!control && control.closest('[data-bx-surface]') === element;
 }
 
-/** Only activation keys on action controls should deform a surface; typing in a field never does. */
+/**
+ * Only activation keys on action controls should deform a surface; typing in a field never does.
+ *
+ * @param target - Focused event target whose native activation semantics must be preserved.
+ * @param key - KeyboardEvent.key value to classify as an activation key.
+ */
 export function isSurfaceActivationKey(target: Element, key: string): boolean {
   if (target.closest('input, select, textarea, [contenteditable]:not([contenteditable="false"])')) return false;
 

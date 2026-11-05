@@ -27,7 +27,7 @@ import { PARK_ARTICLES } from './appearance-preview.data';
   }
 })
 export class AppearancePreview {
-  private readonly a11y = inject(BxA11yService);
+  private readonly bxA11yService = inject(BxA11yService);
 
   private readonly reader: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('reader');
 
@@ -78,10 +78,10 @@ export class AppearancePreview {
   constructor() {
     inject(DestroyRef).onDestroy(() => this.stopScrollHint());
     effect(() => {
-      if (this.a11y.isReducedMotion()) this.stopScrollHint();
+      if (this.bxA11yService.isReducedMotion()) this.stopScrollHint();
     });
     afterNextRender(() => {
-      if (this.a11y.isReducedMotion()) return;
+      if (this.bxA11yService.isReducedMotion()) return;
 
       const reader = this.reader().nativeElement;
       const window = reader.ownerDocument.defaultView;
@@ -98,7 +98,7 @@ export class AppearancePreview {
 
           observer.disconnect();
           timer = window.setTimeout(() => {
-            if (reader.scrollTop !== 0 || this.a11y.isReducedMotion()) return;
+            if (reader.scrollTop !== 0 || this.bxA11yService.isReducedMotion()) return;
 
             const distance = Math.min(280, reader.scrollHeight - reader.clientHeight);
 
@@ -145,6 +145,6 @@ export class AppearancePreview {
 
     const top = target ? target.getBoundingClientRect().top - reader.getBoundingClientRect().top + reader.scrollTop - 96 : 0;
 
-    reader.scrollTo({ top: Math.max(0, top), behavior: this.a11y.isReducedMotion() ? 'auto' : 'smooth' });
+    reader.scrollTo({ top: Math.max(0, top), behavior: this.bxA11yService.isReducedMotion() ? 'auto' : 'smooth' });
   }
 }

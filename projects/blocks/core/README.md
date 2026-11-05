@@ -23,9 +23,9 @@ import { ThemingService, WindowDimensionsService } from '@filip.mazev/blocks/cor
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResponsiveExample {
-    private readonly dimensions = inject(WindowDimensionsService);
+    private readonly windowDimensionsService = inject(WindowDimensionsService);
 
-    protected readonly compact = computed(() => this.dimensions.dimensions().width <= this.dimensions.breakpoints.sm);
+    protected readonly compact = computed(() => this.windowDimensionsService.windowDimensionsService().width <= this.windowDimensionsService.breakpoints.sm);
 
     constructor() {
         inject(ThemingService).setApplicationTheme(null);
@@ -65,16 +65,16 @@ symbols, creates accessible key names and matches individual keyboard events.
 import { inject } from '@angular/core';
 import { BxShortcutService, ResolvableShortcut } from '@filip.mazev/blocks/core';
 
-private readonly shortcuts = inject(BxShortcutService);
+private readonly bxShortcutService = inject(BxShortcutService);
 protected readonly openShortcut: ResolvableShortcut = ['mod', 'shift', 'k'];
 
 // resolve() returns ['⌘', '⇧', 'K'] on Apple devices or ['Ctrl', 'Shift', 'K'] elsewhere.
 // A second platform argument supports previews without changing device detection.
-this.shortcuts.resolve(this.openShortcut, 'mac');
-this.shortcuts.toAriaKeyshortcuts(this.openShortcut); // Meta+Shift+K or Control+Shift+K
+this.bxShortcutService.resolve(this.openShortcut, 'mac');
+this.bxShortcutService.toAriaKeyshortcuts(this.openShortcut); // Meta+Shift+K or Control+Shift+K
 
 // Inside an application-owned keyboard handler:
-if (this.shortcuts.matches(event, this.openShortcut)) {
+if (this.bxShortcutService.matches(event, this.openShortcut)) {
   event.preventDefault();
   // Invoke the action, or call menuTrigger.open(true).
 }
@@ -107,13 +107,13 @@ updates that owner without adding another lock. Touch/overflow requirements foll
 restored only after the final owner releases its lock.
 
 ```ts
-const scroll = inject(ScrollLockService);
+const scrollLockService = inject(ScrollLockService);
 const destroyRef = inject(DestroyRef);
 const lockId = uuidv4();
 
-scroll.disableScroll(lockId, { handleTouchInput: false });
-destroyRef.onDestroy(() => scroll.enableScroll(lockId));
-// Also call scroll.enableScroll(lockId) when the owning overlay closes.
+scrollLockService.disableScroll(lockId, { handleTouchInput: false });
+destroyRef.onDestroy(() => scrollLockService.enableScroll(lockId));
+// Also call scrollLockService.enableScroll(lockId) when the owning overlay closes.
 ```
 
 Import `DestroyRef` and `inject` from `@angular/core`, and `ScrollLockService`/`uuidv4` from the public core entry point. For a scrollable drawer, leave touch

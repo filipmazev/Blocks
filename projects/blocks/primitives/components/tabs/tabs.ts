@@ -34,13 +34,13 @@ import { TabsVariant } from '@primitives/types/tabs.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.bx-tabs-underline]': 'variant() === "underline"',
-    '[class.bx-tabs-animated]': 'hasRendered() && !a11y.isReducedMotion()'
+    '[class.bx-tabs-animated]': 'hasRendered() && !bxA11yService.isReducedMotion()'
   }
 })
 export class Tabs {
   private readonly i18n = inject(BX_I18N, { optional: true });
 
-  protected readonly a11y = inject(BxA11yService);
+  protected readonly bxA11yService = inject(BxA11yService);
 
   private readonly triggers: Signal<readonly ElementRef<HTMLButtonElement>[]> = viewChildren<ElementRef<HTMLButtonElement>>('trigger');
 
@@ -55,9 +55,12 @@ export class Tabs {
 
   protected readonly tabs: Signal<readonly Tab[]> = contentChildren(Tab);
 
+  /** Visual presentation variant using the shared Blocks theme and component styles. Defaults to `'segmented'`. */
   public readonly variant: InputSignal<TabsVariant> = input<TabsVariant>(DEFAULT_TABS_VARIANT);
+  /** Accessible name of the tab list. Defaults to `'Tabs'`. */
   public readonly ariaLabel: InputSignal<ResolvableText> = input<ResolvableText>(DEFAULT_TABS_LABEL);
 
+  /** Value of the active tab; supports controlled two-way selection. Defaults to `null`. */
   public readonly selectedValue: ModelSignal<string | null> = model<string | null>(null);
 
   constructor() {
@@ -69,6 +72,11 @@ export class Tabs {
     });
   }
 
+  /**
+   * Select the enabled tab matching a value; unknown or disabled tab values are ignored.
+   *
+   * @param value - Value identifying the enabled tab to activate.
+   */
   public select(value: string): void {
     const tab = this.tabs().find((item) => item.value() === value && !item.disabled());
 

@@ -1,6 +1,6 @@
 <div class="shortcut-demo">
     <p><code>shortcut</code> displays a hint. This example also handles keyboard events using <code>BxShortcutService.matches()</code>.</p>
-    <p>On this device, <code>mod</code> uses {{ shortcuts.resolve('mod')?.join('') }} (detected platform: {{ shortcuts.platform() }}).</p>
+    <p>On this device, <code>mod</code> uses {{ bxShortcutService.resolve('mod')?.join('') }} (detected platform: {{ bxShortcutService.platform() }}).</p>
     <div>
         <button
             type="button"
@@ -10,13 +10,14 @@
             menuLabel="Project actions"
             [bxMenuTrigger]="actions"
             [menuHover]="false"
-            [attr.aria-keyshortcuts]="shortcuts.toAriaKeyshortcuts(openShortcut)">
-            Project actions · {{ shortcuts.resolve(openShortcut)?.join(' + ') }}
+            [attr.aria-keyshortcuts]="bxShortcutService.toAriaKeyshortcuts(openShortcut)">
+            Project actions · {{ bxShortcutService.resolve(openShortcut)?.join(' + ') }}
         </button>
     </div>
     <p>
-        Press {{ shortcuts.resolve(openShortcut)?.join(' + ') }} together to open the menu. Or press {{ shortcuts.resolve(sequencePrefix)?.join(' + ') }},
-        release the keys, then press V within two seconds. Escape, another key, a pointer press or leaving the window cancels the sequence.
+        Press {{ bxShortcutService.resolve(openShortcut)?.join(' + ') }} together to open the menu. Or press
+        {{ bxShortcutService.resolve(sequencePrefix)?.join(' + ') }}, release the keys, then press V within two seconds. Escape, another key, a pointer press or
+        leaving the window cancels the sequence.
     </p>
     <p role="status">{{ waitingForView() ? 'Waiting for V…' : status() }}</p>
     <ng-template #actions>
@@ -42,13 +43,13 @@
             <section class="platform-preview">
                 <h4>{{ platform === 'default' ? 'Unknown / server' : platform }}</h4>
                 <p>
-                    Portable: <kbd>{{ shortcuts.resolve(openShortcut, platform)?.join(' + ') }}</kbd>
+                    Portable: <kbd>{{ bxShortcutService.resolve(openShortcut, platform)?.join(' + ') }}</kbd>
                 </p>
                 <p>
-                    OS override: <kbd>{{ shortcuts.resolve(duplicateShortcut, platform)?.join(' + ') }}</kbd>
+                    OS override: <kbd>{{ bxShortcutService.resolve(duplicateShortcut, platform)?.join(' + ') }}</kbd>
                 </p>
                 <p>
-                    Modifiers: <kbd>{{ shortcuts.resolve(['command', 'ctrl', 'option', 'shift'], platform)?.join(' + ') }}</kbd>
+                    Modifiers: <kbd>{{ bxShortcutService.resolve(['command', 'ctrl', 'option', 'shift'], platform)?.join(' + ') }}</kbd>
                 </p>
             </section>
         }

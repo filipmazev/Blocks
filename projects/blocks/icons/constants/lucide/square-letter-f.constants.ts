@@ -1,0 +1,7 @@
+import { defineIcon } from '@icons/helpers/define-icon.helpers';
+
+export const lucideSquareLetterF = defineIcon({
+  name: 'square-letter-f',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M9 16V8.5a.5.5 0 0 1 .5-.5H15" /><path d="M9 12h4" /><rect width="18" height="18" x="3" y="3" rx="2" />`
+} as const);

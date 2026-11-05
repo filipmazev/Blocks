@@ -8,7 +8,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -25,9 +24,9 @@ import {
 
 import { Subscription } from 'rxjs';
 
-import type { IAutocompleteCompletionOptionState } from '@forms/components/autocomplete/interfaces/iautocomplete-completion-option-state.interface';
-import type { IAutocompleteFilteredOptionsState } from '@forms/components/autocomplete/interfaces/iautocomplete-filtered-options-state.interface';
-import type { IAutocompleteResolvedOptionsState } from '@forms/components/autocomplete/interfaces/iautocomplete-resolved-options-state.interface';
+import type { IAutocompleteCompletionOptionState } from '@forms/interfaces/iautocomplete-completion-option-state.interface';
+import type { IAutocompleteFilteredOptionsState } from '@forms/interfaces/iautocomplete-filtered-options-state.interface';
+import type { IAutocompleteResolvedOptionsState } from '@forms/interfaces/iautocomplete-resolved-options-state.interface';
 
 import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -35,15 +34,15 @@ import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { BX_OVERLAY_CONTEXT, LoadingIndicator, LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
 
-import { IAutocompleteOption } from '@forms/components/autocomplete/interfaces/iautocomplete-option.interface';
-import { IAutocompleteOptionContext } from '@forms/components/autocomplete/interfaces/iautocomplete-option-context.interface';
+import { BxValueControl } from '@forms/classes/bx-value-control';
 import { Button } from '@forms/components/button/button';
 import { FormField } from '@forms/components/form-field/form-field';
-import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
-import { ILoadMoreConfig } from '@forms/components/shared/load-more/interfaces/iload-more-config.interface';
-import { ILoadMoreContext } from '@forms/components/shared/load-more/interfaces/iload-more-context.interface';
-import { ILoadMoreRequest } from '@forms/components/shared/load-more/interfaces/iload-more-request.interface';
-import { LoadMoreDirective } from '@forms/directives/load-more.directive';
+import { LoadMoreDirective } from '@forms/directives/load-more/load-more.directive';
+import { IAutocompleteOption } from '@forms/interfaces/iautocomplete-option.interface';
+import { IAutocompleteOptionContext } from '@forms/interfaces/iautocomplete-option-context.interface';
+import { ILoadMoreConfig } from '@forms/interfaces/iload-more-config.interface';
+import { ILoadMoreContext } from '@forms/interfaces/iload-more-context.interface';
+import { ILoadMoreRequest } from '@forms/interfaces/iload-more-request.interface';
 
 @Component({
   selector: 'bx-autocomplete',
@@ -68,11 +67,10 @@ import { LoadMoreDirective } from '@forms/directives/load-more.directive';
 export class Autocomplete extends BxValueControl<string> {
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly overlay = inject(Overlay);
-  private readonly positions = inject(BxOverlayPositionService);
-  private readonly vcr = inject(ViewContainerRef);
-  private readonly zone = inject(NgZone);
+  private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly ngZone = inject(NgZone);
   private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
-  private readonly destroy = inject(DestroyRef);
 
   private readonly browser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -154,8 +152,10 @@ export class Autocomplete extends BxValueControl<string> {
   });
   protected readonly completionSuffix: Signal<string> = computed(() => this.completionOption()?.value.slice((this.internalValue() ?? '').length) ?? '');
 
+  /** Current open state of the overlay. */
   public readonly isOpen: Signal<boolean> = this.opened.asReadonly();
 
+  /** Currently loaded options; this collection may be only part of a remote result set. Defaults to an empty array. */
   public readonly options: InputSignal<readonly IAutocompleteOption[]> = input<readonly IAutocompleteOption[]>([]);
   /** Show a muted, uncommitted suffix for a matching suggestion. Accept with the forward arrow, End or Enter. Defaults to true. */
   public readonly inlineCompletion: InputSignal<boolean> = input(true);
@@ -169,23 +169,42 @@ export class Autocomplete extends BxValueControl<string> {
   public readonly externalFiltering: InputSignal<boolean> = input(false);
   /** Suppresses stale results and pagination while a replacement query is pending. */
   public readonly searching: InputSignal<boolean> = input(false);
+  /** Whether the consumer reports additional remote results available for pagination. Defaults to `false`. */
   public readonly hasMore: InputSignal<boolean> = input(false);
+  /**
+   * Error state for the failed incremental request; retained items remain visible and an explicit retry is available. Optional; omission leaves the
+   * value undefined.
+   */
   public readonly loadError: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  /** Text, accessibility, and appearance overrides for the shared load-more action. Defaults to an empty configuration. */
   public readonly loadMoreConfig: InputSignal<ILoadMoreConfig> = input<ILoadMoreConfig>({});
+  /**
+   * Optional custom shared load-more action template; preserve guarded requests and disabled/loading semantics. Optional; omission leaves the value
+   * undefined.
+   */
   public readonly loadMoreTemplate: InputSignal<TemplateRef<ILoadMoreContext> | undefined> = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
+  /** Items reference or page revision used to acknowledge completion of a guarded load-more request. Optional; omission leaves the value undefined. */
   public readonly loadMoreRevision: InputSignal<unknown> = input<unknown>(undefined);
+  /**
+   * Optional presentation template for an option; the owner retains selection and accessibility behavior. Optional; omission leaves the value undefined.
+   */
   public readonly optionTemplate: InputSignal<TemplateRef<IAutocompleteOptionContext> | undefined> = input<TemplateRef<IAutocompleteOptionContext> | undefined>(
     undefined
   );
+  /** Text shown when autocomplete has no matching items and is not loading. Defaults to `'No suggestions. You can enter your own value.'`. */
   public readonly emptyText: InputSignal<ResolvableText> = input<ResolvableText>('No suggestions. You can enter your own value.');
+  /** Text describing active autocomplete result loading. Defaults to `'Loading suggestions'`. */
   public readonly loadingText: InputSignal<ResolvableText> = input<ResolvableText>('Loading suggestions');
+  /** Native browser autocomplete hint applied to the text input. Defaults to `'off'`. */
   public readonly autocomplete: InputSignal<string> = input('off');
 
   /** Emitted for user text edits. The application owns debounce, cancellation and remote requests. */
   public readonly queryChange: OutputEmitterRef<string> = output<string>();
   /** Emitted only when the user chooses a suggestion. Free text remains a valid value. */
   public readonly optionSelected: OutputEmitterRef<IAutocompleteOption> = output<IAutocompleteOption>();
+  /** Emits a guarded incremental option request; the consumer supplies loading, errors, and result updates. */
   public readonly loadMore: OutputEmitterRef<ILoadMoreRequest> = output<ILoadMoreRequest>();
+  /** Emits whether the autocomplete options panel is open. */
   public readonly openedChange: OutputEmitterRef<boolean> = output<boolean>();
 
   private overlayRef?: OverlayRef;
@@ -195,7 +214,7 @@ export class Autocomplete extends BxValueControl<string> {
 
   constructor() {
     super();
-    this.destroy.onDestroy(() => this.dispose());
+    this.destroyRef.onDestroy(() => this.dispose());
     effect(() => {
       if ((this.effectiveDisabled() || this.isReadonly()) && this.isOpen()) this.close();
     });
@@ -206,6 +225,7 @@ export class Autocomplete extends BxValueControl<string> {
     });
   }
 
+  /** Open the component's overlay using its current configuration and shared positioning/focus mechanisms. */
   public open(): void {
     if (!this.browser || this.isOpen() || this.effectiveDisabled() || this.isReadonly()) return;
 
@@ -213,19 +233,19 @@ export class Autocomplete extends BxValueControl<string> {
     const overlay = this.overlay.create({
       width: origin.getBoundingClientRect().width,
       maxWidth: 'calc(100vw - 16px)',
-      positionStrategy: this.positions.getElementStrategy(origin, 'bottom', 4),
+      positionStrategy: this.bxOverlayPositionService.getElementStrategy(origin, 'bottom', 4),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
       usePopover: !!this.context?.useTopLayer || !!origin.closest('dialog, [role="dialog"], [role="alertdialog"], bx-modal, bx-modal-core, [popover]')
     });
 
     this.overlayRef = overlay;
     this.opened.set(true);
-    this.disconnectTheme = this.zone.runOutsideAngular(() => inheritOverlayTheme(origin, overlay.overlayElement));
+    this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(origin, overlay.overlayElement));
     this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, origin);
     this.subscriptions.add(
-      this.zone.runOutsideAngular(() =>
+      this.ngZone.runOutsideAngular(() =>
         trackOverlayOrigin(overlay, origin, {
-          onOriginHidden: () => this.zone.run(() => this.close()),
+          onOriginHidden: () => this.ngZone.run(() => this.close()),
           onPosition: () => {
             const width = origin.getBoundingClientRect().width;
 
@@ -241,13 +261,14 @@ export class Autocomplete extends BxValueControl<string> {
     );
     this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onPanelKey(event)));
 
-    const view = overlay.attach(new TemplatePortal(this.panelTemplate(), this.vcr));
+    const view = overlay.attach(new TemplatePortal(this.panelTemplate(), this.viewContainerRef));
 
     view.detectChanges();
     overlay.updatePosition();
     this.openedChange.emit(true);
   }
 
+  /** Close the component's overlay and apply its configured focus-restoration behavior. */
   public close(): void {
     if (!this.isOpen()) return;
 
@@ -315,14 +336,14 @@ export class Autocomplete extends BxValueControl<string> {
 
     const destination = event.relatedTarget as Node | null;
 
-    if (destination && (this.hostElement.contains(destination) || this.overlayRef?.overlayElement.contains(destination))) return;
+    if (destination && (this.nativeElement.contains(destination) || this.overlayRef?.overlayElement.contains(destination))) return;
 
     queueMicrotask(() => {
-      if (this.destroy.destroyed) return;
+      if (this.destroyRef.destroyed) return;
 
-      const active = this.hostElement.ownerDocument.activeElement;
+      const active = this.nativeElement.ownerDocument.activeElement;
 
-      if (this.hostElement.contains(active) || this.overlayRef?.overlayElement.contains(active)) return;
+      if (this.nativeElement.contains(active) || this.overlayRef?.overlayElement.contains(active)) return;
 
       this.close();
       this.markAsTouched();

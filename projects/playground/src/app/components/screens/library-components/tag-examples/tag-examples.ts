@@ -2,7 +2,7 @@ import type { Signal, WritableSignal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import type { BxSelectOption } from '@forms/types/select-option.types';
 
 import { BX_I18N } from '@filip.mazev/blocks/core';
 import { Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
@@ -21,7 +21,7 @@ import { TruncationExamples } from '@playground/components/screens/library-compo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagExamples {
-  protected readonly translations = inject(DemoI18nService);
+  protected readonly demoI18nService = inject(DemoI18nService);
 
   protected readonly label: WritableSignal<string | number | null> = signal<string | number | null>('Skopje');
 

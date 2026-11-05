@@ -13,6 +13,7 @@ import { DeviceTypeService } from './device-type.service';
 export class BxShortcutService {
   private readonly deviceTypeService = inject(DeviceTypeService);
 
+  /** Return the detected shortcut platform, using the default mapping when a specific platform is unavailable. */
   public platform(): ShortcutPlatform {
     const state = this.deviceTypeService.getDeviceState();
 
@@ -29,7 +30,12 @@ export class BxShortcutService {
     return 'default';
   }
 
-  /** Display tokens; strings remain one token, arrays describe a combination. Unknown labels are preserved. */
+  /**
+   * Display tokens; strings remain one token, arrays describe a combination. Unknown labels are preserved.
+   *
+   * @param shortcut - Optional plain, token-array, or OS-specific shortcut definition.
+   * @param platform - Target platform for symbols/modifiers; omission uses detected platform. Defaults to `this.platform()`.
+   */
   public resolve(shortcut: ResolvableShortcut | undefined, platform = this.platform()): string[] | undefined {
     const keys = this.keys(shortcut, platform);
     const apple = platform === 'mac' || platform === 'ios';
@@ -47,7 +53,12 @@ export class BxShortcutService {
     });
   }
 
-  /** WAI-ARIA key names for a valid combination, or null for a display-only/custom hint. Does not register a binding. */
+  /**
+   * WAI-ARIA key names for a valid combination, or null for a display-only/custom hint. Does not register a binding.
+   *
+   * @param shortcut - Optional shortcut definition to express as accessible key names.
+   * @param platform - Target shortcut platform; omission uses detected platform. Defaults to `this.platform()`.
+   */
   public toAriaKeyshortcuts(shortcut: ResolvableShortcut | undefined, platform = this.platform()): string | null {
     const keys = this.keys(shortcut, platform);
 
@@ -58,7 +69,13 @@ export class BxShortcutService {
     return ordered.map((key) => (key === ' ' ? 'Space' : key === '+' ? 'plus' : key.length === 1 ? key.toUpperCase() : key)).join('+');
   }
 
-  /** Match one combination exactly, ignoring handled, composing, AltGraph and (by default) repeat/editable events. */
+  /**
+   * Match one combination exactly, ignoring handled, composing, AltGraph and (by default) repeat/editable events.
+   *
+   * @param event - Keyboard event to compare without consuming or mutating it.
+   * @param shortcut - Shortcut definition to match as one ordinary key and its exact modifiers.
+   * @param options - Optional platform, repeat, and editable-target overrides. Defaults to `{}`.
+   */
   public matches(event: KeyboardEvent, shortcut: ResolvableShortcut | undefined, options: IShortcutMatchOptions = {}): boolean {
     if (event.defaultPrevented || event.isComposing || event.getModifierState('AltGraph') || (event.repeat && !options.allowRepeat)) return false;
 

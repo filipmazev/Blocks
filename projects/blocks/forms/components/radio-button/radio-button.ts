@@ -1,16 +1,16 @@
 import type { InputSignal, Signal } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, ElementRef, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input } from '@angular/core';
 
 import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 import { FormField } from '@forms/components/form-field/form-field';
-import { RadioRegistry } from '@forms/components/radio-button/services/radio-registry.service';
-import { BX_RADIO_GROUP } from '@forms/components/radio-group/tokens/radio-group.token';
-import { FormSettingsService } from '@forms/components/shared/services/form-settings.service';
-import { LabelPosition, SubscriptSizing } from '@forms/components/shared/types/validation.types';
+import { FormSettingsService } from '@forms/services/form-settings.service';
+import { RadioRegistry } from '@forms/services/radio-registry.service';
+import { BX_RADIO_GROUP } from '@forms/tokens/radio-group.token';
+import { LabelPosition, SubscriptSizing } from '@forms/types/validation.types';
 
 @Component({
   selector: 'bx-radio',
@@ -22,9 +22,8 @@ import { LabelPosition, SubscriptSizing } from '@forms/components/shared/types/v
   styleUrl: './radio-button.scss'
 })
 export class Radio extends BxBaseControl<unknown> {
-  private readonly registry = inject(RadioRegistry);
-  private readonly defaults = inject(FormSettingsService);
-  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly radioRegistry = inject(RadioRegistry);
+  private readonly formSettingsService = inject(FormSettingsService);
   private readonly i18n = inject(BX_I18N, { optional: true });
 
   protected readonly group = inject(BX_RADIO_GROUP, { optional: true });
@@ -43,22 +42,33 @@ export class Radio extends BxBaseControl<unknown> {
   protected readonly effectiveName: Signal<string> = computed(() => this.group?.groupName() ?? this.name());
   protected readonly selected: Signal<boolean> = computed(() => (this.group ? this.group.value() : this.internalValue()) === this.value());
 
-  public readonly resolvedSubscriptSizing: Signal<SubscriptSizing> = computed(() => this.subscriptSizing() ?? this.defaults.settings().subscriptSizing);
+  /** Resolved hint/error spacing policy after instance and shared form settings are combined. */
+  public readonly resolvedSubscriptSizing: Signal<SubscriptSizing> = computed(
+    () => this.subscriptSizing() ?? this.formSettingsService.settings().subscriptSizing
+  );
 
+  /** Position of the label relative to the checkbox or radio control. Defaults to `'after'`. */
   public readonly labelPosition: InputSignal<LabelPosition> = input<LabelPosition>('after');
+  /** Space reserved for hints and validation feedback; omission uses shared form defaults. */
   public readonly subscriptSizing: InputSignal<SubscriptSizing | undefined> = input<SubscriptSizing | undefined>(undefined);
+  /** Application value represented by this radio when it is selected. Required input. */
   public readonly value: InputSignal<unknown> = input.required<unknown>();
+  /** Optional native radio-group name; matching form/name scopes coordinate selection. Defaults to `''`. */
   public readonly name: InputSignal<string> = input<string>('');
 
   protected showTooltip: boolean = false;
 
   constructor() {
     super();
-    this.registry.radios.add(this);
-    inject(DestroyRef).onDestroy(() => this.registry.radios.delete(this));
+    this.radioRegistry.radios.add(this);
+    inject(DestroyRef).onDestroy(() => this.radioRegistry.radios.delete(this));
   }
 
-  /** Match native form/name groups and radios bound to one reactive control. */
+  /**
+   * Match native form/name groups and radios bound to one reactive control.
+   *
+   * @param other - Radio whose native/form group membership should be compared.
+   */
   public sharesGroup(other: Radio): boolean {
     const control = this.ngControl?.control;
 
@@ -67,7 +77,7 @@ export class Radio extends BxBaseControl<unknown> {
     return (
       !!this.name() &&
       this.name() === other.name() &&
-      this.element.closest('form') === other.element.closest('form') &&
+      this.nativeElement.closest('form') === other.nativeElement.closest('form') &&
       control?.parent === other.ngControl?.control?.parent
     );
   }
@@ -78,7 +88,7 @@ export class Radio extends BxBaseControl<unknown> {
     if (this.group) this.group.select(this.value());
     else {
       this.updateValue(this.value());
-      this.registry.select(this);
+      this.radioRegistry.select(this);
     }
   }
 

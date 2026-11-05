@@ -42,20 +42,22 @@ import { Highlight } from 'ngx-highlightjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Appearance {
-  private readonly a11y = inject(BxA11yService);
-  private readonly dimensions = inject(WindowDimensionsService);
+  private readonly bxA11yService = inject(BxA11yService);
+  private readonly windowDimensionsService = inject(WindowDimensionsService);
 
-  protected readonly theme = inject(ThemingService);
+  protected readonly themingService = inject(ThemingService);
 
-  protected readonly appearance: Signal<IBxAppearanceConfig> = this.theme.appearance;
-  protected readonly reducedMotion: Signal<boolean> = this.a11y.isReducedMotion;
+  protected readonly appearance: Signal<IBxAppearanceConfig> = this.themingService.appearance;
+  protected readonly reducedMotion: Signal<boolean> = this.bxA11yService.isReducedMotion;
 
-  protected readonly compactModes: Signal<boolean> = computed(() => this.dimensions.dimensions().width <= this.dimensions.breakpoints.sm);
+  protected readonly compactModes: Signal<boolean> = computed(
+    () => this.windowDimensionsService.dimensions().width <= this.windowDimensionsService.breakpoints.sm
+  );
   protected readonly modes: Signal<readonly IAppearanceChoice<'auto' | DeviceTheme>[]> = computed(() =>
     this.compactModes() ? APPEARANCE_MODES.filter((mode) => mode.value !== 'auto') : APPEARANCE_MODES
   );
   protected readonly selectedMode: Signal<'auto' | DeviceTheme> = computed(() =>
-    this.compactModes() ? this.theme.activeTheme() : (this.theme.applicationTheme() ?? 'auto')
+    this.compactModes() ? this.themingService.activeTheme() : (this.themingService.applicationTheme() ?? 'auto')
   );
   protected readonly translucencyDescription: Signal<'Lighter tint and blur' | 'Balanced tint and blur' | 'Stronger tint and blur'> = computed(() => {
     const value = this.appearance().translucency;
@@ -69,40 +71,40 @@ export class Appearance {
 
   protected readonly qualities: readonly IAppearanceChoice<'auto' | 'baseline' | 'enhanced'>[] = APPEARANCE_QUALITIES;
   protected readonly glassinessModes: readonly IAppearanceChoice<GlassinessMode>[] = GLASSINESS_MODES;
-  protected readonly codeExample: 'const theme = inject(ThemingService);\n\n// Balanced glass throughout the application, including open overlays.\ntheme.setAppearance({ translucency: 0.5 });\n\n// Browser policy for explicitly selected glassy controls.\ntheme.setAppearance({ glassiness: \'auto\' });\n\n// Opaque surfaces are an accessibility preference.\ntheme.setAppearance({ reducedTransparency: true });\n\n// Opt in only the controls that benefit from refraction.\n<button bx-button variant="icon" glassiness="auto">…</button>\n<section bxSurface bxSurfaceGlassiness="auto">…</section>' = `const theme = inject(ThemingService);
+  protected readonly codeExample: 'const themingService = inject(ThemingService);\n\n// Balanced glass throughout the application, including open overlays.\nthemingService.setAppearance({ translucency: 0.5 });\n\n// Browser policy for explicitly selected glassy controls.\nthemingService.setAppearance({ glassiness: \'auto\' });\n\n// Opaque surfaces are an accessibility preference.\nthemingService.setAppearance({ reducedTransparency: true });\n\n// Opt in only the controls that benefit from refraction.\n<button bx-button variant="icon" glassiness="auto">…</button>\n<section bxSurface bxSurfaceGlassiness="auto">…</section>' = `const themingService = inject(ThemingService);
 
 // Balanced glass throughout the application, including open overlays.
-theme.setAppearance({ translucency: 0.5 });
+themingService.setAppearance({ translucency: 0.5 });
 
 // Browser policy for explicitly selected glassy controls.
-theme.setAppearance({ glassiness: 'auto' });
+themingService.setAppearance({ glassiness: 'auto' });
 
 // Opaque surfaces are an accessibility preference.
-theme.setAppearance({ reducedTransparency: true });
+themingService.setAppearance({ reducedTransparency: true });
 
 // Opt in only the controls that benefit from refraction.
 <button bx-button variant="icon" glassiness="auto">…</button>
 <section bxSurface bxSurfaceGlassiness="auto">…</section>`;
 
   protected updateAppearance(settings: Partial<BxAppearanceConfig>): void {
-    this.theme.setAppearance(settings);
+    this.themingService.setAppearance(settings);
   }
 
   protected setMode(mode: DeviceTheme | 'auto'): void {
-    if (this.compactModes() && this.theme.applicationTheme() === null && mode === this.theme.activeTheme()) return;
+    if (this.compactModes() && this.themingService.applicationTheme() === null && mode === this.themingService.activeTheme()) return;
 
-    this.theme.setApplicationTheme(mode === 'auto' ? null : mode);
+    this.themingService.setApplicationTheme(mode === 'auto' ? null : mode);
   }
 
   protected setAutomaticMode(enabled: boolean): void {
-    this.theme.setApplicationTheme(enabled ? null : this.theme.activeTheme());
+    this.themingService.setApplicationTheme(enabled ? null : this.themingService.activeTheme());
   }
 
   protected setMotion(reduce: boolean): void {
-    this.a11y.setReducedMotion(reduce);
+    this.bxA11yService.setReducedMotion(reduce);
   }
 
   protected reset(): void {
-    this.theme.resetAppearance();
+    this.themingService.resetAppearance();
   }
 }

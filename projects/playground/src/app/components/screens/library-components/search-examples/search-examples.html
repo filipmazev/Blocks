@@ -3,9 +3,9 @@
         subscriptSizing="dynamic"
         [label]="{ key: 'searchLabel' }"
         [placeholder]="{ key: 'searchPlaceholder' }"
-        [value]="remote.query()"
-        [loading]="remote.loading()"
-        [loadError]="remote.error()"
+        [value]="mockSearchStore.query()"
+        [loading]="mockSearchStore.loading()"
+        [loadError]="mockSearchStore.error()"
         [loadingLabel]="showLoadingText() ? { key: 'searchLoading' } : undefined"
         [loadingAriaLabel]="{ key: 'searchLoading' }"
         [clearLabel]="{ key: 'searchClear' }"
@@ -13,16 +13,16 @@
         [retryConfig]="retryConfig"
         [readOnly]="readOnly()"
         [disabled]="disabled()"
-        (search)="remote.search($event)"
-        (retry)="remote.search($event)" />
+        (search)="mockSearchStore.search($event)"
+        (retry)="mockSearchStore.search($event)" />
     <div class="search-actions">
         <button
             bx-button
             type="button"
             variant="tonal"
             color="danger"
-            [disabled]="remote.loading() || disabled() || readOnly()"
-            (click)="remote.search(remote.query(), true)">
+            [disabled]="mockSearchStore.loading() || disabled() || readOnly()"
+            (click)="mockSearchStore.search(mockSearchStore.query(), true)">
             Fail this search
         </button>
         <bx-checkbox label="Show loading text" subscriptSizing="dynamic" [checked]="showLoadingText()" (checkedChange)="changeLoadingText($event)" />
@@ -33,20 +33,20 @@
         Requests debounce for 250ms and take 800ms. Type quickly to cancel older requests, or enter an unmatched term for empty results. Failure keeps the last
         successful results. Use Retry request to try the same query again. Enabling Show loading text previews another request.
     </p>
-    <section class="search-results" aria-label="Search results" [attr.aria-busy]="remote.loading()">
-        <p>Last completed search: {{ remote.completedQuery() || 'all components' }} · {{ remote.results().length }} results</p>
+    <section class="search-results" aria-label="Search results" [attr.aria-busy]="mockSearchStore.loading()">
+        <p>Last completed search: {{ mockSearchStore.completedQuery() || 'all components' }} · {{ mockSearchStore.results().length }} results</p>
         <ul>
-            @for (name of remote.results(); track name) {
+            @for (name of mockSearchStore.results(); track name) {
                 <li>{{ name }}</li>
             } @empty {
-                @if (!remote.loading() && !remote.error()) {
+                @if (!mockSearchStore.loading() && !mockSearchStore.error()) {
                     <li role="status">{{ emptyText() }}</li>
                 }
             }
         </ul>
     </section>
     <ul class="search-events" aria-label="Request events">
-        @for (event of remote.requests(); track $index) {
+        @for (event of mockSearchStore.requests(); track $index) {
             <li>{{ event }}</li>
         }
     </ul>

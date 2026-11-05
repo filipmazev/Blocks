@@ -31,8 +31,49 @@ manifest version if the registry is unavailable. Requests abort on destruction o
 3. Run `npm run tools:build-docs`. The generator bundles the Markdown and maps links between release READMEs to their version routes. Starts and builds also
    regenerate documentation.
 
-Keep release content specific to the version. The 1.5.0 beta notes record changes from `f9bf13b2bb6914c26d11639076006bd1dcc5a851` through
-`55b915c819525cfa365d4b59389a765233b2cd35`; they do not track later changes automatically.
+Keep content tied to its documented comparison. The cumulative [1.4.20 Release notes](../../../../../../../documentation/releases/1.4.20/README.md) cover
+`f9bf13b2bb6914c26d11639076006bd1dcc5a851` through `b18ac855a86e7ad9fe77d1d4944f069ccde309ba`, including earlier 1.4 versions without separate notes. The
+[1.5.0 Beta change notes](../../../../../../../documentation/releases/1.5.0/README.md) cover only the subsequent changes through
+`55b915c819525cfa365d4b59389a765233b2cd35`. Neither entry tracks later changes automatically.
+
+## Recommended prerelease workflow
+
+Use **Change notes** as the umbrella term, with **Draft change notes** for unpublished work, **Alpha/Beta change notes** for published previews, and **Release
+notes** for stable publications. Publication status and channel are independent: a published Alpha is still a preview, while an unpublished stable target is
+still a draft. Existing routes and metadata names can remain compatible.
+
+For future work, choose the intended stable version first and increment a numeric prerelease counter:
+
+```text
+1.6.0-alpha.1 → 1.6.0-alpha.2 → 1.6.0-beta.1 → 1.6.0 → 1.6.1
+```
+
+The counter records preview iterations; the patch number records changes to a released version. Under
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html), `1.5.20-alpha.1` sorts after `1.5.0`, so it is unsuitable as an iteration toward 1.5.0. For
+backward-compatible features following the existing 1.5 publications, 1.6.0 is a suitable target; incompatible public API changes require a major version.
+Select the target according to the changes from the previous stable API, rather than the number of previews.
+
+The current automatic resolver still increments the patch number. To use a fixed target with this tooling, explicitly set `release.config.json.nextVersion` for
+each preview, such as `1.6.0-alpha.1`, then `1.6.0-alpha.2`, with `publishConfig.tag: 'alpha'`. For stable publication, assign `1.6.0` and use `latest`. Leaving
+the target null returns to the current patch-increment behavior; counter automation would be a separate tooling change.
+
+Npm [distribution tags](https://docs.npmjs.com/adding-dist-tags-to-packages/) are movable install aliases, separate from the exact package version. Older Blocks
+publications used bare versions under preview tags: `1.5.0` was published as Beta and `1.5.2` as Alpha. Preserve those exact versions and permanent note URLs.
+Moving a tag cannot rename an artifact or make an existing version available for a different package; npm
+[does not allow reusing a published name/version](https://docs.npmjs.com/cli/v11/commands/npm-publish/).
+
+### Comparing previews and stable releases
+
+- Draft notes accumulate the work planned for their exact target and remain visibly unpublished.
+- Each published preview records the delta from the previous preview, or from the previous stable version for the first preview. Preserve its source commits and
+  permanent URL after publication.
+- Stable release notes summarize all user-relevant changes since the previous stable release, including work already described across previews. Consolidate
+  duplicate entries, remove reverted work, and include migration guidance. Comparing only the final preview with stable would omit most of the release.
+- Stable patch notes compare with the preceding stable patch.
+
+If the intended stable target changes, move unpublished draft content to the new target and update its metadata. Keep published preview notes at their original
+versions, link them to the eventual stable notes, and include their relevant changes in the stable summary. Recheck all source comparisons against the actual
+published artifacts; a change in channel does not establish a new baseline.
 
 ## Appearance and accessibility
 

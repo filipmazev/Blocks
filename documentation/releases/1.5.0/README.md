@@ -1,105 +1,90 @@
-# Blocks 1.5.0
+# Blocks 1.5.0 Beta change notes
 
-Blocks has grown from separate core and modal libraries into a unified Angular UI library with shared theming, forms, navigation, notifications, icons and
-appearance effects.
+Published October 31, 2026 on the Beta channel. The exact NPM package version is `1.5.0`, without a `-beta` suffix. Install this historical version with
+`npm install @filip.mazev/blocks@1.5.0`.
 
-These notes cover the library, its documentation and installation schematic. They compare `f9bf13b2bb6914c26d11639076006bd1dcc5a851` with
-`55b915c819525cfa365d4b59389a765233b2cd35`.
+[View version 1.5.0 on NPM](https://www.npmjs.com/package/@filip.mazev/blocks/v/1.5.0).
 
-## Unified package and installation
+This version adds top navigation, editable autocomplete, layout and feedback primitives, interactive popovers, platform-aware shortcuts and refined surface
+interaction. These notes cover only the changes after [1.4.20](../1.4.20/README.md), from `b18ac855a86e7ad9fe77d1d4944f069ccde309ba` through
+`55b915c819525cfa365d4b59389a765233b2cd35`, NPM's recorded 1.5.0 source commit. The unified package, Angular 22 upgrade, semantic themes, existing forms,
+notifications and initial glass runtime are documented in the cumulative 1.4.20 notes.
 
-- Consolidated `@filip.mazev/blocks-core` and `@filip.mazev/modal` into `@filip.mazev/blocks`.
-- Added dedicated public entry points for `core`, `forms`, `primitives`, `navigation`, `icons`, `modal`, `toastr` and `effects`.
-- Added an interactive `ng add @filip.mazev/blocks` schematic with palette selection, global Sass configuration and effects stylesheet registration.
-- Updated Angular peer dependencies from Angular 21 to Angular 22.
+## Top navigation and shared navigation behavior
 
-## Theming and customization
+- Added `TopNav` with a horizontal menubar, a responsive compact presentation and one shared submenu/search panel.
+- Added `bxTopNavBrand` and `bxTopNavActions` template slots, custom item content and typed `ITopNavConfig`, `ITopNavSlotContext` and shared navigation
+  contracts.
+- Added `compactBreakpoint` (default `lg`), an explicit `compact` override, sticky positioning and panel dimensions. Content overflow also switches to compact
+  navigation, keeping essential links reachable as translations, slots, fonts, zoom or available width change.
+- Shared hierarchical browsing, flat contextual search, active-route selection, translated labels and focus/scroll restoration between top and side navigation.
+- Added clickable ancestor paths that browse a level without navigating away; the current parent's heading remains a page link.
+- After selecting a search result, clearing search now opens its containing submenu and scrolls the selected row into view while keeping search-field focus.
+  Clearing without a successful selection restores the previous browsing location.
+- Added RTL-aware horizontal arrow navigation, Home/End and roving tab stops to the shared menu keyboard helper.
+- Removed floating search guides. The retained `showSearchGuide` option is deprecated and ignored; former guide CSS variables have no effect.
+- Updated the playground toolbar to use `TopNav`, with responsive examples and shared English, Spanish, French and German navigation fixtures.
 
-- Reworked theming around semantic roles for backgrounds, text, borders, primary and accent colors, and status feedback.
-- Added typed color contracts, including `SemanticColorToken`, palette shade tokens and light/dark `ThemedColor` configurations.
-- Introduced seven duo-tone palettes: Carbon / Cobalt, Azure / Ember, Violet / Teal, Tangerine / Indigo, Brick Rose / Cyan, Lime / Violet and Cyberpunk.
-- Expanded `ThemingService` with runtime palette selection, high-contrast controls, appearance configuration and persisted preferences.
-- Added shared styling utilities and component CSS variables for more consistent customization of spacing, typography, surfaces and interaction states.
-- Preserved the connection between responsive Sass mixins and `WindowDimensionsService` breakpoints.
+## Editable autocomplete
 
-See the [appearance guide](../../../projects/playground/src/app/components/screens/appearance/README.md) for the current palettes and application-wide
-configuration.
+- Added `Autocomplete`, `IAutocompleteOption` and `IAutocompleteOptionContext` through the forms entry point.
+- Added a `string | null` value model with valid free text, optional suggestions, disabled options and customizable option templates.
+- Added optional inline completion that remains uncommitted until accepted, keyboard selection, IME-aware editing and a clear action.
+- Reused the existing form-field, validation, disabled/readonly, translation and Angular forms integration contracts.
+- Added application-owned query/search/loading/error state and external filtering. Pagination reuses `LoadMoreDirective`, including retained-content failure,
+  explicit retry and the reachable action when there is no scrollbar.
+- Added delayed playground requests demonstrating search, empty results, incremental loading, failure and successful retry, with page-size controls.
 
-## Glass, physics and lighting
+## Layout, feedback and disclosure primitives
 
-- Added a shared glass material across components and overlays, configurable globally through `ThemingService.setAppearance()`.
-- Added adjustable glassiness, automatic/baseline/enhanced rendering quality and reduced-transparency settings.
-- Added `BxSurfaceDirective` for applying Blocks materials to application-owned surfaces, with local appearance and interaction overrides.
-- Introduced spring-based press feedback and spatial lighting that responds to hover, press, keyboard focus and selected states.
-- Added ambient edge tinting from nearby content, with depth and occlusion handling that respects overlay boundaries.
-- Added opaque fallbacks for forced colors, reduced transparency and unsupported backdrop filters.
-- Exposed a framework-independent DOM effects runtime through `@filip.mazev/blocks/effects/runtime`.
+- Added `Card`, `Container`, `Stack`, `Grid` and `Divider`, with semantic surfaces, responsive layout settings and component CSS variables.
+- Added `Alert`, also available as `bx-banner`, with semantic tones, projected actions, optional announcements, dismissal and focus restoration.
+- Added alert emission controls that reuse the shared lighting engine and respect scene boundaries.
+- Added interactive `Chip` with controlled selection, activation and removal events, separate remove actions and disabled/readonly behavior.
+- Added `Collapsible` and coordinated `Accordion` expansion, keyboard-accessible headers and reduced-motion behavior.
+- Added `Skeleton` with configurable shapes and animation that respects reduced motion.
+- Added colocated guides and reachable playground examples for the new primitives.
 
-## Forms and controls
+## Interactive popovers and menu overlays
 
-- Added buttons, form fields, text and numeric inputs, multiline inputs, search inputs, checkboxes, radio buttons and groups, switches, selects, multiselects,
-  autocomplete and sliders.
-- Added integration with Angular Signal Forms, Reactive Forms, template-driven forms and standalone value models.
-- Introduced shared validation presentation with configurable error messages, priorities, visibility policies, projected errors and application defaults.
-- Added composable prefixes, suffixes, hints, required markers, floating labels and filled/outlined field appearances.
-- Added native-control integration through `bxInput` and an extension contract for custom form-field controls.
-- Added distinct readonly behavior through both `readOnly` and Angular's lowercase `readonly` contract.
-- Added numeric parse-state handling, keyboard-accessible steppers, textarea autosizing and native input attribute forwarding.
+- Added `Popover`, `PopoverDirective`, `IPopoverConfig` and `BX_POPOVER_DEFAULTS` for interactive help, compact forms and contextual content.
+- Added nonmodal dialog semantics, configurable placement and dismissal, optional autofocus, translated accessible names and trigger-focus restoration.
+- Kept popover content scrollable within the viewport, with live theme inheritance and existing overlay/top-layer support.
+- Added `MenuTriggerDirective.menuPlacement` for dropdown placement while retaining side-aligned submenu defaults.
+- Added `menuClosing`, emitted before overlay detachment so navigation owners can preserve scroll and focus context.
+- Updated overlay theme inheritance to observe direction changes and propagate `dir` to mounted panels.
 
-## Asynchronous selection and pagination
+## Platform-aware keyboard shortcuts
 
-- Added application-owned loading, searching, error and pagination state to selection controls.
-- Added searchable multiselects with tag presentation, overflow summaries, configurable templates and explicit select-all intent.
-- Added editable autocomplete with free-text values, optional inline completion, custom option templates and externally filtered suggestions.
-- Introduced reusable `LoadMoreDirective` behavior with guarded scroll requests, a visible fallback action when content does not overflow, and explicit retry.
-- Distinguished scroll, button and retry request sources.
-- Added retained-content error states and separate feedback for initial loading, replacement searches and incremental loading.
+- Expanded `BxShortcutService` with platform selection, normalized display tokens, `toAriaKeyshortcuts()` and application-owned event matching through
+  `matches()`.
+- Added portable `mod` combinations, common key aliases and explicit iOS/Android overrides through `IOSShortcut`, alongside `ShortcutPlatform` and
+  `IShortcutMatchOptions`.
+- Ignored handled, composing and AltGraph events, plus repeated keys and editable targets by default. Applications can explicitly allow repeat/editable matches.
+- Added valid `aria-keyshortcuts` metadata to menu items. Shortcut hints do not register global handlers; applications retain ownership of actions and scopes.
+- Improved iPadOS desktop-user-agent detection and desktop/mobile operating-system classification.
 
-## Primitives and overlays
+## Press feedback, lighting and form presentation
 
-- Added cards, containers, stacks, grids, dividers, alerts, chips, tags, collapsibles and accordions.
-- Added loading indicators, spinners, skeletons and determinate/indeterminate progress bars.
-- Added tabs with controlled selection, disabled states, per-tab colors and icons, keyboard navigation and lazy content templates.
-- Added menus, cascading submenus, dropdowns, context menus, tooltips and interactive popovers.
-- Added shared overlay positioning, live theme inheritance, keyboard dismissal and focus behavior for the new overlay controls.
-- Added `TruncateDirective`, `TruncatedTextPipe` and `truncatedText()` for reusable overflow detection and conditional tooltips.
-- Added configurable automatic truncation tooltips across supported controls.
-
-## Navigation
-
-- Added `NavigationService`, route metadata helpers, breadcrumbs and shared navigation configuration.
-- Added `defineNavigation()` with typed section IDs and reusable route declarations.
-- Added route-driven side navigation and top navigation with shared hierarchical browsing, contextual search and active-route handling.
-- Added compact side rails, responsive mobile drawers, configurable slots and persisted desktop navigation state.
-- Added access-adapter filtering, translated navigation metadata and focus/scroll restoration when navigating submenu levels.
-
-## Icons and notifications
-
-- Added Lucide SVG icon integration with asynchronous loading, typed names, configurable sizing and stroke width, and semantic colors.
-- Added custom icon definition helpers and decorative/meaningful icon semantics.
-- Added `ToastrService` with standard information, success, warning and danger notifications, plus custom content.
-- Added six notification positions, configurable duration, progress indicators, swipe dismissal, pause/resume controls and typed close results.
-- Added shared notification defaults and theme-aware notification surfaces.
-
-## Accessibility, translations and developer experience
-
-- Added `BxA11yService` for reactive reduced-motion preferences and application overrides.
-- Added optional `BX_I18N` integration and shared `ResolvableText` contracts for configurable text.
-- Added reactive translation updates through the adapter's version signal.
-- Added keyboard interaction, focus presentation, accessible labels, validation descriptions and RTL behavior across the new components.
-- Expanded public configuration interfaces, template customization points and component documentation.
+- Refined shared pressure feedback with a soft inset sheen and button-content compression while keeping hit areas, layout and overlay origins fixed.
+- Added a visible initial response for quick taps and cleanup on cancellation, key release, focus loss, hidden documents and teardown. Reduced motion uses
+  static feedback, and touch hover does not remain latched.
+- Kept editable fields illuminated for pointer focus while ordinary actions use keyboard focus. Expanded popup triggers retain light; plain layout expansion
+  alone does not mark a control selected.
+- Changed explicit scene-light selection to rank all eligible sources by visible contribution per receiver, with at most four selected lights, rather than
+  taking the first four registered sources.
+- Exposed `getGlassLightRoot()` for resolving existing light-scope boundaries.
+- Aligned checkbox/radio presentation and radio subscript sizing with shared form defaults, and reused common caret and opaque option-panel styling for Select
+  and Autocomplete.
 
 ## Migration notes
 
-| Previous API or setup                   | Current replacement                                        |
-| --------------------------------------- | ---------------------------------------------------------- |
-| `@filip.mazev/blocks-core` imports      | `@filip.mazev/blocks/core`                                 |
-| `@filip.mazev/modal` imports            | `@filip.mazev/blocks/modal`                                |
-| Deep Sass imports from the old packages | `@use '@filip.mazev/blocks' as *;`                         |
-| `core-theme(...)` and legacy theme maps | `bx-theme(...)` with a current palette map                 |
-| Custom `--fm-*` theme overrides         | Review and migrate to the current `--bx-*` semantic tokens |
-| Modal `bannerText`                      | `header: { text: ... }`, with optional icon configuration  |
-| Angular 21 applications                 | Upgrade to Angular 22                                      |
+Existing 1.4.20 package imports, Angular 22 peer requirements, theme setup and effects stylesheet registration remain applicable. New components are available
+through the existing public entry points.
 
-For manual installation, register `@filip.mazev/blocks/effects/effects.css` once alongside the global Blocks theme. The installation schematic configures this
-automatically.
+Remove dependencies on side-navigation search guides and their CSS variables. `showSearchGuide` remains accepted for compatibility but no longer changes the
+rendered navigation. Shortcut combinations use arrays such as `['mod', 'k']`; plain strings remain single display tokens. Continue handling shortcut actions in
+the application, using `BxShortcutService.matches()` where needed.
+
+The Beta channel describes this historical publication's intended maturity. Because `1.5.0` was already published as an exact version, it cannot later identify
+a different stable package. Future prereleases should use a suffix such as `1.6.0-beta.1`, following [Semantic Versioning](https://semver.org/spec/v2.0.0.html).

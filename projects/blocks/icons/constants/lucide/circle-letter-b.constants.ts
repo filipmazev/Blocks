@@ -1,0 +1,7 @@
+import { defineIcon } from '@icons/helpers/define-icon.helpers';
+
+export const lucideCircleLetterB = defineIcon({
+  name: 'circle-letter-b',
+  viewBox: '0 0 24 24',
+  svgContent: `<path d="M9 12h4.846a2.24 2.24 0 011.523.586 2 2 0 01.001 2.828 2.24 2.24 0 01-1.524.586H9.5a.5.5 0 01-.5-.5v-7a.5.5 0 01.5-.5H13a2 2 0 010 4" /><circle cx="12" cy="12" r="10" />`
+} as const);

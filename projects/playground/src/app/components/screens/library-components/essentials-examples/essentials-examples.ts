@@ -3,7 +3,7 @@ import type { InputSignal, Signal, WritableSignal } from '@angular/core';
 import { afterNextRender, ChangeDetectionStrategy, Component, effect, inject, Injector, input, signal, viewChildren } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import type { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import type { BxSelectOption } from '@forms/types/select-option.types';
 
 import { Color } from '@filip.mazev/blocks/core';
 import { Autocomplete, Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
@@ -58,7 +58,7 @@ import { AutocompleteDemoService } from '@playground/components/screens/library-
 export class EssentialsExamples {
   private readonly injector = inject(Injector);
 
-  protected readonly remote = inject(AutocompleteDemoService);
+  protected readonly autocompleteDemoService = inject(AutocompleteDemoService);
 
   private readonly chips: Signal<readonly Chip[]> = viewChildren(Chip);
 
@@ -93,7 +93,7 @@ export class EssentialsExamples {
 
   constructor() {
     effect(() => {
-      if (this.example() === 'autocomplete') this.remote.search('');
+      if (this.example() === 'autocomplete') this.autocompleteDemoService.search('');
     });
   }
 

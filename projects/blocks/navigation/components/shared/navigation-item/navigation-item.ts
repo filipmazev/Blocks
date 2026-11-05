@@ -7,8 +7,8 @@ import { RouterLink } from '@angular/router';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { Tag, TooltipDirective } from '@filip.mazev/blocks/primitives';
 
-import { NavigationStateService } from '@navigation/components/shared/services/navigation-state.service';
 import { INavigationItem } from '@navigation/interfaces/inavigation-item.interface';
+import { NavigationStateService } from '@navigation/services/navigation-state.service';
 
 @Component({
   selector: 'bx-navigation-item',
@@ -19,26 +19,35 @@ import { INavigationItem } from '@navigation/interfaces/inavigation-item.interfa
   host: { role: 'none' }
 })
 export class NavigationItem {
-  protected readonly state = inject(NavigationStateService);
+  protected readonly navigationStateService = inject(NavigationStateService);
 
-  protected readonly active: Signal<boolean> = computed(() => this.state.activeItem()?.id === this.item().id);
-  protected readonly ancestor: Signal<boolean> = computed(() => this.horizontal() && !this.active() && this.state.activeIds().has(this.item().id));
-  protected readonly current: Signal<boolean> = computed(() => this.state.isCurrent(this.item()));
-  protected readonly side: Signal<'left' | 'right'> = computed(() => (this.state.config().side === 'right' ? 'left' : 'right'));
+  protected readonly active: Signal<boolean> = computed(() => this.navigationStateService.activeItem()?.id === this.item().id);
+  protected readonly ancestor: Signal<boolean> = computed(
+    () => this.horizontal() && !this.active() && this.navigationStateService.activeIds().has(this.item().id)
+  );
+  protected readonly current: Signal<boolean> = computed(() => this.navigationStateService.isCurrent(this.item()));
+  protected readonly side: Signal<'left' | 'right'> = computed(() => (this.navigationStateService.config().side === 'right' ? 'left' : 'right'));
   protected readonly expanded: Signal<boolean> = computed(
-    () => (this.state.inlineLevels() || this.state.submenuVisible()) && this.state.trail().some((item) => item.id === this.item().id)
+    () =>
+      (this.navigationStateService.inlineLevels() || this.navigationStateService.submenuVisible()) &&
+      this.navigationStateService.trail().some((item) => item.id === this.item().id)
   );
 
+  /** Navigation item rendered by this row. Required input. */
   public readonly item: InputSignal<INavigationItem> = input.required<INavigationItem>();
+  /** Whether this navigation row uses the compact rail presentation. Defaults to `false`. */
   public readonly compact: InputSignal<boolean> = input(false);
+  /** Whether this row participates in a horizontal navigation bar. Defaults to `false`. */
   public readonly horizontal: InputSignal<boolean> = input(false);
+  /** Whether the row is rendered inside the current submenu level. Defaults to `false`. */
   public readonly inLevel: InputSignal<boolean> = input(false);
+  /** Resolved navigation-row context for search paths and custom presentation. Defaults to `''`. */
   public readonly context: InputSignal<string> = input('');
 
   protected select(event: MouseEvent): void {
     if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
 
-    this.state.select(this.item());
+    this.navigationStateService.select(this.item());
   }
 
   protected expand(event: MouseEvent | KeyboardEvent): void {
@@ -47,7 +56,7 @@ export class NavigationItem {
 
     if (this.item().data?.disabled) return;
 
-    this.state.expansionRequested.next({
+    this.navigationStateService.expansionRequested.next({
       item: this.item(),
       origin: event.currentTarget as HTMLElement,
       keyboard: event instanceof KeyboardEvent || event.detail === 0,

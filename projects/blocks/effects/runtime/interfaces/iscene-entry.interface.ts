@@ -1,4 +1,4 @@
-import type { IGlassSceneOptions } from '@effects/runtime/types';
+import type { IGlassSceneOptions } from '@effects/runtime/types/runtime.types';
 
 /**
  * Describes the scene entry contract.

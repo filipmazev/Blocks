@@ -14,7 +14,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 })
 export class Tooltip {
   private readonly i18n = inject(BX_I18N, { optional: true });
-  private readonly a11y = inject(BxA11yService);
+  private readonly bxA11yService = inject(BxA11yService);
 
   protected readonly resolvedText: Signal<string | undefined> = computed(() => {
     this.i18n?.version?.();
@@ -30,7 +30,9 @@ export class Tooltip {
     return textData;
   });
 
-  public readonly isAnimated: Signal<boolean> = computed(() => !this.a11y.isReducedMotion());
+  /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */
+  public readonly isAnimated: Signal<boolean> = computed(() => !this.bxA11yService.isReducedMotion());
 
+  /** Text content displayed by the component. Required input. */
   public readonly text: InputSignal<ResolvableText> = input.required<ResolvableText>();
 }

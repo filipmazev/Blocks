@@ -3,7 +3,7 @@ import { ComponentRef, Type } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ModalConfig } from '@modal/classes/modal-config';
-import { ModalCore } from '@modal/components/modal-core';
+import { ModalCore } from '@modal/components/modal-core/modal-core';
 import { ModalState } from '@modal/enums/modal-state.enum';
 
 import { IModal } from './imodal.interface';

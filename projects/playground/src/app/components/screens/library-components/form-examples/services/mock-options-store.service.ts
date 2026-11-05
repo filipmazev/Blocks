@@ -8,7 +8,7 @@ import { MockFormsApi } from './mock-forms-api.service';
 
 @Injectable()
 export class MockOptionsStore {
-  private readonly api = inject(MockFormsApi);
+  private readonly mockFormsApi = inject(MockFormsApi);
 
   public readonly options: WritableSignal<readonly IBxSelectOption<string>[]> = signal<readonly IBxSelectOption<string>[]>([]);
 
@@ -59,7 +59,7 @@ export class MockOptionsStore {
     this.record(`${request.source}: requesting ${this.pageSize()} items at offset ${this.options().length}`);
 
     try {
-      const page = await this.api.options(this.query(), this.options().length, this.pageSize(), fail, controller.signal);
+      const page = await this.mockFormsApi.options(this.query(), this.options().length, this.pageSize(), fail, controller.signal);
 
       if (id !== this.requestId) return;
 

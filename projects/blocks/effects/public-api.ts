@@ -1,5 +1,5 @@
 /** Angular bindings for the framework-independent Blocks glass engine. */
-export * from '@effects/directives/surface.directive';
+export * from '@effects/directives/surface/surface.directive';
 export type { SurfaceOptions } from '@filip.mazev/blocks/effects/runtime';
-export * from './component-surface';
-export * from './lighting.service';
+export * from '@effects/helpers/component-surface.helpers';
+export * from '@effects/services/lighting.service';

@@ -1,5 +1,5 @@
 <article class="release-page">
-    @if (releases.unpublished()) {
+    @if (packageReleaseService.unpublished()) {
         <bx-alert class="unpublished-banner" tone="info" announcement="polite" [message]="unpublishedMessage" [dismissible]="false" />
     }
     <header class="page-heading">

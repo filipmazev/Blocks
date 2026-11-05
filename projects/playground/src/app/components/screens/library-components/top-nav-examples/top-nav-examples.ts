@@ -23,10 +23,10 @@ import { NavigationDemoI18nService } from '@playground/components/screens/librar
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopNavExamples {
-  protected readonly translations = inject(NavigationDemoI18nService);
+  protected readonly navigationDemoI18nService = inject(NavigationDemoI18nService);
 
   protected readonly groups: Signal<INavigationTreeGroup[]> = computed(() => {
-    const groups = navigationDemoGroups('/components/top-nav', this.translations);
+    const groups = navigationDemoGroups('/components/top-nav', this.navigationDemoI18nService);
 
     return groups.map((group) =>
       group.id !== 'workspace'
@@ -61,32 +61,32 @@ export class TopNavExamples {
   protected readonly action: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
   protected readonly text: Signal<ITopNavExamplesTextState> = computed(() => ({
-    compact: this.translations.translate('top.compact'),
-    width: this.translations.translate('top.width'),
-    icons: this.translations.translate('top.icons'),
-    sticky: this.translations.translate('top.sticky'),
-    custom: this.translations.translate('top.custom'),
-    actions: this.translations.translate('top.actions'),
-    search: this.translations.translate('demo.search'),
-    rtl: this.translations.translate('demo.rtl'),
-    language: this.translations.translate('demo.language'),
-    brand: this.translations.translate('demo.studio'),
-    title: this.translations.translate('top.title'),
-    description: this.translations.translate('top.description'),
-    compactMode: this.translations.translate('top.modeCompact'),
-    expandedMode: this.translations.translate('top.modeExpanded'),
-    settings: this.translations.translate('top.settings'),
-    help: this.translations.translate('top.help')
+    compact: this.navigationDemoI18nService.translate('top.compact'),
+    width: this.navigationDemoI18nService.translate('top.width'),
+    icons: this.navigationDemoI18nService.translate('top.icons'),
+    sticky: this.navigationDemoI18nService.translate('top.sticky'),
+    custom: this.navigationDemoI18nService.translate('top.custom'),
+    actions: this.navigationDemoI18nService.translate('top.actions'),
+    search: this.navigationDemoI18nService.translate('demo.search'),
+    rtl: this.navigationDemoI18nService.translate('demo.rtl'),
+    language: this.navigationDemoI18nService.translate('demo.language'),
+    brand: this.navigationDemoI18nService.translate('demo.studio'),
+    title: this.navigationDemoI18nService.translate('top.title'),
+    description: this.navigationDemoI18nService.translate('top.description'),
+    compactMode: this.navigationDemoI18nService.translate('top.modeCompact'),
+    expandedMode: this.navigationDemoI18nService.translate('top.modeExpanded'),
+    settings: this.navigationDemoI18nService.translate('top.settings'),
+    help: this.navigationDemoI18nService.translate('top.help')
   }));
   protected readonly selection: Signal<string> = computed(() => {
     const item = this.selected();
     const action = this.action();
 
     return action
-      ? this.translations.translate(action)
+      ? this.navigationDemoI18nService.translate(action)
       : item
-        ? `${this.translations.translate(`nav.${item.id}`)} · ${item.id}`
-        : this.translations.translate('demo.select');
+        ? `${this.navigationDemoI18nService.translate(`nav.${item.id}`)} · ${item.id}`
+        : this.navigationDemoI18nService.translate('demo.select');
   });
   protected readonly config: Signal<ITopNavConfig> = computed<ITopNavConfig>(() => ({
     position: this.sticky() ? 'sticky' : 'inline',

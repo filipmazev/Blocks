@@ -66,6 +66,7 @@ module.exports = [
       'blocks/member-spacing': 'error',
       'blocks/block-indentation': 'error',
       'blocks/explicit-property-types': 'error',
+      'blocks/injected-reference-names': 'error',
       'blocks/modern-angular-apis': 'error',
       'blocks/helpers-regions': 'error',
       'blocks/ordered-imports': ['error', { groups: IMPORT_GROUPS }],
@@ -95,7 +96,7 @@ module.exports = [
   },
   {
     files: ['projects/blocks/**/*.ts'],
-    rules: { 'blocks/documented-interfaces': 'error' }
+    rules: { 'blocks/documented-interfaces': 'error', 'blocks/documented-public-api': 'error', 'blocks/declaration-layout': 'error' }
   },
   {
     files: ['projects/**/*.ts'],

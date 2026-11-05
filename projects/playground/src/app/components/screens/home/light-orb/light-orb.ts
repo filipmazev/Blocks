@@ -43,10 +43,10 @@ const ribbonSamples = Array.from({ length: 25 }, (_, i) => {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LightOrb {
-  private readonly zone = inject(NgZone);
+  private readonly ngZone = inject(NgZone);
 
-  protected readonly theme = inject(ThemingService);
-  protected readonly reducedMotion = inject(BxA11yService).isReducedMotion;
+  protected readonly themingService = inject(ThemingService);
+  protected readonly isReducedMotion = inject(BxA11yService).isReducedMotion;
 
   private readonly physics: LightOrbPhysics = new LightOrbPhysics();
 
@@ -66,7 +66,7 @@ export class LightOrb {
   protected readonly mood: WritableSignal<OrbMood> = signal<OrbMood>('primary');
 
   protected readonly message: Signal<string> = computed(() => {
-    if (this.state() === 'asleep') return `A little light lives in your ${this.theme.paletteLabel().toLowerCase()} theme.`;
+    if (this.state() === 'asleep') return `A little light lives in your ${this.themingService.paletteLabel().toLowerCase()} theme.`;
 
     if (this.mood() === 'danger') return 'Too many throws. Someone is cross.';
 
@@ -83,7 +83,7 @@ export class LightOrb {
     return 'Curious? Catch it. Be kind.';
   });
 
-  public readonly showWakeHint: Signal<boolean> = computed(() => this.ready() && this.state() === 'asleep' && !this.reducedMotion());
+  public readonly showWakeHint: Signal<boolean> = computed(() => this.ready() && this.state() === 'asleep' && !this.isReducedMotion());
 
   public readonly stage: InputSignal<HTMLElement> = input.required<HTMLElement>();
   public readonly cards: InputSignal<HTMLElement> = input.required<HTMLElement>();
@@ -272,16 +272,16 @@ export class LightOrb {
   };
 
   constructor() {
-    afterNextRender(() => this.zone.runOutsideAngular(() => this.initialize()));
+    afterNextRender(() => this.ngZone.runOutsideAngular(() => this.initialize()));
     effect(() => {
-      this.theme.palette();
-      this.theme.activeTheme();
+      this.themingService.palette();
+      this.themingService.activeTheme();
       this.colorsDirty = true;
-      this.zone.runOutsideAngular(() => this.start(true));
+      this.ngZone.runOutsideAngular(() => this.start(true));
     });
     effect(() => {
-      this.motionEnabled = !this.reducedMotion();
-      this.zone.runOutsideAngular(() => {
+      this.motionEnabled = !this.isReducedMotion();
+      this.ngZone.runOutsideAngular(() => {
         if (!this.view) return;
 
         if (!this.motionEnabled) {

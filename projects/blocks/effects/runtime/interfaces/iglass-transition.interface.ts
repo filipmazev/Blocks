@@ -1,4 +1,4 @@
-import type { MotionResult } from '@effects/runtime/types';
+import type { MotionResult } from '@effects/runtime/types/runtime.types';
 /**
  * Describes the glass transition contract.
  */

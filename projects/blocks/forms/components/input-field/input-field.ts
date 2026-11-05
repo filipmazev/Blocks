@@ -10,9 +10,9 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
 
+import { BxValueControl } from '@forms/classes/bx-value-control';
 import { FormField } from '@forms/components/form-field/form-field';
-import { numericConstraint } from '@forms/components/input-field/helpers/numeric-constraint.helpers';
-import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
+import { numericConstraint } from '@forms/helpers/numeric-constraint.helpers';
 import { InputFieldTypes } from '@forms/types/form.types';
 
 @Component({
@@ -66,28 +66,45 @@ export class InputField extends BxValueControl<string | number> {
   protected readonly resolvedDecreaseLabel: Signal<string> = computed(() => resolveText(this.decreaseLabel(), this.i18n));
   protected readonly resolvedIncreaseLabel: Signal<string> = computed(() => resolveText(this.increaseLabel(), this.i18n));
 
+  /** Native input type used by the text field. Defaults to `'text'`. */
   public readonly type: InputSignal<InputFieldTypes> = input<InputFieldTypes>('text');
+  /** Minimum permitted numeric or range value. Optional; omission leaves the value undefined. */
   public readonly min: InputSignalWithTransform<number | undefined, string | number | undefined> = input<number | undefined, string | number | undefined>(
     undefined,
     { transform: numericConstraint }
   );
+  /** Maximum permitted numeric or range value. Optional; omission leaves the value undefined. */
   public readonly max: InputSignalWithTransform<number | undefined, string | number | undefined> = input<number | undefined, string | number | undefined>(
     undefined,
     { transform: numericConstraint }
   );
+  /** Minimum permitted text length for native validation. Optional; omission leaves the value undefined. */
   public readonly minLength: InputSignal<number | undefined> = input<number | undefined>(undefined);
+  /** Maximum permitted text length for native validation. Optional; omission leaves the value undefined. */
   public readonly maxLength: InputSignal<number | undefined> = input<number | undefined>(undefined);
+  /** Native validation pattern applied to the input. Defaults to an empty array. */
   public readonly pattern: InputSignal<readonly RegExp[]> = input<readonly RegExp[]>([]);
+  /** Increment used for numeric adjustments and range selection. Defaults to `1`. */
   public readonly step: InputSignal<number | 'any'> = input<number | 'any'>(1);
+  /** Native browser autocomplete hint forwarded to the underlying text input. Optional; omission leaves the value undefined. */
   public readonly autocomplete: InputSignal<string | undefined> = input<string | undefined>(undefined);
+  /** Native virtual-keyboard hint forwarded to the input. Optional; omission leaves the value undefined. */
   public readonly inputmode: InputSignal<string | undefined> = input<string | undefined>(undefined);
+  /** Whether native browser spell checking is enabled. Defaults to `true`. */
   public readonly spellcheck: InputSignal<boolean> = input(true);
+  /** Whether the control renders a textarea instead of a single-line input. Defaults to `false`. */
   public readonly multiline: InputSignal<boolean> = input(false);
+  /** Initial visible textarea row count. Defaults to `3`. */
   public readonly rows: InputSignal<number> = input(3);
+  /** Whether textarea height follows its content within the configured row limits. Defaults to `true`. */
   public readonly autosize: InputSignal<boolean> = input(true);
+  /** Minimum visible row count when textarea autosizing is enabled. Defaults to `2`. */
   public readonly minRows: InputSignal<number> = input(2);
+  /** Maximum visible row count when textarea autosizing is enabled. Defaults to `8`. */
   public readonly maxRows: InputSignal<number> = input(8);
+  /** Accessible name of the numeric decrement action; supports shared translation keys. Defaults to `'Decrease value'`. */
   public readonly decreaseLabel: InputSignal<ResolvableText> = input<ResolvableText>('Decrease value');
+  /** Accessible name of the numeric increment action; supports shared translation keys. Defaults to `'Increase value'`. */
   public readonly increaseLabel: InputSignal<ResolvableText> = input<ResolvableText>('Increase value');
 
   private composing: boolean = false;
@@ -99,6 +116,7 @@ export class InputField extends BxValueControl<string | number> {
     inject(DestroyRef).onDestroy(() => this.stopSpin());
   }
 
+  /** Reset interaction and temporary numeric input state and stop any held spinner action. */
   public override reset(): void {
     super.reset();
     this.editingRaw.set(undefined);
@@ -106,6 +124,12 @@ export class InputField extends BxValueControl<string | number> {
     this.stopSpin();
   }
 
+  /**
+   * Apply a numeric step and begin held-button repetition when editing is allowed.
+   *
+   * @param direction - Step direction: positive increments and negative decrements.
+   * @param event - Pointer event used to capture the held spinner action.
+   */
   public startSpin(direction: number, event: Event): void {
     event.preventDefault();
 
@@ -117,6 +141,7 @@ export class InputField extends BxValueControl<string | number> {
     }, 400);
   }
 
+  /** Stop any held numeric-spinner repetition and clear its pending timers. */
   public stopSpin(): void {
     clearTimeout(this.spinTimeout);
     clearInterval(this.spinInterval);

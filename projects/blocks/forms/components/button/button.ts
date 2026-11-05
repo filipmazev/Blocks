@@ -21,7 +21,7 @@ import { injectComponentSurface } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
-import { ButtonIconDirective } from '@forms/components/button/directives/button-icon.directive';
+import { ButtonIconDirective } from '@forms/directives/button-icon/button-icon.directive';
 import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
 
 @Component({
@@ -44,7 +44,7 @@ import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
   }
 })
 export class Button {
-  private readonly a11y = inject(BxA11yService);
+  private readonly bxA11yService = inject(BxA11yService);
 
   private readonly projectedIcon: Signal<Icon | undefined> = contentChild(Icon);
   private readonly iconElement: Signal<ElementRef<HTMLElement> | undefined> = contentChild(Icon, { read: ElementRef<HTMLElement> });
@@ -52,17 +52,26 @@ export class Button {
 
   protected readonly spinnerSize: WritableSignal<number> = signal(20);
 
+  /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */
   public readonly isAnimated: Signal<boolean> = computed(() => {
-    return !this.a11y.isReducedMotion();
+    return !this.bxA11yService.isReducedMotion();
   });
+  /** Whether disabled or loading state blocks the button's native activation. */
   public readonly isDisabled: Signal<boolean> = computed(() => this.disabled() || this.loading());
 
+  /** Visual presentation variant using the shared Blocks theme and component styles. Defaults to `'text'`. */
   public readonly variant: InputSignal<ButtonVariant> = input<ButtonVariant>('text');
+  /** Semantic color role applied to the component presentation. Defaults to `'primary'`. */
   public readonly color: InputSignal<ButtonColor> = input<ButtonColor>('primary');
+  /** Whether the button renders an outline treatment. Defaults to `false`. */
   public readonly outlined: InputSignal<boolean> = input<boolean>(false);
+  /** Whether the button uses the shared elevated surface treatment. Defaults to `false`. */
   public readonly elevated: InputSignal<boolean> = input<boolean>(false);
+  /** Whether user interaction is disabled; disabled controls do not accept ordinary activation or edits. Defaults to `false`. */
   public readonly disabled: InputSignalWithTransform<boolean, unknown> = input<boolean, unknown>(false, { transform: booleanAttribute });
+  /** Whether asynchronous work is in progress; the owning control renders its appropriate busy feedback. Defaults to `false`. */
   public readonly loading: InputSignalWithTransform<boolean, unknown> = input<boolean, unknown>(false, { transform: booleanAttribute });
+  /** Whether the button enables decorative interaction feedback. Defaults to `true`. */
   public readonly interactive: InputSignalWithTransform<boolean, unknown> = input<boolean, unknown>(true, { transform: booleanAttribute });
   /** Enable runtime glass lighting and deformation; defaults to true. Disable for dense collections while retaining button styling and semantics. */
   public readonly surfaceEffects: InputSignalWithTransform<boolean, unknown> = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -87,7 +96,7 @@ export class Button {
     );
 
     afterRenderEffect((onCleanup) => {
-      const icon = this.customIcon()?.element.nativeElement ?? this.iconElement()?.nativeElement;
+      const icon = this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
       const size = Number(this.projectedIcon()?.size());
       // Keep the spinner in CSS pixels; bounding rectangles include page zoom and surface transforms.
       const measured = icon?.offsetWidth;

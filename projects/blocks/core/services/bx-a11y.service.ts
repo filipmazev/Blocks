@@ -14,6 +14,7 @@ export class BxA11yService {
 
   private readonly manualOverride: WritableSignal<boolean | null> = signal<boolean | null>(null);
 
+  /** Effective reduced-motion preference, combining the manual override with live operating-system changes. */
   public readonly isReducedMotion: Signal<boolean> = computed(() => {
     const manual = this.manualOverride();
 
@@ -27,6 +28,11 @@ export class BxA11yService {
     this.syncWithDOM();
   }
 
+  /**
+   * Override decorative motion preferences, or restore live operating-system preference tracking.
+   *
+   * @param reduce - True requests reduced motion, false permits normal motion, and null clears the manual override.
+   */
   public setReducedMotion(reduce: boolean | null): void {
     this.manualOverride.set(reduce);
   }

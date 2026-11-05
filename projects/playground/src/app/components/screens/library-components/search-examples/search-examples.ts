@@ -17,18 +17,18 @@ import { MockSearchStore } from '@playground/components/screens/library-componen
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchExamples {
-  private readonly i18n = inject(DemoI18nService);
+  private readonly demoI18nService = inject(DemoI18nService);
 
-  protected readonly remote = inject(MockSearchStore);
+  protected readonly mockSearchStore = inject(MockSearchStore);
 
   protected readonly showLoadingText: WritableSignal<boolean> = signal(false);
   protected readonly readOnly: WritableSignal<boolean> = signal(false);
   protected readonly disabled: WritableSignal<boolean> = signal(false);
 
   protected readonly emptyText: Signal<string> = computed(() => {
-    this.i18n.version();
+    this.demoI18nService.version();
 
-    return this.i18n.translate('searchEmpty');
+    return this.demoI18nService.translate('searchEmpty');
   });
 
   protected readonly retryConfig: ISearchRetryConfig = { variant: 'tonal', color: 'accent' };
@@ -36,6 +36,6 @@ export class SearchExamples {
   protected changeLoadingText(show: boolean): void {
     this.showLoadingText.set(show);
 
-    if (show && !this.remote.loading() && !this.readOnly() && !this.disabled()) void this.remote.search(this.remote.query());
+    if (show && !this.mockSearchStore.loading() && !this.readOnly() && !this.disabled()) void this.mockSearchStore.search(this.mockSearchStore.query());
   }
 }

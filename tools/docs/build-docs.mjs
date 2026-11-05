@@ -124,6 +124,12 @@ for (const [key, source] of Object.entries(liveExamples)) {
   snippets[`assets/code-snippets/${key}`] = text;
 }
 const aliases = {
+  'projects/blocks/forms/components/button/directives/README.md': 'projects/blocks/forms/directives/button-icon/README.md',
+  'projects/blocks/forms/directives/error/README.md': 'projects/blocks/forms/components/error/README.md',
+  'projects/blocks/forms/directives/hint/README.md': 'projects/blocks/forms/components/hint/README.md',
+  'projects/blocks/icons/components/README.md': 'projects/blocks/icons/components/icon/README.md',
+  'projects/blocks/modal/components/README.md': 'projects/blocks/modal/components/modal-core/README.md',
+  'projects/blocks/toastr/components/README.md': 'projects/blocks/toastr/components/toast-core/README.md',
   'documentation/core/README.md': 'projects/blocks/core/README.md',
   'documentation/modal/README.md': 'projects/blocks/modal/README.md',
   'documentation/toastr/README.md': 'projects/blocks/toastr/README.md',

@@ -8,10 +8,10 @@ import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { navigateMenuKey } from '@filip.mazev/blocks/primitives';
 
-import { INavigationLevelBreadcrumb } from '@navigation/components/shared/interfaces/inavigation-level-breadcrumb.interface';
-import { INavigationLevelRequest } from '@navigation/components/shared/interfaces/inavigation-level-request.interface';
 import { NavigationItem } from '@navigation/components/shared/navigation-item/navigation-item';
-import { NavigationStateService } from '@navigation/components/shared/services/navigation-state.service';
+import { INavigationLevelBreadcrumb } from '@navigation/interfaces/inavigation-level-breadcrumb.interface';
+import { INavigationLevelRequest } from '@navigation/interfaces/inavigation-level-request.interface';
+import { NavigationStateService } from '@navigation/services/navigation-state.service';
 
 /** One reusable browsing level. Its owner decides whether it appears inline or in the shared overlay. */
 @Component({
@@ -22,14 +22,16 @@ import { NavigationStateService } from '@navigation/components/shared/services/n
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavigationLevel {
-  private readonly a11y = inject(BxA11yService);
+  private readonly bxA11yService = inject(BxA11yService);
 
-  protected readonly state = inject(NavigationStateService);
+  protected readonly navigationStateService = inject(NavigationStateService);
 
-  protected readonly frames: Signal<string[]> = computed(() => [this.state.levelKey()]);
-  protected readonly animated: Signal<boolean> = computed(() => !this.a11y.isReducedMotion());
+  protected readonly frames: Signal<string[]> = computed(() => [this.navigationStateService.levelKey()]);
+  protected readonly animated: Signal<boolean> = computed(() => !this.bxA11yService.isReducedMotion());
 
+  /** Emits an interaction requesting the preceding navigation level. */
   public readonly back: OutputEmitterRef<MouseEvent | KeyboardEvent> = output<MouseEvent | KeyboardEvent>();
+  /** Emits the breadcrumb and keyboard context of a requested ancestor navigation level. */
   public readonly navigate: OutputEmitterRef<INavigationLevelRequest> = output<INavigationLevelRequest>();
 
   protected requestBack(event: MouseEvent | KeyboardEvent): void {
@@ -43,7 +45,7 @@ export class NavigationLevel {
   protected levelKey(event: KeyboardEvent): void {
     if (event.defaultPrevented) return;
 
-    const backKey = this.state.config().side === 'right' ? 'ArrowRight' : 'ArrowLeft';
+    const backKey = this.navigationStateService.config().side === 'right' ? 'ArrowRight' : 'ArrowLeft';
 
     if (event.key === 'Escape' || event.key === backKey) this.back.emit(event);
   }

@@ -3,9 +3,9 @@
         subscriptSizing="dynamic"
         [label]="text().language"
         [clearable]="false"
-        [options]="translations.languages"
-        [value]="translations.language()"
-        (selectionChange)="translations.setLanguage($event.value)" />
+        [options]="navigationDemoI18nService.languages"
+        [value]="navigationDemoI18nService.language()"
+        (selectionChange)="navigationDemoI18nService.setLanguage($event.value)" />
 </div>
 <div class="nav-demo-controls">
     <bx-checkbox [label]="text().right" [(checked)]="right" />

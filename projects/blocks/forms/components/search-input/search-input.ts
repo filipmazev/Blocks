@@ -7,10 +7,10 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
 
+import { BxValueControl } from '@forms/classes/bx-value-control';
 import { Button } from '@forms/components/button/button';
 import { FormField } from '@forms/components/form-field/form-field';
-import { ISearchRetryConfig } from '@forms/components/search-input/interfaces/isearch-retry-config.interface';
-import { BxValueControl } from '@forms/components/shared/classes/bx-value-control';
+import { ISearchRetryConfig } from '@forms/interfaces/isearch-retry-config.interface';
 
 @Component({
   selector: 'bx-search-input',
@@ -41,16 +41,22 @@ export class SearchInput extends BxValueControl<string> {
   );
   protected readonly searchDescribedBy: Signal<string> = computed(() => `${this.describedBy()} ${this.controlId()}-search-status`);
 
+  /** Accessible name of the clear-value action; supports shared translation keys. Defaults to `'Clear search'`. */
   public readonly clearLabel: InputSignal<ResolvableText> = input<ResolvableText>('Clear search');
+  /** Native browser autocomplete hint forwarded to the underlying text input. Defaults to `'off'`. */
   public readonly autocomplete: InputSignal<string> = input('off');
   /** Application-owned request failure, separate from form validation. */
   public readonly loadError: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
   /** Optional visible loading text; otherwise only loadingAriaLabel is announced. */
   public readonly loadingLabel: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  /** Accessible name for the busy indicator, resolved through the shared translation adapter. Defaults to `'Searching'`. */
   public readonly loadingAriaLabel: InputSignal<ResolvableText> = input<ResolvableText>('Searching');
+  /** Text and accessible name for the explicit retry action; supports shared translation keys. Defaults to `'Retry search'`. */
   public readonly retryLabel: InputSignal<ResolvableText> = input<ResolvableText>('Retry search');
+  /** Button appearance overrides for the retry action. Defaults to an empty configuration. */
   public readonly retryConfig: InputSignal<ISearchRetryConfig> = input<ISearchRetryConfig>({});
 
+  /** Emits a consumer-owned search request when the query changes. */
   // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the established public search event.
   public readonly search: OutputEmitterRef<string> = output<string>();
   /** Requests another attempt for the current query. Set loading synchronously before starting the request. */
@@ -65,6 +71,7 @@ export class SearchInput extends BxValueControl<string> {
     });
   }
 
+  /** Clear an editable search value, emit an empty query, and return focus to the input. */
   public clear(): void {
     if (this.disabled() || this.isReadonly()) return;
 
@@ -74,6 +81,7 @@ export class SearchInput extends BxValueControl<string> {
     this.focus();
   }
 
+  /** Request an explicit retry of the current search while preserving its query and reporting retry state. */
   public retrySearch(): void {
     if (this.disabled() || this.isReadonly() || this.isBusy() || this.retrying() || !this.loadError()) return;
 

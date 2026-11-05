@@ -2,7 +2,7 @@ import type { InputSignal, Signal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-import { LayoutGap } from '@primitives/components/shared/types/layout.types';
+import { LayoutGap } from '@primitives/types/layout.types';
 
 @Component({
   selector: 'bx-grid',
@@ -26,5 +26,6 @@ export class Grid {
   public readonly columns: InputSignal<number | undefined> = input<number | undefined>(undefined);
   /** Minimum auto-fit column size. Defaults to 16rem and never exceeds the container width. */
   public readonly minColumnWidth: InputSignal<string> = input('16rem');
+  /** Shared spacing-scale step between grid cells. Defaults to `4`. */
   public readonly gap: InputSignal<LayoutGap> = input<LayoutGap>(4);
 }

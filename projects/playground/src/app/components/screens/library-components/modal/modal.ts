@@ -12,7 +12,7 @@ import { Button } from '@forms/components/button/button';
 import { Checkbox } from '@forms/components/checkbox/checkbox';
 import { InputField } from '@forms/components/input-field/input-field';
 import { Select } from '@forms/components/select/select';
-import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import { BxSelectOption } from '@forms/types/select-option.types';
 import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
@@ -36,7 +36,7 @@ import { ModalConfigFormControls } from '@playground/types/form.types';
   styleUrl: './modal.scss'
 })
 export class Modal {
-  private readonly modals = inject(ModalService);
+  private readonly modalService = inject(ModalService);
 
   protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
   protected readonly layoutSelectOptions: BxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
@@ -115,7 +115,7 @@ export class Modal {
 
     const headerText = request.headerText === '' ? null : request.headerText;
 
-    const modal = this.modals.open<IDemoModalData, IDemoModalResult>(DemoModal, {
+    const modal = this.modalService.open<IDemoModalData, IDemoModalResult>(DemoModal, {
       header:
         headerText === undefined
           ? undefined

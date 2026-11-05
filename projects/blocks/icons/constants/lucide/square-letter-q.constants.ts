@@ -1,0 +1,7 @@
+import { defineIcon } from '@icons/helpers/define-icon.helpers';
+
+export const lucideSquareLetterQ = defineIcon({
+  name: 'square-letter-q',
+  viewBox: '0 0 24 24',
+  svgContent: `<circle cx="12" cy="12" r="4" /><path d="m16 16-2.5-2.5" /><rect width="18" height="18" x="3" y="3" rx="2" />`
+} as const);

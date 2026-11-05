@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../..');
 const lucideRoot = path.join(repoRoot, 'node_modules', 'lucide-static', 'icons');
 
-const outRoot = path.join(repoRoot, 'projects', 'blocks', 'icons', 'assets', 'lucide');
+const outRoot = path.join(repoRoot, 'projects', 'blocks', 'icons', 'constants', 'lucide');
 const generatedFiles = new Set();
 
 function toPascalCase(fileName) {
@@ -52,12 +52,14 @@ async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
 
-async function writeTypeScript(fileName, source) {
-  const target = path.join(outRoot, fileName);
+async function writeTypeScript(fileName, source, directory = outRoot) {
+  const target = path.join(directory, fileName);
+
+  await ensureDir(path.dirname(target));
   const formatted = await formatGeneratedTypeScript(source, target);
   let current;
 
-  generatedFiles.add(fileName);
+  generatedFiles.add(target);
 
   try {
     current = await fs.readFile(target, 'utf8');
@@ -95,27 +97,25 @@ export const ${exportName} = defineIcon({
 }
 
 function buildNamesTs(names) {
-  return `export const lucideNames = ${JSON.stringify(names, null, 2)} as const;
+  return `export const lucideNames = ${JSON.stringify(names, null, 2)} as const;\n`;
+}
 
-export type LucideName = typeof lucideNames[number];
+function buildTypesTs() {
+  return `import type { IIconDefinition } from '@icons/interfaces/iicon-definition.interface';
+import type { lucideNames } from '@icons/constants/lucide/names.constants';
+
+/** Names of the generated Lucide icon definitions. */
+export type LucideName = (typeof lucideNames)[number];
+
+/** Lazy definition loaders keyed by generated Lucide names. */
+export type LucideIconLoaders = Record<LucideName, () => Promise<IIconDefinition>>;
 `;
 }
 
 function buildLoaderTs(entries) {
-  const loaders = entries
-    .map(({ iconName, exportName }) => {
-      return `  '${iconName}': () => import('./${iconName}').then(m => m.${exportName})`;
-    })
-    .join(',\n');
+  const loaders = entries.map(({ iconName, exportName }) => `  '${iconName}': () => import('./${iconName}.constants').then(m => m.${exportName})`).join(',\n');
 
-  // 3. Adjusted relative path to the interface based on the shallower folder structure
-  return `import type { IconDefinition } from '@icons/interfaces/icon-definition.interface';
-import type { LucideName } from './names';
-
-export type LucideIconLoaders = Record<
-  LucideName,
-  () => Promise<IconDefinition>
->;
+  return `import type { LucideIconLoaders } from '@icons/types/lucide.types';
 
 export const LUCIDE_ICON_LOADERS: LucideIconLoaders = {
 ${loaders}
@@ -143,10 +143,10 @@ async function generateLucide() {
       iconName,
       viewBox,
       svgContent,
-      relativeDefineIconImport: '@icons/helpers/define-icon'
+      relativeDefineIconImport: '@icons/helpers/define-icon.helpers'
     });
 
-    await writeTypeScript(`${iconName}.ts`, ts);
+    await writeTypeScript(`${iconName}.constants.ts`, ts);
 
     names.push(iconName);
     loaderEntries.push({
@@ -155,11 +155,15 @@ async function generateLucide() {
     });
   }
 
-  await writeTypeScript('names.ts', buildNamesTs(names));
+  await writeTypeScript('names.constants.ts', buildNamesTs(names));
 
-  await writeTypeScript('icon-loader.ts', buildLoaderTs(loaderEntries));
+  await writeTypeScript('icon-loader.constants.ts', buildLoaderTs(loaderEntries));
 
-  await writeTypeScript('public-api.ts', `export * from './names';\nexport * from './loader';\n`);
+  await writeTypeScript(
+    'public-api.ts',
+    `export * from './names.constants';\nexport * from './loader.constants';\nexport type { LucideName } from '@icons/types/lucide.types';\n`
+  );
+  await writeTypeScript('lucide.types.ts', buildTypesTs(), path.join(repoRoot, 'projects', 'blocks', 'icons', 'types'));
 
   console.log(`Generated ${files.length} icons for Lucide`);
 }
@@ -168,7 +172,7 @@ async function main() {
   await generateLucide();
 
   for (const filename of await fs.readdir(outRoot)) {
-    if (filename.endsWith('.ts') && !generatedFiles.has(filename)) {
+    if (filename.endsWith('.ts') && !generatedFiles.has(path.join(outRoot, filename))) {
       await fs.unlink(path.join(outRoot, filename));
     }
   }

@@ -1,7 +1,13 @@
 import type { ILightProjection } from '@effects/runtime/interfaces/ilight-projection.interface';
-import type { IPointLight } from '@effects/runtime/scene';
 
-/** Share the exact influence calculation between the source budget and final rendering. */
+import type { IPointLight } from './scene.helpers';
+
+/**
+ * Share the exact influence calculation between the source budget and final rendering.
+ *
+ * @param light - Resolved light position and projection settings.
+ * @param bounds - Receiver bounds used to project light onto its edges.
+ */
 export function projectLight(light: IPointLight, bounds: DOMRect): ILightProjection {
   const cx = bounds.left + bounds.width / 2;
   const cy = bounds.top + bounds.height / 2;

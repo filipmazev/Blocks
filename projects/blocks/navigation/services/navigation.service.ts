@@ -26,21 +26,25 @@ export class NavigationService {
 
   private readonly navEnd: Signal<NavigationEnd | undefined> = toSignal(this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)));
 
+  /** Resolved navigation context for the active route, including translated metadata and breadcrumbs. */
   public readonly current: Signal<IResolvedNavigation> = computed<IResolvedNavigation>(() => {
     this.navEnd();
     this.i18n?.version?.();
 
     return this.resolveCurrent(this.router.routerState.snapshot.root);
   });
+  /** Optional base-route prefix supplied by the navigation access adapter. */
   public readonly routeBase: Signal<string | undefined> = computed<string | undefined>(() => {
     return this.accessAdapter?.resolveBaseRoute();
   });
+  /** Navigation metadata extracted from the current Angular route configuration, with access and translation applied. */
   public readonly routes: Signal<INavigationItem[]> = computed(() => {
     this.navEnd();
     this.i18n?.version?.();
 
     return this.extractRoutes(this.router.config);
   });
+  /** First accessible navigation root route, including the optional application base prefix. */
   public readonly baseRoute: Signal<string | undefined> = computed<string | undefined>(() => {
     const viewableRoutes = this.routes();
 
@@ -74,7 +78,9 @@ export class NavigationService {
 
     return perfectMatch ?? firstFoundRoot ?? primaryPrefix;
   });
+  /** Accessible route tree filtered to entries participating in application menus. */
   public readonly menu: Signal<INavigationItem[]> = computed(() => this.buildMenu(this.routes()));
+  /** Ordered nonempty navigation sections with flattened menu entries. */
   public readonly menuGroups: Signal<INavigationGroup[]> = computed<INavigationGroup[]>(() => {
     const sections = [...(this.config?.sections ?? [])].sort((a, b) => (a.order ?? Number.POSITIVE_INFINITY) - (b.order ?? Number.POSITIVE_INFINITY));
     const groups = new Map<string, INavigationGroup>(
@@ -119,6 +125,7 @@ export class NavigationService {
     return [...groups.values()].filter((group) => group.items.length > 0);
   });
 
+  /** Navigate to the resolved parent/base route when a suitable destination is available. */
   public navigateBack(): void {
     const breadcrumbs = this.current().breadcrumbs;
 

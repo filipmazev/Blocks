@@ -23,13 +23,16 @@ export class ScrollLockService implements OnDestroy {
   private readonly boundHandleTouchMove: (event: Event) => void = this.handleTouchMove.bind(this);
   private readonly boundPreventDefault: (event: Event) => void = this.preventDefault.bind(this);
 
+  /** Mutable backing signal indicating whether at least one owner holds a scroll lock; use isScrollDisabled for observation. Initially `false`. */
   public readonly _isScrollDisabled: WritableSignal<boolean> = signal(false);
 
+  /** Whether at least one overlay owner currently holds a page scroll lock. */
   public readonly isScrollDisabled: Signal<boolean> = this._isScrollDisabled.asReadonly();
 
   private originalStyles: ReadonlyMap<string, IScrollLockStyleSnapshot> | null = null;
   private pendingListenerTimeout: number | null = null;
 
+  /** Release all remaining service-owned locks, listeners, and pending listener timers during teardown. */
   public ngOnDestroy(): void {
     if (!this.isBrowser) return;
 
@@ -37,7 +40,12 @@ export class ScrollLockService implements OnDestroy {
     this.forceCleanupAll();
   }
 
-  /** Acquire or update one owner's lock. Repeated acquisition with the same ID never adds a second lock. */
+  /**
+   * Acquire or update one owner's lock. Repeated acquisition with the same ID never adds a second lock.
+   *
+   * @param usageId - Stable unique ID of the owner acquiring or updating its lock.
+   * @param config - Touch, overflow, and timing requirements for this owner; repeated IDs update one existing lock.
+   */
   public disableScroll(usageId: string, config: IScrollLockConfig): void {
     if (!this.isBrowser) return;
 
@@ -48,7 +56,12 @@ export class ScrollLockService implements OnDestroy {
     this.syncActiveLocks();
   }
 
-  /** Release only this owner's lock. The legacy overflow argument is accepted; final cleanup always removes owned listeners. */
+  /**
+   * Release only this owner's lock. The legacy overflow argument is accepted; final cleanup always removes owned listeners.
+   *
+   * @param usageId - Owner ID whose lock should be released; other owners retain their locks.
+   * @param _extremeOverflow - Legacy compatibility flag; final cleanup always removes owned overflow listeners. Optional.
+   */
   public enableScroll(usageId: string, _extremeOverflow?: boolean): void {
     if (!this.isBrowser || !this.activeLocks.delete(usageId)) return;
 
@@ -64,7 +77,11 @@ export class ScrollLockService implements OnDestroy {
   //#region Helpers
 
   private getActiveConfig(): IScrollLockConfig | null {
-    return Array.from(this.activeLocks.values()).findLast((config) => config.handleTouchInput !== false) ?? null;
+    return (
+      Array.from(this.activeLocks.values())
+        .reverse()
+        .find((config) => config.handleTouchInput !== false) ?? null
+    );
   }
 
   private captureBodyStyles(): void {

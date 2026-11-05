@@ -1,5 +1,5 @@
-import type { GlassinessMode } from '@effects/runtime/refraction/types/refraction.types';
-import type { GlassQuality } from '@effects/runtime/types';
+import type { GlassinessMode } from '@effects/runtime/types/refraction.types';
+import type { GlassQuality } from '@effects/runtime/types/runtime.types';
 /**
  * Describes the surface options contract.
  */

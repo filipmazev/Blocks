@@ -26,12 +26,12 @@ import { PackageReleaseService } from '@playground/services/package-release.serv
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReleaseNotes {
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  protected readonly releases = inject(PackageReleaseService);
+  protected readonly packageReleaseService = inject(PackageReleaseService);
 
-  private readonly params: Signal<ParamMap> = toSignal(this.route.paramMap, { initialValue: this.route.snapshot.paramMap });
+  private readonly params: Signal<ParamMap> = toSignal(this.activatedRoute.paramMap, { initialValue: this.activatedRoute.snapshot.paramMap });
 
   protected readonly currentVersion: string = `v${PLAYGROUND_VERSION}`;
   protected readonly latestVersion: string = DEFAULT_RELEASE_VERSION;

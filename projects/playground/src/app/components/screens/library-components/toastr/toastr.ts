@@ -11,7 +11,7 @@ import { Button } from '@forms/components/button/button';
 import { Checkbox } from '@forms/components/checkbox/checkbox';
 import { InputField } from '@forms/components/input-field/input-field';
 import { Select } from '@forms/components/select/select';
-import { BxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
+import { BxSelectOption } from '@forms/types/select-option.types';
 import { DemoToast } from '@playground/components/screens/library-components/toastr/components/demo-toast/demo-toast';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
@@ -30,8 +30,8 @@ import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
   styleUrl: './toastr.scss'
 })
 export class Toastr {
-  private readonly toastr = inject(ToastrService);
-  private readonly toastrGlobalSettings = inject(ToastrGlobalSettingsService);
+  private readonly toastrService = inject(ToastrService);
+  private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
 
   protected readonly positionOptions: ToastPosition[] = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
   protected readonly typeOptions: string[] = ['info', 'success', 'warn', 'danger'];
@@ -85,11 +85,11 @@ export class Toastr {
     });
 
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((changes) => {
-      this.toastrGlobalSettings.maxOpened.set(changes.maxOpened ?? 4);
-      this.toastrGlobalSettings.position.set(changes.position ?? 'top-right');
-      this.toastrGlobalSettings.animate.set(changes.animate ?? true);
-      this.toastrGlobalSettings.swipeToDismiss.set(changes.swipeToDismiss ?? true);
-      this.toastrGlobalSettings.durationInMs.set(changes.durationInMs ?? 5000);
+      this.toastrGlobalSettingsService.maxOpened.set(changes.maxOpened ?? 4);
+      this.toastrGlobalSettingsService.position.set(changes.position ?? 'top-right');
+      this.toastrGlobalSettingsService.animate.set(changes.animate ?? true);
+      this.toastrGlobalSettingsService.swipeToDismiss.set(changes.swipeToDismiss ?? true);
+      this.toastrGlobalSettingsService.durationInMs.set(changes.durationInMs ?? 5000);
     });
   }
 
@@ -100,7 +100,7 @@ export class Toastr {
 
     const request = this.form.getRawValue();
 
-    const toastRef = this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
+    const toastRef = this.toastrService.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
       position: request.position ?? undefined,
       durationInMs: request.durationInMs ?? undefined,
       animate: request.animate ?? undefined,
@@ -122,22 +122,22 @@ export class Toastr {
 
   protected queueSimpleToast(type: SimpleToastType): void {
     if (type === 'info') {
-      this.toastr.queueInfo({
+      this.toastrService.queueInfo({
         title: 'Information',
         message: 'This is an informational toast message.'
       });
     } else if (type === 'success') {
-      this.toastr.queueSuccess({
+      this.toastrService.queueSuccess({
         title: 'Success',
         message: 'Your operation was successful!'
       });
     } else if (type === 'warn') {
-      this.toastr.queueWarning({
+      this.toastrService.queueWarning({
         title: 'Warning',
         message: 'This is a warning toast message.'
       });
     } else if (type === 'danger') {
-      this.toastr.queueDanger({
+      this.toastrService.queueDanger({
         title: 'Error',
         message: 'An error occurred while processing your request.'
       });

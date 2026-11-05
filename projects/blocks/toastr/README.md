@@ -24,10 +24,10 @@ import { ToastrService } from '@filip.mazev/blocks/toastr';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaveNotification {
-    private readonly toastr = inject(ToastrService);
+    private readonly toastrService = inject(ToastrService);
 
     protected notify(): void {
-        this.toastr.queueSuccess({ title: 'Saved', message: 'Your settings are up to date.' });
+        this.toastrService.queueSuccess({ title: 'Saved', message: 'Your settings are up to date.' });
     }
 }
 ```
@@ -53,7 +53,7 @@ export class CustomToast extends Toast<string, undefined> {}
 Inside an application action with an injected `ToastrService` and `CustomToast` imported from its defining file:
 
 ```ts
-const ref = this.toastr.queueToast(CustomToast, {
+const ref = this.toastrService.queueToast(CustomToast, {
     data: 'The export is ready.',
     position: 'bottom-right',
     durationInMs: 5000,
@@ -102,8 +102,8 @@ by library defaults. It also exposes `maxOpened` for queue capacity.
 import { inject } from '@angular/core';
 import { ToastrGlobalSettingsService } from '@filip.mazev/blocks/toastr';
 
-const settings = inject(ToastrGlobalSettingsService);
-settings.update({ position: 'bottom-right', maxOpened: 3, glassQuality: 'auto' });
+const toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
+toastrGlobalSettingsService.update({ position: 'bottom-right', maxOpened: 3, glassQuality: 'auto' });
 ```
 
 Toast wrappers use Blocks semantic colors, spacing, radius, shared lighting, and the application appearance. Custom content shares its containing surface.

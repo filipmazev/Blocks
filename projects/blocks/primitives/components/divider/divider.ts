@@ -4,7 +4,7 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, computed, inject,
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 
-import { DividerOrientation, DividerStyle } from '@primitives/components/divider/types/divider.types';
+import { DividerOrientation, DividerStyle } from '@primitives/types/divider.types';
 
 @Component({
   selector: 'bx-divider',
@@ -26,8 +26,12 @@ export class Divider {
 
   protected readonly resolvedLabel: Signal<string> = computed(() => resolveText(this.label(), this.i18n));
 
+  /** Direction of the divider line. Defaults to `'horizontal'`. */
   public readonly orientation: InputSignal<DividerOrientation> = input<DividerOrientation>('horizontal');
+  /** Divider stroke presentation using the supported line styles. Defaults to `'solid'`. */
   public readonly lineStyle: InputSignal<DividerStyle> = input<DividerStyle>('solid');
+  /** Visible or accessible label for the component; translation-key values resolve through BX_I18N. Optional; omission leaves the value undefined. */
   public readonly label: InputSignal<ResolvableText | undefined> = input<ResolvableText | undefined>(undefined);
+  /** Whether the visual is decorative and should be hidden from assistive technology. Defaults to `false`. */
   public readonly decorative: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 }

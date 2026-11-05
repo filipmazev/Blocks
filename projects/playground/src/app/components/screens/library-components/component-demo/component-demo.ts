@@ -86,11 +86,11 @@ import { ComponentDialog } from './component-dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComponentDemo {
-  private readonly route = inject(ActivatedRoute);
-  private readonly modals = inject(ModalService);
-  private readonly toasts = inject(ToastrService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly modalService = inject(ModalService);
+  private readonly toastrService = inject(ToastrService);
 
-  private readonly routeData: Signal<Data> = toSignal(this.route.data, { initialValue: this.route.snapshot.data });
+  private readonly routeData: Signal<Data> = toSignal(this.activatedRoute.data, { initialValue: this.activatedRoute.snapshot.data });
 
   private readonly contextMenu: Signal<ContextMenuDirective | undefined> = viewChild(ContextMenuDirective);
 
@@ -155,7 +155,7 @@ export class ComponentDemo {
 
   protected openModal(layout?: 'center' | 'left' | 'right' | 'bottom-sheet'): void {
     const selected = layout ?? (this.entry().id === 'modal-side' ? 'right' : this.entry().id === 'modal-bottom-sheet' ? 'bottom-sheet' : 'center');
-    const ref = this.modals.open<IComponentDialogData, string>(ComponentDialog, {
+    const ref = this.modalService.open<IComponentDialogData, string>(ComponentDialog, {
       data: {
         title: this.entry().title,
         description: 'Edit the project name. The header, content, footer, backdrop and close behavior use the existing Blocks modal composition.'
@@ -176,16 +176,16 @@ export class ComponentDemo {
 
     switch (intent) {
       case 'success':
-        this.toasts.queueSuccess(request);
+        this.toastrService.queueSuccess(request);
         break;
       case 'info':
-        this.toasts.queueInfo(request);
+        this.toastrService.queueInfo(request);
         break;
       case 'warn':
-        this.toasts.queueWarning(request);
+        this.toastrService.queueWarning(request);
         break;
       case 'danger':
-        this.toasts.queueDanger(request);
+        this.toastrService.queueDanger(request);
         break;
     }
 

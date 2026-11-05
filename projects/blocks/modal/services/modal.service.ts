@@ -10,7 +10,7 @@ import { BxA11yService } from '@filip.mazev/blocks/core';
 
 import { ModalConfig } from '@modal/classes/modal-config';
 import { ModalRef } from '@modal/classes/modal-ref';
-import { ModalCore } from '@modal/components/modal-core';
+import { ModalCore } from '@modal/components/modal-core/modal-core';
 import { IModal } from '@modal/interfaces/imodal.interface';
 import { IModalConfig } from '@modal/interfaces/imodal-config.interface';
 import { IModalService } from '@modal/interfaces/imodal-service.interface';
@@ -24,12 +24,12 @@ import { ModalGlobalSettingsService } from './modal-global-settings.service';
 export class ModalService implements IModalService {
   private readonly router = inject(Router);
   private readonly injector = inject(Injector);
-  private readonly appRef = inject(ApplicationRef);
+  private readonly applicationRef = inject(ApplicationRef);
   private readonly environmentInjector = inject(EnvironmentInjector);
-  private readonly rendererFactory = inject(RendererFactory2);
+  private readonly rendererFactory2 = inject(RendererFactory2);
   private readonly document = inject(DOCUMENT);
-  private readonly globalSettings = inject(ModalGlobalSettingsService);
-  private readonly a11y = inject(BxA11yService);
+  private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
+  private readonly bxA11yService = inject(BxA11yService);
 
   private readonly renderer: Renderer2;
 
@@ -37,14 +37,18 @@ export class ModalService implements IModalService {
   private modalsSubject: BehaviorSubject<Set<ModalRef<unknown, unknown, IModal<unknown, unknown>>>> = new BehaviorSubject<Set<ModalRef>>(this.modals);
 
   constructor() {
-    this.renderer = this.rendererFactory.createRenderer(null, null);
+    this.renderer = this.rendererFactory2.createRenderer(null, null);
     this.createSubscriptions();
   }
 
   /**
    * Opens a modal with the specified component and configuration.
-   * @param component The component to be displayed in the modal.
-   * @param config Optional configuration for the modal.
+   *
+   * @param component - The component to be displayed in the modal.
+   * @param config - Optional configuration for the modal.
+   * @typeParam D - Application data supplied to the dynamically created overlay content.
+   * @typeParam R - Application result returned when the overlay content closes.
+   * @typeParam C - Angular content component implementing the corresponding data and result contract.
    * @returns A ModalRef instance representing the opened modal.
    */
   public open<D, R, C extends IModal<D, R> = IModal<D, R>>(component: ComponentType<C>, config?: IModalConfig<D, R>): ModalRef<D, R, C> {
@@ -73,7 +77,7 @@ export class ModalService implements IModalService {
     wrapperRef.instance.componentRef = contentRef;
     wrapperRef.instance.config = new ModalConfig(resolvedConfig);
 
-    this.appRef.attachView(wrapperRef.hostView);
+    this.applicationRef.attachView(wrapperRef.hostView);
     this.document.body.appendChild(wrapperRef.location.nativeElement);
 
     const modal = new ModalRef<D, R, C>(contentRef, component, wrapperRef, this, new ModalConfig(resolvedConfig));
@@ -84,7 +88,7 @@ export class ModalService implements IModalService {
     }
 
     wrapperRef.onDestroy(() => {
-      this.appRef.detachView(wrapperRef.hostView);
+      this.applicationRef.detachView(wrapperRef.hostView);
       wrapperRef.location.nativeElement.remove();
     });
 
@@ -105,7 +109,11 @@ export class ModalService implements IModalService {
 
   /**
    * Closes the specified modal.
-   * @param modal The ModalRef instance representing the modal to be closed.
+   *
+   * @param modal - The ModalRef instance representing the modal to be closed.
+   * @typeParam D - Application data supplied to the dynamically created overlay content.
+   * @typeParam R - Application result returned when the overlay content closes.
+   * @typeParam C - Angular content component implementing the corresponding data and result contract.
    */
   public close<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
     modal.close();
@@ -113,7 +121,11 @@ export class ModalService implements IModalService {
 
   /**
    * Unregisters the specified modal from the service.
-   * @param modal The ModalRef instance representing the modal to be unregistered.
+   *
+   * @param modal - The ModalRef instance representing the modal to be unregistered.
+   * @typeParam D - Application data supplied to the dynamically created overlay content.
+   * @typeParam R - Application result returned when the overlay content closes.
+   * @typeParam C - Angular content component implementing the corresponding data and result contract.
    */
   public unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
     this.modals.delete(modal);
@@ -122,7 +134,8 @@ export class ModalService implements IModalService {
 
   /**
    * Closes all open modals.
-   * @param onNavigate Indicates if the closeAll is triggered by navigation event.
+   *
+   * @param onNavigate - Indicates if the closeAll is triggered by navigation event.
    */
   public closeAll(onNavigate: boolean = false): void {
     this.modals.forEach((modal) => {
@@ -134,7 +147,10 @@ export class ModalService implements IModalService {
 
   /**
    * Finds if a modal with the specified component type is currently open.
-   * @param componentType The component type to search for.
+   *
+   * @param componentType - The component type to search for.
+   * @typeParam D - Application data supplied to the dynamically created overlay content.
+   * @typeParam R - Application result returned when the overlay content closes.
    * @returns True if a modal with the specified component type is open, false otherwise.
    */
   public find<D, R>(componentType: Type<IModal<D, R>>): boolean {
@@ -149,6 +165,7 @@ export class ModalService implements IModalService {
 
   /**
    * Gets the count of currently open modals.
+   *
    * @returns The number of open modals.
    */
   public modalsCount(): number {
@@ -176,16 +193,16 @@ export class ModalService implements IModalService {
   }
 
   private resolveConfig<D, R>(config: IModalConfig<D, R> | undefined): IModalConfig<D, R> {
-    const requestedAnimation = config?.style?.animate ?? this.globalSettings.animate();
-    const finalAnimateState = this.a11y.isReducedMotion() ? false : requestedAnimation;
+    const requestedAnimation = config?.style?.animate ?? this.modalGlobalSettingsService.animate();
+    const finalAnimateState = this.bxA11yService.isReducedMotion() ? false : requestedAnimation;
 
     const resolvedStyle = {
-      layout: config?.style?.layout ?? this.globalSettings.layout(),
+      layout: config?.style?.layout ?? this.modalGlobalSettingsService.layout(),
       animate: finalAnimateState,
-      hasBackdrop: config?.style?.hasBackdrop ?? this.globalSettings.hasBackdrop(),
-      showCloseButton: config?.style?.showCloseButton ?? this.globalSettings.showCloseButton(),
-      contentWrapper: config?.style?.contentWrapper ?? this.globalSettings.contentWrapper(),
-      overrideFullHeight: config?.style?.overrideFullHeight ?? this.globalSettings.overrideFullHeight(),
+      hasBackdrop: config?.style?.hasBackdrop ?? this.modalGlobalSettingsService.hasBackdrop(),
+      showCloseButton: config?.style?.showCloseButton ?? this.modalGlobalSettingsService.showCloseButton(),
+      contentWrapper: config?.style?.contentWrapper ?? this.modalGlobalSettingsService.contentWrapper(),
+      overrideFullHeight: config?.style?.overrideFullHeight ?? this.modalGlobalSettingsService.overrideFullHeight(),
       breakpoints: config?.style?.breakpoints,
       mobileConfig: config?.style?.mobileConfig,
       wrapperClasses: config?.style?.wrapperClasses,
@@ -195,10 +212,10 @@ export class ModalService implements IModalService {
 
     return {
       ...config,
-      disableClose: config?.disableClose ?? this.globalSettings.disableClose(),
-      disableCloseOnBackdropClick: config?.disableCloseOnBackdropClick ?? this.globalSettings.disableCloseOnBackdropClick(),
-      disableCloseOnNavigation: config?.disableCloseOnNavigation ?? this.globalSettings.disableCloseOnNavigation(),
-      closeGuardOnlyOnCancel: config?.closeGuardOnlyOnCancel ?? this.globalSettings.closeGuardOnlyOnCancel(),
+      disableClose: config?.disableClose ?? this.modalGlobalSettingsService.disableClose(),
+      disableCloseOnBackdropClick: config?.disableCloseOnBackdropClick ?? this.modalGlobalSettingsService.disableCloseOnBackdropClick(),
+      disableCloseOnNavigation: config?.disableCloseOnNavigation ?? this.modalGlobalSettingsService.disableCloseOnNavigation(),
+      closeGuardOnlyOnCancel: config?.closeGuardOnlyOnCancel ?? this.modalGlobalSettingsService.closeGuardOnlyOnCancel(),
       style: resolvedStyle
     };
   }

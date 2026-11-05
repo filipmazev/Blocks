@@ -106,10 +106,10 @@ Forms resolve the instance input, then shared application settings, then true:
 import { inject } from '@angular/core';
 import { FormSettingsService } from '@filip.mazev/blocks/forms';
 
-private readonly formSettings = inject(FormSettingsService);
+private readonly formSettingsService = inject(FormSettingsService);
 
 // For example, in application initialization:
-this.formSettings.update({ tooltipOnTruncate: false });
+this.formSettingsService.update({ tooltipOnTruncate: false });
 ```
 
 `[bxTruncate]="false"` is a separate choice: it disables ellipsis itself on a custom text element. `tooltipOnTruncate` only disables automatic tooltips on an
