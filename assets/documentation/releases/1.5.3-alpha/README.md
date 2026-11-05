@@ -102,6 +102,25 @@ The window dimensions updates include behavior changes that may affect consumers
 
 The existing `isMobile()` and `isTablet()` breakpoint boundaries remain unchanged.
 
+## Code generation and lint rules
+
+- Required injected class references to retain the class's full lower-camel-case name, including service suffixes, in fields and local variables.
+- Required direct injected member projections to keep the projected member's name, such as `isReducedMotion` and `nativeElement`.
+- Added ESLint enforcement with alias/namespace resolution and updated library/playground references, templates, host expressions, and documentation examples.
+- Required descriptive JSDoc for public members of exported library components, directives, and services and for exported helpers, including parameter and
+  generic parameter descriptions. Filled documentation gaps across controls, overlays, shared services, and runtime helpers.
+
+## Library source organization
+
+- Applied Modal's entry-point layout across Blocks: supporting types, interfaces, constants, helpers, services, tokens, enums, and classes now use their own
+  top-level category folders, including within the effects runtime secondary entry point.
+- Colocated concrete directive implementations and their guides, templates, styles, and existing specs. Moved form hint/error components into `components` and
+  shared navigation/modal slot directives into `directives`.
+- Separated overlay context contracts from their injection token and extracted supporting declarations from component, directive, service, and runtime modules.
+- Moved generated Lucide definitions into `icons/constants/lucide` and their contracts into `icons/types`. Updated icon/version generators, imports, public
+  re-exports, documentation discovery, and catalog paths to preserve the layout on regeneration.
+- Added ESLint enforcement for category placement, declaration separation, filenames, and colocated component/directive READMEs.
+
 ## Compatibility
 
 Existing public entry points other than the removed `withNav` export remain available. Backdrop inputs are additive, and older release-note URLs continue to

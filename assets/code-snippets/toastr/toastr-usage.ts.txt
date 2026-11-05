@@ -11,10 +11,10 @@ import { IDemoToastResult } from './idemo-toast-result.interface';
   template: `<button bx-button (click)="showToast()">Queue notification</button>`
 })
 export class ToastExample {
-  private readonly toastr = inject(ToastrService);
+  private readonly toastrService = inject(ToastrService);
 
   protected showToast(): void {
-    this.toastr.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
+    this.toastrService.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
       position: 'top-right',
       durationInMs: 5000,
       animate: true,
@@ -22,6 +22,6 @@ export class ToastExample {
       data: { title: 'Saved', message: 'Your preferences have been saved.', openedCount: 0 }
     });
     // For an intent-styled notification, use:
-    // this.toastr.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
+    // this.toastrService.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }

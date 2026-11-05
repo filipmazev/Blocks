@@ -1,0 +1,1 @@
+var o={name:`letter-h`,viewBox:`0 0 24 24`,svgContent:`<path d="M18 20V4" /><path d="M6 12H18" /><path d="M6 20V4" />`};export{o as lucideLetterH};
