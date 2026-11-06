@@ -4850,7 +4850,7 @@ input.bx-slider:disabled {
   --bx-accent-hover: rgb(17.6666666667%, 37%, 77.3333333333%);
   --bx-accent-active: rgb(14.1333333333%, 29.6%, 61.8666666667%);
   --bx-accent-subtle: rgb(90.4941176471%, 93.2235294118%, 98.9176470588%);
-  --bx-on-accent: #000000;
+  --bx-on-accent: #ffffff;
   --bx-on-accent-hover: #ffffff;
   --bx-on-accent-active: #ffffff;
   --bx-text-accent: rgb(9.9764705882%, 20.8941176471%, 43.6705882353%);
@@ -4896,7 +4896,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -5039,7 +5039,7 @@ input.bx-slider:disabled {
   --bx-accent-hover: rgb(17.6666666667%, 37%, 77.3333333333%);
   --bx-accent-active: rgb(14.1333333333%, 29.6%, 61.8666666667%);
   --bx-accent-subtle: rgb(90.4941176471%, 93.2235294118%, 98.9176470588%);
-  --bx-on-accent: #000000;
+  --bx-on-accent: #ffffff;
   --bx-on-accent-hover: #ffffff;
   --bx-on-accent-active: #ffffff;
   --bx-text-accent: rgb(9.9764705882%, 20.8941176471%, 43.6705882353%);
@@ -5083,7 +5083,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -5221,11 +5221,11 @@ input.bx-slider:disabled {
   --bx-on-primary-active: #ffffff;
   --bx-text-brand: #15418d;
   --bx-border-brand: #15418d;
-  --bx-accent: #d85a1a;
-  --bx-accent-hover: rgb(72%, 30%, 8.6666666667%);
-  --bx-accent-active: rgb(57.6%, 24%, 6.9333333333%);
+  --bx-accent: rgb(72%, 30%, 8.6666666667%);
+  --bx-accent-hover: rgb(57.6%, 24%, 6.9333333333%);
+  --bx-accent-active: rgb(40.6588235294%, 16.9411764706%, 4.8941176471%);
   --bx-accent-subtle: rgb(98.1647058824%, 92.2352941176%, 89.2235294118%);
-  --bx-on-accent: #0b0b0b;
+  --bx-on-accent: #ffffff;
   --bx-on-accent-hover: #ffffff;
   --bx-on-accent-active: #ffffff;
   --bx-text-accent: rgb(40.6588235294%, 16.9411764706%, 4.8941176471%);
@@ -5269,7 +5269,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -5321,7 +5321,7 @@ input.bx-slider:disabled {
   --bx-on-accent: #0b0b0b;
   --bx-on-accent-hover: #0b0b0b;
   --bx-on-accent-active: #0b0b0b;
-  --bx-text-accent: #f5a365;
+  --bx-text-accent: rgb(98.1647058824%, 92.2352941176%, 89.2235294118%);
   --bx-border-accent: #f27b35;
   --bx-color-primary-50: #eff6ff;
   --bx-color-primary-100: #dceaff;
@@ -5407,11 +5407,11 @@ input.bx-slider:disabled {
   --bx-on-primary-active: #ffffff;
   --bx-text-brand: #2c0066;
   --bx-border-brand: #2c0066;
-  --bx-accent: #0d9488;
-  --bx-accent-hover: rgb(4.3333333333%, 49.3333333333%, 45.3333333333%);
-  --bx-accent-active: rgb(3.4666666667%, 39.4666666667%, 36.2666666667%);
+  --bx-accent: rgb(4.3333333333%, 49.3333333333%, 45.3333333333%);
+  --bx-accent-hover: rgb(3.4666666667%, 39.4666666667%, 36.2666666667%);
+  --bx-accent-active: rgb(2.4470588235%, 27.8588235294%, 25.6%);
   --bx-accent-subtle: rgb(88.6117647059%, 94.9647058824%, 94.4%);
-  --bx-on-accent: #0b0b0b;
+  --bx-on-accent: #ffffff;
   --bx-on-accent-hover: #ffffff;
   --bx-on-accent-active: #ffffff;
   --bx-text-accent: rgb(2.4470588235%, 27.8588235294%, 25.6%);
@@ -5455,7 +5455,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -5498,7 +5498,7 @@ input.bx-slider:disabled {
   --bx-on-primary: #0b0b0b;
   --bx-on-primary-hover: #0b0b0b;
   --bx-on-primary-active: #0b0b0b;
-  --bx-text-brand: #cfa3ff;
+  --bx-text-brand: #e6d4ff;
   --bx-border-brand: #b36bff;
   --bx-accent: rgb(54.4470588235%, 79.8588235294%, 77.6%);
   --bx-accent-hover: rgb(73.4274509804%, 88.2509803922%, 86.9333333333%);
@@ -5593,11 +5593,11 @@ input.bx-slider:disabled {
   --bx-on-primary-active: #ffffff;
   --bx-text-brand: #9f2d00;
   --bx-border-brand: #9f2d00;
-  --bx-accent: #4f78f5;
-  --bx-accent-hover: rgb(26.3333333333%, 40%, 81.6666666667%);
-  --bx-accent-active: rgb(21.0666666667%, 32%, 65.3333333333%);
+  --bx-accent: rgb(26.3333333333%, 40%, 81.6666666667%);
+  --bx-accent-hover: rgb(21.0666666667%, 32%, 65.3333333333%);
+  --bx-accent-active: rgb(14.8705882353%, 22.5882352941%, 46.1176470588%);
   --bx-accent-subtle: rgb(91.7176470588%, 93.6470588235%, 99.5294117647%);
-  --bx-on-accent: #0b0b0b;
+  --bx-on-accent: #ffffff;
   --bx-on-accent-hover: #ffffff;
   --bx-on-accent-active: #ffffff;
   --bx-text-accent: rgb(14.8705882353%, 22.5882352941%, 46.1176470588%);
@@ -5641,7 +5641,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -5779,11 +5779,11 @@ input.bx-slider:disabled {
   --bx-on-primary-active: #ffffff;
   --bx-text-brand: rgb(34.2588235294%, 13.9294117647%, 15.0588235294%);
   --bx-border-brand: rgb(34.2588235294%, 13.9294117647%, 15.0588235294%);
-  --bx-accent: #0891b2;
-  --bx-accent-hover: rgb(2.6666666667%, 48.3333333333%, 59.3333333333%);
-  --bx-accent-active: rgb(2.1333333333%, 38.6666666667%, 47.4666666667%);
+  --bx-accent: rgb(2.6666666667%, 48.3333333333%, 59.3333333333%);
+  --bx-accent-hover: rgb(2.1333333333%, 38.6666666667%, 47.4666666667%);
+  --bx-accent-active: rgb(1.5058823529%, 27.2941176471%, 33.5058823529%);
   --bx-accent-subtle: rgb(88.3764705882%, 94.8235294118%, 96.3764705882%);
-  --bx-on-accent: #0b0b0b;
+  --bx-on-accent: #ffffff;
   --bx-on-accent-hover: #ffffff;
   --bx-on-accent-active: #ffffff;
   --bx-text-accent: rgb(1.5058823529%, 27.2941176471%, 33.5058823529%);
@@ -5827,7 +5827,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -5870,7 +5870,7 @@ input.bx-slider:disabled {
   --bx-on-primary: #0b0b0b;
   --bx-on-primary-hover: #0b0b0b;
   --bx-on-primary-active: #0b0b0b;
-  --bx-text-brand: #e69ba4;
+  --bx-text-brand: rgb(96.5647058824%, 91.4823529412%, 91.7647058824%);
   --bx-border-brand: #d36b77;
   --bx-accent: #22b8d0;
   --bx-accent-hover: #78d8e6;
@@ -5963,7 +5963,7 @@ input.bx-slider:disabled {
   --bx-on-primary: #0b0b0b;
   --bx-on-primary-hover: #0b0b0b;
   --bx-on-primary-active: #0b0b0b;
-  --bx-text-brand: rgb(36.8941176471%, 46.1176470588%, 11.4823529412%);
+  --bx-text-brand: rgb(18.4470588235%, 23.0588235294%, 5.7411764706%);
   --bx-border-brand: rgb(36.8941176471%, 46.1176470588%, 11.4823529412%);
   --bx-accent: #6842a6;
   --bx-accent-hover: rgb(34.6666666667%, 22%, 55.3333333333%);
@@ -6013,7 +6013,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -6149,7 +6149,7 @@ input.bx-slider:disabled {
   --bx-on-primary: #0b0b0b;
   --bx-on-primary-hover: #0b0b0b;
   --bx-on-primary-active: #0b0b0b;
-  --bx-text-brand: #665e00;
+  --bx-text-brand: #332f00;
   --bx-border-brand: #665e00;
   --bx-accent: #3e5669;
   --bx-accent-hover: #283c4c;
@@ -6199,7 +6199,7 @@ input.bx-slider:disabled {
   --bx-bg-neutral-active: #525252;
   --bx-text-heading: #ffffff;
   --bx-text-primary: #e5e5e5;
-  --bx-text-secondary: #a1a1a1;
+  --bx-text-secondary: #d4d4d4;
   --bx-text-inverse: #171717;
   --bx-border-subtle: #171717;
   --bx-border-default: #262626;
@@ -6251,7 +6251,7 @@ input.bx-slider:disabled {
   --bx-on-accent: #0b0b0b;
   --bx-on-accent-hover: #0b0b0b;
   --bx-on-accent-active: #0b0b0b;
-  --bx-text-accent: #a8b8c6;
+  --bx-text-accent: #cdd6df;
   --bx-border-accent: #7e96a9;
   --bx-color-primary-50: #fffef2;
   --bx-color-primary-100: #fffdd1;

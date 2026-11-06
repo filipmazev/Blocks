@@ -1,231 +1,206 @@
 # Blocks 1.5.3-alpha
 
-Draft notes for the next Alpha release. This version has not been published; content may change before release.
+Draft library release notes. Changes may be revised before release.
 
-## Documentation
+## Declarative side panel
 
-- Colocated the core, modal, and toastr guides with their library entry points and the appearance guide with its playground screen.
-- Aligned these guides with component README sections: purpose, public imports, working usage, API, appearance/customization, behavior/accessibility, and
-  playground.
-- Updated public package imports and relative links, preserved legacy documentation lookup aliases, and regenerated the bundled playground documentation.
-- Standardized README headings, lists, code fences, tables, and wrapping with Prettier and markdownlint. Added a repeatable `lint:docs` gate.
-- Added explicit documentation ownership, structure, generation, and linting rules to `AGENTS.md`.
+- Added standalone `SidePanel` (`bx-side-panel`) to `@filip.mazev/blocks/primitives`, controlled through the `open` boolean model and its `openChange` output.
+- Supports left/right placement, numeric or CSS-length widths, optional element containment, viewport bounds, scoped backdrops, and reactive configuration.
+- Added `SidePanelLayout` for stable CSS containment and real push slots beside page content. `layoutMode` defaults to overlay; optional typed `breakpoints`
+  resolve minimum-width modes through `WindowDimensionsService`, with the highest matching configured threshold winning. `currentLayoutMode()` exposes the
+  effective mode. Push and overlay changes retain the same panel and projected content.
+- Panels inside the layout no longer follow document-scroll rectangles or use deferred scroll-time positioning. Standalone/external-bound overlay presentation
+  remains supported; `container="viewport"` explicitly escapes an enclosing layout. All four side-panel corners are square through shared Modal Side styles.
+- The panel provides the existing top-layer overlay context for nested selection controls, menus, popovers, and tooltips. Tooltips now honor that context and
+  use the shared synchronous origin tracker, avoiding clipping and panel-relative stacking failures.
+- Unhandled Escape is observed for the complete open lifetime, including after projected-content updates or focus moves to the surrounding page. Child overlays
+  retain first dismissal through their existing event handling; tooltip dismissal now marks Escape handled.
+- Added `SidePanelHeaderDirective`, `SidePanelFooterDirective`, and `SidePanelBannerDirective` for projected sections. Body content remains mounted across
+  closing and reopening; omitted sections reserve no space, and the body scrolls separately from header/footer actions.
+- Nonmodal complementary-region semantics preserve ordinary page interaction and keyboard navigation. Configurable focus entry/restoration, close controls,
+  Escape dismissal, translated accessible names, and mounted reduced-motion updates are supported without page scroll locking or focus trapping.
+- Shared panel-frame, header/footer, banner, and close-control Sass presentation with Modal Side. Existing modal services, layouts, backdrops, focus trapping,
+  scroll locks, nested modal handling, animations, and dismissal contracts remain in place.
 
-## Playground and release notes
+## Modal and panel presentation
 
-- Renamed the main navigation label from Overview to Home and removed the Home shortcut row for modal/toast configurators, icons, and release notes.
-- Linked the footer to the most recently published NPM version across all channels, using registry publication timestamps rather than the `latest` tag alone.
-- Added Release, Beta, and Alpha selectors with channel-specific version lists and permanent version routes.
-- Added complete 1.4.20 Release notes, an exact-version NPM link, and a source comparison tied to its published commit.
-- Added a non-dismissible information banner when registry metadata confirms that the displayed playground build has not been published.
+- Declarative SidePanel and left/right Modal Side surfaces use square corners on all four edges, including their material decorations.
+- Centered, side, and bottom-sheet modals share the declarative panel's translucent surface presentation. `--bx-modal-bg` / `--bx-modal-text` retain priority,
+  with shared panel and semantic surface/text fallbacks. Root dialogs retain the ordinary 0.52 opacity floor and their shared appearance preferences.
+- The root dialog paints dimming outside its border so its translucent surface samples the page without its own black scrim. Centered layouts keep viewport
+  dimming on an unscaled frame while the clear opening follows the dialog's zoom. The shared backdrop retains blur, pointer hit testing, and dismissal.
+- Nested dialogs use independent fixed backdrops, retaining the parent's material and backdrop. The first nested dialog uses a 0.9 minimum opacity; subsequent
+  nested levels use 1. `ModalGlobalSettingsService.nestedOpacityFloors` configures those floors reactively, with the final entry repeated at deeper levels. An
+  empty array disables depth adjustment. Appearance/accessibility settings may increase opacity further. Close guards and responsive layouts share the policy.
+- All built-in light-mode accents now use white foregrounds on contrast-safe semantic base/hover/active shades. Raw palette anchors and theme-picker swatches
+  remain unchanged. Other on-fill roles prefer white when it reaches 4.5:1 contrast, otherwise a dark foreground.
+- Corrected brand/accent text against its supported surfaces and secondary text against dark hover/pressed surfaces. Success, information, warning, and danger
+  retain their original foreground, border, and normal/hover/active fill shades. High-contrast definitions and explicit theme overrides retain control. Filled
+  chips preserve their semantic fill during hover and add an inset outline to retain on-fill contrast.
+- Declarative SidePanel headings share Modal Side's title/icon layout, wrapping, divider spacing, and compact 32px close controls. `SidePanel.headerIcon`
+  accepts optional `IIconData` with modal-banner size, semantic color, background, and stroke behavior. Projected headings and the separate top-banner slot
+  remain supported.
 
-## Build and publishing
+## Reusable resizing
 
-- Added `release.config.json` with an optional `nextVersion`. When unassigned, the next version increments the package patch and appends its Alpha/Beta channel.
-- Shared version resolution between generated playground build metadata and the default NPM publish flow. With package 1.5.2 on Alpha, the target is
-  1.5.3-alpha.
-- Kept explicit patch/minor/major overrides and retry publication available. An assigned target is consumed once it becomes the package version.
-- Retained exact-version links when registry access is unavailable and avoided treating a failed registry request as proof of non-publication.
+- Added `ResizeHandleDirective` (`bxResizeHandle`) to Primitives with a numeric `resizeValue` model, physical left/right width and top/bottom height edges, and
+  typed `IResizeHandleEvent` lifecycle events. Owners apply sizes to their own layouts; no table/panel-specific state or target-style mutation is required.
+- Added explicit pixel minimum/maximum inputs, optional original-size references, and container observation. Default maximum is 50% of the container; the
+  relative minimum is 30% of original size. `resizeDisableShrink` defaults to true, retaining the original-size floor until shrinking is explicitly enabled.
+  Available container extent wins over conflicting bounds.
+- Pointer capture, frame-coalesced updates, final-position flushing, keyboard arrows/Home/End, Shift increments, and Escape cancellation share bounded values.
+  Listeners, capture, and temporary selection/cursor styles are cleaned up on completion, cancellation, disabling, focus loss, and destruction.
+- Added opt-in SidePanel width resizing with a handle on its inner edge. `width` is a model supporting `widthChange`; existing one-way bindings still work.
+  `resizable`, `resizeMinWidth`, `resizeMaxWidth`, `resizeDisableShrink`, and translatable `resizeLabel` configure interaction. CSS-length initial widths are
+  supported; completed adjustments write numeric pixels, and cancellation restores the original representation. Side panels resize horizontally only.
+- Added shared neutral resize-grip styling: a compact three-dot pill in a separate gutter and a full-edge line without dots on hover/drag. Pointer inactivity
+  fades the idle grip; focus, touch, reduced motion, and forced colors retain appropriate feedback. Push panels reserve the gutter. `resizeActivityContainer`
+  separates pointer activity from portal bounds, and `resizeIdleDelay` defaults to 2000ms with zero retaining a persistent idle grip.
+- Added `Chip.deselectable`, default true. False supports owner-coordinated single-choice chip groups without toggling the active choice off. Filled chip
+  material now defaults to an opaque semantic fill, configurable through `--bx-chip-fill-opacity`, so primary selection remains visible.
+
+## Scroll-boundary detection and shared loading
+
+- Added `InfiniteScrollDirective` (`bxInfiniteScroll`) to Primitives for detecting proximity to the end of arbitrary scroll containers or an ancestor/document
+  viewport. Inputs configure pixel thresholds, disabled/loading states, completion revisions, and an optional footer offset.
+- Detection remains separate from fetching, pagination, indicators, buttons, retries, and exhaustion. `scrollEnd` emits a guarded boundary event; `complete()`
+  acknowledges completion when the owner has no loading cycle or revision change. Read-only `overflowing()` exposes measured overflow.
+- Optional `infiniteScrollCheckOnRender` enables finite local progressive rendering to fill short viewports after initial render, content changes, and resizing.
+  It defaults to false to avoid uncontrolled remote request loops. Owners explicitly disable detection at exhaustion.
+- Exported `findScrollContainer`, `measureScrollBoundary`, `observeScrollBoundary`, and `IScrollBoundary` for reusable viewport discovery, geometry, and
+  disposable passive observation. Browser observers start after rendering, reconnect for container changes, and release removed content targets and listeners.
+- Refined `LoadMoreDirective` to use the same Core boundary measurement/observation helpers. Select and Multiselect retain one shared orchestration layer for
+  loading, no-scrollbar fallback actions, failure, explicit retry, and request-source payloads. Their public inputs and outputs remain unchanged.
+- Kept footer-excluded overflow measurement and explicit remote fallback behavior. Scroll request guards now run before entering Angular when no new request can
+  be emitted, avoiding redundant change-detection work while loading or awaiting completion.
+
+## Bidirectional virtual rendering
+
+- Added `VirtualCollection<T>` and typed `VirtualItemDirective<T>` to Primitives for a sliding row window independent of detection and data loading. List and
+  responsive multi-column grid modes mount overscan near the viewport and unmount distant items while preserving overall scroll extent with spacers.
+- Exported `IVirtualCollectionConfig`, `IVirtualItemContext<T>`, `IVirtualRange`, stable-key/track-by contracts, and layout types. Configuration covers
+  estimated row height, overscan pixels, and CSS or numeric minimum column width; `measurementRevision` invalidates cached geometry.
+- Measure dynamic rows with `ResizeObserver` and maintain a cached prefix-sum tree for efficient height updates and offset lookups. Width and column changes
+  regroup rows and retain a stable visible anchor. Scroll corrections run after spacer rendering, including when the browser clamps a shrinking scroll extent.
+- Exposed read-only `renderedRange()` and `renderedItems()` for bounded consumer presentation work, plus `scrollToIndex()`, `scrollToItem()`, and
+  `refreshMeasurements()`. Programmatic smooth scrolling respects reduced motion. Focused rows can remain independently mounted; responsive regrouping restores
+  their focused control when available. Measurement internals and coordination tokens remain outside public exports.
+
+## Icons and generated categories
+
+- Broadened `IconSize` to positive numeric pixel values or numeric strings and `number` to positive numeric values, enabling continuous customization. Existing
+  values remain valid. Runtime invalid dimensions use 24 pixels and invalid stroke widths use 1.5.
+- Ignore icon-load completions after input replacement or destruction.
+- Added `LUCIDE_CATEGORIES`, `LUCIDE_ICON_CATEGORIES`, and `LucideCategoryId` to the icons entry point. Category records are synchronized with the generated
+  icon names, support multiple assignments and upstream aliases, and use a predictable uncategorized fallback.
+- Extended the existing generation pipeline with an offline, release-pinned official Lucide snapshot. A controlled synchronization command resolves upstream
+  category inheritance and preserves attribution. Normal builds and runtime require no metadata network requests, and mismatched dependency/snapshot versions
+  fail with synchronization instructions.
 
 ## Page layouts and breadcrumbs
 
-- Added `PageContainer`, `PageHeader`, `PageContent`, and `PageFooter` to the primitives entry point, with colocated guides and an interactive playground.
-- Standardized page widths, responsive padding, heading spacing, and the existing section-label/title treatment throughout the playground, including tokens,
-  icons, utilities, component examples, appearance, release notes, and modal/toast configurators. Home keeps its existing layout.
-- Added `ResolvableText` support for section titles, page titles, explicit descriptions, breadcrumb labels, and the breadcrumb navigation's accessible name.
-  Already-rendered text reacts to the optional `BX_I18N` adapter's language revision.
-- Added `autoResolveTitlesFromNavigation` (default `true`) to infer undefined section and page titles from shared navigation metadata. Descriptions remain
-  manually supplied; explicit empty titles suppress automatic values. Projected headers support additional content and configurable semantic heading levels.
-- Connected `provideNavigation()` and `NavigationService.page` to the optional `BX_PAGE_NAVIGATION` adapter without adding a dependency from primitives back to
-  navigation. Applications can also provide their own reactive `IPageNavigation` adapter or supply explicit headings and breadcrumb trails.
-- Added automatic breadcrumbs with a configurable `breadcrumbsAfter` threshold. The default is one nesting: root trails stay hidden and child pages show
-  ancestor links. Zero shows root entries; the demo's numeric control has a minimum of zero and clamps typed negative values. Breadcrumb resolution remains
-  independent of automatic title resolution.
-- Removed redundant top-of-page back links in favor of breadcrumbs. Trails use native links, an ordered list, visible keyboard focus, and an explicitly marked
-  current page, and wrap for narrow screens, translated labels, and RTL layouts.
-- Grouped Page container, Content container, Stack layout, Grid layout, and Divider under **Primitives → Layout** at `/components/layout`. Their canonical demo
-  routes now use `/components/layout/<component>`; existing `/components/<component>` URLs redirect to the corresponding layout page.
+- Added `PageContainer`, `PageHeader`, `PageContent`, and `PageFooter` to primitives with public configuration and colocated guides.
+- Added responsive width/padding presets and `ResolvableText` support for section titles, page titles, explicit descriptions, breadcrumb labels, and the
+  breadcrumb navigation's accessible name. Already-rendered text reacts to the optional `BX_I18N` language revision.
+- Added `autoResolveTitlesFromNavigation`, default true, to infer undefined headings. Descriptions remain explicit; empty titles suppress automatic values.
+  Projected headers support additional content and configurable semantic heading levels.
+- Connected `provideNavigation()` and `NavigationService.page` to optional `BX_PAGE_NAVIGATION` without a dependency from primitives to navigation. Applications
+  can supply their own reactive `IPageNavigation` adapter or explicit headings and breadcrumb trails.
+- Added automatic breadcrumbs with a configurable `breadcrumbsAfter` threshold. The default hides root trails and shows ancestor links on child pages. Native
+  ordered links, current-page markers, focus indicators, and wrapping support narrow screens, translated labels, and RTL layouts.
 
-## Mobile navigation
+## Mobile navigation and scroll locking
 
-- Reused `ModalBackdrop` for mobile side navigation, including its blur and opaque accessibility fallbacks.
-- Added a translatable dismissal label, tab-order input, and presentation CSS variables to the shared backdrop.
-- Tied the drawer's `ScrollLockService` acquisition to its open overlay presentation and released its own lock on close, route navigation, presentation changes,
-  and destruction. Concurrent modal locks remain active.
-- Made shared scroll-lock ownership idempotent. Releasing one owner preserves every other active lock, recalculates touch/overflow requirements, and restores
-  the original inline body styles only after the final owner releases its lock.
-- Kept embedded inline drawers contained in their preview shell without a page scroll lock.
+- Reused the shared backdrop in mobile side navigation, including blur and opaque accessibility fallbacks. Added a translatable dismissal label, tab-order
+  input, and presentation CSS variables.
+- Tied drawer `ScrollLockService` ownership to open overlay presentation and released its own lock on close, navigation, presentation changes, and destruction.
+  Embedded inline drawers retain their container-scoped behavior without a page lock.
+- Made scroll-lock ownership idempotent. Releasing one owner preserves other locks, recalculates touch/overflow requirements, and restores original inline body
+  styles only after the final owner releases its lock.
 
 ## Window dimensions and responsive breakpoints
 
-- Expanded `WindowDimensionsService` with signals for extra-small and small mobile viewports, small laptops, large desktops, ultra-wide screens, and cumulative
-  `*AndBelow` ranges, while retaining `isMobile`, `isTablet`, and `isDesktop`.
-- Added `currentBreakpoint()` for the active breakpoint key and `currentBreakpointValue()` for its numeric threshold. Both return `undefined` outside the
-  browser.
-- Standardized breakpoint matching on minimum-width thresholds, so the active breakpoint is the highest configured threshold not exceeding the viewport width.
-- Added strongly typed `isAtLeast()`, `isBelow()`, and `isBetween()` methods for custom viewport checks, avoiding manual comparisons with breakpoint numbers.
-- Added generic `resolveResponsiveValue()` to select the value assigned to the highest matching configured breakpoint, with a caller-provided fallback for
-  server rendering or when no configured breakpoint matches.
-- Centralized comparisons behind shared helpers, while preserving convenient, reactive boolean signals for common viewport categories.
-- Improved first-render dimension detection by reading the browser viewport without depending on an uninitialized class field.
-- Replaced the 150 ms debounced resize listener with animation-frame-aligned event coalescing for more responsive dimension updates. Resize subscriptions now
-  clean up automatically when the service is destroyed.
-
-For example, choose a value by viewport size without manually comparing breakpoint constants:
-
-```typescript
-public readonly glassCount: Signal<number> = computed(() =>
-  this.windowDimensionsService.resolveResponsiveValue(
-    { xs: 10, md: 30, '2xl': 100 },
-    100
-  )
-);
-```
-
-Or use a direct comparison inside a reactive computation:
-
-```typescript
-public readonly showExpandedLayout: Signal<boolean> = computed(() =>
-  this.windowDimensionsService.isAtLeast('2xl')
-);
-```
+- Expanded `WindowDimensionsService` with extra-small/small mobile, small laptop, large desktop, ultra-wide, and cumulative `*AndBelow` signals while retaining
+  `isMobile`, `isTablet`, and `isDesktop`.
+- Added `currentBreakpoint()` and `currentBreakpointValue()`, returning undefined outside the browser. The active breakpoint is the highest configured
+  minimum-width threshold not exceeding the viewport width.
+- Added typed `isAtLeast()`, `isBelow()`, `isBetween()`, and generic `resolveResponsiveValue()` with a caller-provided server fallback.
+- Centralized comparisons and improved first-render dimension detection. Resize updates are animation-frame-coalesced instead of debounced by 150 ms and clean
+  up automatically on destruction.
 
 ## Navigation API
 
-- Replaced side-navigation submenu popups with nested lists inside the sidebar at every screen size and depth. Back, ancestor navigation, scroll restoration,
-  and temporary expansion of a compact rail remain available.
-- Removed `submenuMode`, `submenuBreakpoint`, `SideNavSubmenuMode`, and `isInlineSubmenus()`. Consumers should remove these settings, imports, and calls; nested
-  browsing now always uses the panel. The obsolete submenu width/height CSS variables no longer apply.
-- Kept route selection separate from programmatic row focus and focused the active route when entering its containing level.
-- Made the first, section-labelled ancestor action return directly to the full navigation root when that section was only a grouping label, while preserving
-  return to a section list that was explicitly opened. Returning to an ancestor reveals the original item used to enter its child branch, scrolling only the
-  navigation list.
-
-- Renamed the navigation configuration helper from `withNav` to `withInAppNavigation` to clarify its purpose and distinguish in-app navigation from other
-  navigation concerns.
-- Removed the previous `withNav` export. Applications using the old helper must update their imports and configuration calls.
+- Replaced side-navigation submenu popups with nested lists at every screen size and depth. Back, ancestor navigation, scroll restoration, and temporary compact
+  rail expansion remain available.
+- Removed `submenuMode`, `submenuBreakpoint`, `SideNavSubmenuMode`, and `isInlineSubmenus()`. Nested browsing always uses the panel; obsolete submenu
+  width/height variables no longer apply.
+- Kept route selection separate from programmatic focus and focused the active route when entering its level. Ancestor navigation reveals the original entry and
+  scrolls only the navigation list. Section-only ancestors return directly to the navigation root.
+- Renamed `withNav` to `withInAppNavigation` without a deprecated alias.
 
 ## Design tokens and theme palettes
 
-- Added a generated Core inventory of CSS custom properties, variable references, design scales, breakpoints, and emitted utility classes. The inventory
-  includes semantic roles, every palette shade, glass/effects properties, component overrides, registered custom properties, and discoverable runtime values.
+- Added generated Core inventories for CSS custom properties, references, design scales, breakpoints, and utility classes, covering semantic roles, palettes,
+  effects properties, component overrides, registered properties, and discoverable runtime values.
 - Exported `CSS_TOKEN_CATALOG`, `ICssToken`, and category/kind/scope contracts. Metadata distinguishes global, theme, local, and runtime availability and
-  records source declarations and use-site fallbacks; local/runtime discovery does not imply that a variable exists on the document root or is a supported
-  override.
-- Centralized semantic companion mappings in the Sass theme engine. `getComplementaryToken()` uses these mappings and the existing palette companion rule;
-  `resolveTokenToCssVar()` returns the typed `CssVariableReference` contract. Palette guards validate supported palettes and shades.
-- Moved theme IDs, labels, brand/accent assignments, and optional preview order into the theme engine's `$theme-palettes` registry. Generate `THEME_PALETTES`
-  and `THEME_PALETTE_IDS` from that registry, derive `BxThemeId` from the generated IDs, and derive picker swatches from palette shade 500.
-- Added `make-palette-theme(id, dark?, overrides?)` so existing named light/dark theme variables and playground theme classes use the same assignments. Existing
-  palette IDs, labels, class names, and preview colors are preserved.
-
-## Tokens page
-
-- Added the searchable `/tokens` playground page for semantic colors grouped by purpose, palette shade scales, color companions, spacing, corner radii, border
-  colors, shadows, layers, effects, component properties, utility classes, and Sass breakpoints.
-- Used Blocks accordions and compact cards. Only the first result section opens by default; category filters and keyboard navigation support browsing the
-  complete catalog.
-- Added right-click and touch long-press copy menus on token cards, plus a visible Copy… button and keyboard access. Removed the global copy-format dropdown.
-  Options copy `var(--bx-…)`, the raw `--bx-…` name, HEX, RGB, or RGBA. Color copies follow the current theme, preserve transparency, and convert through the
-  browser's sRGB color handling; pairs copy one value per line.
-- Added live color-value search, narrow-screen layouts, and dynamically sized search/select controls that reserve no empty validation row.
-- Added a Blocks Collapse all action beside the Categories filter to close all result sections.
-- Separated categories with matching titles and Blocks dividers while preserving the heading hierarchy for groups and cards.
-- Added scroll-based lazy rendering in small token batches. Batches mount near the viewport and unmount when far away while preserving measured space and
-  focused controls. Shared intersection/resize observers keep long groups lightweight without pagination. With fewer than 48 cards across expanded sections,
-  lazy rendering is disabled and the displayed cards remain mounted.
-- Changed the category filter to a clearable Blocks multiselect. Categories combine inclusively, such as Colors and Color pairs; clearing selection means All
-  tokens, with no category restriction. Search and counts still cover the complete catalog.
-- Reused one color-conversion canvas, cached conversion results for the current theme, and converted only mounted token batches during ordinary browsing.
-  Current HEX/RGB search builds its color index lazily. Deferred documentation content until its section opens.
-- Shortened palette section titles and moved current-theme, palette, and companion labels into trailing heading tags. Card text suppresses selection outside
-  collapsible metadata to avoid conflicts with long-press gestures.
-- Grouped palette shades and companions into their registered theme pairs. Sorted design scales by size/source order, widened non-color tiles, enlarged radius
-  samples, and used a light neutral canvas for visible shadow previews in dark mode.
-- Used Blocks collapsibles for source defaults and fallbacks, wrapped responsive Sass examples in code blocks, and copied RGB with comma-separated channels.
-- Colocated the catalog guide, linked it from Core and Utilities, and included it in generated playground documentation.
-
-## Search input
-
-- Added `SearchInput.compact`, defaulting to `false`, to request compact presentation for a search input without a label. Supplying a label automatically
-  enables compact mode. The input preserves existing search, loading, readonly, and accessibility behavior.
+  records declarations and use-site fallbacks; local/runtime discovery does not imply a document-root value or supported override.
+- Centralized semantic companion mappings. `getComplementaryToken()` uses these mappings and the existing palette rule; `resolveTokenToCssVar()` returns
+  `CssVariableReference`. Palette guards validate supported palettes and shades.
+- Centralized theme IDs, labels, brand/accent assignments, and preview ordering in the Sass `$theme-palettes` registry; generated `THEME_PALETTES`,
+  `THEME_PALETTE_IDS`, and `BxThemeId` derive from it.
+- Added `make-palette-theme(id, dark?, overrides?)` while preserving existing palette IDs, labels, classes, and preview colors.
 
 ## Shared primitive customization
 
-- Fixed surrounding surface highlights changing when a context menu opens. Lighting visibility ignores fully transparent CDK dismissal backdrops while retaining
-  occlusion from visible menu panels and opaque backdrops.
-- Fixed number-only Tag proportions by keeping vertical padding at zero while preserving configurable horizontal padding and minimum diameter.
+- Added `SearchInput.compact`, default false, for compact unlabeled search controls. Supplying a label automatically enables compact mode; existing search,
+  loading, readonly, and accessibility behavior remains available.
+- Fixed surface highlights changing when context menus open. Lighting visibility ignores fully transparent dismissal backdrops while retaining occlusion from
+  visible panels and opaque backdrops. Menu rows keep themed hover/pressed fills and focus without casting near-white light behind the panel.
+- Added `false` support to `BxSurfaceDirective.bxSurfaceEmission` and runtime `ISurfaceOptions.emission`. Automatic emission can be disabled independently of
+  press feedback and received lighting; an explicit focus-emission color still enables focus-only emission. Mounted hover state reacts to changes.
+- Made inherited overlay lighting directional, preserving overlay boundaries for semantic, explicit, reflected, and ambient sources. Exposure checks use
+  projected receiving locations and perimeter-based edge falloff.
+- Fixed number-only Tag proportions while preserving configurable horizontal padding and minimum diameter.
+- Added `Collapsible.titleTemplate`, `Collapsible.trailingTemplate`, and exported `ICollapsibleTitleContext` for translated, noninteractive heading content and
+  status while retaining shared disclosure/focus behavior and RTL support.
+- Added `Card.surfaceEffects`, default true, allowing dense collections to disable decorative controllers while preserving themed styling, slots, and
+  interaction.
 
-- Added optional `titleTemplate` support to Collapsible and accordion items, with the exported `ICollapsibleTitleContext` providing the translated title and
-  expansion state. This supports noninteractive header content such as count tags while retaining the shared disclosure and focus behavior.
-- Added `Collapsible.trailingTemplate` for noninteractive status tags, text, and icons at the logical end of collapsible/accordion headings, before the chevron.
-  It shares `ICollapsibleTitleContext` with title templates, supports RTL layouts, and keeps the heading as one accessible disclosure button.
-- Added `Card.surfaceEffects`, defaulting to `true`. Dense collections can disable decorative surface controllers while keeping themed card styling, content
-  slots, and interactions.
+## Overlay positioning
+
+- Fixed selection-panel drift when a trigger inside a native top-layer popover moves in a nested scroller. Top-layer overlays use synchronous measured CDK
+  positioning; ordinary overlays retain native CSS anchoring where supported.
+- Preserved origin tracking cleanup, resize handling, visibility callbacks, and explicit `reposition()` in both positioning paths.
+- Release Select and Multiselect overlays after completed closes so reopening resolves the current ordinary/top-layer context. Values and search terms remain on
+  the control; reopening during exit reverses the existing transition.
 
 ## Breaking changes and migration
 
-### Navigation configuration
+- `InfiniteScrollDirective` now belongs to `@filip.mazev/blocks/primitives`. Update imports from the earlier Core location; no deprecated Core alias is
+  retained. Geometry and scroll-container helpers remain in Core as shared non-presentational utilities.
 
-The navigation configuration helper has been renamed. This is a **breaking change** for applications using `withNav`.
+- Replace `withNav(...)` with `withInAppNavigation(...)` in imports and navigation configuration.
+- Remove side-navigation submenu settings and `isInlineSubmenus()` calls; nested inline navigation is now the only presentation.
+- `isDesktop()` begins at `xl` (1280 px). Use `isAtLeast('lg')` or `isSmallLaptop()` when the previous desktop threshold is needed. `isMobile()` and
+  `isTablet()` boundaries remain unchanged.
+- `_dimensions` is private. Read the service's readonly `dimensions()` signal instead of setting it directly. Review expensive resize computations because
+  updates now occur per animation frame.
+- `meta-brand-palette` and `meta-accent-palette` are Sass metadata and are excluded from `Color` and `SEMANTIC_COLOR_TOKENS`. Use `ThemingService.palette()` for
+  palette metadata and `primary`/`accent` for themed colors. Filter `CSS_TOKEN_CATALOG` by scope when globally available values are required.
+- Icon numeric contracts are broader; consumers enumerating `IconSize` or `number` as exhaustive unions should use their own preset arrays. Existing rendered
+  presets and defaults remain supported. No Select, Multiselect, load-more, or Modal public API was removed by the scroll/panel additions.
 
-| Previous API   | Current replacement        |
-| -------------- | -------------------------- |
-| `withNav(...)` | `withInAppNavigation(...)` |
+## Documentation, tooling, and source organization
 
-Update imports and references to use `withInAppNavigation`. The existing navigation configuration behavior remains unchanged.
+- Colocated library guides with their owning entry points, components, and directives. Standardized guide sections, public imports, examples, Markdown
+  formatting, and documentation generation. Added a strict `lint:docs` gate.
+- Added `release.config.json` with optional `nextVersion` and shared package-version resolution. Unassigned targets increment the configured channel's patch;
+  explicit version overrides and publication retry remain supported. Registry request failure is not treated as proof of non-publication.
+- Applied entry-point category folders for types, interfaces, constants, helpers, services, classes, enums, and tokens, including secondary entry points. Moved
+  generated Lucide definitions under `icons/constants/lucide` with contracts in `icons/types` and updated generation/import paths.
+- Enforced full lower-camel injected class names, direct injected-member projection names, declaration organization, colocated guides, and descriptive public
+  JSDoc with parameter/type-parameter coverage.
+- Replaced theme-type synchronization with `tools:generate-tokens`, retaining its previous script alias. Token generation evaluates Sass maps and uses the
+  TypeScript AST, with generated-source banners, formatting, strict generation rules, and unchanged-output detection.
 
-### Window dimensions behavior
-
-The window dimensions updates include behavior changes that may affect consumers:
-
-- **`isDesktop()` now begins at `xl` (1280 px), rather than `lg` (1024 px).** Use `isAtLeast('lg')` or `isSmallLaptop()` where the previous desktop threshold is
-  required.
-- The writable `_dimensions` signal is now private. Use the public readonly `dimensions()` signal to read viewport dimensions; callers can no longer set
-  dimensions directly through the service.
-- Resize-driven updates can occur more frequently because they are scheduled per animation frame rather than waiting for a 150 ms quiet period. Review any
-  expensive computations triggered by dimension changes.
-
-The existing `isMobile()` and `isTablet()` breakpoint boundaries remain unchanged.
-
-### Color tokens and variable availability
-
-- `meta-brand-palette` and `meta-accent-palette` are Sass metadata and are excluded from `Color` and `SEMANTIC_COLOR_TOKENS`; `bx-theme` never emitted CSS
-  variables for them. Use `ThemingService.palette()` and its palette definitions for metadata, and use `primary`/`accent` for themed colors.
-- Variable/reference inventories now also include local and runtime properties. Filter `CSS_TOKEN_CATALOG` by `scope` when a consumer needs only global or theme
-  variables. Consult the owning feature guide before setting a local or runtime property.
-- Companion mappings describe styling relationships rather than guaranteed accessible text contrast. Existing public color-helper and scale exports remain
-  available through `@filip.mazev/blocks/core`.
-
-## Code generation and lint rules
-
-- Required injected class references to retain the class's full lower-camel-case name, including service suffixes, in fields and local variables.
-- Required direct injected member projections to keep the projected member's name, such as `isReducedMotion` and `nativeElement`.
-- Added ESLint enforcement with alias/namespace resolution and updated library/playground references, templates, host expressions, and documentation examples.
-- Required descriptive JSDoc for public members of exported library components, directives, and services and for exported helpers, including parameter and
-  generic parameter descriptions. Filled documentation gaps across controls, overlays, shared services, and runtime helpers.
-- Replaced the theme-type synchronization script with `npm run tools:generate-tokens`; retained `tools:sync-theme-types` as a compatibility alias. Library and
-  playground build/start/watch scripts run token generation automatically.
-- Split token generation into source reading, data construction, palette metadata, and TypeScript writing helpers. Evaluate Sass maps through Sass instead of
-  parsing them with regular expressions, and use the TypeScript AST for generated data rather than maintaining TypeScript programs inside strings.
-- Kept type contracts in regular TypeScript files and added `Generated from … by tools/tokens/generate-tokens.mjs` source banners to generated constants.
-- Pre-format generated TypeScript before the strict ESLint autofix/check pass to avoid expensive formatter-difference processing on large inventories. Added
-  per-file progress and elapsed-time reporting, and skip rewriting unchanged outputs so repeated generation does not trigger unnecessary rebuilds.
-
-## Library source organization
-
-- Applied Modal's entry-point layout across Blocks: supporting types, interfaces, constants, helpers, services, tokens, enums, and classes now use their own
-  top-level category folders, including within the effects runtime secondary entry point.
-- Colocated concrete directive implementations and their guides, templates, styles, and existing specs. Moved form hint/error components into `components` and
-  shared navigation/modal slot directives into `directives`.
-- Separated overlay context contracts from their injection token and extracted supporting declarations from component, directive, service, and runtime modules.
-- Moved generated Lucide definitions into `icons/constants/lucide` and their contracts into `icons/types`. Updated icon/version generators, imports, public
-  re-exports, documentation discovery, and catalog paths to preserve the layout on regeneration.
-- Added ESLint enforcement for category placement, declaration separation, filenames, and colocated component/directive READMEs.
-
-## Compatibility
-
-Existing public package entry points remain available. Backdrop and shared primitive inputs are additive, and older release-note URLs continue to work.
-Consumers should review the `withNav` rename, `isDesktop()` threshold, direct writes to `_dimensions`, color-token metadata removal, and variable scopes above.
-
-Stable NPM installs still use the `latest` tag; Alpha and Beta remain opt-in.
+Stable NPM installs continue using the `latest` tag; Alpha and Beta remain opt-in.

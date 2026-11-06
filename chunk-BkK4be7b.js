@@ -1,4 +1,4 @@
-import{Jt as Se,O as Em,On as Z,Qi as y,Xn as ct,ci as p,fr as g,hi as qn,jr as k$1,qr as lt,r as $a,rn as Tr,vt as Ne,wr as j}from"./chunk-CfQ5k3AW.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
+import{$t as Te,J as Hr,Vr as it,Yi as te,an as V,b as D,br as g,gi as ot,it as Jn,mt as Lm,ot as Ka,ra as ve,ta as v,vi as p}from"./chunk-DhMqzCIY.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
 <p>Published October 31, 2026 on the Release channel (<code>latest</code>). Install this exact version with <code>npm install @filip.mazev/blocks@1.4.20</code>.</p>
 <p><a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.4.20">View version 1.4.20 on NPM</a>.</p>
 <p>Blocks 1.4.20 brings together the unified Angular UI package, semantic themes, appearance effects, forms, navigation, notifications and icons developed leading
@@ -358,235 +358,215 @@ themingService.<span class="hljs-title function_">setAppearance</span>({ <span c
 <a href="components/card">card documentation</a> and
 <a href="components/checkbox">checkbox documentation</a> for the complete APIs.</p>
 `,"documentation/releases/1.5.3-alpha/README.md":`<h1>Blocks 1.5.3-alpha</h1>
-<p>Draft notes for the next Alpha release. This version has not been published; content may change before release.</p>
-<h2>Documentation</h2>
+<p>Draft library release notes. Changes may be revised before release.</p>
+<h2>Declarative side panel</h2>
 <ul>
-<li>Colocated the core, modal, and toastr guides with their library entry points and the appearance guide with its playground screen.</li>
-<li>Aligned these guides with component README sections: purpose, public imports, working usage, API, appearance/customization, behavior/accessibility, and
-playground.</li>
-<li>Updated public package imports and relative links, preserved legacy documentation lookup aliases, and regenerated the bundled playground documentation.</li>
-<li>Standardized README headings, lists, code fences, tables, and wrapping with Prettier and markdownlint. Added a repeatable <code>lint:docs</code> gate.</li>
-<li>Added explicit documentation ownership, structure, generation, and linting rules to <code>AGENTS.md</code>.</li>
+<li>Added standalone <code>SidePanel</code> (<code>bx-side-panel</code>) to <code>@filip.mazev/blocks/primitives</code>, controlled through the <code>open</code> boolean model and its <code>openChange</code> output.</li>
+<li>Supports left/right placement, numeric or CSS-length widths, optional element containment, viewport bounds, scoped backdrops, and reactive configuration.</li>
+<li>Added <code>SidePanelLayout</code> for stable CSS containment and real push slots beside page content. <code>layoutMode</code> defaults to overlay; optional typed <code>breakpoints</code>
+resolve minimum-width modes through <code>WindowDimensionsService</code>, with the highest matching configured threshold winning. <code>currentLayoutMode()</code> exposes the
+effective mode. Push and overlay changes retain the same panel and projected content.</li>
+<li>Panels inside the layout no longer follow document-scroll rectangles or use deferred scroll-time positioning. Standalone/external-bound overlay presentation
+remains supported; <code>container=&quot;viewport&quot;</code> explicitly escapes an enclosing layout. All four side-panel corners are square through shared Modal Side styles.</li>
+<li>The panel provides the existing top-layer overlay context for nested selection controls, menus, popovers, and tooltips. Tooltips now honor that context and
+use the shared synchronous origin tracker, avoiding clipping and panel-relative stacking failures.</li>
+<li>Unhandled Escape is observed for the complete open lifetime, including after projected-content updates or focus moves to the surrounding page. Child overlays
+retain first dismissal through their existing event handling; tooltip dismissal now marks Escape handled.</li>
+<li>Added <code>SidePanelHeaderDirective</code>, <code>SidePanelFooterDirective</code>, and <code>SidePanelBannerDirective</code> for projected sections. Body content remains mounted across
+closing and reopening; omitted sections reserve no space, and the body scrolls separately from header/footer actions.</li>
+<li>Nonmodal complementary-region semantics preserve ordinary page interaction and keyboard navigation. Configurable focus entry/restoration, close controls,
+Escape dismissal, translated accessible names, and mounted reduced-motion updates are supported without page scroll locking or focus trapping.</li>
+<li>Shared panel-frame, header/footer, banner, and close-control Sass presentation with Modal Side. Existing modal services, layouts, backdrops, focus trapping,
+scroll locks, nested modal handling, animations, and dismissal contracts remain in place.</li>
 </ul>
-<h2>Playground and release notes</h2>
+<h2>Modal and panel presentation</h2>
 <ul>
-<li>Renamed the main navigation label from Overview to Home and removed the Home shortcut row for modal/toast configurators, icons, and release notes.</li>
-<li>Linked the footer to the most recently published NPM version across all channels, using registry publication timestamps rather than the <code>latest</code> tag alone.</li>
-<li>Added Release, Beta, and Alpha selectors with channel-specific version lists and permanent version routes.</li>
-<li>Added complete 1.4.20 Release notes, an exact-version NPM link, and a source comparison tied to its published commit.</li>
-<li>Added a non-dismissible information banner when registry metadata confirms that the displayed playground build has not been published.</li>
+<li>Declarative SidePanel and left/right Modal Side surfaces use square corners on all four edges, including their material decorations.</li>
+<li>Centered, side, and bottom-sheet modals share the declarative panel&#39;s translucent surface presentation. <code>--bx-modal-bg</code> / <code>--bx-modal-text</code> retain priority,
+with shared panel and semantic surface/text fallbacks. Root dialogs retain the ordinary 0.52 opacity floor and their shared appearance preferences.</li>
+<li>The root dialog paints dimming outside its border so its translucent surface samples the page without its own black scrim. Centered layouts keep viewport
+dimming on an unscaled frame while the clear opening follows the dialog&#39;s zoom. The shared backdrop retains blur, pointer hit testing, and dismissal.</li>
+<li>Nested dialogs use independent fixed backdrops, retaining the parent&#39;s material and backdrop. The first nested dialog uses a 0.9 minimum opacity; subsequent
+nested levels use 1. <code>ModalGlobalSettingsService.nestedOpacityFloors</code> configures those floors reactively, with the final entry repeated at deeper levels. An
+empty array disables depth adjustment. Appearance/accessibility settings may increase opacity further. Close guards and responsive layouts share the policy.</li>
+<li>All built-in light-mode accents now use white foregrounds on contrast-safe semantic base/hover/active shades. Raw palette anchors and theme-picker swatches
+remain unchanged. Other on-fill roles prefer white when it reaches 4.5:1 contrast, otherwise a dark foreground.</li>
+<li>Corrected brand/accent text against its supported surfaces and secondary text against dark hover/pressed surfaces. Success, information, warning, and danger
+retain their original foreground, border, and normal/hover/active fill shades. High-contrast definitions and explicit theme overrides retain control. Filled
+chips preserve their semantic fill during hover and add an inset outline to retain on-fill contrast.</li>
+<li>Declarative SidePanel headings share Modal Side&#39;s title/icon layout, wrapping, divider spacing, and compact 32px close controls. <code>SidePanel.headerIcon</code>
+accepts optional <code>IIconData</code> with modal-banner size, semantic color, background, and stroke behavior. Projected headings and the separate top-banner slot
+remain supported.</li>
 </ul>
-<h2>Build and publishing</h2>
+<h2>Reusable resizing</h2>
 <ul>
-<li>Added <code>release.config.json</code> with an optional <code>nextVersion</code>. When unassigned, the next version increments the package patch and appends its Alpha/Beta channel.</li>
-<li>Shared version resolution between generated playground build metadata and the default NPM publish flow. With package 1.5.2 on Alpha, the target is
-1.5.3-alpha.</li>
-<li>Kept explicit patch/minor/major overrides and retry publication available. An assigned target is consumed once it becomes the package version.</li>
-<li>Retained exact-version links when registry access is unavailable and avoided treating a failed registry request as proof of non-publication.</li>
+<li>Added <code>ResizeHandleDirective</code> (<code>bxResizeHandle</code>) to Primitives with a numeric <code>resizeValue</code> model, physical left/right width and top/bottom height edges, and
+typed <code>IResizeHandleEvent</code> lifecycle events. Owners apply sizes to their own layouts; no table/panel-specific state or target-style mutation is required.</li>
+<li>Added explicit pixel minimum/maximum inputs, optional original-size references, and container observation. Default maximum is 50% of the container; the
+relative minimum is 30% of original size. <code>resizeDisableShrink</code> defaults to true, retaining the original-size floor until shrinking is explicitly enabled.
+Available container extent wins over conflicting bounds.</li>
+<li>Pointer capture, frame-coalesced updates, final-position flushing, keyboard arrows/Home/End, Shift increments, and Escape cancellation share bounded values.
+Listeners, capture, and temporary selection/cursor styles are cleaned up on completion, cancellation, disabling, focus loss, and destruction.</li>
+<li>Added opt-in SidePanel width resizing with a handle on its inner edge. <code>width</code> is a model supporting <code>widthChange</code>; existing one-way bindings still work.
+<code>resizable</code>, <code>resizeMinWidth</code>, <code>resizeMaxWidth</code>, <code>resizeDisableShrink</code>, and translatable <code>resizeLabel</code> configure interaction. CSS-length initial widths are
+supported; completed adjustments write numeric pixels, and cancellation restores the original representation. Side panels resize horizontally only.</li>
+<li>Added shared neutral resize-grip styling: a compact three-dot pill in a separate gutter and a full-edge line without dots on hover/drag. Pointer inactivity
+fades the idle grip; focus, touch, reduced motion, and forced colors retain appropriate feedback. Push panels reserve the gutter. <code>resizeActivityContainer</code>
+separates pointer activity from portal bounds, and <code>resizeIdleDelay</code> defaults to 2000ms with zero retaining a persistent idle grip.</li>
+<li>Added <code>Chip.deselectable</code>, default true. False supports owner-coordinated single-choice chip groups without toggling the active choice off. Filled chip
+material now defaults to an opaque semantic fill, configurable through <code>--bx-chip-fill-opacity</code>, so primary selection remains visible.</li>
+</ul>
+<h2>Scroll-boundary detection and shared loading</h2>
+<ul>
+<li>Added <code>InfiniteScrollDirective</code> (<code>bxInfiniteScroll</code>) to Primitives for detecting proximity to the end of arbitrary scroll containers or an ancestor/document
+viewport. Inputs configure pixel thresholds, disabled/loading states, completion revisions, and an optional footer offset.</li>
+<li>Detection remains separate from fetching, pagination, indicators, buttons, retries, and exhaustion. <code>scrollEnd</code> emits a guarded boundary event; <code>complete()</code>
+acknowledges completion when the owner has no loading cycle or revision change. Read-only <code>overflowing()</code> exposes measured overflow.</li>
+<li>Optional <code>infiniteScrollCheckOnRender</code> enables finite local progressive rendering to fill short viewports after initial render, content changes, and resizing.
+It defaults to false to avoid uncontrolled remote request loops. Owners explicitly disable detection at exhaustion.</li>
+<li>Exported <code>findScrollContainer</code>, <code>measureScrollBoundary</code>, <code>observeScrollBoundary</code>, and <code>IScrollBoundary</code> for reusable viewport discovery, geometry, and
+disposable passive observation. Browser observers start after rendering, reconnect for container changes, and release removed content targets and listeners.</li>
+<li>Refined <code>LoadMoreDirective</code> to use the same Core boundary measurement/observation helpers. Select and Multiselect retain one shared orchestration layer for
+loading, no-scrollbar fallback actions, failure, explicit retry, and request-source payloads. Their public inputs and outputs remain unchanged.</li>
+<li>Kept footer-excluded overflow measurement and explicit remote fallback behavior. Scroll request guards now run before entering Angular when no new request can
+be emitted, avoiding redundant change-detection work while loading or awaiting completion.</li>
+</ul>
+<h2>Bidirectional virtual rendering</h2>
+<ul>
+<li>Added <code>VirtualCollection&lt;T&gt;</code> and typed <code>VirtualItemDirective&lt;T&gt;</code> to Primitives for a sliding row window independent of detection and data loading. List and
+responsive multi-column grid modes mount overscan near the viewport and unmount distant items while preserving overall scroll extent with spacers.</li>
+<li>Exported <code>IVirtualCollectionConfig</code>, <code>IVirtualItemContext&lt;T&gt;</code>, <code>IVirtualRange</code>, stable-key/track-by contracts, and layout types. Configuration covers
+estimated row height, overscan pixels, and CSS or numeric minimum column width; <code>measurementRevision</code> invalidates cached geometry.</li>
+<li>Measure dynamic rows with <code>ResizeObserver</code> and maintain a cached prefix-sum tree for efficient height updates and offset lookups. Width and column changes
+regroup rows and retain a stable visible anchor. Scroll corrections run after spacer rendering, including when the browser clamps a shrinking scroll extent.</li>
+<li>Exposed read-only <code>renderedRange()</code> and <code>renderedItems()</code> for bounded consumer presentation work, plus <code>scrollToIndex()</code>, <code>scrollToItem()</code>, and
+<code>refreshMeasurements()</code>. Programmatic smooth scrolling respects reduced motion. Focused rows can remain independently mounted; responsive regrouping restores
+their focused control when available. Measurement internals and coordination tokens remain outside public exports.</li>
+</ul>
+<h2>Icons and generated categories</h2>
+<ul>
+<li>Broadened <code>IconSize</code> to positive numeric pixel values or numeric strings and <code>number</code> to positive numeric values, enabling continuous customization. Existing
+values remain valid. Runtime invalid dimensions use 24 pixels and invalid stroke widths use 1.5.</li>
+<li>Ignore icon-load completions after input replacement or destruction.</li>
+<li>Added <code>LUCIDE_CATEGORIES</code>, <code>LUCIDE_ICON_CATEGORIES</code>, and <code>LucideCategoryId</code> to the icons entry point. Category records are synchronized with the generated
+icon names, support multiple assignments and upstream aliases, and use a predictable uncategorized fallback.</li>
+<li>Extended the existing generation pipeline with an offline, release-pinned official Lucide snapshot. A controlled synchronization command resolves upstream
+category inheritance and preserves attribution. Normal builds and runtime require no metadata network requests, and mismatched dependency/snapshot versions
+fail with synchronization instructions.</li>
 </ul>
 <h2>Page layouts and breadcrumbs</h2>
 <ul>
-<li>Added <code>PageContainer</code>, <code>PageHeader</code>, <code>PageContent</code>, and <code>PageFooter</code> to the primitives entry point, with colocated guides and an interactive playground.</li>
-<li>Standardized page widths, responsive padding, heading spacing, and the existing section-label/title treatment throughout the playground, including tokens,
-icons, utilities, component examples, appearance, release notes, and modal/toast configurators. Home keeps its existing layout.</li>
-<li>Added <code>ResolvableText</code> support for section titles, page titles, explicit descriptions, breadcrumb labels, and the breadcrumb navigation&#39;s accessible name.
-Already-rendered text reacts to the optional <code>BX_I18N</code> adapter&#39;s language revision.</li>
-<li>Added <code>autoResolveTitlesFromNavigation</code> (default <code>true</code>) to infer undefined section and page titles from shared navigation metadata. Descriptions remain
-manually supplied; explicit empty titles suppress automatic values. Projected headers support additional content and configurable semantic heading levels.</li>
-<li>Connected <code>provideNavigation()</code> and <code>NavigationService.page</code> to the optional <code>BX_PAGE_NAVIGATION</code> adapter without adding a dependency from primitives back to
-navigation. Applications can also provide their own reactive <code>IPageNavigation</code> adapter or supply explicit headings and breadcrumb trails.</li>
-<li>Added automatic breadcrumbs with a configurable <code>breadcrumbsAfter</code> threshold. The default is one nesting: root trails stay hidden and child pages show
-ancestor links. Zero shows root entries; the demo&#39;s numeric control has a minimum of zero and clamps typed negative values. Breadcrumb resolution remains
-independent of automatic title resolution.</li>
-<li>Removed redundant top-of-page back links in favor of breadcrumbs. Trails use native links, an ordered list, visible keyboard focus, and an explicitly marked
-current page, and wrap for narrow screens, translated labels, and RTL layouts.</li>
-<li>Grouped Page container, Content container, Stack layout, Grid layout, and Divider under <strong>Primitives \u2192 Layout</strong> at <code>/components/layout</code>. Their canonical demo
-routes now use <code>/components/layout/&lt;component&gt;</code>; existing <code>/components/&lt;component&gt;</code> URLs redirect to the corresponding layout page.</li>
+<li>Added <code>PageContainer</code>, <code>PageHeader</code>, <code>PageContent</code>, and <code>PageFooter</code> to primitives with public configuration and colocated guides.</li>
+<li>Added responsive width/padding presets and <code>ResolvableText</code> support for section titles, page titles, explicit descriptions, breadcrumb labels, and the
+breadcrumb navigation&#39;s accessible name. Already-rendered text reacts to the optional <code>BX_I18N</code> language revision.</li>
+<li>Added <code>autoResolveTitlesFromNavigation</code>, default true, to infer undefined headings. Descriptions remain explicit; empty titles suppress automatic values.
+Projected headers support additional content and configurable semantic heading levels.</li>
+<li>Connected <code>provideNavigation()</code> and <code>NavigationService.page</code> to optional <code>BX_PAGE_NAVIGATION</code> without a dependency from primitives to navigation. Applications
+can supply their own reactive <code>IPageNavigation</code> adapter or explicit headings and breadcrumb trails.</li>
+<li>Added automatic breadcrumbs with a configurable <code>breadcrumbsAfter</code> threshold. The default hides root trails and shows ancestor links on child pages. Native
+ordered links, current-page markers, focus indicators, and wrapping support narrow screens, translated labels, and RTL layouts.</li>
 </ul>
-<h2>Mobile navigation</h2>
+<h2>Mobile navigation and scroll locking</h2>
 <ul>
-<li>Reused <code>ModalBackdrop</code> for mobile side navigation, including its blur and opaque accessibility fallbacks.</li>
-<li>Added a translatable dismissal label, tab-order input, and presentation CSS variables to the shared backdrop.</li>
-<li>Tied the drawer&#39;s <code>ScrollLockService</code> acquisition to its open overlay presentation and released its own lock on close, route navigation, presentation changes,
-and destruction. Concurrent modal locks remain active.</li>
-<li>Made shared scroll-lock ownership idempotent. Releasing one owner preserves every other active lock, recalculates touch/overflow requirements, and restores
-the original inline body styles only after the final owner releases its lock.</li>
-<li>Kept embedded inline drawers contained in their preview shell without a page scroll lock.</li>
+<li>Reused the shared backdrop in mobile side navigation, including blur and opaque accessibility fallbacks. Added a translatable dismissal label, tab-order
+input, and presentation CSS variables.</li>
+<li>Tied drawer <code>ScrollLockService</code> ownership to open overlay presentation and released its own lock on close, navigation, presentation changes, and destruction.
+Embedded inline drawers retain their container-scoped behavior without a page lock.</li>
+<li>Made scroll-lock ownership idempotent. Releasing one owner preserves other locks, recalculates touch/overflow requirements, and restores original inline body
+styles only after the final owner releases its lock.</li>
 </ul>
 <h2>Window dimensions and responsive breakpoints</h2>
 <ul>
-<li>Expanded <code>WindowDimensionsService</code> with signals for extra-small and small mobile viewports, small laptops, large desktops, ultra-wide screens, and cumulative
-<code>*AndBelow</code> ranges, while retaining <code>isMobile</code>, <code>isTablet</code>, and <code>isDesktop</code>.</li>
-<li>Added <code>currentBreakpoint()</code> for the active breakpoint key and <code>currentBreakpointValue()</code> for its numeric threshold. Both return <code>undefined</code> outside the
-browser.</li>
-<li>Standardized breakpoint matching on minimum-width thresholds, so the active breakpoint is the highest configured threshold not exceeding the viewport width.</li>
-<li>Added strongly typed <code>isAtLeast()</code>, <code>isBelow()</code>, and <code>isBetween()</code> methods for custom viewport checks, avoiding manual comparisons with breakpoint numbers.</li>
-<li>Added generic <code>resolveResponsiveValue()</code> to select the value assigned to the highest matching configured breakpoint, with a caller-provided fallback for
-server rendering or when no configured breakpoint matches.</li>
-<li>Centralized comparisons behind shared helpers, while preserving convenient, reactive boolean signals for common viewport categories.</li>
-<li>Improved first-render dimension detection by reading the browser viewport without depending on an uninitialized class field.</li>
-<li>Replaced the 150 ms debounced resize listener with animation-frame-aligned event coalescing for more responsive dimension updates. Resize subscriptions now
-clean up automatically when the service is destroyed.</li>
+<li>Expanded <code>WindowDimensionsService</code> with extra-small/small mobile, small laptop, large desktop, ultra-wide, and cumulative <code>*AndBelow</code> signals while retaining
+<code>isMobile</code>, <code>isTablet</code>, and <code>isDesktop</code>.</li>
+<li>Added <code>currentBreakpoint()</code> and <code>currentBreakpointValue()</code>, returning undefined outside the browser. The active breakpoint is the highest configured
+minimum-width threshold not exceeding the viewport width.</li>
+<li>Added typed <code>isAtLeast()</code>, <code>isBelow()</code>, <code>isBetween()</code>, and generic <code>resolveResponsiveValue()</code> with a caller-provided server fallback.</li>
+<li>Centralized comparisons and improved first-render dimension detection. Resize updates are animation-frame-coalesced instead of debounced by 150 ms and clean
+up automatically on destruction.</li>
 </ul>
-<p>For example, choose a value by viewport size without manually comparing breakpoint constants:</p>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">glassCount</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span>
-  <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">resolveResponsiveValue</span>(
-    { <span class="hljs-attr">xs</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">md</span>: <span class="hljs-number">30</span>, <span class="hljs-string">&#x27;2xl&#x27;</span>: <span class="hljs-number">100</span> },
-    <span class="hljs-number">100</span>
-  )
-);</code></pre>
-<p>Or use a direct comparison inside a reactive computation:</p>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">showExpandedLayout</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">boolean</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span>
-  <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">isAtLeast</span>(<span class="hljs-string">&#x27;2xl&#x27;</span>)
-);</code></pre>
 <h2>Navigation API</h2>
 <ul>
-<li><p>Replaced side-navigation submenu popups with nested lists inside the sidebar at every screen size and depth. Back, ancestor navigation, scroll restoration,
-and temporary expansion of a compact rail remain available.</p>
-</li>
-<li><p>Removed <code>submenuMode</code>, <code>submenuBreakpoint</code>, <code>SideNavSubmenuMode</code>, and <code>isInlineSubmenus()</code>. Consumers should remove these settings, imports, and calls; nested
-browsing now always uses the panel. The obsolete submenu width/height CSS variables no longer apply.</p>
-</li>
-<li><p>Kept route selection separate from programmatic row focus and focused the active route when entering its containing level.</p>
-</li>
-<li><p>Made the first, section-labelled ancestor action return directly to the full navigation root when that section was only a grouping label, while preserving
-return to a section list that was explicitly opened. Returning to an ancestor reveals the original item used to enter its child branch, scrolling only the
-navigation list.</p>
-</li>
-<li><p>Renamed the navigation configuration helper from <code>withNav</code> to <code>withInAppNavigation</code> to clarify its purpose and distinguish in-app navigation from other
-navigation concerns.</p>
-</li>
-<li><p>Removed the previous <code>withNav</code> export. Applications using the old helper must update their imports and configuration calls.</p>
-</li>
+<li>Replaced side-navigation submenu popups with nested lists at every screen size and depth. Back, ancestor navigation, scroll restoration, and temporary compact
+rail expansion remain available.</li>
+<li>Removed <code>submenuMode</code>, <code>submenuBreakpoint</code>, <code>SideNavSubmenuMode</code>, and <code>isInlineSubmenus()</code>. Nested browsing always uses the panel; obsolete submenu
+width/height variables no longer apply.</li>
+<li>Kept route selection separate from programmatic focus and focused the active route when entering its level. Ancestor navigation reveals the original entry and
+scrolls only the navigation list. Section-only ancestors return directly to the navigation root.</li>
+<li>Renamed <code>withNav</code> to <code>withInAppNavigation</code> without a deprecated alias.</li>
 </ul>
 <h2>Design tokens and theme palettes</h2>
 <ul>
-<li>Added a generated Core inventory of CSS custom properties, variable references, design scales, breakpoints, and emitted utility classes. The inventory
-includes semantic roles, every palette shade, glass/effects properties, component overrides, registered custom properties, and discoverable runtime values.</li>
+<li>Added generated Core inventories for CSS custom properties, references, design scales, breakpoints, and utility classes, covering semantic roles, palettes,
+effects properties, component overrides, registered properties, and discoverable runtime values.</li>
 <li>Exported <code>CSS_TOKEN_CATALOG</code>, <code>ICssToken</code>, and category/kind/scope contracts. Metadata distinguishes global, theme, local, and runtime availability and
-records source declarations and use-site fallbacks; local/runtime discovery does not imply that a variable exists on the document root or is a supported
-override.</li>
-<li>Centralized semantic companion mappings in the Sass theme engine. <code>getComplementaryToken()</code> uses these mappings and the existing palette companion rule;
-<code>resolveTokenToCssVar()</code> returns the typed <code>CssVariableReference</code> contract. Palette guards validate supported palettes and shades.</li>
-<li>Moved theme IDs, labels, brand/accent assignments, and optional preview order into the theme engine&#39;s <code>$theme-palettes</code> registry. Generate <code>THEME_PALETTES</code>
-and <code>THEME_PALETTE_IDS</code> from that registry, derive <code>BxThemeId</code> from the generated IDs, and derive picker swatches from palette shade 500.</li>
-<li>Added <code>make-palette-theme(id, dark?, overrides?)</code> so existing named light/dark theme variables and playground theme classes use the same assignments. Existing
-palette IDs, labels, class names, and preview colors are preserved.</li>
-</ul>
-<h2>Tokens page</h2>
-<ul>
-<li>Added the searchable <code>/tokens</code> playground page for semantic colors grouped by purpose, palette shade scales, color companions, spacing, corner radii, border
-colors, shadows, layers, effects, component properties, utility classes, and Sass breakpoints.</li>
-<li>Used Blocks accordions and compact cards. Only the first result section opens by default; category filters and keyboard navigation support browsing the
-complete catalog.</li>
-<li>Added right-click and touch long-press copy menus on token cards, plus a visible Copy\u2026 button and keyboard access. Removed the global copy-format dropdown.
-Options copy <code>var(--bx-\u2026)</code>, the raw <code>--bx-\u2026</code> name, HEX, RGB, or RGBA. Color copies follow the current theme, preserve transparency, and convert through the
-browser&#39;s sRGB color handling; pairs copy one value per line.</li>
-<li>Added live color-value search, narrow-screen layouts, and dynamically sized search/select controls that reserve no empty validation row.</li>
-<li>Added a Blocks Collapse all action beside the Categories filter to close all result sections.</li>
-<li>Separated categories with matching titles and Blocks dividers while preserving the heading hierarchy for groups and cards.</li>
-<li>Added scroll-based lazy rendering in small token batches. Batches mount near the viewport and unmount when far away while preserving measured space and
-focused controls. Shared intersection/resize observers keep long groups lightweight without pagination. With fewer than 48 cards across expanded sections,
-lazy rendering is disabled and the displayed cards remain mounted.</li>
-<li>Changed the category filter to a clearable Blocks multiselect. Categories combine inclusively, such as Colors and Color pairs; clearing selection means All
-tokens, with no category restriction. Search and counts still cover the complete catalog.</li>
-<li>Reused one color-conversion canvas, cached conversion results for the current theme, and converted only mounted token batches during ordinary browsing.
-Current HEX/RGB search builds its color index lazily. Deferred documentation content until its section opens.</li>
-<li>Shortened palette section titles and moved current-theme, palette, and companion labels into trailing heading tags. Card text suppresses selection outside
-collapsible metadata to avoid conflicts with long-press gestures.</li>
-<li>Grouped palette shades and companions into their registered theme pairs. Sorted design scales by size/source order, widened non-color tiles, enlarged radius
-samples, and used a light neutral canvas for visible shadow previews in dark mode.</li>
-<li>Used Blocks collapsibles for source defaults and fallbacks, wrapped responsive Sass examples in code blocks, and copied RGB with comma-separated channels.</li>
-<li>Colocated the catalog guide, linked it from Core and Utilities, and included it in generated playground documentation.</li>
-</ul>
-<h2>Search input</h2>
-<ul>
-<li>Added <code>SearchInput.compact</code>, defaulting to <code>false</code>, to request compact presentation for a search input without a label. Supplying a label automatically
-enables compact mode. The input preserves existing search, loading, readonly, and accessibility behavior.</li>
+records declarations and use-site fallbacks; local/runtime discovery does not imply a document-root value or supported override.</li>
+<li>Centralized semantic companion mappings. <code>getComplementaryToken()</code> uses these mappings and the existing palette rule; <code>resolveTokenToCssVar()</code> returns
+<code>CssVariableReference</code>. Palette guards validate supported palettes and shades.</li>
+<li>Centralized theme IDs, labels, brand/accent assignments, and preview ordering in the Sass <code>$theme-palettes</code> registry; generated <code>THEME_PALETTES</code>,
+<code>THEME_PALETTE_IDS</code>, and <code>BxThemeId</code> derive from it.</li>
+<li>Added <code>make-palette-theme(id, dark?, overrides?)</code> while preserving existing palette IDs, labels, classes, and preview colors.</li>
 </ul>
 <h2>Shared primitive customization</h2>
 <ul>
-<li><p>Fixed surrounding surface highlights changing when a context menu opens. Lighting visibility ignores fully transparent CDK dismissal backdrops while retaining
-occlusion from visible menu panels and opaque backdrops.</p>
-</li>
-<li><p>Fixed number-only Tag proportions by keeping vertical padding at zero while preserving configurable horizontal padding and minimum diameter.</p>
-</li>
-<li><p>Added optional <code>titleTemplate</code> support to Collapsible and accordion items, with the exported <code>ICollapsibleTitleContext</code> providing the translated title and
-expansion state. This supports noninteractive header content such as count tags while retaining the shared disclosure and focus behavior.</p>
-</li>
-<li><p>Added <code>Collapsible.trailingTemplate</code> for noninteractive status tags, text, and icons at the logical end of collapsible/accordion headings, before the chevron.
-It shares <code>ICollapsibleTitleContext</code> with title templates, supports RTL layouts, and keeps the heading as one accessible disclosure button.</p>
-</li>
-<li><p>Added <code>Card.surfaceEffects</code>, defaulting to <code>true</code>. Dense collections can disable decorative surface controllers while keeping themed card styling, content
-slots, and interactions.</p>
-</li>
+<li>Added <code>SearchInput.compact</code>, default false, for compact unlabeled search controls. Supplying a label automatically enables compact mode; existing search,
+loading, readonly, and accessibility behavior remains available.</li>
+<li>Fixed surface highlights changing when context menus open. Lighting visibility ignores fully transparent dismissal backdrops while retaining occlusion from
+visible panels and opaque backdrops. Menu rows keep themed hover/pressed fills and focus without casting near-white light behind the panel.</li>
+<li>Added <code>false</code> support to <code>BxSurfaceDirective.bxSurfaceEmission</code> and runtime <code>ISurfaceOptions.emission</code>. Automatic emission can be disabled independently of
+press feedback and received lighting; an explicit focus-emission color still enables focus-only emission. Mounted hover state reacts to changes.</li>
+<li>Made inherited overlay lighting directional, preserving overlay boundaries for semantic, explicit, reflected, and ambient sources. Exposure checks use
+projected receiving locations and perimeter-based edge falloff.</li>
+<li>Fixed number-only Tag proportions while preserving configurable horizontal padding and minimum diameter.</li>
+<li>Added <code>Collapsible.titleTemplate</code>, <code>Collapsible.trailingTemplate</code>, and exported <code>ICollapsibleTitleContext</code> for translated, noninteractive heading content and
+status while retaining shared disclosure/focus behavior and RTL support.</li>
+<li>Added <code>Card.surfaceEffects</code>, default true, allowing dense collections to disable decorative controllers while preserving themed styling, slots, and
+interaction.</li>
+</ul>
+<h2>Overlay positioning</h2>
+<ul>
+<li>Fixed selection-panel drift when a trigger inside a native top-layer popover moves in a nested scroller. Top-layer overlays use synchronous measured CDK
+positioning; ordinary overlays retain native CSS anchoring where supported.</li>
+<li>Preserved origin tracking cleanup, resize handling, visibility callbacks, and explicit <code>reposition()</code> in both positioning paths.</li>
+<li>Release Select and Multiselect overlays after completed closes so reopening resolves the current ordinary/top-layer context. Values and search terms remain on
+the control; reopening during exit reverses the existing transition.</li>
 </ul>
 <h2>Breaking changes and migration</h2>
-<h3>Navigation configuration</h3>
-<p>The navigation configuration helper has been renamed. This is a <strong>breaking change</strong> for applications using <code>withNav</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Previous API</th>
-<th>Current replacement</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>withNav(...)</code></td>
-<td><code>withInAppNavigation(...)</code></td>
-</tr>
-</tbody></table>
-<p>Update imports and references to use <code>withInAppNavigation</code>. The existing navigation configuration behavior remains unchanged.</p>
-<h3>Window dimensions behavior</h3>
-<p>The window dimensions updates include behavior changes that may affect consumers:</p>
 <ul>
-<li><strong><code>isDesktop()</code> now begins at <code>xl</code> (1280 px), rather than <code>lg</code> (1024 px).</strong> Use <code>isAtLeast(&#39;lg&#39;)</code> or <code>isSmallLaptop()</code> where the previous desktop threshold is
-required.</li>
-<li>The writable <code>_dimensions</code> signal is now private. Use the public readonly <code>dimensions()</code> signal to read viewport dimensions; callers can no longer set
-dimensions directly through the service.</li>
-<li>Resize-driven updates can occur more frequently because they are scheduled per animation frame rather than waiting for a 150 ms quiet period. Review any
-expensive computations triggered by dimension changes.</li>
+<li><p><code>InfiniteScrollDirective</code> now belongs to <code>@filip.mazev/blocks/primitives</code>. Update imports from the earlier Core location; no deprecated Core alias is
+retained. Geometry and scroll-container helpers remain in Core as shared non-presentational utilities.</p>
+</li>
+<li><p>Replace <code>withNav(...)</code> with <code>withInAppNavigation(...)</code> in imports and navigation configuration.</p>
+</li>
+<li><p>Remove side-navigation submenu settings and <code>isInlineSubmenus()</code> calls; nested inline navigation is now the only presentation.</p>
+</li>
+<li><p><code>isDesktop()</code> begins at <code>xl</code> (1280 px). Use <code>isAtLeast(&#39;lg&#39;)</code> or <code>isSmallLaptop()</code> when the previous desktop threshold is needed. <code>isMobile()</code> and
+<code>isTablet()</code> boundaries remain unchanged.</p>
+</li>
+<li><p><code>_dimensions</code> is private. Read the service&#39;s readonly <code>dimensions()</code> signal instead of setting it directly. Review expensive resize computations because
+updates now occur per animation frame.</p>
+</li>
+<li><p><code>meta-brand-palette</code> and <code>meta-accent-palette</code> are Sass metadata and are excluded from <code>Color</code> and <code>SEMANTIC_COLOR_TOKENS</code>. Use <code>ThemingService.palette()</code> for
+palette metadata and <code>primary</code>/<code>accent</code> for themed colors. Filter <code>CSS_TOKEN_CATALOG</code> by scope when globally available values are required.</p>
+</li>
+<li><p>Icon numeric contracts are broader; consumers enumerating <code>IconSize</code> or <code>number</code> as exhaustive unions should use their own preset arrays. Existing rendered
+presets and defaults remain supported. No Select, Multiselect, load-more, or Modal public API was removed by the scroll/panel additions.</p>
+</li>
 </ul>
-<p>The existing <code>isMobile()</code> and <code>isTablet()</code> breakpoint boundaries remain unchanged.</p>
-<h3>Color tokens and variable availability</h3>
+<h2>Documentation, tooling, and source organization</h2>
 <ul>
-<li><code>meta-brand-palette</code> and <code>meta-accent-palette</code> are Sass metadata and are excluded from <code>Color</code> and <code>SEMANTIC_COLOR_TOKENS</code>; <code>bx-theme</code> never emitted CSS
-variables for them. Use <code>ThemingService.palette()</code> and its palette definitions for metadata, and use <code>primary</code>/<code>accent</code> for themed colors.</li>
-<li>Variable/reference inventories now also include local and runtime properties. Filter <code>CSS_TOKEN_CATALOG</code> by <code>scope</code> when a consumer needs only global or theme
-variables. Consult the owning feature guide before setting a local or runtime property.</li>
-<li>Companion mappings describe styling relationships rather than guaranteed accessible text contrast. Existing public color-helper and scale exports remain
-available through <code>@filip.mazev/blocks/core</code>.</li>
+<li>Colocated library guides with their owning entry points, components, and directives. Standardized guide sections, public imports, examples, Markdown
+formatting, and documentation generation. Added a strict <code>lint:docs</code> gate.</li>
+<li>Added <code>release.config.json</code> with optional <code>nextVersion</code> and shared package-version resolution. Unassigned targets increment the configured channel&#39;s patch;
+explicit version overrides and publication retry remain supported. Registry request failure is not treated as proof of non-publication.</li>
+<li>Applied entry-point category folders for types, interfaces, constants, helpers, services, classes, enums, and tokens, including secondary entry points. Moved
+generated Lucide definitions under <code>icons/constants/lucide</code> with contracts in <code>icons/types</code> and updated generation/import paths.</li>
+<li>Enforced full lower-camel injected class names, direct injected-member projection names, declaration organization, colocated guides, and descriptive public
+JSDoc with parameter/type-parameter coverage.</li>
+<li>Replaced theme-type synchronization with <code>tools:generate-tokens</code>, retaining its previous script alias. Token generation evaluates Sass maps and uses the
+TypeScript AST, with generated-source banners, formatting, strict generation rules, and unchanged-output detection.</li>
 </ul>
-<h2>Code generation and lint rules</h2>
-<ul>
-<li>Required injected class references to retain the class&#39;s full lower-camel-case name, including service suffixes, in fields and local variables.</li>
-<li>Required direct injected member projections to keep the projected member&#39;s name, such as <code>isReducedMotion</code> and <code>nativeElement</code>.</li>
-<li>Added ESLint enforcement with alias/namespace resolution and updated library/playground references, templates, host expressions, and documentation examples.</li>
-<li>Required descriptive JSDoc for public members of exported library components, directives, and services and for exported helpers, including parameter and
-generic parameter descriptions. Filled documentation gaps across controls, overlays, shared services, and runtime helpers.</li>
-<li>Replaced the theme-type synchronization script with <code>npm run tools:generate-tokens</code>; retained <code>tools:sync-theme-types</code> as a compatibility alias. Library and
-playground build/start/watch scripts run token generation automatically.</li>
-<li>Split token generation into source reading, data construction, palette metadata, and TypeScript writing helpers. Evaluate Sass maps through Sass instead of
-parsing them with regular expressions, and use the TypeScript AST for generated data rather than maintaining TypeScript programs inside strings.</li>
-<li>Kept type contracts in regular TypeScript files and added <code>Generated from \u2026 by tools/tokens/generate-tokens.mjs</code> source banners to generated constants.</li>
-<li>Pre-format generated TypeScript before the strict ESLint autofix/check pass to avoid expensive formatter-difference processing on large inventories. Added
-per-file progress and elapsed-time reporting, and skip rewriting unchanged outputs so repeated generation does not trigger unnecessary rebuilds.</li>
-</ul>
-<h2>Library source organization</h2>
-<ul>
-<li>Applied Modal&#39;s entry-point layout across Blocks: supporting types, interfaces, constants, helpers, services, tokens, enums, and classes now use their own
-top-level category folders, including within the effects runtime secondary entry point.</li>
-<li>Colocated concrete directive implementations and their guides, templates, styles, and existing specs. Moved form hint/error components into <code>components</code> and
-shared navigation/modal slot directives into <code>directives</code>.</li>
-<li>Separated overlay context contracts from their injection token and extracted supporting declarations from component, directive, service, and runtime modules.</li>
-<li>Moved generated Lucide definitions into <code>icons/constants/lucide</code> and their contracts into <code>icons/types</code>. Updated icon/version generators, imports, public
-re-exports, documentation discovery, and catalog paths to preserve the layout on regeneration.</li>
-<li>Added ESLint enforcement for category placement, declaration separation, filenames, and colocated component/directive READMEs.</li>
-</ul>
-<h2>Compatibility</h2>
-<p>Existing public package entry points remain available. Backdrop and shared primitive inputs are additive, and older release-note URLs continue to work.
-Consumers should review the <code>withNav</code> rename, <code>isDesktop()</code> threshold, direct writes to <code>_dimensions</code>, color-token metadata removal, and variable scopes above.</p>
-<p>Stable NPM installs still use the <code>latest</code> tag; Alpha and Beta remain opt-in.</p>
+<p>Stable NPM installs continue using the <code>latest</code> tag; Alpha and Beta remain opt-in.</p>
 `,"projects/blocks/README.md":`<h1>@filip.mazev/blocks</h1>
 <p>Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship
 in one package, alongside the installation schematic.</p>
@@ -715,6 +695,11 @@ necessarily available on the document root; the owning feature guide defines sup
 <p>Theme palette IDs, labels, brand/accent roles, and optional swatch preview order live in <code>$theme-palettes</code> in the Sass theme engine. <code>THEME_PALETTES</code> and
 <code>THEME_PALETTE_IDS</code> are generated from that registry; the public <code>BxThemeId</code> union derives from the generated IDs. Existing theme variables use
 <code>make-palette-theme(id, dark?, overrides?)</code>, preserving their public names and colors.</p>
+<p>All built-in light-mode accent fills use white on-accent text. Their semantic base/hover/active shades move darker where needed to meet 4.5:1 text contrast; raw
+palette anchors and picker swatches remain unchanged. Other on-fill foregrounds prefer white when it passes, with dark text for brighter fills. Semantic
+brand/accent text and secondary text choose readable palette shades across their normal, hover, active, and neutral surfaces in both modes. Success,
+information, warning, and danger retain their original status foreground, border, and interaction-fill shades. Explicit theme overrides and high-contrast
+palettes retain control.</p>
 <p>Sass is the source of truth. <code>npm run tools:generate-tokens</code> evaluates the maps and inventories compiled CSS plus TypeScript property usage; generated constants
 pass the repository&#39;s lint/format pipeline. Maintain color/type contracts in ordinary TypeScript. See the catalog guide for generation, availability, and the
 migration of <code>meta-*</code> Sass metadata out of the color-token union.</p>
@@ -772,6 +757,14 @@ adapter version changes update mounted content. Plain strings work without an ad
 <code>translate()</code>.</p>
 <p>Use <code>BxOverlayPositionService</code>, overlay-origin helpers, and shared theme inheritance when extending an existing overlay. Preserve the owning component&#39;s focus
 and lifecycle behavior instead of positioning or recoloring its private DOM.</p>
+<p><code>trackOverlayOrigin()</code> uses native CSS anchors where supported for ordinary overlays. Top-layer popovers use synchronous measured CDK positioning so nested
+scrolling keeps the panel attached to its trigger. The same returned cleanup callback removes listeners and observers for either path; call its <code>reposition()</code>
+method after application-owned layout changes.</p>
+<h3>Scroll boundaries</h3>
+<p>Use <a href="components/infinite-scroll">Primitives InfiniteScrollDirective</a> for guarded end detection and bounded local progressive rendering.
+Core also exports <code>findScrollContainer()</code>, <code>measureScrollBoundary()</code>, <code>observeScrollBoundary()</code>, and <code>IScrollBoundary</code> for reusable viewport discovery and
+disposable observation. Detection owns no fetching, pagination, buttons, or retry state. Forms&#39; <a href="components/load-more">LoadMoreDirective</a>
+shares these helpers and retains remote request orchestration, loading feedback, fallback actions, and explicit retry.</p>
 <h2>Appearance and customization</h2>
 <p>Load global styles once through the established package entry point. Import reusable Sass definitions through the public helpers entry point:</p>
 <pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-keyword">@use</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core/styles/helpers&#x27;</span> as *;
@@ -853,7 +846,7 @@ opt in with <code>bxSurfaceInteractive</code>. Components can override the defau
 <tr>
 <td><code>bxSurfaceEmission</code></td>
 <td>Theme accent (error color in invalid fields)</td>
-<td>Override the semantic color emitted on hover, press or an active state</td>
+<td>CSS color override, or <code>false</code> to disable automatic emission while retaining press feedback</td>
 </tr>
 <tr>
 <td><code>bxSurfaceFocusEmission</code></td>
@@ -867,6 +860,12 @@ opt in with <code>bxSurfaceInteractive</code>. Components can override the defau
 </tr>
 </tbody></table>
 <p>Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.</p>
+<p>Disable automatic emission independently of press feedback and received lighting with <code>[bxSurfaceEmission]=&quot;false&quot;</code>. This also suppresses the default keyboard
+focus emission. An explicit <code>bxSurfaceFocusEmission</code> can opt the surface back into focus-only emission. Hiding decoration with CSS opacity does not disable a
+source in the lighting runtime.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">bxSurface</span> [<span class="hljs-attr">surfaceEffects</span>]=<span class="hljs-string">&quot;false&quot;</span> [<span class="hljs-attr">bxSurfaceEmission</span>]=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;tonal&quot;</span>&gt;</span>Local interaction feedback<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
+<p>Here <code>[surfaceEffects]=&quot;false&quot;</code> lets the directive own the button&#39;s material without mounting a second surface. The <code>/components/surface</code> playground includes a
+Blocks checkbox that switches automatic emission on and off.</p>
 <h2>Glassiness and translucency</h2>
 <p>Translucency controls tint and blur from 0 to 1, with a default of 0.5. Its material strength is <code>0.5 \xD7 value\xB2 + 0.35 \xD7 value\u2074</code>: zero retains the lightest
 material tint, and the preceding midpoint now falls around 70% while both endpoints stay unchanged. The classic material ranges from 6% to about 72.5% tint;
@@ -1203,7 +1202,14 @@ testing excludes covered surfaces, including rounded corners. Fully transparent 
 panels and opaque backdrops still occlude. Opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the
 emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies
 changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent
-hover animation loop.</p>
+hover animation loop. Hover contributions use a bounded circular spread, so a large receiver does not stretch a small source across its entire border. Edge
+falloff uses the distance to the receiver&#39;s perimeter even when a source projects inside its bounds.</p>
+<p>Use <code>mountSurface(element, { emission: false })</code> to disable automatic hover, press, active-state and keyboard-focus emission while keeping press deformation and
+received lighting. An explicit <code>focusEmission</code> still enables focus-only emission. Omission retains the existing theme accent/error default. Blocks menu rows use
+local hover/pressed fills and focus outlines without becoming light sources.</p>
+<p><code>inheritGlassLighting(overlay, origin)</code> shares incoming lighting with an overlay while retaining its physical boundary for outgoing sources. Controls inside an
+overlay can illuminate nearby receivers in that overlay, but cannot cast light back into its trigger&#39;s page or parent overlay. This applies to dropdowns,
+context menus, popovers, selection panels and passive tooltips. Theme inheritance remains independent of this direction of lighting.</p>
 <p>Backdrop behavior follows the browser\u2019s <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter">backdrop-root rules</a>. Visual
 treatment follows <a href="https://developer.apple.com/design/human-interface-guidelines/materials">Apple\u2019s material guidance</a>: restrained highlights and readable
 translucent layers.</p>
@@ -1212,9 +1218,9 @@ custom surface into illumination for any focus. Checked, pressed, selected, and 
 also declares <code>aria-haspopup</code>; ordinary layout expansion alone does not select a control. Focused fields remain active when a different button is hovered.
 Decorative native-control receivers can pass their hit target as the third argument to <code>observeGlassLighting</code>.</p>
 <p>Active borders stay painted when surfaces are partly clipped by the viewport, a scrolling container, or an overlapping header. Scrolling them back into view
-preserves their lighting without a fade. Surrounding light also remains active while part of the source and receiver is exposed; a covered center or projected
-corner alone does not remove it. Fully covered surfaces remain excluded. Exposure checks share a short-lived cache and use bounded fallback probes only when the
-preferred point is covered.</p>
+preserves their lighting without a fade. A partly exposed source can still emit, but each receiving interior/edge location must be uncovered. A visible area
+elsewhere on a receiver does not authorize light through an overlapping opaque panel. Fully covered surfaces remain excluded. Whole-source exposure checks share
+a short-lived cache and use bounded fallback probes only when the preferred point is covered; projected receiver points use separate visibility checks.</p>
 `,"projects/blocks/forms/README.md":`<h1>Forms</h1>
 <p>Blocks fields use Angular 22 native signal control contracts and support Signal Forms, Reactive Forms, Template-driven Forms and standalone models. The library
 supplies presentation, interaction and accessible feedback; Angular owns validation and submission.</p>
@@ -1821,6 +1827,8 @@ remote record.</p>
 <p>The panel stays open while selecting. Arrow keys, Home/End, typeahead, Enter/Space, Escape and Tab support keyboard interaction. Visual checkboxes are
 non-interactive indicators inside listbox options, avoiding nested checkbox focus targets. <code>compareWith</code> supports stable object-value identity across API
 responses.</p>
+<p>After the closing transition completes, the shared selection base releases the panel overlay and its tracking resources. Reopening resolves the current
+ordinary/top-layer context while retaining the selected values and search term. Top-layer panels use measured positioning to follow nested scrolling.</p>
 <p>Pagination and failure/retry use the shared <a href="components/load-more">load-more directive</a>. Existing items stay visible during incremental requests
 and after failed pages. The application owns request cancellation and page/cursor state.</p>
 <h2>Appearance and accessibility</h2>
@@ -2181,6 +2189,10 @@ with overflow. Applications need not know the viewport size or reproduce fallbac
 error/hint descriptions and invalid/required states are connected automatically.</p>
 <p>Panels retain the shared overlay positioning, theme inheritance and top-layer context behavior. Provide <code>BX_OVERLAY_CONTEXT</code> through the existing
 overlay-context directive for custom top-layer containers.</p>
+<p>Ordinary panels use native CSS anchors where supported. Panels promoted into the top layer use measured CDK positioning so nested scrolling and filtering
+preserve their gap, focus and placement without a frame of anchor drift.</p>
+<p>Completed closes release the panel&#39;s overlay and tracking resources. Reopening resolves the current overlay context, including after moving the control into or
+out of a native popover. Selection and the application-owned search term remain on the control.</p>
 <h2>Appearance and accessibility</h2>
 <p>Uses Blocks semantic tokens and the active <code>ThemingService</code> configuration. Customize through documented inputs, templates and CSS variables. Existing components
 update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
@@ -2311,6 +2323,10 @@ scroll threshold and <code>buttonMode</code> (<code>auto</code> or <code>always<
 <li><code>actionVisible()</code>: indicates whether the footer action is visible, allowing an owning component to avoid rendering a second loading indicator.</li>
 <li><code>request(source?)</code>: invokes the same request guard from application code.</li>
 </ul>
+<p>Scroll geometry and passive content/resize observation use Core&#39;s <code>measureScrollBoundary()</code> and <code>observeScrollBoundary()</code> helpers, shared with
+<code>InfiniteScrollDirective</code>. The orchestration remains here: it excludes its own footer when measuring overflow, exposes a reachable action, and guards remote
+requests. Select and Multiselect continue using this one directive. No new Select/Multiselect API is required, and remote underfill never starts an automatic
+fetch loop.</p>
 <h2>Loading, failure and retry</h2>
 <p>Set loading before starting the promise. Append data only on success. On failure retain the previous data and page/cursor, set <code>loadMoreError</code>, and clear
 loading in <code>finally</code>. Retry the same page; advance its cursor only after success. Clear the error when a retry begins.</p>
@@ -2407,9 +2423,13 @@ when the adapter&#39;s <code>version</code> signal changes. Plain text works wit
 <h2>API</h2>
 <p><code>name</code> is required. <code>size</code>, <code>strokeWidth</code>, <code>color</code>, <code>bgColor</code>, <code>decorative</code>, <code>ariaLabel</code> configure rendering. Color accepts a semantic token or themed color;
 <code>bgColor=&quot;auto&quot;</code> derives a complementary token.</p>
-<p><code>size</code> accepts the string values <code>&#39;16&#39;</code>, <code>&#39;20&#39;</code>, <code>&#39;24&#39;</code>, <code>&#39;28&#39;</code>, <code>&#39;32&#39;</code>, <code>&#39;36&#39;</code>, <code>&#39;40&#39;</code>, <code>&#39;44&#39;</code> and <code>&#39;48&#39;</code>, measured in pixels. The default is <code>&#39;24&#39;</code>. For a
-small icon between the first two sizes, choose <code>&#39;16&#39;</code> or <code>&#39;20&#39;</code>; <code>&#39;18&#39;</code> is not supported by <code>IconSize</code>.</p>
-<h2>Appearance</h2>
+<p><code>size</code> accepts positive finite numbers or numeric strings in CSS pixels, including <code>[size]=&quot;64&quot;</code>, <code>size=&quot;18&quot;</code>, and the existing presets. The default is <code>&#39;24&#39;</code>;
+invalid dimensions fall back to 24. <code>strokeWidth</code> accepts positive finite numbers, including fractional values; omission or invalid values use 1.5. Icon
+requests completing after an input change or destruction are ignored.</p>
+<p>Generated <code>LUCIDE_CATEGORIES</code>, <code>LUCIDE_ICON_CATEGORIES</code>, and <code>LucideCategoryId</code> are available from the same public entry point. Categories come from a pinned
+official upstream snapshot and include multiple assignments, resolved inheritance, aliases, and an uncategorized fallback. See the
+<a href="../../../../../tools/icons/README.md">generator guide</a> for synchronization. The mapping contains only icons generated into Blocks.</p>
+<h2>Appearance and customization</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
@@ -2425,9 +2445,9 @@ translucency updates existing components and overlays. Content-only parts share 
 focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Leave decorative icons hidden from assistive technology; meaningful standalone icons need <code>decorative=false</code> and <code>ariaLabel</code>. Label icon buttons on the button
-itself. The catalog paginates icon previews to bound SVG work.</p>
+itself. The catalog progressively renders icon previews in bounded batches.</p>
 <h2>Playground</h2>
-<p>Open <code>/components/icon</code> for a working example and its current value or action result.</p>
+<p>Open <code>/components/icon</code> for a working example, or <code>/icons</code> for categories, persistent catalog preferences, and a live customization inspector.</p>
 `,"projects/blocks/modal/README.md":`<h1>Modal</h1>
 <p>Service-driven dialogs with typed content and results, centered and side layouts, responsive bottom sheets, close guards, and shared Blocks appearance.</p>
 <h2>Import</h2>
@@ -2580,6 +2600,10 @@ other exposed default signals can be configured directly before opening.</p>
 <p>Extend <code>ModalCloseGuard</code> and implement <code>canClose(modalService)</code> returning a boolean, Promise, or Observable. A false result retains the dialog.
 <code>ModalConfirmCloseGuard&lt;D, R&gt;(ConfirmationComponent, config)</code> opens a typed confirmation dialog and waits for its result. Keep application-owned unsaved state
 in the application; provide the guard when opening its content. <code>forceClose: true</code> deliberately bypasses the guard.</p>
+<h3>Declarative nonmodal panels</h3>
+<p>For page-owned inspectors and filters, use <a href="components/side-panel">SidePanel</a> from the primitives entry point with its boolean <code>open</code>
+model. It shares square panel corners, surface material, layout, and close-control presentation with Modal Side while keeping nonmodal behavior separate. Modal
+continues to own its guarded service lifecycle, modal semantics, nested stacking, backdrops, focus trapping/restoration, and scroll locks.</p>
 <h2>Appearance and customization</h2>
 <p><code>IModalStyleConfig</code> supports <code>layout: &#39;center&#39; | &#39;left&#39; | &#39;right&#39; | &#39;bottom-sheet&#39;</code>, responsive <code>breakpoints</code>, <code>animate</code> (true), <code>hasBackdrop</code> (true),
 <code>showCloseButton</code> (true), <code>closeDelay</code> (175 ms), <code>contentWrapper</code> (true), <code>overrideFullHeight</code> (false), and optional <code>wrapperClasses</code>/<code>wrapperStyles</code>.
@@ -2588,6 +2612,27 @@ in the application; provide the guard when opening its content. <code>forceClose
 match the <a href="components">core breakpoint tokens</a>: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>2xl</code>, <code>3xl</code>, and <code>4xl</code>.</p>
 <p>The dialog inherits palette, semantic tokens, and appearance from <code>ThemingService</code>. See the
 <a href="appearance">appearance guide</a> for application-wide configuration.</p>
+<p>All modal layouts share the declarative SidePanel&#39;s translucent surface material and semantic background tokens. <code>--bx-modal-bg</code> and <code>--bx-modal-text</code> remain
+modal-specific overrides, falling back to <code>--bx-panel-bg</code> / <code>--bx-panel-text</code> and then <code>--bx-bg-surface</code> / <code>--bx-text-primary</code>. Root dialogs retain their normal
+0.52 opacity floor and shared appearance preferences. Left/right modal panels have four square corners; centered dialogs and bottom sheets retain their shapes.</p>
+<p>The first dialog paints dimming outside its surface, while the shared backdrop retains blur and pointer dismissal. This prevents the root surface from blending
+with its own black scrim. Its centered animation keeps dimming on an unscaled frame, so the backdrop remains viewport-sized during zoom.</p>
+<h3>Nested dialogs</h3>
+<p>Each nested dialog restores an independent fixed backdrop and dims the parent normally. Opening or closing a child never changes the parent&#39;s material or turns
+its backdrop off. The first nested dialog uses a minimum 0.9 material opacity; the next nested dialog and deeper levels use 1. More opaque application or
+accessibility settings still take precedence. This policy applies to centered, side, and bottom-sheet layouts, including responsive layout changes and close
+guards. Depth follows the mounted modal stack and updates when an intervening dialog is removed; a dialog remains mounted through its close animation.</p>
+<p>Customize the floors through the shared settings service. Index zero is the first nested dialog; the last entry repeats for deeper levels. An empty array
+retains ordinary material at every depth. Values clamp to 0.52\u20131; nonfinite entries use the defaults for their depth. Replace the array when updating it;
+mounted modals respond reactively.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ModalGlobalSettingsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/modal&#x27;</span>;
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> modalGlobalSettingsService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ModalGlobalSettingsService</span>);
+
+<span class="hljs-comment">// First nested dialog: at least 90% opaque; further nesting: fully opaque.</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">modalGlobalSettingsService</span>.<span class="hljs-property">nestedOpacityFloors</span>.<span class="hljs-title function_">set</span>([<span class="hljs-number">0.9</span>, <span class="hljs-number">1</span>]);</code></pre>
+<p><code>hasBackdrop: false</code> keeps that dialog&#39;s backdrop off. Reduced-transparency and forced-color modes retain the opaque fallback.</p>
 <h2>Behavior and accessibility</h2>
 <p>Open content through <code>ModalService</code> so focus handling, Escape/backdrop dismissal, close guards, scroll locks, layout, and cleanup stay coordinated.
 <code>ScrollLockService</code> keeps separate locks for concurrent overlays. Closing one overlay does not unlock another. Reduced motion takes precedence over requested
@@ -2595,6 +2640,8 @@ animation; reduced transparency and forced colors receive opaque backdrop presen
 <p>Header text accepts <code>ResolvableText</code> and updates through the optional <code>BX_I18N</code> adapter. Content components own the translation and accessible naming of their
 custom actions, descriptions, errors, and form controls. Keep actions reachable in constrained viewports and preserve focus when completing asynchronous work.</p>
 <h2>Playground</h2>
+<p>The live dialog includes <strong>Open nested dialog</strong>, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a
+child returns to its parent. The confirm-close guard exercises the same independent backdrop and depth policy.</p>
 <p>Open <code>/modal</code> for the configurator, <code>/components/modal-core</code> for the lifecycle host, or the centered, side, bottom-sheet, header, footer, and backdrop entries
 in the component catalog. The examples demonstrate typed results and guarded dismissal.</p>
 `,"projects/blocks/modal/components/modal-core/README.md":`<h1>Modal core</h1>
@@ -2652,6 +2699,10 @@ bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showClos
 <p><code>--bx-modal-backdrop-position</code> defaults to <code>fixed</code>, <code>--bx-modal-backdrop-z-index</code> to the shared modal layer, and <code>--bx-modal-backdrop-background</code> to the shared
 dim scrim. Owners can set these variables to contain or stack the backdrop without reaching into its DOM. Reduced-transparency and forced-color fallbacks take
 precedence over the ordinary background override.</p>
+<p>ModalService uses this same backdrop for centered, side, and bottom-sheet dialogs. In that composition the backdrop supplies blur and dismissal, while the root
+surface paints dimming outside its own border to avoid a gray tint. Nested dialogs use independent filled backdrops with their own blur and dismissal; older
+backdrop/material layers stay intact. Nested material becomes at least 90% opaque at the first nested level and fully opaque at deeper levels by default.
+Standalone backdrops and mobile navigation retain their existing filled-scrim presentation.</p>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
@@ -2681,6 +2732,8 @@ data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to r
 <p>Required inputs: <code>header</code> (header config or undefined), <code>showCloseButton</code> (boolean). <code>close</code> emits a modal close mode or undefined. Header supports text and an
 optional icon configuration.</p>
 <h2>Appearance</h2>
+<p>Title/icon alignment, wrapping, divider spacing, and the compact close action use shared panel-banner Sass presentation. Declarative SidePanel headings reuse
+the same styling and expose a matching <code>headerIcon: IIconData</code> contract.</p>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
@@ -3956,6 +4009,11 @@ cards. <code>/appearance</code> uses clickable cards for Light, Dark and Auto.</
 <td>Toggles selection and exposes aria-pressed</td>
 </tr>
 <tr>
+<td><code>deselectable</code></td>
+<td>true</td>
+<td>Allows an active selectable chip to be deselected</td>
+</tr>
+<tr>
 <td><code>removable</code></td>
 <td>false</td>
 <td>Separate accessible remove action</td>
@@ -3991,12 +4049,16 @@ cards. <code>/appearance</code> uses clickable cards for Light, Dark and Auto.</
 <td>Focuses the main action</td>
 </tr>
 </tbody></table>
+<p><code>deselectable</code> defaults to true. Set it to false for an application-coordinated single-choice group: activating an unselected chip selects it, while activating
+an already selected chip leaves it selected. The owner clears selection on the other chips. <code>activated</code> still emits for each enabled activation.</p>
 <p><code>IChipConfig</code> supports <code>color</code> (primary), <code>variant</code> (tonal), <code>size</code> (medium), optional <code>icon</code>, and translatable <code>removeLabel</code> (Remove {label}). Provide
 <code>BX_CHIP_DEFAULTS</code> for shared values; instance configuration wins.</p>
 <h2>Appearance and customization</h2>
 <p><code>--bx-chip-background</code>, <code>--bx-chip-color</code>, <code>--bx-chip-border</code>, <code>--bx-chip-radius</code>, <code>--bx-chip-min-height</code>, <code>--bx-chip-hover-background</code> and
-<code>--bx-chip-remove-background</code> override the shared tag palette and spacing defaults. Main-action hover fills the entire chip behind the separate circular remove
-action.</p>
+<code>--bx-chip-remove-background</code>, and <code>--bx-chip-fill-opacity</code> override the shared tag palette and spacing defaults. Main-action hover fills the entire chip behind
+the separate circular remove action for tonal/outlined chips. Filled chips preserve their fill and use an inset hover outline, keeping the theme&#39;s on-fill text
+contrast stable; <code>--bx-chip-hover-background</code> can override that behavior. Filled chips default to an opaque semantic fill (<code>--bx-chip-fill-opacity: 1</code>),
+matching filled-button intent and keeping primary selection visible.</p>
 <h2>Behavior and accessibility</h2>
 <p>Enter and Space activate native buttons. Delete or Backspace on the main action requests removal when enabled. Selection has a check mark and inset outline. The
 label wraps. The application should move focus to an adjacent chip or another action after removing the focused item; the playground demonstrates this. This
@@ -4404,6 +4466,8 @@ translucency updates existing components and overlays. Content-only parts share 
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">themingService</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
 focus states, or semantic control states.</p>
+<p>Rows share their menu&#39;s opaque backing. Hover and press use the themed normal/danger background tokens, keyboard focus retains its outline, and rows do not emit
+light onto neighboring rows or surrounding page surfaces. Press deformation still follows application motion preferences.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use <code>action</code> for activation and <code>disabled</code> for unavailable commands. Valid combinations expose <code>aria-keyshortcuts</code> on the internal button while visual keycaps
 are hidden from its accessible name. Disabled items omit shortcut metadata; application handlers must also guard the disabled command. Only supply a binding
@@ -4438,7 +4502,8 @@ a hint with three tokens. See the <a href="components/menu-item">menu item READM
 example. Both menu playground routes demonstrate a combination and a timed sequence opening an overlay.</p>
 <h2>Appearance</h2>
 <p>Menus use an opaque themed backing with no container blur, reflections, or live lighting. Colors, spacing, radius, elevation and row interactions still follow
-Blocks tokens. Trigger and row effects retain their application appearance settings.</p>
+Blocks tokens. Rows provide local hover/pressed fills and visible keyboard focus without emitting light onto neighboring rows or the page. Press feedback and
+trigger effects retain their application appearance settings.</p>
 <p><code>BxA11yService</code> controls reduced motion. Forced colors preserve native contrast and focus states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.</p>
@@ -4751,6 +4816,306 @@ when the adapter&#39;s <code>version</code> signal changes. Plain text works wit
 <h2>Playground</h2>
 <p>Open <code>/components/progress-bar</code>. Fake asynchronous requests demonstrate progress and loading buttons. Reduced-motion preferences remove continuous animation
 while preserving status feedback.</p>
+`,"projects/blocks/primitives/components/side-panel-layout/README.md":`<h1>Side panel layout</h1>
+<p><code>SidePanelLayout</code> supplies stable bounds for declarative overlay and push panels alongside a page&#39;s content. It keeps containment in CSS and reserves real space
+for push panels without reparenting or recreating their content when modes change.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SidePanel</span>, <span class="hljs-title class_">SidePanelLayout</span>, <span class="hljs-title class_">SidePanelHeaderDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel-layout</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel</span> [(<span class="hljs-attr">open</span>)]=<span class="hljs-string">&quot;filtersOpen&quot;</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">&quot;left&quot;</span> [<span class="hljs-attr">breakpoints</span>]=<span class="hljs-string">&quot;{ &#x27;2xl&#x27;: &#x27;push&#x27; }&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Filters&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">bxSidePanelHeader</span>&gt;</span>Filters<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Filter controls --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">main</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;workspace-content&quot;</span>&gt;</span><span class="hljs-comment">&lt;!-- Page content; give its scroll wrapper overflow: auto. --&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel-layout</span>&gt;</span></code></pre>
+<p>Give the layout a definite available height or a constrained flex/grid slot. A page with a toolbar can use a column flex shell: the toolbar occupies its natural
+height, and the layout fills <code>flex: 1</code> with <code>min-block-size: 0</code>. This keeps panels below the toolbar without numeric offsets or scroll-time rectangle tracking.</p>
+<h2>API</h2>
+<p>The layout has no configuration inputs. Direct <code>bx-side-panel</code> children occupy their physical left/right slots; all other content is projected into the flexible
+middle region. A panel&#39;s <code>layoutMode</code>, <code>breakpoints</code>, <code>width</code>, <code>placement</code>, and <code>open</code> model determine its slot. Default mode is overlay. Breakpoint overrides
+use the shared minimum-width <code>BreakpointKey</code> contract and <code>WindowDimensionsService</code>; the highest matching configured breakpoint wins.</p>
+<h2>Appearance and customization</h2>
+<p>The host is a positioned, isolated flex region with viewport-constrained clipping. Configure surfaces and projected sections on each panel. Size the host with
+your existing Blocks layout tokens and keep the middle content&#39;s actual scroll wrapper constrained.</p>
+<h2>Behavior and accessibility</h2>
+<p>Push mode reserves space, while overlay mode leaves content width unchanged. Both preserve the same panel instance and projected form state. Mode and open
+changes coordinate slot-width transitions with panel motion; reduced motion removes those transitions. The layout adds no focus trap, scroll lock, or modal
+semantics. Child panels provide the existing top-layer overlay context for dropdowns and tooltips.</p>
+<p>An explicit panel <code>container=&quot;viewport&quot;</code> escapes this layout and uses overlay mode. An arbitrary external element can still provide overlay bounds. Push mode
+requires this layout host; standalone panels otherwise retain overlay behavior.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/side-panel</code> to exercise containment and breakpoint behavior, or <code>/icons</code> for coordinated responsive panels and a resizing virtual grid.</p>
+`,"projects/blocks/primitives/components/side-panel/README.md":`<h1>Declarative side panel</h1>
+<p><code>SidePanel</code> is a persistent nonmodal surface controlled by its parent through <code>model&lt;boolean&gt;()</code>. It supports physical left/right placement, viewport or element
+bounds, optional scoped backdrops, and projected header, footer, banner, and body content. It uses no modal service, focus trap, inert page content, or scroll
+lock.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SidePanel</span>, <span class="hljs-title class_">SidePanelBannerDirective</span>, <span class="hljs-title class_">SidePanelFooterDirective</span>, <span class="hljs-title class_">SidePanelHeaderDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Import the component and the slot directives used by the template.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> #<span class="hljs-attr">contentContainer</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;content-region&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;filtersOpen.set(true)&quot;</span>&gt;</span>Filters<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel</span>
+    [(<span class="hljs-attr">open</span>)]=<span class="hljs-string">&quot;filtersOpen&quot;</span>
+    <span class="hljs-attr">placement</span>=<span class="hljs-string">&quot;left&quot;</span>
+    [<span class="hljs-attr">container</span>]=<span class="hljs-string">&quot;contentContainer&quot;</span>
+    [<span class="hljs-attr">width</span>]=<span class="hljs-string">&quot;400&quot;</span>
+    <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Filters&quot;</span>
+    [<span class="hljs-attr">headerIcon</span>]=<span class="hljs-string">&quot;{ name: &#x27;sliders-horizontal&#x27;, color: &#x27;accent&#x27;, bgColor: &#x27;auto&#x27; }&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">bxSidePanelHeader</span>&gt;</span>Filters<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Persistent filter controls --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">bxSidePanelFooter</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;filtersOpen.set(false)&quot;</span>&gt;</span>Done<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel</span>&gt;</span></code></pre>
+<p><code>filtersOpen</code> is a writable boolean signal. For stable page containment and responsive push behavior, use <a href="components/side-panel">SidePanelLayout</a>:</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel-layout</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel</span> [(<span class="hljs-attr">open</span>)]=<span class="hljs-string">&quot;filtersOpen&quot;</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">&quot;left&quot;</span> [<span class="hljs-attr">breakpoints</span>]=<span class="hljs-string">&quot;{ &#x27;2xl&#x27;: &#x27;push&#x27; }&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Filters&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">bxSidePanelHeader</span>&gt;</span>Filters<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Filter controls --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;page-scroll-content&quot;</span>&gt;</span><span class="hljs-comment">&lt;!-- Adjacent page content --&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel-layout</span>&gt;</span></code></pre>
+<p>Give the layout a constrained height. Its page scroll wrapper can then use <code>overflow: auto</code>. A toolbar stays in its own natural-height flex/grid row above the
+layout. The panel and its projected controls remain the same instances when mode changes; push reserves space and overlay leaves the content width unchanged.</p>
+<p>The element&#39;s actual visible bounds determine the surface and backdrop area; no sidebar offsets or relative-position styles are required. Omit <code>container</code> for
+viewport placement. Ensure an element-bound panel&#39;s container has meaningful height.</p>
+<h3>Width resizing</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel</span> [(<span class="hljs-attr">open</span>)]=<span class="hljs-string">&quot;filtersOpen&quot;</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">&quot;left&quot;</span> [<span class="hljs-attr">width</span>]=<span class="hljs-string">&quot;360&quot;</span> [<span class="hljs-attr">resizable</span>]=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Filters&quot;</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Persistent filter controls --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel</span>&gt;</span></code></pre>
+<p><code>width</code> sets the initial width directly, including CSS lengths. It is now a model, so <code>[(width)]=&quot;panelWidth&quot;</code> can retain the user&#39;s width in application state;
+use a <code>number | string</code> writable signal because user adjustments write numeric CSS pixels. Existing one-way <code>[width]</code> bindings remain supported. Escape
+cancellation restores the pre-gesture width, including its original CSS-length representation.</p>
+<p>Resizing is opt-in and uses <a href="components/resize-handle">ResizeHandleDirective</a>. A left panel resizes from its right edge; a right panel resizes
+from its left edge. Side panels expose width resizing only, even though the underlying directive also supports top/bottom height resizing for other layouts.</p>
+<p>The default maximum is 50% of the containing region, retaining an outside backdrop area. The initial width is constrained to that maximum when resizing is
+enabled. <code>resizeDisableShrink</code> defaults to true: growth and return to the original rendered width are allowed. Set it to false to enable the default minimum of
+30% of the original width. Supply <code>resizeMinWidth</code>/<code>resizeMaxWidth</code> to use explicit pixel limits; available container width always takes precedence. The
+reference is the original rendered width at the first resize gesture. A custom initial width remains as simple as <code>[width]=&quot;360&quot;</code>.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-side-panel</span>
+    [(<span class="hljs-attr">open</span>)]=<span class="hljs-string">&quot;editorOpen&quot;</span>
+    [(<span class="hljs-attr">width</span>)]=<span class="hljs-string">&quot;editorWidth&quot;</span>
+    [<span class="hljs-attr">resizable</span>]=<span class="hljs-string">&quot;true&quot;</span>
+    [<span class="hljs-attr">resizeDisableShrink</span>]=<span class="hljs-string">&quot;false&quot;</span>
+    [<span class="hljs-attr">resizeMinWidth</span>]=<span class="hljs-string">&quot;240&quot;</span>
+    [<span class="hljs-attr">resizeMaxWidth</span>]=<span class="hljs-string">&quot;720&quot;</span>
+    <span class="hljs-attr">resizeLabel</span>=<span class="hljs-string">&quot;Resize editor width&quot;</span>
+    <span class="hljs-attr">ariaLabel</span>=<span class="hljs-string">&quot;Editor&quot;</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Editor content --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-side-panel</span>&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input/model</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>open</code> / <code>openChange</code></td>
+<td><code>false</code></td>
+<td>Parent-controlled model and user dismissal updates</td>
+</tr>
+<tr>
+<td><code>panelId</code></td>
+<td>Generated unique ID</td>
+<td>Stable surface ID for <code>aria-controls</code></td>
+</tr>
+<tr>
+<td><code>placement</code></td>
+<td><code>&#39;right&#39;</code></td>
+<td>Physical <code>&#39;left&#39;</code> or <code>&#39;right&#39;</code> edge</td>
+</tr>
+<tr>
+<td><code>headerIcon</code></td>
+<td><code>undefined</code></td>
+<td>Decorative <code>IIconData</code> beside projected heading; defaults to 24px and supports semantic color/background/stroke</td>
+</tr>
+<tr>
+<td><code>width</code> / <code>widthChange</code></td>
+<td><code>400</code></td>
+<td>Initial/current pixel or CSS-length width model; user resizing writes numeric pixels</td>
+</tr>
+<tr>
+<td><code>resizable</code></td>
+<td><code>false</code></td>
+<td>Enable an inner-edge width separator</td>
+</tr>
+<tr>
+<td><code>resizeMinWidth</code></td>
+<td>Relative</td>
+<td>Optional pixel minimum; defaults to 30% when shrinking is enabled</td>
+</tr>
+<tr>
+<td><code>resizeMaxWidth</code></td>
+<td>Relative</td>
+<td>Optional pixel maximum; defaults to 50% of container</td>
+</tr>
+<tr>
+<td><code>resizeDisableShrink</code></td>
+<td><code>true</code></td>
+<td>Prevent shrinking below the original rendered width</td>
+</tr>
+<tr>
+<td><code>resizeLabel</code></td>
+<td><code>&#39;Resize panel width&#39;</code></td>
+<td>Translatable accessible handle name</td>
+</tr>
+<tr>
+<td><code>resizeIdleDelay</code></td>
+<td><code>2000</code></td>
+<td>Milliseconds before the idle grip fades; zero keeps it revealed</td>
+</tr>
+<tr>
+<td><code>container</code></td>
+<td><code>undefined</code></td>
+<td>Nearest SidePanelLayout, or viewport without one; explicit element bounds or &#39;viewport&#39; override this</td>
+</tr>
+<tr>
+<td><code>layoutMode</code></td>
+<td><code>&#39;overlay&#39;</code></td>
+<td>Base push/overlay mode; push requires SidePanelLayout</td>
+</tr>
+<tr>
+<td><code>breakpoints</code></td>
+<td><code>undefined</code></td>
+<td>Typed minimum-width modes; the highest matching configured threshold wins</td>
+</tr>
+<tr>
+<td><code>currentLayoutMode()</code></td>
+<td>Resolved</td>
+<td>Effective mode after viewport resolution and layout availability</td>
+</tr>
+<tr>
+<td><code>backdrop</code></td>
+<td><code>false</code></td>
+<td>Blocks pointer interaction inside the configured bounds</td>
+</tr>
+<tr>
+<td><code>closeOnBackdrop</code></td>
+<td><code>true</code></td>
+<td>Backdrop activation requests model closure</td>
+</tr>
+<tr>
+<td><code>closeOnEscape</code></td>
+<td><code>true</code></td>
+<td>Unhandled Escape closes the open panel, including focus on the surrounding page</td>
+</tr>
+<tr>
+<td><code>showCloseButton</code></td>
+<td><code>true</code></td>
+<td>Built-in accessible close control</td>
+</tr>
+<tr>
+<td><code>ariaLabel</code></td>
+<td><code>&#39;Side panel&#39;</code></td>
+<td><code>ResolvableText</code> accessible region name</td>
+</tr>
+<tr>
+<td><code>labelledBy</code></td>
+<td><code>undefined</code></td>
+<td>Visible label element ID, taking precedence over <code>ariaLabel</code></td>
+</tr>
+<tr>
+<td><code>closeLabel</code></td>
+<td><code>&#39;Close panel&#39;</code></td>
+<td><code>ResolvableText</code> close-control name</td>
+</tr>
+<tr>
+<td><code>autoFocus</code></td>
+<td><code>true</code></td>
+<td>Focuses the surface once when opening</td>
+</tr>
+<tr>
+<td><code>restoreFocus</code></td>
+<td><code>true</code></td>
+<td>Returns focus if it remains inside the closing surface</td>
+</tr>
+<tr>
+<td><code>animationDuration</code></td>
+<td><code>175</code></td>
+<td>Entrance/exit milliseconds; reduced-motion preferences force zero</td>
+</tr>
+</tbody></table>
+<p>Slots are <code>[bxSidePanelBanner]</code>, <code>[bxSidePanelHeader]</code>, <code>[bxSidePanelFooter]</code>, and unmarked body content. Omitted sections consume no spacing. The body scrolls
+independently; header and footer stay reachable. The component has no imperative opening methods or separate lifecycle events; the open model is the state
+contract.</p>
+<h2>Appearance and customization</h2>
+<p>The panel shares surface material, square corners, frame, header/footer, banner, and close-control presentation with Modal Side. Its <code>bxSurface</code> material
+follows the existing <code>ThemingService</code>, lighting, transparency, contrast, and theme inheritance helpers. Existing modal lifecycle and presentation APIs remain
+available.</p>
+<p>The heading row uses the same banner presentation as Modal Side: aligned icon/text, shared title typography, divider spacing, and the compact 32px close button.
+Set <code>headerIcon</code> to an <code>IIconData</code> value for the leading icon; <code>name</code>, optional <code>size</code> (24px), <code>color</code>, <code>bgColor</code>, and <code>strokeWidth</code> match modal banner icons.
+The icon is decorative; projected text and <code>ariaLabel</code> / <code>labelledBy</code> provide the panel name. Projected headings remain application-owned; reset their margin to
+zero and use <code>font: inherit</code> to retain the shared banner typography. The separate <code>bxSidePanelBanner</code> slot remains available above the heading.</p>
+<p>Set these variables on the component or a theme scope:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bx-panel-bg</code></td>
+<td><code>--bx-modal-bg</code>, then <code>--bx-bg-surface</code></td>
+</tr>
+<tr>
+<td><code>--bx-panel-text</code></td>
+<td><code>--bx-modal-text</code>, then <code>--bx-text-primary</code></td>
+</tr>
+<tr>
+<td><code>--bx-panel-padding</code></td>
+<td>Shared spacing 4</td>
+</tr>
+<tr>
+<td><code>--bx-panel-gap</code></td>
+<td>Shared spacing 4</td>
+</tr>
+<tr>
+<td><code>--bx-panel-z-index</code></td>
+<td>Shared fixed layer, below modal overlays</td>
+</tr>
+<tr>
+<td><code>--bx-panel-resize-gutter</code></td>
+<td>Shared spacing 6; space between the panel and adjacent content for the grip</td>
+</tr>
+<tr>
+<td><code>--bx-panel-backdrop</code></td>
+<td>Shared backdrop fallback</td>
+</tr>
+</tbody></table>
+<p>Projected content remains under the consumer&#39;s control. Use semantic tokens and Blocks controls; long content can wrap, and the panel shrinks to narrow bounds.</p>
+<h2>Behavior and accessibility</h2>
+<p>The panel is an accessible complementary region, not a modal dialog. It never sets <code>aria-modal</code>, traps focus, or makes surrounding content inert. An optional
+backdrop blocks pointer interaction only inside its bounds; normal keyboard access to the page remains available. Use Modal when the task requires modal
+semantics and focus trapping.</p>
+<p>Nested Selects, Multiselects, dropdowns, popovers, and tooltips inherit <code>BX_OVERLAY_CONTEXT</code> with top-layer hosting, so floating content is not clipped or
+hidden behind the panel. Explicit nested overlay contexts still follow their existing contract. All four surface corners are square, shared with Modal Side.</p>
+<p>On opening, focus moves to the surface unless <code>autoFocus</code> is false. On closing, it returns to the opening element only if focus is still inside the panel;
+interactions elsewhere retain their focus. The panel observes unhandled Escape for its complete open lifetime, including after icon/content updates and focus
+changes. Child overlays can consume Escape first. The built-in close action remains keyboard-accessible on touch-sized surfaces. Supply an accessible
+alternative if hiding it.</p>
+<p>Content stays mounted and becomes inert and hidden from assistive technology while closed. CSS transitions respond directly to the model, allowing rapid
+reversals without pending completion timers. <code>BxA11yService</code> preference changes update mounted motion immediately. Inside SidePanelLayout, CSS containment
+anchors the layer without scroll-driven measurements or a body portal. The stable parent bounds stay below any toolbar outside that layout. Arbitrary external
+element bounds use synchronous, ancestor-filtered positioning; viewport presentation remains available. Theme/lighting inheritance is applied when hosting
+externally. Listeners, observers, inheritance, and externally hosted nodes are disposed on destruction.</p>
+<p>Resize handles support mouse, pen, touch, and keyboard arrows with Home/End bounds. Pointer moves are frame-coalesced. Active resizing temporarily disables
+panel/slot size motion so the edge tracks the pointer directly; normal entrance/exit motion resumes afterward. The handle has a touch-sized hit area around the
+inner edge and remains outside the scrolling body. A spacing gutter holds a compact pill with three dots without overlapping the surface or adjacent content.
+Push layout reserves the gutter alongside the panel. The grip fades after two seconds of pointer inactivity, reappears on movement within the panel&#39;s content
+region, and uses a neutral full-height line without dots on hover or while dragging. Focus and touch retain a visible affordance; reduced motion removes fades.
+Set <code>resizeIdleDelay</code> to configure the delay or zero to keep the idle grip visible. Escape first cancels resizing, then can dismiss the panel on the next
+activation.</p>
+<p>Text accepts plain strings without an adapter. Optional <code>BX_I18N</code> resolution tracks the adapter&#39;s language revision through computed state.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/side-panel</code> to change placement, width, containment, and backdrop while open and verify persistent form content. <code>/icons</code> demonstrates
+coordinated Filters and Details panels constrained to the main content region.</p>
 `,"projects/blocks/primitives/components/skeleton/README.md":`<h1>Skeleton</h1>
 <p>Reserves space while content loads, with text, rectangle and circle shapes.</p>
 <h2>Public import</h2>
@@ -5072,6 +5437,134 @@ focus states, or semantic control states.</p>
 Prefer the directive for interactive pages.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/tooltip</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/components/virtual-collection/README.md":`<h1>Virtual collection</h1>
+<p><code>VirtualCollection&lt;T&gt;</code> renders a bidirectional sliding window of measured rows. Responsive grids and vertical lists retain their scroll extent with spacers
+while unmounting distant content. It is separate from scroll-end detection, progressive reveal counts, and asynchronous load-more orchestration.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">VirtualCollection</span>, <span class="hljs-title class_">VirtualItemDirective</span>, <span class="hljs-keyword">type</span> <span class="hljs-title class_">IVirtualCollectionConfig</span>, <span class="hljs-keyword">type</span> <span class="hljs-title class_">VirtualTrackBy</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Import the standalone component and item-template directive.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">itemKey</span>: <span class="hljs-title class_">VirtualTrackBy</span>&lt;<span class="hljs-title class_">Workspace</span>&gt; = <span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> item.<span class="hljs-property">id</span>;
+<span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">virtualConfig</span>: <span class="hljs-title class_">IVirtualCollectionConfig</span> = {
+    <span class="hljs-attr">layout</span>: <span class="hljs-string">&#x27;grid&#x27;</span>,
+    <span class="hljs-attr">minColumnWidth</span>: <span class="hljs-string">&#x27;12rem&#x27;</span>,
+    <span class="hljs-attr">estimatedRowHeight</span>: <span class="hljs-number">180</span>,
+    <span class="hljs-attr">overscan</span>: <span class="hljs-number">800</span>
+};</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> #<span class="hljs-attr">viewport</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;results-viewport&quot;</span> <span class="hljs-attr">tabindex</span>=<span class="hljs-string">&quot;0&quot;</span> <span class="hljs-attr">role</span>=<span class="hljs-string">&quot;region&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Workspaces&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-virtual-collection</span> #<span class="hljs-attr">collection</span> [<span class="hljs-attr">items</span>]=<span class="hljs-string">&quot;items()&quot;</span> [<span class="hljs-attr">trackBy</span>]=<span class="hljs-string">&quot;itemKey&quot;</span> [<span class="hljs-attr">config</span>]=<span class="hljs-string">&quot;virtualConfig&quot;</span> [<span class="hljs-attr">scrollContainer</span>]=<span class="hljs-string">&quot;viewport&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> [<span class="hljs-attr">bxVirtualItem</span>]=<span class="hljs-string">&quot;collection&quot;</span> <span class="hljs-attr">let-item</span> <span class="hljs-attr">let-index</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">bx-card</span> [<span class="hljs-attr">title</span>]=<span class="hljs-string">&quot;item.name&quot;</span> [<span class="hljs-attr">surfaceEffects</span>]=<span class="hljs-string">&quot;false&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;select(item)&quot;</span>&gt;</span>Open workspace {{ index + 1 }}<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">bx-card</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bx-virtual-collection</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>Constrain <code>.results-viewport</code> with a height and <code>overflow: auto</code>; set <code>overflow-anchor: none</code> so the collection owns scroll correction. The component can also
+observe a scrolling ancestor or the document when <code>scrollContainer</code> is omitted. Use stable unique keys, immutable item arrays, and application-owned selection
+and expanded/edit state. An unmounted item&#39;s component-local state is recreated when it returns.</p>
+<p>For progressive loading, pass the supplied/revealed item prefix, and put <code>bxInfiniteScroll</code> or <code>bxLoadMore</code> on the actual scroll wrapper. Append data through
+the owner. The virtual component never fetches, retries, infers exhaustion, or changes the supplied data. A future table can use list mode with
+application-owned row templates, <code>role=&quot;rowgroup&quot;</code>, and <code>itemRole=&quot;row&quot;</code>; table semantics, headers, pagination, and selection remain the owner&#39;s responsibility.
+Do not place its div-based rendering inside native elements with restricted children.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>items</code></td>
+<td><code>[]</code></td>
+<td>Full supplied/revealed data, including temporarily unmounted items</td>
+</tr>
+<tr>
+<td><code>trackBy</code></td>
+<td>Required</td>
+<td><code>(item, index) =&gt; string | number</code> stable unique identity</td>
+</tr>
+<tr>
+<td><code>config.layout</code></td>
+<td><code>&#39;list&#39;</code></td>
+<td><code>&#39;list&#39;</code> or responsive row-based <code>&#39;grid&#39;</code></td>
+</tr>
+<tr>
+<td><code>config.estimatedRowHeight</code></td>
+<td><code>128</code></td>
+<td>Positive CSS-pixel row-height estimate, excluding the row gap</td>
+</tr>
+<tr>
+<td><code>config.overscan</code></td>
+<td><code>800</code></td>
+<td>Extra mounted pixels above and below the viewport</td>
+</tr>
+<tr>
+<td><code>config.minColumnWidth</code></td>
+<td><code>&#39;7rem&#39;</code></td>
+<td>CSS length or pixel number used to resolve grid columns</td>
+</tr>
+<tr>
+<td><code>scrollContainer</code></td>
+<td>Discovered</td>
+<td>Actual element or document scroll viewport</td>
+</tr>
+<tr>
+<td><code>measurementRevision</code></td>
+<td><code>undefined</code></td>
+<td>Clear stale height estimates after size, density, or typography changes</td>
+</tr>
+<tr>
+<td><code>itemRole</code></td>
+<td><code>&#39;listitem&#39;</code></td>
+<td>Accessible role on each item wrapper</td>
+</tr>
+<tr>
+<td><code>renderedRange()</code></td>
+<td>Measured</td>
+<td>Contiguous <code>{ start, end, columns }</code> range; end is exclusive</td>
+</tr>
+<tr>
+<td><code>renderedItems()</code></td>
+<td>Measured</td>
+<td>Mounted data, including an independently pinned focused row</td>
+</tr>
+<tr>
+<td><code>scrollToIndex(index, behavior?)</code></td>
+<td>Method</td>
+<td>Scroll to a supplied item, clamping the index; pre-mount calls are deferred</td>
+</tr>
+<tr>
+<td><code>scrollToItem(key, behavior?)</code></td>
+<td>Method</td>
+<td>Scroll to an existing supplied key; missing keys leave position unchanged</td>
+</tr>
+<tr>
+<td><code>refreshMeasurements()</code></td>
+<td>Method</td>
+<td>Imperatively clear heights while retaining the visible anchor</td>
+</tr>
+</tbody></table>
+<p>The typed <code>bxVirtualItem</code> context exposes <code>$implicit</code>, <code>index</code>, and <code>count</code>. Count describes supplied items rather than a complete remote result set.</p>
+<h2>Appearance and customization</h2>
+<p>The component supplies geometry and semantics; projected content supplies presentation. Use Blocks components and semantic tokens. Set <code>--bx-virtual-row-gap</code>
+and <code>--bx-virtual-column-gap</code>; both default to shared spacing 3. <code>minColumnWidth</code> accepts font-relative lengths. Grid columns are measured from CSS, so
+constrained containers, push panels, browser zoom, and text scaling participate in the same layout.</p>
+<h2>Behavior and accessibility</h2>
+<p>Rows use cached measured heights or the configured estimate. A shared <code>ResizeObserver</code> updates mounted rows, and a prefix-sum tree handles height updates and
+offset lookups efficiently. Width/column changes and <code>measurementRevision</code> invalidate stale heights. Spacer changes apply scroll correction after rendering so
+the first visible stable key remains anchored. Unknown distant heights remain estimates until visited; use a realistic estimate to minimize corrections.</p>
+<p>Passive scroll events update the range synchronously, with pixel overscan in both directions. DOM size depends on viewport height, row sizes, columns, and
+overscan rather than distance traveled. Far-offscreen collections can render only their placeholder extent. A focused row stays mounted independently without
+rendering all rows between it and the viewport. Responsive regrouping restores the focused control within its stable item when available.</p>
+<p>Item wrappers expose positions and counts, and interactive projected controls retain native focus and keyboard behavior. Label the actual viewport and provide
+visible focus. Reduced-motion preferences override smooth programmatic scrolling. Observers and listeners disconnect on destruction; browser measurements start
+after rendering. When <code>ResizeObserver</code> is unavailable, estimates still support windowed rendering, but dynamic height accuracy is limited.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/virtual-collection</code> for 3,000 variable-height items, list/grid selection, width and density controls, expandable content, mounted counts, and
+programmatic scrolling. <code>/icons</code> and <code>/tokens</code> combine this component with progressive local rendering and ordinary search/group controls.</p>
 `,"projects/blocks/primitives/directives/context-menu/README.md":`<h1>Context menu</h1>
 <p>A menu positioned at a context action\u2019s coordinates.</p>
 <h2>Import</h2>
@@ -5096,8 +5589,9 @@ wrapper or directly on the trigger:</p>
 <p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking
 order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
 <h2>Appearance</h2>
-<p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Row effects retain
-their application appearance settings.</p>
+<p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Rows use local themed
+hover/pressed fills and keyboard focus outlines without casting light outside the panel. Press feedback follows application motion preferences. Custom emitting
+controls inside the overlay retain its physical lighting boundary even though the panel inherits incoming lighting from its trigger.</p>
 <p>The transparent dismissal backdrop blocks outside interaction without changing the surrounding surfaces&#39; lighting. The visible menu still occludes the content
 under its panel; opaque backdrops retain their normal lighting behavior.</p>
 <p><code>BxA11yService</code> controls reduced motion; enabling it skips the opening and closing fade.</p>
@@ -5133,16 +5627,123 @@ wrapper or directly on the trigger:</p>
 <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span></code></pre>
 <p>Import <code>BxOverlayContextDirective</code> alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking
 order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with <code>{ useTopLayer: true }</code> to scope the behavior to their view.</p>
-<p>Where supported, native CSS anchors keep the menu attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.</p>
+<p>Where supported, native CSS anchors keep ordinary menus attached to their triggers during document and nested scrolling. Top-layer popovers and other browsers
+use synchronous measured CDK positioning, including when the trigger is inside a nested scroller.</p>
 <h2>Appearance</h2>
-<p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Trigger and row
-effects retain their application appearance settings.</p>
+<p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Rows use local themed
+hover/pressed fills and focus outlines without casting light onto the page. Press feedback and trigger effects follow application appearance settings.</p>
 <p><code>BxA11yService</code> controls reduced motion; enabling it skips the opening and closing fade.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use a real button trigger. The fade interaction supports trigger arrow keys, menu arrows, Home, End and Escape; focus returns on dismissal. Reduced motion skips
 the fade. Content keeps its full dimensions and the overlay retains a solid backing throughout its lifetime.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/dropdown</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/directives/infinite-scroll/README.md":`<h1>Infinite scroll detection</h1>
+<p><code>InfiniteScrollDirective</code> detects the bottom boundary of arbitrary scrollable elements. It emits a guarded event without owning data, requests, pagination,
+loading indicators, retry actions, or exhaustion. Use it for bounded local progressive rendering; use Forms&#39; shared load-more orchestration for remote paging.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">InfiniteScrollDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Add the standalone directive to the consuming component&#39;s imports.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+    <span class="hljs-attr">bxInfiniteScroll</span>
+    <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;results&quot;</span>
+    [<span class="hljs-attr">infiniteScrollThreshold</span>]=<span class="hljs-string">&quot;128&quot;</span>
+    [<span class="hljs-attr">infiniteScrollDisabled</span>]=<span class="hljs-string">&quot;!hasMore()&quot;</span>
+    [<span class="hljs-attr">infiniteScrollLoading</span>]=<span class="hljs-string">&quot;loading()&quot;</span>
+    [<span class="hljs-attr">infiniteScrollRevision</span>]=<span class="hljs-string">&quot;items()&quot;</span>
+    (<span class="hljs-attr">scrollEnd</span>)=<span class="hljs-string">&quot;requestNextPage()&quot;</span>&gt;</span>
+    @for (item of items(); track item.id) {
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{{ item.label }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    }
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>Give the wrapper a constrained height and <code>overflow: auto</code>. The owner sets loading before starting its promise, appends successful results, and disables the
+detector when exhausted. The directive does not assume an HTTP service or cursor format. Pass the new items reference through <code>infiniteScrollRevision</code>, or call
+<code>complete()</code> when completion has no loading cycle or revision change.</p>
+<p>For content scrolled by an ancestor, bind that element to <code>infiniteScrollContainer</code>. <code>findScrollContainer(element)</code> finds a vertical scrolling ancestor or falls
+back to the document scrolling element. The host&#39;s bottom remains the observed boundary, so unrelated content after the host does not delay rendering.</p>
+<p>For finite, locally available data, enable <code>infiniteScrollCheckOnRender</code>. Initial rendering, appended content, and resizing then recheck the boundary. Append a
+bounded batch on each event and disable when the local dataset is exhausted. This fills an initially short viewport without polling. Leave this option false for
+remote data to prevent uncontrolled requests; the <a href="components/load-more">load-more directive</a> provides its reachable fallback and
+explicit retry action.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>infiniteScrollContainer</code></td>
+<td>Host</td>
+<td>Optional actual scroll viewport, including a document scrolling element</td>
+</tr>
+<tr>
+<td><code>infiniteScrollThreshold</code></td>
+<td><code>128</code></td>
+<td>Distance from the end in CSS pixels</td>
+</tr>
+<tr>
+<td><code>infiniteScrollDisabled</code></td>
+<td><code>false</code></td>
+<td>Suppresses events; owner decides exhaustion</td>
+</tr>
+<tr>
+<td><code>infiniteScrollLoading</code></td>
+<td><code>false</code></td>
+<td>Suppresses events during owner-controlled loading</td>
+</tr>
+<tr>
+<td><code>infiniteScrollRevision</code></td>
+<td><code>undefined</code></td>
+<td>New items reference or revision acknowledges the previous event</td>
+</tr>
+<tr>
+<td><code>infiniteScrollCheckOnRender</code></td>
+<td><code>false</code></td>
+<td>Also checks initial/render/content/resize changes; opt in for bounded local data</td>
+</tr>
+<tr>
+<td><code>infiniteScrollEndOffset</code></td>
+<td><code>0</code></td>
+<td>Excludes an owner-controlled footer height from measurement</td>
+</tr>
+<tr>
+<td><code>overflowing()</code></td>
+<td>Measured</td>
+<td>Read-only overflow state, independent of event suppression</td>
+</tr>
+<tr>
+<td><code>scrollEnd</code></td>
+<td>Event</td>
+<td>One boundary event until completion or leaving and reentering the boundary</td>
+</tr>
+<tr>
+<td><code>complete()</code></td>
+<td>Method</td>
+<td>Acknowledges completion without initiating another event</td>
+</tr>
+</tbody></table>
+<p><code>measureScrollBoundary(content, container?, endOffset?)</code> returns the distance, overflow, and viewport height in <code>IScrollBoundary</code>.
+<code>observeScrollBoundary(content, container, onScroll, onResize)</code> installs disposable passive events and geometry observers. Both the directive and Forms&#39;
+<code>LoadMoreDirective</code> use these helpers; Select and Multiselect continue sharing the same request guards, retry, loading, and fallback orchestration.</p>
+<p><a href="components/virtual-collection">VirtualCollection</a> independently bounds the mounted DOM in both scroll directions. Give it the revealed items
+and the actual scroll container; its placeholders preserve the scroll extent observed by this detector. Detection, virtual rendering, and remote orchestration
+remain separate contracts.</p>
+<h2>Appearance and customization</h2>
+<p>The detector creates no DOM and supplies no presentation. Render normal, empty, loading, and error states with Blocks components and semantic tokens in the
+owner. Footer offsets allow a separate orchestration layer to exclude its action without tying detection to a particular UI.</p>
+<h2>Behavior and accessibility</h2>
+<p>Scroll handling and measurements run outside Angular, with frame-coalesced detector events and change detection only when state changes or an event emits.
+Observers reconnect for a different container, track appended and removed children, and disconnect on destruction. Browser work starts after rendering, so
+server rendering does not access browser observers.</p>
+<p>Appending preserves scroll position. Owners should use stable tracking keys, announce relevant asynchronous changes, retain existing items on failure, and
+provide keyboard-accessible load/retry actions. The detector never retries errors or infers that the loaded page is the complete remote result set.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/infinite-scroll</code> or the scrolling example on <code>/utilities</code>. Adjust the batch size and container height to exercise local underfill and overflow
+transitions. The asynchronous example demonstrates 800 ms requests, retained results after failure, and explicit retry through success.</p>
 `,"projects/blocks/primitives/directives/menu-trigger/README.md":`<h1>Nested menu trigger</h1>
 <p><code>MenuTriggerDirective</code> opens a <code>bx-menu</code> template using Blocks&#39; overlay positioning and theme inheritance. Use it for arbitrary-depth opaque submenus; each
 descendant receives the containing trigger through <code>menuParent</code>.</p>
@@ -5198,7 +5799,9 @@ owning overlay. Omission leaves the overlay&#39;s default policy in effect. Adva
 <h2>Appearance and customization</h2>
 <p>The context controls hosting, not presentation. Configure appearance through the owning overlay&#39;s inputs and shared Blocks theme.</p>
 <h2>Behavior and accessibility</h2>
-<p>Nested consumers inherit the nearest provided context. The owning overlay retains responsibility for focus, keyboard dismissal, positioning, and cleanup.</p>
+<p>Nested consumers, including tooltips, inherit the nearest provided context. SidePanel provides a top-layer context automatically so floating controls escape its
+clipping surface without component-specific z-index overrides. The owning overlay retains responsibility for focus, keyboard dismissal, positioning, and
+cleanup.</p>
 <h2>Playground</h2>
 <p>See <code>/components/dropdown</code> and <code>/components/popover</code> for overlay interactions.</p>
 `,"projects/blocks/primitives/directives/popover/README.md":`<h1>Popover trigger</h1>
@@ -5207,6 +5810,205 @@ owning overlay. Omission leaves the overlay&#39;s default policy in effect. Adva
 and a named dialog. See the <a href="components/popover">popover component guide</a> for working usage, API defaults, configuration, CSS variables and
 accessibility behavior.</p>
 <p>Playground: <code>/components/popover</code>.</p>
+`,"projects/blocks/primitives/directives/resize-handle/README.md":`<h1>Resize handle</h1>
+<p><code>ResizeHandleDirective</code> supplies a reusable, focusable resize separator. It adjusts an application-owned numeric size from pointer dragging or the keyboard,
+without positioning elements, applying dimensions to targets, or owning table/list/panel data.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ResizeHandleDirective</span>, <span class="hljs-keyword">type</span> <span class="hljs-title class_">IResizeHandleEvent</span>, <span class="hljs-keyword">type</span> <span class="hljs-title class_">ResizeHandleEdge</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Add the standalone directive to the consuming component&#39;s imports.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> #<span class="hljs-attr">container</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;workspace&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">section</span> #<span class="hljs-attr">surface</span> [<span class="hljs-attr">style.width.px</span>]=<span class="hljs-string">&quot;width()&quot;</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Content --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+            <span class="hljs-attr">bxResizeHandle</span>
+            <span class="hljs-attr">resizeEdge</span>=<span class="hljs-string">&quot;right&quot;</span>
+            <span class="hljs-attr">resizeLabel</span>=<span class="hljs-string">&quot;Resize workspace width&quot;</span>
+            [<span class="hljs-attr">resizeTarget</span>]=<span class="hljs-string">&quot;surface&quot;</span>
+            [<span class="hljs-attr">resizeContainer</span>]=<span class="hljs-string">&quot;container&quot;</span>
+            [(<span class="hljs-attr">resizeValue</span>)]=<span class="hljs-string">&quot;width&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">section</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p><code>width</code> is a writable numeric signal. Position and style the handle on the appropriate physical edge. A width handle usually spans the surface height; a height
+handle spans its width. Use a reachable pointer/touch target and a visible focus indicator. Use <code>resizeEdge=&quot;top&quot;</code> or <code>&quot;bottom&quot;</code> with a height model for rows or
+vertically stacked regions; <code>&quot;left&quot;</code> and <code>&quot;right&quot;</code> adjust width for columns or side-by-side regions.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resizeValue</code> / <code>resizeValueChange</code></td>
+<td><code>0</code></td>
+<td>Owner-controlled size in CSS pixels; never writes target styles</td>
+</tr>
+<tr>
+<td><code>resizeEdge</code></td>
+<td><code>&#39;right&#39;</code></td>
+<td>Physical left/right width edge or top/bottom height edge</td>
+</tr>
+<tr>
+<td><code>resizeTarget</code></td>
+<td><code>undefined</code></td>
+<td>Optional element providing the actual rendered size at gesture start</td>
+</tr>
+<tr>
+<td><code>resizeContainer</code></td>
+<td>Target parent, then handle parent</td>
+<td>Available containing width/height for bounds</td>
+</tr>
+<tr>
+<td><code>resizeActivityContainer</code></td>
+<td>Bounds container</td>
+<td>Optional pointer-activity region, independent of portal geometry</td>
+</tr>
+<tr>
+<td><code>resizeMinSize</code></td>
+<td>30% of original</td>
+<td>Optional explicit pixel minimum; shrink prevention takes precedence</td>
+</tr>
+<tr>
+<td><code>resizeMaxSize</code></td>
+<td>50% of container</td>
+<td>Optional explicit pixel maximum; never exceeds available container size</td>
+</tr>
+<tr>
+<td><code>resizeInitialSize</code></td>
+<td>First gesture&#39;s rendered size</td>
+<td>Optional explicit reference for relative minimums and shrink prevention</td>
+</tr>
+<tr>
+<td><code>resizeDisableShrink</code></td>
+<td><code>true</code></td>
+<td>Prevent sizes below the original; enlarged sizes can return to the original</td>
+</tr>
+<tr>
+<td><code>resizeDisabled</code></td>
+<td><code>false</code></td>
+<td>Prevent interaction and cancel an active gesture</td>
+</tr>
+<tr>
+<td><code>resizeLabel</code></td>
+<td><code>&#39;Resize&#39;</code></td>
+<td>Accessible <code>ResolvableText</code> name, resolved reactively through optional <code>BX_I18N</code></td>
+</tr>
+<tr>
+<td><code>resizeControls</code></td>
+<td>Target ID when available</td>
+<td>Controlled element&#39;s ID for <code>aria-controls</code></td>
+</tr>
+<tr>
+<td><code>resizeStep</code></td>
+<td><code>10</code></td>
+<td>Keyboard increment in CSS pixels; Shift multiplies it by five</td>
+</tr>
+<tr>
+<td><code>resizeIdleDelay</code></td>
+<td><code>2000</code></td>
+<td>Milliseconds before the idle grip fades; zero keeps it revealed</td>
+</tr>
+<tr>
+<td><code>indicatorVisible()</code></td>
+<td>Computed</td>
+<td>Recent container pointer activity or an active gesture; exposed as <code>.bx-resize-visible</code></td>
+</tr>
+<tr>
+<td><code>resizing()</code></td>
+<td><code>false</code></td>
+<td>Read-only pointer/keyboard gesture state for suspending owner transitions</td>
+</tr>
+<tr>
+<td><code>minSize()</code> / <code>maxSize()</code></td>
+<td>Computed</td>
+<td>Effective pixel bounds, including available container size</td>
+</tr>
+<tr>
+<td><code>resizeStart</code> / <code>resizeEnd</code></td>
+<td>Events</td>
+<td><code>IResizeHandleEvent</code>: current/start size, source, and cancellation state</td>
+</tr>
+</tbody></table>
+<p>The reference size is captured once at the first gesture unless <code>resizeInitialSize</code> is supplied. Changing between width and height axes resets the implicit
+reference. Width/height are measured from the selected physical axis; the owner can set different explicit limits when changing axes.</p>
+<p>By default shrinking below the original is disabled, so the effective minimum is the original size. To permit shrinking to the default 30% floor, set
+<code>[resizeDisableShrink]=&quot;false&quot;</code>. Explicit minimum/maximum values replace the relative defaults. A smaller available container always wins over conflicting
+minimum constraints. Container resizing updates bounds through <code>ResizeObserver</code>; the directive constrains emitted values rather than changing application-owned
+sizes during unrelated layout changes.</p>
+<h2>Appearance and customization</h2>
+<p>The directive supplies separator semantics, cursor, pointer capture, and touch/selection behavior. It creates no markup or surface. Style its host using Blocks
+semantic tokens; <code>.bx-resizing</code> marks active gestures. Layout owners should suspend width/height transitions while <code>resizing()</code> is true. The directive never
+introduces a theme, fetches data, or manipulates table internals.</p>
+<p>For the shared presentation used by SidePanel and the standalone demo, import <code>core/styles/helpers</code> and include <code>resize-grip</code> on the positioned handle. It uses
+a compact 8 \xD7 24px pill with three dots. Hovering or dragging replaces the dots with a 4px rail running along the resized edge, inset by shared spacing 2 at
+both ends so its pill-shaped caps remain visible. It uses the same background color as the dot grip. Top/bottom handles rotate the grip and run horizontally.
+Keep the host&#39;s hit area at least 24px; the visual grip does not determine pointer target size.</p>
+<p>The idle grip fades after <code>resizeIdleDelay</code> milliseconds without pointer activity in <code>resizeActivityContainer</code> (or the bounds container). Movement reveals it
+again. Hover, focus, and active resizing retain a visible edge. Coarse-pointer/touch and forced-color modes keep a discovery grip visible. <code>BxA11yService</code> and
+the system reduced-motion preference suppress fading. Activity listeners run outside Angular and timers/listeners are released when disabled, reconnected, or
+destroyed.</p>
+<p>Customize <code>--bx-resize-rail-color</code>, <code>--bx-resize-grip-background</code>, <code>--bx-resize-grip-color</code>, <code>--bx-resize-grip-border</code>, and <code>--bx-resize-grip-duration</code> through
+the shared semantic theme.</p>
+<h2>Behavior and accessibility</h2>
+<p>The separator exposes orientation, current value, bounds, accessible name, and controlled surface. Left/right width handles are vertical separators; top/bottom
+height handles are horizontal separators. Native pointer events support mouse, pen, and touch. Pointer moves are frame-coalesced, with the final position
+committed before completion. Pointer capture/document listeners retain the gesture outside the original hit area. Selection and cursor styles are restored on
+completion, cancellation, disabling, loss of capture/window focus, and destruction.</p>
+<p>Arrow keys move the selected physical edge by <code>resizeStep</code>; Shift uses five times that step. Home and End select the effective minimum/maximum. Keyboard
+gestures end on key release or blur. Escape cancels the current gesture and restores its starting size before any surrounding overlay handles Escape. Destroyed
+handles release listeners and styles without emitting late events. Browser geometry starts after rendering, keeping server rendering safe.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/resize-handle</code> for all four edges, default relative bounds, explicit pixel limits, shrink prevention, keyboard resizing, and event feedback.
+<code>/components/side-panel</code> demonstrates width-model integration. <code>/icons</code> enables resizing only on Filters.</p>
+`,"projects/blocks/primitives/directives/side-panel-banner/README.md":`<h1>Side panel banner slot</h1>
+<p>Projects persistent banner content into <a href="components/side-panel">SidePanel</a>.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SidePanelBannerDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Import the standalone slot directive together with <code>SidePanel</code>.</p>
+<h2>Usage</h2>
+<p>Apply <code>bxSidePanelBanner</code> to projected content inside <code>bx-side-panel</code>.</p>
+<h2>API</h2>
+<p>The marker has no inputs or outputs. Its presence controls whether the owning panel reserves section space.</p>
+<h2>Appearance and customization</h2>
+<p>Use the owning panel&#39;s CSS variables and Blocks semantic tokens.</p>
+<h2>Behavior and accessibility</h2>
+<p>Content stays mounted when closed. Include a meaningful heading or keyboard-accessible actions as appropriate.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/side-panel</code>.</p>
+`,"projects/blocks/primitives/directives/side-panel-footer/README.md":`<h1>Side panel footer slot</h1>
+<p>Projects persistent footer content into <a href="components/side-panel">SidePanel</a>.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SidePanelFooterDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Import the standalone slot directive together with <code>SidePanel</code>.</p>
+<h2>Usage</h2>
+<p>Apply <code>bxSidePanelFooter</code> to projected content inside <code>bx-side-panel</code>.</p>
+<h2>API</h2>
+<p>The marker has no inputs or outputs. Its presence controls whether the owning panel reserves section space.</p>
+<h2>Appearance and customization</h2>
+<p>Use the owning panel&#39;s CSS variables and Blocks semantic tokens.</p>
+<h2>Behavior and accessibility</h2>
+<p>Content stays mounted when closed. Include a meaningful heading or keyboard-accessible actions as appropriate.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/side-panel</code>.</p>
+`,"projects/blocks/primitives/directives/side-panel-header/README.md":`<h1>Side panel header slot</h1>
+<p>Projects persistent header content into <a href="components/side-panel">SidePanel</a>.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">SidePanelHeaderDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Import the standalone slot directive together with <code>SidePanel</code>.</p>
+<h2>Usage</h2>
+<p>Apply <code>bxSidePanelHeader</code> to projected content inside <code>bx-side-panel</code>.</p>
+<h2>API</h2>
+<p>The marker has no inputs or outputs. Its presence controls whether the owning panel reserves section space.</p>
+<h2>Appearance and customization</h2>
+<p>The owning panel uses the shared modal-banner title and close-control styling. Reset a projected heading&#39;s margin to zero and use <code>font: inherit</code> for the shared
+title typography. Set the panel&#39;s optional <code>headerIcon: IIconData</code> for a leading icon with configurable size, semantic color, background, and stroke.</p>
+<h2>Behavior and accessibility</h2>
+<p>Content stays mounted when closed. Include a meaningful heading or keyboard-accessible actions as appropriate.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/side-panel</code>.</p>
 `,"projects/blocks/primitives/directives/tab-content/README.md":`<h1>Lazy tab content</h1>
 <p>Declare a tab panel as a template so its contents are instantiated only while that tab is selected.</p>
 <h2>Import</h2>
@@ -5416,6 +6218,24 @@ menus, input fields, search, select and multiselect. Edit text, adjust width, en
 tooltip. <code>/components/tag</code> includes the same demo alongside tag customization.</p>
 <p>Previews use an aligned responsive card grid. Width changes affect each example inside its card; preview areas and caption space stay reserved. Wrapped content
 scrolls inside its preview rather than moving later examples.</p>
+`,"projects/blocks/primitives/directives/virtual-item/README.md":`<h1>Virtual item template</h1>
+<p>Typed projection for <a href="components/virtual-collection">VirtualCollection</a>. The collection mounts only the item templates in its sliding window.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">VirtualCollection</span>, <span class="hljs-title class_">VirtualItemDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-virtual-collection</span> #<span class="hljs-attr">collection</span> [<span class="hljs-attr">items</span>]=<span class="hljs-string">&quot;items()&quot;</span> [<span class="hljs-attr">trackBy</span>]=<span class="hljs-string">&quot;itemKey&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> [<span class="hljs-attr">bxVirtualItem</span>]=<span class="hljs-string">&quot;collection&quot;</span> <span class="hljs-attr">let-item</span> <span class="hljs-attr">let-index</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span>{{ index + 1 }}. {{ item.label }}<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-virtual-collection</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p>The required <code>bxVirtualItem</code> binding supplies its owning collection for generic type inference. <code>IVirtualItemContext&lt;T&gt;</code> exposes the item through <code>$implicit</code>,
+its zero-based <code>index</code>, and the supplied item <code>count</code>.</p>
+<h2>Appearance and customization</h2>
+<p>Use Blocks controls and semantic tokens inside the projected template. The collection owns row geometry and gap variables.</p>
+<h2>Behavior and accessibility</h2>
+<p>Keep application state outside temporary item views. Stable keys preserve anchoring; template-local state is recreated after unmounting. Label interactive
+controls and preserve ordinary keyboard behavior.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/virtual-collection</code>, <code>/icons</code>, or <code>/tokens</code>.</p>
 `,"projects/blocks/toastr/README.md":`<h1>Toastr</h1>
 <p>Component-driven notifications with a bounded queue, typed custom content, semantic message helpers, progress, pause/resume, and swipe dismissal.</p>
 <h2>Import</h2>
@@ -5758,6 +6578,10 @@ themingService.<span class="hljs-title function_">setPalette</span>(<span class=
 themingService.<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-string">&#x27;dark&#x27;</span>);</code></pre>
 <p>Use the palette IDs above in <code>ThemingService.setPalette()</code> and <code>ng add --theme</code>. Sass exports follow the same names, such as <code>$carbon-cobalt-light-theme</code> and
 <code>$carbon-cobalt-dark-theme</code>. High contrast overrides both expressive roles with contrast-first black/white values.</p>
+<p>All light-mode accent fills use white text; semantic fill shades become darker where necessary to reach 4.5:1 contrast. Raw 500-level palette anchors and picker
+swatches stay unchanged. Other filled-role foregrounds prefer white when it passes, with dark text on brighter fills that require it. Brand/accent and secondary
+text also retain contrast on their supported neutral and normal/hover/active surfaces in both modes. High-contrast palettes and explicit theme overrides remain
+supported.</p>
 <h3>Glassiness and translucency</h3>
 <p>The <strong>Translucency</strong> slider controls tint and blur. It defaults to 50%; the preceding midpoint now falls around 70% on the slider, with both endpoints
 preserved. The classic material retains its clear minimum and caps tint near 72.5%; active refraction adds the stronger readability floor below. Use <strong>Reduce
@@ -5853,6 +6677,62 @@ preserves its own color mode. The parent combines two previews for Auto.</p>
 performs no animated demonstration.</p>
 <h2>Playground</h2>
 <p><code>/appearance</code>, in the Light, Dark and Auto choices.</p>
+`,"projects/playground/src/app/components/screens/icon-catalog/README.md":`<h1>Lucide icon catalog</h1>
+<p>Browse generated Lucide icons with search, official category filters, progressive rendering, and a nonmodal customization inspector. Catalog-wide preferences
+survive navigation and reloads; per-icon inspector changes remain separate and last for the current visit.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Icon</span>, <span class="hljs-variable constant_">LUCIDE_CATEGORIES</span>, <span class="hljs-variable constant_">LUCIDE_ICON_CATEGORIES</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/icons&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">InfiniteScrollDirective</span>, <span class="hljs-title class_">SidePanel</span>, <span class="hljs-title class_">SidePanelLayout</span>, <span class="hljs-title class_">VirtualCollection</span>, <span class="hljs-title class_">VirtualItemDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<p>Open <code>/icons</code>. Search by icon identifier and select <strong>Filters</strong> for catalog size, stroke width, and the collapsible <strong>Category</strong> section. Existing Blocks chips
+list all categories side by side, with a checkmark and opaque accent fill for the selected choice. Only one category is selected at a time. Activating the
+selected chip retains that choice; selecting another replaces it. Reset all restores appearance and the unrestricted category default while keeping the search.
+The Filters button has a plain label without an active-filter count.</p>
+<p>Filters resizes from its right edge using the shared resize directive. Its initial width is 360px; the default maximum is 50% of the main-content container.
+Shrinking below the original rendered width is disabled by default. Its width persists while the panel is closed/reopened during this visit. Details remains
+non-resizable. Keyboard users can focus the separator and use arrows, Home/End, and Escape.</p>
+<p>Select any icon for its right-side Details panel. The preview, semantic color picker, size/stroke sliders, background toggle, and Angular example update
+reactively. Copy uses the exact displayed example and announces success or failure. Selecting another tile updates the current panel in place. The active tile
+highlight and pressed state clear when Details closes or another panel opens. Inspector settings are retained independently per selected icon during the visit;
+a new inspector starts at at least 64 pixels using the current catalog stroke width and the accent color, listed first in the color selector. Reset
+customization restores those starting values.</p>
+<h2>API</h2>
+<p>The catalog uses public <a href="components/icon">Icon</a>,
+<a href="components/side-panel">SidePanel</a>, and
+<a href="components/infinite-scroll">InfiniteScrollDirective</a> APIs.</p>
+<p>Generated category maps are imported directly. Runtime filtering performs lookups without name-based classification or network requests. Metadata comes from
+<a href="https://github.com/lucide-icons/lucide">official Lucide source</a> through a pinned local build snapshot; the
+<a href="../../../../../../../tools/icons/README.md">generator guide</a> documents synchronization.</p>
+<p>Preferences use the versioned <code>blocks.icon-catalog.v1</code> local-storage record. Restore validates dimensions, stroke bounds, and current category identifiers;
+malformed/unknown values fall back safely. Older records containing multiple categories restore only the first valid generated category. Writes are debounced
+for 200 ms and flushed on navigation or page exit. Reset updates storage immediately. Storage denial and server rendering are supported without throwing. Search
+and derived result lists are not persisted.</p>
+<h2>Appearance and customization</h2>
+<p>Filters and Details use the shared side-panel/modal-banner heading styles, themed leading icons through <code>headerIcon</code>, and the same compact close action.</p>
+<p>All controls use Blocks components/directives and semantic spacing, color, border, radius, and responsive grid styling. Colors remain theme tokens rather than
+fixed RGB values. Background customization uses the supported <code>bgColor=&quot;auto&quot;</code> icon API. Code omits default size/stroke properties and background when turned
+off.</p>
+<p>The catalogs use a constrained main-content viewport below the toolbar&#39;s natural-height row. SidePanelLayout contains both panels, excluding global navigation
+and the toolbar without offsets or document-scroll tracking. Filters uses <code>{ &#39;2xl&#39;: &#39;push&#39; }</code>: larger screens reserve panel space and resize the virtual grid;
+smaller screens use overlay mode. Details keeps its default overlay presentation. Each panel&#39;s breakpoint policy is independently configurable. Mode changes
+retain the panel and its projected controls. The body scrolls independently from reachable fixed header/footer actions, including at narrow viewport widths.</p>
+<h2>Behavior and accessibility</h2>
+<p>The catalog initially reveals 72 icons, appending bounded batches near the bottom. VirtualCollection independently mounts a measured row window with 800-pixel
+overscan, unmounts distant tiles in either direction, and restores them on return. Changing size invalidates row geometry with stable scroll anchoring; changing
+stroke width updates only mounted SVGs. Grid columns recalculate when push panels, viewport widths, or zoom change. Local underfill checks continue only until
+the finite result set fills the viewport or is exhausted. Search/category changes reset the reveal count, stable names track tiles, and append operations
+preserve scroll position. A Show more button gives keyboard users an explicit route to the next batch. Empty results and result counts use status announcements.</p>
+<p>Search matches case-insensitive partial words in any order, treating spaces, hyphens, and underscores as separators. For example, <code>arrow down</code>, <code>down arrow</code>,
+and <code>arrow-down</code> find <code>arrow-down</code>; this follows the Tokens catalog&#39;s word-matching behavior.</p>
+<p>A single active-panel signal coordinates Filters and Details. Closing preserves filter and inspector settings; tile highlighting is shown only while Details is
+open. Panels use complementary region semantics, optional focus restoration, a close control, and Escape dismissal; the page remains interactive without focus
+trapping, scroll locking, or modal semantics. Existing Blocks controls provide labeled keyboard-accessible sliders and selections. Setting information tooltips
+support focus, hover, and touch tap.</p>
+<p>Scroll to top appears after 400 pixels in the actual scroll viewport. It uses a Blocks tooltip without touch long-press and respects shared reduced-motion
+preferences. It is aligned to the grid&#39;s actual horizontal bounds inside its positioned viewport. It remains visible beside push panels and is hidden while an
+overlay panel is open to keep actions clear. The Tokens catalog uses the same action; Utilities no longer renders it.</p>
+<h2>Playground</h2>
+<p>Open <code>/icons</code> from Tools. Related interactive infrastructure demos are <code>/components/side-panel</code>, <code>/components/infinite-scroll</code>, and <code>/utilities</code>.</p>
 `,"projects/playground/src/app/components/screens/library-components/page-examples/README.md":`<h1>Page layout playground</h1>
 <p>Interactive examples for the <a href="components/layout/page-container">Blocks page container</a>.</p>
 <h2>Import</h2>
@@ -5995,10 +6875,16 @@ theme, palette sections, and companion sections without long title prefixes.</p>
 paths. Changing search or categories opens only the first matching section; other sections remain available to open individually. Choose multiple categories to
 include any selected family, for example Colors and Color pairs. Clear the category selection to return to All tokens; All tokens is the absence of filtering
 rather than a selectable option. Search and counts cover the complete catalog regardless of which batches are mounted.</p>
-<p>At 48 or more displayed cards across all expanded sections, token batches load as you scroll without page controls or API requests. Smaller displayed sets
-render immediately. Shared intersection and resize observers mount nearby batches and release distant cards, retaining measured placeholder heights. Keyboard
-focus can reveal an unloaded batch, and focused content is retained when outside the viewport. If the browser lacks the observer APIs, batches render normally.
-Metadata expansion within an unloaded batch is recreated when it returns. Current color-value search uses a lazy index; ordinary browsing converts only mounted
+<p>Each expanded group initially exposes up to two 24-token chunks. Primitives&#39; <code>InfiniteScrollDirective</code> progressively reveals another two chunks at the group
+boundary, including filling a short viewport from this finite local dataset. A keyboard-accessible Show more action remains available while chunks remain.
+Closing a group preserves its reveal count; changing search or categories resets the counts.</p>
+<p>The shared <code>VirtualCollection</code> uses measured, bidirectional grid rows within each expanded group. Distant cards are unmounted, their height is retained with
+spacers, and returning restores rows without retaining every previously visited tile. Responsive column/height changes preserve a stable scroll anchor, and a
+focused row can remain mounted independently. Groups outside the overscan area retain their scroll extent without mounting their cards. This replaces the old
+playground-only viewport/chunk observer. Color conversion reads only mounted items, including pinned focused rows.</p>
+<p>A constrained catalog viewport occupies the content area below the top bar. The shared Scroll to top action is aligned to the results width near that viewport&#39;s
+bottom-right corner, scrolls that container, and respects reduced motion. It has a keyboard/hover tooltip with touch long-press disabled.</p>
+<p>Metadata expansion within an unloaded batch is recreated when it returns. Current color-value search uses a lazy index; ordinary browsing converts only mounted
 batches. One canvas and a conversion cache are reused until theme/appearance changes. Documentation content mounts only while its section is open. Clear the
 category selection to show all tokens. Blocks accordions provide heading navigation, expansion and focus restoration; source defaults and fallbacks use Blocks
 collapsibles. Right-click a card, touch and hold, or use its <strong>Copy\u2026</strong> button to open a Blocks menu with the applicable copy formats. Focused cards also support
@@ -6006,7 +6892,8 @@ Shift + F10 and the Context Menu key. CSS references copy <code>var(--bx-\u2026)
 comma-separated channels and preserves transparency with <code>rgba(...)</code>; RGBA always includes explicit alpha. Pairs copy one value per line. Non-color variables
 provide CSS-reference/name actions; utility classes and Sass breakpoints provide their respective copy actions. Menu choices follow live theme colors.</p>
 <p>Card text suppresses selection and iOS callouts to keep long-press gestures predictable. Source-default collapsibles retain selectable text and native selection
-menus. Copy actions report success/failure in a live region. Search and multiselect controls use dynamic subscript sizing and reserve no empty validation row.</p>
+menus. Copy-menu rows use local themed hover/pressed fills and focus outlines without illuminating the cards or accordion sections behind the opaque menu. Copy
+actions report success/failure in a live region. Search and multiselect controls use dynamic subscript sizing and reserve no empty validation row.</p>
 <p>Color pairs show both named tokens and adjacent swatches. They reflect <code>getComplementaryToken()</code> exactly: explicit semantic mappings, <code>bg-surface</code> for unmapped
 roles, shade 50 for palette shades above 400, and shade 900 otherwise. They do not imply a guaranteed text contrast ratio. Labels identify colors without
 relying on color alone. There is no catalog animation; reduced-motion and opaque/high-contrast preferences continue through the shared Blocks controls and
@@ -6019,8 +6906,18 @@ Choose <strong>Color pairs</strong> for the complete companion mapping, <strong>
 presents its demo first, then separate documentation and source tabs. The <a href="components">Core guide</a> remains the entry-point
 reference.</p>
 <h2>Import</h2>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DeviceTypeService</span>, <span class="hljs-title class_">ScrollLockService</span>, uuidv4, <span class="hljs-title class_">WindowDimensionsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
-<p>Services are provided in root. Each utility guide documents its public imports, configuration, lifecycle, and supporting types.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> {
+    <span class="hljs-title class_">DeviceTypeService</span>,
+    findScrollContainer,
+    measureScrollBoundary,
+    observeScrollBoundary,
+    <span class="hljs-title class_">ScrollLockService</span>,
+    uuidv4,
+    <span class="hljs-title class_">WindowDimensionsService</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">InfiniteScrollDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<p>Services are provided in root; import the standalone scroll detector where used. Each utility guide documents its public imports, configuration, lifecycle, and
+supporting types.</p>
 <h2>Usage</h2>
 <p>Search <code>/utilities</code> by utility or API name, then follow <strong>Explore utility</strong>. Direct URLs are supported, and the sidenav exposes the same six pages.</p>
 <table>
@@ -6063,6 +6960,38 @@ reference.</p>
 </tr>
 </tbody></table>
 <h2>API</h2>
+<h3>Scroll boundaries</h3>
+<p>The overview includes an interactive local scroll container with configurable batch size and height. It uses <code>InfiniteScrollDirective</code> to progressively expose
+rows and reports boundary-event counts and measured overflow. The accompanying shared load-more demo shows asynchronous loading, retained-content failure, and
+explicit retry through success. See the <a href="components/infinite-scroll">detector guide</a> and
+<code>/components/infinite-scroll</code>.</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>findScrollContainer(element)</code></td>
+<td>Finds the nearest vertical scrolling ancestor or the document viewport</td>
+</tr>
+<tr>
+<td><code>measureScrollBoundary(content, container?, endOffset?)</code></td>
+<td>Returns distance, overflow, and viewport height without changing scroll position</td>
+</tr>
+<tr>
+<td><code>observeScrollBoundary(content, container, onScroll, onResize)</code></td>
+<td>Passive scroll/geometry observation; returns mandatory cleanup</td>
+</tr>
+<tr>
+<td><code>IScrollBoundary</code></td>
+<td>Typed measurement contract in CSS pixels</td>
+</tr>
+</tbody></table>
+<p>The <a href="components/virtual-collection">virtual collection guide</a> and <code>/components/virtual-collection</code> demonstrate
+bidirectional list/grid rendering, dynamic heights, column changes, and programmatic scrolling. Scroll to top is available on Icons and Tokens, inside their own
+content viewports.</p>
 <h3>Coverage audit</h3>
 <table>
 <thead>
@@ -6082,6 +7011,10 @@ reference.</p>
 <tr>
 <td><code>ScrollLockService</code>, <code>IScrollLockConfig</code></td>
 <td>Independent owners, remaining-owner behavior, release actions, navigation cleanup</td>
+</tr>
+<tr>
+<td>Scroll-boundary directive and helpers</td>
+<td>Local batch/height controls, overflow status, asynchronous fallback/retry example; linked virtual collection coverage</td>
 </tr>
 <tr>
 <td><code>uuidv4()</code></td>
@@ -6318,6 +7251,8 @@ values wrap on narrow screens.</p>
 <p><code>IOverlayOriginOptions</code> can disable native anchoring with <code>nativeAnchoring: false</code>, run <code>onPosition</code> after positioning, or run <code>onOriginHidden</code> when the anchor
 leaves view. The owner decides whether to dismiss. Attach content before tracking so size measurement is meaningful. Call both returned cleanup functions before
 disposing the overlay; the owner also cleans up its subscriptions and portal.</p>
+<p>Top-layer popovers always use synchronous measured CDK positioning, including when native CSS anchors are available. This prevents a frame of drift while a
+nested ancestor scrolls. The returned lifecycle and visibility callbacks work the same way in both paths.</p>
 <p>The demo is an informational preview with focus kept on its trigger. It directly uses an element strategy, visibility guard, origin tracker and inherited theme.
 Coordinate and submenu strategies are documented extension points; ready-made
 <a href="components/context-menu">Context menu</a> and
@@ -6327,8 +7262,9 @@ directives when their existing focus, dismissal and accessibility behavior meets
 <p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
 appearance. Open the source tab for the component and template.</p>
 <h2>Behavior and accessibility</h2>
-<p>Use the Blocks select and trigger to try each preferred side. The preview is a Blocks card constrained to the viewport, with scrollable content at larger text
-sizes. It inherits mounted theme and appearance changes.</p>
+<p>Use the Blocks select and trigger to try each preferred side. Toggle <strong>Use top layer</strong> to compare the native-anchor and measured positioning paths; changing the
+toggle closes an open preview. The preview is a Blocks card constrained to the viewport, with scrollable content at larger text sizes. It inherits mounted theme
+and appearance changes.</p>
 <p>Focus stays on the trigger. Escape, blur, outside pointer events, a hidden origin, and navigation close the preview. Reduced-motion and opaque appearances
 follow the shared Blocks surface behavior.</p>
 <h2>Playground</h2>
@@ -6517,7 +7453,7 @@ grids, and tags.</p>
 <h2>Playground</h2>
 <p>Open <code>/utilities/viewport</code> from <strong>Core \u2192 Utilities \u2192 Viewport and breakpoints</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
 <p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
-`};var k={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
+`};var w={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
 
@@ -6612,6 +7548,11 @@ export class ModalExample {
         </p>
         <p class="menu-status" role="status">{{ menuStatus() }}</p>
     </section>
+    <section class="modal-nesting-demo" aria-label="Nested dialogs">
+        <h3>Nested dialogs</h3>
+        <p>Compare independent backdrops and increasing material opacity while the parent stays open.</p>
+        <button bx-button type="button" variant="tonal" color="accent" (click)="openNested()">Open nested dialog</button>
+    </section>
 </div>
 
 <ng-template #dropdownActions>
@@ -6665,7 +7606,8 @@ export class ModalExample {
     }
 }
 
-.modal-menu-demo {
+.modal-menu-demo,
+.modal-nesting-demo {
     display: grid;
     justify-items: start;
     gap: spacing(3);
@@ -6674,7 +7616,9 @@ export class ModalExample {
 }
 
 .modal-menu-demo h3,
-.modal-menu-demo p {
+.modal-menu-demo p,
+.modal-nesting-demo h3,
+.modal-nesting-demo p {
     margin: 0;
 }
 
@@ -6698,9 +7642,10 @@ export class ModalExample {
 `,"assets/code-snippets/modal/modal.ts.txt":`import type { WritableSignal } from '@angular/core';
 
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
 import { Icon } from '@filip.mazev/blocks/icons';
+import { ModalService } from '@filip.mazev/blocks/modal';
 import { ContextMenuDirective, DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
 
 import { Button } from '@filip.mazev/blocks/forms';
@@ -6718,6 +7663,8 @@ import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-mod
   styleUrl: './demo-modal.scss'
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
+  private readonly modalService = inject(ModalService);
+
   protected readonly menuStatus: WritableSignal<string> = signal('Try either menu. Actions keep this modal open.');
 
   protected readonly isSideModal: WritableSignal<boolean> = signal(false);
@@ -6738,6 +7685,18 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
 
   protected selectAction(action: string): void {
     this.menuStatus.set(\`\${action} selected. The modal is still open.\`);
+  }
+
+  protected openNested(): void {
+    this.modalService.open<IDemoModalData, IDemoModalResult>(DemoModal, {
+      data: {
+        ...this.data,
+        title: 'Nested dialog',
+        body: 'The first nested dialog uses at least 90% material opacity. Open another to see a fully opaque surface. Closing returns to the unchanged parent.'
+      },
+      header: { text: 'Nested dialog', icon: { name: 'layers', color: 'accent', bgColor: 'auto' } },
+      style: { layout: 'center', hasBackdrop: true, animate: this.modal.modalConfig?.style.animate ?? true }
+    });
   }
 }
 `,"assets/code-snippets/modal/styles.scss.txt":`@use '@filip.mazev/blocks/core/styles/index' as bx;
@@ -7064,6 +8023,7 @@ export class Identifiers {
     <bx-card title="Connected overlay">
         <bx-stack [gap]="4">
             <p>Choose a preferred side, open the preview, then scroll or resize. The position strategy falls back when space is limited.</p>
+            <bx-checkbox label="Use top layer" [checked]="useTopLayer()" (checkedChange)="setTopLayer($event)" />
             <bx-stack direction="responsive" align="center" [gap]="4">
                 <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
                 <button
@@ -7078,6 +8038,7 @@ export class Identifiers {
                 </button>
             </bx-stack>
             <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
+            <p>Top-layer previews use measured positioning to follow scrolling. Ordinary previews use native CSS anchors where supported.</p>
         </bx-stack>
     </bx-card>
     <bx-alert
@@ -7118,14 +8079,14 @@ import {
   uuidv4,
   WindowDimensionsService
 } from '@filip.mazev/blocks/core';
-import { Button, Select } from '@filip.mazev/blocks/forms';
+import { Button, Checkbox, Select } from '@filip.mazev/blocks/forms';
 import { Alert, Card, Stack } from '@filip.mazev/blocks/primitives';
 
 import { UTILITY_PLACEMENTS } from '@playground/components/screens/utilities/constants/utilities.constants';
 
 @Component({
   selector: 'app-overlay-positioning',
-  imports: [Alert, Button, Card, RouterLink, Select, Stack],
+  imports: [Alert, Button, Card, Checkbox, RouterLink, Select, Stack],
   templateUrl: './overlay-positioning.html',
   styleUrl: '../../utility-demo.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -7143,6 +8104,7 @@ export class OverlayPositioning {
   protected readonly overlayId: string = 'utilities-overlay-' + uuidv4();
 
   protected readonly overlayOpen: WritableSignal<boolean> = signal(false);
+  protected readonly useTopLayer: WritableSignal<boolean> = signal(false);
 
   protected readonly placement: WritableSignal<BxPlacement> = signal('bottom');
 
@@ -7159,6 +8121,11 @@ export class OverlayPositioning {
     this.placement.set(placement ?? 'bottom');
   }
 
+  protected setTopLayer(enabled: boolean): void {
+    this.closeOverlay();
+    this.useTopLayer.set(enabled);
+  }
+
   protected toggleOverlay(event: MouseEvent): void {
     if (this.overlayOpen()) {
       this.closeOverlay();
@@ -7172,6 +8139,7 @@ export class OverlayPositioning {
     if (!(origin instanceof HTMLElement) || !template || !this.windowDimensionsService.isBrowser || !isOverlayOriginVisible(origin)) return;
 
     const overlayRef = this.overlay.create({
+      usePopover: this.useTopLayer(),
       positionStrategy: this.bxOverlayPositionService.getElementStrategy(origin, this.placement()),
       scrollStrategy: this.overlay.scrollStrategies.noop()
     });
@@ -7622,6 +8590,11 @@ export interface IUtilityExample {
             title="Explore the foundations"
             message="All examples follow your active Blocks theme. Each utility has a dedicated demo and guide in the Utilities navigation." />
 
+        <section aria-labelledby="utility-scroll-heading">
+            <h2 id="utility-scroll-heading">Scroll boundaries and progressive rendering</h2>
+            <app-infinite-scroll-examples />
+        </section>
+
         <section class="utility-documentation" aria-label="Utilities guide and coverage">
             <app-readme path="projects/playground/src/app/components/screens/utilities/README.md" />
         </section>
@@ -7679,12 +8652,13 @@ import { Button, SearchInput } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { Alert, Card, Grid, PageContainer, Stack, Tag } from '@filip.mazev/blocks/primitives';
 
+import { InfiniteScrollExamples } from '@playground/components/screens/library-components/infinite-scroll-examples/infinite-scroll-examples';
 import { UTILITY_EXAMPLES } from '@playground/components/screens/utilities/constants/utility-catalog.constants';
 import { Readme } from '@playground/components/shared/readme/readme';
 
 @Component({
   selector: 'app-utilities',
-  imports: [PageContainer, Alert, Button, Card, Grid, Icon, Readme, RouterLink, SearchInput, Stack, Tag],
+  imports: [PageContainer, Alert, Button, Card, Grid, Icon, Readme, RouterLink, SearchInput, Stack, Tag, InfiniteScrollExamples],
   templateUrl: './utilities.html',
   styleUrl: './utilities.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -7790,7 +8764,7 @@ dd {
     overflow: auto;
     overscroll-behavior: contain;
 }
-`};var w=class c{document=p(Z);router=p(Tr);readmeContent=y(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=j({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&Ne(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(lt(0,`div`,0)(1,`div`,1)(2,`span`),Se(3,`Documentation`),ct()(),qn(4,`article`,2),ct()),a&2&&(k$1(4),$a(`innerHTML`,s.readmeContent(),Em))},styles:[`
+`};var k=class c{document=p(te);router=p(Hr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let i=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||c)};static ɵcmp=V({type:c,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&ve(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),Jn(4,`article`,2),it()),n&2&&(D(4),Ka(`innerHTML`,s.readmeContent(),Lm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
@@ -7869,4 +8843,4 @@ dd {
   padding-left: 1rem;
   border-left: 3px solid var(--%NS%bx-border-brand);
   color: var(--%NS%bx-text-secondary);
-}`]})};export{w as n,S as t};
+}`]})};export{k as n,S as t};
