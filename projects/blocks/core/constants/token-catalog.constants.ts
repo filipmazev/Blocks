@@ -5495,6 +5495,33 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-side-nav-label-duration',
+    reference: 'var(--bx-side-nav-label-duration)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-side-nav-label-opacity',
+    reference: 'var(--bx-side-nav-label-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0', '1']
+  },
+  {
+    name: '--bx-side-nav-label-transition-duration',
+    reference: 'var(--bx-side-nav-label-transition-duration)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0ms', 'var(--bx-side-nav-label-duration, 90ms)']
+  },
+  {
     name: '--bx-side-nav-width',
     reference: 'var(--bx-side-nav-width)',
     category: 'components',
