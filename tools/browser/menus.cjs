@@ -125,7 +125,10 @@ test('select uses an opaque container and follows document scrolling without pan
   await page.locator('[data-menu-select] .bx-select-trigger').click();
   await page.locator('.bx-overlay-anchored').waitFor();
   await opaque(page, '.bx-select-panel');
-  assert.equal(await page.locator('.bx-select-menu-container [data-bx-surface], .bx-select-menu-container .bx-glass-decoration').count(), 0);
+  assert.equal(
+    await page.locator('.bx-select-menu-container [role="listbox"] [data-bx-surface], .bx-select-menu-container [role="listbox"] .bx-glass-decoration').count(),
+    0
+  );
   assert.equal(await page.getByRole('option', { name: 'Skopje', selected: true }).count(), 1);
   assert.equal(await page.locator('[data-menu-select] .bx-select-trigger > .bx-glass-decoration').count(), 1);
   assert.equal(await page.locator('.bx-select-panel input').evaluate((e) => e.closest('[data-bx-surface]').dataset.bxReducedTransparency), 'false');
@@ -150,7 +153,7 @@ test('select follows nested scrolling, preserves above placement and cleans up o
   await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
   await page.locator('[data-menu-select]').evaluate((element) => {
     document.body.insertBefore(element, document.body.firstChild);
-    element.style.cssText = 'position:fixed;bottom:20px;left:350px;width:320px';
+    element.style.cssText = 'position:fixed;bottom:20px;left:350px;width:320px;z-index:1';
   });
   await page.locator('[data-menu-select] .bx-select-trigger').click();
   await page.waitForTimeout(300);
@@ -255,6 +258,51 @@ test('context menus keep opaque containers, keyboard actions and dismissal', asy
   assert.match(await page.locator('app-component-demo').innerText(), /Selection copied/);
 });
 
+test('token copy menus keep hover and keyboard feedback without creating semantic emitters', async (t) => {
+  const page = await pageFor(t, 'context-menu');
+  await page.goto(`${origin}/tokens`);
+  const card = page.locator('.token-card').filter({ hasText: '--bx-bg-element-hover' }).first();
+  await card.scrollIntoViewIfNeeded();
+  await card.click({ button: 'right' });
+  const menu = page.locator('.cdk-overlay-pane [role="menu"]');
+  await menu.waitFor();
+  await opaque(page, '.cdk-overlay-pane .bx-menu-wrapper');
+  for (const index of [0, 4]) {
+    const row = menu.getByRole('menuitem').nth(index);
+    await row.hover();
+    await page.waitForTimeout(250);
+    const hover = await row.evaluate((element) => {
+      const probe = document.createElement('span');
+      probe.style.backgroundColor = 'var(--bx-bg-element-hover)';
+      element.append(probe);
+      const expected = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return { expected, actual: getComputedStyle(element).backgroundColor };
+    });
+    assert.equal(hover.actual, hover.expected);
+    assert.equal(await page.locator('.cdk-overlay-pane [data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+  }
+  await page.mouse.move(0, 0);
+  await page.keyboard.press('ArrowDown');
+  const focused = page.locator('.cdk-overlay-pane [role="menuitem"]:focus-visible');
+  await focused.waitFor();
+  assert.notEqual(await focused.evaluate((element) => getComputedStyle(element).outlineStyle), 'none');
+  assert.equal(await page.locator('.cdk-overlay-pane [data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+  await page.keyboard.press('Escape');
+  await menu.waitFor({ state: 'detached' });
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce', forcedColors: 'active' });
+  await card.focus();
+  await page.keyboard.press('Shift+F10');
+  await menu.waitFor();
+  await page.keyboard.press('ArrowDown');
+  await focused.waitFor();
+  assert.equal(await page.locator('.cdk-overlay-pane [data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+  await page.keyboard.press('Escape');
+  await menu.waitFor({ state: 'detached' });
+  await card.waitFor({ state: 'visible' });
+  assert.ok(await card.evaluate((element) => element === document.activeElement));
+});
+
 test('select anchors work inside a native top-layer popover', async (t) => {
   const page = await pageFor(t, 'select');
   await page.locator('[data-menu-select]').evaluate((element) => {
@@ -271,10 +319,46 @@ test('select anchors work inside a native top-layer popover', async (t) => {
     dialog.showPopover();
   });
   await page.locator('[data-menu-select] .bx-select-trigger').click();
-  await page.locator('.bx-overlay-anchored').waitFor();
+  await page.locator('.bx-overlay-tracked').waitFor();
+  assert.equal(await page.locator('.bx-overlay-tracked').evaluate((host) => !!host.closest(':popover-open')), true);
   aligned(await scrollAndMeasure(page, '[data-menu-select] .bx-select-trigger', true));
   await page.locator('.bx-select-menu-container [role="option"]').filter({ hasText: 'Ohrid' }).click();
   await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+  await page.locator('[data-menu-select]').evaluate((element) => {
+    const popover = element.closest('[popover]');
+    document.querySelector('.demo-stage').append(element);
+    popover.hidePopover();
+    popover.remove();
+  });
+  await page.locator('[data-menu-select] .bx-select-trigger').click();
+  await page.locator('.bx-overlay-anchored').waitFor();
+  assert.equal(await page.locator('.bx-overlay-tracked').evaluate((host) => !!host.closest(':popover-open')), false);
+  assert.equal(await page.getByRole('option', { name: 'Ohrid', selected: true }).count(), 1);
+  await page.keyboard.press('Escape');
+  await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+});
+
+test('multiselect releases closed overlays while retaining selection and search across reopen', async (t) => {
+  const page = await pageFor(t, 'multi-select', { reducedMotion: true });
+  const trigger = page.getByRole('combobox', { name: 'Locations', exact: true });
+  await page.waitForFunction(() => document.querySelector('bx-multi-select[label="Locations"] [role="combobox"]')?.getAttribute('aria-busy') === 'false');
+  await trigger.click();
+  await page.getByRole('option', { name: 'Skopje', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+  assert.equal(await page.locator('.bx-overlay-tracked, .bx-overlay-document-layer').count(), 0);
+  await trigger.click();
+  await page.getByRole('option', { name: 'Skopje', exact: true, selected: true }).waitFor();
+  await page.locator('.bx-select-panel input').fill('Ohr');
+  await page.getByRole('option', { name: 'Ohrid', exact: true }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+  await trigger.click();
+  assert.equal(await page.locator('.bx-select-panel input').inputValue(), 'Ohr');
+  await page.getByRole('option', { name: 'Ohrid', exact: true }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+  assert.equal(await trigger.evaluate((element) => element === document.activeElement), true);
 });
 
 for (const component of ['select', 'dropdown']) {

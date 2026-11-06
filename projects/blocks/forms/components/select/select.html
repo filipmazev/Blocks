@@ -105,94 +105,97 @@
             </button>
         }
     </div>
-    <ng-template
-        cdkConnectedOverlay
-        [cdkConnectedOverlayOrigin]="origin"
-        [cdkConnectedOverlayOpen]="isPanelAttached()"
-        [cdkConnectedOverlayPositions]="overlayPositions"
-        [cdkConnectedOverlayHasBackdrop]="false"
-        [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy"
-        [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
-        [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
-        (overlayOutsideClick)="onOutsideClick($event)"
-        (attach)="onPanelAttach()"
-        (detach)="onPanelDetach()"
-        (positionChange)="refreshPanel()">
-        <div class="bx-select-panel" data-bx-surface="solid" tabindex="-1" [class]="panelClass()" (keydown)="onPanelKey($event)">
-            @if (isSearchable()) {
-                <div class="bx-select-search-container">
-                    <bx-search-input
-                        #searchInput
-                        [value]="searchValue()"
-                        [compact]="true"
-                        [placeholder]="resolvedSearchPlaceholder()"
-                        [ariaLabel]="resolvedSearchPlaceholder()"
-                        (search)="onSearchChange($event)"
-                        (keydown.enter)="$event.preventDefault()" />
-                </div>
-            }
+    @if (isPanelAttached()) {
+        <ng-template
+            #panelOverlay="cdkConnectedOverlay"
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="origin"
+            [cdkConnectedOverlayOpen]="true"
+            [cdkConnectedOverlayPositions]="overlayPositions"
+            [cdkConnectedOverlayHasBackdrop]="false"
+            [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy"
+            [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
+            [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
+            (overlayOutsideClick)="onOutsideClick($event)"
+            (attach)="onPanelAttach(panelOverlay)"
+            (detach)="onPanelDetach()"
+            (positionChange)="refreshPanel()">
+            <div class="bx-select-panel" data-bx-surface="solid" tabindex="-1" [class]="panelClass()" (keydown)="onPanelKey($event)">
+                @if (isSearchable()) {
+                    <div class="bx-select-search-container">
+                        <bx-search-input
+                            #searchInput
+                            [value]="searchValue()"
+                            [compact]="true"
+                            [placeholder]="resolvedSearchPlaceholder()"
+                            [ariaLabel]="resolvedSearchPlaceholder()"
+                            (search)="onSearchChange($event)"
+                            (keydown.enter)="$event.preventDefault()" />
+                    </div>
+                }
 
-            <div
-                #pagination="bxLoadMore"
-                class="bx-select-menu-container"
-                bxLoadMore
-                [loadMoreHasMore]="hasMore()"
-                [loadMoreSuppressed]="isSearching()"
-                [loadMoreLoading]="loading()"
-                [loadMoreDisabled]="disabled() || isReadonly()"
-                [loadMoreError]="loadError()"
-                [loadMoreConfig]="loadMoreConfig()"
-                [loadMoreTemplate]="loadMoreTemplate()"
-                [loadMoreRevision]="options()"
-                (loadMore)="requestMore($event)">
-                <div role="listbox" [hidden]="isSearching()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [id]="controlId() + '-options'">
-                    @for (option of filteredOptions(); track option.value; let index = $index) {
-                        @if (option.resolvedGroup && (index === 0 || filteredOptions()[index - 1].resolvedGroup !== option.resolvedGroup)) {
-                            <div class="bx-select-group" [id]="controlId() + '-group-' + index">{{ option.resolvedGroup }}</div>
-                        }
-                        <button
-                            type="button"
-                            class="bx-select-option"
-                            role="option"
-                            tabindex="-1"
-                            [attr.aria-selected]="isSelected(option.value)"
-                            [disabled]="option.disabled || option.groupDisabled || false"
-                            (click)="selectOption(option)">
-                            <span class="bx-select-check-placeholder" aria-hidden="true">
-                                @if (isSelected(option.value)) {
-                                    <bx-icon name="check" size="16" />
+                <div
+                    #pagination="bxLoadMore"
+                    class="bx-select-menu-container"
+                    bxLoadMore
+                    [loadMoreHasMore]="hasMore()"
+                    [loadMoreSuppressed]="isSearching()"
+                    [loadMoreLoading]="loading()"
+                    [loadMoreDisabled]="disabled() || isReadonly()"
+                    [loadMoreError]="loadError()"
+                    [loadMoreConfig]="loadMoreConfig()"
+                    [loadMoreTemplate]="loadMoreTemplate()"
+                    [loadMoreRevision]="options()"
+                    (loadMore)="requestMore($event)">
+                    <div role="listbox" [hidden]="isSearching()" [attr.aria-label]="ariaLabel() || resolvedLabel()" [id]="controlId() + '-options'">
+                        @for (option of filteredOptions(); track option.value; let index = $index) {
+                            @if (option.resolvedGroup && (index === 0 || filteredOptions()[index - 1].resolvedGroup !== option.resolvedGroup)) {
+                                <div class="bx-select-group" [id]="controlId() + '-group-' + index">{{ option.resolvedGroup }}</div>
+                            }
+                            <button
+                                type="button"
+                                class="bx-select-option"
+                                role="option"
+                                tabindex="-1"
+                                [attr.aria-selected]="isSelected(option.value)"
+                                [disabled]="option.disabled || option.groupDisabled || false"
+                                (click)="selectOption(option)">
+                                <span class="bx-select-check-placeholder" aria-hidden="true">
+                                    @if (isSelected(option.value)) {
+                                        <bx-icon name="check" size="16" />
+                                    }
+                                </span>
+                                @if (option.icon) {
+                                    <bx-icon size="16" [name]="option.icon" />
                                 }
-                            </span>
-                            @if (option.icon) {
-                                <bx-icon size="16" [name]="option.icon" />
+                                @if (optionTemplate(); as template) {
+                                    <ng-container
+                                        [ngTemplateOutlet]="template"
+                                        [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }" />
+                                } @else {
+                                    <span>{{ option.resolvedStr }}</span>
+                                }
+                            </button>
+                        } @empty {
+                            @if (!loading()) {
+                                <div class="bx-select-empty" role="status">{{ resolvedEmptyMessage() }}</div>
                             }
-                            @if (optionTemplate(); as template) {
-                                <ng-container
-                                    [ngTemplateOutlet]="template"
-                                    [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }" />
-                            } @else {
-                                <span>{{ option.resolvedStr }}</span>
-                            }
-                        </button>
-                    } @empty {
-                        @if (!loading()) {
-                            <div class="bx-select-empty" role="status">{{ resolvedEmptyMessage() }}</div>
-                        }
-                    }
-                </div>
-                @if (isSearching()) {
-                    <div class="bx-select-search-state" role="status" [attr.aria-label]="resolvedLoadingLabel() || resolvedLoadingAriaLabel()">
-                        @if (resolvedLoadingLabel()) {
-                            <span>{{ resolvedLoadingLabel() }}</span>
-                        } @else {
-                            <bx-loading-spinner [size]="20" [decorative]="true" />
                         }
                     </div>
-                } @else if (loading() && !pagination.actionVisible()) {
-                    <div class="bx-select-loading"><bx-loading-indicator [size]="16" [label]="loadingLabel() ?? loadingAriaLabel()" /></div>
-                }
+                    @if (isSearching()) {
+                        <div class="bx-select-search-state" role="status" [attr.aria-label]="resolvedLoadingLabel() || resolvedLoadingAriaLabel()">
+                            @if (resolvedLoadingLabel()) {
+                                <span>{{ resolvedLoadingLabel() }}</span>
+                            } @else {
+                                <bx-loading-spinner [size]="20" [decorative]="true" />
+                            }
+                        </div>
+                    } @else if (loading() && !pagination.actionVisible()) {
+                        <div class="bx-select-loading"><bx-loading-indicator [size]="16" [label]="loadingLabel() ?? loadingAriaLabel()" /></div>
+                    }
+                </div>
             </div>
-        </div>
-    </ng-template>
+        </ng-template>
+    }
     <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
 </bx-form-field>

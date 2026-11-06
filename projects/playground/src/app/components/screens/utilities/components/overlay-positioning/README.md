@@ -47,6 +47,9 @@ The complete demo source shows portal attachment, theme inheritance, origin trac
 leaves view. The owner decides whether to dismiss. Attach content before tracking so size measurement is meaningful. Call both returned cleanup functions before
 disposing the overlay; the owner also cleans up its subscriptions and portal.
 
+Top-layer popovers always use synchronous measured CDK positioning, including when native CSS anchors are available. This prevents a frame of drift while a
+nested ancestor scrolls. The returned lifecycle and visibility callbacks work the same way in both paths.
+
 The demo is an informational preview with focus kept on its trigger. It directly uses an element strategy, visibility guard, origin tracker and inherited theme.
 Coordinate and submenu strategies are documented extension points; ready-made
 [Context menu](../../../../../../../../blocks/primitives/directives/context-menu/README.md) and
@@ -60,8 +63,9 @@ appearance. Open the source tab for the component and template.
 
 ## Behavior and accessibility
 
-Use the Blocks select and trigger to try each preferred side. The preview is a Blocks card constrained to the viewport, with scrollable content at larger text
-sizes. It inherits mounted theme and appearance changes.
+Use the Blocks select and trigger to try each preferred side. Toggle **Use top layer** to compare the native-anchor and measured positioning paths; changing the
+toggle closes an open preview. The preview is a Blocks card constrained to the viewport, with scrollable content at larger text sizes. It inherits mounted theme
+and appearance changes.
 
 Focus stays on the trigger. Escape, blur, outside pointer events, a hidden origin, and navigation close the preview. Reduced-motion and opaque appearances
 follow the shared Blocks surface behavior.

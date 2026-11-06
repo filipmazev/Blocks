@@ -154,6 +154,18 @@ public readonly showExpandedLayout: Signal<boolean> = computed(() =>
 
 - Fixed surrounding surface highlights changing when a context menu opens. Lighting visibility ignores fully transparent CDK dismissal backdrops while retaining
   occlusion from visible menu panels and opaque backdrops.
+- Stopped menu rows from casting near-white interaction light onto the page behind their opaque panel. Rows retain themed normal/danger hover and pressed fills,
+  visible keyboard focus, and application motion preferences.
+- Added `false` support to `BxSurfaceDirective.bxSurfaceEmission` and runtime `ISurfaceOptions.emission`. Automatic hover, press, active-state, and
+  keyboard-focus emission can be disabled independently of press feedback and received lighting; an explicit focus-emission color still enables focus-only
+  emission.
+- Made emission-setting changes react while an interactive surface is already hovered, without requiring the pointer to leave and return.
+- Made inherited overlay lighting directional. Context menus, dropdowns, popovers, selection panels, and tooltips can receive their trigger's lighting context,
+  while internal semantic, explicit, reflected, and ambient sources retain their overlay boundary.
+- Checked projected receiving locations separately from whole-source exposure, so an uncovered area elsewhere on a receiver cannot authorize lighting through an
+  opaque panel. Edge falloff now measures the receiver perimeter, and hover contributions keep their bounded circular spread on large surfaces.
+- Added an emission toggle to the Surface effects playground and expanded browser coverage for menu hover/focus, overlay isolation, explicit lights and
+  reflections, covered receiving edges, source cleanup, and retained press feedback.
 - Fixed number-only Tag proportions by keeping vertical padding at zero while preserving configurable horizontal padding and minimum diameter.
 
 - Added optional `titleTemplate` support to Collapsible and accordion items, with the exported `ICollapsibleTitleContext` providing the translated title and
@@ -162,6 +174,17 @@ public readonly showExpandedLayout: Signal<boolean> = computed(() =>
   It shares `ICollapsibleTitleContext` with title templates, supports RTL layouts, and keeps the heading as one accessible disclosure button.
 - Added `Card.surfaceEffects`, defaulting to `true`. Dense collections can disable decorative surface controllers while keeping themed card styling, content
   slots, and interactions.
+
+## Overlay positioning
+
+- Fixed select-panel drift when a trigger inside a native top-layer popover moves in a nested scroller. Top-layer overlays use synchronous measured CDK
+  positioning; ordinary overlays retain native CSS anchoring where supported.
+- Preserved the origin tracker's cleanup, resize handling, visibility callbacks, and explicit `reposition()` method in both positioning paths.
+- Released Select and Multiselect panel overlays after completed closes so reopening resolves the current ordinary/top-layer context. Selected values and search
+  terms remain on the control, and reopening during an exit still reverses the existing transition.
+- Added **Use top layer** to the overlay-positioning utility playground and documented the positioning policy in Core, Select, and Dropdown guides.
+- Corrected select browser checks to distinguish undecorated option rows from the shared pagination footer and to keep an artificially fixed test trigger above
+  its demo content. Retained scrolling, filtering, placement, focus restoration, and top-layer checks.
 
 ## Breaking changes and migration
 

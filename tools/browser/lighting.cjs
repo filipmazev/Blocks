@@ -343,12 +343,17 @@ test('hover, focus and explicit sources coexist above bounded ambient layers', a
   assert.equal(structure.ambientNodes, 1);
   assert.equal(structure.keys[0], 'ambient');
   assert.ok(structure.semantic.some((image) => image.includes('rgb(255, 51, 0)')));
+  assert.match(
+    structure.semantic.find((image) => image.includes('rgb(255, 51, 0)')),
+    /radial-gradient\((?:circle )?120px at /
+  );
   assert.ok(structure.semantic.some((image) => image.includes('rgb(51, 85, 255)')));
   const before = await page.evaluate(() => ({ ...metrics }));
   await page.mouse.move(400, 50);
   await page.locator('#left').focus();
   await page.waitForTimeout(240);
-  assert.equal(await page.evaluate(() => metrics.hits), before.hits, 'focus/hover must use cached ambient samples');
+  const after = await page.evaluate(() => ({ ...metrics }));
+  assert.ok(after.hits - before.hits <= 4, 'focus/hover reuses ambient samples with at most four semantic receiving-point visibility checks');
   assert.ok(await page.locator('#receiver [data-bx-light-source^="hover:"]').count());
 });
 
@@ -509,6 +514,176 @@ test('lighting boundaries isolate overlays and removing sources clears their col
   await page.evaluate(() => document.getElementById('right').remove());
   await page.waitForTimeout(250);
   assert.ok(!(await ambient(page)).some((light) => light.color === 'rgb(0, 0, 255)'));
+});
+
+test('inherited overlay backgrounds do not become ambient sources for the page', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(() => {
+    const overlay = document.getElementById('right');
+    overlay.classList.add('cdk-overlay-pane');
+    handles.push({ destroy: runtime.inheritGlassLighting(overlay, document.getElementById('left')) });
+    runtime.refreshGlassLighting(receiver);
+  });
+  await page.waitForFunction(() => lighting.contributions.every((light) => light.color !== 'rgb(0, 0, 255)'));
+  assert.ok((await ambient(page)).some((light) => light.color === 'rgb(255, 0, 0)'));
+});
+
+test('emission can be disabled independently of press feedback and explicitly restored for focus', async (t) => {
+  const page = await pageFor(t, false, true);
+  await page.evaluate(() => {
+    const source = document.getElementById('left');
+    source.setAttribute('role', 'button');
+    source.tabIndex = 0;
+    window.sourceSurface = runtime.mountSurface(source, { emission: false });
+    handles.push(sourceSurface);
+  });
+  await page.locator('#left').hover();
+  await page.evaluate(() => sourceSurface.update({ emission: '#ff3300' }));
+  await page.waitForFunction(() => receiver.querySelector('[data-bx-light-source^="hover:"]'));
+  await page.evaluate(() => sourceSurface.update({ emission: false }));
+  await page.waitForFunction(() => !document.querySelector('[data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]'));
+  await page.mouse.down();
+  assert.ok(await page.locator('#left').evaluate((element) => Number(getComputedStyle(element).getPropertyValue('--bx-glass-press')) > 0));
+  await page.mouse.up();
+  await page.mouse.move(900, 650);
+  await page.keyboard.press('Tab');
+  await page.locator('#left').focus();
+  await page.waitForTimeout(250);
+  assert.equal(await page.locator('[data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+  await page.evaluate(() => sourceSurface.update({ emission: false, focusEmission: '#ff3300' }));
+  await page.waitForFunction(() => receiver.querySelector('[data-bx-light-source^="hover:"]'));
+  await page.evaluate(() => sourceSurface.update({ emission: false }));
+  await page.waitForFunction(() => !document.querySelector('[data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]'));
+});
+
+test('inherited overlays receive external light while internal emitters remain inside their physical boundary', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(() => {
+    document.getElementById('right').remove();
+    const trigger = document.createElement('button');
+    trigger.id = 'overlay-trigger';
+    trigger.textContent = 'Open';
+    trigger.style.cssText = 'position:absolute;left:625px;top:270px;width:25px;height:30px';
+    document.body.append(trigger);
+    const pane = document.createElement('div');
+    pane.className = 'cdk-overlay-pane';
+    pane.style.cssText = 'position:absolute;left:660px;top:180px;width:250px;height:220px;z-index:99;background:#111';
+    pane.innerHTML = '<button id="overlay-source">Action</button><div id="overlay-receiver"></div>';
+    document.body.append(pane);
+    const source = pane.querySelector('button');
+    source.style.cssText = 'position:absolute;left:15px;top:20px;width:90px;height:40px';
+    const target = pane.querySelector('#overlay-receiver');
+    target.style.cssText = 'position:absolute;left:15px;top:70px;width:100px;height:90px';
+    handles.push({ destroy: runtime.inheritGlassLighting(pane, trigger) });
+    handles.push(runtime.mountSurface(trigger, { emission: '#33ff00' }));
+    handles.push(runtime.mountSurface(source, { emission: '#ff3300' }));
+    handles.push({ destroy: runtime.observeGlassLighting(target, (value) => (window.overlayLighting = value)) });
+  });
+  await page.locator('#overlay-source').hover();
+  await page.waitForFunction(() => overlayLighting.contributions.some((light) => !light.ambient && light.color === 'rgb(255, 51, 0)'));
+  assert.ok(await page.evaluate(() => lighting.contributions.every((light) => light.ambient)));
+  assert.equal(await page.evaluate(() => overlayLighting.contributions.find((light) => !light.ambient).spread), 120);
+  await page.locator('#overlay-trigger').hover();
+  await page.waitForFunction(() => overlayLighting.contributions.some((light) => !light.ambient && light.color === 'rgb(51, 255, 0)'));
+  await page.evaluate(() => {
+    const pane = document.querySelector('.cdk-overlay-pane');
+    const nested = document.createElement('div');
+    nested.className = 'cdk-overlay-pane';
+    nested.style.cssText = 'position:absolute;left:660px;top:430px;width:180px;height:60px;z-index:100';
+    nested.innerHTML = '<button id="nested-overlay-source">Nested</button>';
+    document.body.append(nested);
+    const source = nested.querySelector('button');
+    source.style.cssText = 'width:120px;height:40px';
+    handles.push({ destroy: runtime.inheritGlassLighting(nested, pane.querySelector('button')) });
+    handles.push(runtime.mountSurface(source, { emission: '#0044ff' }));
+  });
+  await page.locator('#nested-overlay-source').hover();
+  await page.waitForTimeout(250);
+  assert.ok(await page.evaluate(() => lighting.contributions.every((light) => light.ambient)));
+  assert.ok(await page.evaluate(() => overlayLighting.contributions.every((light) => light.ambient)));
+  await page.evaluate(() => {
+    handles
+      .splice(1)
+      .reverse()
+      .forEach((handle) => handle.destroy());
+    document.querySelectorAll('.cdk-overlay-pane, #overlay-trigger').forEach((element) => element.remove());
+  });
+  assert.ok(await page.evaluate(() => lighting.contributions.every((light) => light.ambient)));
+});
+
+test('a partly exposed receiver rejects light at its covered receiving edge', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(() => {
+    window.scene = runtime.mountGlassScene(document.body, { lights: [{ x: 280, y: 270, z: 24, radius: 120, color: '#ff00ff' }] });
+    handles.push(scene);
+  });
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === '#ff00ff'));
+  await page.evaluate(() => {
+    const cover = document.createElement('div');
+    cover.id = 'edge-cover';
+    cover.style.cssText = 'position:absolute;left:290px;top:240px;width:40px;height:70px;z-index:99;background:black';
+    document.body.append(cover);
+    runtime.refreshGlassLighting(receiver);
+  });
+  await page.waitForFunction(() => lighting.contributions.every((light) => light.color !== '#ff00ff'));
+  await page.evaluate(() => {
+    document.getElementById('edge-cover').remove();
+    runtime.refreshGlassLighting(receiver);
+  });
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === '#ff00ff'));
+});
+
+test('inherited explicit lights and reflections stay directional and an overlay can own its own scene', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(() => {
+    document.getElementById('right').remove();
+    const origin = document.getElementById('left');
+    const pane = document.createElement('div');
+    pane.className = 'cdk-overlay-pane';
+    pane.style.cssText = 'position:absolute;left:640px;top:160px;width:320px;height:240px;z-index:99;background:#111';
+    pane.innerHTML = '<span id="internal-light"></span><div id="internal-receiver"></div>';
+    document.body.append(pane);
+    const source = pane.querySelector('span');
+    source.style.cssText = 'position:absolute;left:20px;top:10px;width:60px;height:20px;background:#cc44aa';
+    const target = pane.querySelector('div');
+    target.style.cssText = 'position:absolute;left:20px;top:40px;width:120px;height:100px';
+    handles.push({ destroy: runtime.inheritGlassLighting(pane, origin) });
+    handles.push({ destroy: runtime.observeGlassLighting(target, (value) => (window.overlayLighting = value)) });
+    window.externalLight = { element: origin, z: 24, radius: 800, color: '#ff7700' };
+    window.internalLight = { element: source, z: 24, radius: 400, color: '#cc44aa' };
+    window.scene = runtime.mountGlassScene(document.body, {
+      lights: [externalLight, internalLight],
+      reflectors: [
+        { element: origin, color: '#33cc44' },
+        { element: source, color: '#aa44cc' }
+      ]
+    });
+    handles.push(scene);
+  });
+  await page.waitForFunction(() => overlayLighting.contributions.some((light) => light.color === '#ff7700'));
+  assert.ok(await page.evaluate(() => overlayLighting.contributions.some((light) => light.color === '#cc44aa')));
+  assert.ok(await page.evaluate(() => lighting.contributions.every((light) => light.color !== '#cc44aa')));
+  assert.equal(await page.evaluate(() => lighting.reflection), '#33cc44');
+  await page.evaluate(() => scene.update({ lights: [internalLight], reflectors: [{ element: internalLight.element, color: '#aa44cc' }] }));
+  await page.waitForFunction(() => lighting.contributions.every((light) => light.ambient) && lighting.reflectionStrength === 0);
+  assert.equal(await page.evaluate(() => overlayLighting.reflection), '#aa44cc');
+  await page.evaluate(() => {
+    handles.push(runtime.mountGlassScene(document.querySelector('.cdk-overlay-pane'), { lights: [{ x: 700, y: 190, z: 24, radius: 200, color: '#00aaff' }] }));
+  });
+  await page.waitForFunction(() => overlayLighting.contributions.some((light) => light.color === '#00aaff'));
+  assert.ok(await page.evaluate(() => overlayLighting.contributions.every((light) => light.ambient || light.color === '#00aaff')));
+  assert.ok(await page.evaluate(() => lighting.contributions.every((light) => light.ambient)));
+});
+
+test('interior sources use the distance to the receiver perimeter instead of illuminating distant borders', async (t) => {
+  const page = await pageFor(t);
+  await page.evaluate(() => {
+    handles.push(runtime.mountGlassScene(document.body, { lights: [{ x: 460, y: 270, z: 24, radius: 60, color: '#ff00ff' }] }));
+  });
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === '#ff00ff'));
+  const light = await page.evaluate(() => lighting.contributions.find((light) => light.color === '#ff00ff'));
+  assert.ok(light.strength > 0);
+  assert.equal(light.edgeStrength, 0);
 });
 
 test('offscreen media is never read and destroying receivers stops all sampling', async (t) => {

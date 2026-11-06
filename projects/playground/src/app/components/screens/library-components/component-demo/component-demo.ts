@@ -110,6 +110,7 @@ export class ComponentDemo {
   protected readonly fieldValue: WritableSignal<string> = signal('');
 
   protected readonly showError: WritableSignal<boolean> = signal(false);
+  protected readonly surfaceEmission: WritableSignal<boolean> = signal(false);
 
   protected readonly fieldError: Signal<'Enter at least three characters.' | undefined> = computed(() =>
     this.showError() && this.fieldValue().trim().length < 3 ? 'Enter at least three characters.' : undefined

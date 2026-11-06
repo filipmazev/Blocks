@@ -44,16 +44,27 @@ and actionable surfaces get automatic hover/focus lighting; decorative container
 input does not turn a panel into an interactive surface. Wrappers inside `bx-form-field` retain field interaction; custom control wrappers outside a field can
 opt in with `bxSurfaceInteractive`. Components can override the default border and radius with their existing tokens.
 
-| Input                    | Default                                                      | Local override                                                                     |
-| ------------------------ | ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| `bxSurfaceTranslucency`  | Global translucency                                          | 0–1                                                                                |
-| `bxSurfaceGlassiness`    | Off unless selected                                          | `auto`, `off`, or `on`; baseline and accessibility settings take precedence        |
-| `bxSurfaceInteractive`   | Automatic control/action detection                           | Boolean; explicitly enables or disables interaction lighting and press deformation |
-| `bxSurfaceEmission`      | Theme accent (error color in invalid fields)                 | Override the semantic color emitted on hover, press or an active state             |
-| `bxSurfaceFocusEmission` | Fields: surface emission color; actions: keyboard focus only | Explicitly illuminate for any focus using this color                               |
-| `bxReducedTransparency`  | Global setting                                               | Boolean                                                                            |
+| Input                    | Default                                                      | Local override                                                                              |
+| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `bxSurfaceTranslucency`  | Global translucency                                          | 0–1                                                                                         |
+| `bxSurfaceGlassiness`    | Off unless selected                                          | `auto`, `off`, or `on`; baseline and accessibility settings take precedence                 |
+| `bxSurfaceInteractive`   | Automatic control/action detection                           | Boolean; explicitly enables or disables interaction lighting and press deformation          |
+| `bxSurfaceEmission`      | Theme accent (error color in invalid fields)                 | CSS color override, or `false` to disable automatic emission while retaining press feedback |
+| `bxSurfaceFocusEmission` | Fields: surface emission color; actions: keyboard focus only | Explicitly illuminate for any focus using this color                                        |
+| `bxReducedTransparency`  | Global setting                                               | Boolean                                                                                     |
 
 Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.
+
+Disable automatic emission independently of press feedback and received lighting with `[bxSurfaceEmission]="false"`. This also suppresses the default keyboard
+focus emission. An explicit `bxSurfaceFocusEmission` can opt the surface back into focus-only emission. Hiding decoration with CSS opacity does not disable a
+source in the lighting runtime.
+
+```html
+<button bx-button bxSurface [surfaceEffects]="false" [bxSurfaceEmission]="false" variant="tonal">Local interaction feedback</button>
+```
+
+Here `[surfaceEffects]="false"` lets the directive own the button's material without mounting a second surface. The `/components/surface` playground includes a
+Blocks checkbox that switches automatic emission on and off.
 
 ## Glassiness and translucency
 

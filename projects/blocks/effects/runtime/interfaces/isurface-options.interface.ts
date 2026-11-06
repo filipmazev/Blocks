@@ -12,8 +12,11 @@ export interface ISurfaceOptions {
   glassiness?: GlassinessMode;
   /** Override automatic action/control detection for interaction lighting and press deformation. */
   interactive?: boolean;
-  /** Override the default theme accent/error color emitted on interaction or an active ARIA state. */
-  emission?: string;
+  /**
+   * Override the default theme accent/error color emitted on interaction or an active ARIA state. Set `false` to disable automatic emission while retaining
+   * press feedback and received lighting. An explicit `focusEmission` can still enable focus-only emission. Omission uses the theme accent/error color.
+   */
+  emission?: string | false;
   /** Override illumination for any focus. Omitted: editable fields illuminate on focus; actions illuminate only on keyboard focus. */
   focusEmission?: string;
   /** Whether motion should be reduced; omission follows the owning accessibility policy. Optional. */

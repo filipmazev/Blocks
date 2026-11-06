@@ -1,5 +1,6 @@
 import type { IEntry } from '@effects/runtime/interfaces/ientry.interface';
 import type { ILightContribution } from '@effects/runtime/interfaces/ilight-contribution.interface';
+import type { ILightProjection } from '@effects/runtime/interfaces/ilight-projection.interface';
 import type { ILighting } from '@effects/runtime/interfaces/ilighting.interface';
 import type { IPointLight } from '@effects/runtime/interfaces/ipoint-light.interface';
 import type { IReflection } from '@effects/runtime/interfaces/ireflection.interface';
@@ -119,8 +120,7 @@ export class SceneRuntime {
   private over: (event: PointerEvent) => void = (event: PointerEvent) => {
     if (event.pointerType === 'touch') return;
 
-    const found = this.find(event);
-    const next = found?.hooks.emission?.() ? found : undefined;
+    const next = this.find(event);
 
     if (next !== this.hovered) {
       this.hovered = next;
@@ -480,7 +480,7 @@ export class SceneRuntime {
   }
 
   private scope(element: HTMLElement): HTMLElement {
-    return lightingOrigin(element).closest<HTMLElement>(`${lightBoundarySelector}, main, aside, nav`) ?? this.doc.body;
+    return element.closest<HTMLElement>(`${lightBoundarySelector}, main, aside, nav`) ?? this.doc.body;
   }
 
   private updateEmitter(): void {
@@ -513,7 +513,10 @@ export class SceneRuntime {
     for (const entry of this.entries.values()) {
       if (!entry.visible) continue;
 
-      const affected = sources.some((source) => this.scope(source.element) === this.scope(entry.element));
+      const affected = sources.some(
+        (source) =>
+          this.scope(source.element) === this.scope(entry.element) || this.scope(source.element) === this.scope(lightingOrigin(entry.element) as HTMLElement)
+      );
 
       // A panel may have finished its opening animation since its surfaces were registered.
       if (affected) {
@@ -536,7 +539,7 @@ export class SceneRuntime {
 
   private refreshRoot(root: HTMLElement, measure = true): void {
     for (const entry of this.entries.values()) {
-      if (!root.contains(lightingOrigin(entry.element))) continue;
+      if (!root.contains(entry.element) && !root.contains(lightingOrigin(entry.element))) continue;
 
       if (measure) {
         entry.bounds = undefined;
@@ -690,10 +693,7 @@ export class SceneRuntime {
           entry.bounds ??= entry.element.getBoundingClientRect();
 
           const origin = lightingOrigin(entry.element) as HTMLElement;
-
-          let nearest: ISceneEntry | undefined;
-
-          for (const candidate of this.scenes) if (candidate.root.contains(origin) && (!nearest || nearest.root.contains(candidate.root))) nearest = candidate;
+          const nearest = this.nearestScene(entry.element, origin);
 
           if (nearest && !sceneData.has(nearest)) {
             const scene = nearest;
@@ -708,13 +708,21 @@ export class SceneRuntime {
           const sceneRoot = nearest?.root ?? entry.element;
           // Explicit scene lights and an active semantic element share the same spatial model.
           const boundary = visibility.boundary(entry.element);
-          const candidates = (data?.lights ?? []).filter((light) => visibility.boundary(light.source ?? sceneRoot) === boundary);
+          const inheritedBoundary = visibility.boundary(origin);
+          const candidates = (data?.lights ?? []).filter((light) => {
+            const sourceBoundary = visibility.boundary(light.source ?? sceneRoot);
+
+            return sourceBoundary === boundary || sourceBoundary === inheritedBoundary;
+          });
           const lights = this.selectSceneLights(entry, candidates, visibility);
 
           for (const { emitter, light } of activeLights) {
+            // Context inheritance only receives light. Internal sources retain the overlay's physical boundary and stacking layer.
+            const target = visibility.boundary(emitter.element) === boundary ? entry.element : origin;
+
             if (
-              this.scope(emitter.element) === this.scope(entry.element) &&
-              visibility.layer(lightingOrigin(emitter.element) as HTMLElement) === visibility.layer(origin) &&
+              this.scope(emitter.element) === this.scope(target) &&
+              visibility.layer(emitter.element) === visibility.layer(target) &&
               !emitter.element.contains(entry.element) &&
               (!entry.element.contains(emitter.element) || entry.element.matches('[role="menu"], [role="tablist"]'))
             )
@@ -723,7 +731,11 @@ export class SceneRuntime {
 
           lights.push(...this.ambient.lights(entry));
 
-          const reflections = (data?.reflections ?? []).filter((reflection) => visibility.boundary(reflection.source) === boundary);
+          const reflections = (data?.reflections ?? []).filter((reflection) => {
+            const sourceBoundary = visibility.boundary(reflection.source);
+
+            return sourceBoundary === boundary || sourceBoundary === inheritedBoundary;
+          });
           const lighting = this.project(entry, lights, reflections, visibility);
 
           lighting.immediate = entry.resuming || !entry.painted;
@@ -793,6 +805,7 @@ export class SceneRuntime {
 
   private lightPoint(light: IGlassLight, key: string, border = false): IPointLight {
     const rect = light.element?.getBoundingClientRect();
+    const radius = finiteClamp(light.radius, 1, 4000, 640);
 
     if (light.element && !border) {
       if (!this.lightIds.has(light.element)) this.lightIds.set(light.element, this.nextId++);
@@ -804,6 +817,7 @@ export class SceneRuntime {
       key,
       bounds: rect && light.edge === 'bottom' ? new DOMRect(rect.left, rect.bottom, rect.width, 0) : border ? rect : undefined,
       source: light.element,
+      spread: border ? radius : undefined,
       excludeSource: light.excludeSource,
       excludeElement: light.excludeElement,
       x: rect ? rect.left + rect.width * finiteClamp(light.offsetX, 0, 1, 0.5) : finiteClamp(light.x, -1e6, 1e6, this.view.innerWidth * 0.25),
@@ -811,7 +825,7 @@ export class SceneRuntime {
       z: finiteClamp(light.z, 1, 4000, 180),
       color: light.color ?? 'var(--bx-text-inverse, Canvas)',
       intensity: finiteClamp(light.intensity, 0, 4, 1),
-      radius: finiteClamp(light.radius, 1, 4000, 640)
+      radius
     };
   }
 
@@ -829,30 +843,52 @@ export class SceneRuntime {
     };
   }
 
-  private selectSceneLights(entry: IEntry, lights: IPointLight[], visibility: ReturnType<typeof lightingVisibility>): IPointLight[] {
-    const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
-    const ranked = lights
-      .filter((light) => !(light.excludeSource && light.source === entry.element) && light.excludeElement !== entry.element)
-      .map((light) => ({ light, projection: projectLight(light, bounds) }))
-      .filter(({ projection }) => projection.edgeWeight > 0.01 || projection.weight > 0.001)
-      .sort((a, b) => Math.max(b.projection.weight, b.projection.edgeWeight) - Math.max(a.projection.weight, a.projection.edgeWeight));
-    const selected: IPointLight[] = [];
+  private nearestScene(element: HTMLElement, origin: HTMLElement): ISceneEntry | undefined {
+    for (const target of [element, origin]) {
+      let nearest: ISceneEntry | undefined;
 
-    for (const { light, projection } of ranked) {
-      if (!visibility.exposed(entry.hooks.hitTarget ?? entry.element, projection.x, projection.y, bounds)) continue;
+      for (const candidate of this.scenes) {
+        if (target === element && origin !== element && candidate.root.contains(origin)) continue;
 
-      if (light.source) {
-        const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
-
-        if (!visibility.exposed(source, projection.x, projection.y, source.getBoundingClientRect())) continue;
+        if (candidate.root.contains(target) && (!nearest || nearest.root.contains(candidate.root))) nearest = candidate;
       }
 
-      selected.push(light);
-
-      if (selected.length === 4) break;
+      if (nearest) return nearest;
     }
 
-    return selected;
+    return undefined;
+  }
+
+  private visibleProjection(entry: IEntry, light: IPointLight, visibility: ReturnType<typeof lightingVisibility>): ILightProjection {
+    const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+    const projection = projectLight(light, bounds);
+
+    if (light.ambient) return projection;
+
+    if (light.source) {
+      const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
+
+      if (!visibility.exposed(source, projection.x, projection.y, source.getBoundingClientRect())) return { ...projection, weight: 0, edgeWeight: 0 };
+    }
+
+    const target = entry.hooks.hitTarget ?? entry.element;
+
+    // Whole-element exposure keeps partly clipped sources active; each receiving location must still be uncovered.
+    return {
+      ...projection,
+      weight: projection.weight > 0.001 && visibility.pointExposed(target, projection.x, projection.y, bounds) ? projection.weight : 0,
+      edgeWeight: projection.edgeWeight > 0.01 && visibility.pointExposed(target, projection.edgeX, projection.edgeY, bounds) ? projection.edgeWeight : 0
+    };
+  }
+
+  private selectSceneLights(entry: IEntry, lights: IPointLight[], visibility: ReturnType<typeof lightingVisibility>): IPointLight[] {
+    return lights
+      .filter((light) => !(light.excludeSource && light.source === entry.element) && light.excludeElement !== entry.element)
+      .map((light) => ({ light, projection: this.visibleProjection(entry, light, visibility) }))
+      .filter(({ projection }) => projection.edgeWeight > 0.01 || projection.weight > 0.001)
+      .sort((a, b) => Math.max(b.projection.weight, b.projection.edgeWeight) - Math.max(a.projection.weight, a.projection.edgeWeight))
+      .slice(0, 4)
+      .map(({ light }) => light);
   }
 
   private project(entry: IEntry, lights: IPointLight[], reflectors: IReflection[], visibility: ReturnType<typeof lightingVisibility>): ILighting {
@@ -876,20 +912,12 @@ export class SceneRuntime {
       if ((light.excludeSource && light.source === entry.element) || light.excludeElement === entry.element) continue;
 
       // Semantic borders emit from their closest edge, so large buttons still have a short reach.
-      const { x: lx, y: ly, weight, edgeWeight } = projectLight(light, b);
+      const { x: lx, y: ly, weight, edgeWeight } = this.visibleProjection(entry, light, visibility);
       // Project actual viewport coordinates into this surface, without a perspective speed-up.
       const localX = Math.max(0, Math.min(100, ((lx - b.left) / Math.max(1, b.width)) * 100));
       const localY = Math.max(0, Math.min(100, ((ly - b.top) / Math.max(1, b.height)) * 100));
 
       if (edgeWeight <= 0.01 && weight <= 0.001) continue;
-
-      if (!light.ambient && !visibility.exposed(entry.hooks.hitTarget ?? entry.element, lx, ly, b)) continue;
-
-      if (!light.ambient && light.source) {
-        const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
-
-        if (!visibility.exposed(source, lx, ly, source.getBoundingClientRect())) continue;
-      }
 
       if (edgeWeight > 0.01)
         rims.push(

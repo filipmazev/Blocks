@@ -141,7 +141,8 @@ comma-separated channels and preserves transparency with `rgba(...)`; RGBA alway
 provide CSS-reference/name actions; utility classes and Sass breakpoints provide their respective copy actions. Menu choices follow live theme colors.
 
 Card text suppresses selection and iOS callouts to keep long-press gestures predictable. Source-default collapsibles retain selectable text and native selection
-menus. Copy actions report success/failure in a live region. Search and multiselect controls use dynamic subscript sizing and reserve no empty validation row.
+menus. Copy-menu rows use local themed hover/pressed fills and focus outlines without illuminating the cards or accordion sections behind the opaque menu. Copy
+actions report success/failure in a live region. Search and multiselect controls use dynamic subscript sizing and reserve no empty validation row.
 
 Color pairs show both named tokens and adjacent swatches. They reflect `getComplementaryToken()` exactly: explicit semantic mappings, `bg-surface` for unmapped
 roles, shade 50 for palette shades above 400, and shade 900 otherwise. They do not imply a guaranteed text contrast ratio. Labels identify colors without

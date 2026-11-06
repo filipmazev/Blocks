@@ -209,7 +209,16 @@ testing excludes covered surfaces, including rounded corners. Fully transparent 
 panels and opaque backdrops still occlude. Opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the
 emitter’s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies
 changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent
-hover animation loop.
+hover animation loop. Hover contributions use a bounded circular spread, so a large receiver does not stretch a small source across its entire border. Edge
+falloff uses the distance to the receiver's perimeter even when a source projects inside its bounds.
+
+Use `mountSurface(element, { emission: false })` to disable automatic hover, press, active-state and keyboard-focus emission while keeping press deformation and
+received lighting. An explicit `focusEmission` still enables focus-only emission. Omission retains the existing theme accent/error default. Blocks menu rows use
+local hover/pressed fills and focus outlines without becoming light sources.
+
+`inheritGlassLighting(overlay, origin)` shares incoming lighting with an overlay while retaining its physical boundary for outgoing sources. Controls inside an
+overlay can illuminate nearby receivers in that overlay, but cannot cast light back into its trigger's page or parent overlay. This applies to dropdowns,
+context menus, popovers, selection panels and passive tooltips. Theme inheritance remains independent of this direction of lighting.
 
 Backdrop behavior follows the browser’s [backdrop-root rules](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter). Visual
 treatment follows [Apple’s material guidance](https://developer.apple.com/design/human-interface-guidelines/materials): restrained highlights and readable
@@ -221,6 +230,6 @@ also declares `aria-haspopup`; ordinary layout expansion alone does not select a
 Decorative native-control receivers can pass their hit target as the third argument to `observeGlassLighting`.
 
 Active borders stay painted when surfaces are partly clipped by the viewport, a scrolling container, or an overlapping header. Scrolling them back into view
-preserves their lighting without a fade. Surrounding light also remains active while part of the source and receiver is exposed; a covered center or projected
-corner alone does not remove it. Fully covered surfaces remain excluded. Exposure checks share a short-lived cache and use bounded fallback probes only when the
-preferred point is covered.
+preserves their lighting without a fade. A partly exposed source can still emit, but each receiving interior/edge location must be uncovered. A visible area
+elsewhere on a receiver does not authorize light through an overlapping opaque panel. Fully covered surfaces remain excluded. Whole-source exposure checks share
+a short-lived cache and use bounded fallback probes only when the preferred point is covered; projected receiver points use separate visibility checks.

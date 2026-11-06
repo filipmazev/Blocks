@@ -12,6 +12,7 @@ import { isOverlayOriginVisible } from './overlay-origin-visibility.helpers';
  * @param overlay - Attached overlay whose position and anchor visibility are managed.
  * @param origin - Native element anchoring the overlay.
  * @param options - Positioning, lifecycle, and origin-visibility callbacks for the tracked overlay. Defaults to `{}`.
+ * @returns Cleanup callback with `reposition()`; top-layer overlays use synchronous measured tracking to avoid nested-scroll drift.
  */
 export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement, options: IOverlayOriginOptions = {}): OverlayOriginTracker {
   const view = origin.ownerDocument.defaultView;
@@ -25,8 +26,10 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement, opt
 
   const native =
     options.nativeAnchoring !== false &&
+    !overlay.getConfig().usePopover &&
     view.CSS?.supports('position-anchor', '--bx-origin') &&
     !!(origin.compareDocumentPosition(host) & Node.DOCUMENT_POSITION_FOLLOWING);
+  // Top-layer popovers use measured positioning: native anchor scroll adjustments can trail nested scrollers by a frame.
   const anchor = native ? OVERLAY_ANCHOR_SEQUENCE.next() : null;
   const originalAnchor = origin.style.getPropertyValue('anchor-name');
   const originalPriority = origin.style.getPropertyPriority('anchor-name');

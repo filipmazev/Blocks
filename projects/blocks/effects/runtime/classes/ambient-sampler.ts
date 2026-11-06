@@ -434,7 +434,7 @@ export class AmbientSampler {
 
     if (!visibility.exposed(entry.element, visibleX, visibleY, bounds)) return [];
 
-    const targetBoundary = visibility.ambientBoundary(entry.element);
+    const targetBoundaries = new Set([visibility.ambientBoundary(entry.element), visibility.ambientBoundary(entry.element, false)]);
     const passiveTooltip = visibility.style(entry.element).pointerEvents === 'none' && !!entry.element.closest('bx-tooltip, [role="tooltip"]');
 
     // Cull once per receiver, rather than walking every media element at every edge probe.
@@ -448,7 +448,7 @@ export class AmbientSampler {
         rect.left <= bounds.right + 96 &&
         rect.bottom >= bounds.top - 96 &&
         rect.top <= bounds.bottom + 96 &&
-        visibility.ambientBoundary(source) === targetBoundary
+        targetBoundaries.has(visibility.ambientBoundary(source, false))
       );
     });
 
@@ -473,12 +473,36 @@ export class AmbientSampler {
 
         if (source) foreground = true;
 
-        source ??= this.findRasterSource(rasterSources, entry, point.x, point.y, visibility, rasterSamples, rects, stack, receiverIndex, true, targetBoundary);
+        source ??= this.findRasterSource(
+          rasterSources,
+          entry,
+          point.x,
+          point.y,
+          visibility,
+          rasterSamples,
+          rects,
+          stack,
+          receiverIndex,
+          true,
+          targetBoundaries
+        );
         source ??= this.findVisualSource(stack.slice(receiverIndex + 1), entry, point.x, point.y, visibility, rasterSamples, rects, {
           skipAncestors: true,
           skipRoot: true
         });
-        source ??= this.findRasterSource(rasterSources, entry, point.x, point.y, visibility, rasterSamples, rects, stack, receiverIndex, false, targetBoundary);
+        source ??= this.findRasterSource(
+          rasterSources,
+          entry,
+          point.x,
+          point.y,
+          visibility,
+          rasterSamples,
+          rects,
+          stack,
+          receiverIndex,
+          false,
+          targetBoundaries
+        );
         source ??= this.findVisualSource(stack.slice(receiverIndex + 1), entry, point.x, point.y, visibility, rasterSamples, rects, {
           skipAncestors: false,
           skipRoot: true
@@ -492,7 +516,7 @@ export class AmbientSampler {
           skipAncestors: true,
           skipRoot: true
         });
-        source ??= this.findRasterSource(rasterSources, entry, point.x, point.y, visibility, rasterSamples, rects, stack, -1, undefined, targetBoundary);
+        source ??= this.findRasterSource(rasterSources, entry, point.x, point.y, visibility, rasterSamples, rects, stack, -1, undefined, targetBoundaries);
         source ??= this.findVisualSource(stack, entry, point.x, point.y, visibility, rasterSamples, rects, {
           skipAncestors: false,
           skipRoot: true
@@ -503,7 +527,7 @@ export class AmbientSampler {
         });
       }
 
-      if (!source || visibility.ambientBoundary(source.element) !== targetBoundary) return;
+      if (!source || !targetBoundaries.has(visibility.ambientBoundary(source.element, false))) return;
 
       const sourceRect = this.rectFor(source.element, rects);
       const gapX = Math.max(bounds.left - sourceRect.right, sourceRect.left - bounds.right, 0);
@@ -573,7 +597,9 @@ export class AmbientSampler {
 
       if (options.skipRoot && (element === this.doc.documentElement || element === this.doc.body)) continue;
 
-      if (visibility.ambientBoundary(element) !== visibility.ambientBoundary(entry.element)) continue;
+      const boundary = visibility.ambientBoundary(element, false);
+
+      if (boundary !== visibility.ambientBoundary(entry.element) && boundary !== visibility.ambientBoundary(entry.element, false)) continue;
 
       const color = this.visualColorAt(element, x, y, visibility, rasterSamples, rects);
 
@@ -594,11 +620,11 @@ export class AmbientSampler {
     stack: Element[],
     receiverIndex: number,
     foreground: boolean | undefined,
-    targetBoundary: HTMLElement
+    targetBoundaries: ReadonlySet<HTMLElement>
   ): IVisualSource | undefined {
     const matches = sources
       .filter((element) => {
-        if (this.isInside(element, entry.element) || visibility.ambientBoundary(element) !== targetBoundary) return false;
+        if (this.isInside(element, entry.element) || !targetBoundaries.has(visibility.ambientBoundary(element, false))) return false;
 
         const bounds = this.rectFor(element, rects);
 

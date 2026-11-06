@@ -38,12 +38,13 @@ wrapper or directly on the trigger:
 Import `BxOverlayContextDirective` alongside the menu directive. The context applies only to nested menu triggers; menus elsewhere keep their normal stacking
 order. Angular components can also provide `BX_OVERLAY_CONTEXT` with `{ useTopLayer: true }` to scope the behavior to their view.
 
-Where supported, native CSS anchors keep the menu attached to its trigger during document and nested scrolling. Other browsers use the CDK positioning fallback.
+Where supported, native CSS anchors keep ordinary menus attached to their triggers during document and nested scrolling. Top-layer popovers and other browsers
+use synchronous measured CDK positioning, including when the trigger is inside a nested scroller.
 
 ## Appearance
 
-The standard `bx-menu` container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Trigger and row
-effects retain their application appearance settings.
+The standard `bx-menu` container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Rows use local themed
+hover/pressed fills and focus outlines without casting light onto the page. Press feedback and trigger effects follow application appearance settings.
 
 `BxA11yService` controls reduced motion; enabling it skips the opening and closing fade.
 

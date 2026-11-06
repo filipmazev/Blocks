@@ -1,9 +1,10 @@
 import { lightBoundarySelector, lightingOrigins } from '@effects/runtime/constants/lighting-visibility.constants';
 /**
- * Let a passive overlay receive light from its trigger's context. Register before mounting its surfaces.
+ * Let an overlay receive light from its trigger's context without allowing its sources to illuminate that context. Register before mounting its surfaces.
  *
  * @param overlay - Overlay receiving the source lighting context.
- * @param origin - Source element whose context the overlay should inherit.
+ * @param origin - Source element whose incoming lighting context the overlay should inherit; its physical boundary remains separate.
+ * @returns Cleanup callback removing the inherited context when the overlay is disposed.
  */
 export function inheritGlassLighting(overlay: HTMLElement, origin: HTMLElement): () => void {
   if (overlay.contains(origin)) throw new Error('A lighting origin must be outside its overlay.');
@@ -43,6 +44,7 @@ export function lightingVisibility(doc: Document, view: Window) {
   const boundaries = new Map<HTMLElement, HTMLElement>();
   const layers = new Map<HTMLElement, HTMLElement>();
   const ambientBoundaries = new Map<Element, HTMLElement>();
+  const ambientSourceBoundaries = new Map<Element, HTMLElement>();
   const hitStacks = new Map<string, Element[]>();
   const exposure = new Map<HTMLElement, boolean>();
   const clippingBounds = new Map<Element, DOMRect>();
@@ -86,17 +88,18 @@ export function lightingVisibility(doc: Document, view: Window) {
     return painted;
   };
 
-  const ambientBoundary = (element: Element): HTMLElement => {
-    const cached = ambientBoundaries.get(element);
+  const ambientBoundary = (element: Element, inherit = true): HTMLElement => {
+    const cache = inherit ? ambientBoundaries : ambientSourceBoundaries;
+    const cached = cache.get(element);
 
     if (cached) return cached;
 
-    const origin = lightingOrigin(element);
+    const origin = inherit ? lightingOrigin(element) : element;
 
     if (origin !== element) {
       const result = ambientBoundary(origin);
 
-      ambientBoundaries.set(element, result);
+      cache.set(element, result);
 
       return result;
     }
@@ -108,10 +111,10 @@ export function lightingVisibility(doc: Document, view: Window) {
     while (current) {
       visited.push(current);
 
-      const boundary = ambientBoundaries.get(current) ?? current.closest<HTMLElement>(lightBoundarySelector);
+      const boundary = cache.get(current) ?? current.closest<HTMLElement>(lightBoundarySelector);
 
       if (boundary) {
-        for (const ancestor of visited) ambientBoundaries.set(ancestor, boundary);
+        for (const ancestor of visited) cache.set(ancestor, boundary);
 
         return boundary;
       }
@@ -121,7 +124,7 @@ export function lightingVisibility(doc: Document, view: Window) {
       current = current.parentElement ?? root.host ?? null;
     }
 
-    for (const ancestor of visited) ambientBoundaries.set(ancestor, doc.documentElement);
+    for (const ancestor of visited) cache.set(ancestor, doc.documentElement);
 
     return doc.documentElement;
   };
@@ -130,16 +133,6 @@ export function lightingVisibility(doc: Document, view: Window) {
     const cached = boundaries.get(element);
 
     if (cached) return cached;
-
-    const origin = lightingOrigin(element);
-
-    if (origin !== element) {
-      const result = boundary(origin as HTMLElement);
-
-      boundaries.set(element, result);
-
-      return result;
-    }
 
     const css = style(element);
     const result =
@@ -276,5 +269,5 @@ export function lightingVisibility(doc: Document, view: Window) {
     return visible;
   };
 
-  return { boundary, layer, exposed, style, elementsAt, ambientBoundary };
+  return { boundary, layer, exposed, pointExposed, style, elementsAt, ambientBoundary };
 }

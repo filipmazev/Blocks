@@ -16,14 +16,14 @@ import {
   uuidv4,
   WindowDimensionsService
 } from '@filip.mazev/blocks/core';
-import { Button, Select } from '@filip.mazev/blocks/forms';
+import { Button, Checkbox, Select } from '@filip.mazev/blocks/forms';
 import { Alert, Card, Stack } from '@filip.mazev/blocks/primitives';
 
 import { UTILITY_PLACEMENTS } from '@playground/components/screens/utilities/constants/utilities.constants';
 
 @Component({
   selector: 'app-overlay-positioning',
-  imports: [Alert, Button, Card, RouterLink, Select, Stack],
+  imports: [Alert, Button, Card, Checkbox, RouterLink, Select, Stack],
   templateUrl: './overlay-positioning.html',
   styleUrl: '../../utility-demo.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -41,6 +41,7 @@ export class OverlayPositioning {
   protected readonly overlayId: string = 'utilities-overlay-' + uuidv4();
 
   protected readonly overlayOpen: WritableSignal<boolean> = signal(false);
+  protected readonly useTopLayer: WritableSignal<boolean> = signal(false);
 
   protected readonly placement: WritableSignal<BxPlacement> = signal('bottom');
 
@@ -57,6 +58,11 @@ export class OverlayPositioning {
     this.placement.set(placement ?? 'bottom');
   }
 
+  protected setTopLayer(enabled: boolean): void {
+    this.closeOverlay();
+    this.useTopLayer.set(enabled);
+  }
+
   protected toggleOverlay(event: MouseEvent): void {
     if (this.overlayOpen()) {
       this.closeOverlay();
@@ -70,6 +76,7 @@ export class OverlayPositioning {
     if (!(origin instanceof HTMLElement) || !template || !this.windowDimensionsService.isBrowser || !isOverlayOriginVisible(origin)) return;
 
     const overlayRef = this.overlay.create({
+      usePopover: this.useTopLayer(),
       positionStrategy: this.bxOverlayPositionService.getElementStrategy(origin, this.placement()),
       scrollStrategy: this.overlay.scrollStrategies.noop()
     });

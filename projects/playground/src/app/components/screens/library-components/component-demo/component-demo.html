@@ -386,6 +386,7 @@
                                         icon="archive"
                                         (action)="activate('Selection archived')" /></bx-menu
                             ></ng-template>
+                            <p>Menu rows keep their hover and focus feedback inside the opaque panel.</p>
                         </div>
                     }
                     @case ('breadcrumbs') {
@@ -450,7 +451,18 @@
                             <bx-icon name="layers" size="28" />
                             <h3>A custom Blocks surface</h3>
                             <p>Material, blur, tint, lighting and motion follow the same global configuration as the controls around it.</p>
-                            <button type="button" bx-button variant="tonal" (click)="activate('Custom surface action')">Try an action</button>
+                            <bx-checkbox label="Emit interaction light" [(checked)]="surfaceEmission" />
+                            <button
+                                type="button"
+                                bx-button
+                                bxSurface
+                                variant="tonal"
+                                [surfaceEffects]="false"
+                                [bxSurfaceEmission]="surfaceEmission() ? undefined : false"
+                                (click)="activate('Custom surface action')">
+                                Try an action
+                            </button>
+                            <p>Hover, keyboard focus and press retain local feedback. Enable emission to add the themed light source.</p>
                         </section>
                     }
                     @default {

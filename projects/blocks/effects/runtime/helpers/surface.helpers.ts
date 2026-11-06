@@ -185,10 +185,13 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
 
     const edgeColor = `color-mix(in srgb, ${value.color} ${(value.edgeStrength * 100).toFixed(2)}%, transparent)`;
 
+    const edgeShape = value.spread ? `circle ${value.spread}px` : 'ellipse farthest-side';
+    const glowShape = value.spread ? `circle ${value.spread}px` : 'ellipse';
+
     layer.edge.style.backgroundImage = source
       ? `linear-gradient(${edgeColor}, ${edgeColor})`
-      : `radial-gradient(ellipse farthest-side at ${at}, ${edgeColor}, transparent 75%)`;
-    layer.glow.style.backgroundImage = `radial-gradient(ellipse at ${at}, color-mix(in srgb, ${value.color} ${(value.strength * 100).toFixed(2)}%, transparent), transparent 68%)`;
+      : `radial-gradient(${edgeShape} at ${at}, ${edgeColor}, transparent 75%)`;
+    layer.glow.style.backgroundImage = `radial-gradient(${glowShape} at ${at}, color-mix(in srgb, ${value.color} ${(value.strength * 100).toFixed(2)}%, transparent), transparent 68%)`;
 
     if (fresh || layer.leaving) fadeLayer(value.key, layer, true);
 
@@ -201,9 +204,11 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
   };
 
   const emissionColor = () =>
-    options.emission ??
-    options.focusEmission ??
-    (element.closest('[data-bx-field-invalid="true"]') || element.matches('[aria-invalid="true"]') ? 'var(--bx-text-danger)' : 'var(--bx-primary)');
+    options.emission === false
+      ? undefined
+      : (options.emission ??
+        options.focusEmission ??
+        (element.closest('[data-bx-field-invalid="true"]') || element.matches('[aria-invalid="true"]') ? 'var(--bx-text-danger)' : 'var(--bx-primary)'));
 
   const emit = (active: boolean, color = emissionColor()) => {
     emitting = active;

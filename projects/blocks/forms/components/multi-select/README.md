@@ -56,6 +56,9 @@ The panel stays open while selecting. Arrow keys, Home/End, typeahead, Enter/Spa
 non-interactive indicators inside listbox options, avoiding nested checkbox focus targets. `compareWith` supports stable object-value identity across API
 responses.
 
+After the closing transition completes, the shared selection base releases the panel overlay and its tracking resources. Reopening resolves the current
+ordinary/top-layer context while retaining the selected values and search term. Top-layer panels use measured positioning to follow nested scrolling.
+
 Pagination and failure/retry use the shared [load-more directive](../../directives/load-more/README.md). Existing items stay visible during incremental requests
 and after failed pages. The application owns request cancellation and page/cursor state.
 

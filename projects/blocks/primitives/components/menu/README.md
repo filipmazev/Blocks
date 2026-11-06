@@ -40,7 +40,8 @@ example. Both menu playground routes demonstrate a combination and a timed seque
 ## Appearance
 
 Menus use an opaque themed backing with no container blur, reflections, or live lighting. Colors, spacing, radius, elevation and row interactions still follow
-Blocks tokens. Trigger and row effects retain their application appearance settings.
+Blocks tokens. Rows provide local hover/pressed fills and visible keyboard focus without emitting light onto neighboring rows or the page. Press feedback and
+trigger effects retain their application appearance settings.
 
 `BxA11yService` controls reduced motion. Forced colors preserve native contrast and focus states.
 

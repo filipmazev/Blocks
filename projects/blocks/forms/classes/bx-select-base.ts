@@ -302,18 +302,23 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
       void this.ngZone
         .runOutsideAngular(() => transition.exit())
         .then(() => {
-          if (revision === this.transitionRevision && !this.isOpen()) this.isPanelAttached.set(false);
+          if (revision === this.transitionRevision && !this.isOpen()) this.detachPanel();
         })
         .catch(() => {
-          if (revision === this.transitionRevision) this.isPanelAttached.set(false);
+          if (revision === this.transitionRevision) this.detachPanel();
         });
-    } else this.isPanelAttached.set(false);
+    } else this.detachPanel();
   }
 
-  protected onPanelAttach(): void {
+  /**
+   * Register the attached panel before its child surfaces render, then restore focus after Angular finishes the view.
+   *
+   * @param connectedOverlay - Newly attached directive; supplied directly because the signal query can still reference the previous view during attachment.
+   */
+  protected onPanelAttach(connectedOverlay: CdkConnectedOverlay): void {
     const revision = this.transitionRevision;
     const origin = this.originRef()?.nativeElement;
-    const overlay = this.connectedOverlay()?.overlayRef;
+    const overlay = connectedOverlay.overlayRef;
 
     if (origin && overlay?.hasAttached()) {
       this.disconnectLighting?.();
@@ -324,7 +329,7 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
 
     // Wait for the attached view's synchronous surface directives to finish mounting.
     queueMicrotask(() => {
-      const attachedOverlay = this.connectedOverlay()?.overlayRef;
+      const attachedOverlay = connectedOverlay.overlayRef;
       const attachedOrigin = this.originRef()?.nativeElement;
 
       if (!attachedOverlay?.hasAttached() || !attachedOrigin || !this.isOpen() || revision !== this.transitionRevision) return;
@@ -492,6 +497,11 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   }
 
   //#region Helpers
+
+  private detachPanel(): void {
+    this.onPanelDetach();
+    this.isPanelAttached.set(false);
+  }
 
   private typeahead(character: string): void {
     clearTimeout(this.typeaheadTimeout);

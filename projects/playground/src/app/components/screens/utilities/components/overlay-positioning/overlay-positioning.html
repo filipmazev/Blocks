@@ -2,6 +2,7 @@
     <bx-card title="Connected overlay">
         <bx-stack [gap]="4">
             <p>Choose a preferred side, open the preview, then scroll or resize. The position strategy falls back when space is limited.</p>
+            <bx-checkbox label="Use top layer" [checked]="useTopLayer()" (checkedChange)="setTopLayer($event)" />
             <bx-stack direction="responsive" align="center" [gap]="4">
                 <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
                 <button
@@ -16,6 +17,7 @@
                 </button>
             </bx-stack>
             <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
+            <p>Top-layer previews use measured positioning to follow scrolling. Ordinary previews use native CSS anchors where supported.</p>
         </bx-stack>
     </bx-card>
     <bx-alert

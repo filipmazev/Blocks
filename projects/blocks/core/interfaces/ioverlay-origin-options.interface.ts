@@ -1,6 +1,6 @@
 /** Optional coordination for overlays whose origins can move inside other overlays or clipped scrollers. */
 export interface IOverlayOriginOptions {
-  /** Allow native CSS anchor tracking. Defaults to true; coordinated cascades use measured positioning. */
+  /** Allow native CSS anchor tracking where supported. Defaults to true; top-layer popovers and coordinated cascades use measured positioning. */
   nativeAnchoring?: boolean;
   /** Optional callback after the overlay is positioned. Use it to update dependent child overlays in order. */
   onPosition?: () => void;

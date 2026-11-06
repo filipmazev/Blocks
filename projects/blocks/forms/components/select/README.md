@@ -62,6 +62,12 @@ error/hint descriptions and invalid/required states are connected automatically.
 Panels retain the shared overlay positioning, theme inheritance and top-layer context behavior. Provide `BX_OVERLAY_CONTEXT` through the existing
 overlay-context directive for custom top-layer containers.
 
+Ordinary panels use native CSS anchors where supported. Panels promoted into the top layer use measured CDK positioning so nested scrolling and filtering
+preserve their gap, focus and placement without a frame of anchor drift.
+
+Completed closes release the panel's overlay and tracking resources. Reopening resolves the current overlay context, including after moving the control into or
+out of a native popover. Selection and the application-owned search term remain on the control.
+
 ## Appearance and accessibility
 
 Uses Blocks semantic tokens and the active `ThemingService` configuration. Customize through documented inputs, templates and CSS variables. Existing components

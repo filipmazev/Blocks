@@ -39,8 +39,11 @@ export class BxSurfaceDirective implements AfterViewInit {
    * undefined.
    */
   public readonly bxSurfaceQuality: InputSignal<GlassQuality | undefined> = input<GlassQuality | undefined>();
-  /** CSS color emitted toward nearby surfaces while this surface is active; omission uses runtime defaults. */
-  public readonly bxSurfaceEmission: InputSignal<string | undefined> = input<string | undefined>();
+  /**
+   * CSS color emitted on hover, press, active state or keyboard focus; omission uses the theme accent/error color. Set `false` to keep press feedback and
+   * received lighting without automatic emission. An explicit `bxSurfaceFocusEmission` can still enable focus-only emission.
+   */
+  public readonly bxSurfaceEmission: InputSignal<string | false | undefined> = input<string | false | undefined>();
   /** CSS color emitted while a contained control has focus; omission uses normal focus-emission policy. Optional; omission leaves the value undefined. */
   public readonly bxSurfaceFocusEmission: InputSignal<string | undefined> = input<string | undefined>();
   /**

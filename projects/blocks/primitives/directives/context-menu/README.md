@@ -43,8 +43,9 @@ order. Angular components can also provide `BX_OVERLAY_CONTEXT` with `{ useTopLa
 
 ## Appearance
 
-The standard `bx-menu` container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Row effects retain
-their application appearance settings.
+The standard `bx-menu` container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Rows use local themed
+hover/pressed fills and keyboard focus outlines without casting light outside the panel. Press feedback follows application motion preferences. Custom emitting
+controls inside the overlay retain its physical lighting boundary even though the panel inherits incoming lighting from its trigger.
 
 The transparent dismissal backdrop blocks outside interaction without changing the surrounding surfaces' lighting. The visible menu still occludes the content
 under its panel; opaque backdrops retain their normal lighting behavior.

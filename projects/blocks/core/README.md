@@ -144,6 +144,10 @@ adapter version changes update mounted content. Plain strings work without an ad
 Use `BxOverlayPositionService`, overlay-origin helpers, and shared theme inheritance when extending an existing overlay. Preserve the owning component's focus
 and lifecycle behavior instead of positioning or recoloring its private DOM.
 
+`trackOverlayOrigin()` uses native CSS anchors where supported for ordinary overlays. Top-layer popovers use synchronous measured CDK positioning so nested
+scrolling keeps the panel attached to its trigger. The same returned cleanup callback removes listeners and observers for either path; call its `reposition()`
+method after application-owned layout changes.
+
 ## Appearance and customization
 
 Load global styles once through the established package entry point. Import reusable Sass definitions through the public helpers entry point:

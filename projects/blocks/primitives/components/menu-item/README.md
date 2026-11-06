@@ -139,6 +139,9 @@ this.themingService.setAppearance({ reducedTransparency: true });
 `BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
 focus states, or semantic control states.
 
+Rows share their menu's opaque backing. Hover and press use the themed normal/danger background tokens, keyboard focus retains its outline, and rows do not emit
+light onto neighboring rows or surrounding page surfaces. Press deformation still follows application motion preferences.
+
 ## Behavior and accessibility
 
 Use `action` for activation and `disabled` for unavailable commands. Valid combinations expose `aria-keyshortcuts` on the internal button while visual keycaps

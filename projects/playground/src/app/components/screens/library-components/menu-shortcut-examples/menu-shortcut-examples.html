@@ -1,5 +1,6 @@
 <div class="shortcut-demo">
     <p><code>shortcut</code> displays a hint. This example also handles keyboard events using <code>BxShortcutService.matches()</code>.</p>
+    <p>Menu rows use local hover and focus feedback without casting light onto the surrounding page.</p>
     <p>On this device, <code>mod</code> uses {{ bxShortcutService.resolve('mod')?.join('') }} (detected platform: {{ bxShortcutService.platform() }}).</p>
     <div>
         <button
