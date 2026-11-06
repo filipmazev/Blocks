@@ -32,9 +32,7 @@ export class SideNavExamples {
     right: this.navigationDemoI18nService.translate('demo.right'),
     rail: this.navigationDemoI18nService.translate('demo.rail'),
     mobile: this.navigationDemoI18nService.translate('demo.mobile'),
-    adjacent: this.navigationDemoI18nService.translate('demo.adjacent'),
     inlineMode: this.navigationDemoI18nService.translate('demo.inlineMode'),
-    flyoutMode: this.navigationDemoI18nService.translate('demo.flyoutMode'),
     search: this.navigationDemoI18nService.translate('demo.search'),
     rtl: this.navigationDemoI18nService.translate('demo.rtl'),
     custom: this.navigationDemoI18nService.translate('demo.custom'),
@@ -56,7 +54,6 @@ export class SideNavExamples {
   protected readonly right: WritableSignal<boolean> = signal(false);
   protected readonly collapsed: WritableSignal<boolean> = signal(false);
   protected readonly mobile: WritableSignal<boolean> = signal(false);
-  protected readonly adjacent: WritableSignal<boolean> = signal(false);
   protected readonly searchable: WritableSignal<boolean> = signal(true);
   protected readonly rtl: WritableSignal<boolean> = signal(false);
   protected readonly custom: WritableSignal<boolean> = signal(false);
@@ -75,7 +72,6 @@ export class SideNavExamples {
     showMobileTrigger: false,
     side: this.right() ? 'right' : 'left',
     mobile: this.mobile(),
-    submenuMode: this.adjacent() ? 'flyout' : 'auto',
     searchable: this.searchable(),
     persistenceKey: 'blocks.side-nav.demo.v1',
     ariaLabel: { key: 'nav.name' },

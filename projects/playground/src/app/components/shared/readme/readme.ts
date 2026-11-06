@@ -43,7 +43,12 @@ export class Readme {
 
     const route = destination.pathname.slice(base.pathname.length);
 
-    if (!/^(?:home|glass|appearance|utilities|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(route)) return;
+    if (
+      !/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(
+        route
+      )
+    )
+      return;
 
     event.preventDefault();
     void this.router.navigateByUrl(`/${route}${destination.search}${destination.hash}`);

@@ -42,7 +42,7 @@ export class NavigationFocusService {
   }
 
   /**
-   * Restore or reset list scroll position, reveal a selected row, and optionally restore row focus after rendering.
+   * Restore list scrolling and reveal a requested item. Focus prefers that item, a saved entry, the current route, then the first enabled item.
    *
    * @param restore - Whether to use the saved browsing position instead of starting at the top.
    * @param keyboard - Whether restored focus should use keyboard-origin focus styling.
@@ -57,7 +57,10 @@ export class NavigationFocusService {
 
     scroller.scrollTop = position?.scrollTop ?? 0;
 
-    const revealId = this.navigationStateService.query().trim() ? undefined : this.navigationStateService.revealItemId();
+    const activeId = this.navigationStateService.activeItem()?.id;
+    const revealId = this.navigationStateService.query().trim()
+      ? undefined
+      : (this.navigationStateService.revealItemId() ?? (focus && !position ? activeId : undefined));
     const rows = Array.from(scroller.querySelectorAll<HTMLElement>('[data-nav-id]'));
     const revealed = revealId ? rows.find((element) => element.getAttribute('data-nav-id') === revealId) : undefined;
 

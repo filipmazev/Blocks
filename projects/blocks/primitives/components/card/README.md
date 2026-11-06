@@ -45,6 +45,7 @@ selected. Use `[(selected)]` when each activation should toggle selection.
 | `title`, `subtitle`                 | absent      | Translated `ResolvableText` content                                                                 |
 | `headingLevel`                      | 3           | Title heading level, clamped to 1–6                                                                 |
 | `variant: CardVariant`              | outlined    | Outlined, elevated or filled                                                                        |
+| `surfaceEffects`                    | true        | Mount shared decorative surface effects; false keeps static themed styling for dense collections    |
 | `opaque`                            | inherited   | Optional opaque presentation                                                                        |
 | `clickable`                         | false       | Whole-card action; native `button[bx-card]` is always clickable                                     |
 | `selected`                          | absent      | Controlled boolean selection; absence creates a plain action                                        |
@@ -57,6 +58,9 @@ selected. Use `[(selected)]` when each activation should toggle selection.
 | `ariaLabelledBy`, `ariaDescribedBy` | absent      | Optional labeling/description IDs                                                                   |
 | `activate()`                        | —           | Requests activation after checking current interactive state                                        |
 | `focus(options?)`                   | —           | Focuses an enabled clickable card                                                                   |
+
+Set `[surfaceEffects]="false"` for dense static collections such as the token catalog. Theme variables, focus styling, content slots and actions remain
+available.
 
 Slots: `bxCardMedia`, `bxCardHeader`, default body and `bxCardFooter`. Header content follows the optional generated title/subtitle. Empty sections take no
 space.

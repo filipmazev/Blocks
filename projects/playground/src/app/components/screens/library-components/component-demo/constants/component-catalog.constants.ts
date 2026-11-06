@@ -14,6 +14,7 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   },
   {
     id: 'divider',
+    layout: true,
     title: 'Divider',
     group: 'Primitives',
     readme: 'projects/blocks/primitives/components/divider/README.md',
@@ -101,7 +102,21 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-card title="Project" [clickable]="true" [selected]="true" highlightColor="accent"><p>Selected workspace</p></bx-card>'
   },
   {
+    id: 'page-container',
+    layout: true,
+    title: 'Page container',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/page-container/README.md',
+    symbol: 'PageContainer, PageHeader, PageContent, PageFooter',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-page-container',
+    description: 'Consistent responsive page gutters, translated headings, optional sections, and automatic breadcrumbs.',
+    example:
+      '<bx-page-container pageDescription="Manage your workspace."><bx-page-content>Page content</bx-page-content><bx-page-footer>Page actions</bx-page-footer></bx-page-container>'
+  },
+  {
     id: 'container',
+    layout: true,
     title: 'Content container',
     group: 'Primitives',
     readme: 'projects/blocks/primitives/components/container/README.md',
@@ -113,6 +128,7 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   },
   {
     id: 'stack',
+    layout: true,
     title: 'Stack layout',
     group: 'Primitives',
     readme: 'projects/blocks/primitives/components/stack/README.md',
@@ -124,6 +140,7 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   },
   {
     id: 'grid',
+    layout: true,
     title: 'Grid layout',
     group: 'Primitives',
     readme: 'projects/blocks/primitives/components/grid/README.md',
@@ -141,7 +158,7 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     symbol: 'SideNav, SideNavHeaderDirective, SideNavFooterDirective',
     package: '@filip.mazev/blocks/navigation',
     selector: 'bx-side-nav',
-    description: 'Route-driven sections, nested flyouts, fuzzy search and responsive icon rails.',
+    description: 'Route-driven sections, in-panel nested navigation, fuzzy search and responsive icon rails.',
     example: '<bx-side-nav />'
   },
   {

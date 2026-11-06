@@ -10,8 +10,19 @@
             [attr.aria-expanded]="expanded()"
             [attr.aria-controls]="panelId()"
             (click)="toggle()">
-            <span>{{ resolvedTitle() }}</span
-            ><bx-icon size="20" [name]="expanded() ? 'chevron-up' : 'chevron-down'" />
+            <span class="bx-collapsible-title">
+                @if (titleTemplate(); as template) {
+                    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="titleContext()" />
+                } @else {
+                    {{ resolvedTitle() }}
+                }
+            </span>
+            @if (trailingTemplate(); as template) {
+                <span class="bx-collapsible-trailing">
+                    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="titleContext()" />
+                </span>
+            }
+            <bx-icon size="20" [name]="expanded() ? 'chevron-up' : 'chevron-down'" />
         </button>
     </div>
     <div

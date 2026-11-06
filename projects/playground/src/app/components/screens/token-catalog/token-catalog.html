@@ -1,0 +1,179 @@
+<bx-page-container pageDescription="Browse the semantic tokens, palette colors, spacing, shapes, and motion values that power Blocks.">
+    <bx-collapsible class="catalog-documentation" title="Using and extending Blocks tokens" [headingLevel]="2" [contentTemplate]="documentation" />
+    <ng-template #documentation>
+        <app-readme path="projects/playground/src/app/components/screens/token-catalog/README.md" />
+    </ng-template>
+
+    <div class="catalog-filters">
+        <bx-search-input
+            ariaLabel="Search tokens"
+            placeholder="Search names, palettes, roles, or values…"
+            subscriptSizing="dynamic"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="updateSearch($event)" />
+        <bx-multi-select
+            label="Categories"
+            placeholder="All tokens"
+            floatLabel="always"
+            subscriptSizing="dynamic"
+            clearLabel="Show all tokens"
+            [clearable]="true"
+            [showSelectAll]="false"
+            [options]="categories"
+            [ngModel]="selectedCategories()"
+            (ngModelChange)="updateCategories($event)" />
+        <button bx-button type="button" variant="tonal" color="grayscale" [disabled]="!groups().length" (click)="collapseAll()">Collapse all</button>
+    </div>
+
+    <div class="catalog-summary">
+        <p role="status">{{ filteredEntries().length }} results in {{ groups().length }} groups · {{ variableCount }} CSS variables</p>
+        <p>{{ themingService.paletteLabel() }} · {{ themingService.activeTheme() }}</p>
+    </div>
+    <p id="token-copy-help" class="catalog-note">
+        Right-click a card or touch and hold to choose a copy format. or focus a card and press Shift + F10. Colors follow the current theme.
+    </p>
+    <p class="copy-status" role="status">{{ copyStatus() }}</p>
+
+    <bx-accordion class="catalog-groups" [multiple]="true">
+        @for (group of groups(); track group.id; let index = $index) {
+            @if (index === 0 || groups()[index - 1].entries[0].category !== group.entries[0].category) {
+                <div class="catalog-category-heading">
+                    <h2>{{ categoryTitle(group.entries[0].category) }}</h2>
+                    <bx-divider [decorative]="true" />
+                </div>
+            }
+            <bx-accordion-item
+                class="token-group"
+                [title]="group.label"
+                [titleTemplate]="groupTitle"
+                [trailingTemplate]="groupStatus"
+                [headingLevel]="3"
+                [expanded]="isExpanded(group)"
+                (expandedChange)="toggleGroup(group.id, $event)">
+                <ng-template #groupTitle let-title>
+                    <span class="group-heading">
+                        <span>{{ title }}</span>
+                    </span>
+                </ng-template>
+                <ng-template #groupStatus>
+                    @for (tag of groupTags(group); track tag) {
+                        <bx-tag size="small" color="neutral" [text]="tag" [focusable]="false" [opaque]="true" />
+                    }
+                </ng-template>
+                @if (isExpanded(group)) {
+                    @for (chunk of group.chunks; track chunk.id) {
+                        <div
+                            #viewport="appTokenViewport"
+                            appTokenViewport
+                            class="token-chunk"
+                            [chunk]="chunk"
+                            [enabled]="lazyEnabled()"
+                            [compact]="group.entries[0].kind === 'color'"
+                            [label]="'Tokens in ' + group.label">
+                            @if (viewport.visible()) {
+                                <div [class]="group.entries[0].kind === 'color' ? 'color-grid' : 'token-grid'">
+                                    @for (entry of chunk.entries; track entry.id) {
+                                        <bx-card
+                                            class="token-card"
+                                            role="group"
+                                            aria-haspopup="menu"
+                                            tabindex="0"
+                                            ariaDescribedBy="token-copy-help"
+                                            [surfaceEffects]="false"
+                                            [opaque]="true"
+                                            [attr.data-token]="entry.id"
+                                            [bxContextMenu]="copyActions"
+                                            [ariaLabel]="entry.name">
+                                            <ng-template #copyActions>
+                                                <bx-menu>
+                                                    @for (format of copyFormats; track format) {
+                                                        @if (canCopy(entry, format)) {
+                                                            <bx-menu-item [label]="copyLabel(entry, format)" (action)="copy(entry, format)" />
+                                                        }
+                                                    }
+                                                </bx-menu>
+                                            </ng-template>
+                                            @switch (entry.kind) {
+                                                @case ('color') {
+                                                    <div bxCardMedia class="token-swatch" aria-hidden="true" [style.background-color]="entry.reference"></div>
+                                                }
+                                                @case ('pair') {
+                                                    <div bxCardMedia class="pair-preview" aria-hidden="true">
+                                                        <span [style.background-color]="entry.reference"></span
+                                                        ><span [style.background-color]="entry.companionReference"></span>
+                                                    </div>
+                                                }
+                                                @case ('radius') {
+                                                    <div bxCardMedia class="shape-preview radius-preview" aria-hidden="true">
+                                                        <span [style.border-radius]="entry.reference"></span>
+                                                    </div>
+                                                }
+                                                @case ('shadow') {
+                                                    <div bxCardMedia class="shape-preview shadow-preview" aria-hidden="true">
+                                                        <span [style.box-shadow]="entry.reference"></span>
+                                                    </div>
+                                                }
+                                                @case ('spacing') {
+                                                    <div bxCardMedia class="space-preview" aria-hidden="true">
+                                                        <span [style.inline-size]="entry.reference"></span>
+                                                    </div>
+                                                }
+                                            }
+                                            <div class="token-content">
+                                                <h4>
+                                                    <code>{{ entry.name }}</code>
+                                                </h4>
+                                                @if (entry.kind === 'color') {
+                                                    <code class="token-color-value">{{ colors()[entry.name]?.hex || liveValues()[entry.name] }}</code>
+                                                } @else {
+                                                    <p class="token-scope">{{ entry.scope }}</p>
+                                                    @if (entry.companion) {
+                                                        <code class="companion">↔ {{ entry.companion }}</code>
+                                                    }
+                                                    @if (entry.kind === 'breakpoint') {
+                                                        <pre
+                                                            class="playground-code-block token-code"
+                                                            tabindex="0"
+                                                            aria-label="Responsive Sass example"><code language="scss" [highlight]="entry.reference"></code></pre>
+                                                    } @else {
+                                                        <code class="token-reference">{{ entry.reference }}</code>
+                                                    }
+                                                    @if (entry.companionReference) {
+                                                        <code class="token-reference">{{ entry.companionReference }}</code>
+                                                    }
+                                                    @if (liveValues()[entry.name]) {
+                                                        <code class="token-value">{{ liveValues()[entry.name] }}</code>
+                                                    } @else if (entry.defaults.length) {
+                                                        @if (entry.defaults.length > 1) {
+                                                            <bx-collapsible
+                                                                class="token-metadata"
+                                                                title="Source defaults"
+                                                                [headingLevel]="5"
+                                                                (contextmenu)="$event.stopPropagation()"
+                                                                (pointerdown)="$event.stopPropagation()">
+                                                                @for (value of entry.defaults; track value) {
+                                                                    <code>{{ value }}</code>
+                                                                }
+                                                            </bx-collapsible>
+                                                        } @else {
+                                                            <code class="token-value">{{ entry.defaults[0] }}</code>
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        </bx-card>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </bx-accordion-item>
+        } @empty {
+            <bx-card class="empty-results" [surfaceEffects]="false">
+                <h2>No tokens found</h2>
+                <p>Try fewer words or clear the category filter to show all tokens.</p>
+            </bx-card>
+        }
+    </bx-accordion>
+</bx-page-container>

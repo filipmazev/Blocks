@@ -1,4 +1,4 @@
 @use '../theme-engine' as *;
 
-$brick-rose-cyan-light-theme: make-light-theme('brick-rose', 'cyan');
-$brick-rose-cyan-dark-theme: make-dark-theme('brick-rose', 'cyan');
+$brick-rose-cyan-light-theme: make-palette-theme('brick-rose-cyan');
+$brick-rose-cyan-dark-theme: make-palette-theme('brick-rose-cyan', true);

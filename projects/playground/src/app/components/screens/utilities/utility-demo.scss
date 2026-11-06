@@ -1,0 +1,92 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+bx-card {
+    --bx-card-padding: #{spacing(5)};
+}
+
+h3,
+p,
+dl {
+    margin: 0;
+}
+
+h3 {
+    color: var(--bx-text-heading);
+    font-size: 1rem;
+}
+
+p,
+dt {
+    color: var(--bx-text-secondary);
+    line-height: 1.65;
+}
+
+dl {
+    display: grid;
+    gap: spacing(3);
+
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: spacing(1) spacing(4);
+    }
+}
+
+dd {
+    margin: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.metric {
+    margin-block: spacing(2);
+    color: var(--bx-text-heading);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+
+.preview-cell {
+    display: block;
+    padding: spacing(5);
+    border-radius: radius(md);
+    background: var(--bx-bg-element);
+    color: var(--bx-text-brand);
+    text-align: center;
+    font-weight: 600;
+}
+
+.identifier {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    overflow-wrap: anywhere;
+}
+
+.token-swatch {
+    block-size: spacing(16);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    forced-color-adjust: none;
+}
+
+.utility-overlay {
+    display: block;
+    inline-size: min(22rem, calc(100vw - #{spacing(8)}));
+    max-block-size: calc(100dvh - #{spacing(8)});
+    overflow: auto;
+}
+
+.lock-controls-content {
+    max-block-size: calc(100dvh - #{spacing(8)} - #{spacing(12)} - #{spacing(12)});
+    padding: spacing(1);
+    overflow: auto;
+    overscroll-behavior: contain;
+}

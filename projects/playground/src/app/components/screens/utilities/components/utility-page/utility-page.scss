@@ -1,0 +1,35 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+h2 {
+    margin: 0;
+    color: var(--bx-text-heading);
+    font-size: 1.125rem;
+}
+
+code,
+.section-heading span {
+    color: var(--bx-text-secondary);
+    font-size: 0.8125rem;
+}
+
+.section-heading {
+    margin-block-end: spacing(4);
+}
+
+.demo-section {
+    margin-block-end: spacing(8);
+}
+
+.documentation-section {
+    min-inline-size: 0;
+    margin-block-start: spacing(8);
+
+    h2 {
+        margin-block-end: spacing(4);
+    }
+}

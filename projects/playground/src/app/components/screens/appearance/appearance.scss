@@ -4,12 +4,6 @@
     display: block;
 }
 
-.appearance {
-    max-inline-size: 80rem;
-    margin-inline: auto;
-    overflow-wrap: anywhere;
-}
-
 .mode-picker {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

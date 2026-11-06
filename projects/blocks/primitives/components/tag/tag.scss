@@ -58,7 +58,8 @@
         inline-size: max-content;
         min-inline-size: var(--bx-tag-number-size, 1.875rem);
         aspect-ratio: 1;
-        padding: var(--bx-tag-number-padding, 0.35em);
+        padding-block: 0;
+        padding-inline: var(--bx-tag-number-padding, 0.35em);
 
         &.is-small {
             min-inline-size: var(--bx-tag-number-size, 1.5rem);

@@ -4,7 +4,49 @@
 @use 'sass:color';
 @use 'sass:math';
 @use 'palettes' as *;
+@use 'token-config' as tokens;
 
+$theme-palettes: (
+    'carbon-cobalt': (
+        'label': 'Carbon / Cobalt',
+        'brand': 'carbon',
+        'accent': 'cobalt'
+    ),
+    'azure-ember': (
+        'label': 'Azure / Ember',
+        'brand': 'azure',
+        'accent': 'ember'
+    ),
+    'violet-teal': (
+        'label': 'Violet / Teal',
+        'brand': 'violet',
+        'accent': 'teal'
+    ),
+    'tangerine-indigo': (
+        'label': 'Tangerine / Indigo',
+        'brand': 'tangerine',
+        'accent': 'indigo'
+    ),
+    'brick-rose-cyan': (
+        'label': 'Brick Rose / Cyan',
+        'brand': 'brick-rose',
+        'accent': 'cyan'
+    ),
+    'lime-violet': (
+        'label': 'Lime / Violet',
+        'brand': 'lime',
+        'accent': 'cool-violet'
+    ),
+    'cyberpunk': (
+        'label': 'Cyberpunk',
+        'brand': 'cyber-yellow',
+        'accent': 'cyber-slate',
+        'preview-order': (
+            'accent',
+            'brand'
+        )
+    )
+) !default;
 $required-theme-keys: (
     'bg-canvas',
     'bg-surface',
@@ -74,6 +116,78 @@ $required-theme-keys: (
     'meta-brand-palette',
     'meta-accent-palette'
 );
+$semantic-pairs: (
+    'bg-canvas': 'text-primary',
+    'bg-surface': 'text-primary',
+    'bg-surface-alt': 'text-primary',
+    'bg-element': 'text-primary',
+    'bg-element-hover': 'text-primary',
+
+    'text-heading': 'bg-element',
+    'text-primary': 'bg-element',
+    'text-secondary': 'bg-element',
+    'text-brand': 'bg-surface',
+    'text-inverse': 'primary',
+    'on-primary': 'primary',
+    'on-primary-hover': 'primary-hover',
+    'on-primary-active': 'primary-active',
+
+    'accent': 'accent-subtle',
+    'accent-hover': 'on-accent-hover',
+    'accent-active': 'on-accent-active',
+    'accent-subtle': 'text-accent',
+    'on-accent': 'accent',
+    'on-accent-hover': 'accent-hover',
+    'on-accent-active': 'accent-active',
+    'text-accent': 'accent-subtle',
+    'border-accent': 'bg-surface',
+
+    'primary': 'primary-subtle',
+    'primary-hover': 'on-primary',
+    'primary-active': 'on-primary',
+    'primary-subtle': 'text-primary',
+
+    'border-subtle': 'bg-surface',
+    'border-default': 'bg-surface',
+    'border-strong': 'bg-surface',
+    'border-brand': 'bg-surface',
+
+    'bg-info': 'text-info',
+    'bg-info-active': 'text-info',
+    'bg-info-hover': 'text-info',
+    'bg-info-disabled': 'border-info',
+    'bg-info-subtle': 'border-info',
+    'border-info': 'bg-info',
+    'text-info': 'bg-info',
+
+    'bg-success': 'text-success',
+    'bg-success-active': 'text-success',
+    'bg-success-hover': 'text-success',
+    'bg-success-disabled': 'border-success',
+    'bg-success-subtle': 'border-success',
+    'border-success': 'bg-success',
+    'text-success': 'bg-success',
+
+    'bg-warn': 'text-warn',
+    'bg-warn-active': 'text-warn',
+    'bg-warn-hover': 'text-warn',
+    'bg-warn-disabled': 'border-warn',
+    'bg-warn-subtle': 'border-warn',
+    'border-warn': 'bg-warn',
+    'text-warn': 'bg-warn',
+
+    'bg-danger': 'text-danger',
+    'bg-danger-active': 'text-danger',
+    'bg-danger-hover': 'text-danger',
+    'bg-danger-disabled': 'border-danger',
+    'bg-danger-subtle': 'border-danger',
+    'border-danger': 'bg-danger',
+    'text-danger': 'bg-danger',
+
+    'scroll-bg': 'bg-surface',
+    'scroll-thumb': 'scroll-bg',
+    'scroll-thumb-hover': 'scroll-bg'
+) !default;
 
 @function validate-theme($theme, $theme-name) {
     @each $key in $required-theme-keys {
@@ -94,6 +208,7 @@ $required-theme-keys: (
 }
 
 /* stylelint-disable scss/at-function-pattern -- Underscores keep the Sass helpers private. */
+
 @function _luminance($value) {
     $result: 0;
     $weights: (
@@ -104,7 +219,6 @@ $required-theme-keys: (
 
     @each $channel, $weight in $weights {
         $part: math.div(color.channel($value, $channel, $space: rgb), 255);
-
         /* stylelint-disable-next-line number-max-precision -- Preserve the exact sRGB linearization threshold. */
         @if $part <= 0.04045 {
             $part: math.div($part, 12.92);
@@ -226,6 +340,7 @@ $required-theme-keys: (
 }
 
 /* stylelint-enable scss/at-function-pattern */
+
 @function make-light-theme($brand, $accent: $brand, $overrides: ()) {
     @return _make-theme($brand, $accent, false, $overrides);
 }
@@ -234,54 +349,66 @@ $required-theme-keys: (
     @return _make-theme($brand, $accent, true, $overrides);
 }
 
+@function make-palette-theme($id, $dark: false, $overrides: ()) {
+    @if not map.has-key($theme-palettes, $id) {
+        @error "Unknown theme palette '#{$id}'.";
+    }
+
+    $palette: map.get($theme-palettes, $id);
+
+    @return _make-theme(map.get($palette, 'brand'), map.get($palette, 'accent'), $dark, $overrides);
+}
+
 @mixin bx-theme($config) {
-    --bx-glass-surface: var(--bx-bg-surface);
-    --bx-glass-text: var(--bx-text-primary);
-    --bx-glass-edge: var(--bx-border-default);
-    --bx-glass-accent: var(--bx-primary);
+    $prefix: '--#{tokens.$token-prefix}#{tokens.$token-delimiter}';
+
+    #{$prefix}glass-surface: var(#{$prefix}bg-surface);
+    #{$prefix}glass-text: var(#{$prefix}text-primary);
+    #{$prefix}glass-edge: var(#{$prefix}border-default);
+    #{$prefix}glass-accent: var(#{$prefix}primary);
 
     @each $key, $value in $config {
         @if string.index($key, 'meta-') != 1 {
-            --bx-#{$key}: #{$value};
+            #{$prefix}#{$key}: #{$value};
         }
     }
 
     @each $role, $key in ('primary': 'meta-brand-palette', 'accent': 'meta-accent-palette') {
         @each $shade, $color in get-palette(map.get($config, $key)) {
-            --bx-color-#{$role}-#{$shade}: #{$color};
+            --#{tokens.$token-prefix}#{tokens.$token-delimiter}#{tokens.$token-color-delimiter}#{tokens.$token-delimiter}#{$role}#{tokens.$token-delimiter}#{$shade}: #{$color};
         }
     }
 }
 
 @each $key in $required-theme-keys {
     @if string.index($key, 'bg-') == 1 {
-        .bx-#{$key} {
-            background-color: var(--bx-#{$key});
+        .#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key} {
+            background-color: var(--#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key});
             transition: background-color 0.2s ease-in-out;
         }
     } @else if string.index($key, 'text-') == 1 {
-        .bx-#{$key} {
-            color: var(--bx-#{$key});
+        .#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key} {
+            color: var(--#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key});
             transition: color 0.2s ease-in-out;
         }
     } @else if string.index($key, 'border-') == 1 {
-        .bx-#{$key} {
-            border-color: var(--bx-#{$key});
+        .#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key} {
+            border-color: var(--#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key});
             transition: border-color 0.2s ease-in-out;
         }
     } @else if not string.index($key, 'scroll-') and string.index($key, 'meta-') != 1 {
-        .bx-bg-#{$key} {
-            background-color: var(--bx-#{$key});
+        .#{tokens.$token-prefix}#{tokens.$token-delimiter}bg-#{$key} {
+            background-color: var(--#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key});
             transition: background-color 0.2s ease-in-out;
         }
 
-        .bx-text-#{$key} {
-            color: var(--bx-#{$key});
+        .#{tokens.$token-prefix}#{tokens.$token-delimiter}text-#{$key} {
+            color: var(--#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key});
             transition: color 0.2s ease-in-out;
         }
 
-        .bx-border-#{$key} {
-            border-color: var(--bx-#{$key});
+        .#{tokens.$token-prefix}#{tokens.$token-delimiter}border-#{$key} {
+            border-color: var(--#{tokens.$token-prefix}#{tokens.$token-delimiter}#{$key});
             transition: border-color 0.2s ease-in-out;
         }
     }

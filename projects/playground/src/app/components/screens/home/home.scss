@@ -1,6 +1,7 @@
 @use 'core/styles/helpers' as *;
 
 :host {
+    padding: clamp(1rem, 3vw, 2.5rem);
     display: block;
 }
 

@@ -35,6 +35,7 @@ export * from '@primitives/services/menu-cascade.service';
 export * from '@primitives/interfaces/imenu-keyboard-options.interface';
 
 export * from '@primitives/components/accordion/accordion';
+export * from '@primitives/interfaces/icollapsible-title-context.interface';
 export * from '@primitives/components/alert/alert';
 export * from '@primitives/types/alert.types';
 export * from '@primitives/components/card/card';
@@ -58,3 +59,11 @@ export * from '@primitives/tokens/popover-defaults.token';
 
 export * from '@primitives/types/dropdown.types';
 export * from '@primitives/interfaces/ibx-overlay-context.interface';
+
+export * from '@primitives/components/page-container/page-container';
+export * from '@primitives/components/page-header/page-header';
+export * from '@primitives/components/page-content/page-content';
+export * from '@primitives/components/page-footer/page-footer';
+export * from '@primitives/interfaces/ipage-breadcrumb.interface';
+export * from '@primitives/interfaces/ipage-navigation.interface';
+export * from '@primitives/tokens/page-navigation.token';

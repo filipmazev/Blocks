@@ -3,16 +3,18 @@ import type { Signal, WritableSignal } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { Button, BxSelectOption, SearchInput, Select } from '@filip.mazev/blocks/forms';
+import { Button, IBxSelectOption, SearchInput, Select } from '@filip.mazev/blocks/forms';
 import { Icon, IconName, IconSize, IconStrokeWidth, lucideNames } from '@filip.mazev/blocks/icons';
+import { PageContainer } from '@filip.mazev/blocks/primitives';
 
 import { Readme } from '@playground/components/shared/readme/readme';
+import { Collapsible } from '@primitives/components/collapsible/collapsible';
 
 import { Highlight } from 'ngx-highlightjs';
 
 @Component({
   selector: 'app-icon-catalog',
-  imports: [Highlight, Icon, FormsModule, SearchInput, Select, Button, Readme],
+  imports: [PageContainer, Highlight, Icon, FormsModule, SearchInput, Select, Button, Readme, Collapsible],
   templateUrl: './icon-catalog.html',
   styleUrl: './icon-catalog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,8 +24,8 @@ export class IconCatalog {
   protected readonly allIcons: readonly IconName[] = lucideNames;
   protected readonly sizes: IconSize[] = ['16', '20', '24', '28', '32', '36', '40', '44', '48'];
   protected readonly strokeWidths: IconStrokeWidth[] = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3];
-  protected readonly sizeSelectOptions: BxSelectOption<IconSize>[] = this.sizes.map((value) => ({ label: `${value}px`, value }));
-  protected readonly strokeSelectOptions: BxSelectOption<IconStrokeWidth>[] = this.strokeWidths.map((value) => ({ label: `${value}px`, value }));
+  protected readonly sizeSelectOptions: IBxSelectOption<IconSize>[] = this.sizes.map((value) => ({ label: `${value}px`, value }));
+  protected readonly strokeSelectOptions: IBxSelectOption<IconStrokeWidth>[] = this.strokeWidths.map((value) => ({ label: `${value}px`, value }));
 
   protected readonly searchTerm: WritableSignal<string> = signal('');
   protected readonly selectedSize: WritableSignal<IconSize> = signal<IconSize>('24');

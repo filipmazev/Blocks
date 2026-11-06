@@ -1,82 +1,79 @@
-<header class="page-heading">
-    <p class="eyebrow">Overlay components</p>
-    <h1>Modals</h1>
-    <p>Configure dialogs, side panels, and sheets using the shared Blocks theme.</p>
-</header>
-<div class="demo-container">
-    <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="modalReadmePath()"></app-component-info>
+<bx-page-container pageDescription="Configure modal layout, responsive behavior, close guards, and content using your shared appearance.">
+    <div class="demo-container">
+        <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="modalReadmePath()"></app-component-info>
 
-    <div #configPanel class="config-container" bxSurface>
-        <div class="config-header">Configurator</div>
-        <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
-        <p class="hint" role="status">{{ resultMessage() }}</p>
+        <div #configPanel class="config-container" bxSurface>
+            <div class="config-header">Configurator</div>
+            <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
+            <p class="hint" role="status">{{ resultMessage() }}</p>
 
-        <form class="config-form form-section" [formGroup]="form">
-            <div class="form-section">
-                <h3>General Style</h3>
+            <form class="config-form form-section" [formGroup]="form">
+                <div class="form-section">
+                    <h3>General Style</h3>
 
-                <bx-select
-                    label="Default Layout"
-                    formControlName="layout"
-                    subscriptSizing="dynamic"
-                    [clearable]="false"
-                    [errorMessages]="{ required: 'Choose a layout.' }"
-                    [options]="layoutSelectOptions">
-                </bx-select>
+                    <bx-select
+                        label="Default Layout"
+                        formControlName="layout"
+                        subscriptSizing="dynamic"
+                        [clearable]="false"
+                        [errorMessages]="{ required: 'Choose a layout.' }"
+                        [options]="layoutSelectOptions">
+                    </bx-select>
 
-                <bx-input-field label="Header Text" formControlName="headerText" subscriptSizing="dynamic"></bx-input-field>
+                    <bx-input-field label="Header Text" formControlName="headerText" subscriptSizing="dynamic"></bx-input-field>
 
-                <bx-input-field label="Title" formControlName="title" subscriptSizing="dynamic"></bx-input-field>
-            </div>
-
-            <div class="form-section">
-                <h3>Behavior & Toggles</h3>
-
-                <div class="form-checkboxes">
-                    <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic"></bx-checkbox>
-
-                    <bx-checkbox label="Has Backdrop" formControlName="hasBackdrop" subscriptSizing="dynamic"></bx-checkbox>
-
-                    <bx-checkbox label="Show Close Button" formControlName="showCloseButton" subscriptSizing="dynamic"></bx-checkbox>
-
-                    <bx-checkbox
-                        label="Disable Close (Global)"
-                        formControlName="disableClose"
-                        tooltip="Prevents closing via ESC key or backdrop clicks."
-                        subscriptSizing="dynamic">
-                    </bx-checkbox>
-
-                    <bx-checkbox label="Disable Backdrop Click" formControlName="disableCloseOnBackdropClick" subscriptSizing="dynamic"></bx-checkbox>
-
-                    <bx-checkbox
-                        label="Use Confirm Close Guard"
-                        formControlName="hasConfirmCloseGuard"
-                        tooltip="Intercepts the close event and prompts the user to confirm."
-                        subscriptSizing="dynamic">
-                    </bx-checkbox>
+                    <bx-input-field label="Title" formControlName="title" subscriptSizing="dynamic"></bx-input-field>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <h3>Responsive Breakpoints</h3>
-                <p class="hint">Select 'none' to ignore that breakpoint.</p>
+                <div class="form-section">
+                    <h3>Behavior & Toggles</h3>
 
-                <div class="breakpoints-grid">
-                    @for (breakpoint of breakpointKeys; track breakpoint) {
-                        <bx-select
-                            subscriptSizing="dynamic"
-                            [clearable]="false"
-                            [label]="breakpoint"
-                            [formControlName]="breakpoint"
-                            [options]="breakpointSelectOptions">
-                        </bx-select>
-                    }
+                    <div class="form-checkboxes">
+                        <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic"></bx-checkbox>
+
+                        <bx-checkbox label="Has Backdrop" formControlName="hasBackdrop" subscriptSizing="dynamic"></bx-checkbox>
+
+                        <bx-checkbox label="Show Close Button" formControlName="showCloseButton" subscriptSizing="dynamic"></bx-checkbox>
+
+                        <bx-checkbox
+                            label="Disable Close (Global)"
+                            formControlName="disableClose"
+                            tooltip="Prevents closing via ESC key or backdrop clicks."
+                            subscriptSizing="dynamic">
+                        </bx-checkbox>
+
+                        <bx-checkbox label="Disable Backdrop Click" formControlName="disableCloseOnBackdropClick" subscriptSizing="dynamic"></bx-checkbox>
+
+                        <bx-checkbox
+                            label="Use Confirm Close Guard"
+                            formControlName="hasConfirmCloseGuard"
+                            tooltip="Intercepts the close event and prompts the user to confirm."
+                            subscriptSizing="dynamic">
+                        </bx-checkbox>
+                    </div>
                 </div>
-            </div>
-        </form>
 
-        <div class="actions">
-            <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="openModal()">Open Modal</button>
+                <div class="form-section">
+                    <h3>Responsive Breakpoints</h3>
+                    <p class="hint">Select 'none' to ignore that breakpoint.</p>
+
+                    <div class="breakpoints-grid">
+                        @for (breakpoint of breakpointKeys; track breakpoint) {
+                            <bx-select
+                                subscriptSizing="dynamic"
+                                [clearable]="false"
+                                [label]="breakpoint"
+                                [formControlName]="breakpoint"
+                                [options]="breakpointSelectOptions">
+                            </bx-select>
+                        }
+                    </div>
+                </div>
+            </form>
+
+            <div class="actions">
+                <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="openModal()">Open Modal</button>
+            </div>
         </div>
     </div>
-</div>
+</bx-page-container>

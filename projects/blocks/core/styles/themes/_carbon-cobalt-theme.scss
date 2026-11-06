@@ -1,4 +1,4 @@
 @use '../theme-engine' as *;
 
-$carbon-cobalt-light-theme: make-light-theme('carbon', 'cobalt');
-$carbon-cobalt-dark-theme: make-dark-theme('carbon', 'cobalt');
+$carbon-cobalt-light-theme: make-palette-theme('carbon-cobalt');
+$carbon-cobalt-dark-theme: make-palette-theme('carbon-cobalt', true);

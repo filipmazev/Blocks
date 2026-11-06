@@ -1,0 +1,29 @@
+@if (resolvedSectionTitle()) {
+    <p class="section-title">{{ resolvedSectionTitle() }}</p>
+}
+@if (resolvedPageTitle()) {
+    @switch (level()) {
+        @case (1) {
+            <h1 class="page-title">{{ resolvedPageTitle() }}</h1>
+        }
+        @case (2) {
+            <h2 class="page-title">{{ resolvedPageTitle() }}</h2>
+        }
+        @case (3) {
+            <h3 class="page-title">{{ resolvedPageTitle() }}</h3>
+        }
+        @case (4) {
+            <h4 class="page-title">{{ resolvedPageTitle() }}</h4>
+        }
+        @case (5) {
+            <h5 class="page-title">{{ resolvedPageTitle() }}</h5>
+        }
+        @case (6) {
+            <h6 class="page-title">{{ resolvedPageTitle() }}</h6>
+        }
+    }
+}
+@if (resolvedPageDescription()) {
+    <p class="page-description">{{ resolvedPageDescription() }}</p>
+}
+<div class="header-content"><ng-content /></div>

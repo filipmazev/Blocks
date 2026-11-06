@@ -1,13 +1,7 @@
-<article class="release-page">
+<bx-page-container pageDescription="Explore version changes, compatibility notes, and migration guidance.">
     @if (packageReleaseService.unpublished()) {
         <bx-alert class="unpublished-banner" tone="info" announcement="polite" [message]="unpublishedMessage" [dismissible]="false" />
     }
-    <header class="page-heading">
-        <p class="eyebrow">Blocks library</p>
-        <h1>Release notes</h1>
-        <p>Explore additions, improvements and migration notes for each version of Blocks.</p>
-    </header>
-
     <div class="release-controls">
         <bx-select
             class="channel-select"
@@ -69,4 +63,4 @@
             <a bx-button variant="tonal" [routerLink]="['/release-notes', latestVersion]">View latest notes<bx-icon name="arrow-right" size="20" /></a>
         </section>
     }
-</article>
+</bx-page-container>

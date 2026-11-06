@@ -20,59 +20,13 @@
     color-scheme: dark;
 }
 
-.theme-carbon-cobalt {
-    @include bx-theme($carbon-cobalt-light-theme);
+@each $id, $definition in $theme-palettes {
+    .theme-#{$id} {
+        @include bx-theme(make-palette-theme($id));
 
-    &[data-theme='dark'] {
-        @include bx-theme($carbon-cobalt-dark-theme);
-    }
-}
-
-.theme-azure-ember {
-    @include bx-theme($azure-ember-light-theme);
-
-    &[data-theme='dark'] {
-        @include bx-theme($azure-ember-dark-theme);
-    }
-}
-
-.theme-violet-teal {
-    @include bx-theme($violet-teal-light-theme);
-
-    &[data-theme='dark'] {
-        @include bx-theme($violet-teal-dark-theme);
-    }
-}
-
-.theme-tangerine-indigo {
-    @include bx-theme($tangerine-indigo-light-theme);
-
-    &[data-theme='dark'] {
-        @include bx-theme($tangerine-indigo-dark-theme);
-    }
-}
-
-.theme-brick-rose-cyan {
-    @include bx-theme($brick-rose-cyan-light-theme);
-
-    &[data-theme='dark'] {
-        @include bx-theme($brick-rose-cyan-dark-theme);
-    }
-}
-
-.theme-lime-violet {
-    @include bx-theme($lime-violet-light-theme);
-
-    &[data-theme='dark'] {
-        @include bx-theme($lime-violet-dark-theme);
-    }
-}
-
-.theme-cyberpunk {
-    @include bx-theme($cyberpunk-light-theme);
-
-    &[data-theme='dark'] {
-        @include bx-theme($cyberpunk-dark-theme);
+        &[data-theme='dark'] {
+            @include bx-theme(make-palette-theme($id, true));
+        }
     }
 }
 
@@ -324,8 +278,7 @@ input[type='range'] {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.9fr);
     gap: spacing(6);
-    max-width: 88rem;
-    margin-inline: auto;
+    min-inline-size: 0;
     align-items: start;
 }
 
@@ -336,6 +289,7 @@ input[type='range'] {
     }
 
     .demo-container > * {
+        min-inline-size: 0;
         width: 100%;
     }
 }

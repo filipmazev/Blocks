@@ -13,6 +13,7 @@
         bxSurface
         bxTooltipTouch="longpress"
         placement="top"
+        [class.is-compact]="isCompact()"
         [class.is-invalid]="showError()"
         [class.is-disabled]="disabled()"
         [class.is-readonly]="isReadonly()"

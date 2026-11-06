@@ -10,7 +10,5 @@ export const SIDE_NAV_DEFAULTS = {
   collapsible: true,
   collapsed: false,
   mobileBreakpoint: 'lg',
-  submenuBreakpoint: 'xl',
-  submenuMode: 'auto',
   showMobileTrigger: true
 } satisfies ISideNavConfig;

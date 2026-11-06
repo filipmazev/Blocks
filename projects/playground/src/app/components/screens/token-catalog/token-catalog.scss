@@ -1,0 +1,273 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.catalog-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: spacing(3);
+    align-items: end;
+}
+
+.catalog-filters > button {
+    align-self: stretch;
+    min-block-size: spacing(10);
+}
+
+bx-search-input {
+    grid-column: 1 / -1;
+}
+
+.catalog-summary {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: spacing(2) spacing(4);
+    margin-block-start: spacing(4);
+}
+
+.catalog-summary p,
+.catalog-note,
+.copy-status,
+.token-scope,
+.token-value,
+.token-color-value,
+.companion {
+    color: var(--bx-text-secondary);
+    font-size: 0.8125rem;
+}
+
+.catalog-summary p {
+    margin: 0;
+}
+
+.copy-status {
+    min-block-size: 1.5em;
+    margin-block: spacing(2);
+    overflow-wrap: anywhere;
+}
+
+.catalog-groups {
+    --bx-accordion-gap: #{spacing(3)};
+    --bx-collapsible-content-padding: #{spacing(3)};
+}
+
+.group-heading {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+}
+
+.catalog-category-heading {
+    display: flex;
+    align-items: center;
+    gap: spacing(3);
+    min-inline-size: 0;
+    margin-block: spacing(6) spacing(2);
+
+    h2 {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        margin: 0;
+        color: var(--bx-text-heading);
+        font-size: 1.125rem;
+        overflow-wrap: anywhere;
+    }
+
+    bx-divider {
+        --bx-divider-margin: 0;
+
+        flex: 1 1 0;
+    }
+}
+
+.token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: spacing(4);
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+    gap: spacing(2);
+}
+
+.token-card {
+    --bx-card-padding: #{spacing(4)};
+    --bx-card-radius: #{radius(md)};
+    --bx-card-background: var(--bx-bg-canvas);
+
+    user-select: none;
+    /* stylelint-disable-next-line property-no-vendor-prefix -- iOS callouts conflict with the card's long-press menu. */
+    -webkit-touch-callout: none;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}
+
+.token-content {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(3);
+    block-size: 100%;
+    overflow-wrap: anywhere;
+}
+
+.token-content h4,
+.token-content p {
+    margin: 0;
+}
+
+.token-content h4 {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.token-reference,
+.token-metadata code {
+    display: block;
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.token-metadata {
+    --bx-collapsible-padding: #{spacing(2)};
+    --bx-collapsible-content-padding: #{spacing(2)};
+
+    font-size: 0.8125rem;
+    user-select: text;
+    /* stylelint-disable-next-line property-no-vendor-prefix -- Expanded metadata retains native iOS selection actions. */
+    -webkit-touch-callout: default;
+}
+
+.token-metadata code {
+    padding-block: spacing(2);
+    color: var(--bx-text-secondary);
+}
+
+.token-code {
+    margin-block: spacing(2);
+    padding: spacing(3);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.token-swatch,
+.pair-preview {
+    block-size: spacing(10);
+    border-block-end: 1px solid var(--bx-border-default);
+}
+
+.pair-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.shape-preview,
+.space-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 10rem;
+    padding: spacing(6);
+    border-block-end: 1px solid var(--bx-border-default);
+    background: var(--bx-bg-surface-alt);
+}
+
+.shape-preview span {
+    inline-size: min(100%, 10rem);
+    block-size: 8rem;
+    border: 1px solid var(--bx-border-brand);
+    border-radius: radius(md);
+    background: var(--bx-bg-element);
+}
+
+.shadow-preview {
+    min-block-size: 12rem;
+    background: var(--bx-color-neutral-200);
+}
+
+.shadow-preview span {
+    block-size: spacing(12);
+    border-color: var(--bx-color-neutral-300);
+    background: var(--bx-color-neutral-50);
+}
+
+.space-preview {
+    min-block-size: spacing(12);
+    justify-content: start;
+    padding-inline: spacing(3);
+}
+
+.space-preview span {
+    block-size: spacing(4);
+    max-inline-size: 100%;
+    border-inline-start: 1px solid var(--bx-border-brand);
+    background: var(--bx-primary);
+}
+
+.copy-button {
+    align-self: start;
+    min-block-size: 2rem;
+    margin-block-start: auto;
+    padding: spacing(1) spacing(2);
+    font-size: 0.75rem;
+}
+
+.empty-results {
+    padding: spacing(4);
+    text-align: center;
+}
+
+.catalog-documentation {
+    margin-block: spacing(6);
+}
+
+.token-chunk {
+    display: block;
+    min-inline-size: 0;
+    overflow-anchor: auto;
+
+    & + & {
+        margin-block-start: spacing(4);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: spacing(1);
+        border-radius: radius(sm);
+    }
+}
+
+@include respond-up(sm) {
+    .catalog-filters {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+@include respond-up(lg) {
+    .catalog-filters {
+        grid-template-columns: minmax(12rem, 1fr) minmax(12rem, 22rem) auto;
+    }
+
+    bx-search-input {
+        grid-column: auto;
+    }
+}
+
+@media (forced-colors: active) {
+    .token-swatch,
+    .pair-preview span,
+    .shape-preview span,
+    .space-preview span {
+        forced-color-adjust: none;
+    }
+}

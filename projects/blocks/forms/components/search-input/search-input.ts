@@ -40,6 +40,7 @@ export class SearchInput extends BxValueControl<string> {
     () => !!this.resolvedLoadError() || (this.isBusy() && (!!this.resolvedLoadingLabel() || this.showRetry()))
   );
   protected readonly searchDescribedBy: Signal<string> = computed(() => `${this.describedBy()} ${this.controlId()}-search-status`);
+  protected readonly isCompact: Signal<boolean> = computed(() => !!this.label() || this.compact());
 
   /** Accessible name of the clear-value action; supports shared translation keys. Defaults to `'Clear search'`. */
   public readonly clearLabel: InputSignal<ResolvableText> = input<ResolvableText>('Clear search');
@@ -55,6 +56,12 @@ export class SearchInput extends BxValueControl<string> {
   public readonly retryLabel: InputSignal<ResolvableText> = input<ResolvableText>('Retry search');
   /** Button appearance overrides for the retry action. Defaults to an empty configuration. */
   public readonly retryConfig: InputSignal<ISearchRetryConfig> = input<ISearchRetryConfig>({});
+  /**
+   * Whether the search input uses a compact presentation. Defaults to `false`.
+   * When a label is provided, compact mode is always enabled, regardless of this setting.
+   * When no label is provided, compact mode is controlled by this property.
+   */
+  public readonly compact: InputSignal<boolean> = input(false);
 
   /** Emits a consumer-owned search request when the query changes. */
   // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the established public search event.

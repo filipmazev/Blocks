@@ -5,9 +5,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { animationFrameScheduler, fromEvent } from 'rxjs';
 import { auditTime, distinctUntilChanged, map } from 'rxjs/operators';
 
-import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
+import { BREAKPOINTS } from '@core/constants/tokens.constants';
 import { IWindowDimensions } from '@core/interfaces/iwindow-dimensions.interface';
-import { BreakpointKey, BreakpointValue } from '@core/types/core.types';
+import { BreakpointKey, BreakpointValue } from '@core/types/tokens.types';
 
 @Injectable({
   providedIn: 'root'

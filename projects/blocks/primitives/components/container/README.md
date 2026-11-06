@@ -34,4 +34,4 @@ inside it.
 
 ## Playground
 
-`/components/container` includes live examples and shared appearance controls.
+`/components/layout/container` includes live examples and shared appearance controls.

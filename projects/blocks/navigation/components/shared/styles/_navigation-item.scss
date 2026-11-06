@@ -6,7 +6,7 @@
     background: var(--bx-nav-item-background, var(--bx-side-nav-item-background, transparent));
     color: var(--bx-text-primary);
 
-    &:not(.is-disabled, :disabled, [aria-disabled='true']):is(:hover, :focus-within) {
+    &:not(.is-disabled, :disabled, [aria-disabled='true']):is(:hover, :focus-visible) {
         background: var(--bx-nav-item-hover-background, var(--bx-side-nav-item-hover-background, var(--bx-accent-subtle)));
         color: var(--bx-text-accent);
     }

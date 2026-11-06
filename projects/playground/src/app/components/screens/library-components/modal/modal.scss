@@ -2,7 +2,8 @@
 @use '../../../../../styles/common' as *;
 
 :host {
-    width: 100%;
+    display: block;
+    min-inline-size: 0;
 }
 
 .breakpoints-grid {

@@ -51,7 +51,8 @@ opaque/reduced-transparency preferences. They have no hover illumination or pres
 Text tags use small rounded corners. A single number without text or icons uses a circle that grows for longer counts. Override `--bx-tag-background`,
 `--bx-tag-color`, `--bx-tag-border`, `--bx-tag-radius`, `--bx-tag-padding`, `--bx-tag-gap`, `--bx-tag-font-size`, `--bx-tag-shadow`,
 `--bx-tag-counter-background`, `--bx-tag-counter-radius`, and `--bx-tag-disabled-opacity` as needed. `--bx-tag-number-size` and `--bx-tag-number-padding`
-configure number-only circles; `--bx-tag-fill-opacity` and `--bx-tag-outline-opacity` tune the variant tints. Forced colors retain a visible boundary.
+configure the minimum diameter and horizontal padding of number-only circles; vertical padding is zero so line height does not stretch them into ovals;
+`--bx-tag-fill-opacity` and `--bx-tag-outline-opacity` tune the variant tints. Forced colors retain a visible boundary.
 
 ## Accessibility and translations
 

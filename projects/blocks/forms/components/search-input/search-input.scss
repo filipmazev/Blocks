@@ -11,13 +11,7 @@
     align-items: center;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(sm);
-    transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease;
-    min-height: spacing(10);
+    min-height: 3.85rem;
     padding: spacing(1) spacing(2) spacing(1) spacing(3);
     gap: spacing(2);
 
@@ -28,6 +22,10 @@
     &:focus-within:not(.is-disabled, .is-readonly) {
         border-color: var(--bx-border-brand);
         box-shadow: 0 0 0 3px var(--bx-primary-subtle);
+    }
+
+    &.is-compact {
+        min-height: spacing(10);
     }
 
     &.is-invalid {

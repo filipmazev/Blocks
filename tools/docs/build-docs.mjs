@@ -47,6 +47,8 @@ await collect('projects/blocks');
 await collect('documentation');
 await collect('projects/playground/src/app/components/screens/appearance');
 await collect('projects/playground/src/app/components/screens/utilities');
+await collect('projects/playground/src/app/components/screens/token-catalog');
+await collect('projects/playground/src/app/components/screens/library-components/page-examples');
 files.sort();
 const documents = {};
 const catalogSource = await readFile(
@@ -71,11 +73,27 @@ const catalog = catalogArray.elements.map((entry) => {
     if (!property || !ts.isStringLiteralLike(property.initializer)) throw new Error(`Catalog ${name} must be a string literal.`);
     return property.initializer.text;
   };
-  return { id: readString('id'), readme: readString('readme') };
+  const layout = entry.properties.some(
+    (property) =>
+      ts.isPropertyAssignment(property) &&
+      ts.isIdentifier(property.name) &&
+      property.name.text === 'layout' &&
+      property.initializer.kind === ts.SyntaxKind.TrueKeyword
+  );
+  return { id: readString('id'), readme: readString('readme'), layout };
 });
-const routes = new Map(catalog.map((entry) => [entry.readme, `components/${entry.id}`]));
+const routes = new Map(catalog.map((entry) => [entry.readme, `components/${entry.layout ? 'layout/' : ''}${entry.id}`]));
 routes.set('projects/playground/src/app/components/screens/appearance/README.md', 'appearance');
 routes.set('projects/playground/src/app/components/screens/utilities/README.md', 'utilities');
+for (const file of files) {
+  const utility = /^projects\/playground\/src\/app\/components\/screens\/utilities\/components\/([^/]+)\/README\.md$/.exec(file);
+  if (utility && utility[1] !== 'utility-page') routes.set(file, `utilities/${utility[1]}`);
+}
+routes.set('projects/playground/src/app/components/screens/token-catalog/README.md', 'tokens');
+routes.set('projects/playground/src/app/components/screens/library-components/page-examples/README.md', 'components/layout/page-container');
+for (const section of ['page-header', 'page-content', 'page-footer']) {
+  routes.set(`projects/blocks/primitives/components/${section}/README.md`, 'components/layout/page-container');
+}
 routes.set('projects/blocks/modal/README.md', 'modal');
 routes.set('projects/blocks/toastr/README.md', 'toastr');
 routes.set('projects/blocks/core/README.md', 'components');
@@ -125,10 +143,18 @@ for (const [key, source] of Object.entries(liveExamples)) {
     .replace(/@use 'core\/styles\/helpers'/g, "@use '@filip.mazev/blocks/core/styles/helpers'");
   snippets[`assets/code-snippets/${key}`] = text;
 }
-for (const file of ['utilities.ts', 'utilities.html', 'utilities.scss', 'constants/utilities.constants.ts', 'types/utilities.types.ts']) {
-  const source = await readFile(path.join(root, 'projects/playground/src/app/components/screens/utilities', file), 'utf8');
-  snippets[`assets/code-snippets/utilities/${file}.txt`] = source.replace(/@use 'core\/styles\/helpers'/g, "@use '@filip.mazev/blocks/core/styles/helpers'");
+async function collectUtilitySnippets(directory, prefix = '') {
+  for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {
+    const relative = `${directory}/${entry.name}`;
+    const key = `${prefix}${entry.name}`;
+    if (entry.isDirectory()) await collectUtilitySnippets(relative, `${key}/`);
+    else if (/\.(?:ts|html|scss)$/.test(entry.name) && !entry.name.endsWith('.spec.ts')) {
+      const source = await readFile(path.join(root, relative), 'utf8');
+      snippets[`assets/code-snippets/utilities/${key}.txt`] = source.replace(/@use 'core\/styles\/helpers'/g, "@use '@filip.mazev/blocks/core/styles/helpers'");
+    }
+  }
 }
+await collectUtilitySnippets('projects/playground/src/app/components/screens/utilities');
 const aliases = {
   'projects/blocks/forms/components/button/directives/README.md': 'projects/blocks/forms/directives/button-icon/README.md',
   'projects/blocks/forms/directives/error/README.md': 'projects/blocks/forms/components/error/README.md',

@@ -1,0 +1,35 @@
+<bx-stack [gap]="5">
+    <bx-alert
+        title="Try two independent owners"
+        message="Acquire both locks, then release one. Page scrolling stays locked until the final owner releases it. Release controls remain available below." />
+    <bx-card #lockControls class="lock-controls" title="Control the demo locks">
+        <bx-stack class="lock-controls-content" [gap]="4">
+            <p role="status">Demo owners: {{ locks().length }}. Page scrolling: {{ scrollLockService.isScrollDisabled() ? 'locked' : 'available' }}.</p>
+            <bx-stack direction="horizontal" role="group" aria-label="Demo scroll lock owners" [wrap]="true" [gap]="3">
+                @for (owner of owners; track owner) {
+                    <button bx-button type="button" variant="tonal" [attr.aria-pressed]="locks().includes(owner)" (click)="toggleLock(owner)">
+                        {{ locks().includes(owner) ? 'Release ' + owner + ' lock' : 'Acquire ' + owner + ' lock' }}
+                    </button>
+                }
+                <button bx-button type="button" variant="tonal" color="grayscale" [disabled]="locks().length === 0" (click)="releaseLocks()">
+                    Release demo locks
+                </button>
+            </bx-stack>
+        </bx-stack>
+    </bx-card>
+    <bx-grid minColumnWidth="16rem">
+        @for (owner of owners; track owner) {
+            <bx-card [title]="owner === 'first' ? 'First owner' : 'Second owner'">
+                <bx-stack [gap]="4">
+                    <bx-tag
+                        [text]="locks().includes(owner) ? 'Lock acquired' : 'Lock released'"
+                        [leadingIcon]="locks().includes(owner) ? 'lock' : 'lock-open'"
+                        [color]="locks().includes(owner) ? 'warn' : 'neutral'"
+                        [focusable]="false" />
+                    <p>Each owner keeps a stable ID and releases only its own lock.</p>
+                </bx-stack>
+            </bx-card>
+        }
+    </bx-grid>
+    <p>Touch input stays enabled. Leaving this example releases its two locks; other overlays keep their own locks.</p>
+</bx-stack>

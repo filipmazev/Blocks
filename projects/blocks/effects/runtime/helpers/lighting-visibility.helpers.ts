@@ -78,9 +78,12 @@ export function lightingVisibility(doc: Document, view: Window) {
       index += shadowElements.length;
     }
 
-    hitStacks.set(key, elements);
+    // Transparent dismissal backdrops block input, but do not cover the pixels used by lighting.
+    const painted = elements.filter((element) => !element.matches('.cdk-overlay-transparent-backdrop') || Number(style(element).opacity) !== 0);
 
-    return elements;
+    hitStacks.set(key, painted);
+
+    return painted;
   };
 
   const ambientBoundary = (element: Element): HTMLElement => {
@@ -204,12 +207,12 @@ export function lightingVisibility(doc: Document, view: Window) {
         return exposed(origin as HTMLElement, rect.left + rect.width / 2, rect.top + rect.height / 2, rect);
       }
 
-      const behind = doc.elementFromPoint(px, py);
+      const behind = elementsAt(px, py)[0];
 
       return !!behind && ambientBoundary(behind) === ambientBoundary(element);
     }
 
-    const hit = doc.elementFromPoint(px, py);
+    const hit = elementsAt(px, py)[0];
 
     return !!hit && (hit === element || element.contains(hit));
   };

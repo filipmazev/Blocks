@@ -1,15 +1,14 @@
-import { SemanticColorToken } from '@core/types/theme.types';
-import { Color, ThemeColorToken, ThemedColor } from '@core/types/tokens.types';
+import type { Color, CssVariableReference, ThemeColorToken, ThemedColor } from '@core/types/tokens.types';
 
 import * as tokenConsts from '@core/constants/tokens.constants';
 
 /**
- * Type Guard: Detects if a token is a static palette shade (e.g., 'orange-500')
+ * Detects a supported palette shade, including the theme-dependent primary and accent palettes (e.g., 'orange-500').
  *
  * @param token - Candidate token checked against the supported palette-token format.
  */
 export function isPaletteToken(token: Color): token is ThemeColorToken {
-  return /-\d+$/.test(token);
+  return tokenConsts.THEME_COLOR_TOKENS.some((candidate) => candidate === token);
 }
 
 /**
@@ -22,26 +21,25 @@ export function isThemedColor(color: unknown): color is Extract<ThemedColor, obj
 }
 
 /**
- * Returns the correct CSS variable string based on the token type.
+ * Returns a typed CSS variable reference for a semantic role or palette shade. Values follow the nearest applied Blocks theme.
  *
  * @param token - Semantic or palette color token to map to its CSS variable.
  */
-export function resolveTokenToCssVar(token: Color): string {
-  if (isPaletteToken(token)) {
-    return `var(--${tokenConsts.TOKEN_PREFIX}${tokenConsts.TOKEN_DELIMITER}${tokenConsts.TOKEN_COLOR_DELIMITER}${tokenConsts.TOKEN_DELIMITER}${token})`;
-  }
+export function resolveTokenToCssVar(token: Color): CssVariableReference {
+  const key = isPaletteToken(token) ? `${tokenConsts.TOKEN_COLOR_DELIMITER}${tokenConsts.TOKEN_DELIMITER}${token}` : token;
 
-  return `var(--${tokenConsts.TOKEN_PREFIX}${tokenConsts.TOKEN_DELIMITER}${token})`;
+  return `var(--${tokenConsts.TOKEN_PREFIX}${tokenConsts.TOKEN_DELIMITER}${key})` as CssVariableReference;
 }
 
 /**
- * Smartly resolves the complementary background token.
+ * Resolves a companion using the semantic map, or shade 50 for palette shades above 400 and shade 900 otherwise.
+ * Unmapped semantic roles use bg-surface. Companions describe component styling relationships, not guaranteed accessible text pairs.
  *
  * @param token - Color token whose complementary foreground/background role is requested.
  */
 export function getComplementaryToken(token: Color): Color {
   if (!isPaletteToken(token)) {
-    return (tokenConsts.SEMANTIC_PAIRS[token as SemanticColorToken] as Color) || 'surface';
+    return Object.hasOwn(tokenConsts.SEMANTIC_PAIRS, token) ? tokenConsts.SEMANTIC_PAIRS[token as keyof typeof tokenConsts.SEMANTIC_PAIRS] : 'bg-surface';
   }
 
   const parts = token.split(tokenConsts.TOKEN_DELIMITER);
@@ -51,15 +49,17 @@ export function getComplementaryToken(token: Color): Color {
   const shadeNum = parseInt(shade || '500', 10);
   const bgShade = shadeNum > 400 ? 50 : 900;
 
-  return `${palette}-${bgShade}` as Color;
+  return `${palette}${tokenConsts.TOKEN_DELIMITER}${bgShade}` as Color;
 }
 
 /**
- * Provides the inverted value of a given token color
+ * Mirrors a supported palette shade, with special handling for 50 and 1000. Semantic roles remain unchanged.
  *
  * @param token - Palette token whose tonal shade is mirrored.
  */
 export function invertPaletteToken(token: Color): Color {
+  if (!isPaletteToken(token)) return token;
+
   const parts = token.split(tokenConsts.TOKEN_DELIMITER);
 
   if (parts.length < 2) return token;
@@ -78,5 +78,5 @@ export function invertPaletteToken(token: Color): Color {
 
   const finalShade = (tokenConsts.SHADE_NUMBERS as readonly number[]).includes(invertedShade) ? invertedShade : shade;
 
-  return `${base}-${finalShade}` as Color;
+  return `${base}${tokenConsts.TOKEN_DELIMITER}${finalShade}` as Color;
 }

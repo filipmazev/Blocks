@@ -29,18 +29,19 @@ true.
 `search` emits the current string on input and clear. Public methods `clear()`, `focus()`, and `retrySearch()` support integration. `retrySearch()` emits
 `retry` only when a request error exists and the control is editable and idle.
 
-| Input/output       | Default          | Behavior                                                                                               |
-| ------------------ | ---------------- | ------------------------------------------------------------------------------------------------------ |
-| `loading`          | `false`          | Application-owned request state; replaces the search icon with the shared spinner.                     |
-| `pending`          | `false`          | Form validation pending state; also shows busy feedback.                                               |
-| `loadError`        | `undefined`      | `ResolvableText` request failure, independent of form validation. Reveals retry immediately.           |
-| `loadingLabel`     | `undefined`      | Optional visible `ResolvableText` loading message.                                                     |
-| `loadingAriaLabel` | `'Searching'`    | `ResolvableText` announcement when no visible loading message is supplied.                             |
-| `retryLabel`       | `'Retry search'` | `ResolvableText` retry button text. Remains stable during loading.                                     |
-| `retryConfig`      | `{}`             | `ISearchRetryConfig`: optional accessible name, Blocks button variant/color, outline, and CSS classes. |
-| `clearLabel`       | `'Clear search'` | `ResolvableText` accessible clear action name.                                                         |
-| `autocomplete`     | `'off'`          | Native search autocomplete.                                                                            |
-| `retry`            | —                | Emits the current query as a string when retry is requested. Does not also emit `search`.              |
+| Input/output       | Default          | Behavior                                                                                                             |
+| ------------------ | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `loading`          | `false`          | Application-owned request state; replaces the search icon with the shared spinner.                                   |
+| `pending`          | `false`          | Form validation pending state; also shows busy feedback.                                                             |
+| `loadError`        | `undefined`      | `ResolvableText` request failure, independent of form validation. Reveals retry immediately.                         |
+| `loadingLabel`     | `undefined`      | Optional visible `ResolvableText` loading message.                                                                   |
+| `loadingAriaLabel` | `'Searching'`    | `ResolvableText` announcement when no visible loading message is supplied.                                           |
+| `retryLabel`       | `'Retry search'` | `ResolvableText` retry button text. Remains stable during loading.                                                   |
+| `retryConfig`      | `{}`             | `ISearchRetryConfig`: optional accessible name, Blocks button variant/color, outline, and CSS classes.               |
+| `clearLabel`       | `'Clear search'` | `ResolvableText` accessible clear action name.                                                                       |
+| `autocomplete`     | `'off'`          | Native search autocomplete.                                                                                          |
+| `retry`            | —                | Emits the current query as a string when retry is requested. Does not also emit `search`.                            |
+| `compact`          | `false`          | Controls compact field presentation. Automatically enabled when a label is provided; otherwise follows this setting. |
 
 ### Asynchronous requests
 

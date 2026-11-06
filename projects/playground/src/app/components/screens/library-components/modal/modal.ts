@@ -5,14 +5,15 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
+import { BreakpointKey, BREAKPOINTS } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { PageContainer } from '@filip.mazev/blocks/primitives';
 
-import { BREAKPOINTS } from '@core/constants/window-dimension.constants';
 import { Button } from '@forms/components/button/button';
 import { Checkbox } from '@forms/components/checkbox/checkbox';
 import { InputField } from '@forms/components/input-field/input-field';
 import { Select } from '@forms/components/select/select';
-import { BxSelectOption } from '@forms/types/select-option.types';
+import { IBxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
@@ -30,7 +31,7 @@ import { ModalConfigFormControls } from '@playground/types/form.types';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [BxSurfaceDirective, RouterLink, CommonModule, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
+  imports: [PageContainer, BxSurfaceDirective, RouterLink, CommonModule, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './modal.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './modal.scss'
@@ -39,15 +40,15 @@ export class Modal {
   private readonly modalService = inject(ModalService);
 
   protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
-  protected readonly layoutSelectOptions: BxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
+  protected readonly layoutSelectOptions: IBxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
     label: layout
       .split('-')
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' '),
     value: layout
   }));
-  protected readonly breakpointSelectOptions: BxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];
-  protected readonly breakpointKeys: ('sm' | 'md' | 'lg' | 'xl' | 'xs' | '2xl' | '3xl' | '4xl')[] = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
+  protected readonly breakpointSelectOptions: IBxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];
+  protected readonly breakpointKeys: BreakpointKey[] = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
   protected readonly form: FormGroup<ModalConfigFormControls>;
 
   protected readonly resultMessage: WritableSignal<string> = signal('Open a modal to preview its layout and close behavior.');

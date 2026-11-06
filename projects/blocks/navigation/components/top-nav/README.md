@@ -158,9 +158,10 @@ does not fit, including changes from translation, slot content, fonts, resizing,
 scrollbar. A compact slot that shrinks its brand/actions does not cause repeated expand/collapse feedback.
 
 Both presentations use one dropdown panel. The first disclosure opens it below the bar using `MenuTriggerDirective` and the existing overlay context. Further
-disclosures replace its list; recursive overlays never accumulate. Back and the clickable ancestor path remain above the scrolling list. Ancestor buttons open
-their submenu panels without navigating to their pages, and the parent's heading remains a route link. Back restores the previous list's scroll and disclosure
-focus. The browsing path survives presentation changes; the panel can reattach to the compact control when its former origin disappears.
+disclosures replace its list; recursive overlays never accumulate. Back and the ancestor path remain above the scrolling list. The first, section-labelled
+action returns to the full navigation root and reveals the item that opened the branch unless that section's own list was explicitly opened. Ancestor buttons
+open their submenu panels without navigating to their pages, and the parent's heading remains a route link. Back restores the previous list's scroll and
+disclosure focus. The browsing path survives presentation changes; the panel can reattach to the compact control when its former origin disappears.
 
 Search always renders flat direct matches with muted parent paths. It does not open nested panels or color ancestors as selected. After navigating to a result,
 clearing search opens its containing submenu and scrolls the selected row into view while retaining search-field focus. Without a successful selection it

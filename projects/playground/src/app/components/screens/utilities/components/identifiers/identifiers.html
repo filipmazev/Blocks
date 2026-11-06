@@ -1,0 +1,20 @@
+<bx-stack [gap]="5">
+    <bx-card title="Generate a version-4 UUID">
+        <bx-stack [gap]="4">
+            <p>Create identifiers for controls, overlays, or shared lock owners.</p>
+            <output class="identifier" aria-label="Generated UUID" aria-live="polite">{{ identifier() }}</output>
+            <bx-stack direction="horizontal" [wrap]="true">
+                <button bx-button type="button" variant="tonal" (click)="generateIdentifier()">Generate another UUID</button>
+            </bx-stack>
+        </bx-stack>
+    </bx-card>
+    <bx-card title="Stable instance identifier">
+        <bx-stack [gap]="3">
+            <code class="identifier" data-owner-id>{{ ownerId }}</code>
+            <p>This ID is generated once for this demo instance. Generate another UUID above and compare: the owner ID stays the same.</p>
+        </bx-stack>
+    </bx-card>
+    <bx-alert
+        title="Generate once, reuse through cleanup"
+        message="Keep owner IDs in instance fields. Generating them in a template or a derived computation can break the connection between acquisition and cleanup." />
+</bx-stack>

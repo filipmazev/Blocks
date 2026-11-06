@@ -160,21 +160,6 @@
     padding: spacing(3);
 }
 
-.bx-nav-flyout {
-    display: flex;
-    box-sizing: border-box;
-    width: var(--bx-side-nav-menu-width, 17rem);
-    max-width: calc(100dvw - #{spacing(4)});
-    max-height: min(var(--bx-side-nav-menu-max-height, 32rem), calc(100dvh - #{spacing(4)}));
-    min-height: 0;
-    overflow: hidden;
-    background: var(--bx-bg-surface);
-    color: var(--bx-text-primary);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(lg);
-    box-shadow: shadow(lg);
-}
-
 .bx-nav-backdrop {
     --bx-modal-backdrop-z-index: #{z(fixed)};
     --bx-modal-backdrop-background: var(--bx-side-nav-backdrop, var(--bx-backdrop-color));

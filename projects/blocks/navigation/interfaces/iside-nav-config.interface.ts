@@ -1,7 +1,5 @@
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
 
-import { SideNavSubmenuMode } from '@navigation/types/side-nav.types';
-
 import { INavigationViewConfig } from './inavigation-view-config.interface';
 
 /** Shared or per-instance side-nav configuration. Instance values override application defaults. */
@@ -20,10 +18,6 @@ export interface ISideNavConfig extends INavigationViewConfig {
   persistenceKey?: string;
   /** Automatic mobile breakpoint from Blocks dimensions. Defaults to lg. */
   mobileBreakpoint?: keyof WindowDimensionsService['breakpoints'];
-  /** Submenu layout breakpoint from Blocks dimensions. Defaults to xl; automatic mode uses inline levels at or below it. */
-  submenuBreakpoint?: keyof WindowDimensionsService['breakpoints'];
-  /** Optional submenu presentation. Defaults to auto, measuring the viewport and an inline panel's containing layout. Mobile always uses inline levels. */
-  submenuMode?: SideNavSubmenuMode;
   /** Optional mobile override for embedded layouts and demos. Omit for automatic viewport detection. */
   mobile?: boolean;
   /** Show the built-in mobile hamburger. Defaults to true; false requires an application trigger calling open/toggle. */

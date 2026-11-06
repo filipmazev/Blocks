@@ -11,7 +11,7 @@ import type { ReleaseChannel } from '@playground/components/screens/release-note
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Button, IBxSelectOption, Select } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { Alert, Tag } from '@filip.mazev/blocks/primitives';
+import { Alert, PageContainer, Tag } from '@filip.mazev/blocks/primitives';
 
 import { DEFAULT_RELEASE_VERSION, RELEASE_NOTES } from '@playground/components/screens/release-notes/constants/release-notes.constants';
 import { Readme } from '@playground/components/shared/readme/readme';
@@ -20,7 +20,7 @@ import { PackageReleaseService } from '@playground/services/package-release.serv
 
 @Component({
   selector: 'app-release-notes',
-  imports: [RouterLink, BxSurfaceDirective, Button, Select, Icon, Tag, Alert, Readme],
+  imports: [PageContainer, RouterLink, BxSurfaceDirective, Button, Select, Icon, Tag, Alert, Readme],
   templateUrl: './release-notes.html',
   styleUrl: './release-notes.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -8,6 +8,6 @@ export interface IThemingServicePalettesState {
   label: string;
   /** CSS class that activates this palette on the theme host. */
   className: string;
-  /** Primary and accent CSS colors, in that order, for a two-color palette preview. */
+  /** Two CSS swatch colors in the theme engine's configured preview order; defaults to brand then accent. */
   colors: readonly [string, string];
 }

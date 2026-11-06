@@ -11,7 +11,6 @@
     <bx-checkbox [label]="text().right" [(checked)]="right" />
     <bx-checkbox [label]="text().rail" [checked]="collapsed()" (checkedChange)="collapsed.set($event)" />
     <bx-checkbox [label]="text().mobile" [(checked)]="mobile" />
-    <bx-checkbox [label]="text().adjacent" [(checked)]="adjacent" />
     <bx-checkbox [label]="text().search" [(checked)]="searchable" />
     <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
     <bx-checkbox [label]="text().custom" [(checked)]="custom" />
@@ -47,7 +46,7 @@
         }
         <output aria-live="polite">{{ selection() }}</output>
         <p>{{ text().keyboard }}</p>
-        <p>{{ nav.isInlineSubmenus() ? text().inlineMode : text().flyoutMode }}</p>
+        <p>{{ text().inlineMode }}</p>
     </div>
 </div>
 <ng-template #customItem let-item let-compact="collapsed"

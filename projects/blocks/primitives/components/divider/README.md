@@ -39,4 +39,4 @@ required.
 
 ## Playground
 
-`/components/divider` includes live examples and shared appearance controls.
+`/components/layout/divider` includes live examples and shared appearance controls.

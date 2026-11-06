@@ -16,6 +16,8 @@ import {
   DropdownDirective,
   Menu,
   MenuItem,
+  PageContainer,
+  PageHeader,
   Tab,
   TabContentDirective,
   Tabs,
@@ -29,6 +31,7 @@ import { IComponentDialogData } from '@playground/components/screens/library-com
 import { EssentialsExamples } from '@playground/components/screens/library-components/essentials-examples/essentials-examples';
 import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
 import { MenuShortcutExamples } from '@playground/components/screens/library-components/menu-shortcut-examples/menu-shortcut-examples';
+import { PageExamples } from '@playground/components/screens/library-components/page-examples/page-examples';
 import { SearchExamples } from '@playground/components/screens/library-components/search-examples/search-examples';
 import { SideNavExamples } from '@playground/components/screens/library-components/side-nav-examples/side-nav-examples';
 import { TagExamples } from '@playground/components/screens/library-components/tag-examples/tag-examples';
@@ -46,6 +49,9 @@ import { ComponentDialog } from './component-dialog';
 @Component({
   selector: 'app-component-demo',
   imports: [
+    PageExamples,
+    PageContainer,
+    PageHeader,
     Highlight,
     RouterLink,
     FormExamples,

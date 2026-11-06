@@ -22,6 +22,11 @@ import { Accordion, Collapsible } from '@filip.mazev/blocks/primitives';
 `multiple` defaults to false. `collapseAll()` closes every child. Import `Collapsible` for the `bx-accordion-item` selector; it exposes the same inputs and
 `expanded` model as [Collapsible](../collapsible/README.md).
 
+Use each item's `titleTemplate` to add noninteractive heading content such as number-only Blocks tags.
+
+Use `trailingTemplate` for status tags or other noninteractive content at the heading's logical end, before its disclosure icon. It receives the same typed
+context as `titleTemplate`. `/tokens` demonstrates compact palette headings with current-theme and companion tags.
+
 Place items directly inside the accordion. Nested accordions coordinate their own items. Single mode reconciles programmatic expanded-state changes and
 initially open children.
 

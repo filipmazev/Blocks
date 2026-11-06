@@ -5,25 +5,9 @@
     min-inline-size: 0;
 }
 
-.release-page {
-    max-inline-size: 70rem;
-    margin-inline: auto;
-    color: var(--bx-text-primary);
-}
-
 .unpublished-banner {
     display: block;
     margin-block-end: spacing(6);
-}
-
-.page-heading {
-    margin-block-end: spacing(8);
-}
-
-h1 {
-    margin-block: 0 spacing(3);
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
-    line-height: 1.2;
 }
 
 .release-controls {
@@ -110,10 +94,6 @@ code {
 }
 
 @include respond-down(sm) {
-    .page-heading {
-        margin-block-end: spacing(6);
-    }
-
     .channel-select,
     .version-select {
         flex-basis: 100%;

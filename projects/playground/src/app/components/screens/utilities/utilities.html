@@ -1,232 +1,44 @@
-<article class="utilities" aria-labelledby="utilities-title">
-    <header class="page-heading">
-        <p class="eyebrow">Blocks foundations</p>
-        <h1 id="utilities-title">Utilities</h1>
-        <p>Explore viewport signals, device detection, shared scroll locks, identifiers, color tokens, and overlay positioning in one place.</p>
-        <p>
-            Related guides: <a routerLink="/appearance">appearance and reduced motion</a>, <a routerLink="/components/menu-item">keyboard shortcuts</a>, and
-            <a routerLink="/components/form-field">form integration</a>.
-        </p>
-    </header>
+<bx-page-container pageDescription="Explore viewport signals, device detection, scroll locking, and shared helpers through focused examples.">
+    <bx-stack [gap]="6">
+        <bx-stack direction="responsive" align="center" justify="between" [gap]="3">
+            <bx-search-input
+                class="utility-search"
+                ariaLabel="Search utilities"
+                placeholder="Search utilities or API names…"
+                subscriptSizing="dynamic"
+                [value]="query()"
+                (valueChange)="query.set($event ?? '')" />
+            <p class="result-count" role="status">{{ examples().length }} utilities</p>
+        </bx-stack>
 
-    <div class="demo-grid">
-        <section aria-labelledby="viewport-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="viewport-title">Viewport and breakpoints</h2>
-                <p>Resize the window or change browser zoom. Values are CSS pixels and describe the viewport.</p>
-                <dl>
-                    <div>
-                        <dt>Width</dt>
-                        <dd data-viewport-width>{{ windowDimensionsService.dimensions().width }} px</dd>
-                    </div>
-                    <div>
-                        <dt>Height</dt>
-                        <dd>{{ windowDimensionsService.dimensions().height }} px</dd>
-                    </div>
-                    <div>
-                        <dt>Current breakpoint</dt>
-                        <dd data-breakpoint>{{ windowDimensionsService.currentBreakpoint() ?? 'Unavailable during SSR' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Breakpoint minimum</dt>
-                        <dd>{{ windowDimensionsService.currentBreakpointValue() ?? 'Unavailable' }} px</dd>
-                    </div>
-                    <div>
-                        <dt>Mobile viewport (below md)</dt>
-                        <dd>{{ windowDimensionsService.isMobile() ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Between md and xl</dt>
-                        <dd>{{ windowDimensionsService.isBetween('md', 'xl') ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>At least lg</dt>
-                        <dd>{{ windowDimensionsService.isAtLeast('lg') ? 'Yes' : 'No' }}</dd>
-                    </div>
-                </dl>
-                <ul class="breakpoints" aria-label="Shared breakpoint minimums">
-                    @for (entry of breakpointEntries; track entry[0]) {
-                        <li [class.current]="windowDimensionsService.currentBreakpoint() === entry[0]">
-                            <strong>{{ entry[0] }}</strong> {{ entry[1] }} px
-                            @if (windowDimensionsService.currentBreakpoint() === entry[0]) {
-                                <span>(current)</span>
-                            }
-                        </li>
-                    }
-                </ul>
-                <h3>Responsive value</h3>
-                <p>
-                    <code>resolveResponsiveValue({{ '{ md: 2, xl: 3 }' }}, 1)</code> selects {{ columns() }} columns.
-                </p>
-                <div class="responsive-preview" [style.grid-template-columns]="'repeat(' + columns() + ', minmax(0, 1fr))'">
-                    @for (item of previewItems; track item) {
-                        <span>{{ item }}</span>
-                    }
-                </div>
-            </bx-container>
+        <bx-grid minColumnWidth="20rem" [gap]="4">
+            @for (entry of examples(); track entry.id) {
+                <bx-card class="utility-card" [title]="entry.title" [headingLevel]="2">
+                    <bx-stack [gap]="4">
+                        <bx-stack direction="horizontal" align="center" [gap]="3">
+                            <bx-icon size="24" [name]="entry.icon" />
+                            <bx-tag text="Core" size="small" color="neutral" [focusable]="false" />
+                        </bx-stack>
+                        <p>{{ entry.description }}</p>
+                        <code>{{ entry.symbol }}</code>
+                    </bx-stack>
+                    <a bxCardFooter bx-button variant="tonal" [routerLink]="['/utilities', entry.id]" [attr.aria-label]="'Explore ' + entry.title">
+                        Explore utility <bx-icon name="arrow-right" size="16" />
+                    </a>
+                </bx-card>
+            }
+        </bx-grid>
+        @if (!examples().length) {
+            <bx-alert title="No utilities found" message="Try another name or clear your search to browse all utilities." />
+            <button bx-button type="button" variant="tonal" (click)="query.set('')">Clear search</button>
+        }
+
+        <bx-alert
+            title="Explore the foundations"
+            message="All examples follow your active Blocks theme. Each utility has a dedicated demo and guide in the Utilities navigation." />
+
+        <section class="utility-documentation" aria-label="Utilities guide and coverage">
+            <app-readme path="projects/playground/src/app/components/screens/utilities/README.md" />
         </section>
-
-        <section aria-labelledby="device-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="device-title">Device detection</h2>
-                <p>
-                    Device categories use browser identity and touch hints. Resizing a desktop window changes viewport signals, while its device category stays
-                    desktop.
-                </p>
-                <dl>
-                    <div>
-                        <dt>Device category</dt>
-                        <dd data-device-category>{{ deviceCategory() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Desktop OS</dt>
-                        <dd>{{ deviceState().desktopOS ?? 'Not detected' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Mobile OS</dt>
-                        <dd>{{ deviceState().mobileOS ?? 'Not detected' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Apple device</dt>
-                        <dd>{{ deviceState().isAppleDevice ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Android device</dt>
-                        <dd>{{ deviceState().isAndroidDevice ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Windows desktop</dt>
-                        <dd>{{ deviceState().isWindowsDesktop ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Linux or Unix desktop</dt>
-                        <dd>{{ deviceState().isLinuxOrUnixDesktop ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Unknown mobile OS</dt>
-                        <dd>{{ deviceState().isUnknownMobileDevice ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Screen orientation</dt>
-                        <dd data-orientation>{{ orientation() }}</dd>
-                    </div>
-                </dl>
-                <button bx-button type="button" variant="tonal" (click)="refreshDevice()">Refresh detection</button>
-                <p>
-                    Screen Orientation change events refresh this demo. The service returns snapshots and orientation methods, so OnPush consumers own refresh
-                    triggers.
-                </p>
-            </bx-container>
-        </section>
-
-        <section class="scroll-demo" aria-labelledby="scroll-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="scroll-title">Shared scroll locking</h2>
-                <p>Acquire both locks, then release one. Page scrolling stays locked until the final owner releases it.</p>
-                <div class="actions" role="group" aria-label="Demo scroll lock owners">
-                    <button bx-button type="button" [attr.aria-pressed]="locks().includes('first')" (click)="toggleLock('first')">
-                        {{ locks().includes('first') ? 'Release first lock' : 'Acquire first lock' }}
-                    </button>
-                    <button bx-button type="button" [attr.aria-pressed]="locks().includes('second')" (click)="toggleLock('second')">
-                        {{ locks().includes('second') ? 'Release second lock' : 'Acquire second lock' }}
-                    </button>
-                    <button bx-button type="button" variant="text" [disabled]="locks().length === 0" (click)="releaseLocks()">Release demo locks</button>
-                </div>
-                <p class="status" role="status">
-                    Demo owners: {{ locks().length }}. Page scrolling: {{ scrollLockService.isScrollDisabled() ? 'locked' : 'available' }}.
-                </p>
-                <p>Touch input remains enabled for this example. Leaving this page releases its two locks; other overlays keep their own locks.</p>
-            </bx-container>
-        </section>
-
-        <section aria-labelledby="identifier-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="identifier-title">Stable owner identifiers</h2>
-                <p>
-                    <code>uuidv4()</code> creates an ID for a control, overlay, or scroll-lock owner. Generate each owner's ID once and reuse it through
-                    cleanup.
-                </p>
-                <output class="identifier" aria-label="Generated UUID" aria-live="polite">{{ identifier() }}</output>
-                <button bx-button type="button" variant="tonal" (click)="generateIdentifier()">Generate another UUID</button>
-                <p>This preview changes independently of the scroll-lock IDs.</p>
-            </bx-container>
-        </section>
-
-        <section aria-labelledby="tokens-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="tokens-title">Color-token helpers</h2>
-                <bx-select label="Color token" [options]="colorTokens" [value]="colorToken()" (valueChange)="setColorToken($event)" />
-                <div class="token-swatch" aria-hidden="true" [style.background]="cssVariable()"></div>
-                <dl>
-                    <div>
-                        <dt>CSS variable</dt>
-                        <dd>{{ cssVariable() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Palette token</dt>
-                        <dd>{{ paletteToken() ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Complementary token</dt>
-                        <dd>{{ complementaryToken() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Inverted palette token</dt>
-                        <dd>{{ invertedToken() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Recognizes light/dark object</dt>
-                        <dd>{{ themedColor() ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Restore carbon-cobalt</dt>
-                        <dd>{{ restoredPalette }}</dd>
-                    </div>
-                    <div>
-                        <dt>Restore unknown-palette</dt>
-                        <dd>{{ unknownPalette }}</dd>
-                    </div>
-                </dl>
-                <p>Semantic CSS variables follow the active theme. Helper results are token mappings; check contrast in your application.</p>
-            </bx-container>
-        </section>
-
-        <section aria-labelledby="overlay-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="overlay-title">Overlay infrastructure</h2>
-                <p>Preview a connected position strategy with origin tracking and inherited theme. Available viewport space can change the final placement.</p>
-                <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
-                <div class="overlay-origin">
-                    <button
-                        bx-button
-                        type="button"
-                        variant="tonal"
-                        [attr.aria-expanded]="overlayOpen()"
-                        [attr.aria-describedby]="overlayOpen() ? overlayId : null"
-                        (click)="toggleOverlay($event)"
-                        (blur)="closeOverlay()">
-                        {{ overlayOpen() ? 'Hide position preview' : 'Show position preview' }}
-                    </button>
-                </div>
-                <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
-                <p>
-                    Use <a routerLink="/components/popover">Popover</a>, <a routerLink="/components/dropdown">Dropdown</a>, or
-                    <a routerLink="/components/tooltip-directive">Tooltip</a> for ready-made interactions.
-                </p>
-            </bx-container>
-        </section>
-    </div>
-
-    <section class="documentation" aria-label="Utilities documentation and source">
-        <app-component-info readmePath="projects/playground/src/app/components/screens/utilities/README.md" [codeFiles]="codeFiles" />
-    </section>
-</article>
-
-<ng-template #overlayTemplate>
-    <bx-container size="full" class="utility-overlay">
-        <div role="tooltip" [id]="overlayId">
-            <strong>Positioned with Core utilities</strong>
-            <p>This surface follows its origin and inherits the active Blocks theme. Preferred placement: {{ placement() }}.</p>
-        </div>
-    </bx-container>
-</ng-template>
+    </bx-stack>
+</bx-page-container>

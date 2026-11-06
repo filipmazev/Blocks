@@ -1,0 +1,43 @@
+<bx-stack [gap]="5">
+    <bx-grid minColumnWidth="18rem">
+        <bx-card title="Choose a color token">
+            <bx-stack [gap]="4">
+                <bx-select label="Color token" [options]="colorTokens" [value]="colorToken()" (valueChange)="setColorToken($event)" />
+                <div class="token-swatch" aria-hidden="true" [style.background]="cssVariable()"></div>
+                <code>{{ cssVariable() }}</code>
+                <p>The swatch follows the active theme. Token mappings below remain available as text.</p>
+                <a bx-button variant="tonal" routerLink="/tokens">Explore the complete token catalog</a>
+            </bx-stack>
+        </bx-card>
+        <bx-card title="Helper results">
+            <dl>
+                <div>
+                    <dt>Palette token</dt>
+                    <dd>{{ paletteToken() ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Complementary token</dt>
+                    <dd>{{ complementaryToken() }}</dd>
+                </div>
+                <div>
+                    <dt>Inverted palette token</dt>
+                    <dd>{{ invertedToken() }}</dd>
+                </div>
+                <div>
+                    <dt>Recognizes light/dark object</dt>
+                    <dd>{{ themedColor() ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Restore carbon-cobalt</dt>
+                    <dd>{{ restoredPalette }}</dd>
+                </div>
+                <div>
+                    <dt>Restore unknown-palette</dt>
+                    <dd>{{ unknownPalette }}</dd>
+                </div>
+            </dl>
+        </bx-card>
+    </bx-grid>
+    <bx-alert
+        message="Companion and inverted mappings describe styling relationships. Check the contrast of your final foreground and background combination." />
+</bx-stack>

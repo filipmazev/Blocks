@@ -1,8 +1,9 @@
 <div class="search-demo">
     <bx-search-input
         subscriptSizing="dynamic"
-        [label]="{ key: 'searchLabel' }"
+        [label]="showLabel() ? { key: 'searchLabel' } : undefined"
         [placeholder]="{ key: 'searchPlaceholder' }"
+        [compact]="compact()"
         [value]="mockSearchStore.query()"
         [loading]="mockSearchStore.loading()"
         [loadError]="mockSearchStore.error()"
@@ -15,6 +16,7 @@
         [disabled]="disabled()"
         (search)="mockSearchStore.search($event)"
         (retry)="mockSearchStore.search($event)" />
+
     <div class="search-actions">
         <button
             bx-button
@@ -25,14 +27,20 @@
             (click)="mockSearchStore.search(mockSearchStore.query(), true)">
             Fail this search
         </button>
+
+        <bx-checkbox label="Show label" subscriptSizing="dynamic" [(checked)]="showLabel" />
+        <bx-checkbox label="Compact" subscriptSizing="dynamic" [(checked)]="compact" />
         <bx-checkbox label="Show loading text" subscriptSizing="dynamic" [checked]="showLoadingText()" (checkedChange)="changeLoadingText($event)" />
         <bx-checkbox label="Readonly" subscriptSizing="dynamic" [(checked)]="readOnly" />
         <bx-checkbox label="Disabled" subscriptSizing="dynamic" [(checked)]="disabled" />
     </div>
+
     <p>
         Requests debounce for 250ms and take 800ms. Type quickly to cancel older requests, or enter an unmatched term for empty results. Failure keeps the last
-        successful results. Use Retry request to try the same query again. Enabling Show loading text previews another request.
+        successful results. Use Retry request to try the same query again. Enabling Show loading text previews another request. When a label is displayed,
+        compact mode is automatically enabled regardless of the Compact setting.
     </p>
+
     <section class="search-results" aria-label="Search results" [attr.aria-busy]="mockSearchStore.loading()">
         <p>Last completed search: {{ mockSearchStore.completedQuery() || 'all components' }} · {{ mockSearchStore.results().length }} results</p>
         <ul>
@@ -45,6 +53,7 @@
             }
         </ul>
     </section>
+
     <ul class="search-events" aria-label="Request events">
         @for (event of mockSearchStore.requests(); track $index) {
             <li>{{ event }}</li>

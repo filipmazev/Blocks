@@ -3,10 +3,8 @@ import type { InputSignal, Signal, WritableSignal } from '@angular/core';
 import { afterNextRender, ChangeDetectionStrategy, Component, effect, inject, Injector, input, signal, viewChildren } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import type { BxSelectOption } from '@forms/types/select-option.types';
-
 import { Color } from '@filip.mazev/blocks/core';
-import { Autocomplete, Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
+import { Autocomplete, Button, Checkbox, IBxSelectOption, InputField, Select } from '@filip.mazev/blocks/forms';
 import {
   Accordion,
   Alert,
@@ -20,7 +18,8 @@ import {
   Popover,
   PopoverDirective,
   Skeleton,
-  Stack
+  Stack,
+  Tag
 } from '@filip.mazev/blocks/primitives';
 
 import { AUTOCOMPLETE_PAGE_SIZES } from '@playground/components/screens/library-components/essentials-examples/constants/autocomplete-options.constants';
@@ -47,7 +46,8 @@ import { AutocompleteDemoService } from '@playground/components/screens/library-
     Popover,
     PopoverDirective,
     Skeleton,
-    Stack
+    Stack,
+    Tag
   ],
   providers: [AutocompleteDemoService],
   templateUrl: './essentials-examples.html',
@@ -62,7 +62,7 @@ export class EssentialsExamples {
 
   private readonly chips: Signal<readonly Chip[]> = viewChildren(Chip);
 
-  protected readonly pageSizes: readonly BxSelectOption<number>[] = AUTOCOMPLETE_PAGE_SIZES;
+  protected readonly pageSizes: readonly IBxSelectOption<number>[] = AUTOCOMPLETE_PAGE_SIZES;
 
   protected readonly selected: WritableSignal<boolean> = signal(false);
 
@@ -80,7 +80,7 @@ export class EssentialsExamples {
 
   protected readonly destination: FormControl<string | null> = new FormControl<string | null>('');
   protected readonly chipConfig: { color: 'accent' } = { color: 'accent' as const };
-  protected readonly cardHighlightOptions: readonly BxSelectOption<Color>[] = CARD_HIGHLIGHT_OPTIONS;
+  protected readonly cardHighlightOptions: readonly IBxSelectOption<Color>[] = CARD_HIGHLIGHT_OPTIONS;
 
   protected readonly cardHighlight: WritableSignal<Color> = signal<Color>('accent');
 

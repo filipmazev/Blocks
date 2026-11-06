@@ -124,6 +124,7 @@
                     <bx-search-input
                         #searchInput
                         [value]="searchValue()"
+                        [compact]="true"
                         [placeholder]="resolvedSearchPlaceholder()"
                         [ariaLabel]="resolvedSearchPlaceholder()"
                         (search)="onSearchChange($event)"

@@ -1,0 +1,50 @@
+<bx-stack [gap]="5">
+    <bx-grid minColumnWidth="16rem">
+        <bx-card title="Device snapshot">
+            <bx-stack [gap]="4">
+                <p class="metric" data-device-category>{{ deviceCategory() }}</p>
+                <bx-tag leadingIcon="smartphone" data-orientation [text]="orientation() + ' screen'" [focusable]="false" />
+                <dl>
+                    <div>
+                        <dt>Desktop OS</dt>
+                        <dd>{{ deviceState().desktopOS ?? 'Not detected' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Mobile OS</dt>
+                        <dd>{{ deviceState().mobileOS ?? 'Not detected' }}</dd>
+                    </div>
+                </dl>
+                <bx-stack direction="horizontal">
+                    <button bx-button type="button" variant="tonal" (click)="refreshDevice()">Refresh detection</button>
+                </bx-stack>
+            </bx-stack>
+        </bx-card>
+        <bx-card title="Platform hints">
+            <dl>
+                <div>
+                    <dt>Apple device</dt>
+                    <dd>{{ deviceState().isAppleDevice ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Android device</dt>
+                    <dd>{{ deviceState().isAndroidDevice ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Windows desktop</dt>
+                    <dd>{{ deviceState().isWindowsDesktop ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Linux or Unix desktop</dt>
+                    <dd>{{ deviceState().isLinuxOrUnixDesktop ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Unknown mobile OS</dt>
+                    <dd>{{ deviceState().isUnknownMobileDevice ? 'Yes' : 'No' }}</dd>
+                </div>
+            </dl>
+        </bx-card>
+    </bx-grid>
+    <bx-alert
+        title="Device identity and viewport size are separate"
+        message="Resizing a desktop window changes its viewport, while its device category stays desktop. This demo refreshes on screen orientation changes; you can also refresh it manually." />
+</bx-stack>

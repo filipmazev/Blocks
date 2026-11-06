@@ -4,11 +4,6 @@
     display: block;
 }
 
-.catalog-container {
-    max-width: 88rem;
-    margin-inline: auto;
-}
-
 .filter-bar {
     display: grid;
     grid-template-columns: minmax(12rem, 1fr) 9rem 9rem;
@@ -106,14 +101,8 @@
     text-align: center;
 }
 
-.icon-documentation {
-    border-top: 1px solid var(--bx-border-default);
-    padding-block: spacing(6);
-}
-
-.icon-documentation summary {
-    cursor: pointer;
-    margin-bottom: spacing(4);
+.catalog-documentation {
+    margin-block: spacing(6);
 }
 
 @include respond-down(sm) {

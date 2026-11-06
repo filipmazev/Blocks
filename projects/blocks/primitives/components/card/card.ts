@@ -76,6 +76,8 @@ export class Card {
   public readonly variant: InputSignal<CardVariant> = input<CardVariant>('outlined');
   /** Optional opaque presentation. Absent follows the global appearance. */
   public readonly opaque: InputSignal<boolean | undefined> = input<boolean | undefined>(undefined);
+  /** Whether the card mounts shared decorative surface effects. Defaults to true; false preserves the themed card styling for dense static collections. */
+  public readonly surfaceEffects: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
   /** Make the whole card an action. Defaults to false; button[bx-card] is always clickable. */
   public readonly clickable: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Controlled selection. Omit for a plain action; bind selectedChange or use [(selected)] to accept toggle requests. */
@@ -101,11 +103,14 @@ export class Card {
   public readonly selectedChange: OutputEmitterRef<boolean> = output<boolean>();
 
   constructor() {
-    injectComponentSurface(() => ({
-      interactive: this.isClickable() && !this.disabled() && !this.isReadonly(),
-      reducedTransparency: this.opaque(),
-      emission: this.isClickable() ? 'var(--bx-card-highlight, var(--bx-primary))' : undefined
-    }));
+    injectComponentSurface(
+      () => ({
+        interactive: this.isClickable() && !this.disabled() && !this.isReadonly(),
+        reducedTransparency: this.opaque(),
+        emission: this.isClickable() ? 'var(--bx-card-highlight, var(--bx-primary))' : undefined
+      }),
+      () => this.surfaceEffects()
+    );
 
     effect(() => {
       if (!this.isClickable() || this.disabled() || this.isReadonly()) this.keyboardPressed.set(false);

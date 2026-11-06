@@ -34,4 +34,4 @@ direction when content should stack on small screens.
 
 ## Playground
 
-`/components/stack` includes live examples and shared appearance controls.
+`/components/layout/stack` includes live examples and shared appearance controls.

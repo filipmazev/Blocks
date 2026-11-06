@@ -1,10 +1,4 @@
-<section class="appearance" aria-labelledby="appearance-title">
-    <header class="page-heading">
-        <p class="eyebrow">Make Blocks your own</p>
-        <h1 id="appearance-title">Appearance</h1>
-        <p>Choose your preferred appearance, shape your surfaces, and find a palette that feels right.</p>
-    </header>
-
+<bx-page-container pageDescription="Configure the shared theme, palette, surfaces, and effects used throughout the playground.">
     <div class="mode-picker" role="group" aria-label="Appearance mode">
         @for (mode of modes(); track mode.value) {
             <bx-card
@@ -209,4 +203,4 @@
         </div>
         <app-readme path="projects/playground/src/app/components/screens/appearance/README.md" />
     </ng-template>
-</section>
+</bx-page-container>

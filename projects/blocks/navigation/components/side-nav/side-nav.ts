@@ -33,7 +33,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Button, SearchInput } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { ModalBackdrop } from '@filip.mazev/blocks/modal';
-import { MenuCascadeService, MenuTriggerDirective, navigateMenuKey } from '@filip.mazev/blocks/primitives';
+import { MenuCascadeService, navigateMenuKey } from '@filip.mazev/blocks/primitives';
 
 import { NavigationItem } from '@navigation/components/shared/navigation-item/navigation-item';
 import { NavigationLevel } from '@navigation/components/shared/navigation-level/navigation-level';
@@ -56,19 +56,7 @@ import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
 @Component({
   selector: 'bx-side-nav',
   exportAs: 'bxSideNav',
-  imports: [
-    NgTemplateOutlet,
-    A11yModule,
-    FormsModule,
-    SearchInput,
-    Button,
-    BxSurfaceDirective,
-    Icon,
-    NavigationItem,
-    NavigationLevel,
-    MenuTriggerDirective,
-    ModalBackdrop
-  ],
+  imports: [NgTemplateOutlet, A11yModule, FormsModule, SearchInput, Button, BxSurfaceDirective, Icon, NavigationItem, NavigationLevel, ModalBackdrop],
   providers: [NavigationStateService, NavigationFocusService],
   templateUrl: './side-nav.html',
   styleUrl: './side-nav.scss',
@@ -85,7 +73,6 @@ import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
   }
 })
 export class SideNav {
-  private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
@@ -101,8 +88,6 @@ export class SideNav {
   protected readonly navigationStateService = inject(NavigationStateService);
   protected readonly navigationFocusService = inject(NavigationFocusService);
 
-  private readonly availableWidth: WritableSignal<number | undefined> = signal<number | undefined>(undefined);
-  private readonly flyoutOrigin: WritableSignal<HTMLElement | undefined> = signal<HTMLElement | undefined>(undefined);
   private readonly saved: WritableSignal<ISideNavSavedState> = signal<ISideNavSavedState>({ sections: {} });
   private readonly loadedKey: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
@@ -111,8 +96,6 @@ export class SideNav {
   private readonly presentation: Signal<string> = computed(() => `${this.isMobile()}:${this.resolvedConfig().position}:${this.resolvedConfig().side}`);
 
   private readonly toggleElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('mobileToggle', { read: ElementRef<HTMLButtonElement> });
-  private readonly submenu: Signal<MenuTriggerDirective | undefined> = viewChild<MenuTriggerDirective>('submenuTrigger');
-  private readonly panel: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('panel');
   private readonly searchInput: Signal<SearchInput | undefined> = viewChild(SearchInput);
   private readonly focusTrap: Signal<CdkTrapFocus | undefined> = viewChild(CdkTrapFocus);
 
@@ -152,22 +135,9 @@ export class SideNav {
     () =>
       !this.isMobile() &&
       !this.navigationStateService.query().trim() &&
-      !(this.isInlineSubmenus() && this.navigationStateService.hasLevel()) &&
+      !this.navigationStateService.hasLevel() &&
       (this.collapsed() ?? this.saved().collapsed ?? this.resolvedConfig().collapsed)
   );
-  /** Resolved submenu presentation, independent of the drawer breakpoint and nesting depth. */
-  public readonly isInlineSubmenus: Signal<boolean> = computed(() => {
-    const config = this.resolvedConfig();
-
-    if (this.isMobile() || config.submenuMode === 'inline') return true;
-
-    if (config.submenuMode === 'flyout') return false;
-
-    const viewport = this.windowDimensionsService.dimensions().width;
-    const width = config.position === 'inline' ? Math.min(viewport, this.availableWidth() ?? viewport) : viewport;
-
-    return width <= this.windowDimensionsService.breakpoints[config.submenuBreakpoint];
-  });
 
   /** Current navigation search text. */
   public readonly query: Signal<string> = this.navigationStateService.query.asReadonly();
@@ -246,6 +216,12 @@ export class SideNav {
         () => {
           if (this.destroyRef.destroyed || !this.isMobile() || !this.mobileOpen()) return;
 
+          if (!this.query().trim() && this.navigationStateService.hasLevel()) {
+            this.navigationFocusService.restore(true, false, true);
+
+            return;
+          }
+
           if (this.navigationStateService.revealItemId()) this.navigationFocusService.restore(true, false, false);
 
           // CDK's automatic capture scrolls clipped ancestors to an off-screen right drawer during its slide.
@@ -267,40 +243,8 @@ export class SideNav {
         if (this.mobileOpen()) this.close();
       });
     });
-    effect(() => {
-      const inline = this.isInlineSubmenus();
-
-      untracked(() => {
-        const focused = this.windowDimensionsService.isBrowser ? this.document.activeElement : null;
-        const focus = !!focused?.closest('.bx-nav-level');
-
-        this.navigationFocusService.remember();
-        this.navigationStateService.inlineLevels.set(inline);
-        this.submenu()?.close();
-
-        if (this.navigationStateService.hasLevel()) this.renderLevel(true, false, focus);
-      });
-    });
-    effect(() => {
-      const hasLevel = this.navigationStateService.hasLevel();
-
-      if (!hasLevel) untracked(() => this.submenu()?.close());
-    });
     effect(() => this.layoutChange.emit(this.layout()));
     this.navigationStateService.expansionRequested.pipe(takeUntilDestroyed()).subscribe((request) => this.openChildren(request));
-    afterNextRender(() => {
-      const view = this.document.defaultView;
-      const parent = this.nativeElement.parentElement;
-
-      if (!view?.ResizeObserver || !parent) return;
-
-      this.availableWidth.set(parent.getBoundingClientRect().width);
-
-      const observer = new view.ResizeObserver(([entry]) => this.availableWidth.set(entry.contentRect.width));
-
-      observer.observe(parent);
-      this.destroyRef.onDestroy(() => observer.disconnect());
-    });
     this.navigationStateService.activated.pipe(takeUntilDestroyed()).subscribe((item) => {
       ++this.renderRevision;
       this.itemSelected.emit(item);
@@ -405,7 +349,6 @@ export class SideNav {
 
     if (next) {
       ++this.renderRevision;
-      this.submenu()?.close();
       this.navigationStateService.search('');
       this.navigationStateService.path.set([]);
       this.navigationStateService.section.set(undefined);
@@ -425,19 +368,8 @@ export class SideNav {
 
     if (!wasSearching) this.navigationFocusService.remember();
 
-    this.submenu()?.close();
     this.navigationStateService.search(query);
-
-    const revealId = this.navigationStateService.revealItemId();
-
-    if (revealId) {
-      this.flyoutOrigin.set(undefined);
-
-      const group = this.navigationStateService.currentGroup() ?? this.visibleGroups().find((entry) => entry.items.some((item) => item.id === revealId));
-
-      if (group && this.sectionCollapsed(group)) this.saved.update((saved) => ({ ...saved, sections: { ...saved.sections, [group.id]: false } }));
-    }
-
+    this.expandRequestedItemSection();
     this.renderLevel(wasSearching && !query.trim(), false, false);
   }
 
@@ -464,22 +396,16 @@ export class SideNav {
   protected navigateLevel(request: INavigationLevelRequest): void {
     this.navigationFocusService.remember();
     this.navigationStateService.navigateLevel(request.breadcrumb);
+
+    if (!this.navigationStateService.hasLevel()) this.expandRequestedItemSection();
+
     this.renderLevel(true, request.keyboard, true);
   }
 
   protected openSection(group: INavigationTreeGroup, event: MouseEvent): void {
     const origin = event.currentTarget as HTMLElement;
 
-    if (this.submenu()?.isOpen() && this.navigationStateService.section() === group.id) {
-      this.submenu()?.close();
-      this.focusMonitor.focusVia(origin, event.detail === 0 ? 'keyboard' : 'program', { preventScroll: true });
-
-      return;
-    }
-
     this.navigationFocusService.remember(origin);
-    this.submenu()?.close();
-    this.flyoutOrigin.set(origin);
     this.navigationStateService.enterSection(group);
     this.renderLevel(false, event.detail === 0, true);
   }
@@ -512,7 +438,15 @@ export class SideNav {
   }
 
   protected panelKey(event: KeyboardEvent): void {
-    if (event.defaultPrevented || event.key !== 'Escape' || !this.mobileOpen() || this.menuCascadeService.hasOpenMenus()) return;
+    if (event.defaultPrevented || event.key !== 'Escape' || this.menuCascadeService.hasOpenMenus()) return;
+
+    if (!this.query().trim() && this.navigationStateService.hasLevel()) {
+      this.back(event);
+
+      return;
+    }
+
+    if (!this.mobileOpen()) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -523,22 +457,19 @@ export class SideNav {
   //#region Helpers
 
   private openChildren(request: INavigationExpandRequest): void {
-    if (!request.inLevel && !this.query().trim() && this.submenu()?.isOpen() && this.navigationStateService.path()[0] === request.item.id) {
-      this.submenu()?.close();
-      this.focusMonitor.focusVia(request.origin, request.keyboard ? 'keyboard' : 'program', { preventScroll: true });
-
-      return;
-    }
-
     this.navigationFocusService.remember(request.origin);
-
-    if (!request.inLevel) {
-      this.submenu()?.close();
-      this.flyoutOrigin.set(request.origin.closest<HTMLElement>('.bx-nav-row') ?? request.origin);
-    }
-
     this.navigationStateService.enter(request.item);
     this.renderLevel(false, request.keyboard, true);
+  }
+
+  private expandRequestedItemSection(): void {
+    const revealId = this.navigationStateService.revealItemId();
+
+    if (!revealId) return;
+
+    const group = this.navigationStateService.currentGroup() ?? this.visibleGroups().find((entry) => entry.items.some((item) => item.id === revealId));
+
+    if (group && this.sectionCollapsed(group)) this.saved.update((saved) => ({ ...saved, sections: { ...saved.sections, [group.id]: false } }));
   }
 
   private renderLevel(restore: boolean, keyboard: boolean, focus: boolean): void {
@@ -548,21 +479,7 @@ export class SideNav {
       () => {
         if (this.destroyRef.destroyed || revision !== this.renderRevision) return;
 
-        const trigger = this.submenu();
-
-        if (!this.query().trim() && this.navigationStateService.hasLevel() && !this.isInlineSubmenus()) {
-          const panel = this.panel()?.nativeElement;
-          const root = Array.from(panel?.querySelectorAll<HTMLElement>('[data-nav-id]') ?? []).find(
-            (row) => row.getAttribute('data-nav-id') === this.navigationStateService.path()[0]
-          );
-          const origin = this.flyoutOrigin()?.isConnected ? this.flyoutOrigin() : (root ?? panel);
-
-          trigger?.open(false, origin);
-        } else trigger?.close();
-
         this.navigationFocusService.restore(restore, keyboard, focus);
-
-        trigger?.reposition();
       },
       { injector: this.injector }
     );

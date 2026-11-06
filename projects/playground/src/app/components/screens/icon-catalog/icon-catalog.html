@@ -1,11 +1,10 @@
-<section class="catalog-container" aria-labelledby="icon-title">
-    <header class="page-heading">
-        <p class="eyebrow">Foundations</p>
-        <h1 id="icon-title">Icons</h1>
-        <p>Find a Lucide icon, tune its proportions, and select it for the usage example.</p>
-    </header>
+<bx-page-container pageDescription="Browse the icon library and try sizes, stroke widths, and themed colors.">
+    <bx-collapsible class="catalog-documentation" title="Icon API and accessibility" [headingLevel]="2">
+        <app-readme path="projects/blocks/icons/components/README.md" />
+    </bx-collapsible>
+
     <div class="filter-bar">
-        <bx-search-input label="Search icons" placeholder="Search by name…" [ngModel]="searchTerm()" (ngModelChange)="search($event)" />
+        <bx-search-input placeholder="Search icons by name…" [ngModel]="searchTerm()" (ngModelChange)="search($event)" />
         <bx-select label="Size" [clearable]="false" [options]="sizeSelectOptions" [ngModel]="selectedSize()" (ngModelChange)="selectedSize.set($event)" />
         <bx-select
             label="Stroke"
@@ -59,8 +58,4 @@
             Next
         </button>
     </nav>
-    <details class="icon-documentation">
-        <summary>Icon API and accessibility</summary>
-        <app-readme path="projects/blocks/icons/components/README.md" />
-    </details>
-</section>
+</bx-page-container>

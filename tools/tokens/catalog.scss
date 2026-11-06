@@ -1,0 +1,23 @@
+@use 'core/styles/index' as bx;
+@use 'core/styles/theme-engine' as engine;
+@use 'core/styles/token-config' as config;
+
+$exports: (
+    export-token('TOKEN_PREFIX', config.$token-prefix),
+    export-token('TOKEN_DELIMITER', config.$token-delimiter),
+    export-token('TOKEN_COLOR_DELIMITER', config.$token-color-delimiter),
+    export-token('FALLBACK_COLOR', config.$fallback-color),
+    export-token('PALETTES', bx.$all-palettes),
+    export-token('THEME_DEFINITIONS', engine.$theme-palettes),
+    export-token('SEMANTIC_KEYS', engine.$required-theme-keys),
+    export-token('SEMANTIC_PAIRS', engine.$semantic-pairs),
+    export-token('SPACING_VALUES', bx.$spacing),
+    export-token('RADIUS_VALUES', bx.$radiuses),
+    export-token('SHADOW_VALUES', bx.$shadows),
+    export-token('Z_INDEX_VALUES', bx.$z-index),
+    export-token('BREAKPOINTS', bx.$breakpoints)
+);
+
+.blocks-catalog-theme {
+    @include bx.bx-theme(bx.$carbon-cobalt-light-theme);
+}

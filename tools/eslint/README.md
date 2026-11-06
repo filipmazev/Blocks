@@ -127,7 +127,8 @@ or test scaffolding.
 ## Generator consistency and compatibility
 
 All TypeScript writers (icons, theme tokens, version constants, and documentation data) use `formatGeneratedTypeScript`, which checks and fixes their output
-with the repository ESLint/Prettier rules before writing. The generator context disables only rules needing a TypeScript project for a file that may not exist
+with the repository ESLint/Prettier rules before writing. It runs Prettier first, avoiding expensive per-difference lint fixes on raw AST/JSON output, then
+applies the complete generator ESLint checks and fixes. The generator context disables only rules needing a TypeScript project for a file that may not exist
 yet; ordinary source validation still checks the written files. CSS writers use `formatGeneratedStyle`. Compiled CSS is excluded from Stylelint source rules and
 still checked by Prettier; its SCSS inputs remain linted.
 

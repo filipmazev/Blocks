@@ -1,0 +1,61 @@
+<bx-stack [gap]="5">
+    <bx-grid minColumnWidth="12rem">
+        <bx-card>
+            <p>Viewport width</p>
+            <p class="metric" data-viewport-width>{{ windowDimensionsService.dimensions().width }} <small>px</small></p>
+            <p>CSS pixels</p>
+        </bx-card>
+        <bx-card>
+            <p>Viewport height</p>
+            <p class="metric">{{ windowDimensionsService.dimensions().height }} <small>px</small></p>
+            <p>CSS pixels</p>
+        </bx-card>
+        <bx-card>
+            <p>Current breakpoint</p>
+            <p class="metric" data-breakpoint>{{ windowDimensionsService.currentBreakpoint() ?? 'SSR' }}</p>
+            <p>Minimum {{ windowDimensionsService.currentBreakpointValue() ?? 'Unavailable' }} px</p>
+        </bx-card>
+    </bx-grid>
+    <bx-card title="Shared breakpoint scale">
+        <bx-stack [gap]="4">
+            <p>Resize the window or change browser zoom. The current breakpoint is marked with a check.</p>
+            <bx-stack direction="horizontal" aria-label="Shared breakpoint minimums" [wrap]="true" [gap]="2">
+                @for (entry of breakpointEntries; track entry[0]) {
+                    <bx-tag
+                        [text]="entry[0] + ' · ' + entry[1] + ' px'"
+                        [color]="windowDimensionsService.currentBreakpoint() === entry[0] ? 'primary' : 'neutral'"
+                        [leadingIcon]="windowDimensionsService.currentBreakpoint() === entry[0] ? 'check' : undefined"
+                        [ariaLabel]="entry[0] + ': ' + entry[1] + ' pixels' + (windowDimensionsService.currentBreakpoint() === entry[0] ? ', current' : '')"
+                        [focusable]="false" />
+                }
+            </bx-stack>
+            <dl>
+                <div>
+                    <dt>Mobile viewport (below md)</dt>
+                    <dd>{{ windowDimensionsService.isMobile() ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Between md and xl</dt>
+                    <dd>{{ windowDimensionsService.isBetween('md', 'xl') ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>At least lg</dt>
+                    <dd>{{ windowDimensionsService.isAtLeast('lg') ? 'Yes' : 'No' }}</dd>
+                </div>
+            </dl>
+        </bx-stack>
+    </bx-card>
+    <bx-card title="Responsive value">
+        <bx-stack [gap]="4">
+            <p>
+                <code>resolveResponsiveValue({{ '{ md: 2, xl: 3 }' }}, 1)</code> selects {{ columns() }} columns.
+            </p>
+            <bx-grid [columns]="columns()" [gap]="3">
+                @for (item of previewItems; track item) {
+                    <span class="preview-cell">{{ item }}</span>
+                }
+            </bx-grid>
+        </bx-stack>
+    </bx-card>
+    <bx-alert message="Viewport signals describe the browser window. Use container-aware layout when a component has less available space." />
+</bx-stack>

@@ -24,10 +24,11 @@ export * from '@core/interfaces/iwindow-dimensions.interface';
 export * from '@core/constants/numeric.constants';
 export * from '@core/constants/scroll-lock.constants';
 export * from '@core/constants/tokens.constants';
-export * from '@core/constants/window-dimension.constants';
+export * from '@core/constants/token-catalog.constants';
+export * from '@core/interfaces/icss-token.interface';
+export * from '@core/types/token-catalog.types';
 
 export * from '@core/types/core.types';
-export * from '@core/types/theme.types';
 export * from '@core/types/tokens.types';
 
 export * from '@core/helpers/core-functions.helpers';

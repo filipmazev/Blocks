@@ -1,0 +1,42 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.section-title {
+    margin: 0 0 #{spacing(2)};
+    color: var(--bx-page-section-color, var(--bx-text-brand));
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.page-title {
+    margin: 0;
+    color: var(--bx-page-title-color, var(--bx-text-heading));
+    font-size: var(--bx-page-title-size, clamp(2rem, 4vw, 3rem));
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.page-description {
+    max-inline-size: var(--bx-page-description-width, 48rem);
+    margin: #{spacing(4)} 0 0;
+    color: var(--bx-page-description-color, var(--bx-text-secondary));
+    line-height: 1.65;
+}
+
+.header-content {
+    margin-block-start: spacing(4);
+
+    &:empty {
+        display: none;
+    }
+}

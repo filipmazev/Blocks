@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { COMPONENT_EXAMPLES } from '@playground/components/screens/library-components/component-demo/component-catalog';
 import { DEFAULT_RELEASE_VERSION } from '@playground/components/screens/release-notes/constants/release-notes.constants';
+import { UTILITY_EXAMPLES } from '@playground/components/screens/utilities/constants/utility-catalog.constants';
 
 import { APP_NAVIGATION } from './app.navigation';
 
@@ -30,7 +31,7 @@ const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
       title: `${entry.title} · Blocks`,
       data: { componentId: entry.id }
     },
-    { label: entry.title, breadcrumb: entry.title, section: entry.group, menu: true, order: index, icon: { name: 'box' } }
+    { label: entry.title, breadcrumb: entry.title, section: entry.group, menu: true, order: index }
   )
 );
 
@@ -38,7 +39,7 @@ export const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
   withInAppNavigation(
     { path: 'home', loadComponent: () => import('@playground/components/screens/home/home').then((m) => m.Home), title: 'Blocks' },
-    { label: 'Home', breadcrumb: 'Home', section: 'Start', icon: { name: 'house' }, menu: true, root: true, order: 1 }
+    { label: 'Home', breadcrumb: 'Home', section: 'Start', menu: true, root: true, order: 1 }
   ),
   withInAppNavigation(
     {
@@ -58,7 +59,24 @@ export const ROUTES: Routes = [
           pathMatch: 'full',
           loadComponent: () => import('@playground/components/screens/library-components/component-demo/component-index').then((m) => m.ComponentIndex)
         },
-        ...componentRoutes
+        withInAppNavigation(
+          {
+            path: 'layout',
+            title: 'Layout · Blocks',
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                loadComponent: () => import('@playground/components/screens/library-components/component-demo/component-index').then((m) => m.ComponentIndex),
+                data: { layout: true }
+              },
+              ...componentRoutes.filter((route) => COMPONENT_EXAMPLES.some((entry) => entry.layout && entry.id === route.path))
+            ]
+          },
+          { label: 'Layout', breadcrumb: 'Layout', section: 'Primitives', menu: true, order: 0 }
+        ),
+        ...componentRoutes.filter((route) => !COMPONENT_EXAMPLES.some((entry) => entry.layout && entry.id === route.path)),
+        ...COMPONENT_EXAMPLES.filter((entry) => entry.layout).map((entry) => ({ path: entry.id, pathMatch: 'full' as const, redirectTo: `layout/${entry.id}` }))
       ]
     },
     { label: 'All components', breadcrumb: 'Components', section: 'Start', menu: true, order: 3 }
@@ -75,23 +93,49 @@ export const ROUTES: Routes = [
         }
       ]
     },
-    { label: 'Release notes', breadcrumb: 'Release notes', section: 'Start', icon: { name: 'history' }, menu: true, order: 4 }
+    { label: 'Release notes', breadcrumb: 'Release notes', section: 'Start', menu: true, order: 4 }
+  ),
+  withInAppNavigation(
+    {
+      path: 'tokens',
+      loadComponent: () => import('@playground/components/screens/token-catalog/token-catalog').then((m) => m.TokenCatalog),
+      title: 'Token Catalog · Blocks'
+    },
+    { label: 'Tokens', breadcrumb: 'Token Catalog', section: 'Core', menu: true, order: 5 }
+  ),
+  withInAppNavigation(
+    {
+      path: 'icons',
+      loadComponent: () => import('@playground/components/screens/icon-catalog/icon-catalog').then((m) => m.IconCatalog),
+      title: 'Icon catalog · Blocks'
+    },
+    { label: 'Icons', breadcrumb: 'Icon catalog', section: 'Core', menu: true, order: 6 }
   ),
   withInAppNavigation(
     {
       path: 'utilities',
-      loadComponent: () => import('@playground/components/screens/utilities/utilities').then((m) => m.Utilities),
-      title: 'Utilities · Blocks'
+      title: 'Utilities · Blocks',
+      children: [
+        {
+          path: '',
+          pathMatch: 'full',
+          loadComponent: () => import('@playground/components/screens/utilities/utilities').then((m) => m.Utilities)
+        },
+        ...UTILITY_EXAMPLES.map((entry, index) =>
+          withInAppNavigation(
+            {
+              path: entry.id,
+              loadComponent: () => import('@playground/components/screens/utilities/components/utility-page/utility-page').then((m) => m.UtilityPage),
+              title: `${entry.title} · Utilities · Blocks`,
+              data: { utilityId: entry.id },
+              children: [{ path: '', pathMatch: 'full', loadComponent: entry.loadComponent }]
+            },
+            { label: entry.title, breadcrumb: entry.title, menu: true, order: index }
+          )
+        )
+      ]
     },
-    { label: 'Utilities', breadcrumb: 'Utilities', section: 'Tools', icon: { name: 'wrench' }, menu: true, order: 7 }
-  ),
-  withInAppNavigation(
-    {
-      path: 'icon-catalog',
-      loadComponent: () => import('@playground/components/screens/icon-catalog/icon-catalog').then((m) => m.IconCatalog),
-      title: 'Icon catalog · Blocks'
-    },
-    { label: 'Icon catalog', breadcrumb: 'Icon catalog', section: 'Tools', menu: true, order: 4 }
+    { label: 'Utilities', breadcrumb: 'Utilities', section: 'Core', menu: true, order: 7 }
   ),
   withInAppNavigation(
     {
@@ -99,7 +143,7 @@ export const ROUTES: Routes = [
       loadComponent: () => import('@playground/components/screens/library-components/modal/modal').then((m) => m.Modal),
       title: 'Modal configurator · Blocks'
     },
-    { label: 'Modal configurator', breadcrumb: 'Modal configurator', section: 'Tools', menu: true, order: 5 }
+    { label: 'Modal configurator', breadcrumb: 'Modal configurator', section: 'Tools', menu: true }
   ),
   withInAppNavigation(
     {
@@ -107,7 +151,7 @@ export const ROUTES: Routes = [
       loadComponent: () => import('@playground/components/screens/library-components/toastr/toastr').then((m) => m.Toastr),
       title: 'Toast configurator · Blocks'
     },
-    { label: 'Toast configurator', breadcrumb: 'Toast configurator', section: 'Tools', menu: true, order: 6 }
+    { label: 'Toast configurator', breadcrumb: 'Toast configurator', section: 'Tools', menu: true }
   ),
   { path: 'glass', pathMatch: 'full', redirectTo: 'appearance' },
   { path: '**', redirectTo: 'components' }

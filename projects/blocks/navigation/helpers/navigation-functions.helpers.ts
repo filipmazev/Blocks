@@ -1,10 +1,13 @@
+import { inject } from '@angular/core';
 import { Route } from '@angular/router';
 
 import { Strict } from '@filip.mazev/blocks/core';
+import { BX_PAGE_NAVIGATION } from '@filip.mazev/blocks/primitives';
 
 import { INavMeta } from '@navigation/interfaces/inav-meta.interface';
 import { INavigationConfig } from '@navigation/interfaces/inavigation-config.interface';
 import { INavigationSectionConfig } from '@navigation/interfaces/inavigation-section-config.interface';
+import { NavigationService } from '@navigation/services/navigation.service';
 import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
 
 /**
@@ -25,7 +28,7 @@ export function defineNavigation<const TSections extends readonly INavigationSec
 }
 
 /**
- * Create Angular providers for the shared navigation configuration.
+ * Create Angular providers for shared navigation configuration and automatic page layout metadata.
  *
  * @param config - Application section ordering and navigation-view defaults to provide.
  */
@@ -34,6 +37,10 @@ export function provideNavigation(config: INavigationConfig) {
     {
       provide: NAVIGATION_CONFIG,
       useValue: config
+    },
+    {
+      provide: BX_PAGE_NAVIGATION,
+      useFactory: () => inject(NavigationService).page
     }
   ];
 }

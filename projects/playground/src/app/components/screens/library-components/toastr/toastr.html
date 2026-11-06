@@ -1,79 +1,90 @@
-<header class="page-heading">
-    <p class="eyebrow">Overlay components</p>
-    <h1>Notifications</h1>
-    <p>Preview toast placement, behavior, and shared application appearance.</p>
-</header>
-<div class="demo-container">
-    <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="toastrReadmePath()"></app-component-info>
+<bx-page-container pageDescription="Configure notification placement, content, timing, and queue behavior using your shared appearance.">
+    <div class="demo-container">
+        <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="toastrReadmePath()"></app-component-info>
 
-    <div #configPanel class="config-container" bxSurface>
-        <div class="config-header">Configurator</div>
-        <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
-        <p class="hint" role="status">{{ resultMessage() }}</p>
+        <div #configPanel class="config-container" bxSurface>
+            <div class="config-header">Configurator</div>
+            <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
+            <p class="hint" role="status">{{ resultMessage() }}</p>
 
-        <form class="config-form" [formGroup]="form">
-            <div class="form-section">
-                <h3>General Style & Data</h3>
+            <form class="config-form" [formGroup]="form">
+                <div class="form-section">
+                    <h3>General Style & Data</h3>
 
-                <bx-select
-                    label="Position"
-                    formControlName="position"
-                    subscriptSizing="dynamic"
-                    [clearable]="false"
-                    [errorMessages]="{ required: 'Choose a position.' }"
-                    [options]="positionSelectOptions">
-                </bx-select>
+                    <bx-select
+                        label="Position"
+                        formControlName="position"
+                        subscriptSizing="dynamic"
+                        [clearable]="false"
+                        [errorMessages]="{ required: 'Choose a position.' }"
+                        [options]="positionSelectOptions">
+                    </bx-select>
 
-                <bx-input-field label="Title for demo toast" formControlName="title" subscriptSizing="dynamic"> </bx-input-field>
+                    <bx-input-field label="Title for demo toast" formControlName="title" subscriptSizing="dynamic"> </bx-input-field>
 
-                <bx-input-field label="Message for demo toast" formControlName="message" subscriptSizing="dynamic"> </bx-input-field>
-            </div>
-
-            <div class="form-section">
-                <h3>Behavior & Toggles</h3>
-
-                <bx-input-field
-                    label="Duration (ms)"
-                    formControlName="durationInMs"
-                    type="number"
-                    tooltip="Set to 0 to disable auto-close"
-                    subscriptSizing="dynamic"
-                    [errorMessages]="{ min: 'Duration must be zero or greater.' }">
-                </bx-input-field>
-
-                <bx-input-field
-                    label="Max Opened (Queue Limit)"
-                    formControlName="maxOpened"
-                    type="number"
-                    subscriptSizing="dynamic"
-                    [errorMessages]="{ min: 'Show at least one notification.', max: 'Show at most ten notifications.' }">
-                </bx-input-field>
-
-                <div class="form-checkboxes">
-                    <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic"> </bx-checkbox>
-
-                    <bx-checkbox label="Swipe to Dismiss" formControlName="swipeToDismiss" subscriptSizing="dynamic"> </bx-checkbox>
+                    <bx-input-field label="Message for demo toast" formControlName="message" subscriptSizing="dynamic"> </bx-input-field>
                 </div>
+
+                <div class="form-section">
+                    <h3>Behavior & Toggles</h3>
+
+                    <bx-input-field
+                        label="Duration (ms)"
+                        formControlName="durationInMs"
+                        type="number"
+                        tooltip="Set to 0 to disable auto-close"
+                        subscriptSizing="dynamic"
+                        [errorMessages]="{ min: 'Duration must be zero or greater.' }">
+                    </bx-input-field>
+
+                    <bx-input-field
+                        label="Max Opened (Queue Limit)"
+                        formControlName="maxOpened"
+                        type="number"
+                        subscriptSizing="dynamic"
+                        [errorMessages]="{ min: 'Show at least one notification.', max: 'Show at most ten notifications.' }">
+                    </bx-input-field>
+
+                    <div class="form-checkboxes">
+                        <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic"> </bx-checkbox>
+
+                        <bx-checkbox label="Swipe to Dismiss" formControlName="swipeToDismiss" subscriptSizing="dynamic"> </bx-checkbox>
+                    </div>
+                </div>
+            </form>
+
+            <div class="actions">
+                <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="queueToast()">Demo Toast</button>
             </div>
-        </form>
 
-        <div class="actions">
-            <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="queueToast()">Demo Toast</button>
-        </div>
-
-        <div class="buttons-container">
-            <button type="button" bx-button variant="filled" color="info" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('info')">
-                Info
-            </button>
-            <button type="button" bx-button variant="filled" color="success" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('success')">
-                Success
-            </button>
-            <button type="button" bx-button variant="filled" color="warn" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('warn')">
-                Warn
-            </button>
-            <button type="button" bx-button variant="filled" color="danger" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('danger')">
-                Error
-            </button>
+            <div class="buttons-container">
+                <button type="button" bx-button variant="filled" color="info" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('info')">
+                    Info
+                </button>
+                <button
+                    type="button"
+                    bx-button
+                    variant="filled"
+                    color="success"
+                    [outlined]="true"
+                    [disabled]="form.invalid"
+                    (click)="queueSimpleToast('success')">
+                    Success
+                </button>
+                <button type="button" bx-button variant="filled" color="warn" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('warn')">
+                    Warn
+                </button>
+                <button
+                    type="button"
+                    bx-button
+                    variant="filled"
+                    color="danger"
+                    [outlined]="true"
+                    [disabled]="form.invalid"
+                    (click)="queueSimpleToast('danger')">
+                    Error
+                </button>
+            </div>
         </div>
     </div>
-</div>
+</bx-page-container>

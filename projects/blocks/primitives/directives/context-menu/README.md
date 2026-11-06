@@ -46,6 +46,9 @@ order. Angular components can also provide `BX_OVERLAY_CONTEXT` with `{ useTopLa
 The standard `bx-menu` container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Row effects retain
 their application appearance settings.
 
+The transparent dismissal backdrop blocks outside interaction without changing the surrounding surfaces' lighting. The visible menu still occludes the content
+under its panel; opaque backdrops retain their normal lighting behavior.
+
 `BxA11yService` controls reduced motion; enabling it skips the opening and closing fade.
 
 ## Behavior and accessibility

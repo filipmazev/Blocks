@@ -54,3 +54,9 @@ item presentation, one-level-at-a-time browsing, flat contextual search, and foc
 
 See [side navigation](components/side-nav/README.md) and [top navigation](components/top-nav/README.md) for public imports, configuration, slots, accessibility,
 and runnable examples. Their playground routes are `/components/side-nav` and `/components/top-nav`.
+
+## Page layout integration
+
+`provideNavigation()` also provides the optional `BX_PAGE_NAVIGATION` adapter from primitives. `NavigationService.page` exposes reactive section and page titles
+plus breadcrumbs for [PageContainer](../primitives/components/page-container/README.md). Descriptions remain application-owned. Breadcrumbs appear after one
+nesting by default and the threshold can be configured on each container. Existing Breadcrumbs components retain their own display settings.

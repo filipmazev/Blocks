@@ -7,6 +7,7 @@ import { BX_I18N, ResolvableText, resolveText, uuidv4 } from '@filip.mazev/block
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 
+import { ICollapsibleTitleContext } from '@primitives/interfaces/icollapsible-title-context.interface';
 import { BX_ACCORDION_COORDINATOR } from '@primitives/tokens/accordion-coordinator.token';
 
 @Component({
@@ -27,6 +28,7 @@ export class Collapsible {
   protected readonly level: Signal<number> = computed(() =>
     Number.isFinite(this.headingLevel()) ? Math.max(1, Math.min(6, Math.floor(this.headingLevel()))) : 3
   );
+  protected readonly titleContext: Signal<ICollapsibleTitleContext> = computed(() => ({ $implicit: this.resolvedTitle(), expanded: this.expanded() }));
 
   /** Whether edits are blocked while preserving focus and enabled presentation; combines readonly and readOnly inputs. */
   public readonly isReadonly: Signal<boolean> = computed(() => this.readonly() || this.readOnly());
@@ -42,6 +44,10 @@ export class Collapsible {
   public readonly id: InputSignal<string | undefined> = input<string | undefined>(undefined);
   /** Heading text displayed by the component; supports shared translation keys where configurable. Required input. */
   public readonly title: InputSignal<ResolvableText> = input.required<ResolvableText>();
+  /** Optional heading template receiving the translated title and expanded state. Defaults to plain title text; use noninteractive content only. */
+  public readonly titleTemplate: InputSignal<TemplateRef<ICollapsibleTitleContext> | undefined> = input<TemplateRef<ICollapsibleTitleContext>>();
+  /** Optional noninteractive content at the logical end of the heading, before the disclosure icon. Omitted by default; receives the title and expanded state. */
+  public readonly trailingTemplate: InputSignal<TemplateRef<ICollapsibleTitleContext> | undefined> = input<TemplateRef<ICollapsibleTitleContext>>();
 
   /** Whether collapsible content is expanded; supports controlled two-way state. Defaults to `false`. */
   public readonly expanded: ModelSignal<boolean> = model(false);

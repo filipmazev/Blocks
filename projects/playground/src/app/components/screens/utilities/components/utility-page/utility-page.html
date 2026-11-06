@@ -1,0 +1,16 @@
+<bx-page-container [pageDescription]="entry().description">
+    <section class="demo-section" aria-labelledby="utility-demo-title">
+        <bx-stack direction="responsive" align="center" justify="between" class="section-heading" [gap]="2">
+            <h2 id="utility-demo-title">Interactive example</h2>
+            <span>Uses your active palette</span>
+        </bx-stack>
+        <router-outlet />
+    </section>
+
+    <bx-divider [decorative]="true" />
+
+    <section class="documentation-section" aria-labelledby="utility-documentation-title">
+        <h2 id="utility-documentation-title">Documentation and source</h2>
+        <app-component-info [readmePath]="entry().readme" [codeFiles]="codeFiles()" />
+    </section>
+</bx-page-container>

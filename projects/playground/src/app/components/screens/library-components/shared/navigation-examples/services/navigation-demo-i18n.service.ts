@@ -2,17 +2,16 @@ import type { WritableSignal } from '@angular/core';
 
 import { Injectable, signal } from '@angular/core';
 
-import type { BxSelectOption } from '@forms/types/select-option.types';
-
 import { IBxI18nAdapter } from '@filip.mazev/blocks/core';
 
+import { IBxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 import { DEMO_LANGUAGE_OPTIONS } from '@playground/components/screens/library-components/shared/i18n/constants/demo-language.constants';
 import { DemoLanguage } from '@playground/components/screens/library-components/shared/i18n/types/demo-language.types';
 import { NAVIGATION_DEMO_TRANSLATIONS } from '@playground/components/screens/library-components/shared/navigation-examples/constants/navigation-examples.constants';
 
 @Injectable()
 export class NavigationDemoI18nService implements IBxI18nAdapter {
-  public readonly languages: readonly BxSelectOption<DemoLanguage>[] = DEMO_LANGUAGE_OPTIONS;
+  public readonly languages: readonly IBxSelectOption<DemoLanguage>[] = DEMO_LANGUAGE_OPTIONS;
 
   public readonly version: WritableSignal<number> = signal(0);
 

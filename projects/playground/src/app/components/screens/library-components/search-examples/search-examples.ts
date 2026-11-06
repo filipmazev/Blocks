@@ -22,6 +22,8 @@ export class SearchExamples {
   protected readonly mockSearchStore = inject(MockSearchStore);
 
   protected readonly showLoadingText: WritableSignal<boolean> = signal(false);
+  protected readonly showLabel: WritableSignal<boolean> = signal(true);
+  protected readonly compact: WritableSignal<boolean> = signal(false);
   protected readonly readOnly: WritableSignal<boolean> = signal(false);
   protected readonly disabled: WritableSignal<boolean> = signal(false);
 

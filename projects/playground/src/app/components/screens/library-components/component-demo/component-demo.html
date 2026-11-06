@@ -1,14 +1,10 @@
-<article class="component-page">
-    <header class="component-header">
-        <a routerLink="/components" class="back-link">All components</a>
-        <p class="eyebrow">{{ entry().group }}</p>
-        <h1>{{ entry().title }}</h1>
-        <p class="description">{{ entry().description }}</p>
+<bx-page-container>
+    <bx-page-header [pageDescription]="entry().description">
         <div class="component-meta">
             <code>{{ entry().selector }}</code
             ><a routerLink="/appearance">Configure appearance globally</a>
         </div>
-    </header>
+    </bx-page-header>
 
     <section class="demo-section" aria-labelledby="preview-heading">
         <div class="section-heading">
@@ -48,6 +44,9 @@
                     }
                     @case ('card') {
                         <app-essentials-examples example="card" />
+                    }
+                    @case ('page-container') {
+                        <app-page-examples />
                     }
                     @case ('container') {
                         <app-essentials-examples example="container" />
@@ -481,4 +480,4 @@
         <pre class="playground-code-block" tabindex="0" aria-label="HTML usage example"><code language="xml" [highlight]="entry().example"></code></pre>
     </section>
     <section class="documentation-section" aria-label="Component documentation"><app-readme [path]="entry().readme" /></section>
-</article>
+</bx-page-container>

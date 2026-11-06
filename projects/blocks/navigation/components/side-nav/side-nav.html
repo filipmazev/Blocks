@@ -25,17 +25,9 @@
         (click)="closeFromControl($event)" />
 }
 <aside
-    #panel
-    #submenuTrigger="bxMenuTrigger"
     tabindex="-1"
     bxSurface
     class="bx-nav-panel"
-    [bxMenuTrigger]="submenuPanel"
-    [menuManual]="true"
-    [menuHover]="false"
-    [menuPinned]="true"
-    [menuSide]="resolvedConfig().side === 'right' ? 'left' : 'right'"
-    [menuLabel]="navigationStateService.parent()?.label ?? navigationStateService.currentGroup()?.title ?? navigationStateService.text().ariaLabel"
     [bxSurfaceInteractive]="false"
     [id]="id"
     [class.is-open]="!isMobile() || mobileOpen()"
@@ -45,8 +37,6 @@
     [attr.inert]="isMobile() && !mobileOpen() ? '' : null"
     [attr.aria-hidden]="isMobile() && !mobileOpen() ? true : null"
     [cdkTrapFocus]="isMobile() && mobileOpen()"
-    (menuOpened)="navigationStateService.submenuVisible.set(true)"
-    (menuClosed)="navigationStateService.submenuVisible.set(false)"
     (keydown)="panelKey($event)">
     <div class="bx-nav-header">
         @if (headerTemplate(); as template) {
@@ -95,6 +85,7 @@
             <bx-search-input
                 class="bx-nav-search"
                 subscriptSizing="dynamic"
+                [compact]="true"
                 [placeholder]="navigationStateService.text().searchPlaceholder"
                 [ariaLabel]="navigationStateService.text().searchLabel"
                 [clearLabel]="navigationStateService.text().clearSearchLabel"
@@ -102,7 +93,7 @@
                 (ngModelChange)="search($event)" />
         }
     }
-    @if (!query().trim() && isInlineSubmenus() && navigationStateService.hasLevel()) {
+    @if (!query().trim() && navigationStateService.hasLevel()) {
         <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
     } @else {
         <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
@@ -131,8 +122,8 @@
                                         [class.is-active]="sectionActive(group)"
                                         [attr.aria-label]="group.title"
                                         [attr.data-section-id]="group.id"
-                                        [attr.aria-expanded]="navigationStateService.submenuVisible() && navigationStateService.currentGroup()?.id === group.id"
-                                        [attr.aria-controls]="navigationStateService.submenuVisible() ? navigationStateService.levelId : null"
+                                        [attr.aria-expanded]="navigationStateService.hasLevel() && navigationStateService.currentGroup()?.id === group.id"
+                                        [attr.aria-controls]="navigationStateService.hasLevel() ? navigationStateService.levelId : null"
                                         (click)="openSection(group, $event)">
                                         <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
                                     </button>
@@ -188,7 +179,3 @@
         }
     </span>
 </aside>
-
-<ng-template #submenuPanel>
-    <div class="bx-nav-flyout"><bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" /></div>
-</ng-template>

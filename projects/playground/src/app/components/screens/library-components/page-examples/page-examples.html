@@ -1,0 +1,35 @@
+<bx-stack [gap]="5">
+    <bx-stack direction="responsive" [gap]="4">
+        <bx-input-field label="Preview title" subscriptSizing="dynamic" [(ngModel)]="title" />
+        <bx-input-field label="Description" subscriptSizing="dynamic" [(ngModel)]="description" />
+    </bx-stack>
+    <bx-stack direction="responsive" [gap]="4">
+        <bx-select label="Preview nesting" subscriptSizing="dynamic" [clearable]="false" [options]="nestingOptions" [(ngModel)]="nesting" />
+        <bx-input-field label="Show breadcrumbs after nesting" type="number" subscriptSizing="dynamic" [min]="0" [formControl]="breadcrumbsAfterControl" />
+    </bx-stack>
+    <bx-stack direction="responsive" [gap]="4">
+        <bx-slide-toggle label="Use current route breadcrumbs" subscriptSizing="dynamic" [(ngModel)]="automatic" />
+        <bx-slide-toggle label="Show footer" subscriptSizing="dynamic" [(ngModel)]="showFooter" />
+    </bx-stack>
+    <bx-page-container class="page-preview" size="full" [breadcrumbs]="automatic() ? undefined : previewBreadcrumbs()" [breadcrumbsAfter]="breadcrumbsAfter()">
+        <bx-page-header
+            sectionTitle="Primitives"
+            [pageTitle]="title()"
+            [pageDescription]="description()"
+            [autoResolveTitlesFromNavigation]="false"
+            [headingLevel]="2" />
+        <bx-page-content>
+            <bx-alert
+                title="Page content"
+                message="This section grows naturally with its content. The page keeps one scroll surface and the same responsive gutters." />
+        </bx-page-content>
+        @if (showFooter()) {
+            <bx-page-footer>
+                <bx-stack direction="responsive" align="center" [gap]="3">
+                    <button bx-button type="button" variant="tonal" (click)="result.set('Footer action completed.')">Try footer action</button>
+                    <span role="status">{{ result() }}</span>
+                </bx-stack>
+            </bx-page-footer>
+        }
+    </bx-page-container>
+</bx-stack>

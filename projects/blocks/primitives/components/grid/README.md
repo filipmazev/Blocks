@@ -33,4 +33,4 @@ RTL use normal CSS layout.
 
 ## Playground
 
-`/components/grid` includes live examples and shared appearance controls.
+`/components/layout/grid` includes live examples and shared appearance controls.

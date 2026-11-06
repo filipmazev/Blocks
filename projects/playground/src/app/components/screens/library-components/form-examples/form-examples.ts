@@ -20,8 +20,7 @@ import {
   validateAsync
 } from '@angular/forms/signals';
 
-import type { ValidationMessage } from '@filip.mazev/blocks/forms';
-import type { BxSelectOption } from '@forms/types/select-option.types';
+import type { IBxSelectOption, ValidationMessage } from '@filip.mazev/blocks/forms';
 
 import { BX_I18N, ResolvableText } from '@filip.mazev/blocks/core';
 import {
@@ -124,7 +123,7 @@ export class FormExamples {
   protected readonly allSelectedTooltipMode: WritableSignal<string | null> = signal<string | null>('total');
   protected readonly allSelectedTooltipText: WritableSignal<string> = signal('All matching locations');
 
-  protected readonly allSelectedTooltipOptions: readonly BxSelectOption<string>[] = DEMO_ALL_SELECTED_TOOLTIP_OPTIONS;
+  protected readonly allSelectedTooltipOptions: readonly IBxSelectOption<string>[] = DEMO_ALL_SELECTED_TOOLTIP_OPTIONS;
 
   protected readonly allSelectedTooltip: Signal<false | ResolvableText | undefined> = computed<ResolvableText | false | undefined>(() => {
     const mode = this.allSelectedTooltipMode();
@@ -160,8 +159,8 @@ export class FormExamples {
   protected readonly submitSnapshot: WritableSignal<string> = signal('');
   protected readonly templateValue: WritableSignal<string> = signal('');
 
-  protected readonly pageSizes: readonly BxSelectOption<number>[] = DEMO_PAGE_SIZES;
-  protected readonly options: readonly BxSelectOption<string>[] = DEMO_DESTINATIONS;
+  protected readonly pageSizes: readonly IBxSelectOption<number>[] = DEMO_PAGE_SIZES;
+  protected readonly options: readonly IBxSelectOption<string>[] = DEMO_DESTINATIONS;
   protected readonly projectMessages: Readonly<Record<string, ValidationMessage | undefined>> = DEMO_PROJECT_MESSAGES;
 
   protected readonly registration: FieldTree<IRegistrationData, string | number, 'writable'> = form(

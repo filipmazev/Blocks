@@ -6,12 +6,8 @@ export interface ISideNavExamplesTextState {
   rail: string;
   /** Resolved mobile value. */
   mobile: string;
-  /** Resolved adjacent value. */
-  adjacent: string;
   /** Resolved inline Mode value. */
   inlineMode: string;
-  /** Resolved flyout Mode value. */
-  flyoutMode: string;
   /** Resolved search value. */
   search: string;
   /** Resolved rtl value. */

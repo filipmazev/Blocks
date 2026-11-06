@@ -28,7 +28,7 @@ import { Select, IBxSelectOption } from '@filip.mazev/blocks/forms';
 ## API
 
 Supports Signal Forms, Reactive Forms, Template-driven Forms, and standalone `[(value)]`. Existing `[formControl]` and `formControlName` bindings remain
-available. `BxSelectOption` remains as a compatibility alias for `IBxSelectOption`.
+available.
 
 Options provide `label`, `value`, optional `disabled`, `icon`, `group` and `groupDisabled`. Labels and group headings accept translation keys.
 `compareWith(a, b)` defaults to `Object.is`; supply a comparator for object values. Selected labels are retained when filtering replaces the visible results.

@@ -1,0 +1,21 @@
+@use 'core/styles/helpers' as *;
+
+:host,
+bx-stack > * {
+    min-inline-size: 0;
+}
+
+:host {
+    display: block;
+    inline-size: 100%;
+}
+
+bx-stack[direction='responsive'] > * {
+    flex: 1 1 0;
+}
+
+.page-preview {
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    background: var(--bx-bg-canvas);
+}

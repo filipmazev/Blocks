@@ -2,10 +2,8 @@ import type { Signal, WritableSignal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import type { BxSelectOption } from '@forms/types/select-option.types';
-
 import { BX_I18N } from '@filip.mazev/blocks/core';
-import { Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
+import { Checkbox, IBxSelectOption, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Tag, TagColor, TagVariant } from '@filip.mazev/blocks/primitives';
 
 import { DemoI18nService } from '@playground/components/screens/library-components/form-examples/services/demo-i18n.service';
@@ -39,6 +37,6 @@ export class TagExamples {
   protected readonly leftNumber: WritableSignal<string | number | null> = signal<string | number | null>(3);
   protected readonly rightNumber: WritableSignal<string | number | null> = signal<string | number | null>(12);
 
-  protected readonly colors: readonly BxSelectOption<TagColor>[] = TAG_COLOR_OPTIONS;
-  protected readonly variants: readonly BxSelectOption<TagVariant>[] = TAG_VARIANT_OPTIONS;
+  protected readonly colors: readonly IBxSelectOption<TagColor>[] = TAG_COLOR_OPTIONS;
+  protected readonly variants: readonly IBxSelectOption<TagVariant>[] = TAG_VARIANT_OPTIONS;
 }

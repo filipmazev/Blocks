@@ -5,6 +5,7 @@ import { ActivatedRouteSnapshot, NavigationEnd, Router, Routes } from '@angular/
 import { filter } from 'rxjs';
 
 import { BX_I18N, isTextWithKey, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
+import { IPageNavigation } from '@filip.mazev/blocks/primitives';
 
 import { IBreadcrumbItem } from '@navigation/interfaces/ibreadcrumb-item.interface';
 import { INavContext } from '@navigation/interfaces/inav-context.interface';
@@ -32,6 +33,13 @@ export class NavigationService {
     this.i18n?.version?.();
 
     return this.resolveCurrent(this.router.routerState.snapshot.root);
+  });
+  /** Translated page heading, section label and breadcrumb trail for the optional primitives page adapter. */
+  public readonly page: Signal<IPageNavigation> = computed(() => {
+    this.navEnd();
+    this.i18n?.version?.();
+
+    return this.resolvePage(this.router.routerState.snapshot.root);
   });
   /** Optional base-route prefix supplied by the navigation access adapter. */
   public readonly routeBase: Signal<string | undefined> = computed<string | undefined>(() => {
@@ -139,6 +147,27 @@ export class NavigationService {
   }
 
   //#region Helpers
+
+  private resolvePage(root: ActivatedRouteSnapshot): IPageNavigation {
+    let snapshot: ActivatedRouteSnapshot | undefined = root;
+    let section: string | undefined;
+    let pageTitle: string | undefined;
+
+    while (snapshot) {
+      const nav = snapshot.routeConfig?.data?.['nav'] as INavMeta | undefined;
+
+      if (nav && !nav.hidden) {
+        section = nav.section ?? section;
+        pageTitle = this.resolveNavText(nav.breadcrumb, { snapshot }) ?? this.resolveNavText(nav.label, { snapshot }) ?? pageTitle;
+      }
+
+      snapshot = snapshot.children.find((child) => child.outlet === 'primary');
+    }
+
+    const sectionTitle = this.config?.sections?.find((entry) => entry.id === section)?.title ?? section;
+
+    return { sectionTitle: resolveText(sectionTitle, this.i18n), pageTitle, breadcrumbs: this.current().breadcrumbs };
+  }
 
   private groupTree(items: INavigationItem[], groups: Map<string, INavigationTreeGroup>, inheritedSection = '', parent?: INavigationItem): void {
     for (const item of items) {

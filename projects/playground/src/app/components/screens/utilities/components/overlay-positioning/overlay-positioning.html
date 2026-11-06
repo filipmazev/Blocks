@@ -1,0 +1,40 @@
+<bx-stack [gap]="5">
+    <bx-card title="Connected overlay">
+        <bx-stack [gap]="4">
+            <p>Choose a preferred side, open the preview, then scroll or resize. The position strategy falls back when space is limited.</p>
+            <bx-stack direction="responsive" align="center" [gap]="4">
+                <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
+                <button
+                    bx-button
+                    type="button"
+                    variant="tonal"
+                    [attr.aria-expanded]="overlayOpen()"
+                    [attr.aria-describedby]="overlayOpen() ? overlayId : null"
+                    (click)="toggleOverlay($event)"
+                    (blur)="closeOverlay()">
+                    {{ overlayOpen() ? 'Hide position preview' : 'Show position preview' }}
+                </button>
+            </bx-stack>
+            <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
+        </bx-stack>
+    </bx-card>
+    <bx-alert
+        title="Shared positioning and theme inheritance"
+        message="The preview uses the public Core positioning, origin tracking, and theme helpers. Change the playground appearance while it is open to see theme inheritance." />
+    <bx-stack direction="horizontal" [wrap]="true" [gap]="2">
+        <a bx-button variant="text" routerLink="/components/popover">Popover</a>
+        <a bx-button variant="text" routerLink="/components/dropdown">Dropdown</a>
+        <a bx-button variant="text" routerLink="/components/tooltip-directive">Tooltip</a>
+    </bx-stack>
+</bx-stack>
+
+<ng-template #overlayTemplate>
+    <bx-card class="utility-overlay">
+        <div role="tooltip" [id]="overlayId">
+            <bx-stack [gap]="3">
+                <strong>Positioned with Core utilities</strong>
+                <p>This surface follows its origin and inherits the active Blocks theme. Preferred placement: {{ placement() }}.</p>
+            </bx-stack>
+        </div>
+    </bx-card>
+</ng-template>

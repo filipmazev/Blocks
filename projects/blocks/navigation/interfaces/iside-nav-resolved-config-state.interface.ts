@@ -1,6 +1,5 @@
 import type { ResolvableText } from '@filip.mazev/blocks/core';
 import type { NavigationSide } from '@navigation/types/navigation-view.types';
-import type { SideNavSubmenuMode } from '@navigation/types/side-nav.types';
 
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
 
@@ -20,10 +19,6 @@ export interface ISideNavResolvedConfigState {
   persistenceKey?: string;
   /** Resolved mobile Breakpoint value. */
   mobileBreakpoint: keyof WindowDimensionsService['breakpoints'];
-  /** Resolved submenu Breakpoint value. */
-  submenuBreakpoint: keyof WindowDimensionsService['breakpoints'];
-  /** Resolved submenu Mode value. */
-  submenuMode: SideNavSubmenuMode;
   /** Whether mobile is enabled in the resolved state. */
   mobile?: boolean;
   /** Whether show Mobile Trigger is enabled in the resolved state. */

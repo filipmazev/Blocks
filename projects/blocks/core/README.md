@@ -56,6 +56,22 @@ that a device category determines interaction. `BxA11yService.isReducedMotion()`
 `ThemingService` exposes application mode, active theme, palette, and appearance signals. Use `setApplicationTheme('light' | 'dark' | null)`, `setPalette(id)`,
 and `setAppearance(partial)` to update mounted Blocks components and their overlays.
 
+### Design tokens
+
+Browse the [token catalog](../../playground/src/app/components/screens/token-catalog/README.md) at `/tokens` for semantic colors grouped by role, every palette
+shade and color companion, spacing, corner radii, border colors, shadows, layers, effects, component variables, utility classes, and Sass breakpoints. Search by
+name, role, value, or source; copy CSS references and preview the current toolbar theme. `CSS_TOKEN_CATALOG` exposes typed discovery metadata with explicit
+global/theme/local/runtime availability. `CSS_VARIABLES` and `CSS_VARIABLE_REFERENCES` supply typed names and references. Local/runtime values are not
+necessarily available on the document root; the owning feature guide defines supported customization.
+
+Theme palette IDs, labels, brand/accent roles, and optional swatch preview order live in `$theme-palettes` in the Sass theme engine. `THEME_PALETTES` and
+`THEME_PALETTE_IDS` are generated from that registry; the public `BxThemeId` union derives from the generated IDs. Existing theme variables use
+`make-palette-theme(id, dark?, overrides?)`, preserving their public names and colors.
+
+Sass is the source of truth. `npm run tools:generate-tokens` evaluates the maps and inventories compiled CSS plus TypeScript property usage; generated constants
+pass the repository's lint/format pipeline. Maintain color/type contracts in ordinary TypeScript. See the catalog guide for generation, availability, and the
+migration of `meta-*` Sass metadata out of the color-token union.
+
 ### `BxShortcutService`
 
 Shares shortcut definitions between menu hints and application-owned keyboard handlers. It resolves OS overrides, normalizes modifier aliases, formats platform

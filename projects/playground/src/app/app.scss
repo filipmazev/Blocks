@@ -51,7 +51,7 @@
 }
 
 .app-content-container {
-    padding: clamp(1rem, 3vw, 2.5rem);
+    min-inline-size: 0;
     outline: none;
 }
 

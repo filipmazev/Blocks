@@ -43,7 +43,7 @@ export class NavigationStateService {
 
   /** Whether the current navigation-level transition moves toward an ancestor. Initially `false`. */
   public readonly backward: WritableSignal<boolean> = signal(false);
-  /** Whether nested navigation levels replace the inline list instead of using an adjacent panel. Initially `true`. */
+  /** Whether nested navigation levels render inside their owner. Side navigation uses true; top navigation sets false for its shared panel. */
   public readonly inlineLevels: WritableSignal<boolean> = signal(true);
   /** Whether the coordinated submenu overlay is currently visible. Initially `false`. */
   public readonly submenuVisible: WritableSignal<boolean> = signal(false);
@@ -67,7 +67,7 @@ export class NavigationStateService {
   /** Emits the navigation item selected through the shared browsing state. */
   public readonly activated: Subject<INavigationItem> = new Subject<INavigationItem>();
 
-  /** A selected search result to reveal once its containing list has rendered. */
+  /** Item to reveal after rendering, including search selections and entries used to open child levels. Initially undefined. */
   public readonly revealItemId: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
   /** Navigation sections after translating presentation and resolving the current source tree. */
@@ -131,7 +131,7 @@ export class NavigationStateService {
   public readonly levelItems: Signal<INavigationItem[]> = computed(() => this.parent()?.children ?? (this.section() ? this.currentGroup()?.items : []) ?? []);
   /** Stable key for the displayed navigation level, used when preserving focus and scroll position. */
   public readonly levelKey: Signal<string> = computed(() => JSON.stringify([this.section(), this.trail().map((item) => item.id)]));
-  /** Ancestor navigation entries for the current browsing level. */
+  /** Browsing ancestors; the first section-labelled action returns to the full root unless that section's own list was explicitly entered. */
   public readonly breadcrumbs: Signal<readonly INavigationLevelBreadcrumb[]> = computed<readonly INavigationLevelBreadcrumb[]>(() => {
     if (!this.parent()) return [];
 
@@ -144,7 +144,7 @@ export class NavigationStateService {
       section
     }));
 
-    return group?.title ? [{ label: group.title, path: [], section: group.id }, ...ancestors] : ancestors;
+    return group?.title ? [{ label: group.title, path: [], section }, ...ancestors] : ancestors;
   });
   /** Resolved navigation action names and status text, updated when configuration or the translation version changes. */
   public readonly text: Signal<INavigationStateServiceTextState> = computed(() => {
@@ -252,13 +252,15 @@ export class NavigationStateService {
   }
 
   /**
-   * Browse the ancestor level represented by a breadcrumb.
+   * Browse an ancestor level and reveal the item used to enter its child branch.
    *
    * @param breadcrumb - Ancestor breadcrumb identifying the target browsing path.
    */
   public navigateLevel(breadcrumb: INavigationLevelBreadcrumb): void {
+    const revealItemId = this.trail()[breadcrumb.path.length]?.id;
+
     this.backward.set(true);
-    this.revealItemId.set(undefined);
+    this.revealItemId.set(revealItemId);
     this.section.set(breadcrumb.section);
     this.path.set(breadcrumb.path);
   }

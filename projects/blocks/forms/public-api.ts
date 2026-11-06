@@ -57,5 +57,3 @@ export * from '@forms/components/checkbox-indicator/checkbox-indicator';
 export * from '@forms/components/autocomplete/autocomplete';
 export * from '@forms/interfaces/iautocomplete-option-context.interface';
 export * from '@forms/interfaces/iautocomplete-option.interface';
-
-export * from '@forms/types/select-option.types';

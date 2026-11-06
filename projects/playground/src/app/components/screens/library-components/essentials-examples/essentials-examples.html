@@ -111,7 +111,7 @@
         @case ('accordion') {
             <bx-checkbox label="Allow multiple open panels" [(checked)]="multiple" />
             <bx-accordion [multiple]="multiple()">
-                <bx-accordion-item title="Project details" [expanded]="true"
+                <bx-accordion-item title="Project details" [expanded]="true" [titleTemplate]="projectHeading" [trailingTemplate]="projectStatus"
                     ><p>Your changes are saved in this workspace.</p>
                     <bx-input-field label="Project name"
                 /></bx-accordion-item>
@@ -121,6 +121,8 @@
                 <bx-accordion-item title="Lazy content" [contentTemplate]="lazyContent" />
                 <bx-accordion-item title="Unavailable section" [disabled]="true" />
             </bx-accordion>
+            <ng-template #projectStatus><bx-tag text="Saved" size="small" [focusable]="false" /></ng-template>
+            <ng-template #projectHeading let-title>{{ title }} <bx-tag size="small" [leadingNumber]="2" [focusable]="false" /></ng-template>
             <ng-template #lazyContent><bx-input-field label="Created when opened" /></ng-template>
         }
         @case ('collapsible') {

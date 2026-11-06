@@ -10,7 +10,7 @@ import type { IAppearanceChoice } from '@playground/components/screens/appearanc
 import { BxA11yService, BxAppearanceConfig, DeviceTheme, ThemingService, WindowDimensionsService } from '@filip.mazev/blocks/core';
 import { Button, Radio, SliderDirective, SlideToggle } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { Card, Collapsible, Container, TooltipDirective } from '@filip.mazev/blocks/primitives';
+import { Card, Collapsible, Container, PageContainer, TooltipDirective } from '@filip.mazev/blocks/primitives';
 
 import { AppearanceModePreview } from '@playground/components/screens/appearance/appearance-mode-preview/appearance-mode-preview';
 import { AppearancePreview } from '@playground/components/screens/appearance/appearance-preview/appearance-preview';
@@ -22,6 +22,7 @@ import { Highlight } from 'ngx-highlightjs';
 @Component({
   selector: 'app-appearance',
   imports: [
+    PageContainer,
     Highlight,
     FormsModule,
     Radio,

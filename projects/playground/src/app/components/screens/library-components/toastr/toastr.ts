@@ -6,12 +6,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RouterLink } from '@angular/router';
 
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { PageContainer } from '@filip.mazev/blocks/primitives';
 
 import { Button } from '@forms/components/button/button';
 import { Checkbox } from '@forms/components/checkbox/checkbox';
 import { InputField } from '@forms/components/input-field/input-field';
 import { Select } from '@forms/components/select/select';
-import { BxSelectOption } from '@forms/types/select-option.types';
+import { IBxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 import { DemoToast } from '@playground/components/screens/library-components/toastr/components/demo-toast/demo-toast';
 import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
@@ -24,7 +25,7 @@ import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 
 @Component({
   selector: 'app-toastr-demo',
-  imports: [BxSurfaceDirective, RouterLink, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
+  imports: [PageContainer, BxSurfaceDirective, RouterLink, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
   templateUrl: './toastr.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './toastr.scss'
@@ -36,7 +37,7 @@ export class Toastr {
   protected readonly positionOptions: ToastPosition[] = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
   protected readonly typeOptions: string[] = ['info', 'success', 'warn', 'danger'];
   protected readonly form: FormGroup<ToastrConfigFormControls>;
-  protected readonly positionSelectOptions: BxSelectOption<string>[] = this.positionOptions.map((pos) => ({
+  protected readonly positionSelectOptions: IBxSelectOption<string>[] = this.positionOptions.map((pos) => ({
     label: pos
       .split('-')
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))

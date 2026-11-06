@@ -205,10 +205,11 @@ as a source; its visible border and declared color determine the facing edges an
 before projection, so local custom properties and scoped themes retain their color on other receivers. Hover light has a 120 CSS-pixel falloff radius and stays
 within the nearest main, aside, nav, dialog or overlay. Add `data-bx-light-scope` to isolate a custom region. Modal panels, native dialogs, popovers,
 fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit
-testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently
-over 200 ms, including the emitter’s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new
-source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking,
-DOM capture, or a permanent hover animation loop.
+testing excludes covered surfaces, including rounded corners. Fully transparent CDK dismissal backdrops intercept input without occluding lighting; visible menu
+panels and opaque backdrops still occlude. Opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the
+emitter’s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies
+changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent
+hover animation loop.
 
 Backdrop behavior follows the browser’s [backdrop-root rules](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter). Visual
 treatment follows [Apple’s material guidance](https://developer.apple.com/design/human-interface-guidelines/materials): restrained highlights and readable
