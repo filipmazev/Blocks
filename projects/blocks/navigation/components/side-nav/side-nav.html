@@ -25,6 +25,7 @@
         (click)="closeFromControl($event)" />
 }
 <aside
+    #panel
     tabindex="-1"
     bxSurface
     class="bx-nav-panel"
@@ -37,145 +38,151 @@
     [attr.inert]="isMobile() && !mobileOpen() ? '' : null"
     [attr.aria-hidden]="isMobile() && !mobileOpen() ? true : null"
     [cdkTrapFocus]="isMobile() && mobileOpen()"
+    (transitionend)="finishExpansion($event)"
     (keydown)="panelKey($event)">
-    <div class="bx-nav-header">
-        @if (headerTemplate(); as template) {
-            <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
-        } @else if (!isCollapsed()) {
-            <strong>{{ navigationStateService.text().ariaLabel }}</strong>
+    <div class="bx-nav-content">
+        <div class="bx-nav-header">
+            @if (headerTemplate(); as template) {
+                <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
+            } @else if (!isCollapsed()) {
+                <strong>{{ navigationStateService.text().ariaLabel }}</strong>
+            }
+            @if (isMobile()) {
+                <button
+                    bx-button
+                    variant="icon"
+                    color="grayscale"
+                    class="bx-nav-panel-toggle"
+                    type="button"
+                    [attr.aria-label]="navigationStateService.text().closeLabel"
+                    (click)="closeFromControl($event)">
+                    <bx-icon name="x" size="20" />
+                </button>
+            } @else if (resolvedConfig().collapsible) {
+                <button
+                    bx-button
+                    variant="icon"
+                    color="grayscale"
+                    class="bx-nav-panel-toggle"
+                    type="button"
+                    [attr.aria-label]="isCollapsed() ? navigationStateService.text().expandLabel : navigationStateService.text().collapseLabel"
+                    [attr.aria-expanded]="!isCollapsed()"
+                    (click)="toggleCollapsed()">
+                    <bx-icon size="20" [name]="(resolvedConfig().side === 'left') !== isCollapsed() ? 'panel-left-close' : 'panel-right-close'" />
+                </button>
+            }
+        </div>
+        @if (resolvedConfig().searchable) {
+            @if (isCollapsed()) {
+                <button
+                    bx-button
+                    variant="icon"
+                    color="grayscale"
+                    type="button"
+                    class="bx-nav-search-toggle"
+                    [attr.aria-label]="navigationStateService.text().searchLabel"
+                    (click)="expandSearch()">
+                    <bx-icon name="search" size="20" />
+                </button>
+            } @else {
+                <bx-search-input
+                    class="bx-nav-search"
+                    subscriptSizing="dynamic"
+                    [compact]="true"
+                    [placeholder]="navigationStateService.text().searchPlaceholder"
+                    [ariaLabel]="navigationStateService.text().searchLabel"
+                    [clearLabel]="navigationStateService.text().clearSearchLabel"
+                    [ngModel]="query()"
+                    (ngModelChange)="search($event)" />
+            }
         }
-        @if (isMobile()) {
-            <button
-                bx-button
-                variant="icon"
-                color="grayscale"
-                class="bx-nav-panel-toggle"
-                type="button"
-                [attr.aria-label]="navigationStateService.text().closeLabel"
-                (click)="closeFromControl($event)">
-                <bx-icon name="x" size="20" />
-            </button>
-        } @else if (resolvedConfig().collapsible) {
-            <button
-                bx-button
-                variant="icon"
-                color="grayscale"
-                class="bx-nav-panel-toggle"
-                type="button"
-                [attr.aria-label]="isCollapsed() ? navigationStateService.text().expandLabel : navigationStateService.text().collapseLabel"
-                [attr.aria-expanded]="!isCollapsed()"
-                (click)="toggleCollapsed()">
-                <bx-icon size="20" [name]="(resolvedConfig().side === 'left') !== isCollapsed() ? 'panel-left-close' : 'panel-right-close'" />
-            </button>
-        }
-    </div>
-    @if (resolvedConfig().searchable) {
-        @if (isCollapsed()) {
-            <button
-                bx-button
-                variant="icon"
-                color="grayscale"
-                type="button"
-                class="bx-nav-search-toggle"
-                [attr.aria-label]="navigationStateService.text().searchLabel"
-                (click)="expandSearch()">
-                <bx-icon name="search" size="20" />
-            </button>
+        @if (!query().trim() && navigationStateService.hasLevel()) {
+            <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
         } @else {
-            <bx-search-input
-                class="bx-nav-search"
-                subscriptSizing="dynamic"
-                [compact]="true"
-                [placeholder]="navigationStateService.text().searchPlaceholder"
-                [ariaLabel]="navigationStateService.text().searchLabel"
-                [clearLabel]="navigationStateService.text().clearSearchLabel"
-                [ngModel]="query()"
-                (ngModelChange)="search($event)" />
-        }
-    }
-    @if (!query().trim() && navigationStateService.hasLevel()) {
-        <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
-    } @else {
-        <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
-            <nav [attr.aria-label]="navigationStateService.text().ariaLabel">
-                @if (query().trim()) {
-                    <div
-                        class="bx-nav-items"
-                        role="menu"
-                        tabindex="-1"
-                        [attr.aria-label]="navigationStateService.text().resultLabel"
-                        (keydown)="menuKey($event)">
-                        @for (entry of navigationStateService.searchResult().entries; track entry.item.id) {
-                            <bx-navigation-item [item]="entry.item" [context]="entry.context" />
+            <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
+                <nav [attr.aria-label]="navigationStateService.text().ariaLabel">
+                    @if (query().trim()) {
+                        <div
+                            class="bx-nav-items"
+                            role="menu"
+                            tabindex="-1"
+                            [attr.aria-label]="navigationStateService.text().resultLabel"
+                            (keydown)="menuKey($event)">
+                            @for (entry of navigationStateService.searchResult().entries; track entry.item.id) {
+                                <bx-navigation-item [item]="entry.item" [context]="entry.context" />
+                            } @empty {
+                                <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
+                            }
+                        </div>
+                    } @else {
+                        @for (group of visibleGroups(); track group.id) {
+                            <section class="bx-nav-section" [attr.aria-label]="group.title || navigationStateService.text().ariaLabel">
+                                @if (group.title) {
+                                    @if (isCollapsed()) {
+                                        <button
+                                            type="button"
+                                            class="bx-nav-section-toggle is-compact"
+                                            [class.is-active]="sectionActive(group)"
+                                            [attr.aria-label]="group.title"
+                                            [attr.data-section-id]="group.id"
+                                            [attr.aria-expanded]="navigationStateService.hasLevel() && navigationStateService.currentGroup()?.id === group.id"
+                                            [attr.aria-controls]="navigationStateService.hasLevel() ? navigationStateService.levelId : null"
+                                            (click)="openSection(group, $event)">
+                                            <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                        </button>
+                                    } @else if (group.collapsible) {
+                                        <button
+                                            type="button"
+                                            class="bx-nav-section-toggle"
+                                            [class.is-active]="sectionActive(group)"
+                                            [attr.aria-expanded]="!sectionCollapsed(group)"
+                                            [attr.aria-controls]="id + '-section-' + $index"
+                                            (click)="toggleSection(group)">
+                                            @if (resolvedConfig().showSectionIcons) {
+                                                <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                            }
+                                            <span>{{ group.title }}</span
+                                            ><bx-icon
+                                                class="bx-nav-section-chevron"
+                                                size="16"
+                                                [name]="sectionCollapsed(group) ? 'chevron-down' : 'chevron-up'" />
+                                        </button>
+                                    } @else {
+                                        <h2 class="bx-nav-section-heading" [class.is-active]="sectionActive(group)">
+                                            @if (resolvedConfig().showSectionIcons) {
+                                                <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                            }
+                                            <span>{{ group.title }}</span>
+                                        </h2>
+                                    }
+                                }
+                                <div
+                                    class="bx-nav-items"
+                                    role="menu"
+                                    tabindex="-1"
+                                    [attr.aria-label]="group.title || navigationStateService.text().ariaLabel"
+                                    [id]="id + '-section-' + $index"
+                                    [hidden]="sectionCollapsed(group)"
+                                    (keydown)="menuKey($event)">
+                                    @for (item of group.items; track item.id) {
+                                        <bx-navigation-item [item]="item" [compact]="isCollapsed()" />
+                                    }
+                                </div>
+                            </section>
                         } @empty {
                             <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                         }
-                    </div>
-                } @else {
-                    @for (group of visibleGroups(); track group.id) {
-                        <section class="bx-nav-section" [attr.aria-label]="group.title || navigationStateService.text().ariaLabel">
-                            @if (group.title) {
-                                @if (isCollapsed()) {
-                                    <button
-                                        type="button"
-                                        class="bx-nav-section-toggle is-compact"
-                                        [class.is-active]="sectionActive(group)"
-                                        [attr.aria-label]="group.title"
-                                        [attr.data-section-id]="group.id"
-                                        [attr.aria-expanded]="navigationStateService.hasLevel() && navigationStateService.currentGroup()?.id === group.id"
-                                        [attr.aria-controls]="navigationStateService.hasLevel() ? navigationStateService.levelId : null"
-                                        (click)="openSection(group, $event)">
-                                        <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
-                                    </button>
-                                } @else if (group.collapsible) {
-                                    <button
-                                        type="button"
-                                        class="bx-nav-section-toggle"
-                                        [class.is-active]="sectionActive(group)"
-                                        [attr.aria-expanded]="!sectionCollapsed(group)"
-                                        [attr.aria-controls]="id + '-section-' + $index"
-                                        (click)="toggleSection(group)">
-                                        @if (resolvedConfig().showSectionIcons) {
-                                            <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
-                                        }
-                                        <span>{{ group.title }}</span
-                                        ><bx-icon size="16" [name]="sectionCollapsed(group) ? 'chevron-down' : 'chevron-up'" />
-                                    </button>
-                                } @else {
-                                    <h2 class="bx-nav-section-heading" [class.is-active]="sectionActive(group)">
-                                        @if (resolvedConfig().showSectionIcons) {
-                                            <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
-                                        }
-                                        <span>{{ group.title }}</span>
-                                    </h2>
-                                }
-                            }
-                            <div
-                                class="bx-nav-items"
-                                role="menu"
-                                tabindex="-1"
-                                [attr.aria-label]="group.title || navigationStateService.text().ariaLabel"
-                                [id]="id + '-section-' + $index"
-                                [hidden]="sectionCollapsed(group)"
-                                (keydown)="menuKey($event)">
-                                @for (item of group.items; track item.id) {
-                                    <bx-navigation-item [item]="item" [compact]="isCollapsed()" />
-                                }
-                            </div>
-                        </section>
-                    } @empty {
-                        <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                     }
-                }
-            </nav>
-        </div>
-    }
-    @if (footerTemplate(); as template) {
-        <footer class="bx-nav-footer"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></footer>
-    }
-    <span class="cdk-visually-hidden" role="status" aria-live="polite">
-        @if (navigationStateService.searchResult().label) {
-            {{ navigationStateService.text().resultLabel }}: {{ navigationStateService.searchResult().label }}
+                </nav>
+            </div>
         }
-    </span>
+        @if (footerTemplate(); as template) {
+            <footer class="bx-nav-footer"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></footer>
+        }
+        <span class="cdk-visually-hidden" role="status" aria-live="polite">
+            @if (navigationStateService.searchResult().label) {
+                {{ navigationStateService.text().resultLabel }}: {{ navigationStateService.searchResult().label }}
+            }
+        </span>
+    </div>
 </aside>

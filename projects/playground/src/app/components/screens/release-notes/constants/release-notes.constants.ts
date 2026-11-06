@@ -3,6 +3,14 @@ import { IReleaseNotes } from '@playground/components/screens/release-notes/inte
 /** Newest first. Keep published entries and their version URLs stable. */
 export const RELEASE_NOTES: readonly IReleaseNotes[] = [
   {
+    version: '1.5.4-alpha',
+    summary: 'Smoother side-navigation expansion, coordinated label and disclosure fades, accessible motion handling, and compact submenu tooltips.',
+    status: 'draft',
+    channel: 'alpha',
+    readme: 'documentation/releases/1.5.4-alpha/README.md',
+    fromCommit: '7d3586b0535a2403607b0dc87f2d0fc4f244f95c'
+  },
+  {
     version: '1.5.3-alpha',
     summary: 'Colocated documentation, channel-specific release notes, shared build and publish versioning, and consistent mobile drawer overlays.',
     status: 'released',

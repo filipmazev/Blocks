@@ -67,6 +67,7 @@ import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
     '[class.is-right]': 'resolvedConfig().side === "right"',
     '[class.is-inline]': 'resolvedConfig().position === "inline"',
     '[class.is-animated]': '!reducedMotion()',
+    '[class.is-expanding]': 'expanding()',
     '[class.is-drawer-animated]': 'drawerAnimated() && !reducedMotion()',
     '[style.--bx-side-nav-width]': 'resolvedConfig().width',
     '[style.--bx-side-nav-collapsed-width]': 'resolvedConfig().collapsedWidth'
@@ -96,10 +97,12 @@ export class SideNav {
   private readonly presentation: Signal<string> = computed(() => `${this.isMobile()}:${this.resolvedConfig().position}:${this.resolvedConfig().side}`);
 
   private readonly toggleElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('mobileToggle', { read: ElementRef<HTMLButtonElement> });
+  private readonly panelElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('panel', { read: ElementRef<HTMLElement> });
   private readonly searchInput: Signal<SearchInput | undefined> = viewChild(SearchInput);
   private readonly focusTrap: Signal<CdkTrapFocus | undefined> = viewChild(CdkTrapFocus);
 
   protected readonly drawerAnimated: WritableSignal<boolean> = signal(false);
+  protected readonly expanding: WritableSignal<boolean> = signal(false);
 
   protected readonly id: string = `bx-side-nav-${this.lockId}`;
 
@@ -176,6 +179,9 @@ export class SideNav {
   private renderRevision: number = 0;
 
   constructor() {
+    let previouslyCollapsed: boolean | undefined;
+    let previousPresentation: string | undefined;
+
     effect(() => {
       this.navigationStateService.config.set(this.resolvedConfig());
       this.navigationStateService.sourceGroups.set(this.groups() ?? this.navigationService.menuTreeGroups());
@@ -202,6 +208,45 @@ export class SideNav {
       } catch {
         /* Storage may be unavailable. */
       }
+    });
+    effect((onCleanup) => {
+      const collapsed = this.isCollapsed();
+      const mobile = this.isMobile();
+      const reducedMotion = this.reducedMotion();
+      const presentation = this.presentation();
+      const expanding = previouslyCollapsed === true && previousPresentation === presentation && !collapsed && !mobile && !reducedMotion;
+      const view = this.document.defaultView;
+
+      previouslyCollapsed = collapsed;
+      previousPresentation = presentation;
+      this.expanding.set(expanding && !!view);
+
+      if (!expanding || !view) return;
+
+      let timeoutId: number | undefined;
+
+      const render = afterNextRender(
+        () => {
+          const delay = this.resolveExpansionDelay();
+
+          if (delay === 0) {
+            this.expanding.set(false);
+
+            return;
+          }
+
+          timeoutId = view.setTimeout(() => {
+            if (!this.destroyRef.destroyed) this.expanding.set(false);
+          }, delay);
+        },
+        { injector: this.injector }
+      );
+
+      onCleanup(() => {
+        render.destroy();
+
+        if (timeoutId !== undefined) view.clearTimeout(timeoutId);
+      });
     });
     effect((onCleanup) => {
       if (!this.isMobile() || !this.mobileOpen() || this.resolvedConfig().position === 'inline') return;
@@ -373,6 +418,10 @@ export class SideNav {
     this.renderLevel(wasSearching && !query.trim(), false, false);
   }
 
+  protected finishExpansion(event: TransitionEvent): void {
+    if (event.target === event.currentTarget && event.propertyName === 'width') this.expanding.set(false);
+  }
+
   protected expandSearch(): void {
     this.toggleCollapsed();
     afterNextRender(
@@ -455,6 +504,20 @@ export class SideNav {
   }
 
   //#region Helpers
+
+  private resolveExpansionDelay(): number {
+    const panel = this.panelElement()?.nativeElement;
+    const view = this.document.defaultView;
+
+    if (!panel || !view) return 0;
+
+    const transition = panel.getAnimations().find((animation) => 'transitionProperty' in animation && animation.transitionProperty === 'width');
+    const endTime = transition?.effect?.getComputedTiming().endTime;
+    const currentTime = transition?.currentTime;
+
+    // Use the remaining animation time and overlap its final 60ms with the reveal instead of starting another full-duration wait after rendering.
+    return typeof endTime === 'number' && typeof currentTime === 'number' ? Math.max(0, endTime - currentTime - 60) : 0;
+  }
 
   private openChildren(request: INavigationExpandRequest): void {
     this.navigationFocusService.remember(request.origin);

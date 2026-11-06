@@ -5,17 +5,17 @@ Version-specific library changes and migration guidance, rendered with the playg
 ## Routes and navigation
 
 `/release-notes` redirects to the newest released entry in the Release channel (`DEFAULT_RELEASE_VERSION`). `/release-notes/:version` is the permanent URL for a
-particular version, for example `/release-notes/1.5.0`. Release notes appear in the Start navigation section.
+particular version, for example `/release-notes/1.5.0`. Release notes is the last entry in the playground navigation.
 
 Blocks `Select` controls choose Release, Beta, or Alpha and filter the version list to that channel. Changing channel navigates to its newest registered entry;
 permanent links infer their channel from release metadata. Unknown versions retain an unavailable state and a link to the current Release notes. Published
 summaries link to the exact NPM version. Draft entries remain visibly marked.
 
-The playground build version comes from `release.config.json` via `tools/version-sync.mjs`. It is currently pinned to the published `1.5.3-alpha` until changes
-and draft notes establish another target. When `nextVersion` is null, the shared resolver increments the package patch and appends its Alpha/Beta channel. For
-example, package 1.5.2 on Alpha produces 1.5.3-alpha. Set `nextVersion` to an exact semantic version to override it; `publish.sh` consumes the same target by
-default and clears the setting after applying it. Explicit `--bump patch|minor|major` overrides that setting; `--retry` publishes the existing manifest version.
-Channel selection remains in `projects/blocks/package.json` under `publishConfig.tag`.
+The playground build version comes from `release.config.json` via `tools/version-sync.mjs`. It is currently pinned to the draft target `1.5.4-alpha`, with
+library-only side-navigation changes documented at `/release-notes/1.5.4-alpha`. When `nextVersion` is null, the shared resolver increments the package patch
+and appends its Alpha/Beta channel. For example, package 1.5.2 on Alpha produces 1.5.3-alpha. Set `nextVersion` to an exact semantic version to override it;
+`publish.sh` consumes the same target by default and clears the setting after applying it. Explicit `--bump patch|minor|major` overrides that setting; `--retry`
+publishes the existing manifest version. Channel selection remains in `projects/blocks/package.json` under `publishConfig.tag`.
 
 `PackageReleaseService` checks public NPM metadata after browser rendering. A non-dismissible Blocks info alert appears only when the registry confirms that the
 build version is absent and its entry has not already been marked released. Known released builds do not show an unpublished warning while registry publication

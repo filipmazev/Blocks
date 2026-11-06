@@ -22,8 +22,8 @@ import { COMPONENT_EXAMPLES } from './component-catalog';
   template: `
     <bx-page-container>
       <bx-page-header
-        [sectionTitle]="layoutOnly() ? 'Primitives' : 'Blocks reference'"
-        [pageTitle]="layoutOnly() ? 'Layout' : 'Components'"
+        [sectionTitle]="layoutOnly() ? 'Primitives' : category() ? 'Components' : 'Blocks reference'"
+        [pageTitle]="layoutOnly() ? 'Layout' : (category() ?? 'Components')"
         [pageDescription]="
           layoutOnly()
             ? 'Compose consistent pages with containers, sections, responsive stacks, grids, and dividers.'
@@ -64,6 +64,11 @@ export class ComponentIndex {
   protected readonly componentRoute: typeof componentRoute = componentRoute;
 
   protected readonly layoutOnly: Signal<boolean> = computed(() => this.routeData()['layout'] === true);
+  protected readonly category: Signal<string | undefined> = computed(() => {
+    const category = this.routeData()['category'];
+
+    return typeof category === 'string' ? category : undefined;
+  });
 
   protected readonly query: WritableSignal<string> = signal('');
 
@@ -71,7 +76,10 @@ export class ComponentIndex {
     const term = this.query().trim().toLowerCase();
 
     return COMPONENT_EXAMPLES.filter(
-      (entry) => (!this.layoutOnly() || entry.layout) && (!term || `${entry.title} ${entry.group} ${entry.description}`.toLowerCase().includes(term))
+      (entry) =>
+        (!this.layoutOnly() || entry.layout) &&
+        (!this.category() || entry.group === this.category()) &&
+        (!term || `${entry.title} ${entry.group} ${entry.description}`.toLowerCase().includes(term))
     );
   });
   protected readonly groups: Signal<

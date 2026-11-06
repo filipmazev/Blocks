@@ -45,12 +45,15 @@
             [attr.aria-expanded]="expanded()"
             [attr.aria-haspopup]="horizontal() ? 'dialog' : null"
             [attr.aria-controls]="expanded() ? navigationStateService.levelId : null"
+            [bxTooltip]="compact() ? item().label : ''"
+            [placement]="side()"
             (click)="expand($event)"
             (keydown)="openOnArrow($event)">
             @if (compact()) {
                 <ng-container [ngTemplateOutlet]="label" />
             } @else {
                 <bx-icon
+                    class="bx-nav-disclosure-icon"
                     size="16"
                     [name]="horizontal() ? (expanded() ? 'chevron-up' : 'chevron-down') : side() === 'right' ? 'chevron-right' : 'chevron-left'" />
             }

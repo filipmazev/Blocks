@@ -49,6 +49,8 @@ await collect('projects/playground/src/app/components/screens/appearance');
 await collect('projects/playground/src/app/components/screens/utilities');
 await collect('projects/playground/src/app/components/screens/token-catalog');
 await collect('projects/playground/src/app/components/screens/icon-catalog');
+await collect('projects/playground/src/app/components/screens/tools');
+await collect('projects/playground/src/app/components/shared/sidenav');
 await collect('projects/playground/src/app/components/screens/library-components/page-examples');
 files.sort();
 const documents = {};
@@ -98,6 +100,8 @@ for (const file of files) {
 }
 routes.set('projects/playground/src/app/components/screens/token-catalog/README.md', 'tokens');
 routes.set('projects/playground/src/app/components/screens/icon-catalog/README.md', 'icons');
+routes.set('projects/playground/src/app/components/screens/tools/README.md', 'tools');
+routes.set('projects/playground/src/app/components/shared/sidenav/README.md', 'components/side-nav');
 for (const slot of ['header', 'footer', 'banner']) {
   routes.set(`projects/blocks/primitives/directives/side-panel-${slot}/README.md`, 'components/side-panel');
 }

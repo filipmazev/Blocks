@@ -1,13 +1,23 @@
-<bx-side-nav [config]="config" [collapsed]="false">
-    <ng-template bxSideNavHeader>
+<bx-side-nav [config]="config" [groups]="groups()" [itemTemplate]="navigationItem">
+    <ng-template let-compact bxSideNavHeader>
         <a class="brand" routerLink="/home" [attr.aria-label]="brandLabel()">
             <app-blocks-logo />
-            <span class="brand-name">
-                <span>{{ title() }}</span>
-                @if (releaseLabel) {
-                    <bx-tag class="brand-release" size="small" color="neutral" [text]="releaseLabel" [opaque]="true" [focusable]="false" />
-                }
-            </span>
+            @if (!compact) {
+                <span class="brand-name">
+                    <span>{{ title() }}</span>
+                    @if (releaseLabel) {
+                        <bx-tag class="brand-release" size="small" color="neutral" [text]="releaseLabel" [opaque]="true" [focusable]="false" />
+                    }
+                </span>
+            }
         </a>
     </ng-template>
 </bx-side-nav>
+<ng-template #navigationItem let-item let-compact="collapsed">
+    @if (compact || item.children?.length || rootItemIds().has(item.id)) {
+        <bx-icon class="navigation-icon" size="20" [name]="item.icon?.name ?? 'folder'" />
+    }
+    @if (!compact) {
+        <span class="navigation-label">{{ item.label }}</span>
+    }
+</ng-template>

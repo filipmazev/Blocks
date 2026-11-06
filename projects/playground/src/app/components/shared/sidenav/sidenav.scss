@@ -41,3 +41,20 @@ app-blocks-logo {
 
     flex: none;
 }
+
+.navigation-icon {
+    flex: none;
+}
+
+.navigation-label {
+    flex: 1;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.brand-name,
+.navigation-label {
+    opacity: var(--bx-side-nav-label-opacity, 1);
+
+    @include bx-transition(opacity, var(--bx-side-nav-label-transition-duration, 0ms), ease-out);
+}

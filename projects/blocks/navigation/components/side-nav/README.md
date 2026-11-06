@@ -177,6 +177,7 @@ Use application-wide `sideNav` defaults in `defineNavigation`, then instance ove
 | `--bx-side-nav-item-hover-background`, `--bx-side-nav-item-active-background` | Shared accent tonal surfaces; only the active route has the selected border |
 | `--bx-side-nav-item-gap`                                                      | Shared spacing 2 (`0.5rem`) between adjacent items                          |
 | `--bx-side-nav-duration`, `--bx-side-nav-easing`                              | `250ms`, `ease`; reduced motion takes precedence                            |
+| `--bx-side-nav-label-duration`                                                | `90ms` label fade as desktop expansion finishes; reduced motion skips it    |
 | `--bx-side-nav-backdrop`                                                      | Shared backdrop color with a neutral scrim fallback                         |
 
 Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and
@@ -185,9 +186,18 @@ fragments do not clear selection. Only the most specific matching item receives 
 box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives `aria-current="page"`.
 
 The navigation region is the panel's sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining
-space, aligned with header, search, and footer controls. Activating its search icon expands the rail and focuses the search field without scrolling the page.
-The root and nested lists reserve their scrollbar gutters when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within
-the available width.
+space, aligned with header, search, and footer controls. Both direct links and submenu icons show their labels in tooltips when compact. Activating its search
+icon expands the rail and focuses the search field without scrolling the page. The root and nested lists reserve their scrollbar gutters when content fits,
+preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.
+
+Desktop expansion lays out content at its final width behind the panel's clipping edge, preventing labels from repeatedly wrapping as the rail opens. Labels and
+disclosure arrows fade in with search during the final 60ms of the width transition, using its remaining running time. Initial expanded rendering and mobile
+drawers have no label delay. Reduced motion removes both the delay and fade, including when the preference changes during expansion. Keyboard focus reveals
+content immediately; accessible names remain available throughout. Pending reveal work is cancelled on collapse, presentation changes, and destruction.
+
+Custom header/footer and item templates can follow the same reveal by setting `opacity: var(--bx-side-nav-label-opacity, 1)` on their text and transitioning
+opacity with `var(--bx-side-nav-label-transition-duration, 0ms)`. These inherited values also handle reduced motion and keyboard focus; keep icons and focus
+indicators outside the faded text.
 
 The background and search use Blocks surfaces. Rows reuse their containing surface, and nested lists remain inside the same themed panel. Standard semantic
 colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks. Programmatic row focus does not apply the
@@ -260,8 +270,9 @@ glass. Presentation changes establish the closed layout immediately; explicit op
 
 ## Playground
 
-Visit `/components/side-nav`. The application shell also uses `SideNav` with real `withInAppNavigation` routes, an expanded text-only menu, its Blocks brand,
-and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a
+Visit `/components/side-nav`. The application shell also uses `SideNav` with real `withInAppNavigation` routes, a persistent collapsible icon rail, its Blocks
+brand, and no footer. Components groups the five component categories, with Layout nested under Primitives; Tools groups the configurators behind its own
+overview. Tokens, Icons, and Utilities remain separate root entries. Existing component and configurator URLs remain valid. The dedicated demo supplies a
 four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional
 search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section, action, demo control,
 instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell’s responsive

@@ -1,12 +1,44 @@
 @use '../../../core/styles/helpers' as *;
 
 :host {
+    --bx-side-nav-label-opacity: 1;
+    --bx-side-nav-label-transition-duration: 0ms;
+
     display: block;
     order: 0;
     flex: 0 0 var(--bx-side-nav-width, 17rem);
     width: var(--bx-side-nav-width, 17rem);
     color: var(--bx-text-primary);
     font-family: inherit;
+}
+
+.bx-nav-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-inline-size: 0;
+    min-block-size: 0;
+
+    &:has(:focus-visible) {
+        --bx-side-nav-label-opacity: 1;
+        --bx-side-nav-label-transition-duration: 0ms;
+    }
+}
+
+:host(:not(.is-mobile, .is-collapsed)) .bx-nav-content {
+    /* IMPORTANT: Lay out expanded content at its final width so panel clipping never reflows labels during the width transition. */
+    inline-size: calc(min(var(--bx-side-nav-width, 17rem), 100dvw) - 1px);
+}
+
+.bx-nav-header > strong,
+.bx-nav-search,
+.bx-nav-section-toggle > span,
+.bx-nav-section-heading > span,
+.bx-nav-section-chevron,
+bx-navigation-level {
+    opacity: var(--bx-side-nav-label-opacity);
+
+    @include bx-transition(opacity, var(--bx-side-nav-label-transition-duration), ease-out);
 }
 
 .bx-nav-panel {
@@ -184,9 +216,16 @@
 }
 
 :host(.is-animated:not(.is-mobile)) {
+    --bx-side-nav-label-transition-duration: var(--bx-side-nav-label-duration, 90ms);
+
     .bx-nav-panel {
         @include bx-transition(width, var(--bx-side-nav-duration, 250ms), var(--bx-side-nav-easing, ease));
     }
+}
+
+:host(.is-expanding) {
+    --bx-side-nav-label-opacity: 0;
+    --bx-side-nav-label-transition-duration: 0ms;
 }
 
 :host(.is-collapsed) {

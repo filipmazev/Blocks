@@ -1,0 +1,19 @@
+<bx-page-container>
+    <bx-page-header
+        sectionTitle="Playground"
+        pageTitle="Tools"
+        pageDescription="Configure Blocks interactions, preview them with your active theme, and copy the settings into your application." />
+    <bx-grid minColumnWidth="16rem" [gap]="4">
+        @for (tool of tools(); track tool.id) {
+            <a bxSurface class="tool-card" [routerLink]="tool.route">
+                <bx-icon size="24" [name]="tool.icon?.name ?? 'wrench'" />
+                <h2>{{ tool.label }}</h2>
+                @if (tool.route === '/modal') {
+                    <p>Explore modal layouts, sizes, actions, and content with a live preview.</p>
+                } @else if (tool.route === '/toastr') {
+                    <p>Try notification styles, placement, timing, and actions before copying your configuration.</p>
+                }
+            </a>
+        }
+    </bx-grid>
+</bx-page-container>

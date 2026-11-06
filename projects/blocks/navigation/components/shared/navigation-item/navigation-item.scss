@@ -70,6 +70,13 @@
     overflow-wrap: anywhere;
 }
 
+.bx-nav-label,
+.bx-nav-disclosure-icon {
+    opacity: var(--bx-side-nav-label-opacity, 1);
+
+    @include bx-transition(opacity, var(--bx-side-nav-label-transition-duration, 0ms), ease-out);
+}
+
 .bx-nav-icon {
     flex: none;
 }

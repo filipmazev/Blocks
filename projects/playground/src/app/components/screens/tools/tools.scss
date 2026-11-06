@@ -1,0 +1,39 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+}
+
+.tool-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: spacing(3);
+    min-inline-size: 0;
+    padding: spacing(5);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    color: var(--bx-text-primary);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+
+    &:hover {
+        border-color: var(--bx-border-strong);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 3px;
+    }
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.125rem;
+}
+
+p {
+    margin: 0;
+    color: var(--bx-text-secondary);
+    line-height: 1.65;
+}
