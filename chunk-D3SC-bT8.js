@@ -358,7 +358,7 @@ themingService.<span class="hljs-title function_">setAppearance</span>({ <span c
 <a href="components/card">card documentation</a> and
 <a href="components/checkbox">checkbox documentation</a> for the complete APIs.</p>
 `,"documentation/releases/1.5.3-alpha/README.md":`<h1>Blocks 1.5.3-alpha</h1>
-<p>Draft library release notes. Changes may be revised before release.</p>
+<p>Published Alpha change notes for <a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.5.3-alpha">@filip.mazev/blocks@1.5.3-alpha</a>.</p>
 <h2>Declarative side panel</h2>
 <ul>
 <li>Added standalone <code>SidePanel</code> (<code>bx-side-panel</code>) to <code>@filip.mazev/blocks/primitives</code>, controlled through the <code>open</code> boolean model and its <code>openChange</code> output.</li>
@@ -381,6 +381,7 @@ scroll locks, nested modal handling, animations, and dismissal contracts remain 
 </ul>
 <h2>Modal and panel presentation</h2>
 <ul>
+<li>Fixed centered modal content clipping on small screens, including nested dialogs. The content region scrolls while header and footer actions remain reachable.</li>
 <li>Declarative SidePanel and left/right Modal Side surfaces use square corners on all four edges, including their material decorations.</li>
 <li>Centered, side, and bottom-sheet modals share the declarative panel&#39;s translucent surface presentation. <code>--bx-modal-bg</code> / <code>--bx-modal-text</code> retain priority,
 with shared panel and semantic surface/text fallbacks. Root dialogs retain the ordinary 0.52 opacity floor and their shared appearance preferences.</li>
@@ -453,6 +454,13 @@ icon names, support multiple assignments and upstream aliases, and use a predict
 <li>Extended the existing generation pipeline with an offline, release-pinned official Lucide snapshot. A controlled synchronization command resolves upstream
 category inheritance and preserves attribution. Normal builds and runtime require no metadata network requests, and mismatched dependency/snapshot versions
 fail with synchronization instructions.</li>
+</ul>
+<h2>Catalog navigation</h2>
+<ul>
+<li>Icons and Tokens show their scroll action only after scrolling 400 pixels past the results&#39; start. Reading documentation above the catalog does not trigger
+it.</li>
+<li>The action returns to the catalog results and focuses that region. Its tooltip and accessible name are <strong>Scroll to catalog top</strong>. Documentation expansion and
+viewport changes update the threshold and destination; reduced motion remains supported.</li>
 </ul>
 <h2>Page layouts and breadcrumbs</h2>
 <ul>
@@ -2637,6 +2645,8 @@ mounted modals respond reactively.</p>
 <p>Open content through <code>ModalService</code> so focus handling, Escape/backdrop dismissal, close guards, scroll locks, layout, and cleanup stay coordinated.
 <code>ScrollLockService</code> keeps separate locks for concurrent overlays. Closing one overlay does not unlock another. Reduced motion takes precedence over requested
 animation; reduced transparency and forced colors receive opaque backdrop presentation.</p>
+<p>Centered dialogs constrain their content to the available viewport, including when nested on small screens. Their content region scrolls independently while the
+header and footer remain reachable.</p>
 <p>Header text accepts <code>ResolvableText</code> and updates through the optional <code>BX_I18N</code> adapter. Content components own the translation and accessible naming of their
 custom actions, descriptions, errors, and form controls. Keep actions reachable in constrained viewports and preserve focus when completing asynchronous work.</p>
 <h2>Playground</h2>
@@ -6728,9 +6738,11 @@ and <code>arrow-down</code> find <code>arrow-down</code>; this follows the Token
 open. Panels use complementary region semantics, optional focus restoration, a close control, and Escape dismissal; the page remains interactive without focus
 trapping, scroll locking, or modal semantics. Existing Blocks controls provide labeled keyboard-accessible sliders and selections. Setting information tooltips
 support focus, hover, and touch tap.</p>
-<p>Scroll to top appears after 400 pixels in the actual scroll viewport. It uses a Blocks tooltip without touch long-press and respects shared reduced-motion
-preferences. It is aligned to the grid&#39;s actual horizontal bounds inside its positioned viewport. It remains visible beside push panels and is hidden while an
-overlay panel is open to keep actions clear. The Tokens catalog uses the same action; Utilities no longer renders it.</p>
+<p>Scroll to catalog top appears after scrolling 400 pixels past the start of the results in the actual scroll viewport, staying hidden while reading the
+documentation above the catalog. Its threshold follows documentation expansion and viewport changes. It uses a Blocks tooltip without touch long-press and
+respects shared reduced-motion preferences. It is aligned to the grid&#39;s actual horizontal bounds inside its positioned viewport. It remains visible beside push
+panels and is hidden while an overlay panel is open to keep actions clear. Activation returns to the start of the results, leaving documentation above the
+viewport. The Tokens catalog uses the same action; Utilities no longer renders it.</p>
 <h2>Playground</h2>
 <p>Open <code>/icons</code> from Tools. Related interactive infrastructure demos are <code>/components/side-panel</code>, <code>/components/infinite-scroll</code>, and <code>/utilities</code>.</p>
 `,"projects/playground/src/app/components/screens/library-components/page-examples/README.md":`<h1>Page layout playground</h1>
@@ -6882,8 +6894,10 @@ Closing a group preserves its reveal count; changing search or categories resets
 spacers, and returning restores rows without retaining every previously visited tile. Responsive column/height changes preserve a stable scroll anchor, and a
 focused row can remain mounted independently. Groups outside the overscan area retain their scroll extent without mounting their cards. This replaces the old
 playground-only viewport/chunk observer. Color conversion reads only mounted items, including pinned focused rows.</p>
-<p>A constrained catalog viewport occupies the content area below the top bar. The shared Scroll to top action is aligned to the results width near that viewport&#39;s
-bottom-right corner, scrolls that container, and respects reduced motion. It has a keyboard/hover tooltip with touch long-press disabled.</p>
+<p>A constrained catalog viewport occupies the content area below the top bar. The shared Scroll to catalog top action is aligned to the results width near that
+viewport&#39;s bottom-right corner, scrolls that container to the start of the results, and respects reduced motion. Documentation remains above the viewport. It
+has a keyboard/hover tooltip with touch long-press disabled. It appears only after scrolling 400 pixels past the start of the results, staying hidden while
+reading the documentation above the catalog. Documentation expansion and viewport changes update the threshold.</p>
 <p>Metadata expansion within an unloaded batch is recreated when it returns. Current color-value search uses a lazy index; ordinary browsing converts only mounted
 batches. One canvas and a conversion cache are reused until theme/appearance changes. Documentation content mounts only while its section is open. Clear the
 category selection to show all tokens. Blocks accordions provide heading navigation, expansion and focus restoration; source defaults and fallbacks use Blocks
