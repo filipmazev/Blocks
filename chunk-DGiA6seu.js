@@ -1,4 +1,4 @@
-import{$t as Te,J as Hr,Vr as it,Yi as te,an as V,b as D,br as g,gi as ot,it as Jn,mt as Lm,ot as Ka,ra as ve,ta as v,vi as p}from"./chunk-DhMqzCIY.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
+import{$t as Te,J as Hr,Vr as it,Yi as te,an as V,b as D,br as g,gi as ot,it as Jn,mt as Lm,ot as Ka,ra as ve,ta as v,vi as p}from"./chunk-DBDMpaTC.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
 <p>Published October 31, 2026 on the Release channel (<code>latest</code>). Install this exact version with <code>npm install @filip.mazev/blocks@1.4.20</code>.</p>
 <p><a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.4.20">View version 1.4.20 on NPM</a>.</p>
 <p>Blocks 1.4.20 brings together the unified Angular UI package, semantic themes, appearance effects, forms, navigation, notifications and icons developed leading
@@ -575,6 +575,31 @@ JSDoc with parameter/type-parameter coverage.</li>
 TypeScript AST, with generated-source banners, formatting, strict generation rules, and unchanged-output detection.</li>
 </ul>
 <p>Stable NPM installs continue using the <code>latest</code> tag; Alpha and Beta remain opt-in.</p>
+`,"documentation/releases/1.5.4-alpha/README.md":`<h1>Blocks 1.5.4-alpha draft change notes</h1>
+<p>Draft for the next Alpha publication of <code>@filip.mazev/blocks</code>. This version has not been published; these notes may change before release.</p>
+<h2>Side navigation</h2>
+<ul>
+<li>Fixed missing label tooltips on compact submenu buttons. Parent icons now use the same shared hover, keyboard-focus, positioning, and theme behavior as
+compact route links.</li>
+<li>Stabilized expanded content at its final width while the panel opens, preventing labels from repeatedly wrapping into narrow columns during the transition.</li>
+<li>Labels, search, and disclosure arrows fade in during the final <code>60ms</code> of the width transition. The delay uses the running transition&#39;s remaining time,
+avoiding an additional wait after rendering. Initial expanded rendering and mobile drawers have no additional reveal delay.</li>
+<li>Added <code>--bx-side-nav-label-duration</code>, defaulting to <code>90ms</code>, to customize the fade duration. Existing <code>--bx-side-nav-duration</code> and <code>--bx-side-nav-easing</code>
+continue to configure the width transition.</li>
+</ul>
+<h2>Accessibility and lifecycle</h2>
+<ul>
+<li>Reduced motion removes the width animation, reveal delay, and fade. Changing the preference while the rail opens reveals content immediately.</li>
+<li>Keyboard focus reveals content immediately. Accessible control names remain available while labels are visually fading; icons and focus indicators remain
+independent of the text fade.</li>
+<li>Pending reveal work is cancelled when the rail collapses, its presentation changes, or the component is destroyed. Browser measurements run after rendering
+and are skipped during server rendering.</li>
+</ul>
+<h2>Compatibility and customization</h2>
+<p>Existing navigation inputs, outputs, routes, and persistence contracts remain unchanged. Applications using the default templates receive the fixes directly.</p>
+<p>Custom item, header, and footer templates can apply the shared reveal to their text using <code>opacity: var(--bx-side-nav-label-opacity, 1)</code> and an opacity
+transition with <code>var(--bx-side-nav-label-transition-duration, 0ms)</code>. Keep icons and focus indicators outside the faded text. The inherited values follow the
+navigation&#39;s reduced-motion and keyboard-focus behavior.</p>
 `,"projects/blocks/README.md":`<h1>@filip.mazev/blocks</h1>
 <p>Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship
 in one package, alongside the installation schematic.</p>
@@ -3297,6 +3322,10 @@ configurations are not enumerated.</p>
 <td><code>250ms</code>, <code>ease</code>; reduced motion takes precedence</td>
 </tr>
 <tr>
+<td><code>--bx-side-nav-label-duration</code></td>
+<td><code>90ms</code> label fade as desktop expansion finishes; reduced motion skips it</td>
+</tr>
+<tr>
 <td><code>--bx-side-nav-backdrop</code></td>
 <td>Shared backdrop color with a neutral scrim fallback</td>
 </tr>
@@ -3306,9 +3335,16 @@ fragments do not clear selection. Only the most specific matching item receives 
 <code>/components/side-nav/overview</code> selects Side navigation rather than also selecting <code>/components</code>. Its owning section uses accent text without a second selected
 box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives <code>aria-current=&quot;page&quot;</code>.</p>
 <p>The navigation region is the panel&#39;s sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining
-space, aligned with header, search, and footer controls. Activating its search icon expands the rail and focuses the search field without scrolling the page.
-The root and nested lists reserve their scrollbar gutters when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within
-the available width.</p>
+space, aligned with header, search, and footer controls. Both direct links and submenu icons show their labels in tooltips when compact. Activating its search
+icon expands the rail and focuses the search field without scrolling the page. The root and nested lists reserve their scrollbar gutters when content fits,
+preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.</p>
+<p>Desktop expansion lays out content at its final width behind the panel&#39;s clipping edge, preventing labels from repeatedly wrapping as the rail opens. Labels and
+disclosure arrows fade in with search during the final 60ms of the width transition, using its remaining running time. Initial expanded rendering and mobile
+drawers have no label delay. Reduced motion removes both the delay and fade, including when the preference changes during expansion. Keyboard focus reveals
+content immediately; accessible names remain available throughout. Pending reveal work is cancelled on collapse, presentation changes, and destruction.</p>
+<p>Custom header/footer and item templates can follow the same reveal by setting <code>opacity: var(--bx-side-nav-label-opacity, 1)</code> on their text and transitioning
+opacity with <code>var(--bx-side-nav-label-transition-duration, 0ms)</code>. These inherited values also handle reduced motion and keyboard focus; keep icons and focus
+indicators outside the faded text.</p>
 <p>The background and search use Blocks surfaces. Rows reuse their containing surface, and nested lists remain inside the same themed panel. Standard semantic
 colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks. Programmatic row focus does not apply the
 hover fill; keyboard focus keeps its visible outline, and route selection belongs only to the most-specific active item.</p>
@@ -3360,8 +3396,9 @@ shell and do not lock page scrolling. Off-screen drawer content is clipped witho
 the surrounding content stationary during either slide direction. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested
 glass. Presentation changes establish the closed layout immediately; explicit open/close actions animate the slide. Reduced motion disables that animation.</p>
 <h2>Playground</h2>
-<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withInAppNavigation</code> routes, an expanded text-only menu, its Blocks brand,
-and no footer. Its compact control and leading item/section icons are disabled; these remain available in the dedicated demo. The dedicated demo supplies a
+<p>Visit <code>/components/side-nav</code>. The application shell also uses <code>SideNav</code> with real <code>withInAppNavigation</code> routes, a persistent collapsible icon rail, its Blocks
+brand, and no footer. Components groups the five component categories, with Layout nested under Primitives; Tools groups the configurators behind its own
+overview. Tokens, Icons, and Utilities remain separate root entries. Existing component and configurator URLs remain valid. The dedicated demo supplies a
 four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional
 search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section, action, demo control,
 instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive
@@ -6915,6 +6952,20 @@ styles.</p>
 <h2>Playground</h2>
 <p>Open <code>/tokens</code> from Tools. Search for <code>warning</code>, <code>danger</code>, <code>background</code>, <code>shadow</code>, <code>rounded</code>, <code>glass</code>, a component name, a source path, or a full CSS variable.
 Choose <strong>Color pairs</strong> for the complete companion mapping, <strong>Sass breakpoints</strong> for responsive thresholds, or <strong>Utility classes</strong> for copyable class names.</p>
+`,"projects/playground/src/app/components/screens/tools/README.md":`<h1>Playground tools</h1>
+<p>The Tools overview groups the modal and toast configurators behind one navigation entry. Cards open the existing <code>/modal</code> and <code>/toastr</code> pages.</p>
+<h2>Import</h2>
+<p>The playground lazy-loads <code>Tools</code> from <code>tools.ts</code> at <code>/tools</code>.</p>
+<h2>Usage</h2>
+<p>Open Tools from the main navigation, then choose a configurator from its overview or open its navigation disclosure to browse the same destinations.</p>
+<h2>API</h2>
+<p>The overview reads the shared <code>NavigationService</code> Tools section, preserving route visibility and resolved labels. It has no component inputs or outputs.</p>
+<h2>Appearance and customization</h2>
+<p>Cards use Blocks surfaces, the responsive Grid component, and semantic color, spacing, and radius tokens. The active playground theme applies immediately.</p>
+<h2>Behavior and accessibility</h2>
+<p>Cards are native links with visible keyboard focus. The grid fits narrow containers and enlarged text. Existing configurator URLs remain unchanged.</p>
+<h2>Playground</h2>
+<p>Visit <code>/tools</code>, <code>/modal</code>, or <code>/toastr</code>.</p>
 `,"projects/playground/src/app/components/screens/utilities/README.md":`<h1>Utilities playground</h1>
 <p>Explore public Core utilities through focused interactive examples. Choose a utility from the overview or expand <strong>Core \u2192 Utilities</strong> in the sidenav. Each page
 presents its demo first, then separate documentation and source tabs. The <a href="components">Core guide</a> remains the entry-point
@@ -7467,6 +7518,30 @@ grids, and tags.</p>
 <h2>Playground</h2>
 <p>Open <code>/utilities/viewport</code> from <strong>Core \u2192 Utilities \u2192 Viewport and breakpoints</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
 <p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/shared/sidenav/README.md":`<h1>Playground navigation</h1>
+<p>The playground shell uses Blocks SideNav for an expandable desktop sidebar, a compact icon rail, and a mobile drawer.</p>
+<h2>Import</h2>
+<p>The application shell imports <code>Sidenav</code> from <code>./components/shared/sidenav/sidenav</code>.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">app-sidenav</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Blocks&quot;</span> /&gt;</span></code></pre>
+<p>Use the desktop header control to collapse or expand the navigation. The preference persists across reloads. On mobile, use the toolbar menu button.</p>
+<h2>API</h2>
+<p><code>title</code> is required. <code>mobile()</code>, <code>open()</code>, <code>panelId()</code>, and <code>toggle(event)</code> connect the application&#39;s mobile trigger to the shared drawer.</p>
+<p>The route-driven tree presents Home, Appearance, Components, Tokens, Icons, Utilities, Tools, and Release notes as separate entries with icons. Components
+contains Primitives, Forms, Navigation, Modals, and Notifications; each category contains its component pages. Layout adds a third level under Primitives.
+Category links open a filtered component index. Tools contains the modal and toast configurators and links to its own overview page. Release notes is the last
+entry. Nested leaf pages use text-only rows; nested parents retain their icons.</p>
+<h2>Appearance and customization</h2>
+<p>The header shows the Blocks logo alone when compact and includes the title and release label when expanded. Shared SideNav controls all panel surfaces,
+dimensions, icons, tooltips, search, and theme behavior.</p>
+<h2>Behavior and accessibility</h2>
+<p>The navigation retains the shared keyboard browsing, Back and ancestor actions, focus restoration, reduced-motion support, and mobile focus trap. Opening a
+branch or search temporarily expands the icon rail without changing the saved preference. Existing component and configurator URLs remain valid. Desktop labels
+retain their final layout while the panel expands, then fade in briefly. Reduced motion skips the delay and fade, including live preference changes. Keyboard
+focus reveals labels immediately, and accessible names remain available during the visual transition.</p>
+<h2>Playground</h2>
+<p>The navigation is available on every playground page. Visit <code>/components</code>, <code>/components/category/forms</code>, <code>/components/layout</code>, and <code>/tools</code> to explore the
+hierarchy.</p>
 `};var w={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
@@ -8778,7 +8853,7 @@ dd {
     overflow: auto;
     overscroll-behavior: contain;
 }
-`};var k=class c{document=p(te);router=p(Hr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let i=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||c)};static ɵcmp=V({type:c,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&ve(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),Jn(4,`article`,2),it()),n&2&&(D(4),Ka(`innerHTML`,s.readmeContent(),Lm))},styles:[`
+`};var k=class i{document=p(te);router=p(Hr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let c=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||i)};static ɵcmp=V({type:i,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&ve(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),Jn(4,`article`,2),it()),n&2&&(D(4),Ka(`innerHTML`,s.readmeContent(),Lm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
