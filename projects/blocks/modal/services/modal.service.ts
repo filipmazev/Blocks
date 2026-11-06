@@ -82,6 +82,11 @@ export class ModalService implements IModalService {
 
     const modal = new ModalRef<D, R, C>(contentRef, component, wrapperRef, this, new ModalConfig(resolvedConfig));
 
+    // Register before application initialization, which may synchronously open a child dialog.
+    this.modals.add(modal);
+    this.syncNestingDepth();
+    this.modalsSubject.next(this.modals);
+
     if (this.isIModal<D, R>(contentRef.instance)) {
       contentRef.instance.modal = modal;
       contentRef.instance.onModalInit();
@@ -98,9 +103,6 @@ export class ModalService implements IModalService {
     this.renderer.setStyle(modalElement, 'width', '100%');
     this.renderer.setStyle(modalElement, 'display', 'flex');
     this.renderer.setStyle(modalElement, 'flex-grow', '1');
-
-    this.modals.add(modal);
-    this.modalsSubject.next(this.modals);
 
     modal.open();
 
@@ -129,6 +131,7 @@ export class ModalService implements IModalService {
    */
   public unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
     this.modals.delete(modal);
+    this.syncNestingDepth();
     this.modalsSubject.next(this.modals);
   }
 
@@ -173,6 +176,10 @@ export class ModalService implements IModalService {
   }
 
   //#region Helpers
+
+  private syncNestingDepth(): void {
+    for (const [depth, modal] of [...this.modals].entries()) modal.modalContainerRef.instance.nestingDepth.set(depth);
+  }
 
   private createSubscriptions(): void {
     this.router.events

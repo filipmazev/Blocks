@@ -29,7 +29,9 @@ The context controls hosting, not presentation. Configure appearance through the
 
 ## Behavior and accessibility
 
-Nested consumers inherit the nearest provided context. The owning overlay retains responsibility for focus, keyboard dismissal, positioning, and cleanup.
+Nested consumers, including tooltips, inherit the nearest provided context. SidePanel provides a top-layer context automatically so floating controls escape its
+clipping surface without component-specific z-index overrides. The owning overlay retains responsibility for focus, keyboard dismissal, positioning, and
+cleanup.
 
 ## Playground
 

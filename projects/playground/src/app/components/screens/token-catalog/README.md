@@ -129,9 +129,18 @@ paths. Changing search or categories opens only the first matching section; othe
 include any selected family, for example Colors and Color pairs. Clear the category selection to return to All tokens; All tokens is the absence of filtering
 rather than a selectable option. Search and counts cover the complete catalog regardless of which batches are mounted.
 
-At 48 or more displayed cards across all expanded sections, token batches load as you scroll without page controls or API requests. Smaller displayed sets
-render immediately. Shared intersection and resize observers mount nearby batches and release distant cards, retaining measured placeholder heights. Keyboard
-focus can reveal an unloaded batch, and focused content is retained when outside the viewport. If the browser lacks the observer APIs, batches render normally.
+Each expanded group initially exposes up to two 24-token chunks. Primitives' `InfiniteScrollDirective` progressively reveals another two chunks at the group
+boundary, including filling a short viewport from this finite local dataset. A keyboard-accessible Show more action remains available while chunks remain.
+Closing a group preserves its reveal count; changing search or categories resets the counts.
+
+The shared `VirtualCollection` uses measured, bidirectional grid rows within each expanded group. Distant cards are unmounted, their height is retained with
+spacers, and returning restores rows without retaining every previously visited tile. Responsive column/height changes preserve a stable scroll anchor, and a
+focused row can remain mounted independently. Groups outside the overscan area retain their scroll extent without mounting their cards. This replaces the old
+playground-only viewport/chunk observer. Color conversion reads only mounted items, including pinned focused rows.
+
+A constrained catalog viewport occupies the content area below the top bar. The shared Scroll to top action is aligned to the results width near that viewport's
+bottom-right corner, scrolls that container, and respects reduced motion. It has a keyboard/hover tooltip with touch long-press disabled.
+
 Metadata expansion within an unloaded batch is recreated when it returns. Current color-value search uses a lazy index; ordinary browsing converts only mounted
 batches. One canvas and a conversion cache are reused until theme/appearance changes. Documentation content mounts only while its section is open. Clear the
 category selection to show all tokens. Blocks accordions provide heading navigation, expansion and focus restoration; source defaults and fallbacks use Blocks

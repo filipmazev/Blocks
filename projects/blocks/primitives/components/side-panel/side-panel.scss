@@ -1,0 +1,165 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    --bx-panel-resize-gutter: #{spacing(6)};
+
+    display: contents;
+}
+
+:host(.local-panel) {
+    display: block;
+    flex: 0 0 0;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow: visible;
+    transition:
+        flex-basis var(--bx-panel-duration, 175ms) ease-in-out,
+        inline-size var(--bx-panel-duration, 175ms) ease-in-out;
+}
+
+.panel-layer {
+    position: fixed;
+    inset: 0;
+    z-index: var(--bx-panel-z-index, #{z(fixed)});
+    pointer-events: none;
+    overflow: clip;
+    visibility: hidden;
+    transition: visibility 0s linear var(--bx-panel-duration, 175ms);
+
+    &.is-open {
+        visibility: visible;
+        transition-delay: 0s;
+    }
+}
+
+.panel-layer.local-layer {
+    position: absolute;
+}
+
+.panel-surface {
+    @include panel-frame;
+    @include panel-surface;
+    @include panel-square-corners;
+
+    position: absolute;
+    inset-block: 0;
+    max-inline-size: 100%;
+    padding: var(--bx-panel-padding, #{spacing(4)});
+    gap: var(--bx-panel-gap, #{spacing(4)});
+    transition: transform var(--bx-panel-duration, 175ms) ease-in-out;
+    outline: none;
+
+    &.panel-left {
+        left: 0;
+        transform: translateX(-100%);
+    }
+
+    &.panel-right {
+        right: 0;
+        transform: translateX(100%);
+    }
+
+    .is-open > & {
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+}
+
+.panel-header {
+    @include panel-banner;
+}
+
+.panel-heading {
+    @include panel-banner-heading;
+}
+
+.panel-close {
+    @include panel-close;
+}
+
+.panel-banner {
+    @include panel-banner;
+}
+
+.panel-footer {
+    @include panel-footer;
+
+    flex-wrap: wrap;
+    border-block-start: 1px solid var(--bx-border-default);
+    padding-block-start: spacing(4);
+}
+
+.panel-body {
+    flex: 1;
+    min-block-size: 0;
+    min-inline-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.panel-backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--bx-panel-backdrop, var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%)));
+    opacity: 0;
+    transition: opacity var(--bx-panel-duration, 175ms) ease-in-out;
+
+    .is-open > & {
+        pointer-events: auto;
+        opacity: 1;
+    }
+}
+
+[hidden] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host(.local-panel) {
+        transition-duration: 0s;
+    }
+
+    .panel-layer {
+        --bx-panel-duration: 0ms !important;
+    }
+}
+
+.panel-resize-handle {
+    @include resize-grip;
+
+    position: absolute;
+    inset-block: 0;
+    inline-size: var(--bx-panel-resize-gutter, #{spacing(6)});
+    z-index: 1;
+    transition: transform var(--bx-panel-duration, 175ms) ease-in-out;
+
+    &.resize-right {
+        left: var(--bx-panel-rendered-width);
+        transform: translateX(calc(0px - var(--bx-panel-rendered-width)));
+
+        .is-open > & {
+            transform: translateX(0);
+        }
+    }
+
+    &.resize-left {
+        right: var(--bx-panel-rendered-width);
+        transform: translateX(var(--bx-panel-rendered-width));
+
+        .is-open > & {
+            transform: translateX(0);
+        }
+    }
+
+    .is-open > & {
+        pointer-events: auto;
+    }
+}
+
+@media (forced-colors: active) {
+    .panel-surface {
+        border: 1px solid CanvasText;
+        background: Canvas;
+        color: CanvasText;
+    }
+}

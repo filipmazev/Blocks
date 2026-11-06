@@ -17,7 +17,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { ResolvableText } from '@filip.mazev/blocks/core';
+import { measureScrollBoundary, observeScrollBoundary, ResolvableText } from '@filip.mazev/blocks/core';
 
 import { LoadMoreFooter } from '@forms/components/shared/load-more/load-more-footer';
 import { ILoadMoreConfig } from '@forms/interfaces/iload-more-config.interface';
@@ -101,11 +101,7 @@ export class LoadMoreDirective {
    * @param source - User/request origin, distinguishing scroll, normal button activation, and explicit retry. Defaults to `'button'`.
    */
   public request(source: LoadMoreSource = 'button'): void {
-    if (this.loadMoreSuppressed()) return;
-
-    if ((!this.loadMoreHasMore() && !this.loadMoreError()) || this.loadMoreDisabled() || this.loadMoreLoading() || this.requested()) return;
-
-    if (source === 'scroll' && this.loadMoreError()) return;
+    if (!this.canRequest(source)) return;
 
     this.requested.set(true);
     this.retrying.set(!!this.loadMoreError());
@@ -115,45 +111,37 @@ export class LoadMoreDirective {
 
   //#region Helpers
 
+  private canRequest(source: LoadMoreSource): boolean {
+    return (
+      !this.loadMoreSuppressed() &&
+      (this.loadMoreHasMore() || !!this.loadMoreError()) &&
+      !this.loadMoreDisabled() &&
+      !this.loadMoreLoading() &&
+      !this.requested() &&
+      (source !== 'scroll' || !this.loadMoreError())
+    );
+  }
+
   private mount(): void {
     this.footer = this.viewContainerRef.createComponent(LoadMoreFooter);
     this.nativeElement.append(this.footer.location.nativeElement);
     this.footer.instance.request.subscribe(() => this.request());
 
-    const measure = () => this.measure();
-    const onScroll = () => {
-      const footerHeight = (this.footer?.location.nativeElement as HTMLElement | undefined)?.offsetHeight ?? 0;
-      const contentHeight = this.nativeElement.scrollHeight - footerHeight;
-
-      if (this.nativeElement.scrollTop + this.nativeElement.clientHeight >= contentHeight - (this.loadMoreConfig().threshold ?? 32))
-        this.ngZone.run(() => this.request('scroll'));
-    };
-
     this.ngZone.runOutsideAngular(() => {
-      const resize = new ResizeObserver(measure);
-      const observeContent = () => {
-        for (const child of Array.from(this.nativeElement.children)) {
-          if (child !== this.footer?.location.nativeElement) resize.observe(child);
-        }
+      const disconnect = observeScrollBoundary(
+        this.nativeElement,
+        this.nativeElement,
+        () => {
+          const footerHeight = (this.footer?.location.nativeElement as HTMLElement | undefined)?.offsetHeight ?? 0;
+          const boundary = measureScrollBoundary(this.nativeElement, this.nativeElement, footerHeight);
 
-        this.measure();
-      };
-
-      const mutation = new MutationObserver(observeContent);
-
-      resize.observe(this.nativeElement);
-      observeContent();
-      mutation.observe(this.nativeElement, { childList: true, subtree: true, characterData: true });
-      this.nativeElement.addEventListener('scroll', onScroll, { passive: true });
-      this.nativeElement.ownerDocument.defaultView?.addEventListener('resize', measure);
-      this.nativeElement.ownerDocument.defaultView?.visualViewport?.addEventListener('resize', measure);
+          if (boundary.distance <= (this.loadMoreConfig().threshold ?? 32) && this.canRequest('scroll')) this.ngZone.run(() => this.request('scroll'));
+        },
+        () => this.measure()
+      );
 
       this.destroyRef.onDestroy(() => {
-        resize.disconnect();
-        mutation.disconnect();
-        this.nativeElement.removeEventListener('scroll', onScroll);
-        this.nativeElement.ownerDocument.defaultView?.removeEventListener('resize', measure);
-        this.nativeElement.ownerDocument.defaultView?.visualViewport?.removeEventListener('resize', measure);
+        disconnect();
         this.footer?.destroy();
       });
     });
@@ -164,7 +152,7 @@ export class LoadMoreDirective {
 
   private measure(): void {
     const footerHeight = (this.footer?.location.nativeElement as HTMLElement | undefined)?.offsetHeight ?? 0;
-    const overflowing = this.nativeElement.scrollHeight - footerHeight > this.nativeElement.clientHeight + 1;
+    const { overflowing } = measureScrollBoundary(this.nativeElement, this.nativeElement, footerHeight);
 
     if (overflowing !== this.overflowing()) this.ngZone.run(() => this.overflowing.set(overflowing));
   }

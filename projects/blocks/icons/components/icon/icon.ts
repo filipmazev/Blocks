@@ -16,7 +16,7 @@ import {
 
 import { loadIcon } from '@icons/helpers/icon-resolve.helpers';
 import { IIconDefinition } from '@icons/interfaces/icon-definition.interface';
-import { IconName, IconSize, IconStrokeWidth } from '@icons/types/icon.types';
+import { IconName, IconSize } from '@icons/types/icon.types';
 
 @Component({
   selector: 'bx-icon',
@@ -78,9 +78,9 @@ export class Icon {
   });
 
   protected readonly resolvedSize: Signal<string> = computed(() => {
-    const s = this.size();
+    const size = Number(this.size());
 
-    return isNaN(Number(s)) ? s : `${Number(s)}px`;
+    return `${Number.isFinite(size) && size > 0 ? size : 24}px`;
   });
   protected readonly resolvedColor: Signal<string> = computed(() => {
     const token = this.activeColorToken();
@@ -99,7 +99,8 @@ export class Icon {
 
     if (!icon?.svgContent) return '';
 
-    const strokeWidth = this.strokeWidth() ?? 1.5;
+    const requestedStroke = this.strokeWidth() ?? 1.5;
+    const strokeWidth = Number.isFinite(requestedStroke) && requestedStroke > 0 ? requestedStroke : 1.5;
 
     const svg = `
     <svg
@@ -121,14 +122,14 @@ export class Icon {
 
   /** Icon definition or registered Lucide icon name to render. Required input. */
   public readonly name: InputSignal<IconName> = input.required<IconName>();
-  /** Rendered icon dimension in CSS pixels. Defaults to `'24'`. */
+  /** Positive icon dimension in CSS pixels as a number or numeric string. Defaults to '24'; invalid values fall back to 24. */
   public readonly size: InputSignal<IconSize> = input<IconSize>('24');
   /** Semantic color role applied to the component presentation. Optional; omission leaves the value undefined. */
   public readonly color: InputSignal<ThemedColor | undefined> = input<ThemedColor | undefined>(undefined);
   /** Optional background color behind the icon; auto selects the themed backing behavior. Optional; omission leaves the value undefined. */
   public readonly bgColor: InputSignal<'auto' | ThemedColor | undefined> = input<ThemedColor | 'auto' | undefined>(undefined);
-  /** SVG stroke-width override for the icon. Optional; omission leaves the value undefined. */
-  public readonly strokeWidth: InputSignal<IconStrokeWidth | undefined> = input<IconStrokeWidth | undefined>(undefined);
+  /** Positive finite SVG stroke width. Omission and invalid values use 1.5; fractional values are supported. */
+  public readonly strokeWidth: InputSignal<number | undefined> = input<number | undefined>(undefined);
   /** Whether the visual is decorative and should be hidden from assistive technology. Defaults to `true`. */
   public readonly decorative: InputSignal<boolean> = input(true);
   /** Optional accessible name when visible text does not provide an appropriate control name. Optional; omission leaves the value undefined. */
@@ -137,11 +138,14 @@ export class Icon {
   constructor() {
     let requestId = 0;
 
-    effect(() => {
+    effect((onCleanup) => {
       const currentId = ++requestId;
 
       const name = this.name();
 
+      onCleanup(() => {
+        requestId++;
+      });
       this.icon.set(undefined);
       this.loadError.set(null);
 

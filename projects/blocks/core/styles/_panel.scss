@@ -1,0 +1,111 @@
+@use 'mixins' as *;
+
+@mixin panel-frame {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+}
+
+@mixin panel-surface(
+    $background: var(--bx-panel-bg, var(--bx-modal-bg, var(--bx-bg-surface))),
+    $text: var(--bx-panel-text, var(--bx-modal-text, var(--bx-text-primary)))
+) {
+    --bx-glass-surface: #{$background};
+    --bx-glass-text: #{$text};
+    --bx-glass-shadow: #{shadow(modal)};
+    --bx-glass-min-opacity: 0.52;
+    --bx-glass-rim-opacity: 1;
+
+    background: $background;
+    color: $text;
+    border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
+    box-shadow: shadow(modal);
+}
+
+@mixin modal-surface($dimming: true) {
+    @include panel-surface(
+        $background: var(--bx-modal-bg, var(--bx-panel-bg, var(--bx-bg-surface))),
+        $text: var(--bx-modal-text, var(--bx-panel-text, var(--bx-text-primary)))
+    );
+
+    --bx-glass-min-opacity: var(--bx-modal-material-opacity, 0.52);
+    --bx-refraction-min-opacity: max(0.72, var(--bx-modal-material-opacity, 0.52));
+
+    @if $dimming {
+        /* IMPORTANT: An outer shadow dims only outside the translucent surface, leaving its sampled background free of scrim tint. */
+        box-shadow:
+            var(--bx-glass-shadow),
+            0 0 0 100vmax var(--bx-modal-dimming-background, transparent);
+    }
+}
+
+@mixin panel-square-corners {
+    border-radius: 0;
+}
+
+@mixin panel-header {
+    display: flex;
+    justify-content: space-between;
+    gap: spacing(2);
+    flex-shrink: 0;
+    min-inline-size: 0;
+}
+
+@mixin panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: spacing(2);
+    flex-shrink: 0;
+}
+
+@mixin panel-banner {
+    @include panel-header;
+
+    align-items: flex-start;
+    gap: spacing(8);
+    min-block-size: 2rem;
+    padding-block-end: spacing(4);
+    border-block-end: 1px solid var(--bx-border-default);
+}
+
+@mixin panel-banner-heading {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-inline-size: 0;
+    gap: spacing(4);
+    font-weight: bold;
+    font-size: 1.25rem;
+    overflow-wrap: anywhere;
+
+    > bx-icon {
+        flex-shrink: 0;
+    }
+}
+
+@mixin panel-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: var(--bx-panel-close-size, 2rem);
+    block-size: var(--bx-panel-close-size, 2rem);
+    padding: 0;
+    border: none;
+    border-radius: var(--bx-rounded-sm, #{radius(sm)});
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--bx-bg-element-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}

@@ -62,6 +62,8 @@ export class Chip {
 
   /** Whether chip activation is allowed to change selection. Defaults to `true`. */
   public readonly selectable: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
+  /** Whether activating a selected chip can deselect it. Defaults to true; false supports owner-coordinated single-choice groups. */
+  public readonly deselectable: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
   /** Whether the chip offers its removal action. Defaults to `false`. */
   public readonly removable: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Whether user interaction is disabled; disabled controls do not accept ordinary activation or edits. Defaults to `false`. */
@@ -89,7 +91,7 @@ export class Chip {
   public activate(): void {
     if (this.disabled() || this.isReadonly()) return;
 
-    if (this.selectable()) this.selected.update((selected) => !selected);
+    if (this.selectable()) this.selected.set(this.deselectable() ? !this.selected() : true);
 
     this.activated.emit();
   }

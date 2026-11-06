@@ -1,0 +1,42 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    --bx-virtual-row-gap: #{spacing(3)};
+    --bx-virtual-column-gap: #{spacing(3)};
+
+    display: block;
+    position: relative;
+    min-inline-size: 0;
+    overflow-anchor: none;
+}
+
+.column-probe {
+    position: absolute;
+    inset-inline: 0;
+    block-size: 0;
+    visibility: hidden;
+    pointer-events: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--bx-virtual-min-column-width, 7rem)), 1fr));
+    gap: var(--bx-virtual-column-gap);
+    row-gap: var(--bx-virtual-row-gap);
+}
+
+.virtual-row {
+    display: grid;
+    grid-template-columns: repeat(var(--bx-virtual-columns, 1), minmax(0, 1fr));
+    gap: var(--bx-virtual-column-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+}
+
+.virtual-item {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+}
+
+.virtual-spacer {
+    pointer-events: none;
+    overflow-anchor: none;
+}

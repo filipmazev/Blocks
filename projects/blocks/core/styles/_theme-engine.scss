@@ -240,17 +240,18 @@ $semantic-pairs: (
 }
 
 @function _on-color($background) {
+    /* IMPORTANT: Prefer white when it meets text contrast; near-equal black/white ratios should not turn saturated blue fills into dark-on-dark controls. */
+    @if _contrast(#ffffff, $background) >= 4.5 {
+        @return #ffffff;
+    }
+
     $dark: #0b0b0b;
 
     @if _contrast($dark, $background) < 4.5 {
         $dark: #000000;
     }
 
-    @if _contrast($dark, $background) >= _contrast(#ffffff, $background) {
-        @return $dark;
-    }
-
-    @return #ffffff;
+    @return $dark;
 }
 
 @function _mode($dark, $light-value, $dark-value) {
@@ -261,17 +262,47 @@ $semantic-pairs: (
     @return $light-value;
 }
 
-@function _color-roles($palette, $role, $dark) {
-    $base: get-color-from-palette($palette, _mode($dark, 500, 300));
-    $hover: get-color-from-palette($palette, _mode($dark, 600, 200));
-    $active: get-color-from-palette($palette, _mode($dark, 700, 100));
-    $subtle: get-color-from-palette($palette, _mode($dark, 100, 900));
-    $text: get-color-from-palette($palette, _mode($dark, 800, 200));
-
-    @if _contrast($text, $subtle) < 4.5 {
-        $text: _on-color($subtle);
+@function _meets-contrast($text, $backgrounds, $minimum) {
+    @each $background in $backgrounds {
+        @if _contrast($text, $background) < $minimum {
+            @return false;
+        }
     }
 
+    @return true;
+}
+
+@function _readable-palette-color($palette, $shade, $dark, $backgrounds, $minimum: 4.5) {
+    $text: get-color-from-palette($palette, $shade);
+
+    @while not _meets-contrast($text, $backgrounds, $minimum) {
+        $next: math.clamp(50, _mode($dark, $shade + 100, $shade - 100), 1000);
+
+        @if $next == $shade {
+            @error "Palette '#{$palette}' has no shade meeting #{$minimum}:1 across its semantic backgrounds.";
+        }
+
+        $shade: $next;
+        $text: get-color-from-palette($palette, $shade);
+    }
+
+    @return $text;
+}
+
+@function _color-roles($palette, $role, $dark, $backgrounds: ()) {
+    $base-shade: _mode($dark, 500, 300);
+
+    @if not $dark and $role == 'accent' {
+        @while $base-shade < 800 and _contrast(#ffffff, get-color-from-palette($palette, $base-shade)) < 4.5 {
+            $base-shade: $base-shade + 100;
+        }
+    }
+
+    $base: get-color-from-palette($palette, $base-shade);
+    $hover: get-color-from-palette($palette, _mode($dark, $base-shade + 100, 200));
+    $active: get-color-from-palette($palette, _mode($dark, $base-shade + 200, 100));
+    $subtle: get-color-from-palette($palette, _mode($dark, 100, 900));
+    $text: _readable-palette-color($palette, _mode($dark, 800, 200), $dark, list.append($backgrounds, $subtle));
     $text-key: 'text-accent';
     $border-key: 'border-accent';
 
@@ -317,6 +348,25 @@ $semantic-pairs: (
         'meta-brand-palette': $brand,
         'meta-accent-palette': $accent
     );
+    $surface-backgrounds: ();
+
+    @each $key
+        in (
+            'bg-canvas',
+            'bg-surface',
+            'bg-surface-alt',
+            'bg-element',
+            'bg-element-hover',
+            'bg-element-active',
+            'bg-neutral',
+            'bg-neutral-hover',
+            'bg-neutral-active'
+        )
+    {
+        $surface-backgrounds: list.append($surface-backgrounds, map.get($base, $key));
+    }
+
+    $base: map.set($base, 'text-secondary', _readable-palette-color('neutral', _mode($dark, 600, 400), $dark, $surface-backgrounds));
 
     @each $status, $palette in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger') {
         $base: map.merge(
@@ -333,8 +383,8 @@ $semantic-pairs: (
         );
     }
 
-    $base: map.merge($base, _color-roles($brand, 'primary', $dark));
-    $base: map.merge($base, _color-roles($accent, 'accent', $dark));
+    $base: map.merge($base, _color-roles($brand, 'primary', $dark, $surface-backgrounds));
+    $base: map.merge($base, _color-roles($accent, 'accent', $dark, $surface-backgrounds));
 
     @return validate-theme(map.merge($base, $overrides), '#{$brand}-#{$accent}');
 }

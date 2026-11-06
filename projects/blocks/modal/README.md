@@ -115,6 +115,12 @@ Extend `ModalCloseGuard` and implement `canClose(modalService)` returning a bool
 `ModalConfirmCloseGuard<D, R>(ConfirmationComponent, config)` opens a typed confirmation dialog and waits for its result. Keep application-owned unsaved state
 in the application; provide the guard when opening its content. `forceClose: true` deliberately bypasses the guard.
 
+### Declarative nonmodal panels
+
+For page-owned inspectors and filters, use [SidePanel](../primitives/components/side-panel/README.md) from the primitives entry point with its boolean `open`
+model. It shares square panel corners, surface material, layout, and close-control presentation with Modal Side while keeping nonmodal behavior separate. Modal
+continues to own its guarded service lifecycle, modal semantics, nested stacking, backdrops, focus trapping/restoration, and scroll locks.
+
 ## Appearance and customization
 
 `IModalStyleConfig` supports `layout: 'center' | 'left' | 'right' | 'bottom-sheet'`, responsive `breakpoints`, `animate` (true), `hasBackdrop` (true),
@@ -127,6 +133,36 @@ match the [core breakpoint tokens](../core/README.md): `xs`, `sm`, `md`, `lg`, `
 The dialog inherits palette, semantic tokens, and appearance from `ThemingService`. See the
 [appearance guide](../../playground/src/app/components/screens/appearance/README.md) for application-wide configuration.
 
+All modal layouts share the declarative SidePanel's translucent surface material and semantic background tokens. `--bx-modal-bg` and `--bx-modal-text` remain
+modal-specific overrides, falling back to `--bx-panel-bg` / `--bx-panel-text` and then `--bx-bg-surface` / `--bx-text-primary`. Root dialogs retain their normal
+0.52 opacity floor and shared appearance preferences. Left/right modal panels have four square corners; centered dialogs and bottom sheets retain their shapes.
+
+The first dialog paints dimming outside its surface, while the shared backdrop retains blur and pointer dismissal. This prevents the root surface from blending
+with its own black scrim. Its centered animation keeps dimming on an unscaled frame, so the backdrop remains viewport-sized during zoom.
+
+### Nested dialogs
+
+Each nested dialog restores an independent fixed backdrop and dims the parent normally. Opening or closing a child never changes the parent's material or turns
+its backdrop off. The first nested dialog uses a minimum 0.9 material opacity; the next nested dialog and deeper levels use 1. More opaque application or
+accessibility settings still take precedence. This policy applies to centered, side, and bottom-sheet layouts, including responsive layout changes and close
+guards. Depth follows the mounted modal stack and updates when an intervening dialog is removed; a dialog remains mounted through its close animation.
+
+Customize the floors through the shared settings service. Index zero is the first nested dialog; the last entry repeats for deeper levels. An empty array
+retains ordinary material at every depth. Values clamp to 0.52–1; nonfinite entries use the defaults for their depth. Replace the array when updating it;
+mounted modals respond reactively.
+
+```typescript
+import { inject } from '@angular/core';
+import { ModalGlobalSettingsService } from '@filip.mazev/blocks/modal';
+
+private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
+
+// First nested dialog: at least 90% opaque; further nesting: fully opaque.
+this.modalGlobalSettingsService.nestedOpacityFloors.set([0.9, 1]);
+```
+
+`hasBackdrop: false` keeps that dialog's backdrop off. Reduced-transparency and forced-color modes retain the opaque fallback.
+
 ## Behavior and accessibility
 
 Open content through `ModalService` so focus handling, Escape/backdrop dismissal, close guards, scroll locks, layout, and cleanup stay coordinated.
@@ -137,6 +173,9 @@ Header text accepts `ResolvableText` and updates through the optional `BX_I18N` 
 custom actions, descriptions, errors, and form controls. Keep actions reachable in constrained viewports and preserve focus when completing asynchronous work.
 
 ## Playground
+
+The live dialog includes **Open nested dialog**, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a
+child returns to its parent. The confirm-close guard exercises the same independent backdrop and depth policy.
 
 Open `/modal` for the configurator, `/components/modal-core` for the lifecycle host, or the centered, side, bottom-sheet, header, footer, and backdrop entries
 in the component catalog. The examples demonstrate typed results and guarded dismissal.

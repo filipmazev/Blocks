@@ -51,3 +51,7 @@ export type { ShortcutPlatform } from '@core/types/shortcut.types';
 
 export * from '@core/constants/theme-palettes.constants';
 export * from '@core/interfaces/itheming-service-palettes-state.interface';
+
+export * from '@core/helpers/scroll-container.helpers';
+export * from '@core/helpers/scroll-boundary.helpers';
+export * from '@core/interfaces/iscroll-boundary.interface';

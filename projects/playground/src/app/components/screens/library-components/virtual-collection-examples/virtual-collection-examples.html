@@ -1,0 +1,26 @@
+<div class="virtual-demo-controls">
+    <bx-select label="Layout" [clearable]="false" [options]="layouts" [ngModel]="layout()" (ngModelChange)="layout.set($event)" />
+    <bx-input-field label="Scroll to index" type="number" [min]="0" [max]="items.length - 1" [ngModel]="index()" (ngModelChange)="index.set($event)" />
+    <button bx-button type="button" variant="tonal" (click)="collection.scrollToIndex(index())">Scroll to item</button>
+</div>
+<label for="virtual-demo-width">Container width {{ width() }}%</label>
+<input id="virtual-demo-width" bxSlider type="range" min="40" max="100" [ngModel]="width()" (ngModelChange)="width.set($event)" />
+<p role="status">
+    {{ collection.renderedItems().length }} mounted of {{ items.length }} · {{ collection.renderedRange().columns }} columns · range
+    {{ collection.renderedRange().start }}–{{ collection.renderedRange().end }}
+</p>
+<div #viewport class="virtual-demo-viewport" tabindex="0" role="region" aria-label="Virtual collection example" [style.inline-size.%]="width()">
+    <bx-virtual-collection #collection [items]="items" [trackBy]="itemKey" [config]="config()" [scrollContainer]="viewport">
+        <ng-template let-item [bxVirtualItem]="collection">
+            <bx-card [title]="item.title" [headingLevel]="3" [surfaceEffects]="false" [opaque]="true">
+                <p>{{ item.description }}</p>
+                @if (expanded().has(item.id)) {
+                    <p>{{ item.description }} {{ item.description }}</p>
+                }
+                <button bx-button type="button" variant="tonal" [attr.aria-expanded]="expanded().has(item.id)" (click)="toggle(item.id)">
+                    {{ expanded().has(item.id) ? 'Less content' : 'More content' }}
+                </button>
+            </bx-card>
+        </ng-template>
+    </bx-virtual-collection>
+</div>

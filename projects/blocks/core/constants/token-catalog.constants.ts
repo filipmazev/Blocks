@@ -776,6 +776,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-chip-fill-opacity',
+    reference: 'var(--bx-chip-fill-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 chip',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
     name: '--bx-chip-hover-background',
     reference: 'var(--bx-chip-hover-background)',
     category: 'components',
@@ -3944,7 +3953,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '0.45', '0.52', '0.65', '0.72', '0.8', '1', 'var(--bx-alert-min-opacity, 0.2)', 'var(--bx-tag-fill-opacity, 0.85)']
+    defaults: [
+      '0',
+      '0.45',
+      '0.52',
+      '0.65',
+      '0.72',
+      '0.8',
+      '1',
+      'var(--bx-alert-min-opacity, 0.2)',
+      'var(--bx-chip-fill-opacity, 1)',
+      'var(--bx-modal-material-opacity, 0.52)',
+      'var(--bx-tag-fill-opacity, 0.85)'
+    ]
   },
   {
     name: '--bx-glass-opacity',
@@ -4112,7 +4133,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-chip-background, var(--bx-chip-role-background))',
       'var(--bx-chip-background, var(--bx-chip-role-fill))',
       'var(--bx-collapsible-background, var(--bx-bg-surface))',
-      'var(--bx-modal-bg, var(--bx-bg-surface))',
+      'var(--bx-modal-bg, var(--bx-panel-bg, var(--bx-bg-surface)))',
+      'var(--bx-panel-bg, var(--bx-modal-bg, var(--bx-bg-surface)))',
       'var(--bx-popover-background, var(--bx-bg-surface))',
       'var(--bx-tag-background, var(--bx-bg-surface))',
       'var(--bx-tag-background, var(--bx-tag-role-fill))',
@@ -4136,8 +4158,9 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-card-color, var(--bx-text-primary))',
       'var(--bx-chip-color, var(--bx-chip-role-on-fill))',
       'var(--bx-chip-color, var(--bx-chip-role-text))',
-      'var(--bx-modal-text, var(--bx-text-primary))',
+      'var(--bx-modal-text, var(--bx-panel-text, var(--bx-text-primary)))',
       'var(--bx-on-accent)',
+      'var(--bx-panel-text, var(--bx-modal-text, var(--bx-text-primary)))',
       'var(--bx-popover-color, var(--bx-text-primary))',
       'var(--bx-tab-selected-text, var(--bx-text-brand))',
       'var(--bx-tab-text, var(--bx-text-primary))',
@@ -4264,6 +4287,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: ['var(--bx-side-nav-backdrop, var(--bx-backdrop-color))']
   },
   {
+    name: '--bx-modal-backdrop-blur',
+    reference: 'var(--bx-modal-backdrop-blur)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-modal-backdrop-fill',
+    reference: 'var(--bx-modal-backdrop-fill)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['transparent', 'var(--bx-modal-backdrop-tone)']
+  },
+  {
     name: '--bx-modal-backdrop-position',
     reference: 'var(--bx-modal-backdrop-position)',
     category: 'components',
@@ -4271,6 +4312,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     defaults: ['absolute']
+  },
+  {
+    name: '--bx-modal-backdrop-tone',
+    reference: 'var(--bx-modal-backdrop-tone)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['rgb(0 0 0 / 60%)', 'var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%))', 'var(--bx-modal-backdrop-background, rgb(0 0 0 / 50%))']
   },
   {
     name: '--bx-modal-backdrop-z-index',
@@ -4291,6 +4341,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-modal-dimming-background',
+    reference: 'var(--bx-modal-dimming-background)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['transparent', 'var(--bx-modal-backdrop-tone)']
+  },
+  {
+    name: '--bx-modal-material-opacity',
+    reference: 'var(--bx-modal-material-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
     name: '--bx-modal-mobile-swipe-line-color',
     reference: 'var(--bx-modal-mobile-swipe-line-color)',
     category: 'components',
@@ -4298,6 +4366,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'runtime',
     defaults: []
+  },
+  {
+    name: '--bx-modal-scale',
+    reference: 'var(--bx-modal-scale)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0', '1']
   },
   {
     name: '--bx-modal-text',
@@ -4369,7 +4446,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Accent',
     kind: 'color',
     scope: 'global',
-    defaults: ['#000000']
+    defaults: ['#ffffff']
   },
   {
     name: '--bx-on-accent-active',
@@ -4520,6 +4597,96 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     reference: 'var(--bx-page-title-size)',
     category: 'components',
     group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-backdrop',
+    reference: 'var(--bx-panel-backdrop)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-bg',
+    reference: 'var(--bx-panel-bg)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-close-size',
+    reference: 'var(--bx-panel-close-size)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-duration',
+    reference: 'var(--bx-panel-duration)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0ms']
+  },
+  {
+    name: '--bx-panel-gap',
+    reference: 'var(--bx-panel-gap)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-padding',
+    reference: 'var(--bx-panel-padding)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-rendered-width',
+    reference: 'var(--bx-panel-rendered-width)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-resize-gutter',
+    reference: 'var(--bx-panel-resize-gutter)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['1.5rem']
+  },
+  {
+    name: '--bx-panel-text',
+    reference: 'var(--bx-panel-text)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-panel-z-index',
+    reference: 'var(--bx-panel-z-index)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
     kind: 'value',
     scope: 'runtime',
     defaults: []
@@ -4865,8 +5032,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    defaults: ['max(0.72, var(--bx-modal-material-opacity, 0.52))']
   },
   {
     name: '--bx-refraction-r',
@@ -4975,6 +5142,51 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     defaults: ['0']
+  },
+  {
+    name: '--bx-resize-grip-background',
+    reference: 'var(--bx-resize-grip-background)',
+    category: 'components',
+    group: 'Component \u00B7 resize',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-resize-grip-border',
+    reference: 'var(--bx-resize-grip-border)',
+    category: 'components',
+    group: 'Component \u00B7 resize',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-resize-grip-color',
+    reference: 'var(--bx-resize-grip-color)',
+    category: 'components',
+    group: 'Component \u00B7 resize',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-resize-grip-duration',
+    reference: 'var(--bx-resize-grip-duration)',
+    category: 'components',
+    group: 'Component \u00B7 resize',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-resize-rail-color',
+    reference: 'var(--bx-resize-rail-color)',
+    category: 'components',
+    group: 'Component \u00B7 resize',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
   },
   {
     name: '--bx-rounded-2xl',
@@ -6240,6 +6452,42 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'runtime',
     defaults: []
+  },
+  {
+    name: '--bx-virtual-column-gap',
+    reference: 'var(--bx-virtual-column-gap)',
+    category: 'components',
+    group: 'Component \u00B7 virtual',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0.75rem']
+  },
+  {
+    name: '--bx-virtual-columns',
+    reference: 'var(--bx-virtual-columns)',
+    category: 'components',
+    group: 'Component \u00B7 virtual',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-virtual-min-column-width',
+    reference: 'var(--bx-virtual-min-column-width)',
+    category: 'components',
+    group: 'Component \u00B7 virtual',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-virtual-row-gap',
+    reference: 'var(--bx-virtual-row-gap)',
+    category: 'components',
+    group: 'Component \u00B7 virtual',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0.75rem']
   },
   {
     name: '--bx-z-base',

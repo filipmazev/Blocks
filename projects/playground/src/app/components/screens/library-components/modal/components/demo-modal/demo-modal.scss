@@ -31,7 +31,8 @@
     }
 }
 
-.modal-menu-demo {
+.modal-menu-demo,
+.modal-nesting-demo {
     display: grid;
     justify-items: start;
     gap: spacing(3);
@@ -40,7 +41,9 @@
 }
 
 .modal-menu-demo h3,
-.modal-menu-demo p {
+.modal-menu-demo p,
+.modal-nesting-demo h3,
+.modal-nesting-demo p {
     margin: 0;
 }
 

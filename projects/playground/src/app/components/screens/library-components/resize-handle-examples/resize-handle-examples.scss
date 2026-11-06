@@ -1,0 +1,99 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.resize-demo-controls,
+.resize-demo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(4);
+}
+
+.resize-demo-actions {
+    margin-block-start: spacing(4);
+}
+
+.resize-demo-container {
+    position: relative;
+    block-size: 24rem;
+    min-inline-size: 0;
+    overflow: hidden;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    background: var(--bx-bg-canvas);
+}
+
+.resize-demo-target {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    background: var(--bx-bg-surface-alt);
+    color: var(--bx-text-primary);
+
+    &.is-horizontal {
+        max-width: 100%;
+    }
+
+    &.is-vertical {
+        max-height: 100%;
+    }
+
+    &.edge-left {
+        left: auto;
+        right: 0;
+    }
+
+    &.edge-top {
+        top: auto;
+        bottom: 0;
+    }
+
+    p {
+        padding: spacing(3);
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+}
+
+.resize-demo-handle {
+    @include resize-grip;
+
+    position: absolute;
+
+    &.handle-left,
+    &.handle-right {
+        inset-block: 0;
+        inline-size: spacing(6);
+    }
+
+    &.handle-top,
+    &.handle-bottom {
+        inset-inline: 0;
+        block-size: spacing(6);
+    }
+
+    &.handle-left {
+        right: 100%;
+    }
+
+    &.handle-right {
+        left: 100%;
+    }
+
+    &.handle-top {
+        bottom: 100%;
+    }
+
+    &.handle-bottom {
+        top: 100%;
+    }
+}

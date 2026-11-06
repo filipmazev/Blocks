@@ -18,24 +18,24 @@
     -webkit-font-smoothing: subpixel-antialiased;
     transform-style: preserve-3d;
     transform-origin: center;
-    background: var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%));
-    backdrop-filter: blur(8px);
+    background: var(--bx-modal-backdrop-fill, var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%)));
+    backdrop-filter: blur(var(--bx-modal-backdrop-blur, 8px));
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .modal-backdrop {
-        background: rgb(0 0 0 / 50%);
+        background: var(--bx-modal-backdrop-fill, rgb(0 0 0 / 50%));
     }
 }
 
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
     .modal-backdrop {
         backdrop-filter: none;
-        background: rgb(0 0 0 / 60%);
+        background: var(--bx-modal-backdrop-fill, rgb(0 0 0 / 60%));
     }
 }
 
 :host-context([data-bx-reduced-transparency='true']) .modal-backdrop {
     backdrop-filter: none;
-    background: rgb(0 0 0 / 60%);
+    background: var(--bx-modal-backdrop-fill, rgb(0 0 0 / 60%));
 }

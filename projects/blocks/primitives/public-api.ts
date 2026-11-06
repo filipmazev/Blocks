@@ -67,3 +67,21 @@ export * from '@primitives/components/page-footer/page-footer';
 export * from '@primitives/interfaces/ipage-breadcrumb.interface';
 export * from '@primitives/interfaces/ipage-navigation.interface';
 export * from '@primitives/tokens/page-navigation.token';
+
+export * from '@primitives/components/side-panel/side-panel';
+export * from '@primitives/directives/side-panel-header/side-panel-header.directive';
+export * from '@primitives/directives/side-panel-footer/side-panel-footer.directive';
+export * from '@primitives/directives/side-panel-banner/side-panel-banner.directive';
+export * from '@primitives/types/side-panel.types';
+
+export * from '@primitives/directives/infinite-scroll/infinite-scroll.directive';
+export * from '@primitives/components/side-panel-layout/side-panel-layout';
+export * from '@primitives/components/virtual-collection/virtual-collection';
+export * from '@primitives/directives/virtual-item/virtual-item.directive';
+export * from '@primitives/interfaces/ivirtual-collection-config.interface';
+export * from '@primitives/interfaces/ivirtual-item-context.interface';
+export * from '@primitives/interfaces/ivirtual-range.interface';
+export * from '@primitives/types/virtual-collection.types';
+export * from '@primitives/directives/resize-handle/resize-handle.directive';
+export * from '@primitives/interfaces/iresize-handle-event.interface';
+export * from '@primitives/types/resize-handle.types';

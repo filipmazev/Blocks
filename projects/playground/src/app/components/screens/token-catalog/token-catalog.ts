@@ -1,10 +1,12 @@
 import type { Signal, WritableSignal } from '@angular/core';
 
 import { Clipboard } from '@angular/cdk/clipboard';
-import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChildren } from '@angular/core';
+import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, linkedSignal, signal, viewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import type { ICssToken } from '@filip.mazev/blocks/core';
+import type { IVirtualCollectionConfig, VirtualTrackBy } from '@filip.mazev/blocks/primitives';
+import type { ITokenCatalogChunk } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-chunk.interface';
 import type { ITokenCatalogColor } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-color.interface';
 import type { ITokenCatalogEntry } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-entry.interface';
 import type { ITokenCatalogGroup } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-group.interface';
@@ -12,18 +14,30 @@ import type { TokenCatalogCategory, TokenCopyFormat } from '@playground/componen
 
 import { BxA11yService, CSS_TOKEN_CATALOG, ThemingService } from '@filip.mazev/blocks/core';
 import { Button, MultiSelect, SearchInput } from '@filip.mazev/blocks/forms';
-import { Accordion, Card, Collapsible, ContextMenuDirective, Divider, Menu, MenuItem, PageContainer, Tag } from '@filip.mazev/blocks/primitives';
+import {
+  Accordion,
+  Card,
+  Collapsible,
+  ContextMenuDirective,
+  Divider,
+  InfiniteScrollDirective,
+  Menu,
+  MenuItem,
+  PageContainer,
+  Tag,
+  VirtualCollection,
+  VirtualItemDirective
+} from '@filip.mazev/blocks/primitives';
 
 import {
   TOKEN_CATALOG_CATEGORIES,
   TOKEN_COPY_FORMATS,
   TOKEN_COPY_LABELS
 } from '@playground/components/screens/token-catalog/constants/token-catalog.constants';
-import { TokenViewportDirective } from '@playground/components/screens/token-catalog/directives/token-viewport.directive';
 import { createCatalogEntries } from '@playground/components/screens/token-catalog/helpers/token-catalog.helpers';
 import { formatCatalogColor } from '@playground/components/screens/token-catalog/helpers/token-color.helpers';
-import { TokenViewportService } from '@playground/components/screens/token-catalog/services/token-viewport.service';
 import { Readme } from '@playground/components/shared/readme/readme';
+import { ScrollToTop } from '@playground/components/shared/scroll-to-top/scroll-to-top';
 
 import { Highlight } from 'ngx-highlightjs';
 
@@ -41,13 +55,15 @@ import { Highlight } from 'ngx-highlightjs';
     Collapsible,
     Readme,
     Highlight,
-    TokenViewportDirective,
+    VirtualCollection,
+    VirtualItemDirective,
+    ScrollToTop,
+    InfiniteScrollDirective,
     ContextMenuDirective,
     Menu,
     MenuItem,
     Tag
   ],
-  providers: [TokenViewportService],
   templateUrl: './token-catalog.html',
   styleUrl: './token-catalog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -78,8 +94,11 @@ export class TokenCatalog {
     return values;
   });
 
-  private readonly viewports: Signal<readonly TokenViewportDirective[]> = viewChildren(TokenViewportDirective);
+  private readonly viewports: Signal<readonly VirtualCollection<ITokenCatalogEntry>[]> = viewChildren<VirtualCollection<ITokenCatalogEntry>>(VirtualCollection);
 
+  protected readonly entryKey: VirtualTrackBy<ITokenCatalogEntry> = (entry) => entry.id;
+  protected readonly colorVirtualConfig: IVirtualCollectionConfig = { layout: 'grid', minColumnWidth: '10rem', estimatedRowHeight: 288, overscan: 800 };
+  protected readonly tokenVirtualConfig: IVirtualCollectionConfig = { layout: 'grid', minColumnWidth: '15rem', estimatedRowHeight: 576, overscan: 800 };
   protected readonly categories: typeof TOKEN_CATALOG_CATEGORIES = TOKEN_CATALOG_CATEGORIES;
   protected readonly copyFormats: typeof TOKEN_COPY_FORMATS = TOKEN_COPY_FORMATS;
   protected readonly variableCount: number = CSS_TOKEN_CATALOG.length;
@@ -133,16 +152,23 @@ export class TokenCatalog {
       }))
     }));
   });
-  protected readonly lazyEnabled: Signal<boolean> = computed(
-    () => this.groups().reduce((count, group) => count + (this.isExpanded(group) ? group.total : 0), 0) >= 48
+
+  protected readonly renderedChunks: WritableSignal<ReadonlyMap<string, number>> = linkedSignal<readonly ITokenCatalogGroup[], ReadonlyMap<string, number>>({
+    source: this.groups,
+    computation: () => new Map<string, number>()
+  });
+
+  protected readonly visibleChunks: Signal<ReadonlyMap<string, readonly ITokenCatalogChunk[]>> = computed(
+    () => new Map(this.groups().map((group) => [group.id, group.chunks.slice(0, this.renderedChunks().get(group.id) ?? 2)]))
+  );
+  protected readonly visibleEntries: Signal<ReadonlyMap<string, readonly ITokenCatalogEntry[]>> = computed(
+    () => new Map([...this.visibleChunks()].map(([id, chunks]) => [id, chunks.flatMap((chunk) => chunk.entries)]))
   );
   protected readonly colors: Signal<Readonly<Record<string, ITokenCatalogColor>>> = computed(() => {
     const colors: Record<string, ITokenCatalogColor> = {};
 
     for (const viewport of this.viewports()) {
-      if (!viewport.visible()) continue;
-
-      for (const entry of viewport.chunk().entries) {
+      for (const entry of viewport.renderedItems()) {
         for (const reference of [entry.reference, entry.companionReference]) {
           if (!reference.startsWith('var(')) continue;
 
@@ -263,6 +289,10 @@ export class TokenCatalog {
   protected updateCategories(values: readonly TokenCatalogCategory[] | null | undefined): void {
     this.selectedCategories.set(values ?? []);
     this.expansionOverrides.set(new Map<string, boolean>());
+  }
+
+  protected renderMore(group: ITokenCatalogGroup): void {
+    this.renderedChunks.update((previous) => new Map(previous).set(group.id, Math.min(group.chunks.length, (previous.get(group.id) ?? 2) + 2)));
   }
 
   protected toggleGroup(id: string, expanded: boolean): void {

@@ -1,0 +1,37 @@
+<div class="panel-demo-controls">
+    <bx-select label="Placement" [clearable]="false" [options]="placements" [ngModel]="placement()" (ngModelChange)="placement.set($event)" />
+    <bx-input-field label="Panel width (px)" type="number" [min]="240" [max]="640" [ngModel]="panelWidth()" (ngModelChange)="panelWidth.set($event)" />
+</div>
+<div class="panel-demo-toggles">
+    <bx-slide-toggle label="Bound to preview container" [ngModel]="contained()" (ngModelChange)="contained.set($event)" />
+    <bx-slide-toggle label="Blocking backdrop inside bounds" [ngModel]="backdrop()" (ngModelChange)="backdrop.set($event)" />
+</div>
+<bx-side-panel-layout class="panel-demo-boundary">
+    <bx-side-panel
+        ariaLabel="Side panel example"
+        [headerIcon]="{ name: 'info', color: 'text-info', bgColor: 'auto' }"
+        [open]="opened()"
+        [placement]="placement()"
+        [container]="contained() ? undefined : 'viewport'"
+        [width]="width()"
+        [resizable]="true"
+        [resizeDisableShrink]="false"
+        [resizeMinWidth]="240"
+        [resizeMaxWidth]="640"
+        [breakpoints]="panelBreakpoints"
+        [backdrop]="backdrop()"
+        (widthChange)="resizeWidth($event)"
+        (openChange)="opened.set($event)">
+        <p bxSidePanelBanner class="demo-banner">Optional projected top banner</p>
+        <h3 bxSidePanelHeader class="demo-heading">Declarative panel</h3>
+        <bx-input-field label="Persistent note" [ngModel]="note()" (ngModelChange)="note.set($event)" />
+        <p>Closing keeps projected content mounted. Escape dismisses the focused panel without a modal focus trap or page scroll lock.</p>
+        <div bxSidePanelFooter><button bx-button type="button" variant="tonal" (click)="opened.set(false)">Done</button></div>
+    </bx-side-panel>
+    <div class="panel-demo-content">
+        <button bx-button type="button" variant="tonal" (click)="opened.set(!opened())">{{ opened() ? 'Close' : 'Open' }} panel</button>
+        <button bx-button type="button" variant="tonal" (click)="pageAction()">Surrounding page action</button>
+        <p role="status">Page actions: {{ clicks() }} · Panel {{ opened() ? 'open' : 'closed' }}</p>
+        <p>The panel has ordinary keyboard navigation. Change its placement, bounds, or width while it is open.</p>
+    </div>
+</bx-side-panel-layout>

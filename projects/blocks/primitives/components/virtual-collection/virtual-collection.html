@@ -1,0 +1,22 @@
+<div #probe class="column-probe" aria-hidden="true"></div>
+@for (block of state().rows; track block.key) {
+    <div class="virtual-spacer" aria-hidden="true" [style.block-size.px]="block.before"></div>
+    <div
+        #row
+        class="virtual-row"
+        role="presentation"
+        [attr.data-bx-virtual-row]="block.index"
+        [style.padding-block-end]="block.startIndex + block.items.length < items().length ? 'var(--bx-virtual-row-gap)' : '0px'">
+        @for (item of block.items; track item.key) {
+            <div
+                class="virtual-item"
+                [attr.data-bx-virtual-index]="item.context.index"
+                [attr.role]="itemRole()"
+                [attr.aria-posinset]="item.context.index + 1"
+                [attr.aria-setsize]="items().length">
+                <ng-container [ngTemplateOutlet]="itemTemplate()?.templateRef ?? null" [ngTemplateOutletContext]="item.context" />
+            </div>
+        }
+    </div>
+}
+<div class="virtual-spacer" aria-hidden="true" [style.block-size.px]="state().bottom"></div>

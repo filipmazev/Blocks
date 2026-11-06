@@ -2,106 +2,6 @@ import type { IComponentExample } from '@playground/components/screens/library-c
 
 export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   {
-    id: 'icon',
-    title: 'Icon',
-    group: 'Primitives',
-    readme: 'projects/blocks/icons/components/icon/README.md',
-    symbol: 'Icon',
-    package: '@filip.mazev/blocks/icons',
-    selector: 'bx-icon',
-    description: 'An asynchronously loaded SVG icon using semantic foreground and background tokens.',
-    example: '<bx-icon name="sparkles" size="32" color="text-accent" [decorative]="false" ariaLabel="Highlights" />'
-  },
-  {
-    id: 'divider',
-    layout: true,
-    title: 'Divider',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/divider/README.md',
-    symbol: 'Divider',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-divider',
-    description: 'Horizontal, vertical and labelled separators using shared border tokens.',
-    example: '<bx-divider label="Continue" />'
-  },
-  {
-    id: 'popover',
-    title: 'Popover',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/popover/README.md',
-    symbol: 'Popover, PopoverDirective',
-    package: '@filip.mazev/blocks/primitives',
-    selector: '[bxPopover]',
-    description: 'General interactive overlays with positioning, focus handling and theme inheritance.',
-    example: '<button [bxPopover]="details">Details</button>\n<ng-template #details><bx-popover>Project information</bx-popover></ng-template>'
-  },
-  {
-    id: 'skeleton',
-    title: 'Skeleton',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/skeleton/README.md',
-    symbol: 'Skeleton',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-skeleton',
-    description: 'Text, rectangular and circular placeholders with reduced-motion support.',
-    example: '<bx-skeleton [lines]="3" />'
-  },
-  {
-    id: 'chip',
-    title: 'Interactive chip',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/chip/README.md',
-    symbol: 'Chip',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-chip',
-    description: 'Selectable actions and removable tokens with native keyboard interaction.',
-    example: '<bx-chip label="Design" [(selected)]="designSelected" [removable]="true" (removed)="removeDesign()" />'
-  },
-  {
-    id: 'accordion',
-    title: 'Accordion',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/accordion/README.md',
-    symbol: 'Accordion, Collapsible',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-accordion',
-    description: 'Single or multiple expanded sections with keyboard heading navigation.',
-    example: '<bx-accordion><bx-accordion-item title="Details">Project content</bx-accordion-item></bx-accordion>'
-  },
-  {
-    id: 'collapsible',
-    title: 'Collapsible',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/collapsible/README.md',
-    symbol: 'Collapsible',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-collapsible',
-    description: 'An independently controlled disclosure with persistent or lazy content.',
-    example: '<bx-collapsible title="Details" [(expanded)]="expanded">Project content</bx-collapsible>'
-  },
-  {
-    id: 'alert',
-    title: 'Inline alert / banner',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/alert/README.md',
-    symbol: 'Alert',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-alert',
-    description: 'Semantic informational, danger, warning, success and neutral banners.',
-    example: '<bx-alert tone="success" title="Saved" message="Your changes are ready." />'
-  },
-  {
-    id: 'card',
-    title: 'Card',
-    group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/card/README.md',
-    symbol: 'Card',
-    package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-card',
-    description: 'Themed content surfaces and clickable cards with selected, disabled and read-only states.',
-    example: '<bx-card title="Project" [clickable]="true" [selected]="true" highlightColor="accent"><p>Selected workspace</p></bx-card>'
-  },
-  {
     id: 'page-container',
     layout: true,
     title: 'Page container',
@@ -151,37 +51,38 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-grid minColumnWidth="16rem"><bx-card title="Project" /></bx-grid>'
   },
   {
-    id: 'side-nav',
-    title: 'Side navigation',
-    group: 'Navigation',
-    readme: 'projects/blocks/navigation/components/side-nav/README.md',
-    symbol: 'SideNav, SideNavHeaderDirective, SideNavFooterDirective',
-    package: '@filip.mazev/blocks/navigation',
-    selector: 'bx-side-nav',
-    description: 'Route-driven sections, in-panel nested navigation, fuzzy search and responsive icon rails.',
-    example: '<bx-side-nav />'
-  },
-  {
-    id: 'top-nav',
-    title: 'Top navigation',
-    group: 'Navigation',
-    readme: 'projects/blocks/navigation/components/top-nav/README.md',
-    symbol: 'TopNav, TopNavBrandDirective, TopNavActionsDirective',
-    package: '@filip.mazev/blocks/navigation',
-    selector: 'bx-top-nav',
-    description: 'Responsive horizontal navigation with one dropdown panel, contextual search, and shared nested browsing.',
-    example: '<bx-top-nav><ng-template bxTopNavBrand>Studio</ng-template><ng-template bxTopNavActions><!-- application actions --></ng-template></bx-top-nav>'
-  },
-  {
-    id: 'truncate',
-    title: 'Truncated text',
+    id: 'divider',
+    layout: true,
+    title: 'Divider',
     group: 'Primitives',
-    readme: 'projects/blocks/primitives/directives/truncate/README.md',
-    symbol: 'TruncateDirective, TruncatedTextPipe, TooltipDirective',
+    readme: 'projects/blocks/primitives/components/divider/README.md',
+    symbol: 'Divider',
     package: '@filip.mazev/blocks/primitives',
-    selector: '[bxTruncate]',
-    description: 'Shared ellipsis and measurement, a public conditional-text pipe, and optional automatic tooltips.',
-    example: '<span bxTruncate #overflow="bxTruncate" [bxTooltip]="label() | bxTruncatedText: overflow.truncated()">{{ label() }}</span>'
+    selector: 'bx-divider',
+    description: 'Horizontal, vertical and labelled separators using shared border tokens.',
+    example: '<bx-divider label="Continue" />'
+  },
+  {
+    id: 'icon',
+    title: 'Icon',
+    group: 'Primitives',
+    readme: 'projects/blocks/icons/components/icon/README.md',
+    symbol: 'Icon',
+    package: '@filip.mazev/blocks/icons',
+    selector: 'bx-icon',
+    description: 'An asynchronously loaded SVG icon using semantic foreground and background tokens.',
+    example: '<bx-icon name="sparkles" size="32" color="text-accent" [decorative]="false" ariaLabel="Highlights" />'
+  },
+  {
+    id: 'surface',
+    title: 'Surface effects',
+    group: 'Primitives',
+    readme: 'projects/blocks/effects/README.md',
+    symbol: 'BxSurfaceDirective',
+    package: '@filip.mazev/blocks/effects',
+    selector: '[bxSurface]',
+    description: 'Apply the shared glass material to a custom surface while inheriting application settings.',
+    example: '<section bxSurface>Custom content follows the global appearance settings.</section>'
   },
   {
     id: 'tag',
@@ -195,59 +96,26 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-tag text="Skopje" leadingIcon="map-pin" color="accent" variant="tonal" [trailingNumber]="2" />'
   },
   {
-    id: 'signal-forms',
-    title: 'Signal Forms',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/README.md',
-    symbol: 'InputField, Checkbox',
-    package: '@filip.mazev/blocks/forms',
-    selector: '[formField]',
-    description: 'A complete form with async validation, cross-field rules, submission and reset.',
-    example: '<bx-input-field label="Email" [formField]="registration.email" />'
+    id: 'chip',
+    title: 'Interactive chip',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/chip/README.md',
+    symbol: 'Chip',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-chip',
+    description: 'Selectable actions and removable tokens with native keyboard interaction.',
+    example: '<bx-chip label="Design" [(selected)]="designSelected" [removable]="true" (removed)="removeDesign()" />'
   },
   {
-    id: 'radio-group',
-    title: 'Radio group',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/radio-group/README.md',
-    symbol: 'RadioGroup, Radio',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-radio-group',
-    description: 'Typed grouped selection with one form value and accessible validation.',
-    example: '<bx-radio-group label="Plan" [formField]="registration.plan"><bx-radio label="Team" value="team" /></bx-radio-group>'
-  },
-  {
-    id: 'select',
-    title: 'Select',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/select/README.md',
-    symbol: 'Select',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-select',
-    description: 'A single-value selection control with a positioned options panel and optional search.',
-    example: '<bx-select label="Destination" [options]="options" [isSearchable]="true" [formControl]="destination" />'
-  },
-  {
-    id: 'multi-select',
-    title: 'Multiselect',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/multi-select/README.md',
-    symbol: 'MultiSelect',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-multi-select',
-    description: 'Paginated checkbox selection with select-all intent and async requests.',
-    example: '<bx-multi-select label="Workspaces" [options]="options()" [hasMore]="hasMore()" [loading]="loading()" (loadMore)="loadNext($event)" />'
-  },
-  {
-    id: 'load-more',
-    title: 'Load more',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/directives/load-more/README.md',
-    symbol: 'LoadMoreDirective',
-    package: '@filip.mazev/blocks/forms',
-    selector: '[bxLoadMore]',
-    description: 'Shared pagination with overflow detection, a loading button, and failure/retry states.',
-    example: '<div bxLoadMore [loadMoreHasMore]="hasMore()" [loadMoreLoading]="loading()" [loadMoreError]="error()" (loadMore)="loadNext($event)"></div>'
+    id: 'skeleton',
+    title: 'Skeleton',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/skeleton/README.md',
+    symbol: 'Skeleton',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-skeleton',
+    description: 'Text, rectangular and circular placeholders with reduced-motion support.',
+    example: '<bx-skeleton [lines]="3" />'
   },
   {
     id: 'loading-spinner',
@@ -283,195 +151,48 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-progress-bar [value]="progress()" label="Upload progress" />'
   },
   {
-    id: 'button-loading',
-    title: 'Loading button',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/button/README.md',
-    symbol: 'Button',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'button[bx-button]',
-    description: 'Async actions with icon replacement, busy semantics, and disabled activation.',
-    example: '<button bx-button [loading]="saving()">Save changes</button>'
+    id: 'alert',
+    title: 'Inline alert / banner',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/alert/README.md',
+    symbol: 'Alert',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-alert',
+    description: 'Semantic informational, danger, warning, success and neutral banners.',
+    example: '<bx-alert tone="success" title="Saved" message="Your changes are ready." />'
   },
   {
-    id: 'hint',
-    title: 'Field hints',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/hint/README.md',
-    symbol: 'BxHint',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-hint',
-    description: 'Visible supporting text with automatic control associations.',
-    example: '<bx-input-field label="Reference" hint="Your public reference" hintEnd="Optional" />'
+    id: 'card',
+    title: 'Card',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/card/README.md',
+    symbol: 'Card',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-card',
+    description: 'Themed content surfaces and clickable cards with selected, disabled and read-only states.',
+    example: '<bx-card title="Project" [clickable]="true" [selected]="true" highlightColor="accent"><p>Selected workspace</p></bx-card>'
   },
   {
-    id: 'prefix',
-    title: 'Field prefix',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/directives/prefix/README.md',
-    symbol: 'PrefixDirective',
-    package: '@filip.mazev/blocks/forms',
-    selector: '[bxPrefix]',
-    description: 'Custom content before the editable input.',
-    example: '<bx-input-field label="Amount"><span bxPrefix>$</span></bx-input-field>'
+    id: 'collapsible',
+    title: 'Collapsible',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/collapsible/README.md',
+    symbol: 'Collapsible',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-collapsible',
+    description: 'An independently controlled disclosure with persistent or lazy content.',
+    example: '<bx-collapsible title="Details" [(expanded)]="expanded">Project content</bx-collapsible>'
   },
   {
-    id: 'suffix',
-    title: 'Field suffix',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/directives/suffix/README.md',
-    symbol: 'SuffixDirective',
-    package: '@filip.mazev/blocks/forms',
-    selector: '[bxSuffix]',
-    description: 'Custom content after the editable input.',
-    example: '<bx-input-field label="Weight"><span bxSuffix>kg</span></bx-input-field>'
-  },
-  {
-    id: 'native-control',
-    title: 'Native form control',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/directives/native-control/README.md',
-    symbol: 'NativeControlDirective',
-    package: '@filip.mazev/blocks/forms',
-    selector: '[bxInput]',
-    description: 'Connect native inputs and textareas to the shared accessible frame.',
-    example: '<bx-form-field label="Notes"><textarea bxInput label="Notes"></textarea></bx-form-field>'
-  },
-  {
-    id: 'button',
-    title: 'Button',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/button/README.md',
-    symbol: 'Button',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'button[bx-button]',
-    description: 'An action control with Blocks intent colors, familiar variants and visible focus.',
-    example: '<button bx-button variant="filled" (click)="save()">Save changes</button>'
-  },
-  {
-    id: 'checkbox-indicator',
-    title: 'Checkbox indicator',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/checkbox-indicator/README.md',
-    symbol: 'CheckboxIndicator',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-checkbox-indicator',
-    description: 'A shared decorative checkbox face for checked, unchecked and partial selection.',
-    example: '<bx-checkbox-indicator [checked]="selected()" [indeterminate]="partial()" />'
-  },
-  {
-    id: 'checkbox',
-    title: 'Checkbox',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/checkbox/README.md',
-    symbol: 'Checkbox',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-checkbox',
-    description: 'A boolean choice integrated with Angular forms.',
-    example: '<bx-checkbox label="Receive updates" [formControl]="updates" />'
-  },
-  {
-    id: 'form-field',
-    title: 'Form field',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/form-field/README.md',
-    symbol: 'FormField',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-form-field',
-    description: 'A shared label, help text, validation and loading frame for controls.',
-    example:
-      '<bx-form-field label="Project name" forId="project" [required]="true" [error]="error">\n  <input id="project" (input)="update($event)" />\n</bx-form-field>'
-  },
-  {
-    id: 'input-field',
-    title: 'Input field',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/input-field/README.md',
-    symbol: 'InputField',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-input-field',
-    description: 'A text, date or numeric input with a floating label and validation feedback.',
-    example: '<bx-input-field label="Project name" [formControl]="name" />'
-  },
-  {
-    id: 'radio',
-    title: 'Radio',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/radio-button/README.md',
-    symbol: 'Radio',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-radio',
-    description: 'A single choice within a named group.',
-    example:
-      '<bx-radio label="Daily" name="frequency" value="daily" [formControl]="frequency" />\n<bx-radio label="Weekly" name="frequency" value="weekly" [formControl]="frequency" />'
-  },
-  {
-    id: 'search-input',
-    title: 'Search input',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/search-input/README.md',
-    symbol: 'SearchInput',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-search-input',
-    description: 'A search control with a clear action, request loading, and explicit retry.',
-    example:
-      '<bx-search-input label="Find a component" [(value)]="query" [loading]="loading()" [loadError]="loadError()" (search)="search($event)" (retry)="search($event)" />'
-  },
-  {
-    id: 'slider',
-    title: 'Slider',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/directives/slider/README.md',
-    symbol: 'SliderDirective',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'input[type=range][bxSlider]',
-    description: 'A native range input with an opaque circular thumb and theme-aware value fill.',
-    example: '<label for="volume">Volume</label>\n<input id="volume" type="range" bxSlider min="0" max="100" [formControl]="volume" />'
-  },
-  {
-    id: 'range-slider',
-    title: 'Range slider',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/range-slider/README.md',
-    symbol: 'RangeSlider',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-range-slider',
-    description: 'A constrained pair of range values with labels and tick marks.',
-    example: '<bx-range-slider label="Budget" [(value)]="range" [discrete]="true" />'
-  },
-  {
-    id: 'slide-toggle',
-    title: 'Slide toggle',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/slide-toggle/README.md',
-    symbol: 'SlideToggle',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-slide-toggle',
-    description: 'A boolean preference that takes effect immediately.',
-    example: '<bx-slide-toggle label="Enable notifications" [formControl]="notifications" />'
-  },
-  {
-    id: 'error',
-    title: 'Error message',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/error/README.md',
-    symbol: 'BxError, FormField',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-error',
-    description: 'A projected custom error message inside a form-field.',
-    example:
-      '<bx-form-field label="Reference" forId="reference">\n  <input id="reference" aria-describedby="reference-error" />\n  <bx-error id="reference-error">Enter at least three characters.</bx-error>\n</bx-form-field>'
-  },
-  {
-    id: 'autocomplete',
-    title: 'Editable autocomplete',
-    group: 'Forms',
-    readme: 'projects/blocks/forms/components/autocomplete/README.md',
-    symbol: 'Autocomplete',
-    package: '@filip.mazev/blocks/forms',
-    selector: 'bx-autocomplete',
-    description: 'Free text and application-owned suggestions with keyboard navigation, async search and pagination.',
-    example: '<bx-autocomplete label="Destination" [options]="suggestions()" [(value)]="destination" />'
+    id: 'accordion',
+    title: 'Accordion',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/accordion/README.md',
+    symbol: 'Accordion, Collapsible',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-accordion',
+    description: 'Single or multiple expanded sections with keyboard heading navigation.',
+    example: '<bx-accordion><bx-accordion-item title="Details">Project content</bx-accordion-item></bx-accordion>'
   },
   {
     id: 'tabs',
@@ -486,16 +207,37 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
       '<bx-tabs ariaLabel="Project information">\n  <bx-tab label="Documentation" value="docs">\n    <ng-template bxTabContent><app-documentation /></ng-template>\n  </bx-tab>\n  <bx-tab label="Code Examples" value="code">\n    <ng-template bxTabContent><app-examples /></ng-template>\n  </bx-tab>\n</bx-tabs>'
   },
   {
-    id: 'menu',
-    title: 'Menu',
+    id: 'tooltip',
+    title: 'Tooltip',
     group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/menu/README.md',
-    symbol: 'Menu, MenuItem',
+    readme: 'projects/blocks/primitives/components/tooltip/README.md',
+    symbol: 'Tooltip',
     package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-menu',
-    description: 'A shared surface for related menu actions.',
-    example:
-      '<bx-menu>\n  <bx-menu-item label="Duplicate" icon="copy" (action)="duplicate()" />\n  <bx-menu-item label="Archive" icon="archive" (action)="archive()" />\n</bx-menu>'
+    selector: 'bx-tooltip',
+    description: 'A short descriptive surface for supplementary help.',
+    example: '<bx-tooltip text="Changes are saved automatically." />'
+  },
+  {
+    id: 'tooltip-directive',
+    title: 'Tooltip trigger',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/directives/tooltip/README.md',
+    symbol: 'TooltipDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: '[bxTooltip]',
+    description: 'Connects a help surface to a trigger using the overlay positioning system.',
+    example: '<button bx-button bxTooltip="Saves this project" placement="top">Save</button>'
+  },
+  {
+    id: 'truncate',
+    title: 'Truncated text',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/directives/truncate/README.md',
+    symbol: 'TruncateDirective, TruncatedTextPipe, TooltipDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: '[bxTruncate]',
+    description: 'Shared ellipsis and measurement, a public conditional-text pipe, and optional automatic tooltips.',
+    example: '<span bxTruncate #overflow="bxTruncate" [bxTooltip]="label() | bxTruncatedText: overflow.truncated()">{{ label() }}</span>'
   },
   {
     id: 'menu-item',
@@ -509,15 +251,16 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-menu-item label="Open view" icon="external-link" [shortcut]="[\'mod\', \'shift\', \'v\']" (action)="openView()" />'
   },
   {
-    id: 'tooltip',
-    title: 'Tooltip',
+    id: 'menu',
+    title: 'Menu',
     group: 'Primitives',
-    readme: 'projects/blocks/primitives/components/tooltip/README.md',
-    symbol: 'Tooltip',
+    readme: 'projects/blocks/primitives/components/menu/README.md',
+    symbol: 'Menu, MenuItem',
     package: '@filip.mazev/blocks/primitives',
-    selector: 'bx-tooltip',
-    description: 'A short descriptive surface for supplementary help.',
-    example: '<bx-tooltip text="Changes are saved automatically." />'
+    selector: 'bx-menu',
+    description: 'A shared surface for related menu actions.',
+    example:
+      '<bx-menu>\n  <bx-menu-item label="Duplicate" icon="copy" (action)="duplicate()" />\n  <bx-menu-item label="Archive" icon="archive" (action)="archive()" />\n</bx-menu>'
   },
   {
     id: 'dropdown',
@@ -544,15 +287,306 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
       '<div [bxContextMenu]="actions" tabindex="0">Right-click or touch and hold here</div>\n<ng-template #actions><bx-menu><bx-menu-item label="Copy" (action)="copy()" /></bx-menu></ng-template>'
   },
   {
-    id: 'tooltip-directive',
-    title: 'Tooltip trigger',
+    id: 'popover',
+    title: 'Popover',
     group: 'Primitives',
-    readme: 'projects/blocks/primitives/directives/tooltip/README.md',
-    symbol: 'TooltipDirective',
+    readme: 'projects/blocks/primitives/components/popover/README.md',
+    symbol: 'Popover, PopoverDirective',
     package: '@filip.mazev/blocks/primitives',
-    selector: '[bxTooltip]',
-    description: 'Connects a help surface to a trigger using the overlay positioning system.',
-    example: '<button bx-button bxTooltip="Saves this project" placement="top">Save</button>'
+    selector: '[bxPopover]',
+    description: 'General interactive overlays with positioning, focus handling and theme inheritance.',
+    example: '<button [bxPopover]="details">Details</button>\n<ng-template #details><bx-popover>Project information</bx-popover></ng-template>'
+  },
+  {
+    id: 'resize-handle',
+    title: 'Resize handle',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/directives/resize-handle/README.md',
+    symbol: 'ResizeHandleDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: '[bxResizeHandle]',
+    description: 'Reusable pointer and keyboard resizing for horizontal and vertical edges with configurable bounds.',
+    example: '<div bxResizeHandle [(resizeValue)]="width" resizeEdge="right" [resizeContainer]="container" [resizeTarget]="surface" />'
+  },
+  {
+    id: 'side-panel',
+    title: 'Side panel',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/side-panel/README.md',
+    symbol: 'SidePanel',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-side-panel',
+    description: 'Declarative, persistent nonmodal panels with container bounds and projected sections.',
+    example: '<bx-side-panel [(open)]="opened" placement="right" ariaLabel="Details">Panel content</bx-side-panel>'
+  },
+  {
+    id: 'infinite-scroll',
+    title: 'Infinite scroll',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/directives/infinite-scroll/README.md',
+    symbol: 'InfiniteScrollDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: '[bxInfiniteScroll]',
+    description: 'Scroll-boundary detection for local progressive rendering or application-owned asynchronous work.',
+    example: '<div bxInfiniteScroll [infiniteScrollDisabled]="!hasMore()" [infiniteScrollRevision]="items()" (scrollEnd)="append()">…</div>'
+  },
+  {
+    id: 'virtual-collection',
+    title: 'Virtual collection',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/virtual-collection/README.md',
+    symbol: 'VirtualCollection, VirtualItemDirective',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-virtual-collection',
+    description: 'Measured bidirectional row virtualization for responsive grids and vertical lists.',
+    example:
+      '<bx-virtual-collection #rows [items]="items()" [trackBy]="itemKey"><ng-template [bxVirtualItem]="rows" let-item>{{ item.label }}</ng-template></bx-virtual-collection>'
+  },
+  {
+    id: 'button',
+    title: 'Button',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/button/README.md',
+    symbol: 'Button',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'button[bx-button]',
+    description: 'An action control with Blocks intent colors, familiar variants and visible focus.',
+    example: '<button bx-button variant="filled" (click)="save()">Save changes</button>'
+  },
+  {
+    id: 'button-loading',
+    title: 'Loading button',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/button/README.md',
+    symbol: 'Button',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'button[bx-button]',
+    description: 'Async actions with icon replacement, busy semantics, and disabled activation.',
+    example: '<button bx-button [loading]="saving()">Save changes</button>'
+  },
+  {
+    id: 'form-field',
+    title: 'Form field',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/form-field/README.md',
+    symbol: 'FormField',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-form-field',
+    description: 'A shared label, help text, validation and loading frame for controls.',
+    example:
+      '<bx-form-field label="Project name" forId="project" [required]="true" [error]="error">\n  <input id="project" (input)="update($event)" />\n</bx-form-field>'
+  },
+  {
+    id: 'native-control',
+    title: 'Native form control',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/directives/native-control/README.md',
+    symbol: 'NativeControlDirective',
+    package: '@filip.mazev/blocks/forms',
+    selector: '[bxInput]',
+    description: 'Connect native inputs and textareas to the shared accessible frame.',
+    example: '<bx-form-field label="Notes"><textarea bxInput label="Notes"></textarea></bx-form-field>'
+  },
+  {
+    id: 'input-field',
+    title: 'Input field',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/input-field/README.md',
+    symbol: 'InputField',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-input-field',
+    description: 'A text, date or numeric input with a floating label and validation feedback.',
+    example: '<bx-input-field label="Project name" [formControl]="name" />'
+  },
+  {
+    id: 'search-input',
+    title: 'Search input',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/search-input/README.md',
+    symbol: 'SearchInput',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-search-input',
+    description: 'A search control with a clear action, request loading, and explicit retry.',
+    example:
+      '<bx-search-input label="Find a component" [(value)]="query" [loading]="loading()" [loadError]="loadError()" (search)="search($event)" (retry)="search($event)" />'
+  },
+  {
+    id: 'checkbox-indicator',
+    title: 'Checkbox indicator',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/checkbox-indicator/README.md',
+    symbol: 'CheckboxIndicator',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-checkbox-indicator',
+    description: 'A shared decorative checkbox face for checked, unchecked and partial selection.',
+    example: '<bx-checkbox-indicator [checked]="selected()" [indeterminate]="partial()" />'
+  },
+  {
+    id: 'checkbox',
+    title: 'Checkbox',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/checkbox/README.md',
+    symbol: 'Checkbox',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-checkbox',
+    description: 'A boolean choice integrated with Angular forms.',
+    example: '<bx-checkbox label="Receive updates" [formControl]="updates" />'
+  },
+  {
+    id: 'radio',
+    title: 'Radio',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/radio-button/README.md',
+    symbol: 'Radio',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-radio',
+    description: 'A single choice within a named group.',
+    example:
+      '<bx-radio label="Daily" name="frequency" value="daily" [formControl]="frequency" />\n<bx-radio label="Weekly" name="frequency" value="weekly" [formControl]="frequency" />'
+  },
+  {
+    id: 'radio-group',
+    title: 'Radio group',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/radio-group/README.md',
+    symbol: 'RadioGroup, Radio',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-radio-group',
+    description: 'Typed grouped selection with one form value and accessible validation.',
+    example: '<bx-radio-group label="Plan" [formField]="registration.plan"><bx-radio label="Team" value="team" /></bx-radio-group>'
+  },
+  {
+    id: 'slide-toggle',
+    title: 'Slide toggle',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/slide-toggle/README.md',
+    symbol: 'SlideToggle',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-slide-toggle',
+    description: 'A boolean preference that takes effect immediately.',
+    example: '<bx-slide-toggle label="Enable notifications" [formControl]="notifications" />'
+  },
+  {
+    id: 'slider',
+    title: 'Slider',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/directives/slider/README.md',
+    symbol: 'SliderDirective',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'input[type=range][bxSlider]',
+    description: 'A native range input with an opaque circular thumb and theme-aware value fill.',
+    example: '<label for="volume">Volume</label>\n<input id="volume" type="range" bxSlider min="0" max="100" [formControl]="volume" />'
+  },
+  {
+    id: 'range-slider',
+    title: 'Range slider',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/range-slider/README.md',
+    symbol: 'RangeSlider',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-range-slider',
+    description: 'A constrained pair of range values with labels and tick marks.',
+    example: '<bx-range-slider label="Budget" [(value)]="range" [discrete]="true" />'
+  },
+  {
+    id: 'select',
+    title: 'Select',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/select/README.md',
+    symbol: 'Select',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-select',
+    description: 'A single-value selection control with a positioned options panel and optional search.',
+    example: '<bx-select label="Destination" [options]="options" [isSearchable]="true" [formControl]="destination" />'
+  },
+  {
+    id: 'multi-select',
+    title: 'Multiselect',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/multi-select/README.md',
+    symbol: 'MultiSelect',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-multi-select',
+    description: 'Paginated checkbox selection with select-all intent and async requests.',
+    example: '<bx-multi-select label="Workspaces" [options]="options()" [hasMore]="hasMore()" [loading]="loading()" (loadMore)="loadNext($event)" />'
+  },
+  {
+    id: 'autocomplete',
+    title: 'Editable autocomplete',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/autocomplete/README.md',
+    symbol: 'Autocomplete',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-autocomplete',
+    description: 'Free text and application-owned suggestions with keyboard navigation, async search and pagination.',
+    example: '<bx-autocomplete label="Destination" [options]="suggestions()" [(value)]="destination" />'
+  },
+  {
+    id: 'signal-forms',
+    title: 'Signal Forms',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/README.md',
+    symbol: 'InputField, Checkbox',
+    package: '@filip.mazev/blocks/forms',
+    selector: '[formField]',
+    description: 'A complete form with async validation, cross-field rules, submission and reset.',
+    example: '<bx-input-field label="Email" [formField]="registration.email" />'
+  },
+  {
+    id: 'hint',
+    title: 'Field hints',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/hint/README.md',
+    symbol: 'BxHint',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-hint',
+    description: 'Visible supporting text with automatic control associations.',
+    example: '<bx-input-field label="Reference" hint="Your public reference" hintEnd="Optional" />'
+  },
+  {
+    id: 'error',
+    title: 'Error message',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/error/README.md',
+    symbol: 'BxError, FormField',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-error',
+    description: 'A projected custom error message inside a form-field.',
+    example:
+      '<bx-form-field label="Reference" forId="reference">\n  <input id="reference" aria-describedby="reference-error" />\n  <bx-error id="reference-error">Enter at least three characters.</bx-error>\n</bx-form-field>'
+  },
+  {
+    id: 'prefix',
+    title: 'Field prefix',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/directives/prefix/README.md',
+    symbol: 'PrefixDirective',
+    package: '@filip.mazev/blocks/forms',
+    selector: '[bxPrefix]',
+    description: 'Custom content before the editable input.',
+    example: '<bx-input-field label="Amount"><span bxPrefix>$</span></bx-input-field>'
+  },
+  {
+    id: 'suffix',
+    title: 'Field suffix',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/directives/suffix/README.md',
+    symbol: 'SuffixDirective',
+    package: '@filip.mazev/blocks/forms',
+    selector: '[bxSuffix]',
+    description: 'Custom content after the editable input.',
+    example: '<bx-input-field label="Weight"><span bxSuffix>kg</span></bx-input-field>'
+  },
+  {
+    id: 'load-more',
+    title: 'Load more',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/directives/load-more/README.md',
+    symbol: 'LoadMoreDirective',
+    package: '@filip.mazev/blocks/forms',
+    selector: '[bxLoadMore]',
+    description: 'Shared pagination with overflow detection, a loading button, and failure/retry states.',
+    example: '<div bxLoadMore [loadMoreHasMore]="hasMore()" [loadMoreLoading]="loading()" [loadMoreError]="error()" (loadMore)="loadNext($event)"></div>'
   },
   {
     id: 'breadcrumbs',
@@ -564,6 +598,72 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     selector: 'bx-breadcrumbs',
     description: 'A route-aware trail derived from Blocks navigation metadata.',
     example: '<bx-breadcrumbs [minimumBreadcrumbs]="1" divider="chevron-right" />'
+  },
+  {
+    id: 'top-nav',
+    title: 'Top navigation',
+    group: 'Navigation',
+    readme: 'projects/blocks/navigation/components/top-nav/README.md',
+    symbol: 'TopNav, TopNavBrandDirective, TopNavActionsDirective',
+    package: '@filip.mazev/blocks/navigation',
+    selector: 'bx-top-nav',
+    description: 'Responsive horizontal navigation with one dropdown panel, contextual search, and shared nested browsing.',
+    example: '<bx-top-nav><ng-template bxTopNavBrand>Studio</ng-template><ng-template bxTopNavActions><!-- application actions --></ng-template></bx-top-nav>'
+  },
+  {
+    id: 'side-nav',
+    title: 'Side navigation',
+    group: 'Navigation',
+    readme: 'projects/blocks/navigation/components/side-nav/README.md',
+    symbol: 'SideNav, SideNavHeaderDirective, SideNavFooterDirective',
+    package: '@filip.mazev/blocks/navigation',
+    selector: 'bx-side-nav',
+    description: 'Route-driven sections, in-panel nested navigation, fuzzy search and responsive icon rails.',
+    example: '<bx-side-nav />'
+  },
+  {
+    id: 'modal-backdrop',
+    title: 'Modal backdrop',
+    group: 'Modals',
+    readme: 'projects/blocks/modal/components/shared/ui/backdrop/README.md',
+    symbol: 'ModalBackdrop',
+    package: '@filip.mazev/blocks/modal',
+    selector: 'service-owned view',
+    description: 'The background scrim that separates an open modal from page content.',
+    example: '<!-- Open from an action in your template -->\n<button bx-button (click)="openModal()">Open modal backdrop</button>'
+  },
+  {
+    id: 'modal-banner',
+    title: 'Modal banner',
+    group: 'Modals',
+    readme: 'projects/blocks/modal/components/shared/ui/banner/README.md',
+    symbol: 'ModalBanner',
+    package: '@filip.mazev/blocks/modal',
+    selector: 'bx-modal-banner',
+    description: 'The shared modal heading, semantic icon and close action.',
+    example: '<bx-modal-banner [header]="{ text: \'Project settings\' }" [showCloseButton]="true" (close)="handleClose($event)" />'
+  },
+  {
+    id: 'modal-header',
+    title: 'Modal header',
+    group: 'Modals',
+    readme: 'projects/blocks/modal/directives/header/README.md',
+    symbol: 'ModalHeaderDirective',
+    package: '@filip.mazev/blocks/modal',
+    selector: '[appModalHeader]',
+    description: 'Projects custom header content into the active Blocks modal layout.',
+    example: '<div *appModalHeader>Custom header content</div>'
+  },
+  {
+    id: 'modal-footer',
+    title: 'Modal footer',
+    group: 'Modals',
+    readme: 'projects/blocks/modal/directives/footer/README.md',
+    symbol: 'ModalFooterDirective',
+    package: '@filip.mazev/blocks/modal',
+    selector: '[appModalFooter]',
+    description: 'Projects custom footer content into the active Blocks modal layout.',
+    example: '<div *appModalFooter>Custom footer content</div>'
   },
   {
     id: 'modal-core',
@@ -610,28 +710,6 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<!-- Open from an action in your template -->\n<button bx-button (click)="openModal()">Open bottom sheet</button>'
   },
   {
-    id: 'modal-backdrop',
-    title: 'Modal backdrop',
-    group: 'Modals',
-    readme: 'projects/blocks/modal/components/shared/ui/backdrop/README.md',
-    symbol: 'ModalBackdrop',
-    package: '@filip.mazev/blocks/modal',
-    selector: 'service-owned view',
-    description: 'The background scrim that separates an open modal from page content.',
-    example: '<!-- Open from an action in your template -->\n<button bx-button (click)="openModal()">Open modal backdrop</button>'
-  },
-  {
-    id: 'modal-banner',
-    title: 'Modal banner',
-    group: 'Modals',
-    readme: 'projects/blocks/modal/components/shared/ui/banner/README.md',
-    symbol: 'ModalBanner',
-    package: '@filip.mazev/blocks/modal',
-    selector: 'bx-modal-banner',
-    description: 'The shared modal heading, semantic icon and close action.',
-    example: '<bx-modal-banner [header]="{ text: \'Project settings\' }" [showCloseButton]="true" (close)="handleClose($event)" />'
-  },
-  {
     id: 'toast-core',
     title: 'Toast core',
     group: 'Notifications',
@@ -652,38 +730,5 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     selector: 'service-owned view',
     description: 'A notification with a semantic icon, optional title and message.',
     example: '<button bx-button (click)="notify()">Show success</button>'
-  },
-  {
-    id: 'surface',
-    title: 'Surface effects',
-    group: 'Primitives',
-    readme: 'projects/blocks/effects/README.md',
-    symbol: 'BxSurfaceDirective',
-    package: '@filip.mazev/blocks/effects',
-    selector: '[bxSurface]',
-    description: 'Apply the shared glass material to a custom surface while inheriting application settings.',
-    example: '<section bxSurface>Custom content follows the global appearance settings.</section>'
-  },
-  {
-    id: 'modal-header',
-    title: 'Modal header',
-    group: 'Modals',
-    readme: 'projects/blocks/modal/directives/header/README.md',
-    symbol: 'ModalHeaderDirective',
-    package: '@filip.mazev/blocks/modal',
-    selector: '[appModalHeader]',
-    description: 'Projects custom header content into the active Blocks modal layout.',
-    example: '<div *appModalHeader>Custom header content</div>'
-  },
-  {
-    id: 'modal-footer',
-    title: 'Modal footer',
-    group: 'Modals',
-    readme: 'projects/blocks/modal/directives/footer/README.md',
-    symbol: 'ModalFooterDirective',
-    package: '@filip.mazev/blocks/modal',
-    selector: '[appModalFooter]',
-    description: 'Projects custom footer content into the active Blocks modal layout.',
-    example: '<div *appModalFooter>Custom footer content</div>'
   }
 ];

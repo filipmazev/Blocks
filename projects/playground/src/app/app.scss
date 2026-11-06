@@ -107,3 +107,20 @@
         display: none;
     }
 }
+
+.app-main.catalog-shell {
+    display: flex;
+    flex-direction: column;
+    block-size: 100dvh;
+    min-block-size: 0;
+
+    .app-toolbar {
+        flex: none;
+    }
+
+    .app-content-container {
+        flex: 1 1 0;
+        min-block-size: 0;
+        overflow: hidden;
+    }
+}

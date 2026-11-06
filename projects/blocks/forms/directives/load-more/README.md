@@ -51,6 +51,11 @@ fetches data itself.
 - `actionVisible()`: indicates whether the footer action is visible, allowing an owning component to avoid rendering a second loading indicator.
 - `request(source?)`: invokes the same request guard from application code.
 
+Scroll geometry and passive content/resize observation use Core's `measureScrollBoundary()` and `observeScrollBoundary()` helpers, shared with
+`InfiniteScrollDirective`. The orchestration remains here: it excludes its own footer when measuring overflow, exposes a reachable action, and guards remote
+requests. Select and Multiselect continue using this one directive. No new Select/Multiselect API is required, and remote underfill never starts an automatic
+fetch loop.
+
 ## Loading, failure and retry
 
 Set loading before starting the promise. Append data only on success. On failure retain the previous data and page/cursor, set `loadMoreError`, and clear

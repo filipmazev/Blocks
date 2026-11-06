@@ -1,0 +1,29 @@
+<h3>Local progressive rendering</h3>
+<p>The detector emits a boundary event. This owner appends a bounded local batch and disables detection at 120 rows.</p>
+<div class="scroll-demo-controls">
+    <bx-input-field label="Batch size" type="number" [min]="1" [max]="24" [ngModel]="batch()" (ngModelChange)="batch.set($event)" />
+    <bx-input-field label="Container height (px)" type="number" [min]="120" [max]="600" [ngModel]="height()" (ngModelChange)="height.set($event)" />
+    <button bx-button type="button" variant="tonal" (click)="reset()">Reset local rows</button>
+</div>
+<div
+    #detector="bxInfiniteScroll"
+    bxInfiniteScroll
+    class="scroll-demo-viewport"
+    role="region"
+    aria-label="Progressively rendered local rows"
+    tabindex="0"
+    [style.block-size.px]="viewportHeight()"
+    [infiniteScrollThreshold]="48"
+    [infiniteScrollCheckOnRender]="true"
+    [infiniteScrollDisabled]="count() >= 120"
+    [infiniteScrollRevision]="rows()"
+    (scrollEnd)="append()">
+    @for (row of rows(); track row) {
+        <div class="scroll-demo-row">Local row {{ row }}</div>
+    }
+</div>
+<p role="status">{{ count() }} of 120 rows · {{ events() }} boundary events · {{ detector.overflowing() ? 'Scrollable' : 'No scrollbar' }}</p>
+<button bx-button type="button" variant="tonal" [disabled]="count() >= 120" (click)="append()">Show more local rows</button>
+<h3>Asynchronous loading, retained-content failure, and explicit retry</h3>
+<p>Remote pagination uses the shared load-more orchestration and the same boundary-observation helpers. Small pages expose its no-scrollbar action.</p>
+<app-form-examples example="load-more" />

@@ -1,0 +1,17 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: contents;
+}
+
+.scroll-top-position {
+    position: absolute;
+    right: 0;
+    inset-block-end: spacing(4);
+    padding-inline-end: spacing(4);
+    z-index: z(sticky);
+
+    &[hidden] {
+        display: none;
+    }
+}

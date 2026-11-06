@@ -23,6 +23,7 @@ import { Chip } from '@filip.mazev/blocks/primitives';
 | `label`               | required | `ResolvableText`                                      |
 | `selected`            | false    | Two-way selection model                               |
 | `selectable`          | true     | Toggles selection and exposes aria-pressed            |
+| `deselectable`        | true     | Allows an active selectable chip to be deselected     |
 | `removable`           | false    | Separate accessible remove action                     |
 | `disabled`            | false    | Removes both actions from normal focus                |
 | `readonly / readOnly` | false    | Prevents activation and removal while retaining focus |
@@ -31,14 +32,19 @@ import { Chip } from '@filip.mazev/blocks/primitives';
 | `removed`             | —        | Removal request; application owns the array           |
 | `focus(options?)`     | —        | Focuses the main action                               |
 
+`deselectable` defaults to true. Set it to false for an application-coordinated single-choice group: activating an unselected chip selects it, while activating
+an already selected chip leaves it selected. The owner clears selection on the other chips. `activated` still emits for each enabled activation.
+
 `IChipConfig` supports `color` (primary), `variant` (tonal), `size` (medium), optional `icon`, and translatable `removeLabel` (Remove {label}). Provide
 `BX_CHIP_DEFAULTS` for shared values; instance configuration wins.
 
 ## Appearance and customization
 
 `--bx-chip-background`, `--bx-chip-color`, `--bx-chip-border`, `--bx-chip-radius`, `--bx-chip-min-height`, `--bx-chip-hover-background` and
-`--bx-chip-remove-background` override the shared tag palette and spacing defaults. Main-action hover fills the entire chip behind the separate circular remove
-action.
+`--bx-chip-remove-background`, and `--bx-chip-fill-opacity` override the shared tag palette and spacing defaults. Main-action hover fills the entire chip behind
+the separate circular remove action for tonal/outlined chips. Filled chips preserve their fill and use an inset hover outline, keeping the theme's on-fill text
+contrast stable; `--bx-chip-hover-background` can override that behavior. Filled chips default to an opaque semantic fill (`--bx-chip-fill-opacity: 1`),
+matching filled-button intent and keeping primary selection visible.
 
 ## Behavior and accessibility
 

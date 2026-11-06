@@ -31,7 +31,7 @@ const componentRoutes: Routes = COMPONENT_EXAMPLES.map((entry, index) =>
       title: `${entry.title} · Blocks`,
       data: { componentId: entry.id }
     },
-    { label: entry.title, breadcrumb: entry.title, section: entry.group, menu: true, order: index }
+    { label: entry.title, breadcrumb: entry.title, section: entry.group, menu: true, order: index + 1 }
   )
 );
 

@@ -3,6 +3,8 @@
 :host {
     display: block;
     min-inline-size: 0;
+    min-block-size: 0;
+    block-size: 100%;
 }
 
 .catalog-filters {
@@ -83,18 +85,6 @@ bx-search-input {
 
         flex: 1 1 0;
     }
-}
-
-.token-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-    gap: spacing(4);
-}
-
-.color-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
-    gap: spacing(2);
 }
 
 .token-card {
@@ -270,4 +260,20 @@ bx-search-input {
     .space-preview span {
         forced-color-adjust: none;
     }
+}
+
+.token-region {
+    position: relative;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    outline: none;
+}
+
+.token-scroll {
+    block-size: 100%;
+    overflow: auto;
+    overflow-anchor: none;
+    overscroll-behavior: contain;
+    outline: none;
 }

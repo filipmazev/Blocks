@@ -18,6 +18,18 @@
         } @else {
             <div class="demo-stage" bxSurface>
                 @switch (entry().id) {
+                    @case ('virtual-collection') {
+                        <app-virtual-collection-examples />
+                    }
+                    @case ('resize-handle') {
+                        <app-resize-handle-examples />
+                    }
+                    @case ('side-panel') {
+                        <app-side-panel-examples />
+                    }
+                    @case ('infinite-scroll') {
+                        <app-infinite-scroll-examples />
+                    }
                     @case ('divider') {
                         <app-essentials-examples example="divider" />
                     }

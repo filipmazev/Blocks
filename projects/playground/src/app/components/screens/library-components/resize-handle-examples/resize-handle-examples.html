@@ -1,0 +1,64 @@
+<div class="resize-demo-controls">
+    <bx-select label="Resize edge" subscriptSizing="dynamic" [clearable]="false" [options]="edges" [ngModel]="edge()" (ngModelChange)="changeEdge($event)" />
+    @if (customBounds()) {
+        <bx-input-field
+            type="number"
+            label="Minimum size (px)"
+            subscriptSizing="dynamic"
+            [min]="0"
+            [ngModel]="minimum()"
+            (ngModelChange)="minimum.set($event)" />
+        <bx-input-field
+            type="number"
+            label="Maximum size (px)"
+            subscriptSizing="dynamic"
+            [min]="0"
+            [ngModel]="maximum()"
+            (ngModelChange)="maximum.set($event)" />
+    }
+</div>
+<div class="resize-demo-actions">
+    <bx-slide-toggle
+        label="Prevent shrinking below initial size"
+        subscriptSizing="dynamic"
+        [ngModel]="disableShrink()"
+        (ngModelChange)="disableShrink.set($event)" />
+    <bx-slide-toggle label="Use explicit pixel limits" subscriptSizing="dynamic" [ngModel]="customBounds()" (ngModelChange)="customBounds.set($event)" />
+    <button bx-button type="button" variant="tonal" (click)="size.set(180)">Reset to 180 px</button>
+</div>
+<p role="status">{{ status() }}</p>
+<p>{{ size() }} px · effective minimum {{ handle.minSize() }} px · effective maximum {{ handle.maxSize() }} px</p>
+<div #container class="resize-demo-container">
+    <section
+        #target
+        class="resize-demo-target"
+        aria-label="Resizable example surface"
+        [class.is-horizontal]="horizontal()"
+        [class.is-vertical]="!horizontal()"
+        [class.edge-left]="edge() === 'left'"
+        [class.edge-top]="edge() === 'top'"
+        [style.width]="horizontal() ? size() + 'px' : '100%'"
+        [style.height]="horizontal() ? '100%' : size() + 'px'">
+        <p>Resize from the {{ edge() }} edge.</p>
+        <div
+            #handle="bxResizeHandle"
+            bxResizeHandle
+            class="resize-demo-handle"
+            [class.handle-left]="edge() === 'left'"
+            [class.handle-right]="edge() === 'right'"
+            [class.handle-top]="edge() === 'top'"
+            [class.handle-bottom]="edge() === 'bottom'"
+            [resizeEdge]="edge()"
+            [resizeTarget]="target"
+            [resizeContainer]="container"
+            [resizeInitialSize]="180"
+            [resizeMinSize]="customBounds() ? minimum() : undefined"
+            [resizeMaxSize]="customBounds() ? maximum() : undefined"
+            [resizeDisableShrink]="disableShrink()"
+            [resizeLabel]="horizontal() ? 'Resize example width' : 'Resize example height'"
+            [(resizeValue)]="size"
+            (resizeStart)="record($event, 'start')"
+            (resizeEnd)="record($event, 'end')"></div>
+    </section>
+</div>
+<p>Arrow keys move the edge by 10 px; Shift moves by 50 px. Home and End use the bounds. Escape cancels an active gesture.</p>

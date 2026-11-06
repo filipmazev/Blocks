@@ -44,6 +44,11 @@ import * as animConst from '@modal/constants/modal-animation.constants';
 @Component({
   selector: 'bx-modal',
   imports: [NgTemplateOutlet, ModalCentered, ModalSide, ModalBackdrop],
+  host: {
+    '[class.has-backdrop]': 'config?.style?.hasBackdrop ?? false',
+    '[class.is-nested]': 'nestingDepth() > 0',
+    '[style.--bx-modal-material-opacity]': 'materialOpacity()'
+  },
   templateUrl: './modal-core.html',
   // ModalRef assigns configuration and component references through the existing imperative API.
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -67,6 +72,18 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
 
   protected readonly windowDimensions: Signal<IWindowDimensions> = this.windowDimensionsService.dimensions;
 
+  protected readonly materialOpacity: Signal<number> = computed(() => {
+    const depth = this.nestingDepth();
+    const floors = this.modalGlobalSettingsService.nestedOpacityFloors();
+
+    if (depth <= 0 || floors.length === 0) return 0.52;
+
+    const requested = floors[Math.min(depth - 1, floors.length - 1)];
+    const fallback = depth === 1 ? 0.9 : 1;
+
+    return Number.isFinite(requested) ? Math.max(0.52, Math.min(1, requested)) : fallback;
+  });
+
   protected readonly modalContainer: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef>('modalContainer');
   protected readonly contentTemplate: Signal<TemplateRef<HTMLElement> | undefined> = viewChild<TemplateRef<HTMLElement>>('contentTemplate');
   protected readonly dynamicContainer: Signal<ViewContainerRef | undefined> = viewChild('dynamicContainer', {
@@ -86,6 +103,9 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   public readonly isCentered: WritableSignal<boolean> = signal<boolean>(false);
   /** Whether the resolved modal layout uses a left or right side panel. Initially `false`. */
   public readonly isSide: WritableSignal<boolean> = signal<boolean>(false);
+
+  /** Zero-based mounted dialog depth assigned by ModalService. Nested depth raises only this dialog's material-opacity floor. Initially zero. */
+  public readonly nestingDepth: WritableSignal<number> = signal(0);
 
   /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */
   public readonly isAnimated: Signal<boolean> = computed(() => this.config?.style.animate ?? this.modalGlobalSettingsService.animate());

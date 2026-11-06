@@ -17,25 +17,46 @@
     z-index: 0;
 }
 
-.modal-backdrop {
-    padding: 0;
-    border: 0;
-    appearance: none;
-    cursor: pointer;
-    position: fixed;
-    inset: 0;
-    z-index: z(modal);
-    pointer-events: auto;
-    -webkit-tap-highlight-color: transparent;
-    background: rgb(0 0 0 / 25%);
-    backface-visibility: hidden;
-    -webkit-font-smoothing: subpixel-antialiased;
-    transform-style: preserve-3d;
-    transform-origin: center;
+@property --bx-modal-scale {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+.centered-modal-frame {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    min-block-size: 0;
+    max-inline-size: 90vw;
+    max-inline-size: 90dvw;
+    max-block-size: 95vh;
+    max-block-size: 95dvh;
+    border-radius: radius(lg);
+
+    /* IMPORTANT: Resize the clear opening instead of scaling its spread shadow, keeping dimming across the viewport during zoom. */
+    &::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: -1;
+        inline-size: calc(100% * var(--bx-modal-scale, 1));
+        block-size: calc(100% * var(--bx-modal-scale, 1));
+        border-radius: calc(#{radius(lg)} * var(--bx-modal-scale, 1));
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 100vmax var(--bx-modal-dimming-background, transparent);
+        pointer-events: none;
+    }
 }
 
 .centered-modal-content-wrapper {
     pointer-events: auto;
+    scale: var(--bx-modal-scale, 1);
+    min-inline-size: 0;
+    min-block-size: 0;
     display: flex;
     flex-direction: column;
     max-width: 90vw;
@@ -93,83 +114,38 @@
     gap: spacing(2);
 }
 
-.centered-modal-animate-in {
-    scale: 0;
+.centered-modal-frame.centered-modal-animate-in {
+    --bx-modal-scale: 0;
+
     animation: centered-modal-animate-in 0.15s ease-in-out forwards;
 }
 
-.centered-modal-animate-out {
+.centered-modal-frame.centered-modal-animate-out {
     animation: centered-modal-animate-out 0.15s ease-in-out forwards;
 }
 
 @keyframes centered-modal-animate-in {
     from {
-        scale: 0;
+        --bx-modal-scale: 0;
     }
 
     to {
-        scale: 1;
-    }
-}
-
-@keyframes centered-modal-animate-in {
-    from {
-        scale: 0;
-    }
-
-    to {
-        scale: 1;
-    }
-}
-
-@keyframes centered-modal-animate-in {
-    from {
-        scale: 0;
-    }
-
-    to {
-        scale: 1;
+        --bx-modal-scale: 1;
     }
 }
 
 @keyframes centered-modal-animate-out {
     from {
-        scale: 1;
+        --bx-modal-scale: 1;
     }
 
     to {
-        scale: 0;
-    }
-}
-
-@keyframes centered-modal-animate-out {
-    from {
-        scale: 1;
-    }
-
-    to {
-        scale: 0;
-    }
-}
-
-@keyframes centered-modal-animate-out {
-    from {
-        scale: 1;
-    }
-
-    to {
-        scale: 0;
+        --bx-modal-scale: 0;
     }
 }
 
 [data-bx-surface] {
-    --bx-glass-surface: var(--bx-modal-bg, var(--bx-bg-surface));
-    --bx-glass-text: var(--bx-modal-text, var(--bx-text-primary));
-    --bx-glass-shadow: #{shadow(modal)};
-    --bx-glass-min-opacity: 0.52;
-    --bx-glass-rim-opacity: 1;
-
-    border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
+    @include modal-surface($dimming: false);
 }
 
 .bx-modal-close {
@@ -194,31 +170,4 @@
         outline: 2px solid var(--bx-border-brand);
         outline-offset: 2px;
     }
-}
-
-.modal-backdrop {
-    background: rgb(0 0 0 / 32%);
-    backdrop-filter: blur(8px);
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .modal-backdrop {
-        background: rgb(0 0 0 / 50%);
-    }
-}
-
-@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-    .modal-backdrop {
-        backdrop-filter: none;
-        background: rgb(0 0 0 / 60%);
-    }
-}
-
-:host-context([data-bx-reduced-transparency='true']) .modal-backdrop {
-    backdrop-filter: none;
-    background: rgb(0 0 0 / 60%);
-}
-
-:host-context([data-theme='dark']) [data-bx-surface] {
-    --bx-glass-min-opacity: 0.72;
 }

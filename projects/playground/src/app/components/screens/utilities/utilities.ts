@@ -9,12 +9,13 @@ import { Button, SearchInput } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { Alert, Card, Grid, PageContainer, Stack, Tag } from '@filip.mazev/blocks/primitives';
 
+import { InfiniteScrollExamples } from '@playground/components/screens/library-components/infinite-scroll-examples/infinite-scroll-examples';
 import { UTILITY_EXAMPLES } from '@playground/components/screens/utilities/constants/utility-catalog.constants';
 import { Readme } from '@playground/components/shared/readme/readme';
 
 @Component({
   selector: 'app-utilities',
-  imports: [PageContainer, Alert, Button, Card, Grid, Icon, Readme, RouterLink, SearchInput, Stack, Tag],
+  imports: [PageContainer, Alert, Button, Card, Grid, Icon, Readme, RouterLink, SearchInput, Stack, Tag, InfiniteScrollExamples],
   templateUrl: './utilities.html',
   styleUrl: './utilities.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

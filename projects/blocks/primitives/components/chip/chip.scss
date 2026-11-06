@@ -25,8 +25,14 @@
     color: var(--bx-glass-text);
 
     &.is-filled {
+        --bx-glass-min-opacity: var(--bx-chip-fill-opacity, 1);
         --bx-glass-surface: var(--bx-chip-background, var(--bx-chip-role-fill));
         --bx-glass-text: var(--bx-chip-color, var(--bx-chip-role-on-fill));
+
+        .bx-chip-action:hover:not(:disabled, [aria-disabled='true'])::before {
+            background: var(--bx-chip-hover-background, transparent);
+            box-shadow: inset 0 0 0 1px currentcolor;
+        }
     }
 
     &.is-outlined {

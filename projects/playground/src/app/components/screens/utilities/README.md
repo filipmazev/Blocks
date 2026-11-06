@@ -7,10 +7,20 @@ reference.
 ## Import
 
 ```typescript
-import { DeviceTypeService, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
+import {
+    DeviceTypeService,
+    findScrollContainer,
+    measureScrollBoundary,
+    observeScrollBoundary,
+    ScrollLockService,
+    uuidv4,
+    WindowDimensionsService
+} from '@filip.mazev/blocks/core';
+import { InfiniteScrollDirective } from '@filip.mazev/blocks/primitives';
 ```
 
-Services are provided in root. Each utility guide documents its public imports, configuration, lifecycle, and supporting types.
+Services are provided in root; import the standalone scroll detector where used. Each utility guide documents its public imports, configuration, lifecycle, and
+supporting types.
 
 ## Usage
 
@@ -27,16 +37,35 @@ Search `/utilities` by utility or API name, then follow **Explore utility**. Dir
 
 ## API
 
+### Scroll boundaries
+
+The overview includes an interactive local scroll container with configurable batch size and height. It uses `InfiniteScrollDirective` to progressively expose
+rows and reports boundary-event counts and measured overflow. The accompanying shared load-more demo shows asynchronous loading, retained-content failure, and
+explicit retry through success. See the [detector guide](../../../../../../blocks/primitives/directives/infinite-scroll/README.md) and
+`/components/infinite-scroll`.
+
+| API                                                             | Behavior                                                                         |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `findScrollContainer(element)`                                  | Finds the nearest vertical scrolling ancestor or the document viewport           |
+| `measureScrollBoundary(content, container?, endOffset?)`        | Returns distance, overflow, and viewport height without changing scroll position |
+| `observeScrollBoundary(content, container, onScroll, onResize)` | Passive scroll/geometry observation; returns mandatory cleanup                   |
+| `IScrollBoundary`                                               | Typed measurement contract in CSS pixels                                         |
+
+The [virtual collection guide](../../../../../../blocks/primitives/components/virtual-collection/README.md) and `/components/virtual-collection` demonstrate
+bidirectional list/grid rendering, dynamic heights, column changes, and programmatic scrolling. Scroll to top is available on Icons and Tokens, inside their own
+content viewports.
+
 ### Coverage audit
 
-| Utilities                                        | Interactive coverage                                                                               |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `WindowDimensionsService`, `BREAKPOINTS`         | Live CSS-pixel dimensions, shared breakpoint tags, range queries, responsive columns               |
-| `DeviceTypeService`, device/OS contracts         | Device identity, platform flags, orientation events, explicit refresh                              |
-| `ScrollLockService`, `IScrollLockConfig`         | Independent owners, remaining-owner behavior, release actions, navigation cleanup                  |
-| `uuidv4()`                                       | Regenerated UUID and stable instance ID comparison                                                 |
-| Color-token helpers, `resolveThemeId()`          | Semantic/palette selection, CSS reference, complementary/inverted tokens, saved palette validation |
-| `BxOverlayPositionService`, origin/theme helpers | Preferred placement, viewport fallback, tracked origin, inherited theme, teardown                  |
+| Utilities                                        | Interactive coverage                                                                                                  |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `WindowDimensionsService`, `BREAKPOINTS`         | Live CSS-pixel dimensions, shared breakpoint tags, range queries, responsive columns                                  |
+| `DeviceTypeService`, device/OS contracts         | Device identity, platform flags, orientation events, explicit refresh                                                 |
+| `ScrollLockService`, `IScrollLockConfig`         | Independent owners, remaining-owner behavior, release actions, navigation cleanup                                     |
+| Scroll-boundary directive and helpers            | Local batch/height controls, overflow status, asynchronous fallback/retry example; linked virtual collection coverage |
+| `uuidv4()`                                       | Regenerated UUID and stable instance ID comparison                                                                    |
+| Color-token helpers, `resolveThemeId()`          | Semantic/palette selection, CSS reference, complementary/inverted tokens, saved palette validation                    |
+| `BxOverlayPositionService`, origin/theme helpers | Preferred placement, viewport fallback, tracked origin, inherited theme, teardown                                     |
 
 The [token catalog](../token-catalog/README.md) at `/tokens` covers `CSS_TOKEN_CATALOG`, CSS reference types, utility classes, foundation scales, and all color
 companions. Focused color-helper examples live in the utilities section above.

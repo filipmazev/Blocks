@@ -21,10 +21,15 @@ Add the standalone component or directive to your component's `imports`.
 `name` is required. `size`, `strokeWidth`, `color`, `bgColor`, `decorative`, `ariaLabel` configure rendering. Color accepts a semantic token or themed color;
 `bgColor="auto"` derives a complementary token.
 
-`size` accepts the string values `'16'`, `'20'`, `'24'`, `'28'`, `'32'`, `'36'`, `'40'`, `'44'` and `'48'`, measured in pixels. The default is `'24'`. For a
-small icon between the first two sizes, choose `'16'` or `'20'`; `'18'` is not supported by `IconSize`.
+`size` accepts positive finite numbers or numeric strings in CSS pixels, including `[size]="64"`, `size="18"`, and the existing presets. The default is `'24'`;
+invalid dimensions fall back to 24. `strokeWidth` accepts positive finite numbers, including fractional values; omission or invalid values use 1.5. Icon
+requests completing after an input change or destruction are ignored.
 
-## Appearance
+Generated `LUCIDE_CATEGORIES`, `LUCIDE_ICON_CATEGORIES`, and `LucideCategoryId` are available from the same public entry point. Categories come from a pinned
+official upstream snapshot and include multiple assignments, resolved inheritance, aliases, and an uncategorized fallback. See the
+[generator guide](../../../../../tools/icons/README.md) for synchronization. The mapping contains only icons generated into Blocks.
+
+## Appearance and customization
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
@@ -47,8 +52,8 @@ focus states, or semantic control states.
 ## Behavior and accessibility
 
 Leave decorative icons hidden from assistive technology; meaningful standalone icons need `decorative=false` and `ariaLabel`. Label icon buttons on the button
-itself. The catalog paginates icon previews to bound SVG work.
+itself. The catalog progressively renders icon previews in bounded batches.
 
 ## Playground
 
-Open `/components/icon` for a working example and its current value or action result.
+Open `/components/icon` for a working example, or `/icons` for categories, persistent catalog preferences, and a live customization inspector.

@@ -7,6 +7,7 @@
         "prebuild": "npm run tools:build-effects && npm run tools:generate-tokens && node tools/version-sync.mjs",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
+        "tools:sync:icons:lucide-categories": "node tools/icons/sync-lucide-categories.mjs",
         "tools:generate:icons:lucide": "node tools/icons/generate-lucide-icons.mjs",
         "tools:generate-tokens": "node tools/tokens/generate-tokens.mjs",
         "tools:sync-version": "node tools/version-sync.mjs",

@@ -1,0 +1,18 @@
+:host {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-inline-size: 0;
+    min-block-size: 0;
+    block-size: 100%;
+    overflow: clip;
+}
+
+.panel-layout-content {
+    position: relative;
+    order: 1;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+}

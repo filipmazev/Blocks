@@ -48,6 +48,7 @@ await collect('documentation');
 await collect('projects/playground/src/app/components/screens/appearance');
 await collect('projects/playground/src/app/components/screens/utilities');
 await collect('projects/playground/src/app/components/screens/token-catalog');
+await collect('projects/playground/src/app/components/screens/icon-catalog');
 await collect('projects/playground/src/app/components/screens/library-components/page-examples');
 files.sort();
 const documents = {};
@@ -82,7 +83,13 @@ const catalog = catalogArray.elements.map((entry) => {
   );
   return { id: readString('id'), readme: readString('readme'), layout };
 });
-const routes = new Map(catalog.map((entry) => [entry.readme, `components/${entry.layout ? 'layout/' : ''}${entry.id}`]));
+const routes = new Map();
+
+// Basic components precede composed examples; shared guides keep their first canonical route.
+for (const entry of catalog) {
+  if (!routes.has(entry.readme)) routes.set(entry.readme, `components/${entry.layout ? 'layout/' : ''}${entry.id}`);
+}
+
 routes.set('projects/playground/src/app/components/screens/appearance/README.md', 'appearance');
 routes.set('projects/playground/src/app/components/screens/utilities/README.md', 'utilities');
 for (const file of files) {
@@ -90,10 +97,16 @@ for (const file of files) {
   if (utility && utility[1] !== 'utility-page') routes.set(file, `utilities/${utility[1]}`);
 }
 routes.set('projects/playground/src/app/components/screens/token-catalog/README.md', 'tokens');
+routes.set('projects/playground/src/app/components/screens/icon-catalog/README.md', 'icons');
+for (const slot of ['header', 'footer', 'banner']) {
+  routes.set(`projects/blocks/primitives/directives/side-panel-${slot}/README.md`, 'components/side-panel');
+}
 routes.set('projects/playground/src/app/components/screens/library-components/page-examples/README.md', 'components/layout/page-container');
 for (const section of ['page-header', 'page-content', 'page-footer']) {
   routes.set(`projects/blocks/primitives/components/${section}/README.md`, 'components/layout/page-container');
 }
+routes.set('projects/blocks/primitives/components/side-panel-layout/README.md', 'components/side-panel');
+routes.set('projects/blocks/primitives/directives/virtual-item/README.md', 'components/virtual-collection');
 routes.set('projects/blocks/modal/README.md', 'modal');
 routes.set('projects/blocks/toastr/README.md', 'toastr');
 routes.set('projects/blocks/core/README.md', 'components');

@@ -31,6 +31,13 @@ export class ModalGlobalSettingsService {
   public readonly closeGuardOnlyOnCancel: WritableSignal<boolean> = signal<boolean>(true);
 
   /**
+   * Minimum material opacity by nested depth, default [0.9, 1]. Index zero is the first nested dialog; the last entry repeats for deeper dialogs.
+   * Empty disables depth adjustment. Values clamp to 0.52–1; nonfinite entries use 0.9 for the first nested dialog and 1 afterward.
+   * Root dialogs retain their normal material. More opaque application/accessibility settings take precedence; update using a new readonly array.
+   */
+  public readonly nestedOpacityFloors: WritableSignal<readonly number[]> = signal<readonly number[]>([0.9, 1]);
+
+  /**
    * Updates the global modal settings with the provided values. Only the specified settings will be updated, while others will remain unchanged.
    *
    * @param settings - An object containing the settings to be updated. Each property is optional, and only those provided will be updated.

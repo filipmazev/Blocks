@@ -1,7 +1,7 @@
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="app-container">
     <app-sidenav #navigation title="Blocks" />
-    <div class="app-main">
+    <div class="app-main" [class.catalog-shell]="catalogRoute()">
         <bx-top-nav class="app-toolbar" data-bx-light-scope [config]="toolbarConfig" [groups]="toolbarGroups">
             <ng-template bxTopNavBrand>
                 @if (navigation.mobile()) {

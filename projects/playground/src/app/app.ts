@@ -1,7 +1,10 @@
 import type { Signal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+
+import { filter, map } from 'rxjs';
 
 import { INavigationTreeGroup, ITopNavConfig, TopNav, TopNavActionsDirective, TopNavBrandDirective } from '@filip.mazev/blocks/navigation';
 
@@ -20,10 +23,21 @@ import { HighlightLoader } from 'ngx-highlightjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
+  private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
   private readonly highlightLoader = inject(HighlightLoader);
 
   protected readonly themingService = inject(ThemingService);
+
+  private readonly currentUrl: Signal<string> = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects)
+    ),
+    { initialValue: this.router.url }
+  );
+
+  protected readonly catalogRoute: Signal<boolean> = computed(() => /^\/(icons|tokens)(?:[/?#]|$)/.test(this.currentUrl()));
 
   protected readonly toolbarConfig: ITopNavConfig = { position: 'sticky', searchable: false, ariaLabel: 'Playground controls' };
   protected readonly toolbarGroups: readonly INavigationTreeGroup[] = [];

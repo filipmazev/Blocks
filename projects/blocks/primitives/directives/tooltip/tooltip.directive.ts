@@ -13,12 +13,14 @@ import {
   inheritOverlayTheme,
   isTextWithKey,
   ResolvableText,
+  trackOverlayOrigin,
   uuidv4
 } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
 import { Tooltip } from '@primitives/components/tooltip/tooltip';
 import { ContextMenuDirective } from '@primitives/directives/context-menu/context-menu.directive';
+import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
 
 @Directive({ selector: '[bxTooltip]' })
 export class TooltipDirective {
@@ -29,6 +31,7 @@ export class TooltipDirective {
   private readonly ngZone = inject(NgZone);
   private readonly focusMonitor = inject(FocusMonitor);
   private readonly ariaDescriber = inject(AriaDescriber);
+  private readonly overlayContext = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly contextMenuDirective = inject(ContextMenuDirective, { optional: true });
 
@@ -46,6 +49,7 @@ export class TooltipDirective {
   private overlayRef: OverlayRef | null = null;
   private tooltipComponent?: ComponentRef<Tooltip>;
   private transition?: ReturnType<typeof createGlassTransition>;
+  private disconnectOrigin?: () => void;
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
   private positionSubscription?: { unsubscribe(): void };
@@ -116,7 +120,8 @@ export class TooltipDirective {
 
       this.overlayRef = this.overlay.create({
         positionStrategy: strategy,
-        scrollStrategy: this.overlay.scrollStrategies.reposition(),
+        scrollStrategy: this.overlay.scrollStrategies.noop(),
+        usePopover: this.overlayContext?.useTopLayer ?? !!this.elementRef.nativeElement.closest('dialog, [role="dialog"], [role="alertdialog"], [popover]'),
         hasBackdrop: false,
         panelClass: 'bx-tooltip-pane'
       });
@@ -152,6 +157,10 @@ export class TooltipDirective {
       this.positionSubscription = strategy.positionChanges.subscribe(positionArrow);
       this.overlayRef.updatePosition();
       positionArrow();
+
+      const overlay = this.overlayRef;
+
+      this.disconnectOrigin = this.ngZone.runOutsideAngular(() => trackOverlayOrigin(overlay, this.elementRef.nativeElement, { onPosition: positionArrow }));
 
       if (!this.bxA11yService.isReducedMotion()) {
         this.transition = this.ngZone.runOutsideAngular(() => createGlassTransition(this.elementRef.nativeElement, pane));
@@ -238,6 +247,7 @@ export class TooltipDirective {
   @HostListener('document:keydown', ['$event'])
   protected onEscape(event: KeyboardEvent): void {
     if (event.key === 'Escape' && this.overlayRef) {
+      event.preventDefault();
       event.stopPropagation();
       this.hovered = false;
       this.focused = false;
@@ -387,6 +397,8 @@ export class TooltipDirective {
     this.keyboardSubscription = undefined;
     this.positionSubscription?.unsubscribe();
     this.positionSubscription = undefined;
+    this.disconnectOrigin?.();
+    this.disconnectOrigin = undefined;
     this.disconnectTheme?.();
     this.disconnectTheme = undefined;
     this.transition?.destroy();

@@ -159,6 +159,11 @@ themingService.setApplicationTheme('dark');
 Use the palette IDs above in `ThemingService.setPalette()` and `ng add --theme`. Sass exports follow the same names, such as `$carbon-cobalt-light-theme` and
 `$carbon-cobalt-dark-theme`. High contrast overrides both expressive roles with contrast-first black/white values.
 
+All light-mode accent fills use white text; semantic fill shades become darker where necessary to reach 4.5:1 contrast. Raw 500-level palette anchors and picker
+swatches stay unchanged. Other filled-role foregrounds prefer white when it passes, with dark text on brighter fills that require it. Brand/accent and secondary
+text also retain contrast on their supported neutral and normal/hover/active surfaces in both modes. High-contrast palettes and explicit theme overrides remain
+supported.
+
 ### Glassiness and translucency
 
 The **Translucency** slider controls tint and blur. It defaults to 50%; the preceding midpoint now falls around 70% on the slider, with both endpoints

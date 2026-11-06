@@ -23,6 +23,9 @@ optional icon configuration.
 
 ## Appearance
 
+Title/icon alignment, wrapping, divider spacing, and the compact close action use shared panel-banner Sass presentation. Declarative SidePanel headings reuse
+the same styling and expose a matching `headerIcon: IIconData` contract.
+
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 

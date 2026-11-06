@@ -68,6 +68,12 @@ Theme palette IDs, labels, brand/accent roles, and optional swatch preview order
 `THEME_PALETTE_IDS` are generated from that registry; the public `BxThemeId` union derives from the generated IDs. Existing theme variables use
 `make-palette-theme(id, dark?, overrides?)`, preserving their public names and colors.
 
+All built-in light-mode accent fills use white on-accent text. Their semantic base/hover/active shades move darker where needed to meet 4.5:1 text contrast; raw
+palette anchors and picker swatches remain unchanged. Other on-fill foregrounds prefer white when it passes, with dark text for brighter fills. Semantic
+brand/accent text and secondary text choose readable palette shades across their normal, hover, active, and neutral surfaces in both modes. Success,
+information, warning, and danger retain their original status foreground, border, and interaction-fill shades. Explicit theme overrides and high-contrast
+palettes retain control.
+
 Sass is the source of truth. `npm run tools:generate-tokens` evaluates the maps and inventories compiled CSS plus TypeScript property usage; generated constants
 pass the repository's lint/format pipeline. Maintain color/type contracts in ordinary TypeScript. See the catalog guide for generation, availability, and the
 migration of `meta-*` Sass metadata out of the color-token union.
@@ -147,6 +153,13 @@ and lifecycle behavior instead of positioning or recoloring its private DOM.
 `trackOverlayOrigin()` uses native CSS anchors where supported for ordinary overlays. Top-layer popovers use synchronous measured CDK positioning so nested
 scrolling keeps the panel attached to its trigger. The same returned cleanup callback removes listeners and observers for either path; call its `reposition()`
 method after application-owned layout changes.
+
+### Scroll boundaries
+
+Use [Primitives InfiniteScrollDirective](../primitives/directives/infinite-scroll/README.md) for guarded end detection and bounded local progressive rendering.
+Core also exports `findScrollContainer()`, `measureScrollBoundary()`, `observeScrollBoundary()`, and `IScrollBoundary` for reusable viewport discovery and
+disposable observation. Detection owns no fetching, pagination, buttons, or retry state. Forms' [LoadMoreDirective](../forms/directives/load-more/README.md)
+shares these helpers and retains remote request orchestration, loading feedback, fallback actions, and explicit retry.
 
 ## Appearance and customization
 

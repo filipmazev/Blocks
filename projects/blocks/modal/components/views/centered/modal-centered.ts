@@ -9,6 +9,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 
 import { ModalConfig } from '@modal/classes/modal-config';
+import { ModalBackdrop } from '@modal/components/shared/ui/backdrop/modal-backdrop';
 import { ModalBanner } from '@modal/components/shared/ui/banner/modal-banner';
 import { ModalBottomSheet } from '@modal/components/views/bottom-sheet/modal-bottom-sheet';
 import { IModalView } from '@modal/interfaces/imodal-view.interface';
@@ -16,7 +17,7 @@ import { ModalCloseMode } from '@modal/types/modal.types';
 
 @Component({
   selector: 'bx-modal-centered',
-  imports: [BxSurfaceDirective, NgTemplateOutlet, NgClass, ModalBottomSheet, ModalBanner, Icon],
+  imports: [BxSurfaceDirective, NgTemplateOutlet, NgClass, ModalBottomSheet, ModalBanner, ModalBackdrop, Icon],
   templateUrl: './modal-centered.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './modal-centered.scss'

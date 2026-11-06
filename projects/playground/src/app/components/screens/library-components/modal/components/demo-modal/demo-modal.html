@@ -24,6 +24,11 @@
         </p>
         <p class="menu-status" role="status">{{ menuStatus() }}</p>
     </section>
+    <section class="modal-nesting-demo" aria-label="Nested dialogs">
+        <h3>Nested dialogs</h3>
+        <p>Compare independent backdrops and increasing material opacity while the parent stays open.</p>
+        <button bx-button type="button" variant="tonal" color="accent" (click)="openNested()">Open nested dialog</button>
+    </section>
 </div>
 
 <ng-template #dropdownActions>

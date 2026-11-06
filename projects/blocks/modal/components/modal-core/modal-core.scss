@@ -1,10 +1,46 @@
 @use '../../../core/styles/helpers' as *;
 
 :host {
+    --bx-modal-dimming-background: transparent;
+    --bx-modal-backdrop-fill: transparent;
+    --bx-modal-backdrop-tone: var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%));
+
     position: fixed;
     inset: 0;
     z-index: z(modal);
     pointer-events: none;
+}
+
+:host(.has-backdrop) {
+    --bx-modal-dimming-background: var(--bx-modal-backdrop-tone);
+}
+
+:host(.has-backdrop.is-nested) {
+    --bx-modal-dimming-background: transparent;
+    --bx-modal-backdrop-fill: var(--bx-modal-backdrop-tone);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :host {
+        --bx-modal-backdrop-tone: var(--bx-modal-backdrop-background, rgb(0 0 0 / 50%));
+    }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+    :host {
+        --bx-modal-backdrop-tone: rgb(0 0 0 / 60%);
+    }
+
+    :host(.has-backdrop) {
+        --bx-modal-dimming-background: transparent;
+        --bx-modal-backdrop-fill: var(--bx-modal-backdrop-tone);
+    }
+}
+
+:host-context([data-bx-reduced-transparency='true']) {
+    --bx-modal-backdrop-tone: rgb(0 0 0 / 60%);
+    --bx-modal-dimming-background: transparent;
+    --bx-modal-backdrop-fill: var(--bx-modal-backdrop-tone);
 }
 
 :host > * {

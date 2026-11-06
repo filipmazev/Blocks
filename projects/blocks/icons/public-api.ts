@@ -10,3 +10,6 @@ export * from '@icons/interfaces/icon-definition.interface';
 export * from '@icons/types/icon.types';
 
 export * from '@icons/constants/lucide/public-api';
+
+export * from '@icons/constants/lucide-categories.constants';
+export * from '@icons/types/lucide-category.types';

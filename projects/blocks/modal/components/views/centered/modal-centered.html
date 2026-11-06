@@ -1,40 +1,45 @@
 @if (!isBottomSheetModalActive()) {
     <div class="modal-overlay" [id]="id() ?? ''">
         @if (config()?.style?.hasBackdrop) {
-            <button type="button" class="modal-backdrop" aria-label="Close dialog" (click)="onBackdropClick.emit($event)"></button>
+            <bx-modal-backdrop [isAnimated]="isAnimated()" [isOpen]="isOpen()" (click)="onBackdropClick.emit($event)" />
         }
         <div class="modal-overlay-wrapper">
-            <div bxSurface data-bx-light-scope [ngClass]="modalClasses()">
-                <div
-                    [class]="'centered-modal-inner-content-container ' + (config()?.style?.wrapperClasses ?? '')"
-                    [style]="config()?.style?.wrapperStyles ?? ''">
-                    <div class="centered-modal-top-group">
-                        @if (hasBanner()) {
-                            <bx-modal-banner
-                                [header]="config()?.header"
-                                [showCloseButton]="config()?.style?.showCloseButton ?? true"
-                                (close)="close.emit('cancel')"></bx-modal-banner>
-                        }
-                        @if (headerTemplate()) {
-                            <div class="centered-modal-header">
-                                <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
-                                @if (!hasBanner()) {
-                                    <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')">
-                                        <bx-icon name="x" />
-                                    </button>
-                                }
+            <div
+                class="centered-modal-frame"
+                [class.centered-modal-animate-in]="modalClasses()['centered-modal-animate-in']"
+                [class.centered-modal-animate-out]="modalClasses()['centered-modal-animate-out']">
+                <div bxSurface data-bx-light-scope [ngClass]="modalClasses()">
+                    <div
+                        [class]="'centered-modal-inner-content-container ' + (config()?.style?.wrapperClasses ?? '')"
+                        [style]="config()?.style?.wrapperStyles ?? ''">
+                        <div class="centered-modal-top-group">
+                            @if (hasBanner()) {
+                                <bx-modal-banner
+                                    [header]="config()?.header"
+                                    [showCloseButton]="config()?.style?.showCloseButton ?? true"
+                                    (close)="close.emit('cancel')"></bx-modal-banner>
+                            }
+                            @if (headerTemplate()) {
+                                <div class="centered-modal-header">
+                                    <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
+                                    @if (!hasBanner()) {
+                                        <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')">
+                                            <bx-icon name="x" />
+                                        </button>
+                                    }
+                                </div>
+                            }
+                            <div class="centered-modal-main-content-container">
+                                <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
+                            </div>
+                        </div>
+
+                        @if (footerTemplate()) {
+                            <div class="centered-modal-footer">
+                                <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
                             </div>
                         }
-                        <div class="centered-modal-main-content-container">
-                            <ng-container [ngTemplateOutlet]="contentTemplate"> </ng-container>
-                        </div>
                     </div>
-
-                    @if (footerTemplate()) {
-                        <div class="centered-modal-footer">
-                            <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
-                        </div>
-                    }
                 </div>
             </div>
         </div>

@@ -97,6 +97,37 @@ test('every palette emits both roles, neutral canvases, solid scrollbars and pai
         }
         assert.ok(tokens[`color-${role}-500`]);
       }
+
+      const surfaces = [
+        'bg-canvas',
+        'bg-surface',
+        'bg-surface-alt',
+        'bg-element',
+        'bg-element-hover',
+        'bg-element-active',
+        'bg-neutral',
+        'bg-neutral-hover',
+        'bg-neutral-active'
+      ];
+
+      for (const foreground of ['text-heading', 'text-primary', 'text-secondary', 'text-brand', 'text-accent']) {
+        for (const background of surfaces) {
+          const ratio = contrast(tokens[foreground], tokens[background]);
+
+          assert.ok(ratio >= 4.5, `${id}/${mode} ${foreground} on ${background}: ${ratio}`);
+        }
+      }
+
+      for (const border of ['border-brand', 'border-accent']) {
+        for (const background of ['bg-canvas', 'bg-surface', 'bg-neutral']) {
+          const ratio = contrast(tokens[border], tokens[background]);
+
+          assert.ok(ratio >= 3, `${id}/${mode} ${border} on ${background}: ${ratio}`);
+        }
+      }
+
+      if (mode === 'light') assert.deepEqual(rgb(tokens['on-accent']), [255, 255, 255], `${id}/${mode} accent foreground`);
+
       assert.equal(
         Object.keys(tokens).some((key) => key.startsWith('meta-')),
         false
@@ -105,11 +136,11 @@ test('every palette emits both roles, neutral canvases, solid scrollbars and pai
   }
 });
 
-test('approved palette anchors match the picker and status colors remain independent', () => {
+test('palette swatches match immutable anchors and status colors remain independent', () => {
   for (const palette of THEME_PALETTES) {
     const light = fixtures.get(`${palette.id}-light`);
     const order = palette.id === 'cyberpunk' ? ['accent', 'primary'] : ['primary', 'accent'];
-    order.forEach((role, index) => assert.deepEqual(rgb(light[role]), rgb(palette.colors[index]), palette.id));
+    order.forEach((role, index) => assert.deepEqual(rgb(light[`color-${role}-500`]), rgb(palette.colors[index]), palette.id));
     for (const mode of appearances) {
       const tokens = fixtures.get(`${palette.id}-${mode}`);
       const reference = fixtures.get(`azure-ember-${mode}`);
@@ -147,7 +178,7 @@ test('only current palette IDs resolve', () => {
   }
 });
 
-test('approved palettes retain their light anchors and tuned dark action colors', () => {
+test('approved palette anchors and tuned dark action colors remain stable', () => {
   const approved = {
     'carbon-cobalt': { light: ['#292a2d', '#356fe8'], dark: ['#e2e2e0', '#6d9aff'] },
     'azure-ember': { light: ['#217eff', '#d85a1a'], dark: ['#72a7ff', '#f27b35'] },
@@ -156,8 +187,8 @@ test('approved palettes retain their light anchors and tuned dark action colors'
   for (const [id, modes] of Object.entries(approved)) {
     for (const [mode, colors] of Object.entries(modes)) {
       const tokens = fixtures.get(`${id}-${mode}`);
-      assert.deepEqual(rgb(tokens.primary), rgb(colors[0]), `${id}/${mode} primary`);
-      assert.deepEqual(rgb(tokens.accent), rgb(colors[1]), `${id}/${mode} accent`);
+      assert.deepEqual(rgb(tokens[mode === 'light' ? 'color-primary-500' : 'primary']), rgb(colors[0]), `${id}/${mode} primary`);
+      assert.deepEqual(rgb(tokens[mode === 'light' ? 'color-accent-500' : 'accent']), rgb(colors[1]), `${id}/${mode} accent`);
     }
   }
 });

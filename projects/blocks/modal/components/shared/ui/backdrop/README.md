@@ -38,6 +38,11 @@ this.modalService.open(DialogContent, {
 dim scrim. Owners can set these variables to contain or stack the backdrop without reaching into its DOM. Reduced-transparency and forced-color fallbacks take
 precedence over the ordinary background override.
 
+ModalService uses this same backdrop for centered, side, and bottom-sheet dialogs. In that composition the backdrop supplies blur and dismissal, while the root
+surface paints dimming outside its own border to avoid a gray tint. Nested dialogs use independent filled backdrops with their own blur and dismissal; older
+backdrop/material layers stay intact. Nested material becomes at least 90% opaque at the first nested level and fully opaque at deeper levels by default.
+Standalone backdrops and mobile navigation retain their existing filled-scrim presentation.
+
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 

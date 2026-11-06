@@ -30,13 +30,17 @@ import { ToastrService } from '@filip.mazev/blocks/toastr';
 import { IComponentDialogData } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-dialog-data.interface';
 import { EssentialsExamples } from '@playground/components/screens/library-components/essentials-examples/essentials-examples';
 import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
+import { InfiniteScrollExamples } from '@playground/components/screens/library-components/infinite-scroll-examples/infinite-scroll-examples';
 import { MenuShortcutExamples } from '@playground/components/screens/library-components/menu-shortcut-examples/menu-shortcut-examples';
 import { PageExamples } from '@playground/components/screens/library-components/page-examples/page-examples';
+import { ResizeHandleExamples } from '@playground/components/screens/library-components/resize-handle-examples/resize-handle-examples';
 import { SearchExamples } from '@playground/components/screens/library-components/search-examples/search-examples';
 import { SideNavExamples } from '@playground/components/screens/library-components/side-nav-examples/side-nav-examples';
+import { SidePanelExamples } from '@playground/components/screens/library-components/side-panel-examples/side-panel-examples';
 import { TagExamples } from '@playground/components/screens/library-components/tag-examples/tag-examples';
 import { TopNavExamples } from '@playground/components/screens/library-components/top-nav-examples/top-nav-examples';
 import { TruncationExamples } from '@playground/components/screens/library-components/truncation-examples/truncation-examples';
+import { VirtualCollectionExamples } from '@playground/components/screens/library-components/virtual-collection-examples/virtual-collection-examples';
 import { Readme } from '@playground/components/shared/readme/readme';
 
 import { Highlight } from 'ngx-highlightjs';
@@ -50,6 +54,10 @@ import { ComponentDialog } from './component-dialog';
   selector: 'app-component-demo',
   imports: [
     PageExamples,
+    SidePanelExamples,
+    ResizeHandleExamples,
+    VirtualCollectionExamples,
+    InfiniteScrollExamples,
     PageContainer,
     PageHeader,
     Highlight,

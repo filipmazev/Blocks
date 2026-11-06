@@ -1,0 +1,65 @@
+<div #layer class="panel-layer" [class.is-open]="open()" [style.--bx-panel-duration.ms]="duration()">
+    @if (backdrop()) {
+        <div class="panel-backdrop" aria-hidden="true" (click)="onBackdrop()"></div>
+    }
+    <aside
+        #surface
+        bxSurface
+        class="panel-surface"
+        tabindex="-1"
+        [id]="panelId()"
+        [bxSurfaceInteractive]="false"
+        [class.panel-left]="placement() === 'left'"
+        [class.panel-right]="placement() === 'right'"
+        [style.inline-size]="resolvedWidth()"
+        [attr.inert]="open() ? null : ''"
+        [attr.aria-hidden]="open() ? null : 'true'"
+        [attr.aria-label]="labelledBy() ? null : accessibleName()"
+        [attr.aria-labelledby]="labelledBy()">
+        <div class="panel-banner" [hidden]="!banner()"><ng-content select="[bxSidePanelBanner]" /></div>
+        <div class="panel-header" [hidden]="!header() && !headerIcon() && !showCloseButton()">
+            <div class="panel-heading">
+                @if (headerIcon(); as icon) {
+                    <bx-icon
+                        aria-hidden="true"
+                        [name]="icon.name"
+                        [size]="icon.size ?? '24'"
+                        [color]="icon.color"
+                        [bgColor]="icon.bgColor"
+                        [strokeWidth]="icon.strokeWidth" />
+                }
+                <ng-content select="[bxSidePanelHeader]" />
+            </div>
+            @if (showCloseButton()) {
+                <button type="button" class="panel-close" [attr.aria-label]="closeText()" (click)="dismiss()"><bx-icon name="x" /></button>
+            }
+        </div>
+        <div class="panel-body"><ng-content /></div>
+        <div class="panel-footer" [hidden]="!footer()"><ng-content select="[bxSidePanelFooter]" /></div>
+    </aside>
+    @if (resizable()) {
+        <div
+            bxResizeHandle
+            class="panel-resize-handle"
+            [class.resize-right]="placement() === 'left'"
+            [class.resize-left]="placement() === 'right'"
+            [style.--bx-panel-rendered-width.px]="measuredWidth()"
+            [attr.inert]="open() ? null : ''"
+            [attr.aria-hidden]="open() ? null : true"
+            [resizeEdge]="placement() === 'left' ? 'right' : 'left'"
+            [resizeValue]="resizeValue()"
+            [resizeTarget]="surface"
+            [resizeContainer]="layer"
+            [resizeActivityContainer]="resizeActivityContainer()"
+            [resizeMinSize]="resizeMinWidth()"
+            [resizeMaxSize]="resizeMaxWidth()"
+            [resizeDisableShrink]="resizeDisableShrink()"
+            [resizeDisabled]="!open()"
+            [resizeLabel]="resizeLabel()"
+            [resizeIdleDelay]="resizeIdleDelay()"
+            [resizeControls]="panelId()"
+            (resizeStart)="onResizeStart()"
+            (resizeValueChange)="width.set($event)"
+            (resizeEnd)="onResizeEnd($event)"></div>
+    }
+</div>

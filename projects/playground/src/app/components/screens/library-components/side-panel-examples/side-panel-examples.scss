@@ -1,0 +1,54 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.panel-demo-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: spacing(4);
+}
+
+.panel-demo-boundary {
+    block-size: 28rem;
+    padding: spacing(4);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    background: var(--bx-bg-surface-alt);
+    margin-block-start: spacing(4);
+
+    button {
+        margin-inline-end: spacing(2);
+        margin-block-end: spacing(2);
+    }
+}
+
+.demo-heading,
+.demo-banner {
+    margin: 0;
+}
+
+.demo-heading {
+    font: inherit;
+}
+
+.panel-demo-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(4);
+    margin-block-start: spacing(3);
+}
+
+.panel-demo-content {
+    min-inline-size: 0;
+    padding: spacing(3);
+}
+
+@include respond-down(sm) {
+    .panel-demo-controls {
+        grid-template-columns: 1fr;
+    }
+}

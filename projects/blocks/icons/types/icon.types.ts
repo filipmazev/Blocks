@@ -1,5 +1,6 @@
 import { LucideName } from './lucide.types';
 
-export type IconSize = '16' | '20' | '24' | '28' | '32' | '36' | '40' | '44' | '48';
-export type IconStrokeWidth = 0.5 | 0.75 | 1 | 1.25 | 1.5 | 1.75 | 2 | 2.25 | 2.5 | 2.75 | 3;
+/** Icon dimension in CSS pixels, supplied as a number or a numeric string. */
+export type IconSize = number | `${number}`;
+/** SVG stroke width; positive finite numeric values are supported. */
 export type IconName = LucideName;

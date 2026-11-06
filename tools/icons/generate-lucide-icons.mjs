@@ -12,6 +12,7 @@ const lucideRoot = path.join(repoRoot, 'node_modules', 'lucide-static', 'icons')
 
 const outRoot = path.join(repoRoot, 'projects', 'blocks', 'icons', 'constants', 'lucide');
 const generatedFiles = new Set();
+const metadataOnly = process.argv.includes('--metadata-only');
 
 function toPascalCase(fileName) {
   return fileName
@@ -123,12 +124,57 @@ ${loaders}
 `;
 }
 
+async function generateCategories(names) {
+  const snapshot = JSON.parse(await fs.readFile(path.join(__dirname, 'data/lucide-categories.json'), 'utf8'));
+  const installed = JSON.parse(await fs.readFile(path.join(repoRoot, 'node_modules/lucide-static/package.json'), 'utf8'));
+
+  if (snapshot.version !== installed.version) {
+    throw new Error(
+      `Lucide category snapshot ${snapshot.version} does not match installed ${installed.version}. Synchronize official metadata first; see tools/icons/README.md.`
+    );
+  }
+
+  const aliases = new Map();
+
+  for (const [name, metadata] of Object.entries(snapshot.icons)) {
+    for (const alias of metadata.aliases ?? []) aliases.set(typeof alias === 'string' ? alias : alias.name, name);
+  }
+
+  const mapping = {};
+  const used = new Set();
+
+  for (const name of names) {
+    const categories = snapshot.icons[name]?.categories ?? snapshot.icons[aliases.get(name)]?.categories ?? [];
+    const resolved = categories.length ? [...categories].sort() : ['uncategorized'];
+
+    mapping[name] = resolved;
+    resolved.forEach((id) => used.add(id));
+  }
+
+  const definitions = [...used].sort().map((id) => ({ id, label: snapshot.categories[id] ?? 'Uncategorized' }));
+  const banner = `// Generated from official Lucide ${snapshot.version} (${snapshot.revision}) by tools/icons/generate-lucide-icons.mjs.\n`;
+
+  await writeTypeScript(
+    'lucide-categories.constants.ts',
+    `${banner}\nimport type { LucideCategoryId } from '@icons/types/lucide-category.types';\nimport type { LucideName } from '@icons/types/lucide.types';\n\n/** Official categories present in the generated Blocks icon set, ordered by stable identifier. */\nexport const LUCIDE_CATEGORIES = ${JSON.stringify(definitions, null, 2)} as const;\n\n/** Precomputed categories for every included icon, including upstream aliases and an uncategorized fallback. */\nexport const LUCIDE_ICON_CATEGORIES: Readonly<Record<LucideName, readonly LucideCategoryId[]>> = ${JSON.stringify(mapping, null, 2)};\n`,
+    path.join(repoRoot, 'projects/blocks/icons/constants')
+  );
+}
+
 async function generateLucide() {
   await ensureDir(outRoot);
 
   const files = await listSvgFiles(lucideRoot);
   const names = [];
   const loaderEntries = [];
+
+  if (metadataOnly) {
+    const { lucideNames } = await import(path.join(outRoot, 'names.constants.ts'));
+
+    await generateCategories(lucideNames);
+
+    return;
+  }
 
   for (const file of files) {
     const iconName = file.replace(/\.svg$/, '');
@@ -158,6 +204,7 @@ async function generateLucide() {
   await writeTypeScript('names.constants.ts', buildNamesTs(names));
 
   await writeTypeScript('icon-loader.constants.ts', buildLoaderTs(loaderEntries));
+  await generateCategories(names);
 
   await writeTypeScript(
     'public-api.ts',
@@ -170,6 +217,8 @@ async function generateLucide() {
 
 async function main() {
   await generateLucide();
+
+  if (metadataOnly) return;
 
   for (const filename of await fs.readdir(outRoot)) {
     if (filename.endsWith('.ts') && !generatedFiles.has(path.join(outRoot, filename))) {

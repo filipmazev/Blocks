@@ -1,0 +1,116 @@
+@use 'mixins' as *;
+@use 'motion' as *;
+
+@mixin resize-grip {
+    outline: none;
+
+    &::before,
+    &::after {
+        @include bx-transition('opacity, background-color, color', var(--bx-resize-grip-duration, 150ms), ease);
+
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
+        border-radius: radius(pill);
+    }
+
+    &::before {
+        background: var(--bx-resize-rail-color, var(--bx-resize-grip-background, var(--bx-bg-element)));
+    }
+
+    &::after {
+        left: 50%;
+        top: 50%;
+        inline-size: spacing(2);
+        block-size: spacing(6);
+        box-sizing: border-box;
+        transform: translate(-50%, -50%);
+        border: 1px solid var(--bx-resize-grip-border, var(--bx-border-default));
+        color: var(--bx-resize-grip-color, var(--bx-text-secondary));
+        background-color: var(--bx-resize-grip-background, var(--bx-bg-element));
+        background-image:
+            radial-gradient(circle, currentcolor 1px, transparent 1.25px), radial-gradient(circle, currentcolor 1px, transparent 1.25px),
+            radial-gradient(circle, currentcolor 1px, transparent 1.25px);
+        background-size: 3px 3px;
+        background-position:
+            center calc(50% - 4px),
+            center,
+            center calc(50% + 4px);
+        background-repeat: no-repeat;
+    }
+
+    &[data-bx-resize-axis='horizontal']::before {
+        inset-block: spacing(2);
+        left: 50%;
+        inline-size: spacing(1);
+        transform: translateX(-50%);
+    }
+
+    &[data-bx-resize-axis='vertical']::before {
+        inset-inline: spacing(2);
+        top: 50%;
+        block-size: spacing(1);
+        transform: translateY(-50%);
+    }
+
+    &[data-bx-resize-axis='vertical']::after {
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    &.bx-resize-visible::after,
+    &:focus-visible::before,
+    &:focus-visible::after {
+        opacity: 1;
+    }
+
+    &:hover::before,
+    &.bx-resizing::before {
+        opacity: 1;
+    }
+
+    &:hover::after,
+    &.bx-resizing::after {
+        opacity: 0;
+    }
+
+    &:focus-visible::before {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: spacing(1);
+    }
+
+    &.bx-resize-reduced-motion::before,
+    &.bx-resize-reduced-motion::after {
+        transition-duration: 0s;
+    }
+
+    @media (hover: none), (pointer: coarse), (forced-colors: active) {
+        &::after {
+            opacity: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &::before,
+        &::after {
+            transition-duration: 0s;
+        }
+    }
+
+    @media (forced-colors: active) {
+        &::before {
+            background: CanvasText;
+        }
+
+        &::after {
+            forced-color-adjust: none;
+            background-color: Canvas;
+            border-color: CanvasText;
+            color: CanvasText;
+        }
+
+        &:focus-visible::before {
+            outline-color: Highlight;
+        }
+    }
+}
