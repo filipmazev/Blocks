@@ -54,9 +54,9 @@ commits or pushes during that migration.
 
 ## Publishing
 
-The library version and release channel live in `projects/blocks/package.json`, currently prepared as `1.5.2` with `publishConfig.tag: 'alpha'`. The playground
-shows an Alpha badge and the current version with an `(alpha)` suffix, and npm publishes to the `alpha` channel. The tag also supports `beta`; change it to
-`latest` for a stable release, removing the badge and suffix after version synchronization. `BLOCKS_VERSION` remains the numeric package version;
+The library version and release channel live in `projects/blocks/package.json`, currently published as `1.5.3-alpha` with `publishConfig.tag: 'alpha'`. The
+playground shows an Alpha badge and the current version with an `(alpha)` suffix, and npm publishes to the `alpha` channel. The tag also supports `beta`; change
+it to `latest` for a stable release, removing the badge and suffix after version synchronization. `BLOCKS_VERSION` contains the exact package version;
 `BLOCKS_RELEASE_CHANNEL` and `BLOCKS_VERSION_LABEL` are generated alongside it. Starts and builds synchronize these automatically.
 
 To prepare the next minor version locally (for example, 1.4.21 → 1.5.0), without publishing or creating a Git tag:
@@ -80,9 +80,9 @@ Choose one command: after `npm run version:minor`, use `--retry` to publish that
 before changing the version, then builds and publishes. It accepts an existing npm login, `NPM_TOKEN`, or an interactive token prompt; `--token` remains
 supported. For unattended publication, the token needs publish access to `@filip.mazev/blocks` and permission to bypass two-factor authentication.
 
-For the prepared 1.5.2 alpha release, use `bash publish.sh --retry` to keep that version instead of bumping again. Consumers can install the published alpha
-with `npm install @filip.mazev/blocks@alpha`. The 1.5.2 release notes are finalized in the playground's release registry with `status: 'released'` and
-`channel: 'alpha'`; this metadata does not publish the package. Record the final comparison commit once the release changes are committed.
+Version `1.5.3-alpha` is published on the Alpha channel. Consumers can install it with `npm install @filip.mazev/blocks@1.5.3-alpha` or follow the channel with
+`npm install @filip.mazev/blocks@alpha`. Use `--retry` only for a prepared version that has not yet been published; NPM does not allow replacing a published
+version. Record the final comparison commit once the release changes are committed.
 
 The publish script passes the built package's channel explicitly and prints the package version and tag. If npm returns `E401 Unauthorized`, run `npm login` or
 supply a valid `NPM_TOKEN` before retrying. Verify publication with `npm view @filip.mazev/blocks dist-tags --json` or
@@ -99,8 +99,8 @@ npm run deploy:playground
 
 Run `npm run lint:docs` for README styling and `npm run tools:build-docs` after changing documentation during an active development-server session.
 
-The playground displays the next publish target from `release.config.json`. Leave `nextVersion` null to increment the current package patch automatically in its
-`publishConfig.tag` channel (currently `1.5.3-alpha`), or assign an exact semantic version. `bash publish.sh` applies that same target before building and
-publishing; `--bump patch|minor|major` explicitly chooses a different increment and `--retry` publishes the current manifest version. Assigned targets are
-cleared after being applied. See the [release page guide](projects/playground/src/app/components/screens/release-notes/README.md) for channel metadata and draft
-notes.
+The playground displays the exact build target from `release.config.json`, currently pinned to the published `1.5.3-alpha`. Keep it pinned until changes and
+draft notes establish the next release. Before publishing again, assign a new unpublished version or use `--bump patch|minor|major`. Setting `nextVersion` to
+null resumes automatic patch increments in the configured channel. `bash publish.sh` applies that same target before building and publishing; `--retry`
+publishes the current manifest version. Assigned targets are cleared after being applied. See the
+[release page guide](projects/playground/src/app/components/screens/release-notes/README.md) for channel metadata and draft notes.

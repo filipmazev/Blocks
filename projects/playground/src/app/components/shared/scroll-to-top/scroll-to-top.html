@@ -1,5 +1,5 @@
 <div #position class="scroll-top-position" [hidden]="!visible() || suppressed()">
-    <button bx-button type="button" variant="mini-fab" aria-label="Scroll to top" bxTooltip="Scroll to top" bxTooltipTouch="none" (click)="scrollToTop()">
+    <button bx-button type="button" variant="mini-fab" bxTooltipTouch="none" [attr.aria-label]="label()" [bxTooltip]="label()" (click)="scrollToTop()">
         <bx-icon name="arrow-up" />
     </button>
 </div>

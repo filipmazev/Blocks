@@ -1,6 +1,6 @@
 # Blocks 1.5.3-alpha
 
-Draft library release notes. Changes may be revised before release.
+Published Alpha change notes for [@filip.mazev/blocks@1.5.3-alpha](https://www.npmjs.com/package/@filip.mazev/blocks/v/1.5.3-alpha).
 
 ## Declarative side panel
 
@@ -24,6 +24,7 @@ Draft library release notes. Changes may be revised before release.
 
 ## Modal and panel presentation
 
+- Fixed centered modal content clipping on small screens, including nested dialogs. The content region scrolls while header and footer actions remain reachable.
 - Declarative SidePanel and left/right Modal Side surfaces use square corners on all four edges, including their material decorations.
 - Centered, side, and bottom-sheet modals share the declarative panel's translucent surface presentation. `--bx-modal-bg` / `--bx-modal-text` retain priority,
   with shared panel and semantic surface/text fallbacks. Root dialogs retain the ordinary 0.52 opacity floor and their shared appearance preferences.
@@ -96,6 +97,13 @@ Draft library release notes. Changes may be revised before release.
 - Extended the existing generation pipeline with an offline, release-pinned official Lucide snapshot. A controlled synchronization command resolves upstream
   category inheritance and preserves attribution. Normal builds and runtime require no metadata network requests, and mismatched dependency/snapshot versions
   fail with synchronization instructions.
+
+## Catalog navigation
+
+- Icons and Tokens show their scroll action only after scrolling 400 pixels past the results' start. Reading documentation above the catalog does not trigger
+  it.
+- The action returns to the catalog results and focuses that region. Its tooltip and accessible name are **Scroll to catalog top**. Documentation expansion and
+  viewport changes update the threshold and destination; reduced motion remains supported.
 
 ## Page layouts and breadcrumbs
 

@@ -71,9 +71,11 @@ open. Panels use complementary region semantics, optional focus restoration, a c
 trapping, scroll locking, or modal semantics. Existing Blocks controls provide labeled keyboard-accessible sliders and selections. Setting information tooltips
 support focus, hover, and touch tap.
 
-Scroll to top appears after 400 pixels in the actual scroll viewport. It uses a Blocks tooltip without touch long-press and respects shared reduced-motion
-preferences. It is aligned to the grid's actual horizontal bounds inside its positioned viewport. It remains visible beside push panels and is hidden while an
-overlay panel is open to keep actions clear. The Tokens catalog uses the same action; Utilities no longer renders it.
+Scroll to catalog top appears after scrolling 400 pixels past the start of the results in the actual scroll viewport, staying hidden while reading the
+documentation above the catalog. Its threshold follows documentation expansion and viewport changes. It uses a Blocks tooltip without touch long-press and
+respects shared reduced-motion preferences. It is aligned to the grid's actual horizontal bounds inside its positioned viewport. It remains visible beside push
+panels and is hidden while an overlay panel is open to keep actions clear. Activation returns to the start of the results, leaving documentation above the
+viewport. The Tokens catalog uses the same action; Utilities no longer renders it.
 
 ## Playground
 

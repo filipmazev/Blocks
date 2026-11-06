@@ -5,7 +5,7 @@ export const RELEASE_NOTES: readonly IReleaseNotes[] = [
   {
     version: '1.5.3-alpha',
     summary: 'Colocated documentation, channel-specific release notes, shared build and publish versioning, and consistent mobile drawer overlays.',
-    status: 'draft',
+    status: 'released',
     channel: 'alpha',
     readme: 'documentation/releases/1.5.3-alpha/README.md',
     fromCommit: '6fbc957850d6b4cb9229f47db98e843c01088dd6'

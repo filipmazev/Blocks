@@ -78,7 +78,8 @@
 .centered-modal-inner-content-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1 1 auto;
+    min-block-size: 0;
     padding: spacing(4) spacing(6);
     gap: spacing(6);
     box-sizing: border-box;

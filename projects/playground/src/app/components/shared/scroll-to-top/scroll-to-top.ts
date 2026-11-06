@@ -5,6 +5,7 @@ import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   ElementRef,
   inject,
@@ -36,6 +37,8 @@ export class ScrollToTop {
   private readonly position: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('position');
 
   protected readonly visible: WritableSignal<boolean> = signal(false);
+
+  protected readonly label: Signal<string> = computed(() => (this.boundary() ? 'Scroll to catalog top' : 'Scroll to top'));
 
   public readonly container: InputSignal<HTMLElement | undefined> = input<HTMLElement | undefined>(undefined);
   public readonly boundary: InputSignal<HTMLElement | undefined> = input<HTMLElement | undefined>(undefined);
@@ -71,9 +74,10 @@ export class ScrollToTop {
     if (!target) return;
 
     const boundary = this.boundary() ?? this.nativeElement.closest<HTMLElement>('main');
+    const top = Math.max(0, target.scrollTop - this.getScrollDistance());
 
     (boundary?.hasAttribute('tabindex') ? boundary : target).focus({ preventScroll: true });
-    target.scrollTo({ top: 0, behavior: this.bxA11yService.isReducedMotion() ? 'instant' : 'smooth' });
+    target.scrollTo({ top, behavior: this.bxA11yService.isReducedMotion() ? 'instant' : 'smooth' });
   }
 
   //#region Helpers
@@ -93,14 +97,22 @@ export class ScrollToTop {
     this.ngZone.runOutsideAngular(() => {
       const scrollTarget = target === document.scrollingElement ? document : target;
       const onScroll = () => this.schedule();
-      const align = () => this.align();
+      const align = () => {
+        this.align();
+        this.schedule();
+      };
+
       const resize = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(align);
 
       resize?.observe(target);
 
       const boundary = this.boundary();
 
-      if (boundary) resize?.observe(boundary);
+      if (boundary) {
+        resize?.observe(boundary);
+
+        if (boundary.parentElement) resize?.observe(boundary.parentElement);
+      }
 
       scrollTarget.addEventListener('scroll', onScroll, { passive: true });
       win.addEventListener('resize', align);
@@ -138,6 +150,19 @@ export class ScrollToTop {
     if (position.style.right !== inset) position.style.right = inset;
   }
 
+  private getScrollDistance(): number {
+    const target = this.target;
+    const boundary = this.boundary();
+
+    if (!target) return 0;
+
+    if (!boundary) return target.scrollTop;
+
+    const viewportTop = target === target.ownerDocument.scrollingElement ? 0 : target.getBoundingClientRect().top + target.clientTop;
+
+    return viewportTop - boundary.getBoundingClientRect().top;
+  }
+
   private schedule(): void {
     if (this.frame !== undefined || this.destroyRef.destroyed) return;
 
@@ -145,7 +170,7 @@ export class ScrollToTop {
       this.frame = this.nativeElement.ownerDocument.defaultView?.requestAnimationFrame(() => {
         this.frame = undefined;
 
-        const visible = (this.target?.scrollTop ?? 0) > 400;
+        const visible = this.getScrollDistance() > 400;
 
         if (visible !== this.visible()) this.ngZone.run(() => this.visible.set(visible));
       });

@@ -169,6 +169,9 @@ Open content through `ModalService` so focus handling, Escape/backdrop dismissal
 `ScrollLockService` keeps separate locks for concurrent overlays. Closing one overlay does not unlock another. Reduced motion takes precedence over requested
 animation; reduced transparency and forced colors receive opaque backdrop presentation.
 
+Centered dialogs constrain their content to the available viewport, including when nested on small screens. Their content region scrolls independently while the
+header and footer remain reachable.
+
 Header text accepts `ResolvableText` and updates through the optional `BX_I18N` adapter. Content components own the translation and accessible naming of their
 custom actions, descriptions, errors, and form controls. Keep actions reachable in constrained viewports and preserve focus when completing asynchronous work.
 

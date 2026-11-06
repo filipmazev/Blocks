@@ -1,6 +1,6 @@
 {
     "name": "@filip.mazev/blocks",
-    "version": "1.5.2",
+    "version": "1.5.3-alpha",
     "license": "MIT",
     "publishConfig": {
         "access": "public",

@@ -138,8 +138,10 @@ spacers, and returning restores rows without retaining every previously visited 
 focused row can remain mounted independently. Groups outside the overscan area retain their scroll extent without mounting their cards. This replaces the old
 playground-only viewport/chunk observer. Color conversion reads only mounted items, including pinned focused rows.
 
-A constrained catalog viewport occupies the content area below the top bar. The shared Scroll to top action is aligned to the results width near that viewport's
-bottom-right corner, scrolls that container, and respects reduced motion. It has a keyboard/hover tooltip with touch long-press disabled.
+A constrained catalog viewport occupies the content area below the top bar. The shared Scroll to catalog top action is aligned to the results width near that
+viewport's bottom-right corner, scrolls that container to the start of the results, and respects reduced motion. Documentation remains above the viewport. It
+has a keyboard/hover tooltip with touch long-press disabled. It appears only after scrolling 400 pixels past the start of the results, staying hidden while
+reading the documentation above the catalog. Documentation expansion and viewport changes update the threshold.
 
 Metadata expansion within an unloaded batch is recreated when it returns. Current color-value search uses a lazy index; ordinary browsing converts only mounted
 batches. One canvas and a conversion cache are reused until theme/appearance changes. Documentation content mounts only while its section is open. Clear the
