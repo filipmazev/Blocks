@@ -3490,8 +3490,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 container',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    defaults: ['var(--bx-page-padding-inline, clamp(1rem, 3vw, 2.5rem))']
   },
   {
     name: '--bx-divider-color',
@@ -4448,6 +4448,78 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     reference: 'var(--bx-overlay-layer-z-index)',
     category: 'components',
     group: 'Component \u00B7 overlay',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-description-color',
+    reference: 'var(--bx-page-description-color)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-description-width',
+    reference: 'var(--bx-page-description-width)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-gap',
+    reference: 'var(--bx-page-gap)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-padding-block',
+    reference: 'var(--bx-page-padding-block)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-padding-inline',
+    reference: 'var(--bx-page-padding-inline)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-section-color',
+    reference: 'var(--bx-page-section-color)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-title-color',
+    reference: 'var(--bx-page-title-color)',
+    category: 'components',
+    group: 'Component \u00B7 page',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-page-title-size',
+    reference: 'var(--bx-page-title-size)',
+    category: 'components',
+    group: 'Component \u00B7 page',
     kind: 'value',
     scope: 'runtime',
     defaults: []
