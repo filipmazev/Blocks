@@ -6680,8 +6680,7 @@ input[type=range] {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.9fr);
   gap: 1.5rem;
-  max-width: 88rem;
-  margin-inline: auto;
+  min-inline-size: 0;
   align-items: start;
 }
 @media (max-width: 1280px) {
@@ -6690,6 +6689,7 @@ input[type=range] {
     flex-direction: column-reverse;
   }
   .demo-container > * {
+    min-inline-size: 0;
     width: 100%;
   }
 }

@@ -1,4 +1,4 @@
-import{Bt as Re,C as D,Ht as Rg,Kr as p,Mn as b,Pr as m,R as Fr,W as H,Wi as ye,X as J,Xi as zi,hr as hn,it as Kn,rr as fn}from"./chunk-CoBsbWg5.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
+import{Jt as Se,O as Em,On as Z,Qi as y,Xn as ct,ci as p,fr as g,hi as qn,jr as k$1,qr as lt,r as $a,rn as Tr,vt as Ne,wr as j}from"./chunk-CfQ5k3AW.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
 <p>Published October 31, 2026 on the Release channel (<code>latest</code>). Install this exact version with <code>npm install @filip.mazev/blocks@1.4.20</code>.</p>
 <p><a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.4.20">View version 1.4.20 on NPM</a>.</p>
 <p>Blocks 1.4.20 brings together the unified Angular UI package, semantic themes, appearance effects, forms, navigation, notifications and icons developed leading
@@ -384,6 +384,25 @@ playground.</li>
 <li>Kept explicit patch/minor/major overrides and retry publication available. An assigned target is consumed once it becomes the package version.</li>
 <li>Retained exact-version links when registry access is unavailable and avoided treating a failed registry request as proof of non-publication.</li>
 </ul>
+<h2>Page layouts and breadcrumbs</h2>
+<ul>
+<li>Added <code>PageContainer</code>, <code>PageHeader</code>, <code>PageContent</code>, and <code>PageFooter</code> to the primitives entry point, with colocated guides and an interactive playground.</li>
+<li>Standardized page widths, responsive padding, heading spacing, and the existing section-label/title treatment throughout the playground, including tokens,
+icons, utilities, component examples, appearance, release notes, and modal/toast configurators. Home keeps its existing layout.</li>
+<li>Added <code>ResolvableText</code> support for section titles, page titles, explicit descriptions, breadcrumb labels, and the breadcrumb navigation&#39;s accessible name.
+Already-rendered text reacts to the optional <code>BX_I18N</code> adapter&#39;s language revision.</li>
+<li>Added <code>autoResolveTitlesFromNavigation</code> (default <code>true</code>) to infer undefined section and page titles from shared navigation metadata. Descriptions remain
+manually supplied; explicit empty titles suppress automatic values. Projected headers support additional content and configurable semantic heading levels.</li>
+<li>Connected <code>provideNavigation()</code> and <code>NavigationService.page</code> to the optional <code>BX_PAGE_NAVIGATION</code> adapter without adding a dependency from primitives back to
+navigation. Applications can also provide their own reactive <code>IPageNavigation</code> adapter or supply explicit headings and breadcrumb trails.</li>
+<li>Added automatic breadcrumbs with a configurable <code>breadcrumbsAfter</code> threshold. The default is one nesting: root trails stay hidden and child pages show
+ancestor links. Zero shows root entries; the demo&#39;s numeric control has a minimum of zero and clamps typed negative values. Breadcrumb resolution remains
+independent of automatic title resolution.</li>
+<li>Removed redundant top-of-page back links in favor of breadcrumbs. Trails use native links, an ordered list, visible keyboard focus, and an explicitly marked
+current page, and wrap for narrow screens, translated labels, and RTL layouts.</li>
+<li>Grouped Page container, Content container, Stack layout, Grid layout, and Divider under <strong>Primitives \u2192 Layout</strong> at <code>/components/layout</code>. Their canonical demo
+routes now use <code>/components/layout/&lt;component&gt;</code>; existing <code>/components/&lt;component&gt;</code> URLs redirect to the corresponding layout page.</li>
+</ul>
 <h2>Mobile navigation</h2>
 <ul>
 <li>Reused <code>ModalBackdrop</code> for mobile side navigation, including its blur and opaque accessibility fallbacks.</li>
@@ -422,9 +441,85 @@ clean up automatically when the service is destroyed.</li>
 );</code></pre>
 <h2>Navigation API</h2>
 <ul>
-<li>Renamed the navigation configuration helper from <code>withNav</code> to <code>withInAppNavigation</code> to clarify its purpose and distinguish in-app navigation from other
-navigation concerns.</li>
-<li>Removed the previous <code>withNav</code> export. Applications using the old helper must update their imports and configuration calls.</li>
+<li><p>Replaced side-navigation submenu popups with nested lists inside the sidebar at every screen size and depth. Back, ancestor navigation, scroll restoration,
+and temporary expansion of a compact rail remain available.</p>
+</li>
+<li><p>Removed <code>submenuMode</code>, <code>submenuBreakpoint</code>, <code>SideNavSubmenuMode</code>, and <code>isInlineSubmenus()</code>. Consumers should remove these settings, imports, and calls; nested
+browsing now always uses the panel. The obsolete submenu width/height CSS variables no longer apply.</p>
+</li>
+<li><p>Kept route selection separate from programmatic row focus and focused the active route when entering its containing level.</p>
+</li>
+<li><p>Made the first, section-labelled ancestor action return directly to the full navigation root when that section was only a grouping label, while preserving
+return to a section list that was explicitly opened. Returning to an ancestor reveals the original item used to enter its child branch, scrolling only the
+navigation list.</p>
+</li>
+<li><p>Renamed the navigation configuration helper from <code>withNav</code> to <code>withInAppNavigation</code> to clarify its purpose and distinguish in-app navigation from other
+navigation concerns.</p>
+</li>
+<li><p>Removed the previous <code>withNav</code> export. Applications using the old helper must update their imports and configuration calls.</p>
+</li>
+</ul>
+<h2>Design tokens and theme palettes</h2>
+<ul>
+<li>Added a generated Core inventory of CSS custom properties, variable references, design scales, breakpoints, and emitted utility classes. The inventory
+includes semantic roles, every palette shade, glass/effects properties, component overrides, registered custom properties, and discoverable runtime values.</li>
+<li>Exported <code>CSS_TOKEN_CATALOG</code>, <code>ICssToken</code>, and category/kind/scope contracts. Metadata distinguishes global, theme, local, and runtime availability and
+records source declarations and use-site fallbacks; local/runtime discovery does not imply that a variable exists on the document root or is a supported
+override.</li>
+<li>Centralized semantic companion mappings in the Sass theme engine. <code>getComplementaryToken()</code> uses these mappings and the existing palette companion rule;
+<code>resolveTokenToCssVar()</code> returns the typed <code>CssVariableReference</code> contract. Palette guards validate supported palettes and shades.</li>
+<li>Moved theme IDs, labels, brand/accent assignments, and optional preview order into the theme engine&#39;s <code>$theme-palettes</code> registry. Generate <code>THEME_PALETTES</code>
+and <code>THEME_PALETTE_IDS</code> from that registry, derive <code>BxThemeId</code> from the generated IDs, and derive picker swatches from palette shade 500.</li>
+<li>Added <code>make-palette-theme(id, dark?, overrides?)</code> so existing named light/dark theme variables and playground theme classes use the same assignments. Existing
+palette IDs, labels, class names, and preview colors are preserved.</li>
+</ul>
+<h2>Tokens page</h2>
+<ul>
+<li>Added the searchable <code>/tokens</code> playground page for semantic colors grouped by purpose, palette shade scales, color companions, spacing, corner radii, border
+colors, shadows, layers, effects, component properties, utility classes, and Sass breakpoints.</li>
+<li>Used Blocks accordions and compact cards. Only the first result section opens by default; category filters and keyboard navigation support browsing the
+complete catalog.</li>
+<li>Added right-click and touch long-press copy menus on token cards, plus a visible Copy\u2026 button and keyboard access. Removed the global copy-format dropdown.
+Options copy <code>var(--bx-\u2026)</code>, the raw <code>--bx-\u2026</code> name, HEX, RGB, or RGBA. Color copies follow the current theme, preserve transparency, and convert through the
+browser&#39;s sRGB color handling; pairs copy one value per line.</li>
+<li>Added live color-value search, narrow-screen layouts, and dynamically sized search/select controls that reserve no empty validation row.</li>
+<li>Added a Blocks Collapse all action beside the Categories filter to close all result sections.</li>
+<li>Separated categories with matching titles and Blocks dividers while preserving the heading hierarchy for groups and cards.</li>
+<li>Added scroll-based lazy rendering in small token batches. Batches mount near the viewport and unmount when far away while preserving measured space and
+focused controls. Shared intersection/resize observers keep long groups lightweight without pagination. With fewer than 48 cards across expanded sections,
+lazy rendering is disabled and the displayed cards remain mounted.</li>
+<li>Changed the category filter to a clearable Blocks multiselect. Categories combine inclusively, such as Colors and Color pairs; clearing selection means All
+tokens, with no category restriction. Search and counts still cover the complete catalog.</li>
+<li>Reused one color-conversion canvas, cached conversion results for the current theme, and converted only mounted token batches during ordinary browsing.
+Current HEX/RGB search builds its color index lazily. Deferred documentation content until its section opens.</li>
+<li>Shortened palette section titles and moved current-theme, palette, and companion labels into trailing heading tags. Card text suppresses selection outside
+collapsible metadata to avoid conflicts with long-press gestures.</li>
+<li>Grouped palette shades and companions into their registered theme pairs. Sorted design scales by size/source order, widened non-color tiles, enlarged radius
+samples, and used a light neutral canvas for visible shadow previews in dark mode.</li>
+<li>Used Blocks collapsibles for source defaults and fallbacks, wrapped responsive Sass examples in code blocks, and copied RGB with comma-separated channels.</li>
+<li>Colocated the catalog guide, linked it from Core and Utilities, and included it in generated playground documentation.</li>
+</ul>
+<h2>Search input</h2>
+<ul>
+<li>Added <code>SearchInput.compact</code>, defaulting to <code>false</code>, to request compact presentation for a search input without a label. Supplying a label automatically
+enables compact mode. The input preserves existing search, loading, readonly, and accessibility behavior.</li>
+</ul>
+<h2>Shared primitive customization</h2>
+<ul>
+<li><p>Fixed surrounding surface highlights changing when a context menu opens. Lighting visibility ignores fully transparent CDK dismissal backdrops while retaining
+occlusion from visible menu panels and opaque backdrops.</p>
+</li>
+<li><p>Fixed number-only Tag proportions by keeping vertical padding at zero while preserving configurable horizontal padding and minimum diameter.</p>
+</li>
+<li><p>Added optional <code>titleTemplate</code> support to Collapsible and accordion items, with the exported <code>ICollapsibleTitleContext</code> providing the translated title and
+expansion state. This supports noninteractive header content such as count tags while retaining the shared disclosure and focus behavior.</p>
+</li>
+<li><p>Added <code>Collapsible.trailingTemplate</code> for noninteractive status tags, text, and icons at the logical end of collapsible/accordion headings, before the chevron.
+It shares <code>ICollapsibleTitleContext</code> with title templates, supports RTL layouts, and keeps the heading as one accessible disclosure button.</p>
+</li>
+<li><p>Added <code>Card.surfaceEffects</code>, defaulting to <code>true</code>. Dense collections can disable decorative surface controllers while keeping themed card styling, content
+slots, and interactions.</p>
+</li>
 </ul>
 <h2>Breaking changes and migration</h2>
 <h3>Navigation configuration</h3>
@@ -453,6 +548,15 @@ dimensions directly through the service.</li>
 expensive computations triggered by dimension changes.</li>
 </ul>
 <p>The existing <code>isMobile()</code> and <code>isTablet()</code> breakpoint boundaries remain unchanged.</p>
+<h3>Color tokens and variable availability</h3>
+<ul>
+<li><code>meta-brand-palette</code> and <code>meta-accent-palette</code> are Sass metadata and are excluded from <code>Color</code> and <code>SEMANTIC_COLOR_TOKENS</code>; <code>bx-theme</code> never emitted CSS
+variables for them. Use <code>ThemingService.palette()</code> and its palette definitions for metadata, and use <code>primary</code>/<code>accent</code> for themed colors.</li>
+<li>Variable/reference inventories now also include local and runtime properties. Filter <code>CSS_TOKEN_CATALOG</code> by <code>scope</code> when a consumer needs only global or theme
+variables. Consult the owning feature guide before setting a local or runtime property.</li>
+<li>Companion mappings describe styling relationships rather than guaranteed accessible text contrast. Existing public color-helper and scale exports remain
+available through <code>@filip.mazev/blocks/core</code>.</li>
+</ul>
 <h2>Code generation and lint rules</h2>
 <ul>
 <li>Required injected class references to retain the class&#39;s full lower-camel-case name, including service suffixes, in fields and local variables.</li>
@@ -460,6 +564,13 @@ expensive computations triggered by dimension changes.</li>
 <li>Added ESLint enforcement with alias/namespace resolution and updated library/playground references, templates, host expressions, and documentation examples.</li>
 <li>Required descriptive JSDoc for public members of exported library components, directives, and services and for exported helpers, including parameter and
 generic parameter descriptions. Filled documentation gaps across controls, overlays, shared services, and runtime helpers.</li>
+<li>Replaced the theme-type synchronization script with <code>npm run tools:generate-tokens</code>; retained <code>tools:sync-theme-types</code> as a compatibility alias. Library and
+playground build/start/watch scripts run token generation automatically.</li>
+<li>Split token generation into source reading, data construction, palette metadata, and TypeScript writing helpers. Evaluate Sass maps through Sass instead of
+parsing them with regular expressions, and use the TypeScript AST for generated data rather than maintaining TypeScript programs inside strings.</li>
+<li>Kept type contracts in regular TypeScript files and added <code>Generated from \u2026 by tools/tokens/generate-tokens.mjs</code> source banners to generated constants.</li>
+<li>Pre-format generated TypeScript before the strict ESLint autofix/check pass to avoid expensive formatter-difference processing on large inventories. Added
+per-file progress and elapsed-time reporting, and skip rewriting unchanged outputs so repeated generation does not trigger unnecessary rebuilds.</li>
 </ul>
 <h2>Library source organization</h2>
 <ul>
@@ -473,8 +584,8 @@ re-exports, documentation discovery, and catalog paths to preserve the layout on
 <li>Added ESLint enforcement for category placement, declaration separation, filenames, and colocated component/directive READMEs.</li>
 </ul>
 <h2>Compatibility</h2>
-<p>Existing public entry points other than the removed <code>withNav</code> export remain available. Backdrop inputs are additive, and older release-note URLs continue to
-work. Window dimension consumers should review the <code>isDesktop()</code> threshold change and any direct writes to <code>_dimensions</code>.</p>
+<p>Existing public package entry points remain available. Backdrop and shared primitive inputs are additive, and older release-note URLs continue to work.
+Consumers should review the <code>withNav</code> rename, <code>isDesktop()</code> threshold, direct writes to <code>_dimensions</code>, color-token metadata removal, and variable scopes above.</p>
 <p>Stable NPM installs still use the <code>latest</code> tag; Alpha and Beta remain opt-in.</p>
 `,"projects/blocks/README.md":`<h1>@filip.mazev/blocks</h1>
 <p>Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship
@@ -595,6 +706,18 @@ positioning, design tokens, and scroll locking.</p>
 that a device category determines interaction. <code>BxA11yService.isReducedMotion()</code> tracks the shared motion preference.</p>
 <p><code>ThemingService</code> exposes application mode, active theme, palette, and appearance signals. Use <code>setApplicationTheme(&#39;light&#39; | &#39;dark&#39; | null)</code>, <code>setPalette(id)</code>,
 and <code>setAppearance(partial)</code> to update mounted Blocks components and their overlays.</p>
+<h3>Design tokens</h3>
+<p>Browse the <a href="tokens">token catalog</a> at <code>/tokens</code> for semantic colors grouped by role, every palette
+shade and color companion, spacing, corner radii, border colors, shadows, layers, effects, component variables, utility classes, and Sass breakpoints. Search by
+name, role, value, or source; copy CSS references and preview the current toolbar theme. <code>CSS_TOKEN_CATALOG</code> exposes typed discovery metadata with explicit
+global/theme/local/runtime availability. <code>CSS_VARIABLES</code> and <code>CSS_VARIABLE_REFERENCES</code> supply typed names and references. Local/runtime values are not
+necessarily available on the document root; the owning feature guide defines supported customization.</p>
+<p>Theme palette IDs, labels, brand/accent roles, and optional swatch preview order live in <code>$theme-palettes</code> in the Sass theme engine. <code>THEME_PALETTES</code> and
+<code>THEME_PALETTE_IDS</code> are generated from that registry; the public <code>BxThemeId</code> union derives from the generated IDs. Existing theme variables use
+<code>make-palette-theme(id, dark?, overrides?)</code>, preserving their public names and colors.</p>
+<p>Sass is the source of truth. <code>npm run tools:generate-tokens</code> evaluates the maps and inventories compiled CSS plus TypeScript property usage; generated constants
+pass the repository&#39;s lint/format pipeline. Maintain color/type contracts in ordinary TypeScript. See the catalog guide for generation, availability, and the
+migration of <code>meta-*</code> Sass metadata out of the color-token union.</p>
 <h3><code>BxShortcutService</code></h3>
 <p>Shares shortcut definitions between menu hints and application-owned keyboard handlers. It resolves OS overrides, normalizes modifier aliases, formats platform
 symbols, creates accessible key names and matches individual keyboard events.</p>
@@ -1076,10 +1199,11 @@ as a source; its visible border and declared color determine the facing edges an
 before projection, so local custom properties and scoped themes retain their color on other receivers. Hover light has a 120 CSS-pixel falloff radius and stays
 within the nearest main, aside, nav, dialog or overlay. Add <code>data-bx-light-scope</code> to isolate a custom region. Modal panels, native dialogs, popovers,
 fixed/sticky panels, CDK overlays and toast stacks form separate lighting boundaries. Positioned stacking layers also constrain hover/focus light. Receiver hit
-testing excludes covered surfaces, including rounded corners, and opening or removing overlays invalidates prior highlights. Each source fades independently
-over 200 ms, including the emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new
-source. Reduced motion applies changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking,
-DOM capture, or a permanent hover animation loop.</p>
+testing excludes covered surfaces, including rounded corners. Fully transparent CDK dismissal backdrops intercept input without occluding lighting; visible menu
+panels and opaque backdrops still occlude. Opening or removing overlays invalidates prior highlights. Each source fades independently over 200 ms, including the
+emitter\u2019s own colored border. Borders can combine several sources; retiring contributions fade out rather than jumping to a new source. Reduced motion applies
+changes immediately. Source coordinates project directly into each receiver without a second position spring, pointer tracking, DOM capture, or a permanent
+hover animation loop.</p>
 <p>Backdrop behavior follows the browser\u2019s <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/backdrop-filter">backdrop-root rules</a>. Visual
 treatment follows <a href="https://developer.apple.com/design/human-interface-guidelines/materials">Apple\u2019s material guidance</a>: restrained highlights and readable
 translucent layers.</p>
@@ -1935,6 +2059,11 @@ true.</p>
 <td>\u2014</td>
 <td>Emits the current query as a string when retry is requested. Does not also emit <code>search</code>.</td>
 </tr>
+<tr>
+<td><code>compact</code></td>
+<td><code>false</code></td>
+<td>Controls compact field presentation. Automatically enabled when a label is provided; otherwise follows this setting.</td>
+</tr>
 </tbody></table>
 <h3>Asynchronous requests</h3>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-search-input</span>
@@ -2029,7 +2158,7 @@ success, and readonly/disabled controls. Enabling Show loading text starts a pre
     (<span class="hljs-attr">loadMore</span>)=<span class="hljs-string">&quot;loadNext($event)&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Supports Signal Forms, Reactive Forms, Template-driven Forms, and standalone <code>[(value)]</code>. Existing <code>[formControl]</code> and <code>formControlName</code> bindings remain
-available. <code>BxSelectOption</code> remains as a compatibility alias for <code>IBxSelectOption</code>.</p>
+available.</p>
 <p>Options provide <code>label</code>, <code>value</code>, optional <code>disabled</code>, <code>icon</code>, <code>group</code> and <code>groupDisabled</code>. Labels and group headings accept translation keys.
 <code>compareWith(a, b)</code> defaults to <code>Object.is</code>; supply a comparator for object values. Selected labels are retained when filtering replaces the visible results.
 <code>searchValue</code> is a string model: the term and matching results persist together across panel close/reopen. Bind it when application code needs to clear or
@@ -2769,6 +2898,10 @@ item presentation, one-level-at-a-time browsing, flat contextual search, and foc
 <code>topNav</code> in <code>defineNavigation</code>; instance configuration overrides those settings.</p>
 <p>See <a href="components/side-nav">side navigation</a> and <a href="components/top-nav">top navigation</a> for public imports, configuration, slots, accessibility,
 and runnable examples. Their playground routes are <code>/components/side-nav</code> and <code>/components/top-nav</code>.</p>
+<h2>Page layout integration</h2>
+<p><code>provideNavigation()</code> also provides the optional <code>BX_PAGE_NAVIGATION</code> adapter from primitives. <code>NavigationService.page</code> exposes reactive section and page titles
+plus breadcrumbs for <a href="components/layout/page-container">PageContainer</a>. Descriptions remain application-owned. Breadcrumbs appear after one
+nesting by default and the threshold can be configured on each container. Existing Breadcrumbs components retain their own display settings.</p>
 `,"projects/blocks/navigation/components/breadcrumbs/README.md":`<h1>Breadcrumbs</h1>
 <p>A route-aware trail derived from Blocks navigation metadata.</p>
 <h2>Import</h2>
@@ -2817,9 +2950,9 @@ Levels use the same short slide, disabled reactively by reduced-motion preferenc
 <p>Neither this view nor an item creates additional overlays. Theme, text resolution, route matching, and flat contextual search come from the shared navigation
 state. Consumer APIs and examples live with the public owners.</p>
 `,"projects/blocks/navigation/components/side-nav/README.md":`<h1>Side navigation</h1>
-<p>A route-driven application rail with collapsible sections, a compact icon rail, one shared submenu panel, contextual fuzzy search, and a responsive mobile
-drawer. It shares <code>NavigationService</code> with breadcrumbs and <code>TopNav</code>, and shares item, search, level, and focus behavior with top navigation and uses Blocks
-menu, overlay, theme, surface, search, tag, and accessibility facilities.</p>
+<p>A route-driven application rail with collapsible sections, a compact icon rail, nested browsing inside the panel, contextual fuzzy search, and a responsive
+mobile drawer. It shares <code>NavigationService</code> with breadcrumbs and <code>TopNav</code>, and shares item, search, level, and focus behavior with top navigation. Theme,
+surface, search, tag, and accessibility behavior follow the shared Blocks facilities.</p>
 <h2>Public import</h2>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> {
     <span class="hljs-title class_">SideNav</span>,
@@ -2875,7 +3008,8 @@ assigning another section moves that branch to the named section. No component-s
 <span class="hljs-comment">// In application providers:</span>
 <span class="hljs-comment">// provideRouter(routes), ...provideNavigation(navigation.config)</span></code></pre>
 <p>A route that only groups children can omit a component. Provide an empty child route if that group&#39;s own URL should render a page. Parent labels remain links;
-their adjacent disclosure opens the child menu. In the compact rail, the parent icon opens its menu and the heading link inside navigates to the parent&#39;s route.</p>
+their adjacent disclosure opens the child list inside the rail. In compact presentation, the parent icon temporarily expands the rail to show its children; the
+heading link inside navigates to the parent&#39;s route.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;application-shell&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">bx-side-nav</span> #<span class="hljs-attr">navigation</span> [<span class="hljs-attr">config</span>]=<span class="hljs-string">&quot;{ side: &#x27;left&#x27; }&quot;</span> [(<span class="hljs-attr">collapsed</span>)]=<span class="hljs-string">&quot;collapsed&quot;</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxSideNavHeader</span> <span class="hljs-attr">let-compact</span> <span class="hljs-attr">let-mobile</span>=<span class="hljs-string">&quot;mobile&quot;</span>&gt;</span>
@@ -2945,7 +3079,7 @@ compact slots.</p>
 <td>Readonly computed layout state for application shells</td>
 </tr>
 <tr>
-<td><code>isMobile()</code>, <code>isCollapsed()</code>, <code>isInlineSubmenus()</code>, <code>query()</code></td>
+<td><code>isMobile()</code>, <code>isCollapsed()</code>, <code>query()</code></td>
 <td>Readonly current presentation and query state</td>
 </tr>
 <tr>
@@ -2973,7 +3107,7 @@ state; a bound value takes precedence.</p>
 </thead>
 <tbody><tr>
 <td><code>side</code></td>
-<td><code>&#39;left&#39;</code>; physical <code>&#39;right&#39;</code> changes drawer edge, hamburger placement, and preferred flyout side</td>
+<td><code>&#39;left&#39;</code>; physical <code>&#39;right&#39;</code> changes drawer edge and hamburger placement</td>
 </tr>
 <tr>
 <td><code>position</code></td>
@@ -3002,14 +3136,6 @@ state; a bound value takes precedence.</p>
 <tr>
 <td><code>mobileBreakpoint</code></td>
 <td><code>&#39;lg&#39;</code>, from <code>WindowDimensionsService.breakpoints</code>; controls the drawer independently of submenu presentation</td>
-</tr>
-<tr>
-<td><code>submenuBreakpoint</code></td>
-<td><code>&#39;xl&#39;</code>; automatic mode uses inline submenu levels at or below this shared breakpoint</td>
-</tr>
-<tr>
-<td><code>submenuMode</code></td>
-<td><code>&#39;auto&#39;</code>; <code>&#39;inline&#39;</code> keeps levels inside the rail, <code>&#39;flyout&#39;</code> explicitly uses one adjacent panel; mobile always uses inline levels</td>
 </tr>
 <tr>
 <td><code>showSearchGuide</code></td>
@@ -3104,14 +3230,6 @@ configurations are not enumerated.</p>
 <td>Shared spacing 2 (<code>0.5rem</code>) between adjacent items</td>
 </tr>
 <tr>
-<td><code>--bx-side-nav-menu-width</code></td>
-<td><code>17rem</code></td>
-</tr>
-<tr>
-<td><code>--bx-side-nav-menu-max-height</code></td>
-<td><code>32rem</code>, constrained to the viewport</td>
-</tr>
-<tr>
 <td><code>--bx-side-nav-duration</code>, <code>--bx-side-nav-easing</code></td>
 <td><code>250ms</code>, <code>ease</code>; reduced motion takes precedence</td>
 </tr>
@@ -3126,11 +3244,11 @@ fragments do not clear selection. Only the most specific matching item receives 
 box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives <code>aria-current=&quot;page&quot;</code>.</p>
 <p>The navigation region is the panel&#39;s sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining
 space, aligned with header, search, and footer controls. Activating its search icon expands the rail and focuses the search field without scrolling the page.
-Its scrollbar gutter and the flyouts&#39; gutters remain reserved when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap
-within the available width.</p>
-<p>The background and search use Blocks surfaces. Rows reuse their containing surface; the adjacent submenu panel is opaque, without backdrop filters. Theme
-inheritance keeps open overlays synchronized with their source. Standard semantic colors, focus styles, forced colors, reduced transparency, and opaque
-presentation remain available through Blocks.</p>
+The root and nested lists reserve their scrollbar gutters when content fits, preventing width shifts. Horizontal overflow is constrained, and labels wrap within
+the available width.</p>
+<p>The background and search use Blocks surfaces. Rows reuse their containing surface, and nested lists remain inside the same themed panel. Standard semantic
+colors, focus styles, forced colors, reduced transparency, and opaque presentation remain available through Blocks. Programmatic row focus does not apply the
+hover fill; keyboard focus keeps its visible outline, and route selection belongs only to the most-specific active item.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">item</span> <span class="hljs-attr">let-entry</span> <span class="hljs-attr">let-active</span>=<span class="hljs-string">&quot;active&quot;</span> <span class="hljs-attr">let-compact</span>=<span class="hljs-string">&quot;collapsed&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">bx-icon</span> [<span class="hljs-attr">name</span>]=<span class="hljs-string">&quot;entry.icon?.name ?? &#x27;circle&#x27;&quot;</span> /&gt;</span>
     @if (!compact) { <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ entry.label }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> }
@@ -3140,42 +3258,40 @@ presentation remain available through Blocks.</p>
 use stable unique item IDs and resolved section titles; item <code>data.label</code> and <code>data.keywords</code> may retain translation definitions. Update the groups input when
 application-owned data changes. The route access adapter applies to service-generated groups; callers supplying groups own their visibility decisions.</p>
 <h2>Behavior and accessibility</h2>
-<p>Every label remains a native route link. Its separate chevron opens children without navigating. The whole navigation chooses one submenu presentation,
-independent of branch depth:</p>
-<ul>
-<li>At <code>xl</code> and below, children replace the current list inside the rail. Inline layouts also measure their containing shell, so a narrow embedded preview uses
-this behavior on a wide viewport.</li>
-<li>Above that threshold, one opaque adjacent panel opens. All deeper levels replace the list in that same panel; further overlays never accumulate or overlap.</li>
-<li>Mobile drawers always browse inside the panel. <code>submenuMode: &#39;inline&#39;</code> forces this on desktop too; <code>submenuMode: &#39;flyout&#39;</code> is an explicit desktop override for
-previews or application layouts.</li>
-</ul>
-<p>Back and the clickable ancestor path stay above the scrolling list. Each ancestor button opens that submenu panel without navigating to its page; the section
-button opens its root list. The current parent&#39;s heading is also a link to its own page. Returning to a level restores its scroll position and disclosure focus.
-Changing the available width preserves the browsing path; a compact rail temporarily expands when it needs to display inline levels without changing its saved
-collapse preference. Levels slide briefly on explicit browsing changes; reduced motion disables the slide. Opening a submenu requires a disclosure click, touch,
-or keyboard action; hovering a label no longer opens menus.</p>
+<p>Every label remains a native route link. Its separate chevron opens children without navigating. At every viewport width and nesting depth, children replace the
+current list inside the sidebar. The navigation never creates an adjacent submenu popup.</p>
+<p>Back and the ancestor path stay above the scrolling list. Each ancestor button returns to a browsing level without navigating to its page. The first,
+section-labelled action returns directly to the full navigation root when the section was only a grouping label. For example, clicking Core after opening
+Utilities from the main list restores all sections and reveals Utilities in the sidebar. The item that opened the branch receives focus; the page&#39;s scroll
+position stays unchanged. If the section&#39;s own list was explicitly opened, such as from the compact rail, that action returns to the section level instead.
+Other ancestor actions also reveal the child item used to enter the deeper branch. The current parent&#39;s heading remains a link to its own page. Returning to a
+level restores its scroll position and focus.</p>
+<p>Opening a new level focuses its active route when present, otherwise its first enabled item. Changing the available width preserves the browsing path. A compact
+rail temporarily expands while browsing children without changing its saved collapse preference, and returns to the rail when browsing returns to the root.
+Levels slide briefly on explicit browsing changes; reduced motion disables the slide. Opening a submenu requires a disclosure click, touch, or keyboard action.</p>
 <p>Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It renders a flat
-list of direct matches with translated parent paths in the main navigation, with identical behavior in both presentations. Searching never opens submenus.
-Labels navigate directly; result disclosures leave search and browse the chosen item&#39;s children. After navigating to a search result, clearing search opens its
-containing submenu and scrolls that result into view, preserving search-field focus. Clearing without a successful selection restores the previous browsing
-level and its scroll position. Search temporarily expands a compact rail without changing its saved preference. Search covers the currently supplied tree, not
-unloaded or remote results.</p>
+list of direct matches with translated parent paths in the main navigation, inside the sidebar. Searching never opens submenus. Labels navigate directly; result
+disclosures leave search and browse the chosen item&#39;s children. After navigating to a search result, clearing search opens its containing submenu and scrolls
+that result into view, preserving search-field focus. Clearing without a successful selection restores the previous browsing level and its scroll position.
+Search temporarily expands a compact rail without changing its saved preference. Search covers the currently supplied tree, not unloaded or remote results.</p>
 <p>Search results use muted parent paths without floating arrows, extra selection colors, or outlines. The page link and its separate disclosure have independent
 hover and focus surfaces; selection belongs to the page link. The legacy <code>showSearchGuide</code> option is ignored, and the former guide CSS variables and
 <code>--bx-side-nav-item-highlight-background</code> no longer affect the component.</p>
 <p>Menus retain <code>menu</code>/<code>menuitem</code> semantics, accessible names, native links, and separate disclosure buttons. Enter/Space or the arrow towards the submenu opens
 children. Up/Down and Home/End move within the current menu. Back, Escape, or the opposite arrow returns one level, restoring scroll and focus; Escape at the
-root can dismiss the mobile drawer. Tab cycles inside the adjacent panel or mobile drawer. Clicking outside closes the adjacent panel.</p>
-<p>The adjacent panel reuses <code>MenuTriggerDirective</code>, native CSS anchoring, origin visibility tracking, theme inheritance, and the measured fallback used by Blocks
-dropdowns. Scrolling does not write overlay positions when native anchoring is available. The panel closes when its origin leaves its clipping container or the
-viewport. It honors <code>bxOverlayContext</code>; menus opened from dialogs or top-layer overlays retain that layer.</p>
+root can dismiss the mobile drawer. Mobile drawers trap Tab; desktop navigation remains part of the page&#39;s normal tab order.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-comment">&lt;!-- App-wide defaults can set the same options through defineNavigation(). --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">bx-side-nav</span> [<span class="hljs-attr">config</span>]=<span class="hljs-string">&quot;{ submenuBreakpoint: &#x27;xl&#x27;, submenuMode: &#x27;auto&#x27;, backLabel: { key: &#x27;nav.back&#x27; } }&quot;</span> /&gt;</span></code></pre>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-side-nav</span> [<span class="hljs-attr">config</span>]=<span class="hljs-string">&quot;{ backLabel: { key: &#x27;nav.back&#x27; }, pathLabel: { key: &#x27;nav.path&#x27; } }&quot;</span> /&gt;</span></code></pre>
+<h3>Migration from adjacent submenu panels</h3>
+<p>Remove <code>submenuMode</code> and <code>submenuBreakpoint</code> from configuration and remove imports of <code>SideNavSubmenuMode</code>. These options and the type are no longer exposed;
+all nested browsing uses the panel itself. Remove calls to <code>isInlineSubmenus()</code> because there is no submenu presentation switch. The retired
+<code>--bx-side-nav-menu-width</code> and <code>--bx-side-nav-menu-max-height</code> variables no longer apply. Use <code>width</code> for the sidebar width and <code>--bx-side-nav-height</code> for an
+embedded panel&#39;s height. Back and ancestor labels remain configurable through the shared text contract.</p>
 <p>Fixed mobile navigation uses a labelled modal drawer with focus capture/trapping, scroll locking, the shared <code>ModalBackdrop</code> click-to-close scrim (including
 blur and opaque accessibility fallbacks), a Blocks icon-only close button with hover feedback, and Escape dismissal. Closing restores the opening control&#39;s
 focus. A submenu consumes Escape before the drawer does. Resizing out of mobile mode closes the drawer and releases its lock. Browser-only persistence and
-measurement are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key changes,
-without cross-tab synchronization.</p>
+viewport observation are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key
+changes, without cross-tab synchronization.</p>
 <p>For an inline mobile preview, use a positioned shell (<code>position: relative</code>) with a minimum height and <code>overflow: hidden</code>. Its drawer and scrim stay inside that
 shell and do not lock page scrolling. Off-screen drawer content is clipped without creating a scroll container, and focus capture uses <code>preventScroll</code> to keep
 the surrounding content stationary during either slide direction. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested
@@ -3186,8 +3302,8 @@ and no footer. Its compact control and leading item/section icons are disabled; 
 four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional
 search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section, action, demo control,
 instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell\u2019s responsive
-navigation. Use the adjacent-panel control to compare the two desktop presentations. Try <code>dsgn tkns</code>, <code>palette</code>, <code>tokens</code>, or <code>Palette</code> for flat contextual
-results, clear the search, and use the disclosures and Back control through all four levels.</p>
+navigation. Desktop and mobile browse the same nested lists. Try <code>dsgn tkns</code>, <code>palette</code>, <code>tokens</code>, or <code>Palette</code> for flat contextual results, clear the search,
+and use the disclosures and Back control through all four levels.</p>
 <p>The fixed drawer acquires its own <code>ScrollLockService</code> lock only while its mobile overlay presentation is open. Closing, route navigation, changing to desktop or
 inline presentation, and destruction release that lock; a concurrently open modal keeps its own lock. <code>--bx-side-nav-backdrop</code> remains available for an explicit
 scrim color. Embedded inline presentation uses the same backdrop inside its shell without locking the page.</p>
@@ -3433,9 +3549,10 @@ links and disclosures have independent hover and focus surfaces.</p>
 does not fit, including changes from translation, slot content, fonts, resizing, and browser zoom. Links are not left hidden behind an essential horizontal
 scrollbar. A compact slot that shrinks its brand/actions does not cause repeated expand/collapse feedback.</p>
 <p>Both presentations use one dropdown panel. The first disclosure opens it below the bar using <code>MenuTriggerDirective</code> and the existing overlay context. Further
-disclosures replace its list; recursive overlays never accumulate. Back and the clickable ancestor path remain above the scrolling list. Ancestor buttons open
-their submenu panels without navigating to their pages, and the parent&#39;s heading remains a route link. Back restores the previous list&#39;s scroll and disclosure
-focus. The browsing path survives presentation changes; the panel can reattach to the compact control when its former origin disappears.</p>
+disclosures replace its list; recursive overlays never accumulate. Back and the ancestor path remain above the scrolling list. The first, section-labelled
+action returns to the full navigation root and reveals the item that opened the branch unless that section&#39;s own list was explicitly opened. Ancestor buttons
+open their submenu panels without navigating to their pages, and the parent&#39;s heading remains a route link. Back restores the previous list&#39;s scroll and
+disclosure focus. The browsing path survives presentation changes; the panel can reattach to the compact control when its former origin disappears.</p>
 <p>Search always renders flat direct matches with muted parent paths. It does not open nested panels or color ancestors as selected. After navigating to a result,
 clearing search opens its containing submenu and scrolls the selected row into view while retaining search-field focus. Without a successful selection it
 restores the prior browsing location and scroll position. A result label navigates directly; its disclosure leaves search and browses the result&#39;s children.
@@ -3555,6 +3672,9 @@ accessible names and keyboard operation. Use the context to adapt content to the
 <h2>API</h2>
 <p><code>multiple</code> defaults to false. <code>collapseAll()</code> closes every child. Import <code>Collapsible</code> for the <code>bx-accordion-item</code> selector; it exposes the same inputs and
 <code>expanded</code> model as <a href="components/collapsible">Collapsible</a>.</p>
+<p>Use each item&#39;s <code>titleTemplate</code> to add noninteractive heading content such as number-only Blocks tags.</p>
+<p>Use <code>trailingTemplate</code> for status tags or other noninteractive content at the heading&#39;s logical end, before its disclosure icon. It receives the same typed
+context as <code>titleTemplate</code>. <code>/tokens</code> demonstrates compact palette headings with current-theme and companion tags.</p>
 <p>Place items directly inside the accordion. Nested accordions coordinate their own items. Single mode reconciles programmatic expanded-state changes and
 initially open children.</p>
 <h2>Appearance and customization</h2>
@@ -3711,6 +3831,11 @@ selected. Use <code>[(selected)]</code> when each activation should toggle selec
 <td>Outlined, elevated or filled</td>
 </tr>
 <tr>
+<td><code>surfaceEffects</code></td>
+<td>true</td>
+<td>Mount shared decorative surface effects; false keeps static themed styling for dense collections</td>
+</tr>
+<tr>
 <td><code>opaque</code></td>
 <td>inherited</td>
 <td>Optional opaque presentation</td>
@@ -3771,6 +3896,8 @@ selected. Use <code>[(selected)]</code> when each activation should toggle selec
 <td>Focuses an enabled clickable card</td>
 </tr>
 </tbody></table>
+<p>Set <code>[surfaceEffects]=&quot;false&quot;</code> for dense static collections such as the token catalog. Theme variables, focus styling, content slots and actions remain
+available.</p>
 <p>Slots: <code>bxCardMedia</code>, <code>bxCardHeader</code>, default body and <code>bxCardFooter</code>. Header content follows the optional generated title/subtitle. Empty sections take no
 space.</p>
 <h2>Appearance and customization</h2>
@@ -3884,6 +4011,12 @@ primitive is not a form field; use selectedChange to coordinate application or f
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-collapsible</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Project details&quot;</span> [(<span class="hljs-attr">expanded</span>)]=<span class="hljs-string">&quot;expanded&quot;</span> [<span class="hljs-attr">region</span>]=<span class="hljs-string">&quot;true&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Persistent content.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">bx-collapsible</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-collapsible</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Notifications&quot;</span> [<span class="hljs-attr">titleTemplate</span>]=<span class="hljs-string">&quot;heading&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">heading</span> <span class="hljs-attr">let-title</span> <span class="hljs-attr">let-expanded</span>=<span class="hljs-string">&quot;expanded&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>{{ title }} \xB7 {{ expanded ? &#x27;Open&#x27; : &#x27;Closed&#x27; }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bx-collapsible</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Notifications&quot;</span> [<span class="hljs-attr">trailingTemplate</span>]=<span class="hljs-string">&quot;status&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">status</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-tag</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;Current theme&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;small&quot;</span> [<span class="hljs-attr">focusable</span>]=<span class="hljs-string">&quot;false&quot;</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">bx-collapsible</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;Lazy content&quot;</span> [<span class="hljs-attr">contentTemplate</span>]=<span class="hljs-string">&quot;details&quot;</span> /&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> #<span class="hljs-attr">details</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Created only while expanded.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span></code></pre>
 <h2>API</h2>
@@ -3926,6 +4059,16 @@ primitive is not a form field; use selectedChange to coordinate application or f
 <td>Adds a named region for substantial content</td>
 </tr>
 <tr>
+<td><code>titleTemplate</code></td>
+<td>absent</td>
+<td>Noninteractive heading template with <code>ICollapsibleTitleContext</code>: <code>$implicit</code> translated title and <code>expanded</code> state</td>
+</tr>
+<tr>
+<td><code>trailingTemplate</code></td>
+<td>absent</td>
+<td>Noninteractive content at the heading&#39;s logical end, before the chevron; receives the same context as <code>titleTemplate</code></td>
+</tr>
+<tr>
 <td><code>contentTemplate</code></td>
 <td>absent</td>
 <td>Lazy template, recreated on expansion</td>
@@ -3941,6 +4084,10 @@ primitive is not a form field; use selectedChange to coordinate application or f
 <td>Guarded toggle and heading focus</td>
 </tr>
 </tbody></table>
+<p>Keep title templates noninteractive; the enclosing native button owns keyboard activation and the accessible name. Use a number-only <code>Tag</code> for counts.</p>
+<p><code>trailingTemplate</code> places status text, tags, or icons on the right in LTR layouts and on the left in RTL layouts. Content can wrap on narrow screens. Import
+<code>Tag</code> from the Primitives entry point for the example above. Keep trailing content noninteractive and set embedded tags to <code>[focusable]=&quot;false&quot;</code>; the heading
+remains one disclosure button, and its accessible name includes the status content.</p>
 <p>Projected content remains mounted while collapsed; lazy template state is recreated on reopening. Application-driven expanded changes remain possible for
 disabled/readonly sections.</p>
 <h2>Appearance and customization</h2>
@@ -3972,7 +4119,7 @@ parent.</p>
 <p>Use main once per page. Give regions descriptive names. Logical gutters and auto margins support RTL, narrow containers and zoom. Compose Stack, Grid and Card
 inside it.</p>
 <h2>Playground</h2>
-<p><code>/components/container</code> includes live examples and shared appearance controls.</p>
+<p><code>/components/layout/container</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/divider/README.md":`<h1>Divider</h1>
 <p>Separates adjacent content with a horizontal or vertical rule and an optional translated label.</p>
 <h2>Public import</h2>
@@ -4019,7 +4166,7 @@ inside it.</p>
 <p>Uses separator semantics and reports its orientation. Labels wrap. Vertical dividers stretch within a flex row; give the row a meaningful height. No motion is
 required.</p>
 <h2>Playground</h2>
-<p><code>/components/divider</code> includes live examples and shared appearance controls.</p>
+<p><code>/components/layout/divider</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/grid/README.md":`<h1>Grid layout</h1>
 <p>Responsive CSS grid for cards and general content without a separate layout framework.</p>
 <h2>Public import</h2>
@@ -4038,7 +4185,7 @@ uses the shared spacing scale. Fixed and automatic grids become one column below
 <p>Keeps natural DOM order without adding roles or keyboard behavior. Place semantic sections and controls inside the grid. Text enlargement, narrow containers and
 RTL use normal CSS layout.</p>
 <h2>Playground</h2>
-<p><code>/components/grid</code> includes live examples and shared appearance controls.</p>
+<p><code>/components/layout/grid</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/loading-indicator/README.md":`<h1>Loading indicator</h1>
 <p>Reusable loading feedback integrated with Blocks themes and accessibility preferences.</p>
 <h2>Import</h2>
@@ -4297,6 +4444,219 @@ Blocks tokens. Trigger and row effects retain their application appearance setti
 <p>Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/menu</code> for a working example and its current value or action result.</p>
+`,"projects/blocks/primitives/components/page-container/README.md":`<h1>Page container</h1>
+<p>A shared page layout with responsive gutters, a section label, title, description, content, and optional footer. The playground uses it on every page except
+home. It preserves the existing eyebrow and large heading treatment while giving catalogs, examples, utilities, and configurators the same spacing.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PageContainer</span>, <span class="hljs-title class_">PageHeader</span>, <span class="hljs-title class_">PageContent</span>, <span class="hljs-title class_">PageFooter</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-container</span> <span class="hljs-attr">sectionTitle</span>=<span class="hljs-string">&quot;Workspace&quot;</span> <span class="hljs-attr">pageTitle</span>=<span class="hljs-string">&quot;Projects&quot;</span> <span class="hljs-attr">pageDescription</span>=<span class="hljs-string">&quot;Manage your active projects.&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-page-content</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Your projects appear here.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-content</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-page-footer</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;createProject()&quot;</span>&gt;</span>Create project<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-footer</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-container</span>&gt;</span></code></pre>
+<p>Content may also be projected directly without <code>PageContent</code>. Supply a <code>bx-page-header</code> when you need actions or other content below the default heading:</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-container</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-page-header</span> [<span class="hljs-attr">pageTitle</span>]=<span class="hljs-string">&quot;{ key: &#x27;projects.title&#x27; }&quot;</span> [<span class="hljs-attr">pageDescription</span>]=<span class="hljs-string">&quot;{ key: &#x27;projects.description&#x27; }&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;createProject()&quot;</span>&gt;</span>Create project<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-page-content</span>&gt;</span>Project list<span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-content</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-container</span>&gt;</span></code></pre>
+<h3>Automatic navigation</h3>
+<p><code>provideNavigation()</code> from <code>@filip.mazev/blocks/navigation</code> installs <code>BX_PAGE_NAVIGATION</code>. The container and header consume this optional reactive adapter
+without introducing a dependency from primitives to navigation. No router or navigation provider is needed when using explicit titles without breadcrumb links.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { defineNavigation, provideNavigation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
+
+<span class="hljs-keyword">const</span> navigation = <span class="hljs-title function_">defineNavigation</span>({ <span class="hljs-attr">sections</span>: [{ <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;workspace&#x27;</span>, <span class="hljs-attr">title</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;workspace.title&#x27;</span> } }] });
+<span class="hljs-keyword">const</span> { withInAppNavigation } = navigation;
+
+<span class="hljs-comment">// In application providers: provideRouter(routes), ...provideNavigation(navigation.config)</span>
+<span class="hljs-keyword">const</span> routes = [
+    <span class="hljs-title function_">withInAppNavigation</span>(
+        {
+            <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;projects&#x27;</span>,
+            <span class="hljs-attr">children</span>: [
+                <span class="hljs-title function_">withInAppNavigation</span>(
+                    { <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;details&#x27;</span>, <span class="hljs-attr">loadComponent</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;./project-details&#x27;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params"><span class="hljs-variable language_">module</span></span>) =&gt;</span> <span class="hljs-variable language_">module</span>.<span class="hljs-property">ProjectDetails</span>) },
+                    { <span class="hljs-attr">label</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;projects.details&#x27;</span> }, <span class="hljs-attr">menu</span>: <span class="hljs-literal">true</span> }
+                )
+            ]
+        },
+        { <span class="hljs-attr">label</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;projects.title&#x27;</span> }, <span class="hljs-attr">section</span>: <span class="hljs-string">&#x27;workspace&#x27;</span>, <span class="hljs-attr">menu</span>: <span class="hljs-literal">true</span> }
+    )
+];</code></pre>
+<p>At <code>/projects</code>, the default breadcrumb trail stays hidden. At <code>/projects/details</code>, it appears with a link back to Projects. Nesting counts breadcrumb entries
+that participate in navigation, excluding routes without breadcrumb metadata. Set <code>[breadcrumbsAfter]=&quot;2&quot;</code> to wait until two nesting levels. Set it to zero to
+show even a root entry, or set <code>[showBreadcrumbs]=&quot;false&quot;</code> to hide the trail. A custom <code>breadcrumbs</code> array follows the same threshold.</p>
+<p>The default header resolves <code>sectionTitle</code> from the navigation section and <code>pageTitle</code> from the active breadcrumb label, falling back to its menu label.
+Componentless routes and metadata-free child outlets retain the nearest route&#39;s heading. <code>pageDescription</code> is always manually supplied. Explicit empty title
+strings suppress their automatic values. A projected <code>PageHeader</code> owns its own inputs; container heading inputs configure only the generated header.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Default</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>size: ContainerSize</code></td>
+<td><code>xl</code></td>
+<td>Shared Container maximum-width preset: <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, or <code>full</code></td>
+</tr>
+<tr>
+<td><code>sectionTitle?: ResolvableText</code></td>
+<td>Navigation section</td>
+<td>Small label above the title; empty string hides it</td>
+</tr>
+<tr>
+<td><code>pageTitle?: ResolvableText</code></td>
+<td>Navigation label</td>
+<td>Page heading; empty string hides it</td>
+</tr>
+<tr>
+<td><code>pageDescription?: ResolvableText</code></td>
+<td>None</td>
+<td>Explicit supporting text</td>
+</tr>
+<tr>
+<td><code>autoResolveTitlesFromNavigation: boolean</code></td>
+<td><code>true</code></td>
+<td>Resolves undefined titles from navigation; breadcrumbs are independent</td>
+</tr>
+<tr>
+<td><code>breadcrumbs?: readonly IPageBreadcrumb[]</code></td>
+<td>Adapter trail</td>
+<td>Explicit labels and absolute router URLs; an empty array suppresses automatic entries</td>
+</tr>
+<tr>
+<td><code>breadcrumbsAfter: number</code></td>
+<td><code>1</code></td>
+<td>Minimum nesting before showing breadcrumbs; negative values clamp to zero</td>
+</tr>
+<tr>
+<td><code>showBreadcrumbs: boolean</code></td>
+<td><code>true</code></td>
+<td>Enables the trail when its threshold is met</td>
+</tr>
+<tr>
+<td><code>breadcrumbLabel: ResolvableText</code></td>
+<td><code>Breadcrumbs</code></td>
+<td>Accessible name for the navigation landmark</td>
+</tr>
+</tbody></table>
+<p><code>PageHeader</code> accepts the same title, description, and <code>autoResolveTitlesFromNavigation</code> inputs, plus <code>headingLevel</code> (1\u20136, default 1). It projects additional
+header content below the description. <code>PageContent</code> and <code>PageFooter</code> project content without introducing a new surface, landmark, or scrolling region.</p>
+<p>Applications with custom navigation can provide <code>BX_PAGE_NAVIGATION</code> as a <code>Signal&lt;IPageNavigation&gt;</code>. Its optional titles and ordered <code>IPageBreadcrumb[]</code> support
+<code>ResolvableText</code>; the final breadcrumb represents the current page. All layout text uses the optional <code>BX_I18N</code> adapter and reacts to its version signal.
+Without an adapter, plain strings render unchanged and translation keys fall back to their keys.</p>
+<h2>Appearance and customization</h2>
+<table>
+<thead>
+<tr>
+<th>CSS variable</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bx-container-max-width</code></td>
+<td>Shared <code>size</code> preset (<code>xl</code>: 1280px)</td>
+</tr>
+<tr>
+<td><code>--bx-page-padding-inline</code></td>
+<td><code>clamp(1rem, 3vw, 2.5rem)</code> from shared spacing tokens</td>
+</tr>
+<tr>
+<td><code>--bx-page-padding-block</code></td>
+<td><code>clamp(1rem, 3vw, 2.5rem)</code> from shared spacing tokens</td>
+</tr>
+<tr>
+<td><code>--bx-page-gap</code></td>
+<td>Shared spacing 8</td>
+</tr>
+<tr>
+<td><code>--bx-page-section-color</code></td>
+<td><code>--bx-text-brand</code></td>
+</tr>
+<tr>
+<td><code>--bx-page-title-color</code></td>
+<td><code>--bx-text-heading</code></td>
+</tr>
+<tr>
+<td><code>--bx-page-title-size</code></td>
+<td><code>clamp(2rem, 4vw, 3rem)</code></td>
+</tr>
+<tr>
+<td><code>--bx-page-description-width</code></td>
+<td><code>48rem</code></td>
+</tr>
+<tr>
+<td><code>--bx-page-description-color</code></td>
+<td><code>--bx-text-secondary</code></td>
+</tr>
+</tbody></table>
+<p>Use the shared theme and appearance configuration. Nesting a preview can override the padding variables without changing other page instances.</p>
+<h2>Behavior and accessibility</h2>
+<p>The layout does not create a second <code>main</code> landmark or a nested scroll area. Place it inside the application&#39;s existing <code>main</code>. The generated header uses one
+native <code>h1</code>. For nested examples, project <code>PageHeader</code> with <code>[headingLevel]=&quot;2&quot;</code> or a deeper level.</p>
+<p>Breadcrumbs use an ordered list in a named navigation landmark, keyboard-accessible router links, visible focus, and <code>aria-current=&quot;page&quot;</code> on the final label.
+Links preserve the router&#39;s normal focus and scrolling policy. Gutters use logical properties; headings and trails wrap for translated content, RTL, narrow
+containers, and zoom. Theme changes apply through semantic tokens; no motion is introduced.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/layout/page-container</code> to change the title, description, breadcrumb depth, root/child trail, automatic navigation, and footer. The footer
+action reports its result. <code>/components/layout</code> groups Page container, Content container, Stack layout, Grid layout, and Divider. Existing
+<code>/components/container</code>, <code>/components/stack</code>, <code>/components/grid</code>, and <code>/components/divider</code> URLs redirect to their layout destinations.</p>
+`,"projects/blocks/primitives/components/page-content/README.md":`<h1>Page content</h1>
+<p>The content section of a page. It keeps projected content shrinkable and supports wrapping without adding a scroll surface.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PageContent</span>, <span class="hljs-title class_">PageContainer</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-container</span> <span class="hljs-attr">pageTitle</span>=<span class="hljs-string">&quot;Projects&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-content</span>&gt;</span>Project list<span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-content</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-container</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p>Projects application-owned content without inputs or outputs.</p>
+<h2>Appearance and customization</h2>
+<p>See the <a href="components/layout/page-container#appearance-and-customization">Page container CSS variables</a>. Additional projected content retains its owning component&#39;s
+styles and uses shared theme tokens.</p>
+<h2>Behavior and accessibility</h2>
+<p>Adds no landmark, focus behavior, or scrolling region. Keep actions keyboard accessible and status announcements application-owned.</p>
+<h2>Playground</h2>
+<p><code>/components/layout/page-container</code> demonstrates this section with the other page components.</p>
+`,"projects/blocks/primitives/components/page-footer/README.md":`<h1>Page footer</h1>
+<p>An optional trailing section for page actions or status. The footer remains in the normal page flow.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PageFooter</span>, <span class="hljs-title class_">PageContainer</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-container</span> <span class="hljs-attr">pageTitle</span>=<span class="hljs-string">&quot;Projects&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-content</span>&gt;</span>Project list<span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-content</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-footer</span>&gt;</span>Page status<span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-footer</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-page-container</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p>Projects application-owned content without inputs or outputs.</p>
+<h2>Appearance and customization</h2>
+<p>See the <a href="components/layout/page-container#appearance-and-customization">Page container CSS variables</a>. Additional projected content retains its owning component&#39;s
+styles and uses shared theme tokens.</p>
+<h2>Behavior and accessibility</h2>
+<p>Adds no landmark, focus behavior, or scrolling region. Keep actions keyboard accessible and status announcements application-owned.</p>
+<h2>Playground</h2>
+<p><code>/components/layout/page-container</code> demonstrates this section with the other page components.</p>
+`,"projects/blocks/primitives/components/page-header/README.md":`<h1>Page header</h1>
+<p>The title section of a page, with a translated eyebrow, heading, description, and projected actions.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">PageHeader</span>, <span class="hljs-title class_">PageContainer</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-page-header</span> <span class="hljs-attr">sectionTitle</span>=<span class="hljs-string">&quot;Workspace&quot;</span> <span class="hljs-attr">pageTitle</span>=<span class="hljs-string">&quot;Projects&quot;</span> <span class="hljs-attr">pageDescription</span>=<span class="hljs-string">&quot;Manage your projects.&quot;</span> /&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>sectionTitle</code>, <code>pageTitle</code>, and <code>pageDescription</code> accept optional <code>ResolvableText</code>. Undefined titles resolve from navigation when
+<code>autoResolveTitlesFromNavigation</code> is true (the default). An empty string hides that title. Descriptions are explicit. <code>headingLevel</code> defaults to 1 and clamps to
+1\u20136; use 2 for nested previews.</p>
+<h2>Appearance and customization</h2>
+<p>See the <a href="components/layout/page-container#appearance-and-customization">Page container CSS variables</a>. Additional projected content retains its owning component&#39;s
+styles and uses shared theme tokens.</p>
+<h2>Behavior and accessibility</h2>
+<p>Uses a native heading and reacts to <code>BX_I18N</code> language updates. Plain strings work without an adapter.</p>
+<h2>Playground</h2>
+<p><code>/components/layout/page-container</code> demonstrates this section with the other page components.</p>
 `,"projects/blocks/primitives/components/popover/README.md":`<h1>Popover</h1>
 <p>A general content surface and trigger for interactive help, compact forms and contextual details. Uses the existing CDK overlay, theme inheritance and surface
 engine.</p>
@@ -4467,7 +4827,7 @@ defaults to 4; supported shared spacing keys are 0, 1, 2, 3, 4, 5, 6, 8, 10 and 
 <p>Adds no ARIA role or keyboard behavior. DOM order remains reading and tab order. Use wrapping horizontal stacks for long translated actions; use responsive
 direction when content should stack on small screens.</p>
 <h2>Playground</h2>
-<p><code>/components/stack</code> includes live examples and shared appearance controls.</p>
+<p><code>/components/layout/stack</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/tab/README.md":`<h1>Tab</h1>
 <p>Declares a labelled panel inside <a href="components/tabs"><code>Tabs</code></a>.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Tabs</span>, <span class="hljs-title class_">Tab</span>, <span class="hljs-title class_">TabContentDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/primitives&#x27;</span>;</code></pre>
@@ -4663,7 +5023,8 @@ opaque/reduced-transparency preferences. They have no hover illumination or pres
 <p>Text tags use small rounded corners. A single number without text or icons uses a circle that grows for longer counts. Override <code>--bx-tag-background</code>,
 <code>--bx-tag-color</code>, <code>--bx-tag-border</code>, <code>--bx-tag-radius</code>, <code>--bx-tag-padding</code>, <code>--bx-tag-gap</code>, <code>--bx-tag-font-size</code>, <code>--bx-tag-shadow</code>,
 <code>--bx-tag-counter-background</code>, <code>--bx-tag-counter-radius</code>, and <code>--bx-tag-disabled-opacity</code> as needed. <code>--bx-tag-number-size</code> and <code>--bx-tag-number-padding</code>
-configure number-only circles; <code>--bx-tag-fill-opacity</code> and <code>--bx-tag-outline-opacity</code> tune the variant tints. Forced colors retain a visible boundary.</p>
+configure the minimum diameter and horizontal padding of number-only circles; vertical padding is zero so line height does not stretch them into ovals;
+<code>--bx-tag-fill-opacity</code> and <code>--bx-tag-outline-opacity</code> tune the variant tints. Forced colors retain a visible boundary.</p>
 <h2>Accessibility and translations</h2>
 <p>Visible text remains available to assistive technology; decorative icons are hidden. An explicit <code>ariaLabel</code> names the tag group when the visible numbers need
 context. Tooltip tags support hover, keyboard focus and touch-and-hold. <code>focusable</code> defaults to true for a tooltip-bearing standalone tag; set it false when a
@@ -4737,6 +5098,8 @@ order. Angular components can also provide <code>BX_OVERLAY_CONTEXT</code> with 
 <h2>Appearance</h2>
 <p>The standard <code>bx-menu</code> container is opaque and uses Blocks colors, spacing, radius and elevation without container blur or live lighting. Row effects retain
 their application appearance settings.</p>
+<p>The transparent dismissal backdrop blocks outside interaction without changing the surrounding surfaces&#39; lighting. The visible menu still occludes the content
+under its panel; opaque backdrops retain their normal lighting behavior.</p>
 <p><code>BxA11yService</code> controls reduced motion; enabling it skips the opening and closing fade.</p>
 <h2>Behavior and accessibility</h2>
 <p>Touch and hold for 500 ms to open the menu. Moving more than 10 CSS pixels, scrolling, adding another finger, releasing early, or cancelling the pointer cancels
@@ -4805,17 +5168,17 @@ descendants on geometry changes and using measured positions only as a fallback.
 subscriptions, and timers are cleaned up on destruction. The trigger honors <code>bxOverlayContext</code> for top-layer positioning, as dropdowns and context menus do;
 origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes siblings, and nested menus inherit live theme state.
 Surfaces use the ordinary opaque <code>bx-menu</code> appearance, without added motion or glass effects.</p>
-<p>The side-navigation demo at <code>/components/side-nav</code> demonstrates nested hover, keyboard, and search-driven opening. Menu width and scroll constraints belong to
-the owner; the side-nav exposes <code>--bx-side-nav-menu-width</code>.</p>
+<p>The <a href="components/top-nav">top-navigation demo</a> at <code>/components/top-nav</code> demonstrates owner-coordinated navigation panels. Menu
+width and scroll constraints belong to the owner. Side navigation browses nested lists inside its own panel.</p>
 <p><code>bx-menu</code> accepts <code>--bx-menu-min-width</code> (default <code>12rem</code>). Constrained submenu owners set it to <code>0</code>, use border-box sizing, and reserve their vertical scrollbar
 gutter.</p>
 <p><code>menuManual: true</code> lets an owner coordinate one overlay for several disclosure controls. Automatic click, pointer, and trigger-key handling and the directive&#39;s
 host ARIA attributes are omitted; the owner supplies its visible controls and accessible semantics and calls <code>open()</code>/<code>close()</code>. <code>open(focus?, origin?)</code>
 optionally supplies the actual positioning origin for that opening, defaulting to <code>menuOrigin</code> and then the host. Overlay keyboard dismissal, focus trapping,
-outside-click handling, theme inheritance, and origin tracking remain shared. Side navigation uses this mode for its single adjacent panel.</p>
+outside-click handling, theme inheritance, and origin tracking remain shared. Top navigation uses this mode for its shared submenu panel.</p>
 <p><code>menuPlacement</code> optionally selects the existing dropdown placement strategy (<code>top</code>, <code>bottom</code>, <code>left</code>, or <code>right</code>). Omitting it retains physical side-aligned
-submenu positioning. <code>TopNav</code> uses <code>bottom</code> for its one panel while <code>SideNav</code> retains its side placement. The shared tracker, top-layer context, focus handling,
-outside-click dismissal, and clipping behavior are unchanged.</p>
+submenu positioning. <code>TopNav</code> uses <code>bottom</code> for its shared panel. The shared tracker, top-layer context, focus handling, outside-click dismissal, and clipping
+behavior are unchanged.</p>
 <p><code>navigateMenuKey(event, menu, options?)</code> also accepts <code>IMenuKeyboardOptions</code>: vertical Up/Down navigation remains the default; horizontal orientation uses
 Left/Right with optional RTL direction and a roving tab stop. This supports the top navigation menubar without introducing a separate keyboard implementation.</p>
 <p><code>menuClosing</code> fires before DOM detachment (after the overlay enters its closing path), allowing owners to retain current scroll/focus context. <code>menuClosed</code>
@@ -5490,126 +5853,251 @@ preserves its own color mode. The parent combines two previews for Auto.</p>
 performs no animated demonstration.</p>
 <h2>Playground</h2>
 <p><code>/appearance</code>, in the Light, Dark and Auto choices.</p>
-`,"projects/playground/src/app/components/screens/utilities/README.md":`<h1>Utilities playground</h1>
-<p>A cumulative playground for public Core utilities that previously had only brief infrastructure summaries or no practical guide. Open <code>/utilities</code> from <strong>Tools
-\u2192 Utilities</strong>. The <a href="components">Core guide</a> remains the entry-point reference.</p>
+`,"projects/playground/src/app/components/screens/library-components/page-examples/README.md":`<h1>Page layout playground</h1>
+<p>Interactive examples for the <a href="components/layout/page-container">Blocks page container</a>.</p>
 <h2>Import</h2>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> {
-    <span class="hljs-title class_">BxOverlayPositionService</span>,
-    <span class="hljs-title class_">DeviceTypeService</span>,
-    getComplementaryToken,
-    inheritOverlayTheme,
-    invertPaletteToken,
-    isOverlayOriginVisible,
-    isPaletteToken,
-    isThemedColor,
-    resolveThemeId,
-    resolveTokenToCssVar,
-    <span class="hljs-title class_">ScrollLockService</span>,
-    trackOverlayOrigin,
-    uuidv4,
-    <span class="hljs-title class_">WindowDimensionsService</span>
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
-<p>The services are provided in root. Inject them in your application; supporting types such as <code>BreakpointKey</code>, <code>IDeviceState</code>, <code>IWindowDimensions</code>,
-<code>IScrollLockConfig</code>, <code>Color</code>, <code>ThemedColor</code>, <code>BxPlacement</code>, and <code>OverlayOriginTracker</code> come from the same public entry point.</p>
+<p>The component catalog loads <code>PageExamples</code> through the page-container example.</p>
 <h2>Usage</h2>
-<h3>Responsive values</h3>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">Signal</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<p>Open <code>/components/layout/page-container</code>. Edit the title and description, choose a preview nesting, change the breadcrumb threshold, switch to the current
+route, and toggle the footer. The footer button reports its result.</p>
+<h2>API</h2>
+<p>The example uses public <code>PageContainer</code>, <code>PageHeader</code>, <code>PageContent</code>, and <code>PageFooter</code> components with Blocks form controls.</p>
+<h2>Appearance and customization</h2>
+<p>The preview follows the current shared theme and appearance configuration. Its nested heading uses level 2.</p>
+<h2>Behavior and accessibility</h2>
+<p>Root and nested preview trails exercise the same threshold as automatic breadcrumbs. The footer action supports keyboard activation and announces its result.</p>
+<h2>Playground</h2>
+<p>Reach this example through <strong>Primitives \u2192 Layout \u2192 Page container</strong>.</p>
+`,"projects/playground/src/app/components/screens/token-catalog/README.md":`<h1>Tokens page</h1>
+<p>Browse and search Blocks colors, color companions, spacing, corner radii, shadows, stacking layers, effects, component properties, utility classes, and Sass
+breakpoints at <code>/tokens</code>. The page uses Blocks search, multiselect, select, button, accordion, and card components. Only the first result section opens by
+default. Collapse all beside Categories closes every result section. Category titles and Blocks dividers separate the matching groups; their labels follow the
+category filter. With at least 48 displayed cards across expanded sections, cards mount in small batches near the viewport. Smaller displayed sets bypass
+viewport observation and stay mounted. Distant batches release their component instances while preserving their measured space, and focused batches stay
+mounted. Other groups mount their batch placeholders when opened. Dense cards keep shared themed styling with decorative surface effects disabled.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> {
+    <span class="hljs-variable constant_">CSS_TOKEN_CATALOG</span>,
+    <span class="hljs-variable constant_">CSS_VARIABLES</span>,
+    <span class="hljs-variable constant_">CSS_VARIABLE_REFERENCES</span>,
+    <span class="hljs-variable constant_">SEMANTIC_PAIRS</span>,
+    <span class="hljs-variable constant_">UTILITY_CLASSES</span>,
+    getComplementaryToken,
+    resolveTokenToCssVar
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">Color</span>, <span class="hljs-title class_">CssVariable</span>, <span class="hljs-title class_">CssVariableReference</span>, <span class="hljs-title class_">ICssToken</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<p>Sass helpers are available through <code>@filip.mazev/blocks/core/styles/helpers</code>. Install the global Blocks styles and a theme as described in the
+<a href="components">Core guide</a>.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="scss code example"><code class="hljs language-scss"><span class="hljs-keyword">@use</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core/styles/helpers&#x27;</span> as *;
 
-<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, computed, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-selector-class">.notice</span> {
+    <span class="hljs-attribute">padding</span>: <span class="hljs-built_in">var</span>(--bx-space-<span class="hljs-number">4</span>);
+    <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid <span class="hljs-built_in">var</span>(--bx-border-danger);
+    <span class="hljs-attribute">border-radius</span>: <span class="hljs-built_in">var</span>(--bx-rounded-md);
+    <span class="hljs-attribute">background</span>: <span class="hljs-built_in">var</span>(--bx-bg-danger);
+    <span class="hljs-attribute">color</span>: <span class="hljs-built_in">var</span>(--bx-text-danger);
+    <span class="hljs-attribute">box-shadow</span>: <span class="hljs-built_in">var</span>(--bx-shadow-sm);
+}
 
-<span class="hljs-keyword">import</span> { <span class="hljs-title class_">WindowDimensionsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
-
-<span class="hljs-meta">@Component</span>({
-    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-responsive-summary&#x27;</span>,
-    <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;p&gt;{{ width() }} CSS pixels \xB7 {{ columns() }} columns&lt;/p&gt;&#x27;</span>,
-    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ResponsiveSummary</span> {
-    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> windowDimensionsService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">WindowDimensionsService</span>);
-
-    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">width</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">dimensions</span>().<span class="hljs-property">width</span>);
-    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">columns</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">resolveResponsiveValue</span>({ <span class="hljs-attr">md</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">xl</span>: <span class="hljs-number">3</span> }, <span class="hljs-number">1</span>));
-}</code></pre>
-<h3>Owner-scoped scroll locking</h3>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, <span class="hljs-title class_">DestroyRef</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ScrollLockService</span>, uuidv4 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
-<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
-
-<span class="hljs-meta">@Component</span>({
-    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-scroll-lock-example&#x27;</span>,
-    <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">Button</span>],
-    <span class="hljs-attr">template</span>: <span class="hljs-string">\`
-        &lt;button bx-button type=&quot;button&quot; (click)=&quot;lock()&quot;&gt;Lock page&lt;/button&gt;
-        &lt;button bx-button type=&quot;button&quot; (click)=&quot;unlock()&quot;&gt;Release my lock&lt;/button&gt;
-    \`</span>,
-    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
-})
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrollLockExample</span> {
-    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> scrollLockService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ScrollLockService</span>);
-    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">lockId</span>: <span class="hljs-built_in">string</span> = <span class="hljs-title function_">uuidv4</span>();
-
-    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
-        <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">DestroyRef</span>).<span class="hljs-title function_">onDestroy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">unlock</span>());
-    }
-
-    <span class="hljs-keyword">protected</span> <span class="hljs-title function_">lock</span>(): <span class="hljs-built_in">void</span> {
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">disableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockId</span>, { <span class="hljs-attr">handleTouchInput</span>: <span class="hljs-literal">false</span> });
-    }
-
-    <span class="hljs-keyword">protected</span> <span class="hljs-title function_">unlock</span>(): <span class="hljs-built_in">void</span> {
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">enableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockId</span>);
+<span class="hljs-keyword">@include</span> respond-up(md) {
+    <span class="hljs-selector-class">.notice</span> {
+        <span class="hljs-attribute">padding</span>: <span class="hljs-built_in">spacing</span>(<span class="hljs-number">6</span>);
     }
 }</code></pre>
-<p>Keep release actions reachable while the page is locked. Release on close and presentation changes as well as destruction. Repeated acquisition with the same ID
-updates that owner&#39;s lock. Releasing an unknown ID does nothing, and releasing your ID preserves other owners&#39; locks.</p>
-<h3>Color-token mapping</h3>
-<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-title function_">resolveTokenToCssVar</span>(<span class="hljs-string">&#x27;primary&#x27;</span>); <span class="hljs-comment">// var(--bx-primary)</span>
-<span class="hljs-title function_">resolveTokenToCssVar</span>(<span class="hljs-string">&#x27;orange-500&#x27;</span>); <span class="hljs-comment">// var(--bx-color-orange-500)</span>
-<span class="hljs-title function_">getComplementaryToken</span>(<span class="hljs-string">&#x27;text-primary&#x27;</span>); <span class="hljs-comment">// bg-element</span>
-<span class="hljs-title function_">getComplementaryToken</span>(<span class="hljs-string">&#x27;orange-500&#x27;</span>); <span class="hljs-comment">// orange-50</span>
-<span class="hljs-title function_">invertPaletteToken</span>(<span class="hljs-string">&#x27;blue-100&#x27;</span>); <span class="hljs-comment">// blue-900</span>
-<span class="hljs-title function_">isPaletteToken</span>(<span class="hljs-string">&#x27;primary&#x27;</span>); <span class="hljs-comment">// false</span>
-<span class="hljs-title function_">isThemedColor</span>({ <span class="hljs-attr">light</span>: <span class="hljs-string">&#x27;primary&#x27;</span>, <span class="hljs-attr">dark</span>: <span class="hljs-string">&#x27;accent&#x27;</span> }); <span class="hljs-comment">// true</span>
-<span class="hljs-title function_">resolveThemeId</span>(<span class="hljs-string">&#x27;carbon-cobalt&#x27;</span>); <span class="hljs-comment">// carbon-cobalt</span>
-<span class="hljs-title function_">resolveThemeId</span>(<span class="hljs-string">&#x27;retired-palette&#x27;</span>); <span class="hljs-comment">// undefined</span></code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">const</span> <span class="hljs-attr">color</span>: <span class="hljs-title class_">Color</span> = <span class="hljs-string">&#x27;danger-500&#x27;</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-attr">reference</span>: <span class="hljs-title class_">CssVariableReference</span> = <span class="hljs-title function_">resolveTokenToCssVar</span>(color); <span class="hljs-comment">// var(--bx-color-danger-500)</span>
+<span class="hljs-keyword">const</span> companion = <span class="hljs-title function_">getComplementaryToken</span>(color); <span class="hljs-comment">// danger-50</span>
+<span class="hljs-keyword">const</span> <span class="hljs-attr">localOverrides</span>: <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">ICssToken</span>[] = <span class="hljs-variable constant_">CSS_TOKEN_CATALOG</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function">(<span class="hljs-params">token</span>) =&gt;</span> token.<span class="hljs-property">scope</span> === <span class="hljs-string">&#x27;local&#x27;</span>);</code></pre>
+<p>Use semantic roles for content that should adapt to the selected theme. <code>primary</code> and <code>accent</code> palette shades follow the chosen brand/accent palettes. Named
+palettes such as <code>carbon</code>, <code>danger</code>, and <code>teal</code> expose their complete shade scales independently of the selected theme.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Export</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CSS_TOKEN_CATALOG</code></td>
+<td>Readonly <code>ICssToken</code> metadata for all discovered <code>--bx-*</code> variables, including declarations, fallbacks, selectors, sources, groups, and availability</td>
+</tr>
+<tr>
+<td><code>CSS_VARIABLES</code>, <code>CSS_VARIABLE_REFERENCES</code></td>
+<td>Names and <code>var(...)</code> references, with the corresponding <code>CssVariable</code> and <code>CssVariableReference</code> unions</td>
+</tr>
+<tr>
+<td><code>SEMANTIC_COLOR_TOKENS</code>, <code>PALETTE_NAMES</code>, <code>SHADE_NUMBERS</code>, <code>COLOR_TOKENS</code></td>
+<td>Supported color inputs, palettes, and shade scales</td>
+</tr>
+<tr>
+<td><code>SEMANTIC_PAIRS</code>, <code>getComplementaryToken()</code></td>
+<td>Explicit semantic companions and the shared palette/fallback companion rules</td>
+</tr>
+<tr>
+<td><code>SPACING_VALUES</code>, <code>RADIUS_VALUES</code>, <code>SHADOW_VALUES</code>, <code>Z_INDEX_VALUES</code></td>
+<td>Default Sass scale values serialized as CSS values</td>
+</tr>
+<tr>
+<td><code>BREAKPOINTS</code></td>
+<td>Numeric pixel thresholds for Sass helpers and responsive services; these are not CSS custom properties</td>
+</tr>
+<tr>
+<td><code>UTILITY_CLASSES</code> and family arrays</td>
+<td>Actual classes emitted by the global Sass entry point, including semantic color utilities</td>
+</tr>
+</tbody></table>
+<p>Availability has explicit meaning:</p>
+<ul>
+<li><code>global</code>: emitted globally by the Blocks utility or accessibility styles.</li>
+<li><code>theme</code>: emitted by <code>bx-theme</code>; values follow the nearest theme.</li>
+<li><code>local</code>: declared or given a fallback in a component/effect; it is not necessarily available on the document root.</li>
+<li><code>runtime</code>: referenced or assigned by TypeScript without a static declaration or fallback. Some are internal rendering state, not supported application
+controls.</li>
+</ul>
+<p>The catalog is a discovery inventory, not a promise that every runtime property is a public customization API. Consult the owning feature guide before setting a
+local or runtime property. A <code>var(...)</code> reference without a fallback is valid only where that variable exists.</p>
+<h3>Generator and maintenance</h3>
+<p>Run <code>npm run tools:generate-tokens</code> after changing Sass or variable usage. Library/playground build scripts and playground start/watch run it automatically.
+<code>npm run tools:sync-theme-types</code> remains a compatibility alias. Generated data lives in Core&#39;s <code>tokens.constants.ts</code>, <code>token-catalog.constants.ts</code>, and
+<code>theme-palettes.constants.ts</code>; types and interfaces are maintained in regular TypeScript files.</p>
+<p><code>$theme-palettes</code> in <code>_theme-engine.scss</code> is the source of theme IDs, labels, brand/accent palette assignments and optional preview order. Swatches derive from
+those palettes&#39; shade 500; theme classes derive from their IDs. <code>make-palette-theme()</code> uses the same assignments for light/dark themes. Generated
+<code>THEME_PALETTE_ROLES</code> exposes the generated brand/accent assignments used to group palette colors and companions into theme sections. <code>THEME_PALETTE_IDS</code>
+supplies the <code>BxThemeId</code> union, and <code>THEME_PALETTES</code> keeps the existing selector metadata contract.</p>
+<p><code>tools/tokens/catalog.scss</code> exports evaluated Sass maps through a Sass custom function. The source reader compiles global styles, component/directive styles,
+and effects, collects custom-property declarations (including <code>@property</code> registration) and nested <code>var()</code> fallbacks, and scans TypeScript string literals for
+runtime property usage. The data helper validates palettes, emitted foundation variables, breakpoint units, and semantic pairs. The writer uses the TypeScript
+AST to emit data declarations, then applies the shared ESLint/formatting pipeline before writing. No TypeScript program is maintained inside generator strings.</p>
+<p>Generation reports its source-reading and per-file validation stages, elapsed time, and updated/unchanged outputs. The shared writer formats before ESLint so
+large inventories avoid expensive formatter-difference processing. Unchanged files keep their modification times to avoid unnecessary watch rebuilds.</p>
+<p>The inventory follows statically discoverable Blocks names. Arbitrary application-defined properties and names constructed entirely at runtime are outside its
+scope; registered dynamic effect properties are included through their CSS registrations. Values come from default library Sass configuration, so applications
+that configure Sass maps can have different scale values. Run <code>npm run tools:build-docs</code> to update the bundled guide.</p>
+<h3>Compatibility</h3>
+<p><code>meta-brand-palette</code> and <code>meta-accent-palette</code> are Sass theme metadata and are no longer included in <code>Color</code> or <code>SEMANTIC_COLOR_TOKENS</code>: <code>bx-theme</code> never
+emitted CSS variables for them. Use <code>ThemingService.palette()</code> and its palette definitions for application palette metadata; use <code>primary</code>/<code>accent</code> for themed
+colors. Existing CSS-variable, scale, utility, and color-helper exports remain available. Variable/reference inventories now also include local and runtime
+properties; filter <code>CSS_TOKEN_CATALOG</code> by scope when building a list of globally available values.</p>
+<h2>Appearance and customization</h2>
+<p>Use the playground toolbar to change the palette, light/dark mode, high contrast, or appearance. Swatches and shape previews use CSS variables directly. Color
+cards display the current HEX value; other global/theme cards display their current computed value and separate source defaults. Component/effect values show
+their declarations and fallbacks instead of suggesting a document-level computed value. Borders are grouped with their semantic color roles; Blocks does not
+currently emit a separate border-width or border-style scale.</p>
+<p>Spacing and radius scales follow their numeric/source scale order. Color tiles stay compact; other tiles have wider columns and more padding. Radius samples are
+large enough to distinguish the larger corners. Shadow samples use a light neutral preview canvas in both themes so the actual shadow remains visible.
+Responsive Sass snippets use the playground code wrapper. Palette shades and companions are grouped together by their registered theme, such as Carbon / Cobalt;
+primary/accent aliases use the short Primary / Accent heading, and remaining standalone palettes stay available separately. Trailing tags identify the current
+theme, palette sections, and companion sections without long title prefixes.</p>
+<h2>Behavior and accessibility</h2>
+<p>Search is case insensitive and matches every entered word against names, references, category, group, scope, default/fallback values, companions, and source
+paths. Changing search or categories opens only the first matching section; other sections remain available to open individually. Choose multiple categories to
+include any selected family, for example Colors and Color pairs. Clear the category selection to return to All tokens; All tokens is the absence of filtering
+rather than a selectable option. Search and counts cover the complete catalog regardless of which batches are mounted.</p>
+<p>At 48 or more displayed cards across all expanded sections, token batches load as you scroll without page controls or API requests. Smaller displayed sets
+render immediately. Shared intersection and resize observers mount nearby batches and release distant cards, retaining measured placeholder heights. Keyboard
+focus can reveal an unloaded batch, and focused content is retained when outside the viewport. If the browser lacks the observer APIs, batches render normally.
+Metadata expansion within an unloaded batch is recreated when it returns. Current color-value search uses a lazy index; ordinary browsing converts only mounted
+batches. One canvas and a conversion cache are reused until theme/appearance changes. Documentation content mounts only while its section is open. Clear the
+category selection to show all tokens. Blocks accordions provide heading navigation, expansion and focus restoration; source defaults and fallbacks use Blocks
+collapsibles. Right-click a card, touch and hold, or use its <strong>Copy\u2026</strong> button to open a Blocks menu with the applicable copy formats. Focused cards also support
+Shift + F10 and the Context Menu key. CSS references copy <code>var(--bx-\u2026)</code>; names copy only <code>--bx-\u2026</code>. HEX uses eight digits when transparency is present; RGB uses
+comma-separated channels and preserves transparency with <code>rgba(...)</code>; RGBA always includes explicit alpha. Pairs copy one value per line. Non-color variables
+provide CSS-reference/name actions; utility classes and Sass breakpoints provide their respective copy actions. Menu choices follow live theme colors.</p>
+<p>Card text suppresses selection and iOS callouts to keep long-press gestures predictable. Source-default collapsibles retain selectable text and native selection
+menus. Copy actions report success/failure in a live region. Search and multiselect controls use dynamic subscript sizing and reserve no empty validation row.</p>
+<p>Color pairs show both named tokens and adjacent swatches. They reflect <code>getComplementaryToken()</code> exactly: explicit semantic mappings, <code>bg-surface</code> for unmapped
+roles, shade 50 for palette shades above 400, and shade 900 otherwise. They do not imply a guaranteed text contrast ratio. Labels identify colors without
+relying on color alone. There is no catalog animation; reduced-motion and opaque/high-contrast preferences continue through the shared Blocks controls and
+styles.</p>
+<h2>Playground</h2>
+<p>Open <code>/tokens</code> from Tools. Search for <code>warning</code>, <code>danger</code>, <code>background</code>, <code>shadow</code>, <code>rounded</code>, <code>glass</code>, a component name, a source path, or a full CSS variable.
+Choose <strong>Color pairs</strong> for the complete companion mapping, <strong>Sass breakpoints</strong> for responsive thresholds, or <strong>Utility classes</strong> for copyable class names.</p>
+`,"projects/playground/src/app/components/screens/utilities/README.md":`<h1>Utilities playground</h1>
+<p>Explore public Core utilities through focused interactive examples. Choose a utility from the overview or expand <strong>Core \u2192 Utilities</strong> in the sidenav. Each page
+presents its demo first, then separate documentation and source tabs. The <a href="components">Core guide</a> remains the entry-point
+reference.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DeviceTypeService</span>, <span class="hljs-title class_">ScrollLockService</span>, uuidv4, <span class="hljs-title class_">WindowDimensionsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<p>Services are provided in root. Each utility guide documents its public imports, configuration, lifecycle, and supporting types.</p>
+<h2>Usage</h2>
+<p>Search <code>/utilities</code> by utility or API name, then follow <strong>Explore utility</strong>. Direct URLs are supported, and the sidenav exposes the same six pages.</p>
+<table>
+<thead>
+<tr>
+<th>Utility</th>
+<th>Playground</th>
+<th>Guide</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Viewport and breakpoints</td>
+<td><code>/utilities/viewport</code></td>
+<td><a href="utilities/viewport">Viewport guide</a></td>
+</tr>
+<tr>
+<td>Device detection</td>
+<td><code>/utilities/device</code></td>
+<td><a href="utilities/device">Device guide</a></td>
+</tr>
+<tr>
+<td>Shared scroll locking</td>
+<td><code>/utilities/scroll-lock</code></td>
+<td><a href="utilities/scroll-lock">Scroll-lock guide</a></td>
+</tr>
+<tr>
+<td>Stable identifiers</td>
+<td><code>/utilities/identifiers</code></td>
+<td><a href="utilities/identifiers">Identifier guide</a></td>
+</tr>
+<tr>
+<td>Color-token helpers</td>
+<td><code>/utilities/color-tokens</code></td>
+<td><a href="utilities/color-tokens">Color-token guide</a></td>
+</tr>
+<tr>
+<td>Overlay positioning</td>
+<td><code>/utilities/overlay-positioning</code></td>
+<td><a href="utilities/overlay-positioning">Overlay guide</a></td>
+</tr>
+</tbody></table>
 <h2>API</h2>
 <h3>Coverage audit</h3>
-<p>The Core overview already mentioned viewport/device services and scroll locks, but lacked a cumulative interactive reference. The following groups now share
-this page and guide:</p>
 <table>
 <thead>
 <tr>
 <th>Utilities</th>
-<th>Demo</th>
+<th>Interactive coverage</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>WindowDimensionsService</code>, <code>BREAKPOINTS</code></td>
-<td>Live width/height, breakpoint minimums, range queries, responsive columns</td>
+<td>Live CSS-pixel dimensions, shared breakpoint tags, range queries, responsive columns</td>
 </tr>
 <tr>
 <td><code>DeviceTypeService</code>, device/OS contracts</td>
-<td>Device category, desktop/mobile OS, platform flags, orientation, explicit refresh</td>
+<td>Device identity, platform flags, orientation events, explicit refresh</td>
 </tr>
 <tr>
 <td><code>ScrollLockService</code>, <code>IScrollLockConfig</code></td>
-<td>Two independent owners, remaining-owner behavior, visible status, release and navigation cleanup</td>
+<td>Independent owners, remaining-owner behavior, release actions, navigation cleanup</td>
 </tr>
 <tr>
 <td><code>uuidv4()</code></td>
-<td>Regenerate a UUID independently of stable scroll-lock owner IDs</td>
+<td>Regenerated UUID and stable instance ID comparison</td>
 </tr>
 <tr>
 <td>Color-token helpers, <code>resolveThemeId()</code></td>
-<td>Choose a semantic/palette token; inspect CSS, complementary/inverted mappings and saved palette validation</td>
+<td>Semantic/palette selection, CSS reference, complementary/inverted tokens, saved palette validation</td>
 </tr>
 <tr>
 <td><code>BxOverlayPositionService</code>, origin/theme helpers</td>
-<td>Preferred placement, viewport fallback, tracked origin, inherited theme and teardown</td>
+<td>Preferred placement, viewport fallback, tracked origin, inherited theme, teardown</td>
 </tr>
 </tbody></table>
+<p>The <a href="tokens">token catalog</a> at <code>/tokens</code> covers <code>CSS_TOKEN_CATALOG</code>, CSS reference types, utility classes, foundation scales, and all color
+companions. Focused color-helper examples live in the utilities section above.</p>
 <p>Other public utilities retain their established guides:</p>
 <table>
 <thead>
@@ -5644,7 +6132,336 @@ this page and guide:</p>
 </tr>
 </tbody></table>
 <p>Internal coordination services, implementation classes, and type-only contracts do not receive separate playground pages.</p>
-<h3>Viewport dimensions</h3>
+<h2>Appearance and customization</h2>
+<p>The overview uses Blocks search, cards, grids, stacks, tags, icons, links styled as buttons, and alerts. Every demo uses public Blocks controls and shared theme
+styles. Layouts shrink and wrap for narrow containers, zoom, and long content. Semantic HTML remains in use for headings, descriptions, definition lists, and
+outputs.</p>
+<h2>Behavior and accessibility</h2>
+<p>Each utility loads independently. Leaving a demo tears down its owned listeners, scroll locks, and overlays. No demo changes global appearance preferences.
+Interactive controls use Blocks keyboard and focus behavior, while status changes and generated identifiers use polite announcements. Viewport resizing avoids
+repeated live announcements.</p>
+<p>The overview and detail pages share <code>PageContainer</code> gutters and headings. Detail pages use automatic breadcrumbs to return to Utilities.</p>
+<h2>Playground</h2>
+<p>Open <code>/utilities</code> from <strong>Core \u2192 Utilities</strong>. Expand its sidenav item for all six utility pages, or use the overview search and links. On each page, the
+interactive example precedes the documentation and source tabs.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/color-tokens/README.md":`<h1>Color-token helpers</h1>
+<p>Map typed colors to CSS references and inspect companion, inversion, and palette-validation helpers.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { getComplementaryToken, invertPaletteToken, isPaletteToken, isThemedColor, resolveThemeId, resolveTokenToCssVar } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-title function_">resolveTokenToCssVar</span>(<span class="hljs-string">&#x27;primary&#x27;</span>); <span class="hljs-comment">// var(--bx-primary)</span>
+<span class="hljs-title function_">resolveTokenToCssVar</span>(<span class="hljs-string">&#x27;orange-500&#x27;</span>); <span class="hljs-comment">// var(--bx-color-orange-500)</span>
+<span class="hljs-title function_">getComplementaryToken</span>(<span class="hljs-string">&#x27;text-primary&#x27;</span>); <span class="hljs-comment">// bg-element</span>
+<span class="hljs-title function_">getComplementaryToken</span>(<span class="hljs-string">&#x27;orange-500&#x27;</span>); <span class="hljs-comment">// orange-50</span>
+<span class="hljs-title function_">invertPaletteToken</span>(<span class="hljs-string">&#x27;blue-100&#x27;</span>); <span class="hljs-comment">// blue-900</span>
+<span class="hljs-title function_">isPaletteToken</span>(<span class="hljs-string">&#x27;primary&#x27;</span>); <span class="hljs-comment">// false</span>
+<span class="hljs-title function_">isThemedColor</span>({ <span class="hljs-attr">light</span>: <span class="hljs-string">&#x27;primary&#x27;</span>, <span class="hljs-attr">dark</span>: <span class="hljs-string">&#x27;accent&#x27;</span> }); <span class="hljs-comment">// true</span>
+<span class="hljs-title function_">resolveThemeId</span>(<span class="hljs-string">&#x27;carbon-cobalt&#x27;</span>); <span class="hljs-comment">// carbon-cobalt</span>
+<span class="hljs-title function_">resolveThemeId</span>(<span class="hljs-string">&#x27;retired-palette&#x27;</span>); <span class="hljs-comment">// undefined</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>resolveTokenToCssVar(token)</code></td>
+<td>Maps a typed semantic or palette color to a CSS <code>var(...)</code> reference; it does not resolve an RGB value</td>
+</tr>
+<tr>
+<td><code>isPaletteToken(token)</code></td>
+<td>Recognizes supported palette names and numeric shades; accepts typed <code>Color</code> values</td>
+</tr>
+<tr>
+<td><code>getComplementaryToken(token)</code></td>
+<td>Looks up semantic pairs (falling back to <code>bg-surface</code>) or chooses palette shade 50 for shades above 400, otherwise 900</td>
+</tr>
+<tr>
+<td><code>invertPaletteToken(token)</code></td>
+<td>Mirrors a palette shade, including 50\u2192900 and 1000\u219250; leaves semantic tokens or unsupported results unchanged</td>
+</tr>
+<tr>
+<td><code>isThemedColor(value)</code></td>
+<td>Narrows non-null objects with a <code>light</code> member; does not validate individual token values or choose a theme</td>
+</tr>
+<tr>
+<td><code>resolveThemeId(value)</code></td>
+<td>Accepts current palette IDs; returns undefined for absent, unknown or retired IDs</td>
+</tr>
+</tbody></table>
+<p>These helpers do not guarantee contrast. <code>Color</code>, <code>ThemeColorToken</code>, <code>SemanticColorToken</code>, and <code>ThemedColor</code> describe typed consumer configuration. Prefer
+semantic tokens for values that should follow theme and palette changes.</p>
+<h2>Appearance and customization</h2>
+<p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
+appearance. Open the source tab for the component and template.</p>
+<h2>Behavior and accessibility</h2>
+<p>The Blocks select updates every helper result reactively. Change the active playground theme to see semantic CSS variables update the decorative swatch; every
+result is also shown as text.</p>
+<p>Browse the <a href="tokens">complete token catalog</a> at <code>/tokens</code> for all CSS variables, companions, scales, and utility classes. Companion
+mappings do not guarantee contrast.</p>
+<h2>Playground</h2>
+<p>Open <code>/utilities/color-tokens</code> from <strong>Core \u2192 Utilities \u2192 Color-token helpers</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
+<p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/device/README.md":`<h1>Device detection</h1>
+<p>Inspect browser device identity, operating-system hints, and screen orientation with <code>DeviceTypeService</code>.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">DeviceTypeService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">DeviceTypeService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-keyword">const</span> deviceTypeService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">DeviceTypeService</span>);
+<span class="hljs-keyword">const</span> state = deviceTypeService.<span class="hljs-title function_">getDeviceState</span>();
+<span class="hljs-keyword">const</span> isAppleDevice = state.<span class="hljs-property">isAppleDevice</span>;
+<span class="hljs-keyword">const</span> landscape = state.<span class="hljs-title function_">isLandscapeOrientation</span>();</code></pre>
+<p>Call <code>inject()</code> in an Angular injection context. Store the snapshot in a signal and refresh it from browser events when the view needs live updates.</p>
+<h2>API</h2>
+<p><code>getDeviceState(): IDeviceState</code> returns a snapshot of mobile/tablet/desktop and OS detection based on browser identity, including iPadOS desktop identity with
+touch hardware. It exposes <code>isDesktop</code>, <code>isMobile</code>, <code>isTablet</code>, <code>desktopOS</code>, <code>mobileOS</code>, <code>isAppleDevice</code>, <code>isAndroidDevice</code>, <code>isWindowsDesktop</code>,
+<code>isLinuxOrUnixDesktop</code>, and <code>isUnknownMobileDevice</code>.</p>
+<p><code>isLandscapeOrientation()</code> and <code>isPortraitOrientation()</code> are available on both the service and the returned state. They read the latest tracked <strong>screen</strong>
+orientation. They are ordinary methods, not Angular signals. This page refreshes its snapshot on Screen Orientation change events and offers an explicit refresh
+action. Without that browser API, the service initializes orientation from a media query; live screen rotation is not tracked there.</p>
+<p>Viewport resizing does not change device categories. Device detection is heuristic and browser identity can be overridden. Use capabilities for interaction
+decisions and viewport signals for layout. During SSR, identity is unavailable: the current fallback reports desktop/unknown OS and portrait orientation.</p>
+<h2>Appearance and customization</h2>
+<p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
+appearance. Open the source tab for the component and template.</p>
+<h2>Behavior and accessibility</h2>
+<p>The demo uses Blocks cards, a tag, and a refresh button. Screen Orientation change events refresh the OnPush snapshot and the subscription is removed on
+destruction.</p>
+<p>Resizing does not change browser identity. Detection is heuristic; prefer capability checks for interaction decisions and viewport signals for layout.</p>
+<h2>Playground</h2>
+<p>Open <code>/utilities/device</code> from <strong>Core \u2192 Utilities \u2192 Device detection</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
+<p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/identifiers/README.md":`<h1>Stable identifiers</h1>
+<p>Create version-4 UUIDs for controls, overlays, and stable shared-resource ownership.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { uuidv4 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { uuidv4 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-attr">ownerId</span>: <span class="hljs-built_in">string</span> = <span class="hljs-title function_">uuidv4</span>();
+<span class="hljs-comment">// Reuse ownerId for acquisition and cleanup throughout this instance&#x27;s lifetime.</span></code></pre>
+<h2>API</h2>
+<p><code>uuidv4(): string</code> uses <code>crypto.getRandomValues()</code> to generate a version-4 UUID. It requires that runtime API. Generate once per owning instance; avoid calling
+it from templates or computed values that may regenerate an owner ID. Coordinate server/client IDs explicitly when stable hydration identity is required.</p>
+<h2>Appearance and customization</h2>
+<p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
+appearance. Open the source tab for the component and template.</p>
+<h2>Behavior and accessibility</h2>
+<p>The Blocks button generates a fresh preview UUID. A separate instance ID remains unchanged for comparison. Updated previews are announced politely, and long
+values wrap on narrow screens.</p>
+<p>The helper needs <code>crypto.getRandomValues()</code>. Coordinate server/client IDs explicitly when hydration requires the same identity.</p>
+<h2>Playground</h2>
+<p>Open <code>/utilities/identifiers</code> from <strong>Core \u2192 Utilities \u2192 Stable identifiers</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
+<p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/overlay-positioning/README.md":`<h1>Overlay positioning</h1>
+<p>Extend Blocks overlays with shared connected positioning, visibility tracking, and live theme inheritance.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxOverlayPositionService</span>, inheritOverlayTheme, isOverlayOriginVisible, trackOverlayOrigin } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Overlay</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/cdk/overlay&#x27;</span>;
+<span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">BxOverlayPositionService</span>, inheritOverlayTheme, trackOverlayOrigin } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-keyword">const</span> overlay = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">Overlay</span>);
+<span class="hljs-keyword">const</span> bxOverlayPositionService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">BxOverlayPositionService</span>);
+
+<span class="hljs-comment">// Run after the origin is rendered and attach a portal before tracking.</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">attachPreview</span>(<span class="hljs-params"><span class="hljs-attr">origin</span>: <span class="hljs-title class_">HTMLElement</span></span>) {
+    <span class="hljs-keyword">const</span> overlayRef = overlay.<span class="hljs-title function_">create</span>({
+        <span class="hljs-attr">positionStrategy</span>: bxOverlayPositionService.<span class="hljs-title function_">getElementStrategy</span>(origin, <span class="hljs-string">&#x27;bottom&#x27;</span>),
+        <span class="hljs-attr">scrollStrategy</span>: overlay.<span class="hljs-property">scrollStrategies</span>.<span class="hljs-title function_">noop</span>()
+    });
+
+    <span class="hljs-keyword">return</span> overlayRef;
+}</code></pre>
+<p>The complete demo source shows portal attachment, theme inheritance, origin tracking, outside-pointer/Escape dismissal, and destruction cleanup.</p>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Utility</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>getElementStrategy(element, placement, offset = 8)</code></td>
+<td>Connected CDK strategy with alternative sides, viewport push and an 8 CSS-pixel viewport margin</td>
+</tr>
+<tr>
+<td><code>getSubmenuStrategy(element, side, offset = 4)</code></td>
+<td>Physical left/right preference with opposite-side fallback and fixed dimensions</td>
+</tr>
+<tr>
+<td><code>getCoordinateStrategy(x, y)</code></td>
+<td>Client-coordinate anchor, initially below with a 2 CSS-pixel offset, then fallback positions</td>
+</tr>
+<tr>
+<td><code>trackOverlayOrigin(overlay, origin, options?)</code></td>
+<td>Tracks an attached connected overlay with native anchoring where available, otherwise measured fallback; returns callable cleanup with <code>reposition()</code></td>
+</tr>
+<tr>
+<td><code>isOverlayOriginVisible(origin)</code></td>
+<td>Checks viewport intersection and clipping ancestors; disconnected or zero-size origins return false</td>
+</tr>
+<tr>
+<td><code>inheritOverlayTheme(source, pane)</code></td>
+<td>Copies inherited theme/appearance context and observes relevant scope attributes; returns observer cleanup</td>
+</tr>
+</tbody></table>
+<p><code>IOverlayOriginOptions</code> can disable native anchoring with <code>nativeAnchoring: false</code>, run <code>onPosition</code> after positioning, or run <code>onOriginHidden</code> when the anchor
+leaves view. The owner decides whether to dismiss. Attach content before tracking so size measurement is meaningful. Call both returned cleanup functions before
+disposing the overlay; the owner also cleans up its subscriptions and portal.</p>
+<p>The demo is an informational preview with focus kept on its trigger. It directly uses an element strategy, visibility guard, origin tracker and inherited theme.
+Coordinate and submenu strategies are documented extension points; ready-made
+<a href="components/context-menu">Context menu</a> and
+<a href="components/menu">Menu</a> demonstrate their intended interactions. Prefer the public overlay components and
+directives when their existing focus, dismissal and accessibility behavior meets your needs.</p>
+<h2>Appearance and customization</h2>
+<p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
+appearance. Open the source tab for the component and template.</p>
+<h2>Behavior and accessibility</h2>
+<p>Use the Blocks select and trigger to try each preferred side. The preview is a Blocks card constrained to the viewport, with scrollable content at larger text
+sizes. It inherits mounted theme and appearance changes.</p>
+<p>Focus stays on the trigger. Escape, blur, outside pointer events, a hidden origin, and navigation close the preview. Reduced-motion and opaque appearances
+follow the shared Blocks surface behavior.</p>
+<h2>Playground</h2>
+<p>Open <code>/utilities/overlay-positioning</code> from <strong>Core \u2192 Utilities \u2192 Overlay positioning</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
+<p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/scroll-lock/README.md":`<h1>Shared scroll locking</h1>
+<p>Coordinate page scroll locks across multiple owners without releasing another component&#39;s lock.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ScrollLockService</span>, uuidv4 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, <span class="hljs-title class_">DestroyRef</span>, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ScrollLockService</span>, uuidv4 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-scroll-lock-example&#x27;</span>,
+    <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">Button</span>],
+    <span class="hljs-attr">template</span>: <span class="hljs-string">\`
+        &lt;button bx-button type=&quot;button&quot; (click)=&quot;lock()&quot;&gt;Lock page&lt;/button&gt;
+        &lt;button bx-button type=&quot;button&quot; (click)=&quot;unlock()&quot;&gt;Release my lock&lt;/button&gt;
+    \`</span>,
+    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrollLockExample</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> scrollLockService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">ScrollLockService</span>);
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">lockId</span>: <span class="hljs-built_in">string</span> = <span class="hljs-title function_">uuidv4</span>();
+
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">DestroyRef</span>).<span class="hljs-title function_">onDestroy</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">unlock</span>());
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-title function_">lock</span>(): <span class="hljs-built_in">void</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">disableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockId</span>, { <span class="hljs-attr">handleTouchInput</span>: <span class="hljs-literal">false</span> });
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-title function_">unlock</span>(): <span class="hljs-built_in">void</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scrollLockService</span>.<span class="hljs-title function_">enableScroll</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockId</span>);
+    }
+}</code></pre>
+<p>Keep release actions reachable while the page is locked. Release on close and presentation changes as well as destruction. Repeated acquisition with the same ID
+updates that owner&#39;s lock. Releasing an unknown ID does nothing, and releasing your ID preserves other owners&#39; locks.</p>
+<h2>API</h2>
+<p><code>isScrollDisabled()</code> is a readonly signal indicating that any owner holds a lock. Observe it instead of writing to the backing signal.
+<code>disableScroll(id, config)</code> requires an owner ID and configuration; <code>enableScroll(id)</code> releases that owner. The legacy optional second argument to
+<code>enableScroll</code> is accepted but does not change final cleanup.</p>
+<table>
+<thead>
+<tr>
+<th><code>IScrollLockConfig</code> member</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>handleTouchInput</code></td>
+<td><code>false</code> preserves touch gestures; <code>true</code> enables touchmove prevention. Omission still applies <code>touch-action: none</code>, without adding a touchmove listener by itself</td>
+</tr>
+<tr>
+<td><code>allowTouchInputOn</code></td>
+<td>Elements whose descendants may receive touch input; absent/empty lists permit targets through the touchmove handler</td>
+</tr>
+<tr>
+<td><code>mobileOnlyTouchPrevention</code></td>
+<td>Limits the touchmove handler to detected mobile devices; tablets use their separate category</td>
+</tr>
+<tr>
+<td><code>handleExtremeOverflow</code></td>
+<td>Adds global wheel/scroll prevention listeners; leave unset for ordinary pages and panels</td>
+</tr>
+<tr>
+<td><code>animationDuration</code></td>
+<td>Milliseconds before installing prevention listeners, plus the service&#39;s 10 ms coordination delay; omitted means zero before that delay</td>
+</tr>
+</tbody></table>
+<p>Any active owner requesting touch/extreme prevention keeps it enabled. Touch allow-list details follow the most recently inserted owner whose <code>handleTouchInput</code>
+is not false; reacquiring an existing ID updates its options without changing its insertion order. The maximum active animation duration controls listener
+installation. Original inline body overflow, right padding, touch action and priorities are restored after the final lock releases.</p>
+<p>The demo uses <code>{ handleTouchInput: false }</code> for both owners so touch users can reach every action. It does not enable extreme overflow handling. Lock
+acquisition and release are no-ops during SSR.</p>
+<h2>Appearance and customization</h2>
+<p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
+appearance. Open the source tab for the component and template.</p>
+<h2>Behavior and accessibility</h2>
+<p>The compact Blocks control panel exposes pressed-state buttons for both owner cards. Acquire both locks and release one to inspect remaining-owner behavior. The
+shared status is announced politely.</p>
+<p>Before acquiring the first lock, the demo brings its controls into view without animation or moving focus. The panel is constrained to the viewport and can
+scroll internally when text is enlarged. Touch gestures remain enabled and release actions stay reachable. Navigating to another utility releases both demo
+locks. Locks held by navigation or other overlays remain active.</p>
+<h2>Playground</h2>
+<p>Open <code>/utilities/scroll-lock</code> from <strong>Core \u2192 Utilities \u2192 Shared scroll locking</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
+<p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/utility-page/README.md":`<h1>Utility page layout</h1>
+<p>Shared playground presentation for the six <a href="utilities">utility examples</a>. Route metadata selects the title, public API summary, guide, and source files.
+The nested router outlet loads the selected example independently. Every page presents the demo above the documentation and code tabs.</p>
+<h2>Import</h2>
+<p>Routes lazy-load <code>UtilityPage</code> from <code>@playground/components/screens/utilities/components/utility-page/utility-page</code>.</p>
+<h2>Usage</h2>
+<p>Register utility metadata in <code>constants/utility-catalog.constants.ts</code>. The <code>/utilities</code> route uses this catalog for child routes, sidenav entries, and overview
+cards.</p>
+<h2>API</h2>
+<p><code>IUtilityExample</code> connects each route ID, title, description, icon, public symbol, README, and lazy demo loader. Supporting declarations stay under the
+utilities screen&#39;s category folders.</p>
+<h2>Appearance and customization</h2>
+<p>The layout uses the shared Blocks PageContainer, automatic breadcrumbs, stacks, dividers, and component-info documentation tabs. The container resolves section
+and page titles through NavigationService; descriptions come from the utility catalog. Shared semantic tokens keep it consistent with the active playground
+appearance.</p>
+<h2>Behavior and accessibility</h2>
+<p>A single page heading labels the article. Named demo and documentation sections appear in reading order. Each example owns cleanup of its resources.</p>
+<h2>Playground</h2>
+<p>Reach this layout through any <code>/utilities/&lt;utility&gt;</code> route, such as <code>/utilities/viewport</code>.</p>
+`,"projects/playground/src/app/components/screens/utilities/components/viewport/README.md":`<h1>Viewport and breakpoints</h1>
+<p>Build responsive layouts with live viewport signals and the shared Blocks breakpoint scale.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">WindowDimensionsService</span>, <span class="hljs-variable constant_">BREAKPOINTS</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="typescript code example"><code class="hljs language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">Signal</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, computed, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">WindowDimensionsService</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/core&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-responsive-summary&#x27;</span>,
+    <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;p&gt;{{ width() }} CSS pixels \xB7 {{ columns() }} columns&lt;/p&gt;&#x27;</span>,
+    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ResponsiveSummary</span> {
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> windowDimensionsService = <span class="hljs-title function_">inject</span>(<span class="hljs-title class_">WindowDimensionsService</span>);
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">width</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">dimensions</span>().<span class="hljs-property">width</span>);
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">columns</span>: <span class="hljs-title class_">Signal</span>&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">windowDimensionsService</span>.<span class="hljs-title function_">resolveResponsiveValue</span>({ <span class="hljs-attr">md</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">xl</span>: <span class="hljs-number">3</span> }, <span class="hljs-number">1</span>));
+}</code></pre>
+<h2>API</h2>
 <table>
 <thead>
 <tr>
@@ -5690,161 +6507,16 @@ this page and guide:</p>
 <code>isDesktopAndBelow</code>, and <code>isLargeDesktopAndBelow</code> are below lg, xl, 2xl, and 3xl respectively.</p>
 <p>SSR dimensions are zero. Simple range predicates compare against zero there; do not interpret them as actual device detection. Responsive values describe
 viewport width, even when the component occupies a smaller container. Browser zoom can change CSS-pixel dimensions.</p>
-<h3>Device categories</h3>
-<p><code>getDeviceState(): IDeviceState</code> returns a snapshot of mobile/tablet/desktop and OS detection based on browser identity, including iPadOS desktop identity with
-touch hardware. It exposes <code>isDesktop</code>, <code>isMobile</code>, <code>isTablet</code>, <code>desktopOS</code>, <code>mobileOS</code>, <code>isAppleDevice</code>, <code>isAndroidDevice</code>, <code>isWindowsDesktop</code>,
-<code>isLinuxOrUnixDesktop</code>, and <code>isUnknownMobileDevice</code>.</p>
-<p><code>isLandscapeOrientation()</code> and <code>isPortraitOrientation()</code> are available on both the service and the returned state. They read the latest tracked <strong>screen</strong>
-orientation. They are ordinary methods, not Angular signals. This page refreshes its snapshot on Screen Orientation change events and offers an explicit refresh
-action. Without that browser API, the service initializes orientation from a media query; live screen rotation is not tracked there.</p>
-<p>Viewport resizing does not change device categories. Device detection is heuristic and browser identity can be overridden. Use capabilities for interaction
-decisions and viewport signals for layout. During SSR, identity is unavailable: the current fallback reports desktop/unknown OS and portrait orientation.</p>
-<h3>Scroll-lock configuration</h3>
-<p><code>isScrollDisabled()</code> is a readonly signal indicating that any owner holds a lock. Observe it instead of writing to the backing signal.
-<code>disableScroll(id, config)</code> requires an owner ID and configuration; <code>enableScroll(id)</code> releases that owner. The legacy optional second argument to
-<code>enableScroll</code> is accepted but does not change final cleanup.</p>
-<table>
-<thead>
-<tr>
-<th><code>IScrollLockConfig</code> member</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>handleTouchInput</code></td>
-<td><code>false</code> preserves touch gestures; <code>true</code> enables touchmove prevention. Omission still applies <code>touch-action: none</code>, without adding a touchmove listener by itself</td>
-</tr>
-<tr>
-<td><code>allowTouchInputOn</code></td>
-<td>Elements whose descendants may receive touch input; absent/empty lists permit targets through the touchmove handler</td>
-</tr>
-<tr>
-<td><code>mobileOnlyTouchPrevention</code></td>
-<td>Limits the touchmove handler to detected mobile devices; tablets use their separate category</td>
-</tr>
-<tr>
-<td><code>handleExtremeOverflow</code></td>
-<td>Adds global wheel/scroll prevention listeners; leave unset for ordinary pages and panels</td>
-</tr>
-<tr>
-<td><code>animationDuration</code></td>
-<td>Milliseconds before installing prevention listeners, plus the service&#39;s 10 ms coordination delay; omitted means zero before that delay</td>
-</tr>
-</tbody></table>
-<p>Any active owner requesting touch/extreme prevention keeps it enabled. Touch allow-list details follow the most recently inserted owner whose <code>handleTouchInput</code>
-is not false; reacquiring an existing ID updates its options without changing its insertion order. The maximum active animation duration controls listener
-installation. Original inline body overflow, right padding, touch action and priorities are restored after the final lock releases.</p>
-<p>The demo uses <code>{ handleTouchInput: false }</code> for both owners so touch users can reach every action. It does not enable extreme overflow handling. Lock
-acquisition and release are no-ops during SSR.</p>
-<h3>Identifiers and color helpers</h3>
-<p><code>uuidv4(): string</code> uses <code>crypto.getRandomValues()</code> to generate a version-4 UUID. It requires that runtime API. Generate once per owning instance; avoid calling
-it from templates or computed values that may regenerate an owner ID. Coordinate server/client IDs explicitly when stable hydration identity is required.</p>
-<table>
-<thead>
-<tr>
-<th>Helper</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>resolveTokenToCssVar(token)</code></td>
-<td>Maps a typed semantic or palette color to a CSS <code>var(...)</code> reference; it does not resolve an RGB value</td>
-</tr>
-<tr>
-<td><code>isPaletteToken(token)</code></td>
-<td>Detects the numeric shade suffix of a typed <code>Color</code>; not a validator for arbitrary untrusted strings</td>
-</tr>
-<tr>
-<td><code>getComplementaryToken(token)</code></td>
-<td>Looks up semantic pairs (falling back to <code>surface</code>) or chooses palette shade 50 for shades above 400, otherwise 900</td>
-</tr>
-<tr>
-<td><code>invertPaletteToken(token)</code></td>
-<td>Mirrors a palette shade, including 50\u2192900 and 1000\u219250; leaves semantic tokens or unsupported results unchanged</td>
-</tr>
-<tr>
-<td><code>isThemedColor(value)</code></td>
-<td>Narrows non-null objects with a <code>light</code> member; does not validate individual token values or choose a theme</td>
-</tr>
-<tr>
-<td><code>resolveThemeId(value)</code></td>
-<td>Accepts current palette IDs; returns undefined for absent, unknown or retired IDs</td>
-</tr>
-</tbody></table>
-<p>These helpers do not guarantee contrast. <code>Color</code>, <code>ThemeColorToken</code>, <code>SemanticColorToken</code>, and <code>ThemedColor</code> describe typed consumer configuration. Prefer
-semantic tokens for values that should follow theme and palette changes.</p>
-<h3>Overlay extension points</h3>
-<table>
-<thead>
-<tr>
-<th>Utility</th>
-<th>Contract</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>getElementStrategy(element, placement, offset = 8)</code></td>
-<td>Connected CDK strategy with alternative sides, viewport push and an 8 CSS-pixel viewport margin</td>
-</tr>
-<tr>
-<td><code>getSubmenuStrategy(element, side, offset = 4)</code></td>
-<td>Physical left/right preference with opposite-side fallback and fixed dimensions</td>
-</tr>
-<tr>
-<td><code>getCoordinateStrategy(x, y)</code></td>
-<td>Client-coordinate anchor, initially below with a 2 CSS-pixel offset, then fallback positions</td>
-</tr>
-<tr>
-<td><code>trackOverlayOrigin(overlay, origin, options?)</code></td>
-<td>Tracks an attached connected overlay with native anchoring where available, otherwise measured fallback; returns callable cleanup with <code>reposition()</code></td>
-</tr>
-<tr>
-<td><code>isOverlayOriginVisible(origin)</code></td>
-<td>Checks viewport intersection and clipping ancestors; disconnected or zero-size origins return false</td>
-</tr>
-<tr>
-<td><code>inheritOverlayTheme(source, pane)</code></td>
-<td>Copies inherited theme/appearance context and observes relevant scope attributes; returns observer cleanup</td>
-</tr>
-</tbody></table>
-<p><code>IOverlayOriginOptions</code> can disable native anchoring with <code>nativeAnchoring: false</code>, run <code>onPosition</code> after positioning, or run <code>onOriginHidden</code> when the anchor
-leaves view. The owner decides whether to dismiss. Attach content before tracking so size measurement is meaningful. Call both returned cleanup functions before
-disposing the overlay; the owner also cleans up its subscriptions and portal.</p>
-<p>The demo is an informational preview with focus kept on its trigger. It directly uses an element strategy, visibility guard, origin tracker and inherited theme.
-Coordinate and submenu strategies are documented extension points; ready-made
-<a href="components/context-menu">Context menu</a> and <a href="components/menu">Menu</a>
-demonstrate their intended interactions. Prefer the public overlay components and directives when their existing focus, dismissal and accessibility behavior
-meets your needs.</p>
 <h2>Appearance and customization</h2>
-<p>The page uses Blocks containers, buttons, selects, documentation tabs, semantic CSS variables and shared Sass spacing/radius/responsive helpers. It follows
-application appearance without changing preferences. The color-token swatch is decorative; text exposes every result independently of color.</p>
-<p>The grid starts with one column and uses the shared xl breakpoint for two columns. The scroll-lock panel spans both columns so its release actions stay
-together. The overlay preview is constrained to the viewport and scrolls if text enlargement requires more space. Supporting demo controls use public Blocks
-APIs.</p>
+<p>The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
+appearance. Open the source tab for the component and template.</p>
 <h2>Behavior and accessibility</h2>
-<ul>
-<li>Viewport and token changes derive from signals under OnPush. Device orientation explicitly bridges browser events to a signal and tears down its subscription.</li>
-<li>Each scroll-lock owner has a stable ID. Release actions and page destruction release only these two IDs, preserving locks held by navigation or other
-overlays.</li>
-<li>Lock status is announced politely. Rapid viewport resizing is displayed without a live announcement on every frame. UUID regeneration has a named live output.</li>
-<li>The position preview supports pointer and keyboard activation. Escape, blur, outside pointer input, hidden origins and page destruction close it. Focus
-remains on the trigger; there are no interactive controls inside the preview.</li>
-<li>The page adds no decorative animation and respects the shared components&#39; reduced-motion, forced-colors and reduced-transparency behavior. Labels and results
-remain visible as text. Device and OS values are informational and do not restrict access to controls.</li>
-<li>Demo text is English. Library translation integration remains in the linked Core and Forms guides; this page introduces no translation adapter.</li>
-</ul>
+<p>Resize the browser or change zoom to observe width, height, breakpoint tags, and the responsive preview. Values use CSS pixels. The preview uses Blocks cards,
+grids, and tags.</p>
+<p>Viewport changes derive from signals under OnPush and are not announced on every resize. SSR dimensions are zero; responsive values use the fallback.</p>
 <h2>Playground</h2>
-<p>Open <code>/utilities</code>. On a first visit, expand <strong>Tools</strong> in the side navigation; later visits respect your saved section states. Suggested checks:</p>
-<ol>
-<li>Resize across md and xl, then compare viewport flags with the device category. Check breakpoint equality at the inclusive minimum.</li>
-<li>Acquire both locks, release the first, then release the second. Acquire again and navigate away to observe cleanup.</li>
-<li>Generate another UUID and verify that the active lock owners still release correctly.</li>
-<li>Choose semantic and palette tokens, then change appearance through the playground toolbar to see CSS variables follow the theme.</li>
-<li>Open the position preview near a viewport boundary, press Escape, reopen, move focus away, and scroll its origin out of view.</li>
-<li>Try a narrow viewport, enlarged text, keyboard-only navigation, and the shared accessibility preferences.</li>
-</ol>
-<p>The <strong>Documentation</strong> tab renders this cumulative README. <strong>Code Examples</strong> bundles the current TypeScript, HTML and SCSS sources during
-<code>npm run tools:build-docs</code>; do not edit generated snippets. The TypeScript example imports its typed option data and owner type from the colocated <code>constants</code>
-and <code>types</code> folders.</p>
+<p>Open <code>/utilities/viewport</code> from <strong>Core \u2192 Utilities \u2192 Viewport and breakpoints</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
+<p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
 `};var k={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var S={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
@@ -6163,121 +6835,171 @@ export class ToastExample {
     // this.toastrService.queueSuccess({ title: 'Saved', message: 'Your preferences have been saved.' });
   }
 }
-`,"assets/code-snippets/utilities/utilities.ts.txt":`import type { Signal, TemplateRef, WritableSignal } from '@angular/core';
+`,"assets/code-snippets/utilities/components/color-tokens/color-tokens.html.txt":`<bx-stack [gap]="5">
+    <bx-grid minColumnWidth="18rem">
+        <bx-card title="Choose a color token">
+            <bx-stack [gap]="4">
+                <bx-select label="Color token" [options]="colorTokens" [value]="colorToken()" (valueChange)="setColorToken($event)" />
+                <div class="token-swatch" aria-hidden="true" [style.background]="cssVariable()"></div>
+                <code>{{ cssVariable() }}</code>
+                <p>The swatch follows the active theme. Token mappings below remain available as text.</p>
+                <a bx-button variant="tonal" routerLink="/tokens">Explore the complete token catalog</a>
+            </bx-stack>
+        </bx-card>
+        <bx-card title="Helper results">
+            <dl>
+                <div>
+                    <dt>Palette token</dt>
+                    <dd>{{ paletteToken() ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Complementary token</dt>
+                    <dd>{{ complementaryToken() }}</dd>
+                </div>
+                <div>
+                    <dt>Inverted palette token</dt>
+                    <dd>{{ invertedToken() }}</dd>
+                </div>
+                <div>
+                    <dt>Recognizes light/dark object</dt>
+                    <dd>{{ themedColor() ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Restore carbon-cobalt</dt>
+                    <dd>{{ restoredPalette }}</dd>
+                </div>
+                <div>
+                    <dt>Restore unknown-palette</dt>
+                    <dd>{{ unknownPalette }}</dd>
+                </div>
+            </dl>
+        </bx-card>
+    </bx-grid>
+    <bx-alert
+        message="Companion and inverted mappings describe styling relationships. Check the contrast of your final foreground and background combination." />
+</bx-stack>
+`,"assets/code-snippets/utilities/components/color-tokens/color-tokens.ts.txt":`import type { Signal, WritableSignal } from '@angular/core';
 
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import {
-  afterNextRender,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  DOCUMENT,
-  inject,
-  signal,
-  viewChild,
-  ViewContainerRef
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { fromEvent } from 'rxjs';
+import type { Color } from '@filip.mazev/blocks/core';
 
-import type { BxPlacement, Color, IDeviceState, OverlayOriginTracker } from '@filip.mazev/blocks/core';
-import type { UtilityLockOwner } from '@playground/components/screens/utilities/types/utilities.types';
-import type { ICodeFile } from '@playground/interfaces/icode-file.interface';
-
-import {
-  BxOverlayPositionService,
-  DeviceTypeService,
-  getComplementaryToken,
-  inheritOverlayTheme,
-  invertPaletteToken,
-  isOverlayOriginVisible,
-  isPaletteToken,
-  isThemedColor,
-  resolveThemeId,
-  resolveTokenToCssVar,
-  ScrollLockService,
-  trackOverlayOrigin,
-  uuidv4,
-  WindowDimensionsService
-} from '@filip.mazev/blocks/core';
+import { getComplementaryToken, invertPaletteToken, isPaletteToken, isThemedColor, resolveThemeId, resolveTokenToCssVar } from '@filip.mazev/blocks/core';
 import { Button, Select } from '@filip.mazev/blocks/forms';
-import { Container } from '@filip.mazev/blocks/primitives';
+import { Alert, Card, Grid, Stack } from '@filip.mazev/blocks/primitives';
 
-import { UTILITY_COLOR_TOKENS, UTILITY_PLACEMENTS } from '@playground/components/screens/utilities/constants/utilities.constants';
-import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
+import { UTILITY_COLOR_TOKENS } from '@playground/components/screens/utilities/constants/utilities.constants';
 
 @Component({
-  selector: 'app-utilities',
-  imports: [Button, ComponentInfo, Container, RouterLink, Select],
-  templateUrl: './utilities.html',
-  styleUrl: './utilities.scss',
+  selector: 'app-color-tokens',
+  imports: [Alert, Button, Card, Grid, RouterLink, Select, Stack],
+  templateUrl: './color-tokens.html',
+  styleUrl: '../../utility-demo.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Utilities {
-  private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceTypeService = inject(DeviceTypeService);
-  private readonly document = inject(DOCUMENT);
-  private readonly overlay = inject(Overlay);
-  private readonly viewContainerRef = inject(ViewContainerRef);
+export class ColorTokens {
+  protected readonly colorTokens: typeof UTILITY_COLOR_TOKENS = UTILITY_COLOR_TOKENS;
+  protected readonly restoredPalette: string = resolveThemeId('carbon-cobalt') ?? 'Unrecognized palette';
+  protected readonly unknownPalette: string = resolveThemeId('unknown-palette') ?? 'Unrecognized palette';
 
-  protected readonly scrollLockService = inject(ScrollLockService);
-  protected readonly windowDimensionsService = inject(WindowDimensionsService);
-
-  private readonly lockIds: Readonly<Record<UtilityLockOwner, string>> = { first: uuidv4(), second: uuidv4() };
-
-  private readonly overlayTemplate: Signal<TemplateRef<unknown> | undefined> = viewChild<TemplateRef<unknown>>('overlayTemplate');
-
-  protected readonly deviceState: WritableSignal<IDeviceState> = signal(this.deviceTypeService.getDeviceState());
-  protected readonly locks: WritableSignal<readonly UtilityLockOwner[]> = signal<readonly UtilityLockOwner[]>([]);
-  protected readonly identifier: WritableSignal<string> = signal(uuidv4());
-
-  protected readonly overlayOpen: WritableSignal<boolean> = signal(false);
-
-  protected readonly placement: WritableSignal<BxPlacement> = signal('bottom');
   protected readonly colorToken: WritableSignal<Color> = signal('primary');
 
-  protected readonly columns: Signal<number> = computed(() => this.windowDimensionsService.resolveResponsiveValue({ md: 2, xl: 3 }, 1));
-  protected readonly deviceCategory: Signal<string> = computed(() => {
-    const state = this.deviceState();
-
-    return state.isTablet ? 'Tablet' : state.isMobile ? 'Mobile' : 'Desktop';
-  });
-  protected readonly orientation: Signal<string> = computed(() => (this.deviceState().isLandscapeOrientation() ? 'Landscape' : 'Portrait'));
   protected readonly cssVariable: Signal<string> = computed(() => resolveTokenToCssVar(this.colorToken()));
   protected readonly complementaryToken: Signal<Color> = computed(() => getComplementaryToken(this.colorToken()));
   protected readonly invertedToken: Signal<Color> = computed(() => invertPaletteToken(this.colorToken()));
   protected readonly paletteToken: Signal<boolean> = computed(() => isPaletteToken(this.colorToken()));
   protected readonly themedColor: Signal<boolean> = computed(() => isThemedColor({ light: this.colorToken(), dark: this.invertedToken() }));
 
-  protected readonly breakpointEntries: [string, number][] = Object.entries(this.windowDimensionsService.breakpoints);
-  protected readonly previewItems: readonly number[] = [1, 2, 3, 4, 5, 6];
-  protected readonly placements: typeof UTILITY_PLACEMENTS = UTILITY_PLACEMENTS;
-  protected readonly colorTokens: typeof UTILITY_COLOR_TOKENS = UTILITY_COLOR_TOKENS;
-  protected readonly overlayId: string = 'utilities-overlay-' + uuidv4();
-  protected readonly restoredPalette: string = resolveThemeId('carbon-cobalt') ?? 'Unrecognized palette';
-  protected readonly unknownPalette: string = resolveThemeId('unknown-palette') ?? 'Unrecognized palette';
-  protected readonly codeFiles: ICodeFile[] = [
-    { title: 'utilities.ts', path: 'assets/code-snippets/utilities/utilities.ts.txt', language: 'typescript' },
-    { title: 'utilities.html', path: 'assets/code-snippets/utilities/utilities.html.txt', language: 'html' },
-    { title: 'utilities.scss', path: 'assets/code-snippets/utilities/utilities.scss.txt', language: 'scss' },
-    { title: 'utilities.constants.ts', path: 'assets/code-snippets/utilities/constants/utilities.constants.ts.txt', language: 'typescript' },
-    { title: 'utilities.types.ts', path: 'assets/code-snippets/utilities/types/utilities.types.ts.txt', language: 'typescript' }
-  ];
+  protected setColorToken(color: Color | null): void {
+    this.colorToken.set(color ?? 'primary');
+  }
+}
+`,"assets/code-snippets/utilities/components/device/device.html.txt":`<bx-stack [gap]="5">
+    <bx-grid minColumnWidth="16rem">
+        <bx-card title="Device snapshot">
+            <bx-stack [gap]="4">
+                <p class="metric" data-device-category>{{ deviceCategory() }}</p>
+                <bx-tag leadingIcon="smartphone" data-orientation [text]="orientation() + ' screen'" [focusable]="false" />
+                <dl>
+                    <div>
+                        <dt>Desktop OS</dt>
+                        <dd>{{ deviceState().desktopOS ?? 'Not detected' }}</dd>
+                    </div>
+                    <div>
+                        <dt>Mobile OS</dt>
+                        <dd>{{ deviceState().mobileOS ?? 'Not detected' }}</dd>
+                    </div>
+                </dl>
+                <bx-stack direction="horizontal">
+                    <button bx-button type="button" variant="tonal" (click)="refreshDevice()">Refresh detection</button>
+                </bx-stack>
+            </bx-stack>
+        </bx-card>
+        <bx-card title="Platform hints">
+            <dl>
+                <div>
+                    <dt>Apple device</dt>
+                    <dd>{{ deviceState().isAppleDevice ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Android device</dt>
+                    <dd>{{ deviceState().isAndroidDevice ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Windows desktop</dt>
+                    <dd>{{ deviceState().isWindowsDesktop ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Linux or Unix desktop</dt>
+                    <dd>{{ deviceState().isLinuxOrUnixDesktop ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Unknown mobile OS</dt>
+                    <dd>{{ deviceState().isUnknownMobileDevice ? 'Yes' : 'No' }}</dd>
+                </div>
+            </dl>
+        </bx-card>
+    </bx-grid>
+    <bx-alert
+        title="Device identity and viewport size are separate"
+        message="Resizing a desktop window changes its viewport, while its device category stays desktop. This demo refreshes on screen orientation changes; you can also refresh it manually." />
+</bx-stack>
+`,"assets/code-snippets/utilities/components/device/device.ts.txt":`import type { Signal, WritableSignal } from '@angular/core';
 
-  private overlayRef: OverlayRef | undefined;
-  private disconnectOrigin: OverlayOriginTracker | undefined;
-  private disconnectTheme: (() => void) | undefined;
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, DOCUMENT, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { fromEvent } from 'rxjs';
+
+import type { IDeviceState } from '@filip.mazev/blocks/core';
+
+import { DeviceTypeService } from '@filip.mazev/blocks/core';
+import { Button } from '@filip.mazev/blocks/forms';
+import { Alert, Card, Grid, Stack, Tag } from '@filip.mazev/blocks/primitives';
+
+@Component({
+  selector: 'app-device',
+  imports: [Alert, Button, Card, Grid, Stack, Tag],
+  templateUrl: './device.html',
+  styleUrl: '../../utility-demo.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Device {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceTypeService = inject(DeviceTypeService);
+  private readonly document = inject(DOCUMENT);
+
+  protected readonly deviceState: WritableSignal<IDeviceState> = signal(this.deviceTypeService.getDeviceState());
+
+  protected readonly deviceCategory: Signal<string> = computed(() => {
+    const state = this.deviceState();
+
+    return state.isTablet ? 'Tablet' : state.isMobile ? 'Mobile' : 'Desktop';
+  });
+  protected readonly orientation: Signal<string> = computed(() => (this.deviceState().isLandscapeOrientation() ? 'Landscape' : 'Portrait'));
 
   constructor() {
-    this.destroyRef.onDestroy(() => {
-      this.releaseLocks();
-      this.closeOverlay();
-    });
     afterNextRender(() => {
       const orientation = this.document.defaultView?.screen.orientation;
 
@@ -6293,29 +7015,143 @@ export class Utilities {
   protected refreshDevice(): void {
     this.deviceState.set(this.deviceTypeService.getDeviceState());
   }
+}
+`,"assets/code-snippets/utilities/components/identifiers/identifiers.html.txt":`<bx-stack [gap]="5">
+    <bx-card title="Generate a version-4 UUID">
+        <bx-stack [gap]="4">
+            <p>Create identifiers for controls, overlays, or shared lock owners.</p>
+            <output class="identifier" aria-label="Generated UUID" aria-live="polite">{{ identifier() }}</output>
+            <bx-stack direction="horizontal" [wrap]="true">
+                <button bx-button type="button" variant="tonal" (click)="generateIdentifier()">Generate another UUID</button>
+            </bx-stack>
+        </bx-stack>
+    </bx-card>
+    <bx-card title="Stable instance identifier">
+        <bx-stack [gap]="3">
+            <code class="identifier" data-owner-id>{{ ownerId }}</code>
+            <p>This ID is generated once for this demo instance. Generate another UUID above and compare: the owner ID stays the same.</p>
+        </bx-stack>
+    </bx-card>
+    <bx-alert
+        title="Generate once, reuse through cleanup"
+        message="Keep owner IDs in instance fields. Generating them in a template or a derived computation can break the connection between acquisition and cleanup." />
+</bx-stack>
+`,"assets/code-snippets/utilities/components/identifiers/identifiers.ts.txt":`import type { WritableSignal } from '@angular/core';
 
-  protected toggleLock(owner: UtilityLockOwner): void {
-    if (this.locks().includes(owner)) {
-      this.scrollLockService.enableScroll(this.lockIds[owner]);
-      this.locks.update((owners) => owners.filter((current) => current !== owner));
-    } else {
-      this.scrollLockService.disableScroll(this.lockIds[owner], { handleTouchInput: false });
-      this.locks.update((owners) => [...owners, owner]);
-    }
-  }
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 
-  protected releaseLocks(): void {
-    this.scrollLockService.enableScroll(this.lockIds.first);
-    this.scrollLockService.enableScroll(this.lockIds.second);
-    this.locks.set([]);
-  }
+import { uuidv4 } from '@filip.mazev/blocks/core';
+import { Button } from '@filip.mazev/blocks/forms';
+import { Alert, Card, Stack } from '@filip.mazev/blocks/primitives';
+
+@Component({
+  selector: 'app-identifiers',
+  imports: [Alert, Button, Card, Stack],
+  templateUrl: './identifiers.html',
+  styleUrl: '../../utility-demo.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Identifiers {
+  protected readonly ownerId: string = uuidv4();
+
+  protected readonly identifier: WritableSignal<string> = signal(uuidv4());
 
   protected generateIdentifier(): void {
     this.identifier.set(uuidv4());
   }
+}
+`,"assets/code-snippets/utilities/components/overlay-positioning/overlay-positioning.html.txt":`<bx-stack [gap]="5">
+    <bx-card title="Connected overlay">
+        <bx-stack [gap]="4">
+            <p>Choose a preferred side, open the preview, then scroll or resize. The position strategy falls back when space is limited.</p>
+            <bx-stack direction="responsive" align="center" [gap]="4">
+                <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
+                <button
+                    bx-button
+                    type="button"
+                    variant="tonal"
+                    [attr.aria-expanded]="overlayOpen()"
+                    [attr.aria-describedby]="overlayOpen() ? overlayId : null"
+                    (click)="toggleOverlay($event)"
+                    (blur)="closeOverlay()">
+                    {{ overlayOpen() ? 'Hide position preview' : 'Show position preview' }}
+                </button>
+            </bx-stack>
+            <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
+        </bx-stack>
+    </bx-card>
+    <bx-alert
+        title="Shared positioning and theme inheritance"
+        message="The preview uses the public Core positioning, origin tracking, and theme helpers. Change the playground appearance while it is open to see theme inheritance." />
+    <bx-stack direction="horizontal" [wrap]="true" [gap]="2">
+        <a bx-button variant="text" routerLink="/components/popover">Popover</a>
+        <a bx-button variant="text" routerLink="/components/dropdown">Dropdown</a>
+        <a bx-button variant="text" routerLink="/components/tooltip-directive">Tooltip</a>
+    </bx-stack>
+</bx-stack>
 
-  protected setColorToken(color: Color | null): void {
-    this.colorToken.set(color ?? 'primary');
+<ng-template #overlayTemplate>
+    <bx-card class="utility-overlay">
+        <div role="tooltip" [id]="overlayId">
+            <bx-stack [gap]="3">
+                <strong>Positioned with Core utilities</strong>
+                <p>This surface follows its origin and inherits the active Blocks theme. Preferred placement: {{ placement() }}.</p>
+            </bx-stack>
+        </div>
+    </bx-card>
+</ng-template>
+`,"assets/code-snippets/utilities/components/overlay-positioning/overlay-positioning.ts.txt":`import type { Signal, TemplateRef, WritableSignal } from '@angular/core';
+
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild, ViewContainerRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+
+import type { BxPlacement, OverlayOriginTracker } from '@filip.mazev/blocks/core';
+
+import {
+  BxOverlayPositionService,
+  inheritOverlayTheme,
+  isOverlayOriginVisible,
+  trackOverlayOrigin,
+  uuidv4,
+  WindowDimensionsService
+} from '@filip.mazev/blocks/core';
+import { Button, Select } from '@filip.mazev/blocks/forms';
+import { Alert, Card, Stack } from '@filip.mazev/blocks/primitives';
+
+import { UTILITY_PLACEMENTS } from '@playground/components/screens/utilities/constants/utilities.constants';
+
+@Component({
+  selector: 'app-overlay-positioning',
+  imports: [Alert, Button, Card, RouterLink, Select, Stack],
+  templateUrl: './overlay-positioning.html',
+  styleUrl: '../../utility-demo.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class OverlayPositioning {
+  private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly overlay = inject(Overlay);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly windowDimensionsService = inject(WindowDimensionsService);
+
+  private readonly overlayTemplate: Signal<TemplateRef<unknown> | undefined> = viewChild<TemplateRef<unknown>>('overlayTemplate');
+
+  protected readonly placements: typeof UTILITY_PLACEMENTS = UTILITY_PLACEMENTS;
+  protected readonly overlayId: string = 'utilities-overlay-' + uuidv4();
+
+  protected readonly overlayOpen: WritableSignal<boolean> = signal(false);
+
+  protected readonly placement: WritableSignal<BxPlacement> = signal('bottom');
+
+  private overlayRef: OverlayRef | undefined;
+  private disconnectOrigin: OverlayOriginTracker | undefined;
+  private disconnectTheme: (() => void) | undefined;
+
+  constructor() {
+    this.destroyRef.onDestroy(() => this.closeOverlay());
   }
 
   protected setPlacement(placement: BxPlacement | null): void {
@@ -6378,413 +7214,276 @@ export class Utilities {
     this.overlayOpen.set(false);
   }
 }
-`,"assets/code-snippets/utilities/utilities.html.txt":`<article class="utilities" aria-labelledby="utilities-title">
-    <header class="page-heading">
-        <p class="eyebrow">Blocks foundations</p>
-        <h1 id="utilities-title">Utilities</h1>
-        <p>Explore viewport signals, device detection, shared scroll locks, identifiers, color tokens, and overlay positioning in one place.</p>
-        <p>
-            Related guides: <a routerLink="/appearance">appearance and reduced motion</a>, <a routerLink="/components/menu-item">keyboard shortcuts</a>, and
-            <a routerLink="/components/form-field">form integration</a>.
-        </p>
-    </header>
-
-    <div class="demo-grid">
-        <section aria-labelledby="viewport-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="viewport-title">Viewport and breakpoints</h2>
-                <p>Resize the window or change browser zoom. Values are CSS pixels and describe the viewport.</p>
-                <dl>
-                    <div>
-                        <dt>Width</dt>
-                        <dd data-viewport-width>{{ windowDimensionsService.dimensions().width }} px</dd>
-                    </div>
-                    <div>
-                        <dt>Height</dt>
-                        <dd>{{ windowDimensionsService.dimensions().height }} px</dd>
-                    </div>
-                    <div>
-                        <dt>Current breakpoint</dt>
-                        <dd data-breakpoint>{{ windowDimensionsService.currentBreakpoint() ?? 'Unavailable during SSR' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Breakpoint minimum</dt>
-                        <dd>{{ windowDimensionsService.currentBreakpointValue() ?? 'Unavailable' }} px</dd>
-                    </div>
-                    <div>
-                        <dt>Mobile viewport (below md)</dt>
-                        <dd>{{ windowDimensionsService.isMobile() ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Between md and xl</dt>
-                        <dd>{{ windowDimensionsService.isBetween('md', 'xl') ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>At least lg</dt>
-                        <dd>{{ windowDimensionsService.isAtLeast('lg') ? 'Yes' : 'No' }}</dd>
-                    </div>
-                </dl>
-                <ul class="breakpoints" aria-label="Shared breakpoint minimums">
-                    @for (entry of breakpointEntries; track entry[0]) {
-                        <li [class.current]="windowDimensionsService.currentBreakpoint() === entry[0]">
-                            <strong>{{ entry[0] }}</strong> {{ entry[1] }} px
-                            @if (windowDimensionsService.currentBreakpoint() === entry[0]) {
-                                <span>(current)</span>
-                            }
-                        </li>
-                    }
-                </ul>
-                <h3>Responsive value</h3>
-                <p>
-                    <code>resolveResponsiveValue({{ '{ md: 2, xl: 3 }' }}, 1)</code> selects {{ columns() }} columns.
-                </p>
-                <div class="responsive-preview" [style.grid-template-columns]="'repeat(' + columns() + ', minmax(0, 1fr))'">
-                    @for (item of previewItems; track item) {
-                        <span>{{ item }}</span>
-                    }
-                </div>
-            </bx-container>
-        </section>
-
-        <section aria-labelledby="device-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="device-title">Device detection</h2>
-                <p>
-                    Device categories use browser identity and touch hints. Resizing a desktop window changes viewport signals, while its device category stays
-                    desktop.
-                </p>
-                <dl>
-                    <div>
-                        <dt>Device category</dt>
-                        <dd data-device-category>{{ deviceCategory() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Desktop OS</dt>
-                        <dd>{{ deviceState().desktopOS ?? 'Not detected' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Mobile OS</dt>
-                        <dd>{{ deviceState().mobileOS ?? 'Not detected' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Apple device</dt>
-                        <dd>{{ deviceState().isAppleDevice ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Android device</dt>
-                        <dd>{{ deviceState().isAndroidDevice ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Windows desktop</dt>
-                        <dd>{{ deviceState().isWindowsDesktop ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Linux or Unix desktop</dt>
-                        <dd>{{ deviceState().isLinuxOrUnixDesktop ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Unknown mobile OS</dt>
-                        <dd>{{ deviceState().isUnknownMobileDevice ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Screen orientation</dt>
-                        <dd data-orientation>{{ orientation() }}</dd>
-                    </div>
-                </dl>
-                <button bx-button type="button" variant="tonal" (click)="refreshDevice()">Refresh detection</button>
-                <p>
-                    Screen Orientation change events refresh this demo. The service returns snapshots and orientation methods, so OnPush consumers own refresh
-                    triggers.
-                </p>
-            </bx-container>
-        </section>
-
-        <section class="scroll-demo" aria-labelledby="scroll-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="scroll-title">Shared scroll locking</h2>
-                <p>Acquire both locks, then release one. Page scrolling stays locked until the final owner releases it.</p>
-                <div class="actions" role="group" aria-label="Demo scroll lock owners">
-                    <button bx-button type="button" [attr.aria-pressed]="locks().includes('first')" (click)="toggleLock('first')">
-                        {{ locks().includes('first') ? 'Release first lock' : 'Acquire first lock' }}
+`,"assets/code-snippets/utilities/components/scroll-lock/scroll-lock.html.txt":`<bx-stack [gap]="5">
+    <bx-alert
+        title="Try two independent owners"
+        message="Acquire both locks, then release one. Page scrolling stays locked until the final owner releases it. Release controls remain available below." />
+    <bx-card #lockControls class="lock-controls" title="Control the demo locks">
+        <bx-stack class="lock-controls-content" [gap]="4">
+            <p role="status">Demo owners: {{ locks().length }}. Page scrolling: {{ scrollLockService.isScrollDisabled() ? 'locked' : 'available' }}.</p>
+            <bx-stack direction="horizontal" role="group" aria-label="Demo scroll lock owners" [wrap]="true" [gap]="3">
+                @for (owner of owners; track owner) {
+                    <button bx-button type="button" variant="tonal" [attr.aria-pressed]="locks().includes(owner)" (click)="toggleLock(owner)">
+                        {{ locks().includes(owner) ? 'Release ' + owner + ' lock' : 'Acquire ' + owner + ' lock' }}
                     </button>
-                    <button bx-button type="button" [attr.aria-pressed]="locks().includes('second')" (click)="toggleLock('second')">
-                        {{ locks().includes('second') ? 'Release second lock' : 'Acquire second lock' }}
-                    </button>
-                    <button bx-button type="button" variant="text" [disabled]="locks().length === 0" (click)="releaseLocks()">Release demo locks</button>
-                </div>
-                <p class="status" role="status">
-                    Demo owners: {{ locks().length }}. Page scrolling: {{ scrollLockService.isScrollDisabled() ? 'locked' : 'available' }}.
-                </p>
-                <p>Touch input remains enabled for this example. Leaving this page releases its two locks; other overlays keep their own locks.</p>
-            </bx-container>
-        </section>
+                }
+                <button bx-button type="button" variant="tonal" color="grayscale" [disabled]="locks().length === 0" (click)="releaseLocks()">
+                    Release demo locks
+                </button>
+            </bx-stack>
+        </bx-stack>
+    </bx-card>
+    <bx-grid minColumnWidth="16rem">
+        @for (owner of owners; track owner) {
+            <bx-card [title]="owner === 'first' ? 'First owner' : 'Second owner'">
+                <bx-stack [gap]="4">
+                    <bx-tag
+                        [text]="locks().includes(owner) ? 'Lock acquired' : 'Lock released'"
+                        [leadingIcon]="locks().includes(owner) ? 'lock' : 'lock-open'"
+                        [color]="locks().includes(owner) ? 'warn' : 'neutral'"
+                        [focusable]="false" />
+                    <p>Each owner keeps a stable ID and releases only its own lock.</p>
+                </bx-stack>
+            </bx-card>
+        }
+    </bx-grid>
+    <p>Touch input stays enabled. Leaving this example releases its two locks; other overlays keep their own locks.</p>
+</bx-stack>
+`,"assets/code-snippets/utilities/components/scroll-lock/scroll-lock.ts.txt":`import type { Signal, WritableSignal } from '@angular/core';
 
-        <section aria-labelledby="identifier-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="identifier-title">Stable owner identifiers</h2>
-                <p>
-                    <code>uuidv4()</code> creates an ID for a control, overlay, or scroll-lock owner. Generate each owner's ID once and reuse it through
-                    cleanup.
-                </p>
-                <output class="identifier" aria-label="Generated UUID" aria-live="polite">{{ identifier() }}</output>
-                <button bx-button type="button" variant="tonal" (click)="generateIdentifier()">Generate another UUID</button>
-                <p>This preview changes independently of the scroll-lock IDs.</p>
-            </bx-container>
-        </section>
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 
-        <section aria-labelledby="tokens-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="tokens-title">Color-token helpers</h2>
-                <bx-select label="Color token" [options]="colorTokens" [value]="colorToken()" (valueChange)="setColorToken($event)" />
-                <div class="token-swatch" aria-hidden="true" [style.background]="cssVariable()"></div>
-                <dl>
-                    <div>
-                        <dt>CSS variable</dt>
-                        <dd>{{ cssVariable() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Palette token</dt>
-                        <dd>{{ paletteToken() ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Complementary token</dt>
-                        <dd>{{ complementaryToken() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Inverted palette token</dt>
-                        <dd>{{ invertedToken() }}</dd>
-                    </div>
-                    <div>
-                        <dt>Recognizes light/dark object</dt>
-                        <dd>{{ themedColor() ? 'Yes' : 'No' }}</dd>
-                    </div>
-                    <div>
-                        <dt>Restore carbon-cobalt</dt>
-                        <dd>{{ restoredPalette }}</dd>
-                    </div>
-                    <div>
-                        <dt>Restore unknown-palette</dt>
-                        <dd>{{ unknownPalette }}</dd>
-                    </div>
-                </dl>
-                <p>Semantic CSS variables follow the active theme. Helper results are token mappings; check contrast in your application.</p>
-            </bx-container>
-        </section>
+import type { UtilityLockOwner } from '@playground/components/screens/utilities/types/utilities.types';
 
-        <section aria-labelledby="overlay-title">
-            <bx-container size="full" class="demo-panel">
-                <h2 id="overlay-title">Overlay infrastructure</h2>
-                <p>Preview a connected position strategy with origin tracking and inherited theme. Available viewport space can change the final placement.</p>
-                <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
-                <div class="overlay-origin">
-                    <button
-                        bx-button
-                        type="button"
-                        variant="tonal"
-                        [attr.aria-expanded]="overlayOpen()"
-                        [attr.aria-describedby]="overlayOpen() ? overlayId : null"
-                        (click)="toggleOverlay($event)"
-                        (blur)="closeOverlay()">
-                        {{ overlayOpen() ? 'Hide position preview' : 'Show position preview' }}
-                    </button>
-                </div>
-                <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
-                <p>
-                    Use <a routerLink="/components/popover">Popover</a>, <a routerLink="/components/dropdown">Dropdown</a>, or
-                    <a routerLink="/components/tooltip-directive">Tooltip</a> for ready-made interactions.
-                </p>
-            </bx-container>
-        </section>
-    </div>
+import { ScrollLockService, uuidv4 } from '@filip.mazev/blocks/core';
+import { Button } from '@filip.mazev/blocks/forms';
+import { Alert, Card, Grid, Stack, Tag } from '@filip.mazev/blocks/primitives';
 
-    <section class="documentation" aria-label="Utilities documentation and source">
-        <app-component-info readmePath="projects/playground/src/app/components/screens/utilities/README.md" [codeFiles]="codeFiles" />
+@Component({
+  selector: 'app-scroll-lock',
+  imports: [Alert, Button, Card, Grid, Stack, Tag],
+  templateUrl: './scroll-lock.html',
+  styleUrl: '../../utility-demo.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ScrollLock {
+  protected readonly scrollLockService = inject(ScrollLockService);
+
+  private readonly lockIds: Readonly<Record<UtilityLockOwner, string>> = { first: uuidv4(), second: uuidv4() };
+
+  private readonly lockControls: Signal<ElementRef<HTMLElement> | undefined> = viewChild('lockControls', { read: ElementRef<HTMLElement> });
+
+  protected readonly owners: readonly UtilityLockOwner[] = ['first', 'second'];
+
+  protected readonly locks: WritableSignal<readonly UtilityLockOwner[]> = signal<readonly UtilityLockOwner[]>([]);
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.releaseLocks());
+  }
+
+  protected toggleLock(owner: UtilityLockOwner): void {
+    if (this.locks().includes(owner)) {
+      this.scrollLockService.enableScroll(this.lockIds[owner]);
+      this.locks.update((owners) => owners.filter((current) => current !== owner));
+    } else {
+      if (!this.locks().length) this.lockControls()?.nativeElement.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+
+      this.scrollLockService.disableScroll(this.lockIds[owner], { handleTouchInput: false });
+      this.locks.update((owners) => [...owners, owner]);
+    }
+  }
+
+  protected releaseLocks(): void {
+    this.scrollLockService.enableScroll(this.lockIds.first);
+    this.scrollLockService.enableScroll(this.lockIds.second);
+    this.locks.set([]);
+  }
+}
+`,"assets/code-snippets/utilities/components/utility-page/utility-page.html.txt":`<bx-page-container [pageDescription]="entry().description">
+    <section class="demo-section" aria-labelledby="utility-demo-title">
+        <bx-stack direction="responsive" align="center" justify="between" class="section-heading" [gap]="2">
+            <h2 id="utility-demo-title">Interactive example</h2>
+            <span>Uses your active palette</span>
+        </bx-stack>
+        <router-outlet />
     </section>
-</article>
 
-<ng-template #overlayTemplate>
-    <bx-container size="full" class="utility-overlay">
-        <div role="tooltip" [id]="overlayId">
-            <strong>Positioned with Core utilities</strong>
-            <p>This surface follows its origin and inherits the active Blocks theme. Preferred placement: {{ placement() }}.</p>
-        </div>
-    </bx-container>
-</ng-template>
-`,"assets/code-snippets/utilities/utilities.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
+    <bx-divider [decorative]="true" />
+
+    <section class="documentation-section" aria-labelledby="utility-documentation-title">
+        <h2 id="utility-documentation-title">Documentation and source</h2>
+        <app-component-info [readmePath]="entry().readme" [codeFiles]="codeFiles()" />
+    </section>
+</bx-page-container>
+`,"assets/code-snippets/utilities/components/utility-page/utility-page.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
 
 :host {
     display: block;
     min-inline-size: 0;
 }
 
-.utilities {
-    max-inline-size: 80rem;
-    margin-inline: auto;
-    overflow-wrap: anywhere;
-}
-
-.demo-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: spacing(5);
-
-    > section {
-        min-inline-size: 0;
-    }
-}
-
-.demo-panel {
-    --bx-container-padding: #{spacing(5)};
-
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: spacing(4);
-    block-size: 100%;
-    padding: spacing(5);
-    background: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(lg);
-}
-
-h2,
-h3,
-p,
-dl {
-    margin: 0;
-}
-
 h2 {
-    font-size: 1.25rem;
-}
-
-h3 {
-    font-size: 1rem;
-}
-
-p {
-    color: var(--bx-text-secondary);
-    line-height: 1.65;
-}
-
-a {
-    color: var(--bx-text-brand);
-    text-underline-offset: 0.2em;
-}
-
-a:focus-visible {
-    outline: 2px solid var(--bx-border-brand);
-    outline-offset: 3px;
-}
-
-dl {
-    display: grid;
-    gap: spacing(3);
-
-    > div {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: spacing(1) spacing(4);
-    }
-}
-
-dt {
-    color: var(--bx-text-secondary);
-}
-
-dd {
     margin: 0;
-    font-weight: 600;
+    color: var(--bx-text-heading);
+    font-size: 1.125rem;
 }
 
-.actions,
-.breakpoints {
-    display: flex;
-    flex-wrap: wrap;
-    gap: spacing(3);
+code,
+.section-heading span {
+    color: var(--bx-text-secondary);
+    font-size: 0.8125rem;
 }
 
-.breakpoints {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-
-    li {
-        padding: spacing(2) spacing(3);
-        border: 1px solid var(--bx-border-default);
-        border-radius: radius(md);
-        font-size: 0.875rem;
-    }
-
-    .current {
-        border-color: var(--bx-border-brand);
-    }
+.section-heading {
+    margin-block-end: spacing(4);
 }
 
-.responsive-preview {
-    display: grid;
-    gap: spacing(2);
-
-    span {
-        padding: spacing(3);
-        background: var(--bx-bg-element);
-        border: 1px solid var(--bx-border-default);
-        border-radius: radius(md);
-        text-align: center;
-    }
+.demo-section {
+    margin-block-end: spacing(8);
 }
 
-.identifier {
-    display: block;
-    padding: spacing(4);
-    background: var(--bx-bg-element);
-    border-radius: radius(md);
-    font-family: monospace;
-    overflow-wrap: anywhere;
-}
-
-.token-swatch {
-    block-size: spacing(12);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(md);
-}
-
-.overlay-origin {
-    display: flex;
-    justify-content: center;
-    padding-block: spacing(5);
-}
-
-.utility-overlay {
-    --bx-container-padding: #{spacing(4)};
-
-    display: block;
-    inline-size: min(20rem, calc(100vw - #{spacing(8)}));
-    max-block-size: calc(100dvh - #{spacing(8)});
-    overflow: auto;
-    padding: spacing(4);
-    background: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-default);
-    border-radius: radius(lg);
-
-    p {
-        margin-block-start: spacing(2);
-    }
-}
-
-.documentation {
+.documentation-section {
+    min-inline-size: 0;
     margin-block-start: spacing(8);
+
+    h2 {
+        margin-block-end: spacing(4);
+    }
 }
+`,"assets/code-snippets/utilities/components/utility-page/utility-page.ts.txt":`import type { Signal } from '@angular/core';
+import type { Data } from '@angular/router';
 
-@include respond-up(xl) {
-    .demo-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
-    .scroll-demo {
-        grid-column: 1 / -1;
-    }
+import type { IUtilityExample } from '@playground/components/screens/utilities/interfaces/iutility-example.interface';
+import type { ICodeFile } from '@playground/interfaces/icode-file.interface';
+
+import { Divider, PageContainer, Stack } from '@filip.mazev/blocks/primitives';
+
+import { UTILITY_EXAMPLES } from '@playground/components/screens/utilities/constants/utility-catalog.constants';
+import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
+
+@Component({
+  selector: 'app-utility-page',
+  imports: [PageContainer, ComponentInfo, Divider, RouterOutlet, Stack],
+  templateUrl: './utility-page.html',
+  styleUrl: './utility-page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class UtilityPage {
+  private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly routeData: Signal<Data> = toSignal(this.activatedRoute.data, { initialValue: this.activatedRoute.snapshot.data });
+
+  protected readonly entry: Signal<IUtilityExample> = computed(
+    () => UTILITY_EXAMPLES.find((entry) => entry.id === this.routeData()['utilityId']) ?? UTILITY_EXAMPLES[0]
+  );
+  protected readonly codeFiles: Signal<ICodeFile[]> = computed(() => {
+    const id = this.entry().id;
+
+    const files: ICodeFile[] = [
+      { title: \`\${id}.ts\`, path: \`assets/code-snippets/utilities/components/\${id}/\${id}.ts.txt\`, language: 'typescript' },
+      { title: \`\${id}.html\`, path: \`assets/code-snippets/utilities/components/\${id}/\${id}.html.txt\`, language: 'html' },
+      { title: 'utility-demo.scss', path: 'assets/code-snippets/utilities/utility-demo.scss.txt', language: 'scss' }
+    ];
+
+    if (id === 'color-tokens' || id === 'overlay-positioning')
+      files.push({
+        title: 'utilities.constants.ts',
+        path: 'assets/code-snippets/utilities/constants/utilities.constants.ts.txt',
+        language: 'typescript'
+      });
+
+    if (id === 'scroll-lock')
+      files.push({ title: 'utilities.types.ts', path: 'assets/code-snippets/utilities/types/utilities.types.ts.txt', language: 'typescript' });
+
+    return files;
+  });
+}
+`,"assets/code-snippets/utilities/components/viewport/viewport.html.txt":`<bx-stack [gap]="5">
+    <bx-grid minColumnWidth="12rem">
+        <bx-card>
+            <p>Viewport width</p>
+            <p class="metric" data-viewport-width>{{ windowDimensionsService.dimensions().width }} <small>px</small></p>
+            <p>CSS pixels</p>
+        </bx-card>
+        <bx-card>
+            <p>Viewport height</p>
+            <p class="metric">{{ windowDimensionsService.dimensions().height }} <small>px</small></p>
+            <p>CSS pixels</p>
+        </bx-card>
+        <bx-card>
+            <p>Current breakpoint</p>
+            <p class="metric" data-breakpoint>{{ windowDimensionsService.currentBreakpoint() ?? 'SSR' }}</p>
+            <p>Minimum {{ windowDimensionsService.currentBreakpointValue() ?? 'Unavailable' }} px</p>
+        </bx-card>
+    </bx-grid>
+    <bx-card title="Shared breakpoint scale">
+        <bx-stack [gap]="4">
+            <p>Resize the window or change browser zoom. The current breakpoint is marked with a check.</p>
+            <bx-stack direction="horizontal" aria-label="Shared breakpoint minimums" [wrap]="true" [gap]="2">
+                @for (entry of breakpointEntries; track entry[0]) {
+                    <bx-tag
+                        [text]="entry[0] + ' \xB7 ' + entry[1] + ' px'"
+                        [color]="windowDimensionsService.currentBreakpoint() === entry[0] ? 'primary' : 'neutral'"
+                        [leadingIcon]="windowDimensionsService.currentBreakpoint() === entry[0] ? 'check' : undefined"
+                        [ariaLabel]="entry[0] + ': ' + entry[1] + ' pixels' + (windowDimensionsService.currentBreakpoint() === entry[0] ? ', current' : '')"
+                        [focusable]="false" />
+                }
+            </bx-stack>
+            <dl>
+                <div>
+                    <dt>Mobile viewport (below md)</dt>
+                    <dd>{{ windowDimensionsService.isMobile() ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>Between md and xl</dt>
+                    <dd>{{ windowDimensionsService.isBetween('md', 'xl') ? 'Yes' : 'No' }}</dd>
+                </div>
+                <div>
+                    <dt>At least lg</dt>
+                    <dd>{{ windowDimensionsService.isAtLeast('lg') ? 'Yes' : 'No' }}</dd>
+                </div>
+            </dl>
+        </bx-stack>
+    </bx-card>
+    <bx-card title="Responsive value">
+        <bx-stack [gap]="4">
+            <p>
+                <code>resolveResponsiveValue({{ '{ md: 2, xl: 3 }' }}, 1)</code> selects {{ columns() }} columns.
+            </p>
+            <bx-grid [columns]="columns()" [gap]="3">
+                @for (item of previewItems; track item) {
+                    <span class="preview-cell">{{ item }}</span>
+                }
+            </bx-grid>
+        </bx-stack>
+    </bx-card>
+    <bx-alert message="Viewport signals describe the browser window. Use container-aware layout when a component has less available space." />
+</bx-stack>
+`,"assets/code-snippets/utilities/components/viewport/viewport.ts.txt":`import type { Signal } from '@angular/core';
+
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+
+import { WindowDimensionsService } from '@filip.mazev/blocks/core';
+import { Alert, Card, Grid, Stack, Tag } from '@filip.mazev/blocks/primitives';
+
+@Component({
+  selector: 'app-viewport',
+  imports: [Alert, Card, Grid, Stack, Tag],
+  templateUrl: './viewport.html',
+  styleUrl: '../../utility-demo.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Viewport {
+  protected readonly windowDimensionsService = inject(WindowDimensionsService);
+
+  protected readonly breakpointEntries: [string, number][] = Object.entries(this.windowDimensionsService.breakpoints);
+  protected readonly previewItems: readonly number[] = [1, 2, 3, 4, 5, 6];
+
+  protected readonly columns: Signal<number> = computed(() => this.windowDimensionsService.resolveResponsiveValue({ md: 2, xl: 3 }, 1));
 }
 `,"assets/code-snippets/utilities/constants/utilities.constants.ts.txt":`import type { BxPlacement, Color } from '@filip.mazev/blocks/core';
 import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
@@ -6804,8 +7503,294 @@ export const UTILITY_COLOR_TOKENS: IBxSelectOption<Color>[] = [
   { label: 'Orange 500', value: 'orange-500' },
   { label: 'Blue 100', value: 'blue-100' }
 ];
+`,"assets/code-snippets/utilities/constants/utility-catalog.constants.ts.txt":`import type { IUtilityExample } from '@playground/components/screens/utilities/interfaces/iutility-example.interface';
+
+export const UTILITY_EXAMPLES: readonly IUtilityExample[] = [
+  {
+    id: 'viewport',
+    title: 'Viewport and breakpoints',
+    description: 'Watch viewport signals update and see shared breakpoints adapt a responsive layout.',
+    symbol: 'WindowDimensionsService',
+    icon: 'scan',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/viewport/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/viewport/viewport').then((m) => m.Viewport)
+  },
+  {
+    id: 'device',
+    title: 'Device detection',
+    description: 'Inspect device categories, operating systems, touch hints, and screen orientation.',
+    symbol: 'DeviceTypeService',
+    icon: 'smartphone',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/device/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/device/device').then((m) => m.Device)
+  },
+  {
+    id: 'scroll-lock',
+    title: 'Scroll locking',
+    description: 'Try independent lock owners and see how shared page scrolling is restored.',
+    symbol: 'ScrollLockService',
+    icon: 'lock',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/scroll-lock/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/scroll-lock/scroll-lock').then((m) => m.ScrollLock)
+  },
+  {
+    id: 'identifiers',
+    title: 'Identifiers',
+    description: 'Generate UUIDs and compare a changing preview with a stable instance identifier.',
+    symbol: 'uuidv4()',
+    icon: 'fingerprint',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/identifiers/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/identifiers/identifiers').then((m) => m.Identifiers)
+  },
+  {
+    id: 'color-tokens',
+    title: 'Color-token helpers',
+    description: 'Explore CSS references, complementary colors, palette inversion, and saved palette validation.',
+    symbol: 'resolveTokenToCssVar() and color helpers',
+    icon: 'palette',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/color-tokens/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/color-tokens/color-tokens').then((m) => m.ColorTokens)
+  },
+  {
+    id: 'overlay-positioning',
+    title: 'Overlay positioning',
+    description: 'Position a themed surface, track its origin, and try viewport-aware placement fallbacks.',
+    symbol: 'BxOverlayPositionService and overlay helpers',
+    icon: 'layers',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/overlay-positioning/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/overlay-positioning/overlay-positioning').then((m) => m.OverlayPositioning)
+  }
+];
+`,"assets/code-snippets/utilities/interfaces/iutility-example.interface.ts.txt":`import type { Route } from '@angular/router';
+
+import type { IconName } from '@filip.mazev/blocks/icons';
+
+/** A utility's navigation, interactive example, and colocated guide. */
+export interface IUtilityExample {
+  /** URL segment and demo folder below utilities. */
+  id: string;
+  /** Human-readable navigation and page title. */
+  title: string;
+  /** Summary shown on the overview and example page. */
+  description: string;
+  /** Public API names introduced by the example. */
+  symbol: string;
+  /** Icon accompanying the overview card. */
+  icon: IconName;
+  /** Repository path to the authoritative README. */
+  readme: string;
+  /** Lazy loader for the isolated interactive example. */
+  loadComponent: NonNullable<Route['loadComponent']>;
+}
 `,"assets/code-snippets/utilities/types/utilities.types.ts.txt":`export type UtilityLockOwner = 'first' | 'second';
-`};var w=class c{document=p(J);router=p(Fr);readmeContent=b(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=m.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=H({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&ye(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(fn(0,`div`,0)(1,`div`,1)(2,`span`),Re(3,`Documentation`),hn()(),Kn(4,`article`,2),hn()),a&2&&(D(4),zi(`innerHTML`,s.readmeContent(),Rg))},styles:[`
+`,"assets/code-snippets/utilities/utilities.html.txt":`<bx-page-container pageDescription="Explore viewport signals, device detection, scroll locking, and shared helpers through focused examples.">
+    <bx-stack [gap]="6">
+        <bx-stack direction="responsive" align="center" justify="between" [gap]="3">
+            <bx-search-input
+                class="utility-search"
+                ariaLabel="Search utilities"
+                placeholder="Search utilities or API names\u2026"
+                subscriptSizing="dynamic"
+                [value]="query()"
+                (valueChange)="query.set($event ?? '')" />
+            <p class="result-count" role="status">{{ examples().length }} utilities</p>
+        </bx-stack>
+
+        <bx-grid minColumnWidth="20rem" [gap]="4">
+            @for (entry of examples(); track entry.id) {
+                <bx-card class="utility-card" [title]="entry.title" [headingLevel]="2">
+                    <bx-stack [gap]="4">
+                        <bx-stack direction="horizontal" align="center" [gap]="3">
+                            <bx-icon size="24" [name]="entry.icon" />
+                            <bx-tag text="Core" size="small" color="neutral" [focusable]="false" />
+                        </bx-stack>
+                        <p>{{ entry.description }}</p>
+                        <code>{{ entry.symbol }}</code>
+                    </bx-stack>
+                    <a bxCardFooter bx-button variant="tonal" [routerLink]="['/utilities', entry.id]" [attr.aria-label]="'Explore ' + entry.title">
+                        Explore utility <bx-icon name="arrow-right" size="16" />
+                    </a>
+                </bx-card>
+            }
+        </bx-grid>
+        @if (!examples().length) {
+            <bx-alert title="No utilities found" message="Try another name or clear your search to browse all utilities." />
+            <button bx-button type="button" variant="tonal" (click)="query.set('')">Clear search</button>
+        }
+
+        <bx-alert
+            title="Explore the foundations"
+            message="All examples follow your active Blocks theme. Each utility has a dedicated demo and guide in the Utilities navigation." />
+
+        <section class="utility-documentation" aria-label="Utilities guide and coverage">
+            <app-readme path="projects/playground/src/app/components/screens/utilities/README.md" />
+        </section>
+    </bx-stack>
+</bx-page-container>
+`,"assets/code-snippets/utilities/utilities.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.utility-search {
+    inline-size: 100%;
+    max-inline-size: 32rem;
+}
+
+.result-count {
+    flex-shrink: 0;
+    margin: 0;
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}
+
+.utility-card {
+    --bx-card-padding: #{spacing(5)};
+
+    p {
+        margin: 0;
+        color: var(--bx-text-secondary);
+        line-height: 1.65;
+    }
+
+    code {
+        font-size: 0.8125rem;
+    }
+
+    bx-icon {
+        color: var(--bx-text-brand);
+    }
+}
+
+.utility-documentation {
+    min-inline-size: 0;
+    margin-block-start: spacing(4);
+}
+`,"assets/code-snippets/utilities/utilities.ts.txt":`import type { Signal, WritableSignal } from '@angular/core';
+
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import type { IUtilityExample } from '@playground/components/screens/utilities/interfaces/iutility-example.interface';
+
+import { Button, SearchInput } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { Alert, Card, Grid, PageContainer, Stack, Tag } from '@filip.mazev/blocks/primitives';
+
+import { UTILITY_EXAMPLES } from '@playground/components/screens/utilities/constants/utility-catalog.constants';
+import { Readme } from '@playground/components/shared/readme/readme';
+
+@Component({
+  selector: 'app-utilities',
+  imports: [PageContainer, Alert, Button, Card, Grid, Icon, Readme, RouterLink, SearchInput, Stack, Tag],
+  templateUrl: './utilities.html',
+  styleUrl: './utilities.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class Utilities {
+  protected readonly query: WritableSignal<string> = signal('');
+
+  protected readonly examples: Signal<readonly IUtilityExample[]> = computed(() => {
+    const term = this.query().trim().toLowerCase();
+
+    return UTILITY_EXAMPLES.filter((entry) => !term || \`\${entry.title} \${entry.description} \${entry.symbol}\`.toLowerCase().includes(term));
+  });
+}
+`,"assets/code-snippets/utilities/utility-demo.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+bx-card {
+    --bx-card-padding: #{spacing(5)};
+}
+
+h3,
+p,
+dl {
+    margin: 0;
+}
+
+h3 {
+    color: var(--bx-text-heading);
+    font-size: 1rem;
+}
+
+p,
+dt {
+    color: var(--bx-text-secondary);
+    line-height: 1.65;
+}
+
+dl {
+    display: grid;
+    gap: spacing(3);
+
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: spacing(1) spacing(4);
+    }
+}
+
+dd {
+    margin: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.metric {
+    margin-block: spacing(2);
+    color: var(--bx-text-heading);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+    font-variant-numeric: tabular-nums;
+}
+
+.preview-cell {
+    display: block;
+    padding: spacing(5);
+    border-radius: radius(md);
+    background: var(--bx-bg-element);
+    color: var(--bx-text-brand);
+    text-align: center;
+    font-weight: 600;
+}
+
+.identifier {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    overflow-wrap: anywhere;
+}
+
+.token-swatch {
+    block-size: spacing(16);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    forced-color-adjust: none;
+}
+
+.utility-overlay {
+    display: block;
+    inline-size: min(22rem, calc(100vw - #{spacing(8)}));
+    max-block-size: calc(100dvh - #{spacing(8)});
+    overflow: auto;
+}
+
+.lock-controls-content {
+    max-block-size: calc(100dvh - #{spacing(8)} - #{spacing(12)} - #{spacing(12)});
+    padding: spacing(1);
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+`};var w=class c{document=p(Z);router=p(Tr);readmeContent=y(()=>{let e=this.path().replace(/^\/+/,``);return x[k[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let n=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(n.origin!==t.origin||!n.pathname.startsWith(t.pathname))return;let i=n.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(i)&&(e.preventDefault(),this.router.navigateByUrl(`/${i}${n.search}${n.hash}`))}static ɵfac=function(a){return new(a||c)};static ɵcmp=j({type:c,selectors:[[`app-readme`]],hostBindings:function(a,s){a&1&&Ne(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(a,s){a&1&&(lt(0,`div`,0)(1,`div`,1)(2,`span`),Se(3,`Documentation`),ct()(),qn(4,`article`,2),ct()),a&2&&(k$1(4),$a(`innerHTML`,s.readmeContent(),Em))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;

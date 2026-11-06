@@ -27,6 +27,25 @@ Draft notes for the next Alpha release. This version has not been published; con
 - Kept explicit patch/minor/major overrides and retry publication available. An assigned target is consumed once it becomes the package version.
 - Retained exact-version links when registry access is unavailable and avoided treating a failed registry request as proof of non-publication.
 
+## Page layouts and breadcrumbs
+
+- Added `PageContainer`, `PageHeader`, `PageContent`, and `PageFooter` to the primitives entry point, with colocated guides and an interactive playground.
+- Standardized page widths, responsive padding, heading spacing, and the existing section-label/title treatment throughout the playground, including tokens,
+  icons, utilities, component examples, appearance, release notes, and modal/toast configurators. Home keeps its existing layout.
+- Added `ResolvableText` support for section titles, page titles, explicit descriptions, breadcrumb labels, and the breadcrumb navigation's accessible name.
+  Already-rendered text reacts to the optional `BX_I18N` adapter's language revision.
+- Added `autoResolveTitlesFromNavigation` (default `true`) to infer undefined section and page titles from shared navigation metadata. Descriptions remain
+  manually supplied; explicit empty titles suppress automatic values. Projected headers support additional content and configurable semantic heading levels.
+- Connected `provideNavigation()` and `NavigationService.page` to the optional `BX_PAGE_NAVIGATION` adapter without adding a dependency from primitives back to
+  navigation. Applications can also provide their own reactive `IPageNavigation` adapter or supply explicit headings and breadcrumb trails.
+- Added automatic breadcrumbs with a configurable `breadcrumbsAfter` threshold. The default is one nesting: root trails stay hidden and child pages show
+  ancestor links. Zero shows root entries; the demo's numeric control has a minimum of zero and clamps typed negative values. Breadcrumb resolution remains
+  independent of automatic title resolution.
+- Removed redundant top-of-page back links in favor of breadcrumbs. Trails use native links, an ordered list, visible keyboard focus, and an explicitly marked
+  current page, and wrap for narrow screens, translated labels, and RTL layouts.
+- Grouped Page container, Content container, Stack layout, Grid layout, and Divider under **Primitives → Layout** at `/components/layout`. Their canonical demo
+  routes now use `/components/layout/<component>`; existing `/components/<component>` URLs redirect to the corresponding layout page.
+
 ## Mobile navigation
 
 - Reused `ModalBackdrop` for mobile side navigation, including its blur and opaque accessibility fallbacks.
@@ -73,9 +92,76 @@ public readonly showExpandedLayout: Signal<boolean> = computed(() =>
 
 ## Navigation API
 
+- Replaced side-navigation submenu popups with nested lists inside the sidebar at every screen size and depth. Back, ancestor navigation, scroll restoration,
+  and temporary expansion of a compact rail remain available.
+- Removed `submenuMode`, `submenuBreakpoint`, `SideNavSubmenuMode`, and `isInlineSubmenus()`. Consumers should remove these settings, imports, and calls; nested
+  browsing now always uses the panel. The obsolete submenu width/height CSS variables no longer apply.
+- Kept route selection separate from programmatic row focus and focused the active route when entering its containing level.
+- Made the first, section-labelled ancestor action return directly to the full navigation root when that section was only a grouping label, while preserving
+  return to a section list that was explicitly opened. Returning to an ancestor reveals the original item used to enter its child branch, scrolling only the
+  navigation list.
+
 - Renamed the navigation configuration helper from `withNav` to `withInAppNavigation` to clarify its purpose and distinguish in-app navigation from other
   navigation concerns.
 - Removed the previous `withNav` export. Applications using the old helper must update their imports and configuration calls.
+
+## Design tokens and theme palettes
+
+- Added a generated Core inventory of CSS custom properties, variable references, design scales, breakpoints, and emitted utility classes. The inventory
+  includes semantic roles, every palette shade, glass/effects properties, component overrides, registered custom properties, and discoverable runtime values.
+- Exported `CSS_TOKEN_CATALOG`, `ICssToken`, and category/kind/scope contracts. Metadata distinguishes global, theme, local, and runtime availability and
+  records source declarations and use-site fallbacks; local/runtime discovery does not imply that a variable exists on the document root or is a supported
+  override.
+- Centralized semantic companion mappings in the Sass theme engine. `getComplementaryToken()` uses these mappings and the existing palette companion rule;
+  `resolveTokenToCssVar()` returns the typed `CssVariableReference` contract. Palette guards validate supported palettes and shades.
+- Moved theme IDs, labels, brand/accent assignments, and optional preview order into the theme engine's `$theme-palettes` registry. Generate `THEME_PALETTES`
+  and `THEME_PALETTE_IDS` from that registry, derive `BxThemeId` from the generated IDs, and derive picker swatches from palette shade 500.
+- Added `make-palette-theme(id, dark?, overrides?)` so existing named light/dark theme variables and playground theme classes use the same assignments. Existing
+  palette IDs, labels, class names, and preview colors are preserved.
+
+## Tokens page
+
+- Added the searchable `/tokens` playground page for semantic colors grouped by purpose, palette shade scales, color companions, spacing, corner radii, border
+  colors, shadows, layers, effects, component properties, utility classes, and Sass breakpoints.
+- Used Blocks accordions and compact cards. Only the first result section opens by default; category filters and keyboard navigation support browsing the
+  complete catalog.
+- Added right-click and touch long-press copy menus on token cards, plus a visible Copy… button and keyboard access. Removed the global copy-format dropdown.
+  Options copy `var(--bx-…)`, the raw `--bx-…` name, HEX, RGB, or RGBA. Color copies follow the current theme, preserve transparency, and convert through the
+  browser's sRGB color handling; pairs copy one value per line.
+- Added live color-value search, narrow-screen layouts, and dynamically sized search/select controls that reserve no empty validation row.
+- Added a Blocks Collapse all action beside the Categories filter to close all result sections.
+- Separated categories with matching titles and Blocks dividers while preserving the heading hierarchy for groups and cards.
+- Added scroll-based lazy rendering in small token batches. Batches mount near the viewport and unmount when far away while preserving measured space and
+  focused controls. Shared intersection/resize observers keep long groups lightweight without pagination. With fewer than 48 cards across expanded sections,
+  lazy rendering is disabled and the displayed cards remain mounted.
+- Changed the category filter to a clearable Blocks multiselect. Categories combine inclusively, such as Colors and Color pairs; clearing selection means All
+  tokens, with no category restriction. Search and counts still cover the complete catalog.
+- Reused one color-conversion canvas, cached conversion results for the current theme, and converted only mounted token batches during ordinary browsing.
+  Current HEX/RGB search builds its color index lazily. Deferred documentation content until its section opens.
+- Shortened palette section titles and moved current-theme, palette, and companion labels into trailing heading tags. Card text suppresses selection outside
+  collapsible metadata to avoid conflicts with long-press gestures.
+- Grouped palette shades and companions into their registered theme pairs. Sorted design scales by size/source order, widened non-color tiles, enlarged radius
+  samples, and used a light neutral canvas for visible shadow previews in dark mode.
+- Used Blocks collapsibles for source defaults and fallbacks, wrapped responsive Sass examples in code blocks, and copied RGB with comma-separated channels.
+- Colocated the catalog guide, linked it from Core and Utilities, and included it in generated playground documentation.
+
+## Search input
+
+- Added `SearchInput.compact`, defaulting to `false`, to request compact presentation for a search input without a label. Supplying a label automatically
+  enables compact mode. The input preserves existing search, loading, readonly, and accessibility behavior.
+
+## Shared primitive customization
+
+- Fixed surrounding surface highlights changing when a context menu opens. Lighting visibility ignores fully transparent CDK dismissal backdrops while retaining
+  occlusion from visible menu panels and opaque backdrops.
+- Fixed number-only Tag proportions by keeping vertical padding at zero while preserving configurable horizontal padding and minimum diameter.
+
+- Added optional `titleTemplate` support to Collapsible and accordion items, with the exported `ICollapsibleTitleContext` providing the translated title and
+  expansion state. This supports noninteractive header content such as count tags while retaining the shared disclosure and focus behavior.
+- Added `Collapsible.trailingTemplate` for noninteractive status tags, text, and icons at the logical end of collapsible/accordion headings, before the chevron.
+  It shares `ICollapsibleTitleContext` with title templates, supports RTL layouts, and keeps the heading as one accessible disclosure button.
+- Added `Card.surfaceEffects`, defaulting to `true`. Dense collections can disable decorative surface controllers while keeping themed card styling, content
+  slots, and interactions.
 
 ## Breaking changes and migration
 
@@ -102,6 +188,15 @@ The window dimensions updates include behavior changes that may affect consumers
 
 The existing `isMobile()` and `isTablet()` breakpoint boundaries remain unchanged.
 
+### Color tokens and variable availability
+
+- `meta-brand-palette` and `meta-accent-palette` are Sass metadata and are excluded from `Color` and `SEMANTIC_COLOR_TOKENS`; `bx-theme` never emitted CSS
+  variables for them. Use `ThemingService.palette()` and its palette definitions for metadata, and use `primary`/`accent` for themed colors.
+- Variable/reference inventories now also include local and runtime properties. Filter `CSS_TOKEN_CATALOG` by `scope` when a consumer needs only global or theme
+  variables. Consult the owning feature guide before setting a local or runtime property.
+- Companion mappings describe styling relationships rather than guaranteed accessible text contrast. Existing public color-helper and scale exports remain
+  available through `@filip.mazev/blocks/core`.
+
 ## Code generation and lint rules
 
 - Required injected class references to retain the class's full lower-camel-case name, including service suffixes, in fields and local variables.
@@ -109,6 +204,13 @@ The existing `isMobile()` and `isTablet()` breakpoint boundaries remain unchange
 - Added ESLint enforcement with alias/namespace resolution and updated library/playground references, templates, host expressions, and documentation examples.
 - Required descriptive JSDoc for public members of exported library components, directives, and services and for exported helpers, including parameter and
   generic parameter descriptions. Filled documentation gaps across controls, overlays, shared services, and runtime helpers.
+- Replaced the theme-type synchronization script with `npm run tools:generate-tokens`; retained `tools:sync-theme-types` as a compatibility alias. Library and
+  playground build/start/watch scripts run token generation automatically.
+- Split token generation into source reading, data construction, palette metadata, and TypeScript writing helpers. Evaluate Sass maps through Sass instead of
+  parsing them with regular expressions, and use the TypeScript AST for generated data rather than maintaining TypeScript programs inside strings.
+- Kept type contracts in regular TypeScript files and added `Generated from … by tools/tokens/generate-tokens.mjs` source banners to generated constants.
+- Pre-format generated TypeScript before the strict ESLint autofix/check pass to avoid expensive formatter-difference processing on large inventories. Added
+  per-file progress and elapsed-time reporting, and skip rewriting unchanged outputs so repeated generation does not trigger unnecessary rebuilds.
 
 ## Library source organization
 
@@ -123,7 +225,7 @@ The existing `isMobile()` and `isTablet()` breakpoint boundaries remain unchange
 
 ## Compatibility
 
-Existing public entry points other than the removed `withNav` export remain available. Backdrop inputs are additive, and older release-note URLs continue to
-work. Window dimension consumers should review the `isDesktop()` threshold change and any direct writes to `_dimensions`.
+Existing public package entry points remain available. Backdrop and shared primitive inputs are additive, and older release-note URLs continue to work.
+Consumers should review the `withNav` rename, `isDesktop()` threshold, direct writes to `_dimensions`, color-token metadata removal, and variable scopes above.
 
 Stable NPM installs still use the `latest` tag; Alpha and Beta remain opt-in.

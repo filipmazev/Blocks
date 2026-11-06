@@ -1,0 +1,1 @@
+var e=[{label:`Bottom`,value:`bottom`},{label:`Top`,value:`top`},{label:`Left`,value:`left`},{label:`Right`,value:`right`}];var l=[{label:`Primary`,value:`primary`},{label:`Accent`,value:`accent`},{label:`Surface`,value:`bg-surface`},{label:`Primary text`,value:`text-primary`},{label:`Orange 500`,value:`orange-500`},{label:`Blue 100`,value:`blue-100`}];export{l as n,e as t};
