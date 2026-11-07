@@ -37,6 +37,7 @@ import { ResizeHandleExamples } from '@playground/components/screens/library-com
 import { SearchExamples } from '@playground/components/screens/library-components/search-examples/search-examples';
 import { SideNavExamples } from '@playground/components/screens/library-components/side-nav-examples/side-nav-examples';
 import { SidePanelExamples } from '@playground/components/screens/library-components/side-panel-examples/side-panel-examples';
+import { StepperExamples } from '@playground/components/screens/library-components/stepper-examples/stepper-examples';
 import { TagExamples } from '@playground/components/screens/library-components/tag-examples/tag-examples';
 import { TopNavExamples } from '@playground/components/screens/library-components/top-nav-examples/top-nav-examples';
 import { TruncationExamples } from '@playground/components/screens/library-components/truncation-examples/truncation-examples';
@@ -67,6 +68,7 @@ import { ComponentDialog } from './component-dialog';
     EssentialsExamples,
     MenuShortcutExamples,
     TagExamples,
+    StepperExamples,
     SideNavExamples,
     TopNavExamples,
     TruncationExamples,

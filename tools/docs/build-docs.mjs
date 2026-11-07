@@ -111,6 +111,9 @@ for (const section of ['page-header', 'page-content', 'page-footer']) {
 }
 routes.set('projects/blocks/primitives/components/side-panel-layout/README.md', 'components/side-panel');
 routes.set('projects/blocks/primitives/directives/virtual-item/README.md', 'components/virtual-collection');
+for (const guide of ['components/step', 'directives/step-content', 'directives/step-label']) {
+  routes.set(`projects/blocks/navigation/${guide}/README.md`, 'components/stepper');
+}
 routes.set('projects/blocks/modal/README.md', 'modal');
 routes.set('projects/blocks/toastr/README.md', 'toastr');
 routes.set('projects/blocks/core/README.md', 'components');

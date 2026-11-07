@@ -60,3 +60,8 @@ and runnable examples. Their playground routes are `/components/side-nav` and `/
 `provideNavigation()` also provides the optional `BX_PAGE_NAVIGATION` adapter from primitives. `NavigationService.page` exposes reactive section and page titles
 plus breadcrumbs for [PageContainer](../primitives/components/page-container/README.md). Descriptions remain application-owned. Breadcrumbs appear after one
 nesting by default and the threshold can be configured on each container. Existing Breadcrumbs components retain their own display settings.
+
+## Stepper workflows
+
+[Stepper](components/stepper/README.md) provides passive progress, externally controlled section navigation and guarded wizards through the same `bx-stepper`
+component. Import `Stepper`, `Step` and its optional template directives from `@filip.mazev/blocks/navigation`.

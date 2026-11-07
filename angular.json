@@ -111,7 +111,7 @@
         "blocks": {
             "projectType": "library",
             "root": "projects/blocks",
-            "sourceRoot": "projects/blocks/src",
+            "sourceRoot": "projects/blocks",
             "prefix": "lib",
             "architect": {
                 "build": {
@@ -130,6 +130,16 @@
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
                         "lintFilePatterns": ["projects/blocks/**/*.ts", "projects/blocks/**/*.html"]
+                    }
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "buildTarget": "playground:build:development",
+                        "tsConfig": "projects/blocks/tsconfig.spec.json",
+                        "runner": "karma",
+                        "browsers": ["ChromeHeadless"],
+                        "include": ["navigation/components/stepper/**/*.spec.ts", "navigation/components/step/**/*.spec.ts"]
                     }
                 }
             }

@@ -1,0 +1,94 @@
+@use 'core/styles/helpers' as *;
+
+:host,
+.stepper-examples,
+section {
+    display: block;
+    min-inline-size: 0;
+}
+
+.stepper-examples {
+    display: grid;
+    gap: spacing(8);
+}
+
+h3,
+h4 {
+    margin-block: 0 spacing(3);
+}
+
+p {
+    color: var(--bx-text-secondary);
+    line-height: 1.6;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: spacing(3);
+    margin-block: spacing(4);
+
+    @include respond-up(sm) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include respond-up(lg) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.toggles,
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+    margin-block: spacing(4);
+}
+
+.section-layout {
+    display: grid;
+    gap: spacing(4);
+
+    @include respond-up(md) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+}
+
+.section-scroll {
+    position: relative;
+    max-block-size: 22rem;
+    overflow: auto;
+    padding: spacing(4);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(md);
+    overscroll-behavior: contain;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+    }
+}
+
+.document-section {
+    min-block-size: 20rem;
+    padding-block: spacing(4);
+    overflow-wrap: anywhere;
+}
+
+.gallery-group {
+    padding-block: spacing(4);
+    border-block-start: 1px solid var(--bx-border-default);
+}
+
+.gallery-row {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: center;
+    gap: spacing(3);
+    margin-block: spacing(4);
+}
+
+bx-banner {
+    display: block;
+    margin-block: spacing(3);
+}

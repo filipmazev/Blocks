@@ -37,7 +37,8 @@
         "tools:build-effects": "node tools/build-effects-styles.mjs",
         "lint:scripts": "eslint --max-warnings=0 \"tools/**/*.{js,mjs,cjs}\" \"*.config.{js,mjs,cjs}\"",
         "lint:docs": "markdownlint-cli2",
-        "tools:sync-theme-types": "npm run tools:generate-tokens"
+        "tools:sync-theme-types": "npm run tools:generate-tokens",
+        "test:stepper": "ng test blocks --watch=false"
     },
     "private": true,
     "workspaces": [

@@ -1,0 +1,152 @@
+<ng-content select="bx-step"></ng-content>
+
+<div class="step-header" role="group" [attr.aria-label]="text().label" [attr.aria-busy]="pending() ? 'true' : null">
+    @if (variant() === 'progress') {
+        <div class="progress-summary">
+            <span>{{ summary() }}</span>
+            @if (showPercentage()) {
+                <span>{{ progress().toFixed(0) }}%</span>
+            }
+        </div>
+        <bx-progress-bar [value]="progress()" [label]="text().label" />
+    }
+    <ol class="step-list">
+        @for (row of rows(); track row.step.id; let index = $index) {
+            <li
+                class="step-item"
+                [attr.data-status]="row.status"
+                [class.is-current]="row.step.id === selectedStep()?.id"
+                [class.is-complete]="row.complete"
+                [class.is-awaiting-confirmation]="row.awaitingConfirmation"
+                [class.is-unavailable]="unavailable(row.step)">
+                <ng-container [ngTemplateOutlet]="stepBody" [ngTemplateOutletContext]="{ $implicit: row, index }" />
+            </li>
+        }
+    </ol>
+</div>
+
+<ng-template #stepBody let-row let-index="index">
+    @if (interactive()) {
+        <button
+            #trigger
+            bxSurface
+            data-bx-surface="glass"
+            class="step-body"
+            type="button"
+            [bxSurfaceGlassiness]="variant() === 'cards' ? glassiness() : 'off'"
+            [bxSurfaceInteractive]="surfaceEffects() && !isReadonly() && !unavailable(row.step)"
+            [bxSurfaceEmission]="surfaceEffects() ? (row.status === 'error' ? 'var(--bx-text-danger)' : 'var(--bx-stepper-color, var(--bx-accent))') : false"
+            [id]="row.triggerId"
+            [attr.data-step-id]="row.step.id"
+            [attr.aria-current]="row.step.id === selectedStep()?.id ? 'step' : null"
+            [attr.aria-controls]="mode() === 'wizard' && row.step.content ? row.panelId : null"
+            [attr.aria-describedby]="row.triggerId + '-detail'"
+            [attr.aria-disabled]="isReadonly() || pending() !== null || isComplete() ? 'true' : null"
+            [attr.aria-label]="row.label"
+            [tabIndex]="tabIndex(row.step.id)"
+            [disabled]="unavailable(row.step)"
+            (click)="activate($event, row.step.id)"
+            (keydown)="onKey($event, row.step.id)">
+            <ng-container [ngTemplateOutlet]="visual" [ngTemplateOutletContext]="{ $implicit: row, index }" />
+        </button>
+    } @else {
+        <div
+            bxSurface
+            data-bx-surface="glass"
+            class="step-body"
+            [bxSurfaceGlassiness]="variant() === 'cards' ? glassiness() : 'off'"
+            [bxSurfaceInteractive]="false"
+            [bxSurfaceEmission]="false"
+            [id]="row.triggerId"
+            [attr.aria-current]="row.step.id === selectedStep()?.id ? 'step' : null">
+            <ng-container [ngTemplateOutlet]="visual" [ngTemplateOutletContext]="{ $implicit: row, index }" />
+        </div>
+    }
+    <span class="sr-only" [id]="row.triggerId + '-detail'">{{ row.description }} {{ row.detail }}</span>
+</ng-template>
+
+<ng-template #visual let-row let-index="index">
+    <span class="marker" aria-hidden="true">
+        @if (row.status === 'loading') {
+            <bx-loading-spinner [size]="markerIconSize()" [decorative]="true" />
+        } @else if (row.status === 'error') {
+            <span class="marker-symbol">!</span>
+        } @else if (row.status === 'skipped') {
+            <span class="marker-symbol">−</span>
+        } @else if (row.awaitingConfirmation) {
+            <bx-icon class="marker-symbol" name="clock" [size]="markerIconSize()" />
+        } @else if (row.complete) {
+            <span class="marker-symbol">✓</span>
+        } @else if (row.step.icon) {
+            <bx-icon class="marker-symbol" [size]="markerIconSize()" [name]="row.step.icon" />
+        } @else {
+            <span class="marker-symbol">{{ index + 1 }}</span>
+        }
+    </span>
+    <span class="step-copy" aria-hidden="true">
+        <span class="step-label">
+            @if (row.step.labelTemplate) {
+                <ng-container [ngTemplateOutlet]="row.step.labelTemplate" [ngTemplateOutletContext]="{ $implicit: row.step, index, status: row.status }" />
+            } @else {
+                {{ row.label }}
+            }
+        </span>
+        @if (showDescriptions() && row.description) {
+            <span class="step-description">{{ row.description }}</span>
+        }
+        <span class="step-detail">{{ row.detail }}</span>
+    </span>
+    @if (!interactive()) {
+        <span class="sr-only">{{ row.label }}</span>
+    }
+</ng-template>
+
+@if (mode() === 'wizard') {
+    @if (isComplete() && completionContent()) {
+        <div class="step-panel" data-completion tabindex="-1" role="region" [attr.aria-label]="text().completed">
+            <ng-container [ngTemplateOutlet]="completionContent()" />
+        </div>
+    } @else {
+        <div class="step-panels">
+            @for (row of rows(); track row.step.id) {
+                @if (row.step.content) {
+                    <section
+                        #panel
+                        class="step-panel"
+                        tabindex="-1"
+                        [id]="row.panelId"
+                        [attr.data-step-id]="row.step.id"
+                        [attr.aria-labelledby]="row.triggerId"
+                        [hidden]="row.step.id !== selectedStep()?.id">
+                        @if (renderContent(row.step.id)) {
+                            <ng-container [ngTemplateOutlet]="row.step.content" />
+                        }
+                    </section>
+                }
+            }
+        </div>
+    }
+    @if (controls() && selectedStep() && !isComplete()) {
+        <div class="step-actions">
+            <button bx-button type="button" [disabled]="!hasPrevious() || isReadonly() || pending() !== null" (click)="previous('controls')">
+                {{ text().back }}
+            </button>
+            <div class="step-forward">
+                @if (selectedStep()?.optional) {
+                    <button bx-button type="button" [disabled]="isReadonly() || pending() !== null" (click)="skip('controls')">{{ text().skip }}</button>
+                }
+                <button
+                    bx-button
+                    type="button"
+                    variant="filled"
+                    [disabled]="isReadonly()"
+                    [loading]="pending() !== null"
+                    (click)="hasNext() ? next('controls') : finish('controls')">
+                    {{ hasNext() ? text().next : text().finish }}
+                </button>
+            </div>
+        </div>
+    }
+}
+
+<div class="sr-only" role="status" aria-live="polite" aria-atomic="true">{{ announcement() }}</div>

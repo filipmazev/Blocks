@@ -195,6 +195,18 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-accordion><bx-accordion-item title="Details">Project content</bx-accordion-item></bx-accordion>'
   },
   {
+    id: 'stepper',
+    title: 'Stepper',
+    group: 'Navigation',
+    readme: 'projects/blocks/navigation/components/stepper/README.md',
+    symbol: 'Stepper, Step, StepContentDirective, StepLabelDirective',
+    package: '@filip.mazev/blocks/navigation',
+    selector: 'bx-stepper',
+    description: 'Progress indicators, application-controlled section navigation and validated asynchronous wizard workflows.',
+    example:
+      '<bx-stepper mode="wizard"><bx-step id="details" label="Details">Details content</bx-step><bx-step id="review" label="Review">Review content</bx-step></bx-stepper>'
+  },
+  {
     id: 'tabs',
     title: 'Tabs',
     group: 'Primitives',

@@ -1,0 +1,224 @@
+<div class="stepper-examples">
+    <section aria-labelledby="stepper-config-title">
+        <h3 id="stepper-config-title">Presentation and behavior</h3>
+        <bx-stepper
+            #preview
+            [mode]="mode()"
+            [steps]="previewSteps()"
+            [variant]="variant()"
+            [size]="size()"
+            [orientation]="orientation()"
+            [responsive]="responsive()"
+            [showLabels]="showLabels()"
+            [indicatorInteractive]="allowIndicatorRequests()"
+            [readOnly]="readOnly()"
+            [glassiness]="glass() ? 'on' : 'off'"
+            [surfaceEffects]="lighting()"
+            [labels]="labels"
+            [showPercentage]="true"
+            [(activeStep)]="active"
+            (stepRequested)="mode() !== 'wizard' && confirmPreview($event)" />
+        <div class="config-grid">
+            <bx-select label="Current step (activeStep ID)" [clearable]="false" [options]="currentStepOptions()" [(ngModel)]="active" />
+            <bx-select label="Behavior" [clearable]="false" [options]="modes" [(ngModel)]="mode" />
+            <bx-select label="Variant" [clearable]="false" [options]="variants" [(ngModel)]="variant" />
+            <bx-select label="Size" [clearable]="false" [options]="sizes" [(ngModel)]="size" />
+            <bx-select label="Orientation" [clearable]="false" [options]="orientations" [(ngModel)]="orientation" />
+            <bx-select label="Narrow screens" [clearable]="false" [options]="responsiveOptions" [(ngModel)]="responsive" />
+            <bx-select
+                label="Language"
+                [clearable]="false"
+                [options]="languages"
+                [ngModel]="stepperDemoI18nService.language()"
+                (ngModelChange)="stepperDemoI18nService.setLanguage($event)" />
+        </div>
+        <div class="toggles">
+            <bx-slide-toggle label="Labels" [(ngModel)]="showLabels" />
+            <bx-slide-toggle label="Current step error" [(ngModel)]="errorState" />
+            <bx-slide-toggle label="Current step loading" [(ngModel)]="loadingState" />
+            <bx-slide-toggle label="Indicator interaction" [(ngModel)]="allowIndicatorRequests" />
+            <bx-slide-toggle label="Read only" [(ngModel)]="readOnly" />
+            <bx-slide-toggle label="Glass surfaces" [(ngModel)]="glass" />
+            <bx-slide-toggle label="Interaction lighting" [(ngModel)]="lighting" />
+        </div>
+        <div class="actions">
+            <button bx-button type="button" (click)="preview.reset()">Reset</button>
+        </div>
+        <bx-banner announcement="polite" [message]="status()" />
+    </section>
+
+    <section aria-labelledby="stepper-section-title">
+        <h3 id="stepper-section-title">Application-owned section navigation</h3>
+        <bx-banner announcement="polite" [message]="sectionStatus()" />
+        <div class="section-layout">
+            <bx-stepper
+                mode="navigation"
+                orientation="vertical"
+                [steps]="sectionSteps"
+                [(activeStep)]="sectionActive"
+                (stepRequested)="navigateSection($event)" />
+            <div #sectionsWrapper class="section-scroll" tabindex="0" role="region" aria-label="Release sections" (scroll)="observeSections()">
+                @for (step of sectionSteps; track step.id) {
+                    <section #section class="document-section" [attr.data-section]="step.id" [attr.aria-label]="step.label">
+                        <h4>{{ step.label }}</h4>
+                        <p>{{ step.description }}</p>
+                        <p>The section selection follows this scroll container. No scroll observer or router is owned by the stepper.</p>
+                        <button bx-button type="button" (click)="sectionStatus.set('Reviewed ' + step.id)">Mark section reviewed</button>
+                    </section>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section aria-labelledby="stepper-wizard-title">
+        <h3 id="stepper-wizard-title">Workspace wizard</h3>
+        <p>Required Reactive Forms validation, optional content, disabled steps, guarded saves, retained input and explicit completion.</p>
+        <div class="toggles">
+            <bx-slide-toggle label="Linear workflow" [(ngModel)]="linear" />
+            <bx-slide-toggle label="Completed steps editable" [(ngModel)]="editable" />
+        </div>
+        <div class="actions">
+            @for (value of policies; track value) {
+                <button bx-button type="button" [attr.aria-pressed]="policy() === value" (click)="policy.set(value)">{{ value }} content</button>
+            }
+            <button bx-button type="button" (click)="nextOutcome.set('fail')">Fail next save</button>
+            <button bx-button type="button" (click)="nextOutcome.set('reject')">Reject next guard</button>
+            <button bx-button type="button" (click)="resetWizard(wizard)">Reset workflow and forms</button>
+        </div>
+        <bx-stepper
+            #wizard
+            mode="wizard"
+            [variant]="variant()"
+            [size]="size()"
+            [orientation]="orientation()"
+            [responsive]="responsive()"
+            [linear]="linear()"
+            [contentPolicy]="policy()"
+            [labels]="labels"
+            [beforeTransition]="save"
+            [completionContent]="finished"
+            [(activeStep)]="wizardActive"
+            (transitionFinished)="recordWizard($event)">
+            <bx-step id="details" icon="file-text" [label]="{ key: 'details' }" [validation]="details" [editable]="editable()">
+                <ng-template bxStepContent>
+                    <bx-input-field label="Workspace name" placeholder="Enter a workspace name" [formControl]="details.controls.name" />
+                    <p>This required field becomes touched only after an invalid forward attempt.</p>
+                </ng-template>
+            </bx-step>
+            <bx-step id="preferences" icon="settings" [label]="{ key: 'preferences' }" [optional]="true">
+                <ng-template bxStepLabel
+                    ><span>{{ stepperDemoI18nService.translate('preferences') }}</span></ng-template
+                >
+                <ng-template bxStepContent>
+                    <bx-input-field label="Delivery note" [formControl]="note" />
+                    <p>Skip leaves this step incomplete. With retained content, edits and child state survive revisiting.</p>
+                </ng-template>
+            </bx-step>
+            <bx-step id="managed" label="Managed by your organization" [disabled]="true" />
+            <bx-step id="review" icon="clipboard-check" [label]="{ key: 'review' }">
+                <ng-template bxStepContent>
+                    <h4>Review workspace</h4>
+                    <p>Workspace: {{ details.controls.name.value }}</p>
+                    <p>Note: {{ note.value || 'No delivery note' }}</p>
+                    <p>Finish performs the same asynchronous save as Next. A failed save keeps this content and its form values.</p>
+                </ng-template>
+            </bx-step>
+        </bx-stepper>
+        <ng-template #finished>
+            <h4>Workspace ready</h4>
+            <p>Your workflow is complete. Reset to start again.</p>
+            <button bx-button type="button" (click)="wizard.reset()">Restart with existing values</button>
+        </ng-template>
+        <bx-banner
+            announcement="polite"
+            [message]="
+                wizard.pending()
+                    ? 'Saving workspace… The next step opens automatically after a successful save.'
+                    : wizardStatus() + ' Next server outcome: ' + nextOutcome() + '.'
+            " />
+    </section>
+
+    <section aria-labelledby="stepper-signal-title">
+        <h3 id="stepper-signal-title">Signal Forms</h3>
+        <bx-stepper #signalWizard mode="wizard" variant="segments" [labels]="labels">
+            <bx-step id="name" label="Name" [validation]="signalForm()">
+                <ng-template bxStepContent><bx-input-field label="Required workspace name" [formField]="signalForm.name" /></ng-template>
+            </bx-step>
+            <bx-step id="ready" label="Ready">
+                <ng-template bxStepContent
+                    ><p>Ready to create {{ signalModel().name }}.</p></ng-template
+                >
+            </bx-step>
+        </bx-stepper>
+        <button bx-button type="button" (click)="signalWizard.reset()">Restart Signal Forms example</button>
+    </section>
+
+    <section aria-labelledby="stepper-custom-title">
+        <h3 id="stepper-custom-title">Non-linear workflow and custom controls</h3>
+        <p>Add or remove an optional step. Every control invokes the same guarded methods as the built-in buttons.</p>
+        <bx-stepper #custom mode="wizard" variant="cards" [steps]="dynamicSteps()" [linear]="false" [controls]="false" [labels]="labels" />
+        <ng-template #dynamicContent>
+            <p>Active step: {{ custom.selectedStep()?.label }}. Component state follows stable IDs when definitions change.</p>
+            <bx-input-field label="Application-owned draft" [(ngModel)]="draft" />
+            <bx-banner [message]="'Current draft: ' + (draft() || 'Empty')" />
+        </ng-template>
+        <div class="actions">
+            <button bx-button type="button" (click)="custom.previous()">Back</button>
+            <button bx-button type="button" (click)="custom.next()">Next</button>
+            <button bx-button type="button" (click)="custom.finish()">Finish</button>
+            <button bx-button type="button" (click)="extra.set(!extra())">{{ extra() ? 'Remove' : 'Add' }} optional step</button>
+            <button bx-button type="button" (click)="custom.reset()">Reset</button>
+        </div>
+        <bx-banner announcement="polite" [message]="custom.isComplete() ? 'Completed' : custom.lastTransition()?.outcome || 'Ready'" />
+    </section>
+
+    <section aria-labelledby="stepper-controlled-title">
+        <h3 id="stepper-controlled-title">Controlled wizard selection</h3>
+        <bx-stepper
+            #controlled
+            mode="wizard"
+            selectionMode="controlled"
+            [steps]="gallerySteps"
+            [linear]="false"
+            [labels]="controlledLabels"
+            [(activeStep)]="controlledActive"
+            (transitionFinished)="pendingConfirmation.set($event)" />
+        <bx-banner
+            announcement="polite"
+            [title]="
+                confirmationLabel() ? 'Waiting for application confirmation' : controlled.isComplete() ? 'Workflow complete' : 'Application-owned selection'
+            "
+            [message]="controlledMessage()">
+            @if (confirmationLabel(); as destination) {
+                <button bx-button bxAlertActions type="button" variant="filled" (click)="confirmSelection()">Open {{ destination }}</button>
+            }
+        </bx-banner>
+        <button bx-button type="button" (click)="controlled.reset(); pendingConfirmation.set(null)">Reset controlled wizard</button>
+    </section>
+
+    <section aria-labelledby="stepper-gallery-title">
+        <h3 id="stepper-gallery-title">Variant and size reference</h3>
+        <p>All presentations use the same completion data. Segment thickness changes with size. Orientation follows the configurator above.</p>
+        @for (presentation of galleryVariants; track presentation) {
+            <div class="gallery-group">
+                <h4>{{ presentation }}</h4>
+                @for (density of gallerySizes; track density) {
+                    <div class="gallery-row">
+                        <span>{{ density }}</span>
+                        <bx-stepper
+                            activeStep="build"
+                            [steps]="gallerySteps"
+                            [variant]="presentation"
+                            [size]="density"
+                            [orientation]="orientation()"
+                            [responsive]="responsive()"
+                            [glassiness]="glass() ? 'on' : 'off'"
+                            [surfaceEffects]="lighting()"
+                            [showLabels]="presentation !== 'dots'"
+                            [labels]="labels" />
+                    </div>
+                }
+            </div>
+        }
+    </section>
+</div>

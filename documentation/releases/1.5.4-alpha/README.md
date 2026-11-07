@@ -61,3 +61,31 @@ navigation's reduced-motion and keyboard-focus behavior.
   `ToastRef.data` for live updates. Modal initialization data is unchanged.
 - Removed the unused `ModalRef.modalContainer` and `parentElement` properties. Mounted content/container getters are undefined after destruction. The toast host
   no longer replaces the reference's close method at runtime; service-created content can inject its typed reference directly.
+
+## Stepper
+
+- Added standalone `Stepper` (`bx-stepper`), declarative `Step` (`bx-step`), and content/label template directives to `@filip.mazev/blocks/navigation`. The same
+  component supports passive progress indicators, application-owned section navigation, and guarded wizard workflows.
+- Supports typed data-driven definitions or projected steps, stable-ID `activeStep` binding, optional and disabled steps, explicit completion/skipping,
+  non-editable completed steps, and separate loading/error state. Visiting a step does not imply completion.
+- Added `goTo`, `next`, `previous`, `skip`, `finish`, and `reset`, with typed request, selection, transition, and completion events. Synchronous, promise, and
+  observable guards share validation, duplicate-request protection, cancellation, and stale-result checks. Failed saves retain the current selection and content
+  for an explicit retry.
+- Integrates with Reactive Forms and Signal Forms through a structural validation contract. Linear workflows enforce required predecessors, invalid forward
+  attempts mark controls touched, optional steps can be skipped, and completion remains distinct from visiting the final step.
+- Supports internal selection and application-confirmed wizard selection. Accepted controlled destinations show a clock marker, accent text, and translatable
+  “Awaiting confirmation” feedback while the current step remains selected. Confirmation, reset, and superseding requests clear the waiting presentation.
+- Added eager, retained, and active-only content policies, configurable wizard controls, custom label/content templates, and an application-owned completion
+  view. Reset clears workflow progress without clearing application-owned form values.
+- Added steps, segments, dots, progress, and cards in three sizes, horizontal/vertical layouts, and scroll, vertical, or compact responsive behavior. Connectors
+  are solid and aligned with their markers; small markers and dots leave room around status symbols. Card text uses the same top alignment as alerts and
+  banners.
+- Uses Blocks semantic colors, shared glass and lighting, translation support, and configurable CSS variables. Non-card variants keep transparent selected
+  backgrounds with marker/label hover feedback. Disabled steps are visibly muted; read-only presentation retains focus and progress with neutral markers.
+- Includes roving keyboard navigation, RTL support, accessible status descriptions, predictable wizard focus, and shared reduced-motion/transparency and
+  forced-color behavior. Shared text defaults are configurable through `BX_STEPPER_DEFAULTS` and per-instance labels.
+- Added the `/components/stepper` playground with appearance controls, section navigation, form validation, asynchronous save failure/retry, controlled
+  confirmation, dynamic steps, and nearby draft previews. Colocated guides and browser regression coverage document the supported integration patterns.
+
+See the [Stepper guide](../../../projects/blocks/navigation/components/stepper/README.md) for public imports, runnable examples, configuration, and
+accessibility.

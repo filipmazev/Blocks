@@ -1,0 +1,606 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    --step-marker: var(--bx-stepper-marker-size, #{spacing(8)});
+    --step-dot-size: var(--bx-stepper-dot-size, #{spacing(6)});
+    --step-thickness: var(--bx-stepper-thickness, 0.25rem);
+    --step-connector: var(--bx-stepper-connector-thickness, 2px);
+    --step-gap: var(--bx-stepper-gap, #{spacing(3)});
+    --step-padding: var(--bx-stepper-padding, #{spacing(3)});
+    --step-color: var(--bx-stepper-color, var(--bx-accent));
+    --step-on-color: var(--bx-stepper-on-color, var(--bx-on-accent));
+    --step-indicator-width: var(--step-marker);
+    --step-indicator-height: var(--step-marker);
+    --step-inset: calc(var(--step-padding) + 1px);
+    --step-endpoint-gap: #{spacing(2)};
+
+    display: flex;
+    flex-direction: column;
+    gap: spacing(4);
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    color: var(--bx-text-primary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+:host([data-size='sm']) {
+    --step-marker: var(--bx-stepper-marker-size, calc(#{spacing(6)} + #{spacing(1)}));
+    --step-dot-size: var(--bx-stepper-dot-size, #{spacing(5)});
+    --step-thickness: var(--bx-stepper-thickness, 0.125rem);
+    --step-gap: var(--bx-stepper-gap, #{spacing(2)});
+    --step-padding: var(--bx-stepper-padding, #{spacing(2)});
+
+    font-size: 0.8125rem;
+}
+
+:host([data-size='lg']) {
+    --step-marker: var(--bx-stepper-marker-size, #{spacing(10)});
+    --step-dot-size: var(--bx-stepper-dot-size, calc(#{spacing(6)} + #{spacing(1)}));
+    --step-thickness: var(--bx-stepper-thickness, 0.5rem);
+    --step-gap: var(--bx-stepper-gap, #{spacing(4)});
+    --step-padding: var(--bx-stepper-padding, #{spacing(4)});
+
+    font-size: 1rem;
+}
+
+.step-header,
+.step-panels,
+.step-panel {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+.step-list {
+    display: flex;
+    gap: var(--step-gap);
+    margin: 0;
+    padding: spacing(1);
+    list-style: none;
+    overflow: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+}
+
+.step-item {
+    --step-state-color: var(--step-color);
+    --step-state-text: var(--bx-text-accent);
+    --step-state-background: var(--bx-accent-subtle);
+    --step-state-border: var(--bx-border-accent);
+
+    position: relative;
+    flex: 1 0 8rem;
+    min-inline-size: 0;
+
+    &:not(:first-child)::before,
+    &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: calc(var(--step-inset) + (var(--step-indicator-height) - var(--step-connector)) / 2);
+        inset-inline-start: calc(50% + var(--step-indicator-width) / 2 + var(--step-endpoint-gap));
+        inline-size: calc(50% + var(--step-gap) / 2 - var(--step-indicator-width) / 2 - var(--step-endpoint-gap));
+        block-size: var(--step-connector);
+        border-radius: radius(pill);
+        background: var(--bx-border-default);
+        pointer-events: none;
+    }
+
+    &:not(:first-child)::before {
+        inset-inline-start: calc(var(--step-gap) / -2);
+    }
+
+    &.is-complete + .step-item::before {
+        background: var(--step-color);
+    }
+
+    &.is-complete[data-status='error'] + .step-item::before {
+        background: var(--bx-bg-danger);
+    }
+
+    &.is-complete::after {
+        background: var(--step-state-color);
+    }
+
+    &[data-status='error'] {
+        --step-state-color: var(--bx-bg-danger);
+        --step-state-text: var(--bx-text-danger);
+        --step-state-background: var(--bx-bg-danger-subtle);
+        --step-state-border: var(--bx-border-danger);
+    }
+
+    &.is-unavailable .step-body {
+        opacity: 0.5;
+    }
+}
+
+.step-body {
+    --bx-glass-surface: transparent;
+    --bx-glass-text: inherit;
+    --bx-glass-edge: transparent;
+    --bx-glass-radius: #{radius(md)};
+    --bx-glass-shadow: none;
+    --bx-glass-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-opacity: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: spacing(2);
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 2.75rem;
+    padding: var(--step-padding);
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    background: transparent;
+    font: inherit;
+    text-align: center;
+    overflow-wrap: anywhere;
+
+    &:focus-visible {
+        outline: 2px solid var(--step-state-text);
+        outline-offset: 2px;
+    }
+}
+
+button.step-body {
+    min-inline-size: 2.75rem;
+    cursor: pointer;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+
+    &[aria-disabled='true'] {
+        cursor: default;
+    }
+}
+
+.marker {
+    display: inline-flex;
+    position: relative;
+    z-index: 2;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--step-indicator-width);
+    block-size: var(--step-indicator-height);
+    border: 1px solid var(--bx-border-strong);
+    border-radius: var(--bx-stepper-marker-radius, #{radius(pill)});
+    background: var(--bx-bg-surface);
+    color: var(--bx-text-secondary);
+    font-weight: 600;
+    line-height: 1;
+}
+
+.is-complete .marker {
+    border-color: var(--step-state-border);
+    background: var(--step-state-background);
+    color: var(--step-state-text);
+}
+
+.is-current .marker {
+    border-color: transparent;
+    background: var(--step-state-color);
+    color: var(--step-on-color);
+}
+
+.is-awaiting-confirmation .marker {
+    border-color: var(--step-state-border);
+    background: var(--step-state-background);
+    color: var(--step-state-text);
+}
+
+.is-awaiting-confirmation .step-label,
+.is-awaiting-confirmation .step-detail {
+    color: var(--step-state-text);
+}
+
+.is-awaiting-confirmation .step-detail {
+    font-weight: 600;
+}
+
+[data-status='error'] .marker {
+    border-color: var(--step-state-border);
+    background: var(--step-state-background);
+    color: var(--step-state-text);
+}
+
+.is-unavailable .marker {
+    border-color: var(--bx-border-default);
+    background: var(--bx-bg-element);
+    color: var(--bx-text-secondary);
+}
+
+:host(.is-readonly) {
+    --step-color: var(--bx-border-strong);
+
+    .step-body {
+        color: var(--bx-text-secondary);
+        cursor: default;
+    }
+
+    .marker {
+        border-color: var(--bx-border-strong);
+        background: var(--bx-bg-element);
+        color: var(--bx-text-secondary);
+    }
+
+    .is-current .marker {
+        border-color: var(--bx-text-primary);
+        color: var(--bx-text-primary);
+    }
+
+    [data-status='error'] .marker {
+        border-color: var(--bx-border-danger);
+        background: var(--bx-bg-danger-subtle);
+        color: var(--bx-text-danger);
+    }
+}
+
+@media (hover: hover) {
+    button.step-body:hover:not(:disabled, [aria-disabled='true']) {
+        .step-label {
+            color: var(--step-state-text);
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+
+        .marker {
+            box-shadow: 0 0 0 3px var(--step-state-background);
+        }
+    }
+
+    .step-item:not(.is-current) button.step-body:hover:not(:disabled, [aria-disabled='true']) .marker {
+        border-color: var(--step-state-border);
+        background: var(--step-state-background);
+        color: var(--step-state-text);
+    }
+}
+
+.step-copy {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(1);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+.step-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 1.5em;
+    font-weight: 600;
+}
+
+.step-description,
+.step-detail {
+    font-size: 0.875em;
+    color: var(--bx-text-secondary);
+}
+
+[data-status='error'] .step-detail {
+    color: var(--step-state-text);
+}
+
+.step-panel {
+    overflow-wrap: anywhere;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}
+
+.step-actions,
+.step-forward,
+.progress-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: spacing(2);
+}
+
+.step-forward {
+    margin-inline-start: auto;
+}
+
+.progress-summary {
+    margin-block-end: spacing(3);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+:host([data-labels='false']) .step-copy {
+    display: none;
+}
+
+:host(:not([data-variant='cards'])) .step-body {
+    backdrop-filter: none;
+}
+
+@mixin row-body {
+    .step-body {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: spacing(3);
+        text-align: start;
+    }
+
+    .marker {
+        margin-block-start: var(--step-row-marker-offset, max(0px, (1.5em - var(--step-indicator-height)) / 2));
+    }
+
+    .step-label {
+        justify-content: flex-start;
+        min-block-size: var(--step-row-label-height, var(--step-indicator-height));
+    }
+}
+
+:host([data-variant='cards']) {
+    @include row-body;
+
+    --step-row-marker-offset: 0.125rem;
+    --step-row-label-height: 1.5em;
+
+    .step-item {
+        flex-basis: 12rem;
+    }
+
+    .step-body {
+        --bx-glass-surface: var(--bx-stepper-card-background, var(--bx-bg-surface));
+        --bx-glass-edge: var(--bx-border-default);
+        --bx-glass-radius: var(--bx-stepper-card-radius, #{radius(md)});
+        --bx-glass-decoration-opacity: 1;
+        --bx-glass-rim-opacity: 1;
+        --bx-glass-rim-visibility: 0.25;
+        --bx-glass-opacity: var(--bx-glass-material-opacity);
+    }
+
+    @media (hover: hover) {
+        button.step-body:hover:not(:disabled, [aria-disabled='true']) {
+            --bx-glass-edge: var(--step-state-border);
+        }
+    }
+
+    .is-current .step-body {
+        --bx-glass-edge: var(--step-state-border);
+    }
+}
+
+:host([data-variant='cards'].is-readonly) .is-current .step-body {
+    --bx-glass-edge: var(--bx-border-strong);
+}
+
+:host([data-variant='segments']) {
+    --step-indicator-height: var(--step-thickness);
+
+    .step-item {
+        flex-basis: 6rem;
+    }
+
+    .marker {
+        inline-size: 100%;
+        min-block-size: 2px;
+        border: 0;
+        border-radius: var(--bx-stepper-segment-radius, #{radius(pill)});
+        background: var(--bx-border-strong);
+    }
+
+    .is-current .marker,
+    .is-complete .marker,
+    .is-awaiting-confirmation .marker,
+    [data-status='error'] .marker {
+        background: var(--step-state-color);
+    }
+
+    .marker-symbol,
+    bx-loading-spinner {
+        display: none;
+    }
+
+    @media (hover: hover) {
+        .step-item button.step-body:hover:not(:disabled, [aria-disabled='true']) .marker {
+            background: var(--step-state-color);
+            box-shadow: none;
+        }
+    }
+}
+
+:host([data-variant='segments'].is-readonly) .marker,
+:host([data-variant='segments']) .is-unavailable .marker {
+    background: var(--bx-border-strong);
+}
+
+:host([data-variant='segments'].is-readonly) [data-status='error'] .marker {
+    background: var(--bx-bg-danger);
+}
+
+:host([data-variant='dots']) {
+    --step-indicator-width: var(--step-dot-size);
+    --step-indicator-height: var(--step-indicator-width);
+
+    .marker::after {
+        font-size: 0.75rem;
+    }
+
+    .marker-symbol,
+    bx-loading-spinner {
+        display: none;
+    }
+
+    .is-complete .marker::after {
+        content: '✓';
+    }
+
+    [data-status='error'] .marker::after {
+        content: '!';
+    }
+
+    [data-status='skipped'] .marker::after {
+        content: '−';
+    }
+
+    [data-status='loading'] .marker::after,
+    .is-awaiting-confirmation:not([data-status='error'], [data-status='skipped']) .marker::after {
+        content: '…';
+    }
+}
+
+:host([data-variant='progress']) {
+    --bx-progress-height: var(--step-thickness);
+    --bx-progress-color: var(--step-color);
+
+    .marker {
+        display: none;
+    }
+}
+
+:host(:not([data-variant='steps'])) .step-item::before,
+:host(:not([data-variant='steps'])) .step-item::after {
+    display: none;
+}
+
+@mixin vertical-layout {
+    @include row-body;
+
+    .step-list {
+        flex-direction: column;
+    }
+
+    .step-item {
+        flex: 0 0 auto;
+
+        &::before {
+            display: none;
+        }
+
+        &:not(:last-child)::after {
+            inset-block-start: calc(var(--step-inset) + var(--step-indicator-height) + var(--step-endpoint-gap));
+            inset-inline-start: calc(var(--step-inset) + (var(--step-indicator-width) - var(--step-connector)) / 2);
+            inline-size: var(--step-connector);
+            block-size: calc(100% + var(--step-gap) - var(--step-indicator-height) - 2 * var(--step-endpoint-gap));
+        }
+    }
+}
+
+:host([data-orientation='vertical']) {
+    @include vertical-layout;
+}
+
+@mixin vertical-segments {
+    --step-indicator-width: var(--step-thickness);
+    --step-indicator-height: var(--bx-stepper-segment-length, #{spacing(10)});
+
+    .marker {
+        inline-size: var(--step-indicator-width);
+    }
+}
+
+:host([data-variant='segments'][data-orientation='vertical']) {
+    @include vertical-segments;
+}
+
+@include respond-down(sm) {
+    :host([data-responsive='vertical']) {
+        @include vertical-layout;
+    }
+
+    :host([data-variant='segments'][data-responsive='vertical']) {
+        @include vertical-segments;
+    }
+
+    :host([data-responsive='compact']) {
+        .step-description,
+        .step-detail {
+            display: none;
+        }
+
+        .step-copy {
+            display: none;
+        }
+
+        .is-current .step-copy {
+            display: flex;
+        }
+    }
+
+    :host([data-responsive='compact'][data-orientation='horizontal']) .step-item {
+        flex-basis: 2.75rem;
+    }
+
+    :host([data-responsive='compact'][data-orientation='horizontal']) .step-item.is-current {
+        flex-basis: var(--bx-stepper-compact-active-width, 8rem);
+    }
+
+    :host([data-variant='cards'][data-responsive='compact'][data-orientation='horizontal']) {
+        .step-body {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .marker {
+            margin-block-start: 0;
+        }
+
+        .step-label {
+            justify-content: center;
+            min-block-size: 1.5em;
+        }
+    }
+}
+
+@media (forced-colors: active) {
+    .marker {
+        border-color: CanvasText;
+    }
+
+    .is-current .marker,
+    .is-complete .marker {
+        background: Highlight;
+        color: HighlightText;
+        forced-color-adjust: none;
+    }
+
+    [data-status='error'] .marker {
+        border-color: CanvasText;
+        background: Canvas;
+        color: CanvasText;
+    }
+
+    .step-item::before,
+    .step-item::after {
+        background: CanvasText;
+        forced-color-adjust: none;
+    }
+
+    [data-status='disabled'] {
+        color: GrayText;
+    }
+}
