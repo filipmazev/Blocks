@@ -19,7 +19,9 @@ Add the standalone component or directive to your component's `imports`.
 ## API
 
 Required inputs: `header` (header config or undefined), `showCloseButton` (boolean). `close` emits a modal close mode or undefined. Header supports text and an
-optional icon configuration.
+optional icon configuration, `loading` (false by default), and translatable `loadingLabel` (defaults to `Loading`). Loading replaces only the icon area with the
+shared spinner, preserving the normal icon for restoration and respecting reduced motion. Header updates flow from `ModalRef.patch()`; see the
+[modal patch contract](../../../../README.md#live-configuration-patching).
 
 ## Appearance
 

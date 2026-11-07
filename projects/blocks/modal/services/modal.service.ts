@@ -4,9 +4,9 @@ import { ApplicationRef, createComponent, EnvironmentInjector, inject, Injectabl
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 
-import { BehaviorSubject, filter, skip } from 'rxjs';
+import { filter, skip } from 'rxjs';
 
-import { BxA11yService } from '@filip.mazev/blocks/core';
+import type { IModalStackEntry } from '@modal/interfaces/imodal-stack-entry.interface';
 
 import { ModalConfig } from '@modal/classes/modal-config';
 import { ModalRef } from '@modal/classes/modal-ref';
@@ -29,12 +29,9 @@ export class ModalService implements IModalService {
   private readonly rendererFactory2 = inject(RendererFactory2);
   private readonly document = inject(DOCUMENT);
   private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
-  private readonly bxA11yService = inject(BxA11yService);
 
   private readonly renderer: Renderer2;
-
-  private modals: Set<ModalRef> = new Set();
-  private modalsSubject: BehaviorSubject<Set<ModalRef<unknown, unknown, IModal<unknown, unknown>>>> = new BehaviorSubject<Set<ModalRef>>(this.modals);
+  private readonly modals: Set<IModalStackEntry> = new Set<IModalStackEntry>();
 
   constructor() {
     this.renderer = this.rendererFactory2.createRenderer(null, null);
@@ -52,8 +49,13 @@ export class ModalService implements IModalService {
    * @returns A ModalRef instance representing the opened modal.
    */
   public open<D, R, C extends IModal<D, R> = IModal<D, R>>(component: ComponentType<C>, config?: IModalConfig<D, R>): ModalRef<D, R, C> {
+    const resolvedConfig = this.resolveConfig(config);
+    const modal = new ModalRef<D, R, C>(new ModalConfig(resolvedConfig), component, this);
     const dataInjector = Injector.create({
-      providers: [{ provide: MODAL_DATA, useValue: config?.data }],
+      providers: [
+        { provide: MODAL_DATA, useValue: config?.data },
+        { provide: ModalRef, useValue: modal }
+      ],
       parent: this.injector
     });
 
@@ -62,51 +64,47 @@ export class ModalService implements IModalService {
       elementInjector: dataInjector
     });
 
-    const contentInjector = Injector.create({
-      providers: [{ provide: ModalCore, useValue: wrapperRef.instance }],
-      parent: wrapperRef.injector
-    });
-
-    const contentRef = createComponent(component, {
-      environmentInjector: this.environmentInjector,
-      elementInjector: contentInjector
-    });
-
-    const resolvedConfig = this.resolveConfig(config);
-
-    wrapperRef.instance.componentRef = contentRef;
-    wrapperRef.instance.config = new ModalConfig(resolvedConfig);
-
-    this.applicationRef.attachView(wrapperRef.hostView);
-    this.document.body.appendChild(wrapperRef.location.nativeElement);
-
-    const modal = new ModalRef<D, R, C>(contentRef, component, wrapperRef, this, new ModalConfig(resolvedConfig));
-
-    // Register before application initialization, which may synchronously open a child dialog.
-    this.modals.add(modal);
-    this.syncNestingDepth();
-    this.modalsSubject.next(this.modals);
-
-    if (this.isIModal<D, R>(contentRef.instance)) {
-      contentRef.instance.modal = modal;
-      contentRef.instance.onModalInit();
-    }
-
+    modal.attachContainer(wrapperRef);
     wrapperRef.onDestroy(() => {
       this.applicationRef.detachView(wrapperRef.hostView);
       wrapperRef.location.nativeElement.remove();
     });
 
-    const modalElement = modal.componentRef.location.nativeElement;
+    try {
+      this.applicationRef.attachView(wrapperRef.hostView);
+      this.document.body.appendChild(wrapperRef.location.nativeElement);
+      this.modals.add(modal);
+      this.syncNestingDepth();
 
-    this.renderer.setStyle(modalElement, 'height', '97%');
-    this.renderer.setStyle(modalElement, 'width', '100%');
-    this.renderer.setStyle(modalElement, 'display', 'flex');
-    this.renderer.setStyle(modalElement, 'flex-grow', '1');
+      // Content constructors can synchronously open children; register and append the parent first.
+      const contentInjector = Injector.create({
+        providers: [{ provide: ModalCore, useValue: wrapperRef.instance }],
+        parent: wrapperRef.injector
+      });
+      const contentRef = createComponent(component, {
+        environmentInjector: this.environmentInjector,
+        elementInjector: contentInjector
+      });
+      const modalElement = contentRef.location.nativeElement;
 
-    modal.open();
+      modal.attachContent(contentRef);
+      this.renderer.setStyle(modalElement, 'height', '97%');
+      this.renderer.setStyle(modalElement, 'width', '100%');
+      this.renderer.setStyle(modalElement, 'display', 'flex');
+      this.renderer.setStyle(modalElement, 'flex-grow', '1');
+      modal.open();
 
-    return modal;
+      if (wrapperRef.instance.isOpen() && this.isIModal<D, R>(contentRef.instance)) {
+        contentRef.instance.modal = modal;
+        contentRef.instance.onModalInit();
+      }
+
+      return modal;
+    } catch (error) {
+      if (!wrapperRef.hostView.destroyed) wrapperRef.destroy();
+
+      throw error;
+    }
   }
 
   /**
@@ -132,7 +130,6 @@ export class ModalService implements IModalService {
   public unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
     this.modals.delete(modal);
     this.syncNestingDepth();
-    this.modalsSubject.next(this.modals);
   }
 
   /**
@@ -142,7 +139,7 @@ export class ModalService implements IModalService {
    */
   public closeAll(onNavigate: boolean = false): void {
     this.modals.forEach((modal) => {
-      if (modal.modalConfig?.disableCloseOnNavigation !== true || !onNavigate) {
+      if (modal.config().disableCloseOnNavigation !== true || !onNavigate) {
         modal.close('cancel', undefined, true);
       }
     });
@@ -158,7 +155,7 @@ export class ModalService implements IModalService {
    */
   public find<D, R>(componentType: Type<IModal<D, R>>): boolean {
     for (const modal of this.modals) {
-      if (modal.componentRef.componentType === componentType) {
+      if (modal.componentType === componentType) {
         return true;
       }
     }
@@ -175,10 +172,23 @@ export class ModalService implements IModalService {
     return this.modals.size;
   }
 
+  /**
+   * Check whether a modal is the highest registered overlay, including while it is animating closed.
+   * @internal
+   * @param modal - Reference whose keyboard-dismissal ownership is being checked.
+   * @typeParam D - Modal initialization data.
+   * @typeParam R - Modal close result.
+   * @typeParam C - Mounted content implementing the modal contract.
+   * @returns True only for the last registered modal; background dialogs must not handle Escape.
+   */
+  public isTopmost<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): boolean {
+    return [...this.modals].at(-1) === modal;
+  }
+
   //#region Helpers
 
   private syncNestingDepth(): void {
-    for (const [depth, modal] of [...this.modals].entries()) modal.modalContainerRef.instance.nestingDepth.set(depth);
+    for (const [depth, modal] of [...this.modals].entries()) modal.setNestingDepth(depth);
   }
 
   private createSubscriptions(): void {
@@ -201,11 +211,10 @@ export class ModalService implements IModalService {
 
   private resolveConfig<D, R>(config: IModalConfig<D, R> | undefined): IModalConfig<D, R> {
     const requestedAnimation = config?.style?.animate ?? this.modalGlobalSettingsService.animate();
-    const finalAnimateState = this.bxA11yService.isReducedMotion() ? false : requestedAnimation;
 
     const resolvedStyle = {
       layout: config?.style?.layout ?? this.modalGlobalSettingsService.layout(),
-      animate: finalAnimateState,
+      animate: requestedAnimation,
       hasBackdrop: config?.style?.hasBackdrop ?? this.modalGlobalSettingsService.hasBackdrop(),
       showCloseButton: config?.style?.showCloseButton ?? this.modalGlobalSettingsService.showCloseButton(),
       contentWrapper: config?.style?.contentWrapper ?? this.modalGlobalSettingsService.contentWrapper(),

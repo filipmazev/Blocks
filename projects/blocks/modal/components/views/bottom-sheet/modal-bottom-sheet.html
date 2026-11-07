@@ -12,7 +12,13 @@
     [ngClass]="{
         'opened-bottom-sheet-modal': isAnimated()
     }">
-    <button #verticalSwipeTarget type="button" aria-label="Close dialog" class="touch-hitbox bottom-sheet-modal-top-bar" (click)="onDismissClick($event)">
+    <button
+        #verticalSwipeTarget
+        type="button"
+        aria-label="Close dialog"
+        class="touch-hitbox bottom-sheet-modal-top-bar"
+        [disabled]="config()?.disableClose === true"
+        (click)="onDismissClick($event)">
         <div class="swipe-line"></div>
     </button>
 

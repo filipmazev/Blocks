@@ -9,7 +9,7 @@
 
             <form class="config-form" [formGroup]="form">
                 <div class="form-section">
-                    <h3>General Style & Data</h3>
+                    <h3>Initial placement and editable content</h3>
 
                     <bx-select
                         label="Position"
@@ -55,7 +55,39 @@
 
             <div class="actions">
                 <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="queueToast()">Demo Toast</button>
+                <button type="button" bx-button variant="tonal" [disabled]="!customToast()" (click)="patchCustomToast()">
+                    Apply message to last custom toast
+                </button>
             </div>
+
+            <section class="live-patch-demo" aria-label="Live toast configuration">
+                <h3>Live updates</h3>
+                <p class="hint">Title and message above can be applied to the selected notification. Position and animation remain opening-time settings.</p>
+                <p class="hint" role="status">Selected notification: {{ liveToast()?.state() ?? 'none' }}. {{ liveToast()?.paused() ? 'Paused' : '' }}</p>
+                <form class="config-form live-patch-form" [formGroup]="liveForm">
+                    <bx-select label="Live type" formControlName="type" subscriptSizing="dynamic" [options]="liveTypeOptions" [clearable]="false" />
+                    <bx-select label="Live icon (clear to remove)" formControlName="icon" subscriptSizing="dynamic" [options]="liveIconOptions" />
+                    <bx-checkbox label="Icon loading" formControlName="loading" subscriptSizing="dynamic" />
+                    <bx-checkbox label="Show close button" formControlName="showCloseButton" subscriptSizing="dynamic" />
+                    <bx-checkbox label="Show progress bar" formControlName="showProgressBar" subscriptSizing="dynamic" />
+                    <bx-checkbox label="Default surface backing" formControlName="hasDefaultBackground" subscriptSizing="dynamic" />
+                    <bx-input-field label="New lifetime (ms; 0 keeps open)" type="number" formControlName="durationInMs" subscriptSizing="dynamic" />
+                </form>
+                <div class="actions">
+                    <button type="button" bx-button variant="filled" [disabled]="form.invalid" (click)="openLiveToast()">Open live toast (no timeout)</button>
+                    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="patchLiveToast()">Apply content and appearance</button>
+                    <button type="button" bx-button variant="tonal" [disabled]="!liveToast() || liveForm.invalid" (click)="patchLiveToast(true)">
+                        Apply and reset lifetime
+                    </button>
+                    <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.pause()">Pause</button>
+                    <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.resume()">Resume</button>
+                    <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.close()">Dismiss selected</button>
+                    <button type="button" bx-button variant="tonal" (click)="loadingToSuccess()">Loading to success</button>
+                    <button type="button" bx-button variant="tonal" [disabled]="form.invalid" (click)="queuePatchDemo()">Patch a queued toast</button>
+                    <button type="button" bx-button (click)="releaseQueueDemo()">Release queue placeholders</button>
+                </div>
+                <p class="hint">Content patches keep the remaining time. Reset lifetime also works while paused. Hover pauses timed notifications.</p>
+            </section>
 
             <div class="buttons-container">
                 <button type="button" bx-button variant="filled" color="info" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('info')">

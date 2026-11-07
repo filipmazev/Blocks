@@ -108,6 +108,8 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
     let isPointerDown = false;
 
     const pointerDown = (event: PointerEvent) => {
+      if (this.config()?.disableClose) return;
+
       if (event.button !== 0 && event.pointerType === 'mouse') return;
 
       const modalHeight = this.elementRef()?.nativeElement.offsetHeight || 0;
@@ -187,7 +189,7 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   }
 
   private monitorInputType(): void {
-    if (this.globalResizeCleanup) return;
+    if (this.globalResizeCleanup || typeof window === 'undefined') return;
 
     const handler = (event: PointerEvent) => {
       const isTouch = event.pointerType === 'touch';

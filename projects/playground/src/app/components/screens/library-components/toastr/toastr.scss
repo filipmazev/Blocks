@@ -1,4 +1,49 @@
+@use 'core/styles/helpers' as *;
+
 :host {
     display: block;
     min-inline-size: 0;
+}
+
+.config-container {
+    gap: spacing(4);
+}
+
+.config-header,
+.hint,
+.form-section h3 {
+    margin: 0;
+}
+
+.actions {
+    flex-wrap: wrap;
+    gap: spacing(3);
+    margin-block-start: 0;
+}
+
+.live-patch-demo {
+    display: grid;
+    gap: spacing(4);
+    min-inline-size: 0;
+    padding-block-start: spacing(4);
+    border-block-start: 1px solid var(--bx-border-default);
+}
+
+.live-patch-demo h3,
+.live-patch-demo p {
+    margin: 0;
+}
+
+.live-patch-form {
+    gap: spacing(3);
+}
+
+.actions > button {
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+}
+
+.buttons-container {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    margin-block-start: 0;
 }

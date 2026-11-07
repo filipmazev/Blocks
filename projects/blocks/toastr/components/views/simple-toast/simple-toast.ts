@@ -1,9 +1,11 @@
 import type { Signal } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { BX_I18N, isTextWithKey } from '@filip.mazev/blocks/core';
+import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
 import { Toast } from '@toastr/classes/toast';
 import { ISimpleToastData } from '@toastr/interfaces/isimple-toast-data.interface';
@@ -11,43 +13,19 @@ import { ISimpleToastData } from '@toastr/interfaces/isimple-toast-data.interfac
 @Component({
   selector: 'bx-simple-toast',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass, Icon, LoadingSpinner],
   templateUrl: './simple-toast.html',
-  // Toast.data remains a publicly mutable object rather than a signal input.
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './simple-toast.scss'
 })
 export class SimpleToast extends Toast<ISimpleToastData, undefined> {
   private readonly i18n = inject(BX_I18N, { optional: true });
 
-  protected readonly resolvedTitle: Signal<string | undefined> = computed(() => {
-    this.i18n?.version?.();
+  protected readonly resolvedTitle: Signal<string> = computed(() => resolveText(this.data()?.title ?? undefined, this.i18n));
+  protected readonly resolvedMessage: Signal<string> = computed(() => resolveText(this.data()?.message, this.i18n));
+  protected readonly iconSize: Signal<number> = computed(() => {
+    const size = Number(this.data()?.icon?.size ?? 24);
 
-    const title = this.data.title;
-
-    if (!title) return undefined;
-
-    if (isTextWithKey(title)) {
-      return this.i18n?.translate(title.key) ?? title.key;
-    }
-
-    return title;
+    return Number.isFinite(size) && size > 0 ? size : 24;
   });
-  protected readonly resolvedMessage: Signal<string | undefined> = computed(() => {
-    this.i18n?.version?.();
-
-    const message = this.data.message;
-
-    if (!message) return undefined;
-
-    if (isTextWithKey(message)) {
-      return this.i18n?.translate(message.key) ?? message.key;
-    }
-
-    return message;
-  });
-
-  protected dismiss(): void {
-    this.toast?.close();
-  }
 }

@@ -27,3 +27,37 @@ Existing navigation inputs, outputs, routes, and persistence contracts remain un
 Custom item, header, and footer templates can apply the shared reveal to their text using `opacity: var(--bx-side-nav-label-opacity, 1)` and an opacity
 transition with `var(--bx-side-nav-label-transition-duration, 0ms)`. Keep icons and focus indicators outside the faded text. The inherited values follow the
 navigation's reduced-motion and keyboard-focus behavior.
+
+## Reactive modal and toast configuration
+
+- Added strongly typed `ModalRef.patch(IModalPatch)` and `ToastRef.patch(IToastPatch<D>)`, backed by one reactive configuration source per reference. Callers
+  and mounted content can update supported properties without recreating the overlay, restarting its entrance animation, or resetting application content state.
+- Modal patches merge heading, icon, dismissal policies, close-action visibility, and supported wrapper/content presentation. Undefined retains existing values;
+  supported null values clear optional content or presentation. Layout, identity, mounting, initialization data, and lifecycle callbacks remain opening-time
+  configuration.
+- Added optional header and simple-toast icon loading, plus translatable accessible loading labels. The shared spinner temporarily replaces the retained icon,
+  preserves its area, and respects reduced motion. Simple toasts now support configurable icons alongside their existing semantic type, title, and message.
+- Toast patches shallow-merge plain-object content data and replace arrays, primitives, and nonplain objects. Translation, semantic surfaces, and derived
+  presentation react to updates. Data nullability follows the application contract; simple-toast title and icon accept null to clear them.
+- Explicit duration patches reset toast lifetime and progress, including repeated equal durations and duration zero for manual dismissal. Unrelated patches
+  retain remaining time, paused toasts remain paused, and restoring a hidden progress indicator uses the current remaining fraction.
+- Queued notifications receive patches before display without promotion or a running lifetime. Closing queued references cancels them without display. Closing
+  and destroyed overlays ignore late patches; timers, subscriptions, progress controllers, and dismissal callbacks are cleaned up.
+- Fixed modal close-action visibility to honor disabled dismissal and show-close-button settings consistently. Mounted modal motion responds to shared
+  accessibility preferences; requested animation preferences are retained so reduced-motion changes can be applied reactively.
+- Serialized toast queue processing to prevent reentrant content construction or initialization from exceeding capacity or changing queue order. Rechecked the
+  current capacity and pause policy before each notification is mounted; configuration, progress, and lifetime remain instance-owned.
+- Restricted Escape dismissal to the top registered modal, preventing background dialogs from closing or opening extra confirmations. Deduplicated pending close
+  guards per dialog while retaining force-close behavior.
+- Registered parent dialogs before constructing content so synchronously opened children retain correct stacking and depth. Failed content initialization
+  releases the affected dialog, and bottom-sheet views remain mounted through their close animation.
+
+## Reactive API migration
+
+- Replace `ModalRef.modalConfig` with `ModalRef.config()`. `ModalCore.config` and `ToastCore.config` are now signals; `ToastRef.config` is read with `config()`.
+  Use patch methods rather than mutating configuration snapshots. References are service-created; their construction/attachment lifecycle has changed.
+- `Toast<D, R>.data` and the `IToast` data contract are now `Signal<D | undefined>`. Read `data()?.message` in templates or `this.data()?.message` in
+  TypeScript. Custom toast implementations must expose reactive data and a read-only reference. `TOAST_DATA` remains an initialization snapshot; migrate to
+  `ToastRef.data` for live updates. Modal initialization data is unchanged.
+- Removed the unused `ModalRef.modalContainer` and `parentElement` properties. Mounted content/container getters are undefined after destruction. The toast host
+  no longer replaces the reference's close method at runtime; service-created content can inject its typed reference directly.

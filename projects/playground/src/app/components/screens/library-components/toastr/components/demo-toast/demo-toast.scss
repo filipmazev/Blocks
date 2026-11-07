@@ -4,7 +4,7 @@
     display: flex;
     position: relative;
     padding: spacing(4);
-    min-height: 2.5rem;
+    min-block-size: 2.5rem;
     color: var(--bx-text-primary);
 }
 
@@ -14,11 +14,14 @@
     justify-content: center;
     align-items: flex-start;
     flex: 1;
-    padding-right: spacing(6);
+    gap: spacing(2);
+    min-inline-size: 0;
+    padding-inline-end: spacing(6);
+    overflow-wrap: anywhere;
 }
 
 .notification-title {
-    margin: 0 0 spacing(1);
+    margin: 0;
     font-size: 1rem;
     font-weight: 600;
 }
@@ -27,4 +30,18 @@
     margin: 0;
     font-size: 0.875rem;
     line-height: 1.5;
+}
+
+.notification-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(2);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-block-start: spacing(2);
+}
+
+.notification-actions > button {
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
 }

@@ -41,3 +41,8 @@ export * from '@modal/types/modal.types';
 
 export * from '@modal/classes/guards/modal-confirm-close-guard';
 export * from '@modal/classes/modal-close-guard';
+
+export * from '@modal/interfaces/imodal-header-config.interface';
+export * from '@modal/interfaces/imodal-patch.interface';
+export * from '@modal/interfaces/imodal-header-patch.interface';
+export * from '@modal/interfaces/imodal-style-patch.interface';

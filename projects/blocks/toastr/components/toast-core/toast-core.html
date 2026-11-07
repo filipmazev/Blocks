@@ -3,8 +3,8 @@
         #toastSwipeTarget
         bxSurface
         class="toast-wrapper"
-        [bxSurfaceGlassiness]="config?.hasDefaultBackground === false ? 'off' : (config?.glassiness ?? 'auto')"
-        [bxSurfaceQuality]="config?.glassQuality ?? 'enhanced'"
+        [bxSurfaceGlassiness]="config().hasDefaultBackground === false ? 'off' : (config().glassiness ?? 'auto')"
+        [bxSurfaceQuality]="config().glassQuality ?? 'enhanced'"
         [ngClass]="wrapperClasses()"
         [class.show]="isVisible()"
         [class.no-animate]="!isAnimated()"
@@ -20,7 +20,7 @@
 
         <ng-container #dynamicContainer></ng-container>
 
-        @if (config?.durationInMs && showProgressBar() && progressBarCssVar() && progressBarBgCssVar()) {
+        @if (config().durationInMs && showProgressBar() && progressBarCssVar() && progressBarBgCssVar()) {
             <div class="toast-progress-container" [style.background]="progressBarBgCssVar()">
                 <div #progressBar class="toast-progress-bar" [style.background]="progressBarCssVar()"></div>
             </div>

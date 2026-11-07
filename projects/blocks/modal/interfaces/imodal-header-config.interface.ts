@@ -9,4 +9,8 @@ export interface IModalHeaderConfig {
   text: ResolvableText;
   /** (optional) An icon to display to the left of the text, will default to undefined */
   icon?: IIconData;
+  /** Replace only the icon area with the shared loading spinner while true. Defaults to false; preserves the configured icon. */
+  loading?: boolean;
+  /** Accessible icon-loading label with translation support. Defaults to Loading through the shared spinner. */
+  loadingLabel?: ResolvableText;
 }

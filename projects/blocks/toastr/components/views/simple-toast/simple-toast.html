@@ -1,5 +1,22 @@
-<div class="simple-toast" [ngClass]="data.type">
-    <div class="simple-toast-content">
+@let content = data();
+<div class="simple-toast" [ngClass]="content?.type ?? 'info'">
+    @if (content?.icon || content?.loading !== undefined) {
+        <span class="simple-toast-icon-area" [style.min-inline-size.px]="iconSize()" [style.min-block-size.px]="iconSize()">
+            @if (content?.icon; as icon) {
+                <bx-icon
+                    [name]="icon.name"
+                    [size]="iconSize()"
+                    [color]="icon.color"
+                    [bgColor]="icon.bgColor"
+                    [strokeWidth]="icon.strokeWidth"
+                    [style.visibility]="content?.loading ? 'hidden' : 'visible'" />
+            }
+            @if (content?.loading) {
+                <bx-loading-spinner [size]="iconSize()" [label]="content?.loadingLabel ?? 'Loading'" />
+            }
+        </span>
+    }
+    <div class="simple-toast-content" aria-live="polite" aria-atomic="true">
         @if (resolvedTitle()) {
             <h4 class="simple-toast-title">{{ resolvedTitle() }}</h4>
             <p class="simple-toast-message">{{ resolvedMessage() }}</p>

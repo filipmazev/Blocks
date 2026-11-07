@@ -83,7 +83,7 @@ For custom header/footer content, add `ModalHeaderDirective` and `ModalFooterDir
 | `modalState$()`                       | Observe `OPENING`, `OPEN`, `CLOSING`, and `CLOSED`.                                     |
 | `backdropClick()`                     | Observe backdrop pointer events.                                                        |
 | `afterClosed()`                       | Observe the final `IModalCloseResult<R \| undefined>` with `state` and optional `data`. |
-| `modalConfig`                         | Read the resolved configuration.                                                        |
+| `config()`                            | Read the authoritative reactive configuration.                                          |
 
 Use supported configuration and slots to customize the dialog. Applications do not need to inspect its component references or DOM.
 
@@ -94,7 +94,7 @@ Use supported configuration and slots to customize the dialog. Applications do n
 | Property                          | Default and purpose                                                                            |
 | --------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `data`                            | Optional typed content payload.                                                                |
-| `header`                          | Optional `{ text: ResolvableText, icon?: IIconData }`.                                         |
+| `header`                          | Optional heading text, icon, icon loading, and loading label.                                  |
 | `style`                           | Optional `IModalStyleConfig` described below.                                                  |
 | `open`                            | `true`; initial open state.                                                                    |
 | `disableClose`                    | `false`; prevent ordinary dismissal.                                                           |
@@ -109,11 +109,68 @@ Use supported configuration and slots to customize the dialog. Applications do n
 Instance options override `ModalGlobalSettingsService` defaults. Its `update()` currently applies `animate`, `hasBackdrop`, and `disableCloseOnBackdropClick`;
 other exposed default signals can be configured directly before opening.
 
+### Live configuration patching
+
+`ModalRef.patch(patch: IModalPatch): void` updates the existing dialog synchronously. Use the reference returned by `open()` or `this.modal` inside a component
+extending `Modal<D, R>`. Both paths share the same configuration signal; `config()` reads the current resolved value. The reference is also injectable as
+`inject<ModalRef<D, R>>(ModalRef)` inside service-created content.
+
+```ts
+const ref = this.modalService.open(WizardDialog, {
+    header: { text: 'Step 1: Details', icon: { name: 'pencil' } }
+});
+
+ref.patch({ header: { text: 'Step 2: Review' } });
+ref.patch({ header: { loading: true }, disableClose: true });
+ref.patch({
+    header: { text: 'Changes saved', icon: { name: 'check' }, loading: false },
+    disableClose: false
+});
+```
+
+Inside `WizardDialog`, the same update is `this.modal.patch({ header: { text: 'Step 2: Review' } })`. Draft values, the mounted component, scroll position,
+focus on retained elements, and the entrance animation remain intact.
+
+| Patch property                                                                      | Behavior                                                                                                             |
+| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `header.text`                                                                       | Replace `ResolvableText`; null clears only the text.                                                                 |
+| `header.icon`                                                                       | Merge supplied `IIconData` members; null removes the icon. A new partial icon without a name uses `info`.            |
+| `header.loading`                                                                    | Replace only the icon area with the shared spinner, retaining the configured icon. Defaults to false.                |
+| `header.loadingLabel`                                                               | Accessible spinner label as `ResolvableText`; defaults to the shared spinner's `Loading` label.                      |
+| `header: null`                                                                      | Remove the configured heading and icon; custom header slots remain mounted.                                          |
+| `disableClose`                                                                      | Prevent user dismissal through Escape, close actions, backdrop, and swipe. Programmatic `close()` remains available. |
+| `disableCloseOnBackdropClick`, `disableCloseOnNavigation`, `closeGuardOnlyOnCancel` | Update the existing dismissal policies.                                                                              |
+| `style.showCloseButton`                                                             | Toggle the close action, subject to `disableClose`.                                                                  |
+| `style.wrapperClasses`, `style.wrapperStyles`                                       | Replace presentation overrides; null clears the override.                                                            |
+| `contentClasses`, `contentStyles`                                                   | Replace classes or inline styles on the content wrapper; null clears them.                                           |
+
+Omitted and `undefined` properties retain their current values. Header, icon, and supported style updates merge instead of resetting siblings. No consumer-owned
+configuration object is mutated. Patches are applied in call order, including during `onModalInit()`. Closing and destroyed modals ignore late updates.
+
+Layout, responsive breakpoints, animation, backdrop mounting, identity, component type, initialization data, and lifecycle callbacks remain opening-time
+options. They are absent from `IModalPatch`. Application form and wizard data stays application-owned.
+
+When loading switches off, the configured icon returns. A hidden normal icon preserves its dimensions, including its backing. When there is no configured icon,
+explicit loading state reserves a default 24px slot so switching between true and false does not shift the heading. Spinner size follows `icon.size` and reduced
+motion uses the shared static presentation. This loading flag affects the icon only; it does not disable the dialog or prevent dismissal automatically.
+
+### Migration for reactive references
+
+Replace `ref.modalConfig` with `ref.config()` and direct configuration assignments with `ref.patch(...)`. `ModalCore.config` is now a signal as well.
+Configuration snapshots must be treated as read-only. The old unused `modalContainer` and `parentElement` properties are removed; service-owned mounting is not
+configurable through the reference. Mounted component/container getters become undefined after destruction. References are created and attached by
+`ModalService`; use its `open()` API rather than constructing references yourself. `Modal<D, R>.data` and `MODAL_DATA` remain initialization data.
+
 ### Close guards
 
 Extend `ModalCloseGuard` and implement `canClose(modalService)` returning a boolean, Promise, or Observable. A false result retains the dialog.
 `ModalConfirmCloseGuard<D, R>(ConfirmationComponent, config)` opens a typed confirmation dialog and waits for its result. Keep application-owned unsaved state
 in the application; provide the guard when opening its content. `forceClose: true` deliberately bypasses the guard.
+
+Only the top registered modal handles Escape, including when other dialogs remain mounted behind it. A disabled top dialog does not pass Escape to its parent.
+Repeated close requests share the pending guard decision instead of opening duplicate confirmation dialogs; force closing remains available. Each dialog retains
+its own patch configuration, guard, and close timer. Parents are registered before constructing application content, so a synchronously opened child retains the
+correct stack order and nesting depth. Bottom-sheet presentation stays mounted throughout dismissal.
 
 ### Declarative nonmodal panels
 
@@ -180,5 +237,9 @@ custom actions, descriptions, errors, and form controls. Keep actions reachable 
 The live dialog includes **Open nested dialog**, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a
 child returns to its parent. The confirm-close guard exercises the same independent backdrop and depth policy.
 
-Open `/modal` for the configurator, `/components/modal-core` for the lifecycle host, or the centered, side, bottom-sheet, header, footer, and backdrop entries
-in the component catalog. The examples demonstrate typed results and guarded dismissal.
+Open `/modal` for initial configuration, live heading/icon/dismissal controls inside the dialog, and a three-step save wizard. Visit `/components/modal-core`
+for the lifecycle host, or the centered, side, bottom-sheet, header, footer, and backdrop entries in the component catalog. The examples demonstrate typed
+results and guarded dismissal.
+
+The `/modal` dialog includes an editable draft note, live presentation controls, and a review/save flow. Patches retain that note and the wizard step. The page
+also exposes an action to patch heading and dismissal settings on its last open reference.

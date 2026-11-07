@@ -2,17 +2,23 @@
     @let headerData = header();
     @if (headerData) {
         <div class="modal-top-banner-title-container">
-            @if (headerData.icon) {
-                <bx-icon
-                    [name]="headerData.icon.name"
-                    [size]="headerData.icon.size ?? '24'"
-                    [color]="headerData.icon.color"
-                    [bgColor]="headerData.icon.bgColor"
-                    [strokeWidth]="headerData.icon.strokeWidth" />
+            @if (headerData.icon || headerData.loading !== undefined) {
+                <span class="modal-icon-area" [style.min-inline-size.px]="iconSize()" [style.min-block-size.px]="iconSize()">
+                    @if (headerData.icon; as icon) {
+                        <bx-icon
+                            [name]="icon.name"
+                            [size]="iconSize()"
+                            [color]="icon.color"
+                            [bgColor]="icon.bgColor"
+                            [strokeWidth]="icon.strokeWidth"
+                            [style.visibility]="headerData.loading ? 'hidden' : 'visible'" />
+                    }
+                    @if (headerData.loading) {
+                        <bx-loading-spinner [size]="iconSize()" [label]="headerData.loadingLabel ?? 'Loading'" />
+                    }
+                </span>
             }
-            @if (resolvedText()) {
-                {{ resolvedText() }}
-            }
+            <span aria-live="polite" aria-atomic="true">{{ resolvedText() }}</span>
         </div>
     }
 

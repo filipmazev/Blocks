@@ -25,3 +25,13 @@
 .bx-modal-close {
     @include panel-close;
 }
+
+.modal-icon-area {
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+
+    > * {
+        grid-area: 1 / 1;
+    }
+}

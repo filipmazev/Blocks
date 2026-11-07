@@ -11,6 +11,24 @@
     <div>
         {{ data.body }}
     </div>
+    <section class="modal-patch-demo" aria-label="Live modal configuration">
+        <h3>Patch this open modal</h3>
+        <p>Apply changes without replacing this content. The draft note and wizard step stay intact.</p>
+        <bx-input-field label="Draft note (retained across patches)" subscriptSizing="dynamic" [formControl]="draftNote" />
+        <form class="live-patch-form" [formGroup]="liveForm">
+            <bx-input-field label="Live heading" formControlName="text" subscriptSizing="dynamic" />
+            <bx-select label="Live icon (clear to remove)" formControlName="icon" subscriptSizing="dynamic" [options]="iconOptions" />
+            <bx-checkbox label="Icon loading" formControlName="loading" subscriptSizing="dynamic" />
+            <bx-checkbox label="Prevent user dismissal" formControlName="disableClose" subscriptSizing="dynamic" />
+            <bx-checkbox label="Show close button" formControlName="showCloseButton" subscriptSizing="dynamic" />
+            <bx-checkbox label="Accent heading appearance" formControlName="emphasize" subscriptSizing="dynamic" />
+            <button type="button" bx-button variant="tonal" [disabled]="saving()" (click)="applyLivePatch()">Apply live patch</button>
+        </form>
+        <p role="status">Wizard step {{ wizardStep() }} of 3. {{ saving() ? 'Saving…' : 'Your draft is retained.' }}</p>
+        <button type="button" bx-button [disabled]="saving() || wizardStep() === 3" [loading]="saving()" (click)="advanceWizard()">
+            {{ wizardStep() === 1 ? 'Review draft' : wizardStep() === 2 ? 'Save draft' : 'Saved' }}
+        </button>
+    </section>
     <section class="modal-menu-demo" aria-label="Menus inside this modal">
         <h3>Menus inside the modal</h3>
         <button bx-button type="button" variant="tonal" color="primary" placement="bottom" [bxDropdown]="dropdownActions">

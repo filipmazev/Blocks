@@ -1,163 +1,217 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { ComponentRef, Type } from '@angular/core';
+import type { ComponentType } from '@angular/cdk/portal';
+import type { ComponentRef, Signal, WritableSignal } from '@angular/core';
 
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { signal } from '@angular/core';
 
-import { ModalCore } from '@modal/components/modal-core/modal-core';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+
+import type { ModalCore } from '@modal/components/modal-core/modal-core';
+import type { IModal } from '@modal/interfaces/imodal.interface';
+import type { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
+import type { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
+import type { IModalHeaderPatch } from '@modal/interfaces/imodal-header-patch.interface';
+import type { IModalPatch } from '@modal/interfaces/imodal-patch.interface';
+import type { IModalRef } from '@modal/interfaces/imodal-ref.interface';
+import type { ModalService } from '@modal/services/modal.service';
+import type { ModalCloseMode } from '@modal/types/modal.types';
+
 import { ModalState } from '@modal/enums/modal-state.enum';
-import { IModal } from '@modal/interfaces/imodal.interface';
-import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
-import { IModalRef } from '@modal/interfaces/imodal-ref.interface';
-import { ModalService } from '@modal/services/modal.service';
-import { ModalCloseMode } from '@modal/types/modal.types';
 
 import { ModalConfig } from './modal-config';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export class ModalRef<D = unknown, R = any, C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
-  private _modalContainer: Type<ModalCore<D, R, C>> = {} as Type<ModalCore<D, R, C>>;
-  private _modalContainerRef: ComponentRef<ModalCore<D, R, C>> = {} as ComponentRef<ModalCore<D, R, C>>;
-  private _modalContainerElement: HTMLElement = {} as HTMLElement;
-  private _parentElement: HTMLElement | undefined = undefined;
-  private _componentRef: ComponentRef<C> = {} as ComponentRef<C>;
-  private _modalState: ModalState = ModalState.CLOSED;
-  private modalState: BehaviorSubject<ModalState> = new BehaviorSubject<ModalState>(this.getStatus());
-  private _modalConfig?: ModalConfig<D, R> = undefined;
-  private backdropClickSubject: Subject<MouseEvent> = new Subject<MouseEvent>();
-  private afterCloseSubject: Subject<IModalCloseResult<R | undefined>> = new Subject<IModalCloseResult<R | undefined>>();
+/** An existing modal's reactive configuration, mounted content, and guarded close lifecycle.
+ * @typeParam D - Initialization data supplied to the content component.
+ * @typeParam R - Result emitted after the modal closes.
+ * @typeParam C - Mounted content implementing the modal contract.
+ */
+export class ModalRef<D = unknown, R = unknown, C extends IModal<D, R> = IModal<D, R>> implements IModalRef<D, R, C> {
+  private readonly configuration: WritableSignal<ModalConfig<D, R>>;
+  private readonly modalState: BehaviorSubject<ModalState> = new BehaviorSubject<ModalState>(ModalState.OPENING);
+  private readonly backdropClickSubject: Subject<MouseEvent> = new Subject<MouseEvent>();
+  private readonly afterCloseSubject: Subject<IModalCloseResult<R | undefined>> = new Subject<IModalCloseResult<R | undefined>>();
+  private readonly subscriptions: Subscription = new Subscription();
+
+  /** Authoritative resolved configuration. Read with config(); use patch() for supported updates. */
+  public readonly config: Signal<ModalConfig<D, R>>;
+
+  private contentRef?: ComponentRef<C>;
+  private containerRef?: ComponentRef<ModalCore<D, R, C>>;
+  private closeTimeout?: ReturnType<typeof setTimeout>;
 
   constructor(
-    componentRef: ComponentRef<C>,
-    public componentType: ComponentType<C>,
-    modalContainerRef: ComponentRef<ModalCore<D, R, C>>,
-    private modalService: ModalService,
-    modalConfig?: ModalConfig<D, R>
+    config: ModalConfig<D, R>,
+    /** Angular component type mounted for this modal. It cannot be changed through patch(). */
+    public readonly componentType: ComponentType<C>,
+    private readonly modalService: ModalService
   ) {
-    this.modalConfig = modalConfig;
-    this.modalContainerRef = modalContainerRef;
-    this.modalContainerElement = modalContainerRef.location.nativeElement;
-
-    this.componentRef = componentRef;
+    this.configuration = signal(config);
+    this.config = this.configuration.asReadonly();
   }
 
-  public get modalContainer(): Type<ModalCore<D, R, C>> {
-    return this._modalContainer;
+  /** Mounted content reference; unavailable after destruction. */
+  public get componentRef(): ComponentRef<C> | undefined {
+    return this.contentRef;
   }
 
-  public get modalContainerRef(): ComponentRef<ModalCore<D, R, C>> {
-    return this._modalContainerRef;
+  /** Mounted presentation host; unavailable after destruction. */
+  public get modalContainerRef(): ComponentRef<ModalCore<D, R, C>> | undefined {
+    return this.containerRef;
   }
 
-  public get modalContainerElement(): HTMLElement {
-    return this._modalContainerElement;
+  /** Mounted overlay element; unavailable after destruction. */
+  public get modalContainerElement(): HTMLElement | undefined {
+    return this.containerRef?.location.nativeElement;
   }
 
-  public get parentElement(): HTMLElement | undefined {
-    return this._parentElement;
+  /**
+   * Update this mounted modal's material depth after a stack change.
+   * @internal
+   * @param depth - Zero-based nesting depth assigned by ModalService.
+   */
+  public setNestingDepth(depth: number): void {
+    this.containerRef?.instance.nestingDepth.set(depth);
   }
 
-  public get componentRef(): ComponentRef<C> {
-    return this._componentRef;
+  /**
+   * Merge supported properties synchronously without recreating content. Closing and destroyed modals ignore updates.
+   * @param patch - Runtime changes; undefined retains a value and supported null values clear it.
+   */
+  public patch(patch: IModalPatch): void {
+    if (this.modalState.value === ModalState.CLOSING || this.modalState.value === ModalState.CLOSED) return;
+
+    this.configuration.update(
+      (current) =>
+        new ModalConfig({
+          ...current,
+          header: patch.header === null ? undefined : patch.header === undefined ? current.header : this.patchHeader(current.header, patch.header),
+          disableClose: patch.disableClose ?? current.disableClose,
+          disableCloseOnBackdropClick: patch.disableCloseOnBackdropClick ?? current.disableCloseOnBackdropClick,
+          disableCloseOnNavigation: patch.disableCloseOnNavigation ?? current.disableCloseOnNavigation,
+          closeGuardOnlyOnCancel: patch.closeGuardOnlyOnCancel ?? current.closeGuardOnlyOnCancel,
+          contentClasses: patch.contentClasses === undefined ? current.contentClasses : (patch.contentClasses ?? ''),
+          contentStyles: patch.contentStyles === undefined ? current.contentStyles : (patch.contentStyles ?? ''),
+          style: {
+            ...current.style,
+            showCloseButton: patch.style?.showCloseButton ?? current.style.showCloseButton,
+            wrapperClasses: patch.style?.wrapperClasses === undefined ? current.style.wrapperClasses : (patch.style.wrapperClasses ?? ''),
+            wrapperStyles: patch.style?.wrapperStyles === undefined ? current.style.wrapperStyles : (patch.style.wrapperStyles ?? '')
+          }
+        })
+    );
   }
 
-  public get modalConfig(): ModalConfig<D, R> | undefined {
-    return this._modalConfig;
-  }
-
+  /** Observe backdrop activations, including those that do not dismiss the modal. */
   public backdropClick(): Observable<MouseEvent> {
     return this.backdropClickSubject.asObservable();
   }
 
+  /** Observe the opening, open, closing, and closed lifecycle. Completes after destruction. */
   public modalState$(): Observable<ModalState> {
     return this.modalState.asObservable();
   }
 
-  /**
-   * Observable that emits when the modal has been closed.
-   * @returns An Observable that emits an IModalCloseResult<R | undefined> when the modal is closed.
-   */
+  /** Observe the final close mode and optional result. Emits once and completes after destruction. */
   public afterClosed(): Observable<IModalCloseResult<R | undefined>> {
     return this.afterCloseSubject.asObservable();
   }
 
-  public async open(): Promise<void> {
-    this._modalState = ModalState.OPENING;
-    this.modalState.next(ModalState.OPENING);
-
-    this.modalContainerRef.instance.componentRef = this._componentRef;
-
-    const config = new ModalConfig(this.modalConfig);
-
-    this.modalContainerRef.instance.config = config;
-
-    this.modalContainerRef.instance.closeFunction = this.handleClose.bind(this);
-
-    this.parentElement?.appendChild(this.modalContainerElement);
-
-    this.modalContainerRef.instance.backdropClick.subscribe((event) => {
-      this.backdropClicked(event);
-    });
-
-    this._modalState = ModalState.OPEN;
-    this.modalState.next(ModalState.OPEN);
+  /**
+   * Connect the presentation host before application content is constructed.
+   * @internal
+   * @param modalContainerRef - Host sharing this reference's configuration and dismissal lifecycle.
+   */
+  public attachContainer(modalContainerRef: ComponentRef<ModalCore<D, R, C>>): void {
+    this.containerRef = modalContainerRef;
+    modalContainerRef.instance.closeFunction = (result) => this.handleClose(result);
+    this.subscriptions.add(modalContainerRef.instance.backdropClick.subscribe((event) => this.backdropClickSubject.next(event)));
+    modalContainerRef.onDestroy(() => this.finishClose({ state: 'cancel', data: undefined }));
   }
 
+  /**
+   * Connect application content to its already-registered presentation host.
+   * @internal
+   * @param componentRef - Content constructed with this modal's injected reference.
+   */
+  public attachContent(componentRef: ComponentRef<C>): void {
+    this.contentRef = componentRef;
+
+    if (this.containerRef) this.containerRef.instance.componentRef = componentRef;
+  }
+
+  /** Mark the attached modal open. Repeated calls cannot reopen a closing or destroyed modal. */
+  public open(): void {
+    if (this.modalState.value === ModalState.OPENING) this.modalState.next(ModalState.OPEN);
+  }
+
+  /**
+   * Request guarded closure. Programmatic closure remains available when user dismissal is disabled.
+   * @param state - Result mode; defaults to cancel.
+   * @param result - Optional application result.
+   * @param forceClose - Bypass dismissal guards when true; defaults to false.
+   */
   public close(state: ModalCloseMode = 'cancel', result: R | undefined = undefined, forceClose: boolean = false): void {
-    this.modalContainerRef.instance.close(state, result, false, forceClose);
+    if (this.modalState.value === ModalState.CLOSING || this.modalState.value === ModalState.CLOSED) return;
+
+    this.containerRef?.instance.close(state, result, false, forceClose);
   }
 
   //#region Helpers
 
-  private set modalContainerRef(modalContainerRef: ComponentRef<ModalCore<D, R, C>>) {
-    this._modalContainerRef = modalContainerRef;
-  }
+  private patchHeader(current: IModalHeaderConfig | undefined, patch: IModalHeaderPatch): IModalHeaderConfig {
+    const icon = patch.icon;
 
-  private set modalContainerElement(modalContainerElement: HTMLElement) {
-    this._modalContainerElement = modalContainerElement;
-  }
-
-  private set parentElement(parentElement: HTMLElement | undefined) {
-    this._parentElement = parentElement;
-  }
-
-  private set componentRef(componentRef: ComponentRef<C>) {
-    this._componentRef = componentRef;
-  }
-
-  private set modalConfig(modalConfig: ModalConfig<D, R> | undefined) {
-    this._modalConfig = modalConfig;
-  }
-
-  private getStatus(): ModalState {
-    return this._modalState;
-  }
-
-  private backdropClicked(event: MouseEvent) {
-    this.backdropClickSubject.next(event);
-  }
-
-  private afterClose(result: IModalCloseResult<R | undefined>) {
-    this.afterCloseSubject.next(result);
+    return {
+      text: patch.text === undefined ? (current?.text ?? '') : (patch.text ?? ''),
+      loading: patch.loading ?? current?.loading,
+      loadingLabel: patch.loadingLabel ?? current?.loadingLabel,
+      icon:
+        icon === null
+          ? undefined
+          : icon === undefined
+            ? current?.icon
+            : {
+                name: icon.name ?? current?.icon?.name ?? 'info',
+                size: icon.size ?? current?.icon?.size,
+                color: icon.color ?? current?.icon?.color,
+                bgColor: icon.bgColor ?? current?.icon?.bgColor,
+                strokeWidth: icon.strokeWidth ?? current?.icon?.strokeWidth
+              }
+    };
   }
 
   private handleClose(result: IModalCloseResult<R | undefined>): void {
-    this._modalState = ModalState.CLOSING;
+    if (this.modalState.value === ModalState.CLOSING || this.modalState.value === ModalState.CLOSED) return;
+
     this.modalState.next(ModalState.CLOSING);
 
-    setTimeout(() => {
-      if (this.modalConfig?.afterClose) {
-        this.modalConfig.afterClose();
-      }
+    const duration = this.containerRef?.instance.isAnimated() ? this.containerRef.instance.animationDuration : 0;
 
-      this.modalContainerRef.destroy();
+    this.closeTimeout = setTimeout(() => this.finishClose(result), duration);
+  }
 
-      this._modalState = ModalState.CLOSED;
-      this.modalState.next(ModalState.CLOSED);
+  private finishClose(result: IModalCloseResult<R | undefined>): void {
+    if (this.modalState.value === ModalState.CLOSED) return;
 
-      this.afterClose(result);
+    clearTimeout(this.closeTimeout);
+    this.subscriptions.unsubscribe();
+    this.modalState.next(ModalState.CLOSED);
 
-      this.modalService?.unregister(this);
-    }, this.modalContainerRef.instance.animationDuration);
+    const containerRef = this.containerRef;
+
+    this.containerRef = undefined;
+    this.contentRef = undefined;
+
+    try {
+      this.config().afterClose?.();
+    } finally {
+      if (containerRef && !containerRef.hostView.destroyed) containerRef.destroy();
+
+      this.modalService.unregister(this);
+      this.afterCloseSubject.next(result);
+      this.afterCloseSubject.complete();
+      this.backdropClickSubject.complete();
+      this.modalState.complete();
+    }
   }
 
   //#endregion

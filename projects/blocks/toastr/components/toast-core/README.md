@@ -33,7 +33,10 @@ Add the standalone component or directive to your component's `imports`.
 ## API
 
 Use `ToastrService.queueToast(ContentComponent, config)` for custom content, or queueInfo, queueSuccess, queueWarning and queueDanger for common messages.
-Config controls position, durationInMs, progress and close actions.
+Config controls position, durationInMs, progress and close actions. `config()` and `toastRef` share the reference's reactive configuration. Use
+`ToastRef.patch()` to update data, lifetime, close/progress presentation, and the existing surface policy without replacing content. Duration patches reset time
+and progress, preserve pause state, and apply to queued toasts before display. See the
+[patch contract and migration](../../README.md#live-configuration-patching).
 
 ## Appearance
 

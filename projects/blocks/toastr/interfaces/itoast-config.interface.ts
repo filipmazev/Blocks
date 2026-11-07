@@ -10,7 +10,7 @@ export interface IToastConfig<D = unknown> {
   glassiness?: GlassinessMode;
   /** Optional material quality; defaults to the global toast setting ('enhanced'). Application baseline still wins. */
   glassQuality?: GlassQuality;
-  /** Optional component data; omitted when the component needs no input data. */
+  /** Optional initial component data; omitted when no payload is needed. Live content reads ToastRef.data(); patches shallow-merge plain objects. */
   data?: D;
   /** Optional screen placement; defaults to global settings (top-right). */
   position?: ToastPosition;

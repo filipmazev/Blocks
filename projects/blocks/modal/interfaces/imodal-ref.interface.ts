@@ -1,4 +1,4 @@
-import { ComponentRef, Type } from '@angular/core';
+import { ComponentRef, Signal } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -8,6 +8,7 @@ import { ModalState } from '@modal/enums/modal-state.enum';
 
 import { IModal } from './imodal.interface';
 import { IModalCloseResult } from './imodal-close-result.interface';
+import { IModalPatch } from './imodal-patch.interface';
 
 /**
  * Interface for the Modal Reference
@@ -16,23 +17,18 @@ import { IModalCloseResult } from './imodal-close-result.interface';
  * @typeParam C The type of the modal component, will default to IModal<D, R>
  */
 export interface IModalRef<D, R, C extends IModal<D, R> = IModal<D, R>> {
-  /** The type of the modal container component */
-  modalContainer: Type<ModalCore<D, R, C>>;
-  /** The component reference of the modal container */
-  modalContainerRef: ComponentRef<ModalCore<D, R, C>>;
-  /** The HTML element of the modal container */
-  modalContainerElement: HTMLElement;
-  /** (optional) The parent HTML element where the modal is attached */
-  parentElement?: HTMLElement;
-
-  /** The component reference of the modal content */
-  componentRef: ComponentRef<C>;
+  /** Mounted presentation host; undefined after destruction. */
+  readonly modalContainerRef: ComponentRef<ModalCore<D, R, C>> | undefined;
+  /** Mounted overlay element; undefined after destruction. */
+  readonly modalContainerElement: HTMLElement | undefined;
+  /** Mounted application content; undefined after destruction. */
+  readonly componentRef: ComponentRef<C> | undefined;
 
   /** Observable that emits the current state of the modal */
   modalState$(): Observable<ModalState>;
 
-  /** (optional) The configuration of the modal */
-  modalConfig?: ModalConfig<D, R>;
+  /** Authoritative reactive configuration; read config() and use patch() for supported changes. */
+  readonly config: Signal<ModalConfig<D, R>>;
 
   /** Observable that emits when the modal has been closed */
   afterClosed(): Observable<IModalCloseResult<R | undefined>>;
@@ -41,6 +37,16 @@ export interface IModalRef<D, R, C extends IModal<D, R> = IModal<D, R>> {
 
   /** Function to open the modal */
   open(): void;
-  /** Function to close the modal with specified parameters */
-  close: (state: 'confirm' | 'cancel', result: R | undefined, forceClose: boolean, fromSelf: boolean, from: { constructor: Type<unknown> } | undefined) => void;
+  /**
+   * Merge supported runtime configuration without recreating the modal.
+   * @param patch - Partial updates; undefined retains values and supported null clears them.
+   */
+  patch(patch: IModalPatch): void;
+  /**
+   * Request guarded closure.
+   * @param state - Confirm or cancel mode; defaults to cancel.
+   * @param result - Optional application result.
+   * @param forceClose - Bypass guards when true; defaults to false.
+   */
+  close(state?: 'confirm' | 'cancel', result?: R, forceClose?: boolean): void;
 }

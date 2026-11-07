@@ -7,7 +7,7 @@
             <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
             <p class="hint" role="status">{{ resultMessage() }}</p>
 
-            <form class="config-form form-section" [formGroup]="form">
+            <form class="config-form" [formGroup]="form">
                 <div class="form-section">
                     <h3>General Style</h3>
 
@@ -72,8 +72,14 @@
             </form>
 
             <div class="actions">
-                <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="openModal()">Open Modal</button>
+                <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="openModal()">
+                    Open Modal with live controls
+                </button>
+                <button type="button" bx-button variant="tonal" [disabled]="!activeModal() || form.invalid" (click)="patchOpenModal()">
+                    Apply heading and dismissal to open modal
+                </button>
             </div>
+            <p class="hint">Layout and animation apply when opening. The dialog contains live controls and a wizard that use ModalRef.patch().</p>
         </div>
     </div>
 </bx-page-container>

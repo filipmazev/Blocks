@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Button } from '@filip.mazev/blocks/forms';
 import { Toast } from '@filip.mazev/blocks/toastr';
-
-export interface IDemoToastData {
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'danger';
-}
+import { IDemoToastData } from './idemo-toast-data.interface';
 
 @Component({
-  selector: 'app-demo-toast',
-  imports: [NgClass],
-  templateUrl: './demo-toast.html',
-  styleUrl: './demo-toast.scss'
+    selector: 'app-demo-toast',
+    imports: [Button],
+    templateUrl: './demo-toast.html',
+    styleUrl: './demo-toast.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoToast extends Toast<IDemoToastData, undefined> {
-  
-  protected dismiss(): void {
-    // Access the base class 'toast' reference to trigger the close animation
-    this.toast?.close();
-  }
-  
+    protected updateMessage(): void {
+        this.toast.patch({ data: { message: 'Updated inside the existing notification.' } });
+    }
+
+    protected dismiss(): void {
+        this.close();
+    }
 }

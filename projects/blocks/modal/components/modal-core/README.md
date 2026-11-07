@@ -20,7 +20,9 @@ Add the standalone component or directive to your component's `imports`.
 ## API
 
 `ModalService.open(ContentComponent, config)` accepts data, header, style, close behavior and guards. Style `layout` selects center, left, right or
-bottom-sheet; `animate`, `hasBackdrop`, and `showCloseButton` customize presentation. Observe `afterClosed()` for the close result.
+bottom-sheet; `animate`, `hasBackdrop`, and `showCloseButton` customize presentation. The host reads `config()` from its injected reference; supported runtime
+changes go through `ModalRef.patch()` without recreating the mounted content. See [live configuration patching](../../README.md#live-configuration-patching).
+Observe `afterClosed()` for the close result.
 
 ```ts
 this.modalService.open(DialogContent, {

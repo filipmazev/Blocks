@@ -7,13 +7,13 @@
             @if (hasBanner()) {
                 <bx-modal-banner
                     [header]="config()?.header"
-                    [showCloseButton]="config()?.style?.showCloseButton ?? true"
+                    [showCloseButton]="config()?.disableClose !== true && config()?.style?.showCloseButton !== false"
                     (close)="close.emit('cancel')"></bx-modal-banner>
             }
             @if (headerTemplate()) {
                 <div class="side-modal-header">
                     <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
-                    @if (!hasBanner()) {
+                    @if (!hasBanner() && config()?.disableClose !== true && config()?.style?.showCloseButton !== false) {
                         <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')">
                             <bx-icon name="x" />
                         </button>

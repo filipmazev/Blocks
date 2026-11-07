@@ -1,6 +1,6 @@
 # Simple toast
 
-A notification with a semantic icon, optional title and message.
+A notification with a semantic type, optional icon and title, and a required message.
 
 The toast wrapper uses enhanced glassiness on supported browsers, with shared translucency and accessibility preferences. Text retains its semantic foreground
 as the background scrolls; the material keeps a minimum tint and blur for readability. Progress and border lighting retain the notification type. Use toast
@@ -23,7 +23,12 @@ Add the standalone component or directive to your component's `imports`.
 ## API
 
 Use `toastrService.queueSuccess({ title: "Saved", message: "Your settings are up to date." })`. Equivalent methods queueInfo, queueWarning and queueDanger set
-the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).
+the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling), plus optional icon,
+loading, and loadingLabel.
+
+The returned `ToastRef` supports `patch({ data: { message, type, icon, loading } })`. Data is reactive through `data()`; title and icon accept null to clear
+them. Icon loading preserves the configured icon and its dimensions and does not extend the lifetime. Use `durationInMs: 0` for a persistent operation
+notification, then patch the completion text and a timed duration. See [live patching and lifetime behavior](../../../README.md#live-configuration-patching).
 
 ## Appearance
 

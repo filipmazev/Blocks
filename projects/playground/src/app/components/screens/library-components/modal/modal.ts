@@ -5,6 +5,8 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
+import type { ModalRef } from '@filip.mazev/blocks/modal';
+
 import { BreakpointKey, BREAKPOINTS } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { PageContainer } from '@filip.mazev/blocks/primitives';
@@ -16,7 +18,6 @@ import { Select } from '@forms/components/select/select';
 import { IBxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
-import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
 import { ModalService } from '@modal/services/modal.service';
 import { ModalLayout } from '@modal/types/modal.types';
 import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
@@ -50,6 +51,8 @@ export class Modal {
   protected readonly breakpointSelectOptions: IBxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];
   protected readonly breakpointKeys: BreakpointKey[] = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
   protected readonly form: FormGroup<ModalConfigFormControls>;
+
+  protected readonly activeModal: WritableSignal<ModalRef<IDemoModalData, IDemoModalResult> | null> = signal(null);
 
   protected readonly resultMessage: WritableSignal<string> = signal('Open a modal to preview its layout and close behavior.');
   protected readonly modalReadmePath: WritableSignal<string> = signal<string>('projects/blocks/modal/README.md');
@@ -120,14 +123,14 @@ export class Modal {
       header:
         headerText === undefined
           ? undefined
-          : ({
-              text: headerText,
+          : {
+              text: headerText ?? '',
               icon: {
                 name: 'info',
                 color: 'text-info',
                 bgColor: 'auto'
               }
-            } as IModalHeaderConfig),
+            },
       data: {
         title: request.title,
         body: 'This dialog shares the application theme and appearance settings. Confirm to apply the example, or cancel to return to the playground.',
@@ -155,13 +158,28 @@ export class Modal {
         : undefined
     });
 
+    this.activeModal.set(modal);
+
     modal.afterClosed().subscribe((result: IModalCloseResult<IDemoModalResult | undefined>) => {
+      if (this.activeModal() === modal) this.activeModal.set(null);
+
       if (result.state === 'confirm' && result.data) {
         this.openedCount = result.data.openedCount;
         this.resultMessage.set(`Changes confirmed. This modal has been confirmed ${this.openedCount} time${this.openedCount === 1 ? '' : 's'}.`);
       } else {
         this.resultMessage.set('Modal closed. No changes were applied.');
       }
+    });
+  }
+
+  protected patchOpenModal(): void {
+    const values = this.form.getRawValue();
+
+    this.activeModal()?.patch({
+      header: { text: values.headerText ?? '', icon: { name: 'pencil' } },
+      disableClose: values.disableClose ?? false,
+      disableCloseOnBackdropClick: values.disableCloseOnBackdropClick ?? false,
+      style: { showCloseButton: values.showCloseButton ?? true }
     });
   }
 

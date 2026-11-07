@@ -2,9 +2,7 @@ import { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable, Injector } from '@angular/core';
 
-import { take } from 'rxjs';
-
-import { BxA11yService } from '@filip.mazev/blocks/core';
+import { Subscription, take } from 'rxjs';
 
 import { ToastRef } from '@toastr/classes/toast-ref';
 import { ToastCore } from '@toastr/components/toast-core/toast-core';
@@ -27,13 +25,13 @@ export class ToastrService {
   private readonly environmentInjector = inject(EnvironmentInjector);
   private readonly document = inject(DOCUMENT);
   private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
-  private readonly bxA11yService = inject(BxA11yService);
 
   private readonly toastQueue: Array<() => void> = [];
-  private readonly activeToasts: Array<ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>> = [];
+  private readonly activeToasts: Set<object> = new Set<object>();
   private readonly containers: Map<ToastPosition, HTMLElement> = new Map<ToastPosition, HTMLElement>();
 
   private activePauses: number = 0;
+  private isProcessingQueue: boolean = false;
 
   /**
    * Displays a toast notification with the specified component and configuration.
@@ -47,9 +45,25 @@ export class ToastrService {
    */
   public queueToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config?: IToastConfig<D>): ToastRef<D, R> {
     const resolvedConfig = this.resolveConfig(config);
-    const toastRef = new ToastRef<D, R>();
+    const toastRef = new ToastRef<D, R>(resolvedConfig);
+    const queuedSubscription = new Subscription();
 
-    this.toastQueue.push(() => this.buildAndAttachToast(componentType, resolvedConfig, toastRef));
+    const build = (): void => {
+      queuedSubscription.unsubscribe();
+
+      if (toastRef.state() !== 'closed') this.buildAndAttachToast(componentType, toastRef);
+    };
+
+    queuedSubscription.add(
+      toastRef.afterClosed$.pipe(take(1)).subscribe(() => {
+        const index = this.toastQueue.indexOf(build);
+
+        if (index !== -1) this.toastQueue.splice(index, 1);
+
+        this.processQueue();
+      })
+    );
+    this.toastQueue.push(build);
 
     this.processQueue();
 
@@ -67,6 +81,9 @@ export class ToastrService {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
       data: {
         title: request.title,
+        icon: request.icon,
+        loading: request.loading,
+        loadingLabel: request.loadingLabel,
         message: request.message,
         type: 'success'
       },
@@ -91,6 +108,9 @@ export class ToastrService {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
       data: {
         title: request.title,
+        icon: request.icon,
+        loading: request.loading,
+        loadingLabel: request.loadingLabel,
         message: request.message,
         type: 'info'
       },
@@ -115,6 +135,9 @@ export class ToastrService {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
       data: {
         title: request.title,
+        icon: request.icon,
+        loading: request.loading,
+        loadingLabel: request.loadingLabel,
         message: request.message,
         type: 'warn'
       },
@@ -139,6 +162,9 @@ export class ToastrService {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
       data: {
         title: request.title,
+        icon: request.icon,
+        loading: request.loading,
+        loadingLabel: request.loadingLabel,
         message: request.message,
         type: 'danger'
       },
@@ -155,101 +181,99 @@ export class ToastrService {
   //#region Helpers
 
   private processQueue(): void {
-    if (this.activePauses > 0) {
-      return;
-    }
+    if (this.isProcessingQueue || this.activePauses > 0) return;
 
-    const max = this.toastrGlobalSettingsService.maxOpened();
+    this.isProcessingQueue = true;
 
-    while (this.activeToasts.length < max && this.toastQueue.length > 0) {
-      const buildNext = this.toastQueue.shift();
+    try {
+      while (this.activePauses === 0 && this.activeToasts.size < this.toastrGlobalSettingsService.maxOpened() && this.toastQueue.length > 0) {
+        const buildNext = this.toastQueue.shift();
 
-      if (buildNext) {
-        buildNext();
+        buildNext?.();
       }
+    } finally {
+      this.isProcessingQueue = false;
     }
   }
 
-  private buildAndAttachToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config: IToastConfig<D>, toastRef: ToastRef<D, R>): void {
+  private buildAndAttachToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, toastRef: ToastRef<D, R>): void {
     const dataInjector = Injector.create({
-      providers: [{ provide: TOAST_DATA, useValue: config.data }],
+      providers: [
+        { provide: TOAST_DATA, useValue: toastRef.config().data },
+        { provide: ToastRef, useValue: toastRef }
+      ],
       parent: this.injector
     });
-
+    const wrapperRef = createComponent<ToastCore<D, R, C>>(ToastCore, {
+      environmentInjector: this.environmentInjector,
+      elementInjector: dataInjector
+    });
     const contentRef = createComponent(componentType, {
       environmentInjector: this.environmentInjector,
       elementInjector: dataInjector
     });
+    const subscriptions = new Subscription();
 
-    if (this.isIToast<D, R, C>(contentRef.instance)) {
-      contentRef.instance.toast = toastRef;
-      contentRef.instance.onToastInit?.();
-    }
-
-    const wrapperInjector = Injector.create({
-      providers: [{ provide: ToastRef, useValue: toastRef }],
-      parent: this.injector
-    });
-
-    const wrapperRef = createComponent<ToastCore<D, R, C>>(ToastCore, {
-      environmentInjector: this.environmentInjector,
-      elementInjector: wrapperInjector
-    });
+    let isThisToastPausing = toastRef.paused();
 
     wrapperRef.instance.componentRef = contentRef;
-    wrapperRef.instance.config = config;
-    wrapperRef.instance.toastRef = toastRef;
 
-    this.applicationRef.attachView(wrapperRef.hostView);
+    if (toastRef.state() === 'closed') {
+      wrapperRef.destroy();
 
-    const container = this.getContainer(config.position || 'top-right');
+      return;
+    }
 
-    container.appendChild(wrapperRef.location.nativeElement);
+    this.activeToasts.add(wrapperRef);
 
-    this.activeToasts.push(wrapperRef as ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>);
+    if (isThisToastPausing) this.activePauses++;
 
-    let isThisToastPausing = false;
-
-    toastRef.config = config;
-
-    toastRef.onPause$.subscribe(() => {
-      if (!isThisToastPausing) {
-        isThisToastPausing = true;
-        this.activePauses++;
-      }
-    });
-
-    toastRef.onResume$.subscribe(() => {
-      if (isThisToastPausing) {
-        isThisToastPausing = false;
-        this.activePauses = Math.max(0, this.activePauses - 1);
-
-        if (this.activePauses === 0) {
-          this.processQueue();
+    subscriptions.add(
+      toastRef.onPause$.subscribe(() => {
+        if (!isThisToastPausing) {
+          isThisToastPausing = true;
+          this.activePauses++;
         }
-      }
+      })
+    );
+    subscriptions.add(
+      toastRef.onResume$.subscribe(() => {
+        if (isThisToastPausing) {
+          isThisToastPausing = false;
+          this.activePauses = Math.max(0, this.activePauses - 1);
+
+          if (this.activePauses === 0) this.processQueue();
+        }
+      })
+    );
+    subscriptions.add(
+      toastRef.afterClosed$.pipe(take(1)).subscribe(() => {
+        if (isThisToastPausing) {
+          isThisToastPausing = false;
+          this.activePauses = Math.max(0, this.activePauses - 1);
+        }
+
+        this.finalizeToast(wrapperRef);
+      })
+    );
+    wrapperRef.onDestroy(() => {
+      toastRef.completeClose();
+      subscriptions.unsubscribe();
     });
 
-    toastRef.afterClosed$.pipe(take(1)).subscribe(() => {
-      if (isThisToastPausing) {
-        isThisToastPausing = false;
-        this.activePauses = Math.max(0, this.activePauses - 1);
-      }
-
-      this.finalizeToast(wrapperRef);
-    });
+    toastRef.attach((result) => wrapperRef.instance.closeToast(result));
+    this.applicationRef.attachView(wrapperRef.hostView);
+    this.getContainer(toastRef.config().position ?? 'top-right').appendChild(wrapperRef.location.nativeElement);
+    contentRef.instance.onToastInit?.();
   }
 
   private finalizeToast<D, R, C extends IToast<D, R>>(wrapperRef: ComponentRef<ToastCore<D, R, C>>): void {
-    const index = this.activeToasts.indexOf(wrapperRef as ComponentRef<ToastCore<unknown, unknown, IToast<unknown, unknown>>>);
-
-    if (index > -1) {
-      this.activeToasts.splice(index, 1);
-    }
+    if (!this.activeToasts.delete(wrapperRef)) return;
 
     this.applicationRef.detachView(wrapperRef.hostView);
     wrapperRef.location.nativeElement.remove();
-    wrapperRef.destroy();
+
+    if (!wrapperRef.hostView.destroyed) wrapperRef.destroy();
 
     this.processQueue();
   }
@@ -271,14 +295,13 @@ export class ToastrService {
 
   private resolveConfig<D>(config?: IToastConfig<D>): IToastConfig<D> {
     const requestedAnimation = config?.animate ?? this.toastrGlobalSettingsService.animate();
-    const finalAnimateState = this.bxA11yService.isReducedMotion() ? false : requestedAnimation;
 
     return {
       ...config,
       position: config?.position ?? this.toastrGlobalSettingsService.position(),
       glassiness: config?.glassiness ?? this.toastrGlobalSettingsService.glassiness(),
       glassQuality: config?.glassQuality ?? this.toastrGlobalSettingsService.glassQuality(),
-      animate: finalAnimateState,
+      animate: requestedAnimation,
       wrapperClass: config?.wrapperClass ?? this.toastrGlobalSettingsService.wrapperClass(),
       durationInMs: config?.durationInMs ?? this.toastrGlobalSettingsService.durationInMs(),
       swipeToDismiss: config?.swipeToDismiss ?? this.toastrGlobalSettingsService.swipeToDismiss(),
@@ -287,10 +310,6 @@ export class ToastrService {
       showProgressBar: config?.showProgressBar ?? this.toastrGlobalSettingsService.showProgressBar(),
       progressBarColor: config?.progressBarColor ?? this.toastrGlobalSettingsService?.progressBarColor()
     };
-  }
-
-  private isIToast<D, R, C extends IToast<D, R>>(component: unknown): component is C {
-    return typeof component === 'object' && component !== null && 'toast' in component;
   }
 
   //#endregion

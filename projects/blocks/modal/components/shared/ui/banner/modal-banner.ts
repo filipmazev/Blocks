@@ -2,15 +2,16 @@ import type { InputSignal, OutputEmitterRef, Signal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
-import { BX_I18N, isTextWithKey } from '@filip.mazev/blocks/core';
+import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
 import { Icon } from '@filip.mazev/blocks/icons';
+import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
 import { ModalCloseMode } from '@modal/types/modal.types';
 
 @Component({
   selector: 'bx-modal-banner',
-  imports: [Icon],
+  imports: [Icon, LoadingSpinner],
   templateUrl: './modal-banner.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './modal-banner.scss'
@@ -18,18 +19,11 @@ import { ModalCloseMode } from '@modal/types/modal.types';
 export class ModalBanner {
   private readonly i18n = inject(BX_I18N, { optional: true });
 
-  protected readonly resolvedText: Signal<string | undefined> = computed(() => {
-    this.i18n?.version?.();
+  protected readonly resolvedText: Signal<string> = computed(() => resolveText(this.header()?.text, this.i18n));
+  protected readonly iconSize: Signal<number> = computed(() => {
+    const size = Number(this.header()?.icon?.size ?? 24);
 
-    const headerData = this.header();
-
-    if (!headerData || !headerData.text) return undefined;
-
-    if (isTextWithKey(headerData.text)) {
-      return this.i18n?.translate(headerData.text.key) ?? headerData.text.key;
-    }
-
-    return headerData.text;
+    return Number.isFinite(size) && size > 0 ? size : 24;
   });
 
   /** Modal heading text and optional semantic icon; undefined omits configured heading content. Required input. */

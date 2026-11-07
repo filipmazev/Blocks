@@ -1,62 +1,62 @@
 @use 'core/styles/helpers' as *;
 
 .demo-modal-content-class {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: spacing(4);
+  overflow-y: auto;
 
-    @include respond-up(xl) {
-        &.side-modal {
-            max-width: 30vw;
-            max-width: 30dvw;
-        }
-
-        &.center-modal {
-            max-width: 50vw;
-            max-width: 50dvw;
-        }
+  @include respond-up(xl) {
+    &.side-modal {
+      max-width: 30vw;
+      max-width: 30dvw;
     }
+
+    &.center-modal {
+      max-width: 50vw;
+      max-width: 50dvw;
+    }
+  }
 }
 
 .button-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: spacing(4);
 
-    & button {
-        cursor: pointer;
-    }
+  & button {
+    cursor: pointer;
+  }
 }
 
 .modal-menu-demo {
-    display: grid;
-    justify-items: start;
-    gap: spacing(3);
-    padding-top: spacing(4);
-    border-top: 1px solid var(--bx-border-default);
+  display: grid;
+  justify-items: start;
+  gap: spacing(3);
+  padding-block-start: spacing(4);
+  border-block-start: 1px solid var(--bx-border-default);
 }
 
 .modal-menu-demo h3,
 .modal-menu-demo p {
-    margin: 0;
+  margin: 0;
 }
 
 .modal-context-target {
-    border-style: dashed;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
+  border-style: dashed;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .menu-hint,
 .menu-status {
-    color: var(--bx-text-secondary);
-    font-size: 0.875rem;
+  color: var(--bx-text-secondary);
+  font-size: 0.875rem;
 }
 
 .menu-status {
-    min-height: 2.5em;
+  min-height: 2.5em;
 }

@@ -17,7 +17,7 @@ export interface IModalComponent<D, R, C extends IModal<D, R> = IModal<D, R>> ex
   /** (optional) The component reference (the component that is being displayed in the modal), will default to undefined (for non-dynamic modals) */
   componentRef?: ComponentRef<C>;
   /** (optional) The configuration for the modal, will default to default values for the configuration */
-  config?: ModalConfig<D, R>;
+  readonly config: Signal<ModalConfig<D, R>>;
 
   /** (required) Whether the modal is open or not */
   isOpen: Signal<boolean>;

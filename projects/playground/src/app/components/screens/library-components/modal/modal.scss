@@ -1,13 +1,33 @@
 @use 'core/styles/helpers' as *;
-@use '../../../../../styles/common' as *;
 
 :host {
     display: block;
     min-inline-size: 0;
 }
 
+.config-container {
+    gap: spacing(4);
+}
+
+.config-header,
+.hint,
+.form-section h3 {
+    margin: 0;
+}
+
+.actions {
+    flex-wrap: wrap;
+    gap: spacing(3);
+    margin-block-start: 0;
+}
+
+.actions > button {
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+}
+
 .breakpoints-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 7.5rem), 1fr));
+    gap: spacing(4);
 }

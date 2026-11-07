@@ -1,4 +1,4 @@
-@if (config?.style?.hasBackdrop && (isSide() || isBottomSheetModalActive())) {
+@if (config().style.hasBackdrop && (isSide() || isBottomSheetModalActive())) {
     <bx-modal-backdrop [isAnimated]="isAnimated()" [isOpen]="isOpen()" (click)="onBackdropClick($event)"> </bx-modal-backdrop>
 }
 
@@ -9,15 +9,15 @@
                 [layout]="effectiveLayout()"
                 [headerTemplate]="headerTemplate()"
                 [footerTemplate]="footerTemplate()"
-                [config]="config"
+                [config]="config()"
                 [id]="id()"
                 [isOpen]="isOpen()"
                 [isAnimated]="isAnimated()"
                 [isBottomSheetModalActive]="isBottomSheetModalActive()"
                 [animationDuration]="animationDuration"
-                [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass"
-                [hasBanner]="hasBanner"
-                (close)="close($event)">
+                [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass()"
+                [hasBanner]="hasBanner()"
+                (close)="close($event, undefined, true)">
                 <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
             </bx-modal-side>
         }
@@ -25,15 +25,15 @@
             <bx-modal-centered
                 [headerTemplate]="headerTemplate()"
                 [footerTemplate]="footerTemplate()"
-                [config]="config"
+                [config]="config()"
                 [id]="id()"
                 [isOpen]="isOpen()"
                 [isAnimated]="isAnimated()"
                 [isBottomSheetModalActive]="isBottomSheetModalActive()"
                 [animationDuration]="animationDuration"
-                [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass"
-                [hasBanner]="hasBanner"
-                (close)="close($event)"
+                [hasDefaultContentWrapperClass]="hasDefaultContentWrapperClass()"
+                [hasBanner]="hasBanner()"
+                (close)="close($event, undefined, true)"
                 (onBackdropClick)="onBackdropClick($event)">
                 <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
             </bx-modal-centered>
@@ -42,5 +42,7 @@
 </ng-container>
 
 <ng-template #contentTemplate>
-    <ng-container #dynamicContainer></ng-container>
+    <div class="modal-content" [ngClass]="config().contentClasses" [style]="config().contentStyles">
+        <ng-container #dynamicContainer></ng-container>
+    </div>
 </ng-template>

@@ -7,16 +7,14 @@ import { ModalRef } from './modal-ref';
 
 @Injectable()
 export class Modal<D, R> implements IModal<D, R> {
+  private readonly modalRef = inject<ModalRef<D, R>>(ModalRef);
   private readonly injectedData = inject<D>(MODAL_DATA);
 
-  /**
-   * Data injected into the modal component.
-   */
+  /** Reference shared with ModalService and the presentation host; available during construction. */
+  public readonly modal: ModalRef<D, R> = this.modalRef;
+
+  /** Initialization data injected into the modal content. Patching does not change this payload. */
   public data: D = this.injectedData;
-  /**
-   * Reference to the ModalRef instance associated with this modal.
-   */
-  public modal!: ModalRef<D, R>;
 
   /** Called when the modal is initialized. */
   public onModalInit(): void {}
@@ -26,7 +24,7 @@ export class Modal<D, R> implements IModal<D, R> {
    *
    * @param result - The result to be passed when closing the modal.
    */
-  public close(result?: R) {
+  public close(result?: R): void {
     this.modal?.close('cancel', result);
   }
 }

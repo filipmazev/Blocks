@@ -19,3 +19,7 @@ export * from '@toastr/tokens/toast-data.token';
 export * from '@toastr/classes/toast';
 export * from '@toastr/classes/toast-ref';
 export type { IToastrGlobalSettings } from '@toastr/interfaces/itoastr-global-settings.interface';
+
+export * from '@toastr/interfaces/itoast-patch.interface';
+export * from '@toastr/interfaces/iqueue-simple-toast-request.interface';
+export * from '@toastr/types/toast-patch.types';
