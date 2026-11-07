@@ -83,7 +83,6 @@
                     <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.resume()">Resume</button>
                     <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.close()">Dismiss selected</button>
                     <button type="button" bx-button variant="tonal" (click)="loadingToSuccess()">Loading to success</button>
-                    <button type="button" bx-button variant="tonal" [disabled]="form.invalid" (click)="queuePatchDemo()">Patch a queued toast</button>
                     <button type="button" bx-button (click)="releaseQueueDemo()">Release queue placeholders</button>
                 </div>
                 <p class="hint">Content patches keep the remaining time. Reset lifetime also works while paused. Hover pauses timed notifications.</p>

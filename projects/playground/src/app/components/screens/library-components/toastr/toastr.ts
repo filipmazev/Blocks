@@ -232,34 +232,6 @@ export class Toastr {
     this.transitionTimeouts.set(toast, timeout);
   }
 
-  protected queuePatchDemo(): void {
-    if (this.form.invalid) return;
-
-    this.releaseQueueDemo();
-
-    const capacity = this.toastrGlobalSettingsService.maxOpened();
-
-    for (let index = 0; index < capacity; index++) {
-      const blocker = this.toastrService.queueInfo({
-        message: `Queue demo placeholder ${index + 1}. Release the placeholders to show the patched notification.`,
-        durationInMs: 0
-      });
-
-      this.queueBlockers.push(blocker);
-      this.trackToast(blocker);
-    }
-
-    const toast = this.toastrService.queueInfo({ message: 'Original queued content', durationInMs: 0 });
-
-    this.trackToast(toast);
-    this.liveToast.set(toast);
-    toast.patch({
-      data: { message: 'Patched while queued. My lifetime starts only when displayed.', type: 'success', icon: { name: 'check' } },
-      durationInMs: 6000
-    });
-    this.resultMessage.set('Target patched while queued. Release queue placeholders to allow it to appear in order.');
-  }
-
   protected releaseQueueDemo(): void {
     for (const toast of this.queueBlockers) toast.close();
 
