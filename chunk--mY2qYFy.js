@@ -1,4 +1,4 @@
-import{$t as Te,J as Hr,Vr as it,Yi as te,an as V,b as D,br as g,gi as ot,it as Jn,mt as Lm,ot as Ka,ra as ve,ta as v,vi as p}from"./chunk-DBDMpaTC.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
+import{Ci as ot,Ji as te,Jr as it,L as Fm,S as D,Y as Hr,aa as ve,at as Jn,ct as Ka,in as Te,ra as v,un as V,wi as p,wr as g}from"./chunk-B79cUMdP.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
 <p>Published October 31, 2026 on the Release channel (<code>latest</code>). Install this exact version with <code>npm install @filip.mazev/blocks@1.4.20</code>.</p>
 <p><a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.4.20">View version 1.4.20 on NPM</a>.</p>
 <p>Blocks 1.4.20 brings together the unified Angular UI package, semantic themes, appearance effects, forms, navigation, notifications and icons developed leading
@@ -600,6 +600,67 @@ and are skipped during server rendering.</li>
 <p>Custom item, header, and footer templates can apply the shared reveal to their text using <code>opacity: var(--bx-side-nav-label-opacity, 1)</code> and an opacity
 transition with <code>var(--bx-side-nav-label-transition-duration, 0ms)</code>. Keep icons and focus indicators outside the faded text. The inherited values follow the
 navigation&#39;s reduced-motion and keyboard-focus behavior.</p>
+<h2>Reactive modal and toast configuration</h2>
+<ul>
+<li>Added strongly typed <code>ModalRef.patch(IModalPatch)</code> and <code>ToastRef.patch(IToastPatch&lt;D&gt;)</code>, backed by one reactive configuration source per reference. Callers
+and mounted content can update supported properties without recreating the overlay, restarting its entrance animation, or resetting application content state.</li>
+<li>Modal patches merge heading, icon, dismissal policies, close-action visibility, and supported wrapper/content presentation. Undefined retains existing values;
+supported null values clear optional content or presentation. Layout, identity, mounting, initialization data, and lifecycle callbacks remain opening-time
+configuration.</li>
+<li>Added optional header and simple-toast icon loading, plus translatable accessible loading labels. The shared spinner temporarily replaces the retained icon,
+preserves its area, and respects reduced motion. Simple toasts now support configurable icons alongside their existing semantic type, title, and message.</li>
+<li>Toast patches shallow-merge plain-object content data and replace arrays, primitives, and nonplain objects. Translation, semantic surfaces, and derived
+presentation react to updates. Data nullability follows the application contract; simple-toast title and icon accept null to clear them.</li>
+<li>Explicit duration patches reset toast lifetime and progress, including repeated equal durations and duration zero for manual dismissal. Unrelated patches
+retain remaining time, paused toasts remain paused, and restoring a hidden progress indicator uses the current remaining fraction.</li>
+<li>Queued notifications receive patches before display without promotion or a running lifetime. Closing queued references cancels them without display. Closing
+and destroyed overlays ignore late patches; timers, subscriptions, progress controllers, and dismissal callbacks are cleaned up.</li>
+<li>Fixed modal close-action visibility to honor disabled dismissal and show-close-button settings consistently. Mounted modal motion responds to shared
+accessibility preferences; requested animation preferences are retained so reduced-motion changes can be applied reactively.</li>
+<li>Serialized toast queue processing to prevent reentrant content construction or initialization from exceeding capacity or changing queue order. Rechecked the
+current capacity and pause policy before each notification is mounted; configuration, progress, and lifetime remain instance-owned.</li>
+<li>Restricted Escape dismissal to the top registered modal, preventing background dialogs from closing or opening extra confirmations. Deduplicated pending close
+guards per dialog while retaining force-close behavior.</li>
+<li>Registered parent dialogs before constructing content so synchronously opened children retain correct stacking and depth. Failed content initialization
+releases the affected dialog, and bottom-sheet views remain mounted through their close animation.</li>
+</ul>
+<h2>Reactive API migration</h2>
+<ul>
+<li>Replace <code>ModalRef.modalConfig</code> with <code>ModalRef.config()</code>. <code>ModalCore.config</code> and <code>ToastCore.config</code> are now signals; <code>ToastRef.config</code> is read with <code>config()</code>.
+Use patch methods rather than mutating configuration snapshots. References are service-created; their construction/attachment lifecycle has changed.</li>
+<li><code>Toast&lt;D, R&gt;.data</code> and the <code>IToast</code> data contract are now <code>Signal&lt;D | undefined&gt;</code>. Read <code>data()?.message</code> in templates or <code>this.data()?.message</code> in
+TypeScript. Custom toast implementations must expose reactive data and a read-only reference. <code>TOAST_DATA</code> remains an initialization snapshot; migrate to
+<code>ToastRef.data</code> for live updates. Modal initialization data is unchanged.</li>
+<li>Removed the unused <code>ModalRef.modalContainer</code> and <code>parentElement</code> properties. Mounted content/container getters are undefined after destruction. The toast host
+no longer replaces the reference&#39;s close method at runtime; service-created content can inject its typed reference directly.</li>
+</ul>
+<h2>Stepper</h2>
+<ul>
+<li>Added standalone <code>Stepper</code> (<code>bx-stepper</code>), declarative <code>Step</code> (<code>bx-step</code>), and content/label template directives to <code>@filip.mazev/blocks/navigation</code>. The same
+component supports passive progress indicators, application-owned section navigation, and guarded wizard workflows.</li>
+<li>Supports typed data-driven definitions or projected steps, stable-ID <code>activeStep</code> binding, optional and disabled steps, explicit completion/skipping,
+non-editable completed steps, and separate loading/error state. Visiting a step does not imply completion.</li>
+<li>Added <code>goTo</code>, <code>next</code>, <code>previous</code>, <code>skip</code>, <code>finish</code>, and <code>reset</code>, with typed request, selection, transition, and completion events. Synchronous, promise, and
+observable guards share validation, duplicate-request protection, cancellation, and stale-result checks. Failed saves retain the current selection and content
+for an explicit retry.</li>
+<li>Integrates with Reactive Forms and Signal Forms through a structural validation contract. Linear workflows enforce required predecessors, invalid forward
+attempts mark controls touched, optional steps can be skipped, and completion remains distinct from visiting the final step.</li>
+<li>Supports internal selection and application-confirmed wizard selection. Accepted controlled destinations show a clock marker, accent text, and translatable
+\u201CAwaiting confirmation\u201D feedback while the current step remains selected. Confirmation, reset, and superseding requests clear the waiting presentation.</li>
+<li>Added eager, retained, and active-only content policies, configurable wizard controls, custom label/content templates, and an application-owned completion
+view. Reset clears workflow progress without clearing application-owned form values.</li>
+<li>Added steps, segments, dots, progress, and cards in three sizes, horizontal/vertical layouts, and scroll, vertical, or compact responsive behavior. Connectors
+are solid and aligned with their markers; small markers and dots leave room around status symbols. Card text uses the same top alignment as alerts and
+banners.</li>
+<li>Uses Blocks semantic colors, shared glass and lighting, translation support, and configurable CSS variables. Non-card variants keep transparent selected
+backgrounds with marker/label hover feedback. Disabled steps are visibly muted; read-only presentation retains focus and progress with neutral markers.</li>
+<li>Includes roving keyboard navigation, RTL support, accessible status descriptions, predictable wizard focus, and shared reduced-motion/transparency and
+forced-color behavior. Shared text defaults are configurable through <code>BX_STEPPER_DEFAULTS</code> and per-instance labels.</li>
+<li>Added the <code>/components/stepper</code> playground with appearance controls, section navigation, form validation, asynchronous save failure/retry, controlled
+confirmation, dynamic steps, and nearby draft previews. Colocated guides and browser regression coverage document the supported integration patterns.</li>
+</ul>
+<p>See the <a href="components/stepper">Stepper guide</a> for public imports, runnable examples, configuration, and
+accessibility.</p>
 `,"projects/blocks/README.md":`<h1>@filip.mazev/blocks</h1>
 <p>Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship
 in one package, alongside the installation schematic.</p>
@@ -2564,8 +2625,8 @@ itself. The catalog progressively renders icon previews in bounded batches.</p>
 <td>Observe the final <code>IModalCloseResult&lt;R | undefined&gt;</code> with <code>state</code> and optional <code>data</code>.</td>
 </tr>
 <tr>
-<td><code>modalConfig</code></td>
-<td>Read the resolved configuration.</td>
+<td><code>config()</code></td>
+<td>Read the authoritative reactive configuration.</td>
 </tr>
 </tbody></table>
 <p>Use supported configuration and slots to customize the dialog. Applications do not need to inspect its component references or DOM.</p>
@@ -2584,7 +2645,7 @@ itself. The catalog progressively renders icon previews in bounded batches.</p>
 </tr>
 <tr>
 <td><code>header</code></td>
-<td>Optional <code>{ text: ResolvableText, icon?: IIconData }</code>.</td>
+<td>Optional heading text, icon, icon loading, and loading label.</td>
 </tr>
 <tr>
 <td><code>style</code></td>
@@ -2629,10 +2690,90 @@ itself. The catalog progressively renders icon previews in bounded batches.</p>
 </tbody></table>
 <p>Instance options override <code>ModalGlobalSettingsService</code> defaults. Its <code>update()</code> currently applies <code>animate</code>, <code>hasBackdrop</code>, and <code>disableCloseOnBackdropClick</code>;
 other exposed default signals can be configured directly before opening.</p>
+<h3>Live configuration patching</h3>
+<p><code>ModalRef.patch(patch: IModalPatch): void</code> updates the existing dialog synchronously. Use the reference returned by <code>open()</code> or <code>this.modal</code> inside a component
+extending <code>Modal&lt;D, R&gt;</code>. Both paths share the same configuration signal; <code>config()</code> reads the current resolved value. The reference is also injectable as
+<code>inject&lt;ModalRef&lt;D, R&gt;&gt;(ModalRef)</code> inside service-created content.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">const</span> ref = <span class="hljs-variable language_">this</span>.<span class="hljs-property">modalService</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">WizardDialog</span>, {
+    <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Step 1: Details&#x27;</span>, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pencil&#x27;</span> } }
+});
+
+ref.<span class="hljs-title function_">patch</span>({ <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Step 2: Review&#x27;</span> } });
+ref.<span class="hljs-title function_">patch</span>({ <span class="hljs-attr">header</span>: { <span class="hljs-attr">loading</span>: <span class="hljs-literal">true</span> }, <span class="hljs-attr">disableClose</span>: <span class="hljs-literal">true</span> });
+ref.<span class="hljs-title function_">patch</span>({
+    <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Changes saved&#x27;</span>, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;check&#x27;</span> }, <span class="hljs-attr">loading</span>: <span class="hljs-literal">false</span> },
+    <span class="hljs-attr">disableClose</span>: <span class="hljs-literal">false</span>
+});</code></pre>
+<p>Inside <code>WizardDialog</code>, the same update is <code>this.modal.patch({ header: { text: &#39;Step 2: Review&#39; } })</code>. Draft values, the mounted component, scroll position,
+focus on retained elements, and the entrance animation remain intact.</p>
+<table>
+<thead>
+<tr>
+<th>Patch property</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>header.text</code></td>
+<td>Replace <code>ResolvableText</code>; null clears only the text.</td>
+</tr>
+<tr>
+<td><code>header.icon</code></td>
+<td>Merge supplied <code>IIconData</code> members; null removes the icon. A new partial icon without a name uses <code>info</code>.</td>
+</tr>
+<tr>
+<td><code>header.loading</code></td>
+<td>Replace only the icon area with the shared spinner, retaining the configured icon. Defaults to false.</td>
+</tr>
+<tr>
+<td><code>header.loadingLabel</code></td>
+<td>Accessible spinner label as <code>ResolvableText</code>; defaults to the shared spinner&#39;s <code>Loading</code> label.</td>
+</tr>
+<tr>
+<td><code>header: null</code></td>
+<td>Remove the configured heading and icon; custom header slots remain mounted.</td>
+</tr>
+<tr>
+<td><code>disableClose</code></td>
+<td>Prevent user dismissal through Escape, close actions, backdrop, and swipe. Programmatic <code>close()</code> remains available.</td>
+</tr>
+<tr>
+<td><code>disableCloseOnBackdropClick</code>, <code>disableCloseOnNavigation</code>, <code>closeGuardOnlyOnCancel</code></td>
+<td>Update the existing dismissal policies.</td>
+</tr>
+<tr>
+<td><code>style.showCloseButton</code></td>
+<td>Toggle the close action, subject to <code>disableClose</code>.</td>
+</tr>
+<tr>
+<td><code>style.wrapperClasses</code>, <code>style.wrapperStyles</code></td>
+<td>Replace presentation overrides; null clears the override.</td>
+</tr>
+<tr>
+<td><code>contentClasses</code>, <code>contentStyles</code></td>
+<td>Replace classes or inline styles on the content wrapper; null clears them.</td>
+</tr>
+</tbody></table>
+<p>Omitted and <code>undefined</code> properties retain their current values. Header, icon, and supported style updates merge instead of resetting siblings. No consumer-owned
+configuration object is mutated. Patches are applied in call order, including during <code>onModalInit()</code>. Closing and destroyed modals ignore late updates.</p>
+<p>Layout, responsive breakpoints, animation, backdrop mounting, identity, component type, initialization data, and lifecycle callbacks remain opening-time
+options. They are absent from <code>IModalPatch</code>. Application form and wizard data stays application-owned.</p>
+<p>When loading switches off, the configured icon returns. A hidden normal icon preserves its dimensions, including its backing. When there is no configured icon,
+explicit loading state reserves a default 24px slot so switching between true and false does not shift the heading. Spinner size follows <code>icon.size</code> and reduced
+motion uses the shared static presentation. This loading flag affects the icon only; it does not disable the dialog or prevent dismissal automatically.</p>
+<h3>Migration for reactive references</h3>
+<p>Replace <code>ref.modalConfig</code> with <code>ref.config()</code> and direct configuration assignments with <code>ref.patch(...)</code>. <code>ModalCore.config</code> is now a signal as well.
+Configuration snapshots must be treated as read-only. The old unused <code>modalContainer</code> and <code>parentElement</code> properties are removed; service-owned mounting is not
+configurable through the reference. Mounted component/container getters become undefined after destruction. References are created and attached by
+<code>ModalService</code>; use its <code>open()</code> API rather than constructing references yourself. <code>Modal&lt;D, R&gt;.data</code> and <code>MODAL_DATA</code> remain initialization data.</p>
 <h3>Close guards</h3>
 <p>Extend <code>ModalCloseGuard</code> and implement <code>canClose(modalService)</code> returning a boolean, Promise, or Observable. A false result retains the dialog.
 <code>ModalConfirmCloseGuard&lt;D, R&gt;(ConfirmationComponent, config)</code> opens a typed confirmation dialog and waits for its result. Keep application-owned unsaved state
 in the application; provide the guard when opening its content. <code>forceClose: true</code> deliberately bypasses the guard.</p>
+<p>Only the top registered modal handles Escape, including when other dialogs remain mounted behind it. A disabled top dialog does not pass Escape to its parent.
+Repeated close requests share the pending guard decision instead of opening duplicate confirmation dialogs; force closing remains available. Each dialog retains
+its own patch configuration, guard, and close timer. Parents are registered before constructing application content, so a synchronously opened child retains the
+correct stack order and nesting depth. Bottom-sheet presentation stays mounted throughout dismissal.</p>
 <h3>Declarative nonmodal panels</h3>
 <p>For page-owned inspectors and filters, use <a href="components/side-panel">SidePanel</a> from the primitives entry point with its boolean <code>open</code>
 model. It shares square panel corners, surface material, layout, and close-control presentation with Modal Side while keeping nonmodal behavior separate. Modal
@@ -2677,8 +2818,11 @@ custom actions, descriptions, errors, and form controls. Keep actions reachable 
 <h2>Playground</h2>
 <p>The live dialog includes <strong>Open nested dialog</strong>, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a
 child returns to its parent. The confirm-close guard exercises the same independent backdrop and depth policy.</p>
-<p>Open <code>/modal</code> for the configurator, <code>/components/modal-core</code> for the lifecycle host, or the centered, side, bottom-sheet, header, footer, and backdrop entries
-in the component catalog. The examples demonstrate typed results and guarded dismissal.</p>
+<p>Open <code>/modal</code> for initial configuration, live heading/icon/dismissal controls inside the dialog, and a three-step save wizard. Visit <code>/components/modal-core</code>
+for the lifecycle host, or the centered, side, bottom-sheet, header, footer, and backdrop entries in the component catalog. The examples demonstrate typed
+results and guarded dismissal.</p>
+<p>The <code>/modal</code> dialog includes an editable draft note, live presentation controls, and a review/save flow. Patches retain that note and the wizard step. The page
+also exposes an action to patch heading and dismissal settings on its last open reference.</p>
 `,"projects/blocks/modal/components/modal-core/README.md":`<h1>Modal core</h1>
 <p>The service-owned host that composes modal content and chooses the active layout.</p>
 <h2>Import</h2>
@@ -2689,7 +2833,9 @@ in the component catalog. The examples demonstrate typed results and guarded dis
 <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;openModal()&quot;</span>&gt;</span>Open modal core<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p><code>ModalService.open(ContentComponent, config)</code> accepts data, header, style, close behavior and guards. Style <code>layout</code> selects center, left, right or
-bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. Observe <code>afterClosed()</code> for the close result.</p>
+bottom-sheet; <code>animate</code>, <code>hasBackdrop</code>, and <code>showCloseButton</code> customize presentation. The host reads <code>config()</code> from its injected reference; supported runtime
+changes go through <code>ModalRef.patch()</code> without recreating the mounted content. See <a href="modal#live-configuration-patching">live configuration patching</a>.
+Observe <code>afterClosed()</code> for the close result.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-variable language_">this</span>.<span class="hljs-property">modalService</span>.<span class="hljs-title function_">open</span>(<span class="hljs-title class_">DialogContent</span>, {
     <span class="hljs-attr">header</span>: { <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Modal core&#x27;</span> },
     <span class="hljs-attr">style</span>: { <span class="hljs-attr">layout</span>: <span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-attr">hasBackdrop</span>: <span class="hljs-literal">true</span> }
@@ -2765,7 +2911,9 @@ data and <code>ModalRef</code>; call <code>modal.close(mode, result)</code> to r
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-modal-banner</span> [<span class="hljs-attr">header</span>]=<span class="hljs-string">&quot;{ text: &#x27;Project settings&#x27; }&quot;</span> [<span class="hljs-attr">showCloseButton</span>]=<span class="hljs-string">&quot;true&quot;</span> (<span class="hljs-attr">close</span>)=<span class="hljs-string">&quot;handleClose($event)&quot;</span> /&gt;</span></code></pre>
 <h2>API</h2>
 <p>Required inputs: <code>header</code> (header config or undefined), <code>showCloseButton</code> (boolean). <code>close</code> emits a modal close mode or undefined. Header supports text and an
-optional icon configuration.</p>
+optional icon configuration, <code>loading</code> (false by default), and translatable <code>loadingLabel</code> (defaults to <code>Loading</code>). Loading replaces only the icon area with the
+shared spinner, preserving the normal icon for restoration and respecting reduced motion. Header updates flow from <code>ModalRef.patch()</code>; see the
+<a href="modal#live-configuration-patching">modal patch contract</a>.</p>
 <h2>Appearance</h2>
 <p>Title/icon alignment, wrapping, divider spacing, and the compact close action use shared panel-banner Sass presentation. Declarative SidePanel headings reuse
 the same styling and expose a matching <code>headerIcon: IIconData</code> contract.</p>
@@ -2990,6 +3138,9 @@ and runnable examples. Their playground routes are <code>/components/side-nav</c
 <p><code>provideNavigation()</code> also provides the optional <code>BX_PAGE_NAVIGATION</code> adapter from primitives. <code>NavigationService.page</code> exposes reactive section and page titles
 plus breadcrumbs for <a href="components/layout/page-container">PageContainer</a>. Descriptions remain application-owned. Breadcrumbs appear after one
 nesting by default and the threshold can be configured on each container. Existing Breadcrumbs components retain their own display settings.</p>
+<h2>Stepper workflows</h2>
+<p><a href="components/stepper">Stepper</a> provides passive progress, externally controlled section navigation and guarded wizards through the same <code>bx-stepper</code>
+component. Import <code>Stepper</code>, <code>Step</code> and its optional template directives from <code>@filip.mazev/blocks/navigation</code>.</p>
 `,"projects/blocks/navigation/components/breadcrumbs/README.md":`<h1>Breadcrumbs</h1>
 <p>A route-aware trail derived from Blocks navigation metadata.</p>
 <h2>Import</h2>
@@ -3407,6 +3558,550 @@ and use the disclosures and Back control through all four levels.</p>
 <p>The fixed drawer acquires its own <code>ScrollLockService</code> lock only while its mobile overlay presentation is open. Closing, route navigation, changing to desktop or
 inline presentation, and destruction release that lock; a concurrently open modal keeps its own lock. <code>--bx-side-nav-backdrop</code> remains available for an explicit
 scrim color. Embedded inline presentation uses the same backdrop inside its shell without locking the page.</p>
+`,"projects/blocks/navigation/components/step/README.md":`<h1>Step definitions</h1>
+<p>Use this declaration inside <code>bx-stepper</code> to configure workflow presentation and content. See the <a href="components/stepper">Stepper guide</a> for the full API and
+runnable examples.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">Step</span>, <span class="hljs-title class_">Stepper</span>, <span class="hljs-title class_">StepContentDirective</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;wizard&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-step</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;details&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Details&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxStepContent</span>&gt;</span>Details content<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-step</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-stepper</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>Step</code> mirrors <code>IStepDefinition</code> metadata. Its required inputs are <code>id</code> and <code>label</code>; optional inputs cover descriptions, icons, availability, completion,
+validity, form state, loading/error and guards. <code>definition()</code> exposes its current metadata snapshot.</p>
+<h2>Appearance and customization</h2>
+<p>Presentation inherits the owning stepper&#39;s variant, size, semantic tokens and appearance policies. Supply a meaningful plain or translated step label.</p>
+<h2>Behavior and accessibility</h2>
+<p>Use <code>bxStepContent</code> for deferred creation. The stepper supports eager, lazy-retained and destroy-inactive content policies. Ordinary projection is eager.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/stepper</code> for validated workflows and content/label customization.</p>
+`,"projects/blocks/navigation/components/stepper/README.md":`<h1>Stepper</h1>
+<p><code>bx-stepper</code> presents progress, requests application-owned navigation, or orchestrates a guarded wizard. Behavior and presentation are independent: all three
+modes support steps, segments, dots, progress and cards. The component lives in navigation and reuses Blocks buttons, icons, surfaces and progress indicators.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> {
+    <span class="hljs-title class_">Stepper</span>,
+    <span class="hljs-title class_">Step</span>,
+    <span class="hljs-title class_">StepContentDirective</span>,
+    <span class="hljs-title class_">StepLabelDirective</span>,
+    <span class="hljs-title class_">IStepDefinition</span>,
+    <span class="hljs-title class_">IStepperRequest</span>,
+    <span class="hljs-title class_">IStepperTransition</span>,
+    <span class="hljs-title class_">StepperGuard</span>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
+<p>Add the components and directives used by your template to the standalone component&#39;s <code>imports</code>. Public contracts are exported from this same entry point.</p>
+<h2>Usage</h2>
+<h3>Passive progress</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span>, signal } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">IStepDefinition</span>, <span class="hljs-title class_">Stepper</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-release-progress&#x27;</span>,
+    <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">Stepper</span>],
+    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>,
+    <span class="hljs-attr">template</span>: <span class="hljs-string">\`&lt;bx-stepper [steps]=&quot;steps&quot; [(activeStep)]=&quot;active&quot; variant=&quot;segments&quot; size=&quot;sm&quot; /&gt;\`</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ReleaseProgress</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> active = signal&lt;<span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-string">&#x27;build&#x27;</span>);
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">steps</span>: <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">IStepDefinition</span>[] = [
+        { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;plan&#x27;</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Plan&#x27;</span>, <span class="hljs-attr">completed</span>: <span class="hljs-literal">true</span> },
+        { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;build&#x27;</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Build&#x27;</span>, <span class="hljs-attr">loading</span>: <span class="hljs-literal">true</span> },
+        { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;ship&#x27;</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Ship&#x27;</span> }
+    ];
+}</code></pre>
+<p>Indicator mode creates no focusable step controls by default. Set <code>indicatorInteractive</code> to emit requests without committing selection.</p>
+<h3>Application-controlled navigation</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;navigation&quot;</span> <span class="hljs-attr">orientation</span>=<span class="hljs-string">&quot;vertical&quot;</span> [<span class="hljs-attr">steps</span>]=<span class="hljs-string">&quot;sections&quot;</span> [(<span class="hljs-attr">activeStep</span>)]=<span class="hljs-string">&quot;activeSection&quot;</span> (<span class="hljs-attr">stepRequested</span>)=<span class="hljs-string">&quot;navigate($event)&quot;</span> /&gt;</span></code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> activeSection = signal&lt;<span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>&gt;(<span class="hljs-string">&#x27;overview&#x27;</span>);
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">sections</span>: <span class="hljs-keyword">readonly</span> <span class="hljs-title class_">IStepDefinition</span>[] = [
+    { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;overview&#x27;</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Overview&#x27;</span> },
+    { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;access&#x27;</span>, <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;Access&#x27;</span> }
+];
+
+<span class="hljs-keyword">public</span> <span class="hljs-title function_">navigate</span>(<span class="hljs-attr">request</span>: <span class="hljs-title class_">IStepperRequest</span>): <span class="hljs-built_in">void</span> {
+    <span class="hljs-comment">// Scroll, navigate, load, expand or reject in application code.</span>
+    <span class="hljs-comment">// Confirm only when the application accepts the destination:</span>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">activeSection</span>.<span class="hljs-title function_">set</span>(request.<span class="hljs-property">id</span>);
+}</code></pre>
+<p><code>stepRequested</code> carries <code>{ id, index, source, action }</code>. A request and confirmed <code>selectionChanged</code> are separate events. The stepper owns no router, scroll
+container, section IDs, observers or scrolling offsets. Scroll/route listeners can update <code>activeStep</code> independently without creating navigation requests.</p>
+<h3>Declarative wizard with Reactive Forms</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">ChangeDetectionStrategy</span>, <span class="hljs-title class_">Component</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">FormControl</span>, <span class="hljs-title class_">ReactiveFormsModule</span>, <span class="hljs-title class_">Validators</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/forms&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">InputField</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/forms&#x27;</span>;
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">Step</span>, <span class="hljs-title class_">StepContentDirective</span>, <span class="hljs-title class_">Stepper</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;
+
+<span class="hljs-meta">@Component</span>({
+    <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-workspace-wizard&#x27;</span>,
+    <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">ReactiveFormsModule</span>, <span class="hljs-title class_">Button</span>, <span class="hljs-title class_">InputField</span>, <span class="hljs-title class_">Stepper</span>, <span class="hljs-title class_">Step</span>, <span class="hljs-title class_">StepContentDirective</span>],
+    <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>,
+    <span class="hljs-attr">template</span>: <span class="hljs-string">\`
+        &lt;bx-stepper #wizard mode=&quot;wizard&quot; [completionContent]=&quot;done&quot;&gt;
+            &lt;bx-step id=&quot;details&quot; label=&quot;Details&quot; [validation]=&quot;name&quot;&gt;
+                &lt;ng-template bxStepContent&gt;
+                    &lt;bx-input-field label=&quot;Workspace name&quot; [formControl]=&quot;name&quot; /&gt;
+                &lt;/ng-template&gt;
+            &lt;/bx-step&gt;
+            &lt;bx-step id=&quot;review&quot; label=&quot;Review&quot;&gt;
+                &lt;ng-template bxStepContent
+                    &gt;&lt;p&gt;Create {{ name.value }}.&lt;/p&gt;&lt;/ng-template
+                &gt;
+            &lt;/bx-step&gt;
+        &lt;/bx-stepper&gt;
+        &lt;ng-template #done&gt;
+            &lt;p&gt;Workspace created.&lt;/p&gt;
+            &lt;button bx-button type=&quot;button&quot; (click)=&quot;wizard.reset()&quot;&gt;Restart&lt;/button&gt;
+        &lt;/ng-template&gt;
+    \`</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WorkspaceWizard</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> name = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FormControl</span>(<span class="hljs-string">&#x27;&#x27;</span>, { <span class="hljs-attr">nonNullable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">validators</span>: <span class="hljs-title class_">Validators</span>.<span class="hljs-property">required</span> });
+}</code></pre>
+<p>Built-in Back, Next, Skip and Finish actions use Blocks buttons and the same lifecycle as public navigation methods.</p>
+<p>Wizard defaults are linear, internally committed selection, retained lazy templates and built-in controls. Only successful forward advancement or Finish marks
+the current step completed. An optional Skip records skipped state and never claims completion. Disabled steps are excluded from navigation and progress totals.</p>
+<h3>Signal Forms and other validity models</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { signal } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/core&#x27;</span>;
+<span class="hljs-keyword">import</span> { form, required } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@angular/forms/signals&#x27;</span>;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> draft = <span class="hljs-title function_">signal</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;&#x27;</span> });
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> registration = <span class="hljs-title function_">form</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">draft</span>, <span class="hljs-function">(<span class="hljs-params">schema</span>) =&gt;</span> <span class="hljs-title function_">required</span>(schema.<span class="hljs-property">name</span>));</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-step</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;details&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Details&quot;</span> [<span class="hljs-attr">validation</span>]=<span class="hljs-string">&quot;registration()&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxStepContent</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">bx-input-field</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Workspace name&quot;</span> [<span class="hljs-attr">formField</span>]=<span class="hljs-string">&quot;registration.name&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-step</span>&gt;</span></code></pre>
+<p>Import Angular&#39;s Signal Forms <code>FormField</code> directive and Blocks <code>InputField</code> into the owning component. <code>validation</code> accepts the existing form state through
+<code>IStepValidation</code>: <code>valid</code>, optional <code>pending</code>, optional <code>statusChanges</code> and touch methods. Reactive Forms <code>AbstractControl</code>, a non-null <code>NgForm</code>, and Signal
+Forms field state are structurally compatible. No form is required: <code>[valid]=&quot;canContinue()&quot;</code> supports application-owned standalone state.</p>
+<p>Explicit <code>valid</code> overrides the form&#39;s valid value. Pending validation, application <code>loading</code> and server <code>error</code> still prevent forward navigation. An invalid
+attempt marks the supplied reactive subtree touched, or calls the supplied field state&#39;s <code>markAsTouched</code>. Angular Signal Forms marks the field and its
+descendants touched. Untouched steps are not presented as invalid until a forward attempt; explicit server errors are shown immediately. Changing an already
+completed form to invalid removes its effective completion and blocks linear progression. Backward navigation still runs guards and remains possible.</p>
+<h3>Asynchronous guards and recovery</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">public</span> <span class="hljs-keyword">readonly</span> <span class="hljs-attr">saveStep</span>: <span class="hljs-title class_">StepperGuard</span> = <span class="hljs-title function_">async</span> ({ <span class="hljs-keyword">from</span>, signal }) =&gt; {
+    <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">&#x27;/api/workflow/save&#x27;</span>, {
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+        signal,
+        <span class="hljs-attr">headers</span>: { <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> },
+        <span class="hljs-attr">body</span>: <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>({ <span class="hljs-attr">stepId</span>: <span class="hljs-keyword">from</span>?.<span class="hljs-property">id</span> })
+    });
+
+    <span class="hljs-keyword">if</span> (!response.<span class="hljs-property">ok</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;Save failed&#x27;</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+};</code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;wizard&quot;</span> [<span class="hljs-attr">beforeTransition</span>]=<span class="hljs-string">&quot;saveStep&quot;</span> (<span class="hljs-attr">transitionFinished</span>)=<span class="hljs-string">&quot;showResult($event)&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-step</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;details&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Details&quot;</span>&gt;</span>Details<span class="hljs-tag">&lt;/<span class="hljs-name">bx-step</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-step</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;review&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Review&quot;</span>&gt;</span>Review<span class="hljs-tag">&lt;/<span class="hljs-name">bx-step</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-stepper</span>&gt;</span></code></pre>
+<p>The pipeline checks availability, forward validity and linear prerequisites; runs current <code>canExit</code>, destination <code>canEnter</code>, then <code>beforeTransition</code>; rechecks
+validity; commits progress and (for internal selection) the active ID. Guards accept booleans, promises or observables. The first observable value is used;
+empty observables refuse navigation. <code>false</code> produces <code>rejected/guard</code>; thrown/rejected operations produce <code>error</code> with the original error value. Neither
+automatically creates a toast. Application error feedback can inspect <code>transitionFinished</code> or <code>lastTransition()</code> and retry through the same method.</p>
+<p><code>pending()</code> exposes the in-flight request and loading feedback. Duplicate operations return <code>busy</code> without running another guard. Reset, destruction, external
+selection, definition replacement/removal and navigation-policy changes abort pending work. Observables unsubscribe. Promises are detached on cancellation; the
+application must honor the supplied <code>AbortSignal</code> to cancel their underlying request. A stale result cannot select a removed destination.</p>
+<h3>Controlled wizards and custom controls</h3>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span>
+    #<span class="hljs-attr">wizard</span>
+    <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;wizard&quot;</span>
+    <span class="hljs-attr">selectionMode</span>=<span class="hljs-string">&quot;controlled&quot;</span>
+    [<span class="hljs-attr">steps</span>]=<span class="hljs-string">&quot;steps&quot;</span>
+    [(<span class="hljs-attr">activeStep</span>)]=<span class="hljs-string">&quot;active&quot;</span>
+    [<span class="hljs-attr">controls</span>]=<span class="hljs-string">&quot;false&quot;</span>
+    (<span class="hljs-attr">transitionFinished</span>)=<span class="hljs-string">&quot;confirm($event)&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> [<span class="hljs-attr">loading</span>]=<span class="hljs-string">&quot;wizard.pending() !== null&quot;</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;wizard.next()&quot;</span>&gt;</span>Continue<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">public</span> <span class="hljs-title function_">confirm</span>(<span class="hljs-attr">result</span>: <span class="hljs-title class_">IStepperTransition</span>): <span class="hljs-built_in">void</span> {
+    <span class="hljs-keyword">if</span> (result.<span class="hljs-property">outcome</span> === <span class="hljs-string">&#x27;accepted&#x27;</span> &amp;&amp; result.<span class="hljs-property">toId</span> !== <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>.<span class="hljs-title function_">set</span>(result.<span class="hljs-property">toId</span>);
+}</code></pre>
+<p>In controlled mode, successful guards record progress and emit an accepted transition; the application independently confirms <code>activeStep</code>. Indicator and
+navigation modes always use request-only selection regardless of <code>selectionMode</code>. Direct external model changes are authoritative and bypass wizard guards; use
+<code>goTo</code>, <code>next</code>, <code>previous</code>, <code>skip</code> and <code>finish</code> when the change must be guarded.</p>
+<p>The playground deliberately separates requesting a step from confirming it. Its \u201CRequest next step\u201D action shows a \u201CWaiting for application confirmation\u201D banner
+and an \u201COpen Build\u201D (or other destination) action. The current marker moves only when that application action updates <code>activeStep</code>. Applications can confirm
+immediately in their transition handler, as above; ordinary wizards use the default <code>selectionMode=&quot;internal&quot;</code> to advance automatically.</p>
+<h3>Content ownership and lifecycle</h3>
+<p>Choose either projected <code>bx-step</code> definitions or the <code>steps</code> input, including an explicitly empty array. Mixing sources throws. Nonempty stable IDs are
+required; duplicates throw. Reordering preserves identity. Unknown, removed or disabled active IDs display the first enabled step; no enabled steps means no
+selection or controls. This fallback does not overwrite the external model. Removed IDs lose their internal progress and retained views.</p>
+<p>Data-driven wizard steps can supply <code>content: TemplateRef&lt;unknown&gt;</code> and <code>labelTemplate: TemplateRef&lt;IStepperLabelContext&gt;</code> without a separate registry.
+<code>bxStepContent</code> defers expensive projected content. Ordinary direct projection is instantiated by Angular eagerly even when wrapped for display; use the
+template directive when creation policy matters.</p>
+<table>
+<thead>
+<tr>
+<th><code>contentPolicy</code></th>
+<th>Creation and destruction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>retained</code></td>
+<td>Default. Create a template on first activation and retain it hidden on leaving.</td>
+</tr>
+<tr>
+<td><code>eager</code></td>
+<td>Instantiate every content template when rendered in a wizard.</td>
+</tr>
+<tr>
+<td><code>active</code></td>
+<td>Destroy the inactive embedded view; revisiting creates a fresh view.</td>
+</tr>
+</tbody></table>
+<p><code>reset(id?)</code> aborts work, clears internal progress, skips, attempted validation and inactive visitation, and selects the given/first enabled ID. Application
+form values, explicit step overrides and form touched state remain application-owned. Reset forms separately when starting a fresh draft. A successful Finish
+emits <code>completed</code> once until reset and may replace the panels with <code>completionContent</code>. Viewing the final step alone does not finish the workflow. Percentage
+represents completed enabled steps, so skipped optional steps intentionally need not yield 100%; supply <code>progressValue</code> for a different business metric.</p>
+<h2>API</h2>
+<h3>Stepper inputs and models</h3>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Type</th>
+<th>Default / behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mode</code></td>
+<td><code>StepperMode</code></td>
+<td><code>indicator</code>, <code>navigation</code>, <code>wizard</code></td>
+</tr>
+<tr>
+<td><code>steps</code></td>
+<td><code>readonly IStepDefinition[]</code></td>
+<td>Omitted for projected definitions</td>
+</tr>
+<tr>
+<td><code>activeStep</code></td>
+<td><code>model&lt;string | null&gt;</code></td>
+<td><code>null</code>; stable ID with two-way binding</td>
+</tr>
+<tr>
+<td><code>variant</code></td>
+<td><code>StepperVariant</code></td>
+<td><code>steps</code>, <code>segments</code>, <code>dots</code>, <code>progress</code>, <code>cards</code></td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>StepperSize</code></td>
+<td><code>md</code>; also <code>sm</code>, <code>lg</code></td>
+</tr>
+<tr>
+<td><code>orientation</code></td>
+<td><code>StepperOrientation</code></td>
+<td><code>horizontal</code>; also <code>vertical</code></td>
+</tr>
+<tr>
+<td><code>responsive</code></td>
+<td><code>StepperResponsive</code></td>
+<td><code>scroll</code>; also <code>vertical</code>, <code>compact</code></td>
+</tr>
+<tr>
+<td><code>showLabels</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>showDescriptions</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>indicatorInteractive</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>readOnly</code>, <code>readonly</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code>; either blocks user/API edits</td>
+</tr>
+<tr>
+<td><code>linear</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code>; requires completed predecessors</td>
+</tr>
+<tr>
+<td><code>selectionMode</code></td>
+<td><code>StepperSelectionMode</code></td>
+<td><code>internal</code>; also <code>controlled</code></td>
+</tr>
+<tr>
+<td><code>beforeTransition</code></td>
+<td><code>StepperGuard</code></td>
+<td>Optional application guard</td>
+</tr>
+<tr>
+<td><code>controls</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code> in wizard mode only</td>
+</tr>
+<tr>
+<td><code>contentPolicy</code></td>
+<td><code>StepperContentPolicy</code></td>
+<td><code>retained</code>; also <code>eager</code>, <code>active</code></td>
+</tr>
+<tr>
+<td><code>focusOnChange</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code> for wizard panels only</td>
+</tr>
+<tr>
+<td><code>completionContent</code></td>
+<td><code>TemplateRef&lt;unknown&gt;</code></td>
+<td>Optional application completion view</td>
+</tr>
+<tr>
+<td><code>progressValue</code></td>
+<td><code>number</code></td>
+<td>Optional explicit 0\u2013100 completion percentage</td>
+</tr>
+<tr>
+<td><code>showPercentage</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code>; progress presentation</td>
+</tr>
+<tr>
+<td><code>labels</code></td>
+<td><code>Partial&lt;IStepperLabels&gt;</code></td>
+<td>Shared defaults, then English</td>
+</tr>
+<tr>
+<td><code>glassiness</code></td>
+<td>Shared <code>GlassinessMode</code></td>
+<td>Inherits global appearance for cards</td>
+</tr>
+<tr>
+<td><code>surfaceEffects</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code>; interactive step lighting</td>
+</tr>
+</tbody></table>
+<h3>Step metadata</h3>
+<p>The declarative <code>Step</code> inputs match <code>IStepDefinition</code> fields except <code>content</code>/<code>labelTemplate</code>, which use <code>bxStepContent</code>/<code>bxStepLabel</code> templates.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code>, <code>label</code></td>
+<td>Required stable ID and <code>ResolvableText</code> name</td>
+</tr>
+<tr>
+<td><code>description</code>, <code>statusText</code></td>
+<td>Optional reactive translated text</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td>Optional Blocks <code>IconName</code></td>
+</tr>
+<tr>
+<td><code>disabled</code>, <code>optional</code></td>
+<td>Default <code>false</code>; excluded navigation / available skip action</td>
+</tr>
+<tr>
+<td><code>editable</code></td>
+<td>Default <code>true</code>; <code>false</code> prevents revisiting completed steps</td>
+</tr>
+<tr>
+<td><code>completed</code>, <code>skipped</code></td>
+<td>Optional explicit overrides of internal wizard state</td>
+</tr>
+<tr>
+<td><code>valid</code>, <code>validation</code></td>
+<td>Explicit validity or application-owned form state</td>
+</tr>
+<tr>
+<td><code>error</code>, <code>loading</code></td>
+<td>Application-owned error/busy state, default <code>false</code></td>
+</tr>
+<tr>
+<td><code>canExit</code>, <code>canEnter</code></td>
+<td>Optional per-step guards</td>
+</tr>
+<tr>
+<td><code>content</code>, <code>labelTemplate</code></td>
+<td>Optional data-driven templates</td>
+</tr>
+</tbody></table>
+<p>Explicit <code>completed: false</code> prevents derived completion; a linear workflow must receive an application-confirmed completion override before advancing that step.
+Explicit completion is still ineffective while validation is invalid/pending or an application error/loading state is set. Derived skipped state is cleared when
+the step is subsequently completed. Visual priority is disabled, loading, error, skipped, completed, then active/pending; <code>aria-current</code> always tracks selection
+independently.</p>
+<h3>Methods, state and events</h3>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Result / payload</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>goTo(id, source?)</code></td>
+<td><code>Promise&lt;IStepperTransition&gt;</code></td>
+</tr>
+<tr>
+<td><code>next(source?)</code>, <code>previous(source?)</code></td>
+<td>Same return type; skip disabled/non-editable completed destinations</td>
+</tr>
+<tr>
+<td><code>skip(source?)</code>, <code>finish(source?)</code></td>
+<td>Same return type; optional skip / explicit final action</td>
+</tr>
+<tr>
+<td><code>reset(id?)</code></td>
+<td><code>void</code>; restart without guards, preserve application-owned form data</td>
+</tr>
+<tr>
+<td><code>selectedStep()</code></td>
+<td>Effective metadata or <code>null</code></td>
+</tr>
+<tr>
+<td><code>pending()</code>, <code>lastTransition()</code></td>
+<td>Read-only current operation / latest settled result</td>
+</tr>
+<tr>
+<td><code>progress()</code>, <code>isComplete()</code>, <code>isReadonly()</code></td>
+<td>Completed percentage / finished workflow / combined readonly</td>
+</tr>
+<tr>
+<td><code>stepRequested</code></td>
+<td><code>IStepperRequest</code>: ID, zero-based index, source, action</td>
+</tr>
+<tr>
+<td><code>selectionChanged</code></td>
+<td><code>IStepperSelection</code>: ID, index, previous ID</td>
+</tr>
+<tr>
+<td><code>transitionFinished</code></td>
+<td><code>IStepperTransition</code>: request, from/to IDs, outcome, reason/error</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td><code>IStepperCompletion</code>: ordered completed and skipped ID arrays</td>
+</tr>
+</tbody></table>
+<p>Sources are <code>pointer</code>, <code>keyboard</code>, <code>programmatic</code> (the method default) and <code>controls</code>. Outcomes are <code>accepted</code>, <code>rejected</code>, <code>invalid</code>, <code>error</code>, <code>cancelled</code> and
+<code>busy</code>. <code>busy</code> is returned directly without a second settled-result event. Readonly state blocks reset and requests but still permits authoritative external
+selection updates. Missing destinations are rejected without throwing. Skipping a final optional step finishes the workflow while keeping that step skipped.
+Final completion requires all enabled required steps even in non-linear mode.</p>
+<h2>Appearance and customization</h2>
+<p>Sizes change marker diameter, segment thickness, spacing, typography and surface padding. Connectors remain thin and solid. Interactive controls retain a
+minimum 44 CSS pixel target. Segments use different thicknesses for <code>sm</code>, <code>md</code> and <code>lg</code>. Dots use compact filled, hollow and checked indicators; progress uses
+actual completion rather than active position. Dots measure 1.25 / 1.5 / 1.75rem across the size presets so status symbols have clear interior spacing. Step
+icons and spinners scale to 16 / 18 / 20 CSS pixels. Vertical progress keeps a horizontal continuous completion bar above its vertical step list.</p>
+<table>
+<thead>
+<tr>
+<th>CSS custom property</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--bx-stepper-marker-size</code></td>
+<td>Size preset: 1.75 / 2 / 2.5rem</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-dot-size</code></td>
+<td>Size preset: 1.25 / 1.5 / 1.75rem</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-marker-radius</code></td>
+<td>Shared pill radius</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-thickness</code></td>
+<td>Size preset: 0.125 / 0.25 / 0.5rem</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-gap</code></td>
+<td>Size preset: shared spacing 2 / 3 / 4</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-padding</code></td>
+<td>Size preset: shared spacing 2 / 3 / 4</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-color</code></td>
+<td><code>--bx-accent</code></td>
+</tr>
+<tr>
+<td><code>--bx-stepper-on-color</code></td>
+<td><code>--bx-on-accent</code>; foreground paired with the active fill</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-connector-thickness</code></td>
+<td><code>2px</code>; separate from segment/progress thickness</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-segment-radius</code></td>
+<td>Shared pill radius</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-segment-length</code></td>
+<td>Shared spacing 10 for vertical segments</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-card-background</code></td>
+<td><code>--bx-bg-surface</code></td>
+</tr>
+<tr>
+<td><code>--bx-stepper-card-radius</code></td>
+<td>Shared medium radius</td>
+</tr>
+<tr>
+<td><code>--bx-stepper-compact-active-width</code></td>
+<td><code>8rem</code>; readable active label in compact horizontal layouts</td>
+</tr>
+</tbody></table>
+<p>Step bodies use <code>BxSurfaceDirective</code>, global materials and transparency fallbacks. Cards have a persistent neutral surface. Other variants keep transparent
+backgrounds, including selected and hovered steps. Hover feedback emphasizes the marker and underlines its label without moving content. Shared lighting
+attaches to the interactive button, so selection, hover and keyboard focus emit from the correct element. Markers and segments do not receive independent glass
+surfaces. Global Off and accessibility policies take precedence over component overrides. Theme and palette changes use semantic CSS variables on mounted
+instances. Active markers pair the accent fill with its on-accent foreground; completed markers use the matching subtle surface. Errors consistently use danger
+tokens for the marker, feedback and emitted light. Decorative outlines and dashed connectors are avoided; keyboard focus retains a visible outline. Horizontal
+labels are centered below markers, and vertical labels align with the marker center. Cards align their text stack to the top with a small marker offset, using
+the same icon-and-text arrangement as alerts and banners. No independent animation or lighting implementation is introduced.</p>
+<p>Custom labels use <code>&lt;ng-template bxStepLabel let-step let-index=&quot;index&quot; let-status=&quot;status&quot;&gt;\u2026&lt;/ng-template&gt;</code> inside <code>bx-step</code>. Keep content non-interactive and
+preserve a meaningful plain <code>label</code>, which remains the button&#39;s accessible name. The custom label is decorative to avoid duplicated accessible names.</p>
+<p>Unavailable steps use muted markers and reduced visual emphasis. Completed steps with <code>editable: false</code> receive the same unavailable treatment when revisiting
+is blocked. Read-only steppers keep their content, completion symbols and keyboard focus, use neutral markers, and suppress interaction feedback and lighting.
+The current step remains distinguishable by its stronger marker border; read-only does not disable the control or discard progress.</p>
+<h3>Localization</h3>
+<p>Every component-owned label is configurable as <code>ResolvableText</code>. Supply <code>labels</code> per instance or provide
+<code>{ provide: BX_STEPPER_DEFAULTS, useValue: { labels: { next: { key: &#39;workflow.next&#39; } } } }</code>. Merge precedence is instance member, shared member, English
+default. Text reacts to <code>BX_I18N.version()</code> changes. Without an adapter, strings work directly and translation keys fall back to their key. Position text
+receives <code>index</code> (one-based), <code>count</code>, <code>label</code> and rounded <code>percent</code>; plain strings can use <code>{index}</code>, <code>{count}</code>, <code>{label}</code> and <code>{percent}</code> placeholders.
+<code>IStepperLabels</code> also covers pending, awaitingConfirmation, active, completed, skipped, error, loading, disabled, optional and rejection/invalid feedback.</p>
+<h2>Behavior and accessibility</h2>
+<p>The header is a named group with an ordered list. Passive indicators have no buttons. Interactive headers use native buttons with <code>aria-current=&quot;step&quot;</code>,
+descriptions and wizard panel relationships. They do not claim tablist semantics. State text, check/error/skip symbols and filled/hollow markers supplement
+semantic colors. Loading remains identifiable with reduced motion and forced colors.</p>
+<p>Interactive steps use one roving tab stop. Orientation-aware arrows, Home and End move focus without committing selection; Enter and Space activate through
+native button behavior. Horizontal movement reverses in RTL. Disabled and non-editable completed destinations are skipped. Keyboard direction follows rendered
+CSS orientation, including responsive vertical layouts. Navigation mode never moves focus on external selection. Wizards focus newly rendered panels by default;
+turn off <code>focusOnChange</code> when your application owns focus. If no panel exists, focus falls back to the step button. Completion content receives focus.</p>
+<p>Status announcements cover loading, validation refusal, guard refusal, failures and completion. Wizard panel names identify selection changes without another
+repeated live announcement. <code>BxA11yService</code> and shared surface/progress/spinner policies handle live reduced-motion preferences. Semantic tokens, logical CSS
+and forced-colors rules preserve readable state across themes, RTL and accessibility modes.</p>
+<p><code>responsive=&quot;scroll&quot;</code> preserves labels with a reachable horizontal scroll region. <code>vertical</code> changes the list at the shared <code>sm</code> breakpoint. <code>compact</code> hides
+supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
+state during server rendering. Content wraps for long translations and constrained containers.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/stepper</code> for all modes, variants, sizes and orientations; English/Spanish/French/German text changes; appearance controls; a scroll-driven
+section navigator; validated Reactive Forms and Signal Forms; asynchronous save success, guard refusal and failure/retry; optional/disabled/non-editable steps;
+custom labels and controls; dynamic definitions; controlled confirmation; completion and reset.</p>
+<p>Run <code>npm run test:stepper</code> for the colocated Angular TestBed browser suite. It uses the installed Angular unit-test builder with Karma/Jasmine and
+ChromeHeadless.</p>
+<p>Functional references: <a href="https://material.angular.dev/components/stepper/overview">Angular Material</a>, <a href="https://primeng.org/stepper">PrimeNG</a>,
+<a href="https://mui.com/material-ui/react-stepper/">MUI</a>, <a href="https://mantine.dev/core/stepper/">Mantine</a> and <a href="https://ng.ant.design/components/steps/en">NG-ZORRO</a>.
+Visual review also considers <a href="https://github.com/JCarterJohnson/vibecoded-design-tells">vibecoded-design-tells</a>; Blocks tokens and surfaces remain
+authoritative.</p>
 `,"projects/blocks/navigation/components/top-nav/README.md":`<h1>Top navigation</h1>
 <p>A responsive horizontal route navigation bar with brand/action slots, a compact menu, contextual search, and one shared panel for every nesting level. It uses
 the same route state, item views, Back behavior, search matching, focus/scroll bookmarks, and tonal styling as <code>SideNav</code>.</p>
@@ -3718,6 +4413,43 @@ accessible names and keyboard operation. Use the context to adapt content to the
 accessible names and keyboard operation. Use the context to adapt content to the available space.</p>
 <h2>Playground</h2>
 <p>Visit <code>/components/side-nav</code> and see the <a href="components/side-nav">owning component guide</a>.</p>
+`,"projects/blocks/navigation/directives/step-content/README.md":`<h1>Lazy step content</h1>
+<p>Use this declaration inside <code>bx-stepper</code> to configure workflow presentation and content. See the <a href="components/stepper">Stepper guide</a> for the
+full API and runnable examples.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">StepContentDirective</span>, <span class="hljs-title class_">Step</span>, <span class="hljs-title class_">Stepper</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;wizard&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-step</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;details&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Details&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxStepContent</span>&gt;</span>Details content<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bx-step</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-stepper</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>StepContentDirective.templateRef</code> captures the projected <code>TemplateRef&lt;unknown&gt;</code>. The owning stepper controls its creation and destruction.</p>
+<h2>Appearance and customization</h2>
+<p>Presentation inherits the owning stepper&#39;s variant, size, semantic tokens and appearance policies. Supply a meaningful plain or translated step label.</p>
+<h2>Behavior and accessibility</h2>
+<p>Use <code>bxStepContent</code> for deferred creation. The stepper supports eager, lazy-retained and destroy-inactive content policies. Ordinary projection is eager.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/stepper</code> for validated workflows and content/label customization.</p>
+`,"projects/blocks/navigation/directives/step-label/README.md":`<h1>Custom step labels</h1>
+<p>Use this declaration inside <code>bx-stepper</code> to configure workflow presentation and content. See the <a href="components/stepper">Stepper guide</a> for the
+full API and runnable examples.</p>
+<h2>Import</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">StepLabelDirective</span>, <span class="hljs-title class_">Step</span>, <span class="hljs-title class_">Stepper</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/navigation&#x27;</span>;</code></pre>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span> <span class="hljs-attr">mode</span>=<span class="hljs-string">&quot;wizard&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bx-step</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;review&quot;</span> <span class="hljs-attr">label</span>=<span class="hljs-string">&quot;Review&quot;</span>
+        &gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">bxStepLabel</span> <span class="hljs-attr">let-step</span> <span class="hljs-attr">let-status</span>=<span class="hljs-string">&quot;status&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>{{ step.label }}<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> \xB7 {{ status }}<span class="hljs-tag">&lt;/<span class="hljs-name">ng-template</span>&gt;</span>&lt;/bx-step
+    &gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">bx-stepper</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p><code>StepLabelDirective.templateRef</code> captures <code>TemplateRef&lt;IStepperLabelContext&gt;</code>. The context supplies <code>$implicit</code> metadata, zero-based <code>index</code>, and resolved
+<code>status</code>. The template context guard types these variables.</p>
+<h2>Appearance and customization</h2>
+<p>Presentation inherits the owning stepper&#39;s variant, size, semantic tokens and appearance policies. Supply a meaningful plain or translated step label.</p>
+<h2>Behavior and accessibility</h2>
+<p>Custom labels are visual content inside a native button; do not nest interactive controls. The plain step label remains the accessible name.</p>
+<h2>Playground</h2>
+<p>Open <code>/components/stepper</code> for validated workflows and content/label customization.</p>
 `,"projects/blocks/navigation/directives/top-nav-actions/README.md":`<h1>Top nav actions slot</h1>
 <p>Provide custom action content for <code>bx-top-nav</code> through a typed projected template.</p>
 <h2>Import</h2>
@@ -6315,7 +7047,7 @@ controls and preserve ordinary keyboard behavior.</p>
 <span class="hljs-meta">@Component</span>({
     <span class="hljs-attr">selector</span>: <span class="hljs-string">&#x27;app-custom-toast&#x27;</span>,
     <span class="hljs-attr">imports</span>: [<span class="hljs-title class_">Button</span>],
-    <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;p&gt;{{ data }}&lt;/p&gt;&lt;button bx-button (click)=&quot;close()&quot;&gt;Dismiss&lt;/button&gt;&#x27;</span>,
+    <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;p&gt;{{ data() }}&lt;/p&gt;&lt;button bx-button (click)=&quot;close()&quot;&gt;Dismiss&lt;/button&gt;&#x27;</span>,
     <span class="hljs-attr">changeDetection</span>: <span class="hljs-title class_">ChangeDetectionStrategy</span>.<span class="hljs-property">OnPush</span>
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomToast</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_ inherited__">Toast</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-literal">undefined</span>&gt; {}</code></pre>
@@ -6333,8 +7065,87 @@ ref.<span class="hljs-property">afterClosed$</span>.<span class="hljs-title func
 <p><code>queueInfo</code>, <code>queueSuccess</code>, <code>queueWarning</code>, and <code>queueDanger</code> accept <code>IQueueSimpleToastRequest</code> and return a typed <code>ToastRef</code>.
 <code>queueToast(ContentComponent, config?)</code> queues custom content. Excess requests wait until an open slot becomes available; <code>maxOpened</code> defaults to four across
 positions.</p>
-<p><code>Toast&lt;D, R&gt;</code> provides typed <code>data</code>, the <code>toast</code> reference, <code>onToastInit()</code>, and <code>close(result?)</code>. <code>ToastRef&lt;D, R&gt;</code> exposes <code>close(result?)</code>, <code>pause()</code>,
-<code>resume()</code>, resolved <code>config</code>, and <code>afterClosed$</code>, <code>onPause$</code>, and <code>onResume$</code> observables.</p>
+<p><code>Toast&lt;D, R&gt;</code> provides typed reactive <code>data()</code>, the <code>toast</code> reference, <code>onToastInit()</code>, and <code>close(result?)</code>. <code>ToastRef&lt;D, R&gt;</code> exposes <code>close(result?)</code>,
+<code>pause()</code>, <code>resume()</code>, reactive <code>config()</code> and <code>data()</code>, and <code>afterClosed$</code>, <code>onPause$</code>, and <code>onResume$</code> observables.</p>
+<h3>Live configuration patching</h3>
+<p><code>ToastRef.patch(patch: IToastPatch&lt;D&gt;): void</code> updates an existing queued or open notification. The returned reference and <code>this.toast</code> inside content share the
+same state. It is also injectable as <code>inject&lt;ToastRef&lt;D, R&gt;&gt;(ToastRef)</code>. Read resolved settings with <code>config()</code>, content with <code>data()</code>, lifecycle with
+<code>state()</code>, and the current pause preference with <code>paused()</code>.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">const</span> ref = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toastrService</span>.<span class="hljs-title function_">queueInfo</span>({
+    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;File upload&#x27;</span>,
+    <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Uploading your file\u2026&#x27;</span>,
+    <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;upload&#x27;</span> },
+    <span class="hljs-attr">loading</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">durationInMs</span>: <span class="hljs-number">0</span>
+});
+
+<span class="hljs-comment">// In your application&#x27;s successful request completion:</span>
+ref.<span class="hljs-title function_">patch</span>({
+    <span class="hljs-attr">data</span>: { <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Upload complete&#x27;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;success&#x27;</span>, <span class="hljs-attr">icon</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;check&#x27;</span> }, <span class="hljs-attr">loading</span>: <span class="hljs-literal">false</span> },
+    <span class="hljs-attr">closeButtonColor</span>: <span class="hljs-string">&#x27;text-success&#x27;</span>,
+    <span class="hljs-attr">progressBarColor</span>: <span class="hljs-string">&#x27;text-success&#x27;</span>,
+    <span class="hljs-attr">durationInMs</span>: <span class="hljs-number">4000</span>
+});</code></pre>
+<p>The same operation inside custom content is <code>this.toast.patch(...)</code>. For example, a component extending <code>Toast&lt;{ message: string }, undefined&gt;</code> can call
+<code>this.toast.patch({ data: { message: &#39;Updated from inside&#39; } })</code> and render <code>{{ data()?.message }}</code>. Define application data interfaces in their own files.</p>
+<table>
+<thead>
+<tr>
+<th>Patch property</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>data</code></td>
+<td>Shallow-merge plain-object members; replace arrays, primitives, and nonplain objects. Undefined members retain existing values.</td>
+</tr>
+<tr>
+<td><code>durationInMs</code></td>
+<td>Explicitly restart the lifetime in milliseconds, even when the number equals the previous value; zero disables automatic dismissal.</td>
+</tr>
+<tr>
+<td><code>showCloseButton</code>, <code>closeButtonColor</code></td>
+<td>Update dismissal presentation; null clears the color override.</td>
+</tr>
+<tr>
+<td><code>showProgressBar</code>, <code>progressBarColor</code></td>
+<td>Update progress visibility/color without resetting time; null clears the color override.</td>
+</tr>
+<tr>
+<td><code>wrapperClass</code></td>
+<td>Replace wrapper classes; null restores the default wrapper. Include <code>default-wrapper</code> when extending its presentation.</td>
+</tr>
+<tr>
+<td><code>hasDefaultBackground</code>, <code>glassiness</code>, <code>glassQuality</code></td>
+<td>Update the existing surface policy, subject to application and accessibility settings.</td>
+</tr>
+</tbody></table>
+<p>Undefined means no change. Null clears the optional presentation overrides listed above. Data nullability follows the declared <code>D</code> contract; simple-toast
+<code>title</code> and <code>icon</code> explicitly accept null to clear them. Nested application objects are replaced, not recursively merged. Supply complete initial data for
+required object members before applying partial data updates. Patches never mutate the original payload or perform application requests.</p>
+<p>Simple-toast data also accepts <code>icon</code>, <code>loading</code>, and <code>loadingLabel</code>. Loading replaces only the icon with the shared spinner; the normal icon and its backing
+retain their dimensions and return when loading becomes false. Explicit loading state without an icon reserves a default 24px area to avoid shifts. Icon size
+follows <code>icon.size</code>; invalid sizes fall back to 24px. The optional accessible <code>loadingLabel</code> accepts <code>ResolvableText</code> and defaults to the shared <code>Loading</code>
+label. Loading does not pause the toast or extend its lifetime: configure <code>durationInMs: 0</code> when the notification must remain open during an operation.</p>
+<p>Changing semantic <code>type</code> updates simple-toast text, surface, and emission. Explicit close/progress colors remain independently configurable; patch them
+alongside the type when they should change together, as in the example above.</p>
+<h4>Lifetime, queue, and dismissal</h4>
+<p>Patching message, icon, appearance, or visibility preserves the remaining time. A duration patch resets timer and progress together. A paused toast stays
+paused, including when its duration is patched; resuming uses the new remaining lifetime. Hidden progress can be restored at the current remaining fraction.
+Pause/resume calls are idempotent, and existing hover and swipe interactions continue to use the reference&#39;s pause state.</p>
+<p>Each notification retains its own configuration, remaining lifetime, pause state, and dismissal controller. Queue processing serializes mounting, including when
+content construction or initialization synchronously queues another notification. The current capacity and pause policy are rechecked before each mount.</p>
+<p>Queued patches do not promote a toast or start a timer. The queue mounts the latest configuration and starts the lifetime on display. Closing a queued reference
+removes it without rendering. Patches during closing or after destruction are ignored; asynchronous completions cannot reopen it. Progress animations, timers,
+subscriptions, and wrapper callbacks are released on destruction.</p>
+<p>Position, component type, mounting, animation, and swipe configuration remain opening-time options and are absent from <code>IToastPatch&lt;D&gt;</code>.</p>
+<h4>Reactive custom content and migration</h4>
+<p><code>Toast&lt;D, R&gt;.data</code> is now a <code>Signal&lt;D | undefined&gt;</code>. Replace <code>data.message</code> with <code>data()?.message</code> in templates and <code>this.data.message</code> with
+<code>this.data()?.message</code> in TypeScript. Use <code>computed()</code> to derive translated or formatted content. A one-time local copy of <code>data()</code> does not subscribe to future
+patches. <code>IToast&lt;D, R&gt;</code> now requires this signal contract and a read-only reference; custom implementations can inject <code>ToastRef</code> and expose <code>toast.data</code>.</p>
+<p>Replace <code>ref.config</code> with <code>ref.config()</code> and direct mutation with <code>ref.patch(...)</code>. Configuration and data snapshots must be treated as read-only. <code>TOAST_DATA</code>
+remains a nonreactive initialization snapshot for direct token consumers; migrate to <code>ToastRef.data</code> or the <code>Toast</code> base class to receive updates. References
+are created by <code>ToastrService</code>; the wrapper no longer replaces the reference&#39;s <code>close()</code> method during initialization.</p>
 <h3>Configuration</h3>
 <table>
 <thead>
@@ -6388,8 +7199,8 @@ positions.</p>
 <td><code>enhanced</code>; the application baseline and device budget take precedence.</td>
 </tr>
 </tbody></table>
-<p>Simple requests require <code>message</code> and accept optional <code>title</code>, both with <code>ResolvableText</code>. The simple helper&#39;s progress option retains the existing spelling
-<code>showProgessBar</code>; custom toast configuration and global settings use <code>showProgressBar</code>.</p>
+<p>Simple requests require <code>message</code> and accept optional <code>title</code>, both with <code>ResolvableText</code>, plus optional icon, loading, and accessible loading label. The simple
+helper&#39;s progress option retains the existing spelling <code>showProgessBar</code>; custom toast configuration and global settings use <code>showProgressBar</code>.</p>
 <p><code>ToastrGlobalSettingsService.update(partial)</code> merges defaults without discarding unrelated settings. Per-toast configuration overrides these settings, followed
 by library defaults. It also exposes <code>maxOpened</code> for queue capacity.</p>
 <h2>Appearance and customization</h2>
@@ -6407,7 +7218,8 @@ important outcomes outside transient notifications. Use an inline alert or modal
 <p>Reduced motion suppresses movement while preserving state; reduced transparency and forced colors use opaque presentation. Simple message text accepts strings
 or translation keys through <code>BX_I18N</code>; custom components own translation, keyboard access, accessible names, and descriptions for their own content.</p>
 <h2>Playground</h2>
-<p>Open <code>/toastr</code> for the configurator, <code>/components/toast-core</code> for custom content, and <code>/components/simple-toast</code> for semantic notifications.</p>
+<p>Open <code>/toastr</code> for initial configuration, live content/type/icon/surface/progress updates, paused lifetime resets, a loading-to-success transition, and a
+queued-patch example. Open <code>/components/toast-core</code> for custom content, and <code>/components/simple-toast</code> for semantic notifications.</p>
 `,"projects/blocks/toastr/components/toast-core/README.md":`<h1>Toast core</h1>
 <p>The toast lifecycle host with progress, dismissal and content composition.</p>
 <p>Toast wrappers opt into enhanced glassiness on supported browsers. The default maximum of four open notifications bounds the extra surfaces. The
@@ -6426,7 +7238,10 @@ toastrGlobalSettingsService.<span class="hljs-title function_">update</span>({ <
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;notify()&quot;</span>&gt;</span>Show notification<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>Use <code>ToastrService.queueToast(ContentComponent, config)</code> for custom content, or queueInfo, queueSuccess, queueWarning and queueDanger for common messages.
-Config controls position, durationInMs, progress and close actions.</p>
+Config controls position, durationInMs, progress and close actions. <code>config()</code> and <code>toastRef</code> share the reference&#39;s reactive configuration. Use
+<code>ToastRef.patch()</code> to update data, lifetime, close/progress presentation, and the existing surface policy without replacing content. Duration patches reset time
+and progress, preserve pause state, and apply to queued toasts before display. See the
+<a href="toastr#live-configuration-patching">patch contract and migration</a>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
@@ -6447,7 +7262,7 @@ The playground\u2019s toast page can show all four semantic intents.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/toast-core</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/toastr/components/views/simple-toast/README.md":`<h1>Simple toast</h1>
-<p>A notification with a semantic icon, optional title and message.</p>
+<p>A notification with a semantic type, optional icon and title, and a required message.</p>
 <p>The toast wrapper uses enhanced glassiness on supported browsers, with shared translucency and accessibility preferences. Text retains its semantic foreground
 as the background scrolls; the material keeps a minimum tint and blur for readability. Progress and border lighting retain the notification type. Use toast
 configuration or global toast settings to select automatic detail, or disable glassiness.</p>
@@ -6458,7 +7273,11 @@ configuration or global toast settings to select automatic detail, or disable gl
 <pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bx-button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">&quot;notify()&quot;</span>&gt;</span>Show success<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
 <h2>API</h2>
 <p>Use <code>toastrService.queueSuccess({ title: &quot;Saved&quot;, message: &quot;Your settings are up to date.&quot; })</code>. Equivalent methods queueInfo, queueWarning and queueDanger set
-the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling).</p>
+the semantic intent. Request fields include position, durationInMs, animate, showCloseButton and showProgessBar (existing API spelling), plus optional icon,
+loading, and loadingLabel.</p>
+<p>The returned <code>ToastRef</code> supports <code>patch({ data: { message, type, icon, loading } })</code>. Data is reactive through <code>data()</code>; title and icon accept null to clear
+them. Icon loading preserves the configured icon and its dimensions and does not extend the lifetime. Use <code>durationInMs: 0</code> for a persistent operation
+notification, then patch the completion text and a timed duration. See <a href="toastr#live-configuration-patching">live patching and lifetime behavior</a>.</p>
 <h2>Appearance</h2>
 <p>Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from <code>ThemingService</code>; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.</p>
@@ -7624,6 +8443,24 @@ export class ModalExample {
     <div>
         {{ data.body }}
     </div>
+    <section class="modal-patch-demo" aria-label="Live modal configuration">
+        <h3>Patch this open modal</h3>
+        <p>Apply changes without replacing this content. The draft note and wizard step stay intact.</p>
+        <bx-input-field label="Draft note (retained across patches)" subscriptSizing="dynamic" [formControl]="draftNote" />
+        <form class="live-patch-form" [formGroup]="liveForm">
+            <bx-input-field label="Live heading" formControlName="text" subscriptSizing="dynamic" />
+            <bx-select label="Live icon (clear to remove)" formControlName="icon" subscriptSizing="dynamic" [options]="iconOptions" />
+            <bx-checkbox label="Icon loading" formControlName="loading" subscriptSizing="dynamic" />
+            <bx-checkbox label="Prevent user dismissal" formControlName="disableClose" subscriptSizing="dynamic" />
+            <bx-checkbox label="Show close button" formControlName="showCloseButton" subscriptSizing="dynamic" />
+            <bx-checkbox label="Accent heading appearance" formControlName="emphasize" subscriptSizing="dynamic" />
+            <button type="button" bx-button variant="tonal" [disabled]="saving()" (click)="applyLivePatch()">Apply live patch</button>
+        </form>
+        <p role="status">Wizard step {{ wizardStep() }} of 3. {{ saving() ? 'Saving\u2026' : 'Your draft is retained.' }}</p>
+        <button type="button" bx-button [disabled]="saving() || wizardStep() === 3" [loading]="saving()" (click)="advanceWizard()">
+            {{ wizardStep() === 1 ? 'Review draft' : wizardStep() === 2 ? 'Save draft' : 'Saved' }}
+        </button>
+    </section>
     <section class="modal-menu-demo" aria-label="Menus inside this modal">
         <h3>Menus inside the modal</h3>
         <button bx-button type="button" variant="tonal" color="primary" placement="bottom" [bxDropdown]="dropdownActions">
@@ -7668,7 +8505,8 @@ export class ModalExample {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: spacing(4);
+    min-inline-size: 0;
     overflow-y: auto;
 
     @include respond-up(xl) {
@@ -7686,24 +8524,36 @@ export class ModalExample {
 
 .button-container {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 1rem;
+    gap: spacing(3);
+}
 
-    & button {
-        cursor: pointer;
-    }
+.button-container > button,
+.modal-patch-demo button,
+.modal-menu-demo > button,
+.modal-nesting-demo > button {
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+}
+
+.modal-patch-demo,
+.modal-menu-demo,
+.modal-nesting-demo {
+    display: grid;
+    gap: spacing(3);
+    min-inline-size: 0;
+    padding-block-start: spacing(4);
+    border-block-start: 1px solid var(--bx-border-default);
 }
 
 .modal-menu-demo,
 .modal-nesting-demo {
-    display: grid;
     justify-items: start;
-    gap: spacing(3);
-    padding-top: spacing(4);
-    border-top: 1px solid var(--bx-border-default);
 }
 
+.modal-patch-demo h3,
+.modal-patch-demo p,
 .modal-menu-demo h3,
 .modal-menu-demo p,
 .modal-nesting-demo h3,
@@ -7728,42 +8578,141 @@ export class ModalExample {
 .menu-status {
     min-height: 2.5em;
 }
+
+.live-patch-form {
+    display: grid;
+    gap: spacing(3);
+    min-inline-size: 0;
+}
+
+.modal-patch-demo > button,
+.live-patch-form > button {
+    justify-self: start;
+}
 `,"assets/code-snippets/modal/modal.ts.txt":`import type { WritableSignal } from '@angular/core';
 
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
+import type { IconName } from '@filip.mazev/blocks/icons';
+import type { ModalLiveFormControls } from '@playground/types/overlay-patch-demo.types';
+
+import { Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { ModalService } from '@filip.mazev/blocks/modal';
+import { Modal, ModalFooterDirective, ModalHeaderDirective, ModalService } from '@filip.mazev/blocks/modal';
 import { ContextMenuDirective, DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
 
-import { Button } from '@filip.mazev/blocks/forms';
-import { Modal } from '@filip.mazev/blocks/modal';
-import { ModalFooterDirective } from '@filip.mazev/blocks/modal';
-import { ModalHeaderDirective } from '@filip.mazev/blocks/modal';
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 
 @Component({
   selector: 'app-demo-modal',
-  imports: [ModalHeaderDirective, ModalFooterDirective, NgClass, Button, ContextMenuDirective, DropdownDirective, Menu, MenuItem, Icon],
+  imports: [
+    ReactiveFormsModule,
+    Checkbox,
+    InputField,
+    Select,
+    ModalHeaderDirective,
+    ModalFooterDirective,
+    NgClass,
+    Button,
+    ContextMenuDirective,
+    DropdownDirective,
+    Menu,
+    MenuItem,
+    Icon
+  ],
   templateUrl: './demo-modal.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './demo-modal.scss'
 })
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
   private readonly modalService = inject(ModalService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly liveForm: FormGroup<ModalLiveFormControls> = new FormGroup({
+    text: new FormControl('Workspace settings', { nonNullable: true }),
+    icon: new FormControl<IconName | null>('info'),
+    loading: new FormControl(false, { nonNullable: true }),
+    disableClose: new FormControl(false, { nonNullable: true }),
+    showCloseButton: new FormControl(true, { nonNullable: true }),
+    emphasize: new FormControl(false, { nonNullable: true })
+  });
+  protected readonly iconOptions: IBxSelectOption<IconName>[] = [
+    { label: 'Info', value: 'info' },
+    { label: 'Edit', value: 'pencil' },
+    { label: 'Done', value: 'check' }
+  ];
+  protected readonly draftNote: FormControl<string> = new FormControl('', { nonNullable: true });
+
+  protected readonly wizardStep: WritableSignal<number> = signal(1);
+
+  protected readonly saving: WritableSignal<boolean> = signal(false);
 
   protected readonly menuStatus: WritableSignal<string> = signal('Try either menu. Actions keep this modal open.');
 
   protected readonly isSideModal: WritableSignal<boolean> = signal(false);
   protected readonly isCenteredModal: WritableSignal<boolean> = signal(false);
 
-  public override onModalInit(): void {
-    const layout = this.modal?.modalConfig?.style.layout;
+  private saveTimeout?: ReturnType<typeof setTimeout>;
 
+  constructor() {
+    super();
+    this.destroyRef.onDestroy(() => clearTimeout(this.saveTimeout));
+  }
+
+  /** Populate initial live controls from the shared configuration without changing the mounted content. */
+  public override onModalInit(): void {
+    const layout = this.modal.config().style.layout;
+
+    const config = this.modal.config();
+
+    this.liveForm.patchValue({
+      text: typeof config.header?.text === 'string' ? config.header.text : '',
+      icon: config.header?.icon?.name ?? null,
+      loading: config.header?.loading ?? false,
+      disableClose: config.disableClose,
+      showCloseButton: config.style.showCloseButton ?? true
+    });
     this.isSideModal.set(layout === 'right' || layout === 'left');
     this.isCenteredModal.set(layout === 'center');
+  }
+
+  protected applyLivePatch(): void {
+    const values = this.liveForm.getRawValue();
+
+    this.modal.patch({
+      header: { text: values.text, icon: values.icon ? { name: values.icon } : null, loading: values.loading },
+      disableClose: values.disableClose,
+      style: {
+        showCloseButton: values.showCloseButton,
+        wrapperStyles: values.emphasize ? '--bx-modal-text: var(--bx-text-accent)' : null
+      }
+    });
+  }
+
+  protected advanceWizard(): void {
+    if (this.saving()) return;
+
+    if (this.wizardStep() === 1) {
+      this.wizardStep.set(2);
+      this.modal.patch({ header: { text: 'Step 2: Review your changes', icon: { name: 'pencil' }, loading: false } });
+
+      return;
+    }
+
+    this.saving.set(true);
+    this.modal.patch({ header: { text: 'Saving your changes\u2026', loading: true }, disableClose: true });
+    this.saveTimeout = setTimeout(() => {
+      this.saving.set(false);
+      this.wizardStep.set(3);
+      this.modal.patch({
+        header: { text: 'Changes saved', icon: { name: 'check', color: 'text-success' }, loading: false },
+        disableClose: false
+      });
+    }, 1800);
   }
 
   protected confirm(): void {
@@ -7784,7 +8733,7 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
         body: 'The first nested dialog uses at least 90% material opacity. Open another to see a fully opaque surface. Closing returns to the unchanged parent.'
       },
       header: { text: 'Nested dialog', icon: { name: 'layers', color: 'accent', bgColor: 'auto' } },
-      style: { layout: 'center', hasBackdrop: true, animate: this.modal.modalConfig?.style.animate ?? true }
+      style: { layout: 'center', hasBackdrop: true, animate: this.modal.config().style.animate ?? true }
     });
   }
 }
@@ -7803,8 +8752,12 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
 // Configure material through ThemingService.setAppearance(...) application-wide.
 `,"assets/code-snippets/toastr/demo-toast.html.txt":`<div class="notification">
     <div class="notification-content">
-        <h4 class="notification-title">{{ data.title }}</h4>
-        <p class="notification-message">{{ data.message }}</p>
+        <h4 class="notification-title">{{ data()?.title }}</h4>
+        <p class="notification-message">{{ data()?.message }}</p>
+        <div class="notification-actions">
+            <button type="button" bx-button variant="text" (click)="updateMessage()">Patch message inside</button>
+            <button type="button" bx-button variant="text" (click)="dismiss()">Dismiss with result</button>
+        </div>
     </div>
 </div>
 `,"assets/code-snippets/toastr/demo-toast.scss.txt":`@use '@filip.mazev/blocks/core/styles/helpers' as *;
@@ -7813,7 +8766,7 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
     display: flex;
     position: relative;
     padding: spacing(4);
-    min-height: 2.5rem;
+    min-block-size: 2.5rem;
     color: var(--bx-text-primary);
 }
 
@@ -7823,11 +8776,14 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
     justify-content: center;
     align-items: flex-start;
     flex: 1;
-    padding-right: spacing(6);
+    gap: spacing(2);
+    min-inline-size: 0;
+    padding-inline-end: spacing(6);
+    overflow-wrap: anywhere;
 }
 
 .notification-title {
-    margin: 0 0 spacing(1);
+    margin: 0;
     font-size: 1rem;
     font-weight: 600;
 }
@@ -7837,24 +8793,50 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
     font-size: 0.875rem;
     line-height: 1.5;
 }
+
+.notification-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(2);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-block-start: spacing(2);
+}
+
+.notification-actions > button {
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+}
 `,"assets/code-snippets/toastr/demo-toast.ts.txt":`import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+import { Button } from '@filip.mazev/blocks/forms';
+import { Toast } from '@filip.mazev/blocks/toastr';
 
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
-import { Toast } from '@filip.mazev/blocks/toastr';
 
 @Component({
   selector: 'app-demo-toast',
+  imports: [Button],
   templateUrl: './demo-toast.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './demo-toast.scss'
 })
 export class DemoToast extends Toast<IDemoToastData, IDemoToastResult> {
+  protected updateMessage(): void {
+    this.toast.patch({ data: { message: 'Updated from inside this notification.' } });
+  }
+
   protected dismiss(): void {
     this.toast?.close({
-      openedCount: (this.data.openedCount ?? 0) + 1
+      openedCount: (this.data()?.openedCount ?? 0) + 1
     });
   }
+}
+`,"assets/code-snippets/toastr/idemo-toast-data.interface.ts.txt":`export interface IDemoToastData {
+    title: string;
+    message: string;
+    openedCount: number;
 }
 `,"assets/code-snippets/toastr/toastr-usage.ts.txt":`import { Component, inject } from '@angular/core';
 import { Button } from '@filip.mazev/blocks/forms';
@@ -8853,7 +9835,7 @@ dd {
     overflow: auto;
     overscroll-behavior: contain;
 }
-`};var k=class i{document=p(te);router=p(Hr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let c=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||i)};static ɵcmp=V({type:i,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&ve(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),Jn(4,`article`,2),it()),n&2&&(D(4),Ka(`innerHTML`,s.readmeContent(),Lm))},styles:[`
+`};var k=class i{document=p(te);router=p(Hr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let c=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||i)};static ɵcmp=V({type:i,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&ve(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),Jn(4,`article`,2),it()),n&2&&(D(4),Ka(`innerHTML`,s.readmeContent(),Fm))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;

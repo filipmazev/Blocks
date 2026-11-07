@@ -21,7 +21,7 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
   protected isCenteredModal = signal(false);
 
   public override onModalInit(): void {
-    const layout = this.modal?.modalConfig?.style.layout;
+    const layout = this.modal.config().style.layout;
     this.isSideModal.set(layout === 'right' || layout === 'left');
     this.isCenteredModal.set(layout === 'center');
   }

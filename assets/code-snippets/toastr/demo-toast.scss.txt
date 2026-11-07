@@ -1,89 +1,47 @@
+@use 'core/styles/helpers' as *;
+
 .notification {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--bx-border-default, #ccc);
-    min-height: 40px;
-
-    &.info {
-        color: var(--bx-text-info);
-        background-color: var(--bx-bg-info-subtle);
-        border: 1px solid var(--bx-border-info);
-    }
-
-    &.success {
-        color: var(--bx-text-success);
-        background-color: var(--bx-bg-success-subtle);
-        border: 1px solid var(--bx-border-success);
-    }
-
-    &.warn {
-        color: var(--bx-text-warn);
-        background-color: var(--bx-bg-warn-subtle);
-        border: 1px solid var(--bx-border-warn);
-    }
-
-    &.danger {
-        color: var(--bx-text-danger);
-        background-color: var(--bx-bg-danger-subtle);
-        border: 1px solid var(--bx-border-danger);
-    }
+  display: flex;
+  position: relative;
+  padding: spacing(4);
+  min-block-size: 2.5rem;
+  color: var(--bx-text-primary);
 }
 
 .notification-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    flex-grow: 1;
-    padding-right: 1.5rem;
-    font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1;
+  gap: spacing(2);
+  min-inline-size: 0;
+  padding-inline-end: spacing(6);
+  overflow-wrap: anywhere;
 }
 
 .notification-title {
-    margin: 0 0 0.25rem 0;
-    font-size: 1rem;
-    font-weight: 600;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .notification-message {
-    margin: 0;
-    font-size: 0.875rem;
-    line-height: 1.4;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
-.notification-close-button {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
+.notification-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing(2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding-block-start: spacing(2);
+}
 
-    &.info {
-        color: var(--bx-text-info);
-    }
-
-    &.success {
-        color: var(--bx-text-success);
-    }
-
-    &.warn {
-        color: var(--bx-text-warn);
-    }
-
-    &.danger {
-        color: var(--bx-text-danger);
-    }
+.notification-actions > button {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
 }
