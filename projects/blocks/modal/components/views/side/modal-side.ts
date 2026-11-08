@@ -1,7 +1,19 @@
 import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal, TemplateRef, viewChildren } from '@angular/core';
+import {
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  TemplateRef,
+  viewChildren
+} from '@angular/core';
 
 import type { IModalSideModalClassesState } from '@modal/interfaces/imodal-side-modal-classes-state.interface';
 
@@ -75,18 +87,27 @@ export class ModalSide<D = unknown, R = unknown> implements IModalView<D, R> {
   public readonly bottomSheet: Signal<readonly ModalBottomSheet<unknown, unknown>[]> = viewChildren(ModalBottomSheet);
 
   constructor() {
-    effect(() => {
-      const isOpen = this.isOpen();
+    const nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
-      if (isOpen) {
-        this.renderOpenClass.set(false);
+    let previouslyOpen = false;
 
-        setTimeout(() => {
-          this.renderOpenClass.set(true);
-        }, 50);
-      } else {
-        this.renderOpenClass.set(false);
-      }
+    afterRenderEffect((onCleanup) => {
+      const open = this.isOpen();
+      const animated = this.isAnimated();
+      const view = nativeElement.ownerDocument.defaultView;
+
+      const entering = open && !previouslyOpen;
+
+      previouslyOpen = open;
+      this.renderOpenClass.set(open && (!animated || !entering));
+
+      if (!open || !animated || !entering || !view) return;
+
+      let frame = view.requestAnimationFrame(() => {
+        frame = view.requestAnimationFrame(() => this.renderOpenClass.set(true));
+      });
+
+      onCleanup(() => view.cancelAnimationFrame(frame));
     });
   }
 }

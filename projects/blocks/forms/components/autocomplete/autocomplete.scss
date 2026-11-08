@@ -133,6 +133,10 @@
     overflow-wrap: anywhere;
 }
 
+[data-bx-selection-surface='true'] .bx-autocomplete-option:is(:hover, .is-active) {
+    background: transparent;
+}
+
 @media (forced-colors: active) {
     .bx-autocomplete-control:focus-within,
     .bx-autocomplete-option.is-active {

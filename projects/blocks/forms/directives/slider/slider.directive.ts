@@ -1,14 +1,22 @@
 import type { InputSignal } from '@angular/core';
 
-import { afterEveryRender, afterNextRender, DestroyRef, Directive, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
+import { afterEveryRender, afterNextRender, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
 
-import { ThemingService } from '@filip.mazev/blocks/core';
-import { observeGlassLighting, refreshGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
+import {
+  createSpringMotion,
+  ISpringMotion,
+  MOTION_PRESETS,
+  observeGlassLighting,
+  paintMotionStyles,
+  refreshGlassLighting
+} from '@filip.mazev/blocks/effects/runtime';
 
 /** Glass styling for a native range, including reactive forms and programmatic values. */
 @Directive({ selector: 'input[type=range][bxSlider]', host: { class: 'bx-slider' } })
 export class SliderDirective {
   private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  private readonly bxA11yService = inject(BxA11yService);
 
   /** Whether the slider snaps to its configured step values. Defaults to `false`. */
   public readonly discrete: InputSignal<boolean> = input(false);
@@ -21,9 +29,20 @@ export class SliderDirective {
   private valueLabel?: HTMLSpanElement;
   private tickList?: HTMLDataListElement;
   private thumb?: HTMLSpanElement;
+  private motion?: ISpringMotion;
+  private releaseGesture?: () => void;
+  private pressed: boolean = false;
+  private lastPosition: number = 0;
+  private lastInputTime: number = 0;
+  private trackWidth: number = 0;
+  private thumbWidth: number = 0;
+  private pointerId: number | null = null;
 
   constructor() {
     inject(ThemingService);
+    effect(() => {
+      if (this.bxA11yService.isReducedMotion()) this.motion?.retarget([0, 0], true);
+    });
 
     afterEveryRender(() => this.sync());
 
@@ -49,6 +68,52 @@ export class SliderDirective {
       shell.append(input, thumb);
       this.shell = shell;
       this.thumb = thumb;
+      this.motion = createSpringMotion(
+        [0, 0],
+        ([pressure, stretch]) => {
+          const reduced = this.bxA11yService.isReducedMotion();
+
+          paintMotionStyles(thumb, {
+            '--bx-slider-pressure': String(reduced ? 0 : pressure),
+            '--bx-slider-stretch': String(reduced ? 0 : Math.max(0, stretch))
+          });
+        },
+        MOTION_PRESETS.elastic
+      );
+
+      const release = (event?: Event): void => {
+        if (event?.type === 'visibilitychange' && !input.ownerDocument.hidden) return;
+
+        if (event && 'pointerId' in event && event.pointerId !== this.pointerId) return;
+
+        this.pressed = false;
+        this.pointerId = null;
+        this.motion?.retarget([0, 0], this.bxA11yService.isReducedMotion());
+        input.ownerDocument.defaultView?.removeEventListener('pointerup', release, true);
+        input.ownerDocument.defaultView?.removeEventListener('pointercancel', release, true);
+        input.ownerDocument.defaultView?.removeEventListener('blur', release);
+        input.ownerDocument.removeEventListener('visibilitychange', release);
+        this.releaseGesture = undefined;
+      };
+
+      const press = (event: PointerEvent): void => {
+        if (!event.isPrimary || event.button !== 0) return;
+
+        if (input.disabled || input.hasAttribute('readonly') || input.getAttribute('aria-readonly') === 'true') return;
+
+        this.pressed = true;
+        this.pointerId = event.pointerId;
+        this.lastInputTime = 0;
+        this.motion?.retarget([1, 0], this.bxA11yService.isReducedMotion());
+        input.ownerDocument.defaultView?.addEventListener('pointerup', release, true);
+        input.ownerDocument.defaultView?.addEventListener('pointercancel', release, true);
+        input.ownerDocument.defaultView?.addEventListener('blur', release);
+        input.ownerDocument.addEventListener('visibilitychange', release);
+        this.releaseGesture = release;
+      };
+
+      input.addEventListener('pointerdown', press);
+      input.addEventListener('blur', release);
 
       const valueLabel = input.ownerDocument.createElement('span');
 
@@ -65,10 +130,13 @@ export class SliderDirective {
       this.sync();
 
       const place = () => {
+        this.trackWidth = input.offsetWidth;
+        this.thumbWidth = thumb.offsetWidth;
         shell.style.setProperty('--bx-slider-center-y', `${input.offsetTop + input.offsetHeight / 2}px`);
         shell.style.setProperty('--bx-slider-track-start', `${input.offsetLeft}px`);
         shell.style.setProperty('--bx-slider-track-width', `${input.offsetWidth}px`);
         refreshGlassLighting(thumb);
+        this.sync();
       };
 
       const resize = new ResizeObserver(place);
@@ -76,6 +144,7 @@ export class SliderDirective {
       ngZone.runOutsideAngular(() => {
         resize.observe(input);
         resize.observe(shell);
+        resize.observe(thumb);
         place();
       });
 
@@ -96,6 +165,10 @@ export class SliderDirective {
 
             thumb.style.setProperty('--bx-slider-light-x', `${reflected ? light.reflectionX : light.x}%`);
             thumb.style.setProperty('--bx-slider-light-y', `${reflected ? light.reflectionY : light.y}%`);
+            paintMotionStyles(shell, {
+              '--bx-slider-light-color': reflected ? light.reflection : light.color,
+              '--bx-slider-light-strength': String(Math.max(0.04, strength))
+            });
           },
           input
         )
@@ -104,18 +177,53 @@ export class SliderDirective {
       destroyRef.onDestroy(() => {
         resize.disconnect();
         stop();
+        release();
+        input.removeEventListener('pointerdown', press);
+        input.removeEventListener('blur', release);
+        this.motion?.destroy();
         shell.replaceWith(input);
         this.shell = this.thumb = undefined;
       });
     });
   }
 
-  @HostListener('input')
+  @HostListener('input', ['$event'])
+  protected onInput(event: Event): void {
+    const input = this.elementRef.nativeElement;
+    const span = (input.max === '' ? 100 : Number(input.max)) - (input.min === '' ? 0 : Number(input.min));
+    const position = span > 0 ? input.valueAsNumber / span : 0;
+    const elapsed = Math.max(0.008, (event.timeStamp - this.lastInputTime) / 1000);
+    const stretch = this.pressed && this.lastInputTime > 0 ? Math.min(0.065, (Math.abs(position - this.lastPosition) / elapsed) * 0.015) : 0;
+
+    this.lastPosition = position;
+    this.lastInputTime = event.timeStamp;
+    this.motion?.retarget([this.pressed ? 1 : 0, stretch], this.bxA11yService.isReducedMotion());
+    this.sync();
+  }
+
   protected sync(): void {
     const input = this.elementRef.nativeElement;
+
+    if (input.disabled || input.hasAttribute('readonly') || input.getAttribute('aria-readonly') === 'true') this.releaseGesture?.();
+
     const min = input.min === '' ? 0 : Number(input.min);
     const max = input.max === '' ? 100 : Number(input.max);
     const progress = max > min ? Math.max(0, Math.min(100, ((input.valueAsNumber - min) / (max - min)) * 100)) : 0;
+
+    if (this.shell && this.thumbWidth > 0 && this.trackWidth > 0) {
+      const neighbor = input.hasAttribute('aria-valuemax')
+        ? Number(input.getAttribute('aria-valuemax'))
+        : input.hasAttribute('aria-valuemin')
+          ? Number(input.getAttribute('aria-valuemin'))
+          : null;
+
+      if (neighbor !== null && Number.isFinite(neighbor) && max > min) {
+        const distance = (Math.abs(neighbor - input.valueAsNumber) / (max - min)) * (this.trackWidth - this.thumbWidth);
+        const limit = String(Math.max(0, Math.min(0.45, (distance * 2) / this.thumbWidth - 2)));
+
+        if (this.shell.style.getPropertyValue('--bx-slider-neighbor-limit') !== limit) this.shell.style.setProperty('--bx-slider-neighbor-limit', limit);
+      }
+    }
 
     if (this.valueLabel) {
       this.valueLabel.hidden = !this.discrete();

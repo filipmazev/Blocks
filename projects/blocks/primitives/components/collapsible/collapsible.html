@@ -1,9 +1,11 @@
 <div class="bx-collapsible" bxSurface [bxSurfaceInteractive]="false">
     <div role="heading" [attr.aria-level]="level()">
         <button
+            bxSurface
             type="button"
             class="bx-collapsible-trigger"
             data-bx-collapsible-trigger
+            [bxSurfaceEmission]="false"
             [id]="triggerId()"
             [disabled]="disabled()"
             [attr.aria-disabled]="isReadonly() ? 'true' : null"
@@ -26,15 +28,21 @@
         </button>
     </div>
     <div
-        class="bx-collapsible-content"
+        class="bx-collapsible-reveal"
+        [class.is-expanded]="expanded()"
+        [class.is-animated]="hasRendered() && !bxA11yService.isReducedMotion()"
         [id]="panelId()"
-        [hidden]="!expanded()"
+        [attr.aria-hidden]="!expanded()"
         [attr.inert]="expanded() ? null : ''"
         [attr.role]="region() ? 'region' : null"
         [attr.aria-labelledby]="region() ? triggerId() : null">
-        <ng-content />
-        @if (expanded() && contentTemplate(); as template) {
-            <ng-container [ngTemplateOutlet]="template" />
-        }
+        <div class="bx-collapsible-clip">
+            <div class="bx-collapsible-content">
+                <ng-content />
+                @if (expanded() && contentTemplate(); as template) {
+                    <ng-container [ngTemplateOutlet]="template" />
+                }
+            </div>
+        </div>
     </div>
 </div>

@@ -29,15 +29,59 @@
     border-radius: radius(md);
 }
 
-.bx-tab-list {
-    display: flex;
+.bx-tab-viewport {
     flex: 1 1 auto;
-    gap: spacing(1);
     min-width: 0;
-    padding: 1px;
+    max-width: 100%;
     overflow: auto hidden;
     overscroll-behavior-x: contain;
     scrollbar-width: thin;
+}
+
+.bx-tab-list {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    box-sizing: border-box;
+    gap: spacing(1);
+    width: max-content;
+    min-width: 100%;
+    padding: 1px;
+}
+
+.bx-tab-selection-layer {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+}
+
+.bx-tab-selection {
+    --bx-glass-surface: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface));
+    --bx-glass-edge: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent);
+    --bx-glass-opacity: 0.45;
+    --bx-glass-decoration-opacity: 0.5;
+    --bx-glass-rim-visibility: 0.65;
+    --bx-glass-shadow: #{shadow(sm)};
+    --bx-glass-radius: #{radius(sm)};
+
+    position: absolute;
+    inset: 0 auto auto 0;
+    box-sizing: border-box;
+    visibility: hidden;
+    pointer-events: none;
+    transform-origin: center;
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+}
+
+:host(.bx-tabs-draggable) .bx-tab-trigger:not(:disabled) {
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
+}
+
+:host(.bx-tabs-dragging) .bx-tab-trigger:not(:disabled) {
+    cursor: grabbing;
 }
 
 .bx-tab-trigger {
@@ -51,6 +95,8 @@
     --bx-glass-shadow: none;
 
     display: inline-flex;
+    position: relative;
+    z-index: 1;
     align-items: center;
     gap: spacing(2);
     flex: none;
@@ -68,13 +114,7 @@
     }
 
     &.is-selected {
-        --bx-glass-surface: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface));
         --bx-glass-text: var(--bx-tab-selected-text, var(--bx-text-brand));
-        --bx-glass-edge: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent);
-        --bx-glass-opacity: 0.45;
-        --bx-glass-decoration-opacity: 0.5;
-        --bx-glass-rim-visibility: 0.65;
-        --bx-glass-shadow: #{shadow(sm)};
     }
 
     &:disabled {
@@ -94,6 +134,15 @@
     min-height: 0;
     max-height: var(--bx-tabs-max-panel-height, none);
     overflow: var(--bx-tabs-panel-overflow, visible);
+}
+
+:host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected {
+    --bx-glass-surface: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface));
+    --bx-glass-edge: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent);
+    --bx-glass-opacity: 0.45;
+    --bx-glass-decoration-opacity: 0.5;
+    --bx-glass-rim-visibility: 0.65;
+    --bx-glass-shadow: #{shadow(sm)};
 }
 
 .bx-tab-panel {
@@ -133,14 +182,21 @@
         border-inline-end: 1px solid var(--bx-border-default);
         border-radius: 0;
         font-size: 0.8rem;
+    }
 
-        &.is-selected {
-            --bx-glass-shadow: inset 0 -2px 0 var(--bx-tab-highlight, var(--bx-border-brand));
-        }
+    .bx-tab-selection {
+        --bx-glass-radius: 0;
+        --bx-glass-shadow: inset 0 -2px 0 var(--bx-tab-highlight, var(--bx-border-brand));
+
+        border-radius: 0;
     }
 }
 
 @media (forced-colors: active) {
+    .bx-tab-selection {
+        display: none;
+    }
+
     .bx-tab-trigger.is-selected {
         outline: 2px solid Highlight;
         outline-offset: -2px;

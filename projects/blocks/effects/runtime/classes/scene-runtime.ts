@@ -385,7 +385,12 @@ export class SceneRuntime {
     };
   }
 
-  public refreshElement(element: HTMLElement): void {
+  /**
+   * Refresh one receiver after geometry or semantic material changes.
+   * @param element - Registered surface whose cached geometry and environment need refreshing.
+   * @param immediate - Wait for urgent resampling and snap environmental colors. Defaults to false.
+   */
+  public refreshElement(element: HTMLElement, immediate = false): void {
     const entry = this.entries.get(element);
 
     if (entry) this.updateSelected(entry);
@@ -393,6 +398,11 @@ export class SceneRuntime {
     this.updateEmitter();
 
     if (entry) {
+      if (immediate) {
+        entry.resuming = true;
+        entry.painted = false;
+      }
+
       this.ambient.invalidate(entry, true);
       entry.bounds = undefined;
       entry.lastLighting = undefined;
@@ -664,17 +674,22 @@ export class SceneRuntime {
       const batch = Array.from(this.queue).slice(0, 24);
       const visibility = lightingVisibility(this.doc, this.view);
       const emissions = [...this.emitting].map(([emitter, color]) => {
-        const bounds = emitter.element.getBoundingClientRect();
+        const origin = emitter.hooks.emissionOrigin?.() ?? emitter.element;
+        const bounds = origin.getBoundingClientRect();
         const exposed =
-          visibility.exposed(emitter.element, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds) && !emitter.element.closest(disabledSelector);
+          visibility.exposed(origin, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2, bounds) && !emitter.element.closest(disabledSelector);
 
-        return { emitter, color: exposed ? (emitter.hooks.resolveEmission?.(color) ?? color) : color, exposed };
+        return { emitter, origin, color: exposed ? (emitter.hooks.resolveEmission?.(color) ?? color) : color, exposed };
       });
       const activeLights = emissions
         .filter((source) => source.exposed)
-        .map(({ emitter, color }) => ({
+        .map(({ emitter, origin, color }) => ({
           emitter,
-          light: this.lightPoint({ element: emitter.element, color, excludeSource: true, z: 24, intensity: 0.85, radius: 120 }, `hover:${emitter.id}`, true)
+          light: this.lightPoint(
+            { element: origin, color, excludeSource: true, z: 24, intensity: 0.85 * (emitter.hooks.emissionStrength?.() ?? 1), radius: 120 },
+            `hover:${emitter.id}`,
+            true
+          )
         }));
       const sceneData = new Map<ISceneEntry, { lights: IPointLight[]; reflections: IReflection[] }>();
       // Read only scenes used by this batch; avoid measuring offscreen or unrelated objects.

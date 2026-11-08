@@ -1,8 +1,6 @@
 @use '../../../core/styles/helpers' as *;
 
 :host {
-    --bx-button-pressure: var(--bx-glass-press, 0);
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -165,30 +163,6 @@
     width: 100%;
     height: 100%;
     color: inherit;
-}
-
-/* IMPORTANT: Animate the content inside a stationary hit area, using the shared glass pressure spring. */
-:host(.bx-btn-animated:not(.bx-btn-non-interactive, [disabled], [aria-disabled='true'], [data-bx-reduced-motion='true'])) {
-    .bx-btn-content-wrapper {
-        transform: translateY(calc(var(--bx-button-pressure) * var(--bx-button-press-offset, 1px)))
-            scale(calc(1 - var(--bx-button-pressure) * var(--bx-button-press-compression, 0.035)));
-    }
-}
-
-:host([data-bx-reduced-motion='true']) .bx-btn-content-wrapper {
-    transform: none;
-    transition: none;
-}
-
-:host(:not([data-bx-surface])),
-:host(.bx-btn-text) {
-    &.bx-btn-animated .bx-btn-content-wrapper {
-        transition: transform 140ms ease-out;
-    }
-
-    &:active:not(.bx-btn-non-interactive, [disabled], [aria-disabled='true']) {
-        --bx-button-pressure: 1;
-    }
 }
 
 :host([data-bx-surface]),

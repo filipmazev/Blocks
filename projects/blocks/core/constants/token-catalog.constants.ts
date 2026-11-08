@@ -569,24 +569,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: ['#e4ad55']
   },
   {
-    name: '--bx-button-press-compression',
-    reference: 'var(--bx-button-press-compression)',
-    category: 'components',
-    group: 'Component \u00B7 button',
-    kind: 'value',
-    scope: 'runtime',
-    defaults: []
-  },
-  {
-    name: '--bx-button-press-offset',
-    reference: 'var(--bx-button-press-offset)',
-    category: 'components',
-    group: 'Component \u00B7 button',
-    kind: 'value',
-    scope: 'runtime',
-    defaults: []
-  },
-  {
     name: '--bx-button-press-shadow',
     reference: 'var(--bx-button-press-shadow)',
     category: 'components',
@@ -594,15 +576,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     defaults: ['none']
-  },
-  {
-    name: '--bx-button-pressure',
-    reference: 'var(--bx-button-pressure)',
-    category: 'components',
-    group: 'Component \u00B7 button',
-    kind: 'value',
-    scope: 'local',
-    defaults: ['1', 'var(--bx-glass-press, 0)']
   },
   {
     name: '--bx-card-background',
@@ -886,6 +859,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
   {
     name: '--bx-collapsible-content-padding',
     reference: 'var(--bx-collapsible-content-padding)',
+    category: 'components',
+    group: 'Component \u00B7 collapsible',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-collapsible-duration',
+    reference: 'var(--bx-collapsible-duration)',
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
@@ -3665,6 +3647,9 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [
       'color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent)',
       'color-mix(in srgb, var(--bx-text-danger) 40%, var(--bx-border-default))',
+      'color-mix(in srgb, var(--step-selection-color, var(--step-color)) 65%, transparent)',
+      'color-mix(in srgb, var(--step-state-border) calc(clamp(0, var(--step-activation, 0), 1) * 100%), var(--bx-border-default))',
+      'color-mix(in srgb, var(--step-state-color) 40%, var(--bx-bg-surface))',
       'currentcolor',
       'transparent',
       'var(--bx-alert-border, color-mix(in srgb, var(--bx-alert-role-border) 44.8%, transparent))',
@@ -3680,8 +3665,10 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-collapsible-border, var(--bx-border-default))',
       'var(--bx-popover-border, var(--bx-border-default))',
       'var(--bx-tag-border, var(--bx-tag-role-border))',
+      'var(--bx-text-primary)',
       'var(--bx-text-secondary)',
-      'var(--step-state-border)'
+      'var(--step-state-border)',
+      'var(--step-state-color)'
     ]
   },
   {
@@ -3978,7 +3965,10 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [
       '0',
       '0.15',
+      '0.22',
       '0.45',
+      '0.8',
+      '1',
       'calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469))',
       'var(--bx-glass-material-opacity)',
       'var(--bx-tag-outline-opacity, 0.12)'
@@ -4015,6 +4005,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '0.5rem',
       '50%',
       '9999px',
+      'inherit',
       'var(--bx-alert-radius, 0.75rem)',
       'var(--bx-autocomplete-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-card-radius, 0.75rem)',
@@ -4024,6 +4015,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-rounded-lg, 0.75rem)',
       'var(--bx-rounded-sm, 0.25rem)',
       'var(--bx-stepper-card-radius, 0.5rem)',
+      'var(--bx-stepper-marker-radius, 9999px)',
+      'var(--bx-stepper-segment-radius, 9999px)',
       'var(--bx-tag-radius, 0.25rem)'
     ]
   },
@@ -4079,7 +4072,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '0.25', '0.35', '0.65', 'var(--bx-alert-rim-opacity, 0.8)']
+    defaults: [
+      '0',
+      '0.25',
+      '0.35',
+      '0.65',
+      '1',
+      'calc(0.25 + clamp(0, var(--step-activation, 0), 1) * 0.4)',
+      'calc(var(--step-rim-interaction, 0.8) * var(--step-rim-semantic, 1))',
+      'var(--bx-alert-rim-opacity, 0.8)'
+    ]
   },
   {
     name: '--bx-glass-shadow',
@@ -4117,6 +4119,10 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     defaults: [
+      'Canvas',
+      'CanvasText',
+      'Highlight',
+      'color-mix(\n      in srgb,\n      var(--step-state-color) calc(clamp(0, max(var(--step-activation, 0), var(--step-completion, 0)), 1) * 100%),\n      var(--bx-border-strong)\n  )',
       'color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface))',
       'transparent',
       'var(--btn-selected-surface, var(--bx-bg-neutral-active))',
@@ -4129,11 +4135,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-accent-subtle)',
       'var(--bx-alert-background, color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-alert-role-background)))',
       'var(--bx-autocomplete-background, var(--bx-bg-surface))',
+      'var(--bx-bg-danger)',
       'var(--bx-bg-danger-subtle)',
+      'var(--bx-bg-element)',
+      'var(--bx-bg-element-hover)',
       'var(--bx-bg-neutral)',
       'var(--bx-bg-neutral-hover)',
       'var(--bx-bg-surface)',
       'var(--bx-bg-surface-alt)',
+      'var(--bx-border-default)',
+      'var(--bx-border-strong)',
       'var(--bx-card-background, var(--bx-bg-element))',
       'var(--bx-card-background, var(--bx-bg-surface))',
       'var(--bx-card-hover-background, var(--bx-bg-element-hover))',
@@ -4146,11 +4157,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-modal-bg, var(--bx-panel-bg, var(--bx-bg-surface)))',
       'var(--bx-panel-bg, var(--bx-modal-bg, var(--bx-bg-surface)))',
       'var(--bx-popover-background, var(--bx-bg-surface))',
+      'var(--bx-selection-surface, var(--bx-selection-row-surface, var(--bx-bg-element-hover)))',
       'var(--bx-stepper-card-background, var(--bx-bg-surface))',
       'var(--bx-tag-background, var(--bx-bg-surface))',
       'var(--bx-tag-background, var(--bx-tag-role-fill))',
       'var(--bx-tag-background, var(--bx-tag-role-tonal))',
-      'var(--bx-toast-bg, var(--bx-bg-surface))'
+      'var(--bx-toast-bg, var(--bx-bg-surface))',
+      'var(--step-selection-color, var(--step-color))',
+      'var(--step-state-background)',
+      'var(--step-state-color)'
     ]
   },
   {
@@ -4161,6 +4176,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     defaults: [
+      'CanvasText',
+      'HighlightText',
       'inherit',
       'var(--btn-theme-active-text, var(--btn-theme-text))',
       'var(--btn-theme-hover-text, var(--btn-theme-text))',
@@ -4183,9 +4200,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-text-danger)',
       'var(--bx-text-info)',
       'var(--bx-text-primary)',
+      'var(--bx-text-secondary)',
       'var(--bx-text-success)',
       'var(--bx-text-warn)',
-      'var(--bx-toast-text, var(--bx-text-primary))'
+      'var(--bx-toast-text, var(--bx-text-primary))',
+      'var(--step-on-color)',
+      'var(--step-state-text)'
     ]
   },
   {
@@ -5363,6 +5383,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-selection-row-surface',
+    reference: 'var(--bx-selection-row-surface)',
+    category: 'components',
+    group: 'Component \u00B7 selection',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-selection-surface',
+    reference: 'var(--bx-selection-surface)',
+    category: 'components',
+    group: 'Component \u00B7 selection',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
     name: '--bx-shadow-lg',
     reference: 'var(--bx-shadow-lg)',
     category: 'shadows',
@@ -5606,6 +5644,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-slider-expansion-limit',
+    reference: 'var(--bx-slider-expansion-limit)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
     name: '--bx-slider-fill-display',
     reference: 'var(--bx-slider-fill-display)',
     category: 'components',
@@ -5750,6 +5797,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-slider-neighbor-limit',
+    reference: 'var(--bx-slider-neighbor-limit)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
     name: '--bx-slider-physical-position',
     reference: 'var(--bx-slider-physical-position)',
     category: 'components',
@@ -5768,6 +5824,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-slider-pressure',
+    reference: 'var(--bx-slider-pressure)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
     name: '--bx-slider-progress',
     reference: 'var(--bx-slider-progress)',
     category: 'components',
@@ -5775,6 +5840,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'runtime',
     defaults: []
+  },
+  {
+    name: '--bx-slider-stretch',
+    reference: 'var(--bx-slider-stretch)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-slider-stretch-limit',
+    reference: 'var(--bx-slider-stretch-limit)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['clamp(0, (var(--bx-range-end) - var(--bx-range-start)) * 0.5, 0.065)']
   },
   {
     name: '--bx-slider-thumb-size',
@@ -6416,6 +6499,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: []
   },
   {
+    name: '--bx-toggle-direction',
+    reference: 'var(--bx-toggle-direction)',
+    category: 'components',
+    group: 'Component \u00B7 toggle',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['-1']
+  },
+  {
     name: '--bx-toggle-inline-size',
     reference: 'var(--bx-toggle-inline-size)',
     category: 'components',
@@ -6427,6 +6519,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
   {
     name: '--bx-toggle-justify-content',
     reference: 'var(--bx-toggle-justify-content)',
+    category: 'components',
+    group: 'Component \u00B7 toggle',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-toggle-position',
+    reference: 'var(--bx-toggle-position)',
+    category: 'components',
+    group: 'Component \u00B7 toggle',
+    kind: 'value',
+    scope: 'local',
+    defaults: ['0', '1']
+  },
+  {
+    name: '--bx-toggle-stretch',
+    reference: 'var(--bx-toggle-stretch)',
     category: 'components',
     group: 'Component \u00B7 toggle',
     kind: 'value',

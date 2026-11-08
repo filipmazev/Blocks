@@ -144,7 +144,9 @@ export class ComponentDemo {
 
   protected readonly detailsDisabled: WritableSignal<boolean> = signal(false);
   protected readonly showActivity: WritableSignal<boolean> = signal(true);
+  protected readonly overflowTabs: WritableSignal<boolean> = signal(false);
 
+  protected readonly extraTabs: readonly number[] = [1, 2, 3, 4, 5, 6, 7, 8];
   protected readonly tabNote: FormControl<string> = new FormControl('', { nonNullable: true });
   protected readonly options: ({ label: string; value: string; disabled?: undefined } | { label: string; value: string; disabled: boolean })[] = [
     { label: 'Skopje', value: 'skopje' },

@@ -70,6 +70,8 @@
 }
 
 .bx-slide-toggle-track {
+    --bx-toggle-position: 0;
+
     position: relative;
     flex-shrink: 0;
     width: 42px;
@@ -84,14 +86,12 @@
     }
 
     &.is-checked {
+        --bx-toggle-position: 1;
+
         background-color: var(--bx-accent);
 
         &.is-invalid {
             background-color: var(--bx-bg-danger);
-        }
-
-        .bx-slide-toggle-thumb {
-            transform: translateX(18px);
         }
     }
 }
@@ -104,15 +104,27 @@
 .bx-slide-toggle-thumb {
     position: absolute;
     top: 2px;
-    left: 2px;
+    inset-inline-start: 2px;
     width: 18px;
     height: 18px;
     background: var(--bx-text-secondary);
     border: 1px solid var(--bx-bg-surface);
     box-sizing: border-box;
     border-radius: radius(pill);
-    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateX(calc(var(--bx-toggle-position, 0) * 18px * var(--bx-toggle-direction, 1)))
+        scale(
+            calc(1 + var(--bx-toggle-stretch, 0) + var(--bx-glass-press, 0) * 0.018),
+            calc(1 - var(--bx-toggle-stretch, 0) / 3 - var(--bx-glass-press, 0) * 0.035)
+        );
     box-shadow: var(--bx-shadow-sm);
+}
+
+.bx-slide-toggle-track:dir(rtl) {
+    --bx-toggle-direction: -1;
+}
+
+.bx-slide-toggle-track[data-bx-reduced-motion='true'] .bx-slide-toggle-thumb {
+    transform: translateX(calc(var(--bx-toggle-position, 0) * 18px * var(--bx-toggle-direction, 1)));
 }
 
 .is-checked .bx-slide-toggle-thumb {

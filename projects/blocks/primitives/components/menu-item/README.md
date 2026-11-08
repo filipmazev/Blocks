@@ -152,6 +152,12 @@ Browsers, operating systems and assistive technology may reserve key combination
 and offer application-owned remapping where needed. See
 [MDN's aria-keyshortcuts guidance](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-keyshortcuts).
 
+### Motion and material response
+
+Inside a Blocks Menu, hover and keyboard focus share its moving material surface rather than independently painting a backing on every row. Disabled rows are
+excluded, semantic danger text remains visible, and focus outlines remain native to the item. Standalone items keep their local interaction styling. Inspect
+`/components/menu-item`; reduced motion snaps the shared surface.
+
 ## Playground
 
 Open `/components/menu-item` or `/components/menu` for working menu-opening combinations and sequences, OS previews, disabled-command guards, an editable field,

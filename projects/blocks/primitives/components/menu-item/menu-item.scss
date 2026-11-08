@@ -89,6 +89,10 @@
     text-align: left;
 }
 
+:host-context([data-bx-selection-surface='true']) .bx-menu-item-btn:is(:hover, :active):not(.is-disabled) {
+    background: transparent !important;
+}
+
 .bx-menu-item-content-wrapped {
     white-space: normal;
     overflow-wrap: anywhere;

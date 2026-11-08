@@ -5,6 +5,12 @@ export { inheritGlassLighting } from '@effects/runtime/helpers/lighting-visibili
 export { getGlassLightRoot } from '@effects/runtime/helpers/light-root.helpers';
 export { createGlassTransition } from '@effects/runtime/helpers/glass-transition.helpers';
 export { Spring } from '@effects/runtime/classes/spring';
+export { createSpringMotion, paintMotionStyles } from '@effects/runtime/helpers/spring-motion.helpers';
+export { mountSelectionMotion } from '@effects/runtime/helpers/selection-motion.helpers';
+export type { ISelectionMotion } from '@effects/runtime/interfaces/iselection-motion.interface';
+export type { ISelectionMotionOptions } from '@effects/runtime/interfaces/iselection-motion-options.interface';
+export { MOTION_PRESETS } from '@effects/runtime/constants/motion.constants';
+export type { ISpringMotion } from '@effects/runtime/interfaces/ispring-motion.interface';
 export type { GlassinessMode } from '@effects/runtime/types/refraction.types';
 export type { ISpringOptions, ISpringOptions as SpringOptions } from '@effects/runtime/classes/spring';
 export type {

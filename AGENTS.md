@@ -167,6 +167,35 @@ reorganizing unrelated code.
 - Preserve content readability and focus visibility in light/dark themes, alternate palettes, opaque presentation, and accessibility modes. Decorative effects
   must not carry essential information.
 
+## Motion and lighting refinement
+
+- Preserve each component's established silhouette and material. Calibrate existing fill, reception, and emission before adding inner rails, outlines, beams, or
+  other decorative geometry. Thin progress tracks and segments should remain continuous and readable.
+- Use traveling selection surfaces when their destinations share a clear spatial relationship, such as tabs or connected step indicators. Separate cards use
+  local border, tint, rim, or pressure feedback instead of a surface traveling across the empty space between them.
+- Treat motion as a response to committed state. Guards, validation, asynchronous confirmation, and disabled/readonly behavior remain authoritative. Rapid
+  changes retarget current position and velocity rather than restarting an animation.
+- Where a selection surface looks draggable, support direct pointer/touch manipulation alongside click and keyboard operation. Keep preview separate from
+  committed selection, capture the gesture, and handle release, cancellation, Escape, stale data, overflow, and teardown predictably.
+- Reuse the effects runtime's exact spring, motion presets, and shared lazy frame scheduler. Bound deformation, stop settled work, keep hit targets stable, and
+  preserve pointer precision for controls such as sliders. Use local motion where spatial travel would imply a relationship the UI does not have.
+- Keep the existing lighting engine authoritative. Received environmental light and emitted semantic light are independent. Emission should follow the visible
+  material's geometry; registered descendant origins reuse their own surface renderer rather than adding another lighting layer.
+- Highlights must read as light in every theme. Do not simulate stronger illumination by increasing a dark elevation shadow. Use semantic color, theme surfaces,
+  and the engine's directional rim/reflection treatment, while keeping resting depth separate from illumination.
+- Keep decorative selection layers out of scrollable overflow calculations. Spring stretch and overshoot must not create scrollbars or change header height;
+  genuine tab/item overflow must remain reachable by pointer, touch, and keyboard. Keep routine disclosure transitions brief and interruptible.
+- Pointer hover feedback must respond immediately; do not delay menu hover with a traveling spring. Keep danger hover visibly semantic. Keyboard selection may
+  use spatial settling where it aids orientation, independently of immediate pointer feedback.
+- Keep button text and icons undistorted. Apply pressure feedback to the material, rim, or backing rather than squeezing the label. Slider thumbs may enlarge
+  into their existing magnifier treatment while held, then spring back to an opaque resting thumb; their value and center must track the pointer precisely.
+- Semantic fill, foreground, and contour changes must agree immediately. Cached environmental/refraction tint must not visually retain the previous status over
+  an error or other important semantic border. Refresh the existing renderer when committed semantic material changes and preserve semantic contour priority.
+- Respect live reduced-motion and reduced-transparency preferences independently. Remove decorative travel/deformation under reduced motion while preserving
+  direct manipulation and state feedback; adapt material opacity without disabling useful lighting.
+- Validate the actual interaction in the Playground, including hold-and-drag, interruption, variable geometry, light/dark themes, narrow layouts, and semantic
+  state changes. Visual feedback from review takes precedence over adding increasingly elaborate effects.
+
 ## Translations
 
 - Integrate user-facing text with `BX_I18N`. Accept the shared `ResolvableText` contract for configurable text rather than adding a separate translation format.

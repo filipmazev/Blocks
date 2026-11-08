@@ -54,7 +54,8 @@
 
 .centered-modal-content-wrapper {
     pointer-events: auto;
-    scale: var(--bx-modal-scale, 1);
+    scale: calc(0.975 + var(--bx-modal-scale, 1) * 0.025);
+    opacity: var(--bx-modal-scale, 1);
     min-inline-size: 0;
     min-block-size: 0;
     display: flex;
@@ -118,11 +119,11 @@
 .centered-modal-frame.centered-modal-animate-in {
     --bx-modal-scale: 0;
 
-    animation: centered-modal-animate-in 0.15s ease-in-out forwards;
+    animation: centered-modal-animate-in 175ms #{motion-easing(snappy)} forwards;
 }
 
 .centered-modal-frame.centered-modal-animate-out {
-    animation: centered-modal-animate-out 0.15s ease-in-out forwards;
+    animation: centered-modal-animate-out 150ms ease-out forwards;
 }
 
 @keyframes centered-modal-animate-in {

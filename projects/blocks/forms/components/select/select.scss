@@ -398,6 +398,10 @@
     overflow-wrap: anywhere;
 }
 
+[data-bx-selection-surface='true'] .bx-select-option:is(:hover, :active):not([aria-selected='true']) {
+    background: transparent;
+}
+
 .bx-select-control {
     position: relative;
     inline-size: 100%;

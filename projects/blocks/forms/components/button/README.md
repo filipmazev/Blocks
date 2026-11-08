@@ -72,21 +72,19 @@ this.themingService.setAppearance({ reducedTransparency: true });
 `BxA11yService` controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
 focus states, or semantic control states.
 
-Press feedback applies to every `bx-button` variant. Translucent glass buttons deepen their inset reflection, gather a soft theme-colored sheen, and compress
-their content slightly while held. Solid filled and floating actions use their semantic pressed color and the same content compression, without an extra sheen
-or inset ring. The existing shared pressure spring returns the content and material to rest, including quick taps. The button’s hit area, layout, and overlay
-origin stay fixed. Mouse, touch, Enter, and Space activation use the same pressure state; release, cancellation, blur, or removal clears it. Text buttons and
-`[surfaceEffects]="false"` retain native press feedback without decorative lighting.
+Press feedback keeps button labels and icons undistorted. Translucent glass buttons deepen their existing inset reflection and gather a soft theme-colored
+sheen; solid filled and floating actions use their semantic pressed color. The shared pressure spring returns the material to rest, including quick taps. The
+hit area, text geometry, layout, and overlay origin stay fixed. Release, cancellation, blur, and removal clear pressure. Text buttons and surface opt-outs
+retain native press feedback.
 
-| CSS variable                    | Default / behavior                                                                      |
-| ------------------------------- | --------------------------------------------------------------------------------------- |
-| `--bx-button-press-compression` | `0.035`; content shrinks by 3.5% at full pressure                                       |
-| `--bx-button-press-offset`      | `1px`; content moves down at full pressure                                              |
-| `--bx-button-press-shadow`      | Semantic inset shadow for translucent buttons; `none` for solid filled/floating actions |
-| `--bx-glass-press-opacity`      | `0.6` for translucent buttons; `0` for solid filled/floating actions                    |
+| CSS variable               | Default / behavior                                                                      |
+| -------------------------- | --------------------------------------------------------------------------------------- |
+| `--bx-button-press-shadow` | Semantic inset shadow for translucent buttons; `none` for solid filled/floating actions |
+| `--bx-glass-press-opacity` | `0.6` for translucent buttons; `0` for solid filled/floating actions                    |
 
-Reduced motion keeps static pressed-color, inset, or underline feedback without compression or rebound. Reduced transparency retains each variant’s pressed
-appearance on the opaque surface. Forced colors uses a visible pressed outline, and disabled/noninteractive controls do not animate or illuminate.
+The former `--bx-button-press-compression` and `--bx-button-press-offset` content effects have been removed deliberately; remove those overrides when migrating.
+Customize the supported material variables instead. Reduced motion keeps static color/inset/underline feedback. Reduced transparency retains the opaque pressed
+appearance. Forced colors preserve a visible pressed outline; disabled and noninteractive controls do not illuminate.
 
 ## Behavior and accessibility
 
@@ -96,6 +94,14 @@ Disabled actions do not emit an action through a click listener.
 `surfaceEffects` defaults to `true`. Set `[surfaceEffects]="false"` for dense collections such as the icon catalog to retain Blocks button styling, theme
 updates, focus, loading and disabled behavior without mounting per-button runtime glass lighting or deformation. It can be changed while mounted. An explicitly
 applied `bxSurface` directive continues to own its surface independently.
+
+### Motion and material response
+
+Surface-backed buttons reuse the existing pressure spring on their material, with fixed text and icon geometry. Repeated presses remain responsive, and reduced
+motion retains static press feedback. Inspect `/components/button`.
+
+Filled/floating intent emits more strongly than outlined, tonal, icon, or grayscale intent. Danger and warning receive modest semantic emphasis. This local
+calibration uses the existing surface engine and leaves environmental reception independent; original fills, colors, and public appearance inputs remain intact.
 
 ## Playground
 

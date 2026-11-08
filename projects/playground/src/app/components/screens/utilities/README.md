@@ -81,6 +81,10 @@ Other public utilities retain their established guides:
 | Form state/defaults, `BxBaseControl`, `FormSettingsService`     | [Forms](../../../../../../blocks/forms/README.md) and [Truncate](../../../../../../blocks/primitives/directives/truncate/README.md)                                                                                                         |
 | Navigation, modal, notification and effects services            | Their [Navigation](../../../../../../blocks/navigation/README.md), [Modal](../../../../../../blocks/modal/README.md), [Toastr](../../../../../../blocks/toastr/README.md), and [Effects](../../../../../../blocks/effects/README.md) guides |
 
+The effects runtime's shared motion helpers (`createSpringMotion`, `mountSelectionMotion`, `createGlassTransition`) retain their focused
+[Effects guide](../../../../../../blocks/effects/README.md) and [runtime API guide](../../../../../../blocks/effects/runtime/README.md), with interactive
+coverage at `/components/tabs`, `/components/stepper`, `/components/slider`, `/components/slide-toggle`, `/components/menu`, and the select/overlay pages.
+
 Internal coordination services, implementation classes, and type-only contracts do not receive separate playground pages.
 
 ## Appearance and customization

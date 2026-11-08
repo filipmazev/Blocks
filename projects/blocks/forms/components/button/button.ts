@@ -22,6 +22,7 @@ import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
 import { ButtonIconDirective } from '@forms/directives/button-icon/button-icon.directive';
+import { buttonEmissionStrength } from '@forms/helpers/button-material.helpers';
 import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
 
 @Component({
@@ -82,6 +83,7 @@ export class Button {
     injectComponentSurface(
       () => ({
         glassiness: this.glassiness(),
+        emissionStrength: buttonEmissionStrength(this.variant(), this.outlined(), this.color()),
         interactive: this.variant() === 'text' || !this.interactive() || this.isDisabled() ? false : undefined,
         emission:
           this.variant() !== 'text' && this.interactive() && !this.isDisabled()

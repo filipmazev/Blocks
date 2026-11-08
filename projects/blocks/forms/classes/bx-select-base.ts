@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 
 import { BX_I18N, BxA11yService, DEFAULT_DEBOUNCE_TIME, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
-import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { createGlassTransition, inheritGlassLighting, ISelectionMotion, mountSelectionMotion } from '@filip.mazev/blocks/effects/runtime';
 import { BX_OVERLAY_CONTEXT, ITagConfig, TruncateDirective, truncatedText } from '@filip.mazev/blocks/primitives';
 
 import { SearchInput } from '@forms/components/search-input/search-input';
@@ -206,6 +206,7 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   public readonly openedChange: OutputEmitterRef<boolean> = output<boolean>();
 
   private transition?: ReturnType<typeof createGlassTransition>;
+  private selectionMotion?: ISelectionMotion;
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
   private disconnectOrigin?: () => void;
@@ -217,6 +218,11 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
 
   constructor() {
     super();
+    effect(() => {
+      const reducedMotion = this.bxA11yService.isReducedMotion();
+
+      this.selectionMotion?.update({ reducedMotion });
+    });
     effect(() => {
       if (this.searchRequest() && !this.loading() && !this.debouncing()) this.searchRequest.set(false);
     });
@@ -338,6 +344,13 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
       this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(attachedOrigin, attachedOverlay.overlayElement));
       attachedOverlay.updatePosition();
 
+      const list = attachedOverlay.overlayElement.querySelector<HTMLElement>('[role="listbox"]');
+
+      this.selectionMotion?.destroy();
+      this.selectionMotion = list
+        ? this.ngZone.runOutsideAngular(() => mountSelectionMotion(list, { reducedMotion: this.bxA11yService.isReducedMotion() }))
+        : undefined;
+
       if (!this.bxA11yService.isReducedMotion()) {
         this.transition?.destroy();
         this.transition = this.ngZone.runOutsideAngular(() => createGlassTransition(attachedOrigin, attachedOverlay.overlayElement));
@@ -366,6 +379,8 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   }
 
   protected onPanelDetach(): void {
+    this.selectionMotion?.destroy();
+    this.selectionMotion = undefined;
     this.transition?.destroy();
     this.transition = undefined;
     this.disconnectTheme?.();

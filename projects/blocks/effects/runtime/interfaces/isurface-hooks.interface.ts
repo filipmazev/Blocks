@@ -11,6 +11,10 @@ export interface ISurfaceHooks {
   interactive(): boolean;
   /** Returns an optional semantic color emitted during interaction. */
   emission?(): string | undefined;
+  /** Returns the visible light source element; omission uses the registered surface bounds. */
+  emissionOrigin?(): HTMLElement;
+  /** Returns the local emission multiplier; omission preserves the historical strength of 1. */
+  emissionStrength?(): number;
   /** Resolve source-local CSS colors before projecting them into another element's variable scope. */
   resolveEmission?(color: string): string;
   /** Returns an optional semantic color emitted while the surface is focused. */

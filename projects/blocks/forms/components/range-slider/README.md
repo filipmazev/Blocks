@@ -39,6 +39,13 @@ update when the application theme changes. Keyboard focus, forced colors, reduce
 Text inputs accept `ResolvableText`: plain text or `{ key: 'translation.key' }`. With `BX_I18N`, text is resolved reactively, including already-mounted controls
 when the adapter's `version` signal changes. Plain text works without an adapter.
 
+### Motion and material response
+
+Both thumbs reuse the native slider's enlarged pressed magnifier and spring back to fully opaque resting thumbs without delaying pointer precision or changing
+range ordering. Horizontal expansion is capped by the actual pixel clearance between thumbs, using cached container geometry, and velocity stretch decreases as
+the selected interval narrows, preserving clarity when thumbs approach. Release and cancellation settle independently. Live reduced motion removes deformation;
+reduced transparency keeps the existing opaque thumbs. Inspect `/components/range-slider` with close and overlapping endpoints.
+
 ## Playground
 
 Open `/components/range-slider` for a live pair, labels and ticks.

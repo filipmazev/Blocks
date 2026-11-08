@@ -289,7 +289,12 @@
     </div>
 } @else if (example() === 'range-slider') {
     <div class="async-demo">
+        <p>Move either thumb quickly, bring the endpoints together, then release. Values remain exact while decorative stretch settles.</p>
         <bx-range-slider label="Budget range" [discrete]="true" [showTickMarks]="true" [step]="10" [(value)]="range" /><output>{{ range() | json }}</output>
+        <div class="form-row">
+            <button bx-button type="button" (click)="range.set([40, 50])">Nearby thumbs</button
+            ><button bx-button type="button" (click)="range.set([20, 80])">Reset range</button>
+        </div>
     </div>
 } @else {
     <div class="async-demo">

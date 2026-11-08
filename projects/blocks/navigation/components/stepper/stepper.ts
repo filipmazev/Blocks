@@ -46,12 +46,14 @@ import type {
 
 import { BX_I18N, BxA11yService, resolveText, uuidv4 } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { createSpringMotion, ISpringMotion, MOTION_PRESETS, paintMotionStyles, refreshGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
 
 import { Step } from '@navigation/components/step/step';
 import { STEPPER_LABELS } from '@navigation/constants/stepper.constants';
+import { STEPPER_EMISSION_STRENGTH } from '@navigation/constants/stepper-motion.constants';
 import { isStepPending, isStepValid } from '@navigation/helpers/stepper.helpers';
 import { StepperWorkflowService } from '@navigation/services/stepper-workflow.service';
 import { BX_STEPPER_DEFAULTS } from '@navigation/tokens/stepper-defaults.token';
@@ -85,6 +87,8 @@ export class Stepper {
   protected readonly bxA11yService = inject(BxA11yService);
 
   private readonly instanceId: string = `bx-stepper-${uuidv4()}`;
+  private readonly markerMotions: Map<HTMLElement, ISpringMotion> = new Map();
+  private readonly markerStatuses: Map<HTMLElement, StepperStatus> = new Map();
 
   private readonly validationRevision: WritableSignal<number> = signal(0);
 
@@ -127,6 +131,7 @@ export class Stepper {
   });
 
   private readonly stepList: Signal<ElementRef<HTMLOListElement> | undefined> = viewChild<ElementRef<HTMLOListElement>>('stepList');
+  private readonly selection: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('selection');
 
   private readonly projectedSteps: Signal<readonly Step[]> = contentChildren(Step);
 
@@ -143,6 +148,12 @@ export class Stepper {
     ) as Record<keyof IStepperLabels, string>;
   });
   protected readonly interactive: Signal<boolean> = computed(() => this.mode() !== 'indicator' || this.indicatorInteractive());
+
+  protected readonly emissionStrength: typeof STEPPER_EMISSION_STRENGTH = STEPPER_EMISSION_STRENGTH;
+
+  protected readonly selectionColor: Signal<string> = computed(() =>
+    this.rows().find((row) => row.step.id === this.selectedStep()?.id)?.status === 'error' ? 'var(--bx-bg-danger)' : 'var(--step-color)'
+  );
   protected readonly markerIconSize: Signal<number> = computed(() => (this.size() === 'sm' ? 16 : this.size() === 'lg' ? 20 : 18));
   protected readonly rows: Signal<readonly IStepperView[]> = computed(() => {
     this.validationRevision();
@@ -296,8 +307,60 @@ export class Stepper {
   public readonly completed: OutputEmitterRef<IStepperCompletion> = output<IStepperCompletion>();
 
   private previousId: string | null = null;
+  private selectionMotion: ISpringMotion | undefined;
+  private selectionLayout: string | null = null;
 
   constructor() {
+    afterRenderEffect(() => {
+      const rows = this.rows();
+      const selected = this.selectedStep()?.id;
+      const reduced = this.bxA11yService.isReducedMotion();
+      const markers = this.markers().map((marker) => marker.nativeElement);
+
+      for (const [marker, motion] of this.markerMotions) {
+        if (markers.includes(marker)) continue;
+
+        motion.destroy();
+        this.markerMotions.delete(marker);
+        this.markerStatuses.delete(marker);
+      }
+
+      markers.forEach((marker, index) => {
+        const row = rows[index];
+        const body = marker.parentElement;
+        const item = body?.parentElement;
+
+        if (!row || !item) return;
+
+        const target = [row.step.id === selected ? 1 : 0, row.complete ? 1 : 0];
+        const existing = this.markerMotions.get(marker);
+        const motion =
+          existing ??
+          createSpringMotion(
+            target,
+            ([active, complete]) => {
+              paintMotionStyles(item, { '--step-activation': String(active), '--step-completion': String(Math.max(0, Math.min(1, complete))) });
+            },
+            MOTION_PRESETS.elastic
+          );
+
+        this.markerMotions.set(marker, motion);
+        motion.retarget(target, reduced || !existing);
+
+        if (this.markerStatuses.get(marker) !== row.status) {
+          this.markerStatuses.set(marker, row.status);
+          refreshGlassLighting(marker, true);
+        }
+      });
+    });
+    this.destroyRef.onDestroy(() => {
+      for (const motion of this.markerMotions.values()) motion.destroy();
+
+      this.markerMotions.clear();
+      this.markerStatuses.clear();
+      this.selectionMotion?.destroy();
+    });
+
     effect((onCleanup) => {
       const subscriptions = this.definitions().flatMap((step) => {
         const subscription = step.validation?.statusChanges?.subscribe(() => this.validationRevision.update((revision) => revision + 1));
@@ -346,10 +409,15 @@ export class Stepper {
       this.responsive();
       this.showLabels();
       this.showDescriptions();
+      this.bxA11yService.isReducedMotion();
+      this.variant();
 
-      if (!list || !connectors.length || !view) return;
+      if (!list || !view) return;
 
-      const measure = (): void => this.positionConnectors(list, markers, connectors);
+      const measure = (): void => {
+        this.positionConnectors(list, markers, connectors);
+        this.positionSelection(list, markers);
+      };
 
       measure();
 
@@ -494,6 +562,53 @@ export class Stepper {
   }
 
   //#region Helpers
+
+  private positionSelection(list: HTMLElement, markers: readonly HTMLElement[]): void {
+    const surface = this.selection()?.nativeElement;
+    const index = this.rows().findIndex((row) => row.step.id === this.selectedStep()?.id);
+    const marker = markers[index];
+    const track = surface?.parentElement;
+    const target = this.variant() === 'progress' ? marker?.parentElement : marker;
+    const view = list.ownerDocument.defaultView;
+
+    if (!surface || !target || !track || !view || !target.offsetWidth || !target.offsetHeight) {
+      if (surface) surface.style.visibility = 'hidden';
+
+      this.selectionMotion?.destroy();
+      this.selectionMotion = undefined;
+      this.selectionLayout = null;
+
+      return;
+    }
+
+    const bounds = target.getBoundingClientRect();
+    const origin = track.getBoundingClientRect();
+    const layout = `${this.variant()}:${view.getComputedStyle(list).flexDirection}`;
+    const padding = this.variant() === 'progress' ? 0 : 3;
+    const geometry = [bounds.left - origin.left - padding, bounds.top - origin.top - padding, bounds.width + padding * 2, bounds.height + padding * 2];
+
+    this.selectionMotion ??= createSpringMotion(
+      geometry,
+      ([x, y, width, height], [velocityX, velocityY]) => {
+        const stretch = this.bxA11yService.isReducedMotion() ? 0 : Math.min(0.06, Math.hypot(velocityX, velocityY) / 16000);
+        const horizontal = Math.abs(velocityX) >= Math.abs(velocityY);
+
+        paintMotionStyles(
+          surface,
+          {
+            transform: `translate3d(${x}px, ${y}px, 0) scale(${1 + (horizontal ? stretch : -stretch / 3)}, ${1 + (horizontal ? -stretch / 3 : stretch)})`,
+            width: `${Math.max(1, width)}px`,
+            height: `${Math.max(1, height)}px`
+          },
+          true
+        );
+      },
+      MOTION_PRESETS.fluid
+    );
+    this.selectionMotion.retarget(geometry, this.bxA11yService.isReducedMotion() || this.selectionLayout !== layout);
+    this.selectionLayout = layout;
+    surface.style.visibility = 'visible';
+  }
 
   private positionConnectors(list: HTMLElement, markers: readonly HTMLElement[], connectors: readonly HTMLElement[]): void {
     const view = list.ownerDocument.defaultView;

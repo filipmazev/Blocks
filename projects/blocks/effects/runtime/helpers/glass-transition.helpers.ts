@@ -1,17 +1,18 @@
 import type { IGlassTransition, IGlassTransitionOptions, MotionResult } from '@effects/runtime/types/runtime.types';
 
 import { configurationEvent } from '@effects/runtime/constants/appearance-configuration.constants';
+import { MOTION_PRESETS } from '@effects/runtime/constants/motion.constants';
 
 import { inheritedAttribute } from './appearance-configuration.helpers';
-import { rememberStyles } from './dom.helpers';
-import { subscribeFrame } from './frame-scheduler.helpers';
+import { finiteClamp, rememberStyles } from './dom.helpers';
+import { refreshGlassLighting } from './scene.helpers';
+import { createSpringMotion, paintMotionStyles } from './spring-motion.helpers';
 
 /**
- * Fade a positioned overlay without changing the geometry of its content.
- *
+ * Materialize a positioned overlay with restrained scale and opacity, preserving its collision-aware position.
  * @param origin - Opening element providing the transition interaction context.
- * @param target - Already positioned overlay element whose material opacity is animated.
- * @param options - Optional transition timing, motion preference, and lifecycle configuration. Defaults to `{}`.
+ * @param target - Already positioned overlay element whose material is animated.
+ * @param options - Optional motion preference, scale, and paint callback. Defaults to inherited preferences and a 0.985 entrance scale.
  */
 export function createGlassTransition(origin: HTMLElement, target: HTMLElement, options: IGlassTransitionOptions = {}): IGlassTransition {
   const doc = target.ownerDocument;
@@ -23,52 +24,56 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
 
   const skin = target.matches('[data-bx-surface]') ? target : (target.querySelector<HTMLElement>('[data-bx-surface]') ?? target);
   const restoreVisibility = rememberStyles(target, ['visibility']);
+  const restoreSkin = rememberStyles(skin, ['opacity', 'scale', 'transform-origin']);
   const opacity = Number(view.getComputedStyle(skin).opacity);
-  const readOpacity = () => Number(view.getComputedStyle(skin).opacity);
+  const scale = finiteClamp(options.scale, 0.9, 1, 0.985);
   const preference = view.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let above = target.getBoundingClientRect().bottom <= origin.getBoundingClientRect().top;
 
   let disposed = false;
   let active = false;
-  let value = 0;
   let destination = 0;
-  let animation: Animation | undefined;
-  let unsubscribe: (() => void) | undefined;
   let resolvePending: ((result: MotionResult) => void) | undefined;
 
-  const reduced = () => {
+  const reduced = (): boolean => {
     const inherited = inheritedAttribute(origin, 'data-bx-reduced-motion');
 
     return options.reducedMotion ?? (inherited === null ? preference.matches : inherited === 'true');
   };
 
-  function settle(): void {
-    active = false;
-    value = destination;
-    unsubscribe?.();
-    unsubscribe = undefined;
-    animation?.cancel();
-    animation = undefined;
-    restoreVisibility();
+  const motion = createSpringMotion(
+    [0],
+    ([position], [velocity]) => {
+      paintMotionStyles(skin, {
+        opacity: String(Math.max(0, Math.min(1, position)) * opacity),
+        scale: String(scale + (1 - scale) * position),
+        'transform-origin': above ? 'center bottom' : 'center top'
+      });
+      options.onUpdate?.();
 
-    if (destination === 0) target.style.visibility = 'hidden';
+      if (!active || position !== destination || velocity !== 0) return;
 
-    const resolve = resolvePending;
+      active = false;
+      restoreSkin();
+      restoreVisibility();
 
-    resolvePending = undefined;
-    resolve?.('finished');
-  }
+      if (destination === 0) target.style.visibility = 'hidden';
+
+      refreshGlassLighting(skin);
+
+      const resolve = resolvePending;
+
+      resolvePending = undefined;
+      resolve?.('finished');
+    },
+    MOTION_PRESETS.snappy
+  );
 
   function move(open: boolean): Promise<MotionResult> {
     if (disposed) return Promise.resolve('cancelled');
 
-    // Read the interpolated value only when reversing an in-flight fade.
-    const from = animation && opacity > 0 ? readOpacity() / opacity : value;
-
     resolvePending?.('cancelled');
-    animation?.cancel();
-    animation = undefined;
-    unsubscribe?.();
-    unsubscribe = undefined;
     destination = open ? 1 : 0;
     active = true;
     restoreVisibility();
@@ -77,38 +82,13 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
       resolvePending = resolve;
     });
 
-    if (reduced() || from === destination) settle();
-    else {
-      // Animate the surface itself to preserve backdrop-root behavior. Native
-      // animation avoids style mutations that invalidate scene lighting each frame.
-      const current = skin.animate([{ opacity: from * opacity }, { opacity: destination * opacity }], {
-        duration: (open ? 180 : 140) * Math.abs(destination - from),
-        easing: 'ease-in-out',
-        fill: 'both'
-      });
-
-      animation = current;
-      void current.finished
-        .then(() => {
-          if (animation === current && !disposed) settle();
-        })
-        .catch(() => {
-          /* Reversing or destroying a fade cancels its animation. */
-        });
-
-      if (options.onUpdate)
-        unsubscribe = subscribeFrame(() => {
-          options.onUpdate?.();
-
-          return active && !disposed;
-        });
-    }
+    motion.retarget([destination], reduced());
 
     return finished;
   }
 
-  const onPreference = () => {
-    if (active && reduced()) settle();
+  const onPreference = (): void => {
+    if (active && reduced()) motion.retarget([destination], true);
   };
 
   preference.addEventListener('change', onPreference);
@@ -117,20 +97,20 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   return {
     enter: () => move(true),
     exit: () => move(false),
-    refresh() {},
+    refresh() {
+      if (!disposed) above = target.getBoundingClientRect().bottom <= origin.getBoundingClientRect().top;
+    },
     destroy() {
       if (disposed) return;
 
       disposed = true;
       active = false;
-      unsubscribe?.();
-      unsubscribe = undefined;
+      motion.destroy();
       resolvePending?.('cancelled');
       resolvePending = undefined;
       preference.removeEventListener('change', onPreference);
       doc.removeEventListener(configurationEvent, onPreference);
-      animation?.cancel();
-      animation = undefined;
+      restoreSkin();
       restoreVisibility();
     }
   };

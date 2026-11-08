@@ -63,7 +63,40 @@
     scrollbar-width: thin;
 }
 
+.step-track {
+    position: relative;
+    inline-size: max-content;
+    min-inline-size: 100%;
+}
+
+.step-selection {
+    --bx-glass-surface: var(--step-selection-color, var(--step-color));
+    --bx-glass-edge: color-mix(in srgb, var(--step-selection-color, var(--step-color)) 65%, transparent);
+    --bx-glass-opacity: 0.22;
+    --bx-glass-radius: #{radius(pill)};
+    --bx-glass-decoration-opacity: 1;
+    --bx-glass-rim-opacity: 1;
+    --bx-glass-rim-visibility: 1;
+    --bx-glass-shadow: none;
+
+    position: absolute;
+    inset: 0 auto auto 0;
+    z-index: 1;
+    box-sizing: border-box;
+    visibility: hidden;
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
+    pointer-events: none;
+    transform-origin: center;
+}
+
+:host([data-variant='progress']) .step-selection {
+    --bx-glass-radius: var(--bx-stepper-card-radius, #{radius(md)});
+}
+
 .step-list {
+    position: relative;
+    z-index: 2;
     display: flex;
     gap: var(--step-gap);
     box-sizing: border-box;
@@ -84,7 +117,7 @@
     flex: 1 0 8rem;
     min-inline-size: 0;
 
-    &[data-status='error'] {
+    &.is-error {
         --step-state-color: var(--bx-bg-danger);
         --step-state-text: var(--bx-text-danger);
         --step-state-background: var(--bx-bg-danger-subtle);
@@ -97,20 +130,43 @@
 }
 
 .step-connector {
+    --bx-glass-surface: var(--bx-border-default);
+    --bx-glass-edge: var(--bx-border-strong);
+    --bx-glass-opacity: 1;
+    --bx-glass-radius: #{radius(pill)};
+    --bx-glass-shadow: none;
+    --bx-glass-decoration-opacity: 1;
+    --bx-glass-rim-visibility: 0.65;
+    --bx-glass-rim-opacity: 1;
+
     display: block;
     position: absolute;
     z-index: 1;
     border-radius: radius(pill);
-    background: var(--bx-border-default);
+    border: 0;
     visibility: hidden;
     pointer-events: none;
 }
 
-.is-complete .step-connector {
-    background: var(--step-state-color);
+.step-connector-fill {
+    --bx-glass-surface: var(--step-state-color);
+    --bx-glass-edge: var(--step-state-border);
+    --bx-glass-radius: inherit;
+
+    position: absolute;
+    inset: 0;
+    border: 0;
+    border-radius: inherit;
+    transform: scaleX(var(--step-completion, 0));
+    transform-origin: left center;
+}
+
+.step-connector:dir(rtl) .step-connector-fill {
+    transform-origin: right center;
 }
 
 .step-body {
+    --step-pressure: var(--bx-glass-press, 0);
     --bx-glass-surface: transparent;
     --bx-glass-text: inherit;
     --bx-glass-edge: transparent;
@@ -158,6 +214,17 @@ button.step-body {
 }
 
 .marker {
+    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-text-secondary);
+    --bx-glass-edge: var(--bx-border-strong);
+    --bx-glass-radius: var(--bx-stepper-marker-radius, #{radius(pill)});
+    --bx-glass-opacity: 0.8;
+    --bx-glass-min-opacity: 0.65;
+    --bx-glass-decoration-opacity: 1;
+    --bx-glass-rim-visibility: calc(var(--step-rim-interaction, 0.8) * var(--step-rim-semantic, 1));
+    --bx-glass-rim-opacity: 1;
+    --bx-glass-shadow: #{shadow(sm)};
+
     display: inline-flex;
     position: relative;
     z-index: 2;
@@ -167,30 +234,29 @@ button.step-body {
     box-sizing: border-box;
     inline-size: var(--step-indicator-width);
     block-size: var(--step-indicator-height);
-    border: 1px solid var(--bx-border-strong);
-    border-radius: var(--bx-stepper-marker-radius, #{radius(pill)});
-    background: var(--bx-bg-surface);
-    color: var(--bx-text-secondary);
+    border: 1px solid var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius);
     font-weight: 600;
     line-height: 1;
 }
 
 .is-complete .marker {
-    border-color: var(--step-state-border);
-    background: var(--step-state-background);
-    color: var(--step-state-text);
+    --bx-glass-edge: var(--step-state-border);
+    --bx-glass-surface: var(--step-state-background);
+    --bx-glass-text: var(--step-state-text);
 }
 
 .is-current .marker {
-    border-color: transparent;
-    background: var(--step-state-color);
-    color: var(--step-on-color);
+    --bx-glass-edge: var(--step-state-border);
+    --bx-glass-surface: var(--step-state-color);
+    --bx-glass-text: var(--step-on-color);
+    --bx-glass-min-opacity: 1;
 }
 
 .is-awaiting-confirmation .marker {
-    border-color: var(--step-state-border);
-    background: var(--step-state-background);
-    color: var(--step-state-text);
+    --bx-glass-edge: var(--step-state-border);
+    --bx-glass-surface: var(--step-state-background);
+    --bx-glass-text: var(--step-state-text);
 }
 
 .is-awaiting-confirmation .step-label,
@@ -202,16 +268,18 @@ button.step-body {
     font-weight: 600;
 }
 
-[data-status='error'] .marker {
-    border-color: var(--step-state-border);
-    background: var(--step-state-background);
-    color: var(--step-state-text);
+.is-error .marker {
+    // IMPORTANT: Semantic error contours remain authoritative while environmental colors are resampled.
+    --step-rim-semantic: 0.15;
+    --bx-glass-edge: var(--step-state-border);
+    --bx-glass-surface: var(--step-state-background);
+    --bx-glass-text: var(--step-state-text);
 }
 
 .is-unavailable .marker {
-    border-color: var(--bx-border-default);
-    background: var(--bx-bg-element);
-    color: var(--bx-text-secondary);
+    --bx-glass-edge: var(--bx-border-default);
+    --bx-glass-surface: var(--bx-bg-element);
+    --bx-glass-text: var(--bx-text-secondary);
 }
 
 :host(.is-readonly) {
@@ -223,20 +291,20 @@ button.step-body {
     }
 
     .marker {
-        border-color: var(--bx-border-strong);
-        background: var(--bx-bg-element);
-        color: var(--bx-text-secondary);
+        --bx-glass-edge: var(--bx-border-strong);
+        --bx-glass-surface: var(--bx-bg-element);
+        --bx-glass-text: var(--bx-text-secondary);
     }
 
     .is-current .marker {
-        border-color: var(--bx-text-primary);
-        color: var(--bx-text-primary);
+        --bx-glass-edge: var(--bx-text-primary);
+        --bx-glass-text: var(--bx-text-primary);
     }
 
-    [data-status='error'] .marker {
-        border-color: var(--bx-border-danger);
-        background: var(--bx-bg-danger-subtle);
-        color: var(--bx-text-danger);
+    .is-error .marker {
+        --bx-glass-edge: var(--bx-border-danger);
+        --bx-glass-surface: var(--bx-bg-danger-subtle);
+        --bx-glass-text: var(--bx-text-danger);
     }
 }
 
@@ -249,14 +317,14 @@ button.step-body {
         }
 
         .marker {
-            box-shadow: 0 0 0 3px var(--step-state-background);
+            --step-rim-interaction: 1;
+            --bx-glass-edge: color-mix(in srgb, var(--step-state-color) 40%, var(--bx-bg-surface));
         }
     }
 
     .step-item:not(.is-current) button.step-body:hover:not(:disabled, [aria-disabled='true']) .marker {
-        border-color: var(--step-state-border);
-        background: var(--step-state-background);
-        color: var(--step-state-text);
+        --bx-glass-surface: var(--step-state-background);
+        --bx-glass-text: var(--step-state-text);
     }
 }
 
@@ -285,7 +353,7 @@ button.step-body {
     color: var(--bx-text-secondary);
 }
 
-[data-status='error'] .step-detail {
+.is-error .step-detail {
     color: var(--step-state-text);
 }
 
@@ -369,11 +437,11 @@ button.step-body {
 
     .step-body {
         --bx-glass-surface: var(--bx-stepper-card-background, var(--bx-bg-surface));
-        --bx-glass-edge: var(--bx-border-default);
+        --bx-glass-edge: color-mix(in srgb, var(--step-state-border) calc(clamp(0, var(--step-activation, 0), 1) * 100%), var(--bx-border-default));
         --bx-glass-radius: var(--bx-stepper-card-radius, #{radius(md)});
         --bx-glass-decoration-opacity: 1;
         --bx-glass-rim-opacity: 1;
-        --bx-glass-rim-visibility: 0.25;
+        --bx-glass-rim-visibility: calc(0.25 + clamp(0, var(--step-activation, 0), 1) * 0.4);
         --bx-glass-opacity: var(--bx-glass-material-opacity);
     }
 
@@ -381,10 +449,6 @@ button.step-body {
         button.step-body:hover:not(:disabled, [aria-disabled='true']) {
             --bx-glass-edge: var(--step-state-border);
         }
-    }
-
-    .is-current .step-body {
-        --bx-glass-edge: var(--step-state-border);
     }
 }
 
@@ -400,18 +464,32 @@ button.step-body {
     }
 
     .marker {
+        --bx-glass-surface: color-mix(
+            in srgb,
+            var(--step-state-color) calc(clamp(0, max(var(--step-activation, 0), var(--step-completion, 0)), 1) * 100%),
+            var(--bx-border-strong)
+        );
+        --bx-glass-radius: var(--bx-stepper-segment-radius, #{radius(pill)});
+        --bx-glass-shadow: none;
+        --bx-glass-opacity: 1;
+        --bx-glass-min-opacity: 1;
+        --bx-glass-rim-visibility: 1;
+
         inline-size: 100%;
         min-block-size: 2px;
         border: 0;
         border-radius: var(--bx-stepper-segment-radius, #{radius(pill)});
-        background: var(--bx-border-strong);
     }
 
     .is-current .marker,
-    .is-complete .marker,
+    .is-complete .marker {
+        --bx-glass-edge: var(--step-state-color);
+        --bx-glass-surface: var(--step-state-color);
+    }
+
     .is-awaiting-confirmation .marker,
-    [data-status='error'] .marker {
-        background: var(--step-state-color);
+    .is-error .marker {
+        --bx-glass-surface: var(--step-state-color);
     }
 
     .marker-symbol,
@@ -421,19 +499,19 @@ button.step-body {
 
     @media (hover: hover) {
         .step-item button.step-body:hover:not(:disabled, [aria-disabled='true']) .marker {
-            background: var(--step-state-color);
-            box-shadow: none;
+            --bx-glass-surface: var(--step-state-color);
+            --bx-glass-shadow: none;
         }
     }
 }
 
 :host([data-variant='segments'].is-readonly) .marker,
 :host([data-variant='segments']) .is-unavailable .marker {
-    background: var(--bx-border-strong);
+    --bx-glass-surface: var(--bx-border-strong);
 }
 
-:host([data-variant='segments'].is-readonly) [data-status='error'] .marker {
-    background: var(--bx-bg-danger);
+:host([data-variant='segments'].is-readonly) .is-error .marker {
+    --bx-glass-surface: var(--bx-bg-danger);
 }
 
 :host([data-variant='dots']) {
@@ -453,7 +531,7 @@ button.step-body {
         content: '✓';
     }
 
-    [data-status='error'] .marker::after {
+    .is-error .marker::after {
         content: '!';
     }
 
@@ -462,7 +540,7 @@ button.step-body {
     }
 
     [data-status='loading'] .marker::after,
-    .is-awaiting-confirmation:not([data-status='error'], [data-status='skipped']) .marker::after {
+    .is-awaiting-confirmation:not(.is-error, [data-status='skipped']) .marker::after {
         content: '…';
     }
 }
@@ -476,6 +554,23 @@ button.step-body {
     }
 }
 
+:host(:not(.is-reduced-motion, [data-variant='segments'], [data-variant='progress'])) {
+    .marker {
+        transform: scale(
+            calc(1 + var(--step-activation, 0) * 0.018 + var(--step-pressure, 0) * 0.018),
+            calc(1 + var(--step-activation, 0) * 0.018 - var(--step-pressure, 0) * 0.055)
+        );
+    }
+
+    .is-complete .marker-symbol {
+        transform: scale(calc(0.92 + var(--step-completion, 1) * 0.08));
+    }
+}
+
+:host(.is-reduced-motion) .marker {
+    transform: none;
+}
+
 @mixin vertical-layout {
     @include row-body;
 
@@ -484,8 +579,17 @@ button.step-body {
         inline-size: 100%;
     }
 
+    .step-track {
+        inline-size: 100%;
+    }
+
     .step-item {
         flex: 0 0 auto;
+    }
+
+    .step-connector-fill {
+        transform: scaleY(var(--step-completion, 0));
+        transform-origin: center top;
     }
 }
 
@@ -557,26 +661,43 @@ button.step-body {
 }
 
 @media (forced-colors: active) {
+    .step-selection {
+        display: none;
+    }
+
     .marker {
+        --bx-glass-min-opacity: 1;
+
         border-color: CanvasText;
     }
 
     .is-current .marker,
     .is-complete .marker {
+        --bx-glass-surface: Highlight;
+        --bx-glass-text: HighlightText;
+
         background: Highlight;
         color: HighlightText;
         forced-color-adjust: none;
     }
 
-    [data-status='error'] .marker {
+    .is-error .marker {
+        --bx-glass-surface: Canvas;
+        --bx-glass-text: CanvasText;
+
         border-color: CanvasText;
         background: Canvas;
         color: CanvasText;
     }
 
     .step-connector {
-        background: CanvasText;
+        --bx-glass-surface: CanvasText;
+
         forced-color-adjust: none;
+    }
+
+    .step-connector-fill {
+        --bx-glass-surface: Highlight;
     }
 
     [data-status='disabled'] {

@@ -44,6 +44,12 @@ export class BxSurfaceDirective implements AfterViewInit {
    * received lighting without automatic emission. An explicit `bxSurfaceFocusEmission` can still enable focus-only emission.
    */
   public readonly bxSurfaceEmission: InputSignal<string | false | undefined> = input<string | false | undefined>();
+  /** Optional descendant CSS selector for the visible light source. Omission or no match emits from the entire surface; interaction stays on the host. */
+  public readonly bxSurfaceEmissionOrigin: InputSignal<string | undefined> = input<string | undefined>();
+  /** Emission strength on a 0–2 scale; defaults to 1. Does not change received light or pressure feedback. */
+  public readonly bxSurfaceEmissionStrength: InputSignalWithTransform<number | undefined, unknown> = input<number | undefined, unknown>(undefined, {
+    transform: optionalNumber
+  });
   /** CSS color emitted while a contained control has focus; omission uses normal focus-emission policy. Optional; omission leaves the value undefined. */
   public readonly bxSurfaceFocusEmission: InputSignal<string | undefined> = input<string | undefined>();
   /**
@@ -89,6 +95,8 @@ export class BxSurfaceDirective implements AfterViewInit {
       reducedMotion: this.bxA11yService.isReducedMotion(),
       reducedTransparency: this.bxReducedTransparency(),
       emission: this.bxSurfaceEmission(),
+      emissionOrigin: this.bxSurfaceEmissionOrigin(),
+      emissionStrength: this.bxSurfaceEmissionStrength(),
       focusEmission: this.bxSurfaceFocusEmission()
     };
   }

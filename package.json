@@ -38,7 +38,8 @@
         "lint:scripts": "eslint --max-warnings=0 \"tools/**/*.{js,mjs,cjs}\" \"*.config.{js,mjs,cjs}\"",
         "lint:docs": "markdownlint-cli2",
         "tools:sync-theme-types": "npm run tools:generate-tokens",
-        "test:stepper": "ng test blocks --watch=false"
+        "test:stepper": "ng test blocks --watch=false --include='navigation/components/stepper/**/*.spec.ts' --include='navigation/components/step/**/*.spec.ts'",
+        "test:motion": "ng test blocks --watch=false"
     },
     "private": true,
     "workspaces": [

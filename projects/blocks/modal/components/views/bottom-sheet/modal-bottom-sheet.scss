@@ -136,3 +136,7 @@
 [data-bx-surface] {
     @include modal-surface;
 }
+
+.bottom-sheet-modal-style.is-motion-enabled {
+    transition: transform 300ms #{motion-easing(smooth)};
+}

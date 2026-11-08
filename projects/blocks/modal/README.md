@@ -232,6 +232,13 @@ header and footer remain reachable.
 Header text accepts `ResolvableText` and updates through the optional `BX_I18N` adapter. Content components own the translation and accessible naming of their
 custom actions, descriptions, errors, and form controls. Keep actions reachable in constrained viewports and preserve focus when completing asynchronous work.
 
+### Motion and material response
+
+Centered dialogs combine opacity with a restrained 0.975–1 material scale instead of growing content from zero. Their existing viewport dimming layer remains
+independent. Side dialogs and bottom sheets use the shared smooth curve for large surfaces; side entrance frames are cancelled on close or destruction.
+Bottom-sheet dragging remains direct, with restrained recovery after an unsuccessful dismiss gesture. Live reduced motion removes decorative movement. Close
+guards, focus/stacking and reactive patches retain their existing lifecycle. Inspect `/modal` in centered, side and mobile sheet layouts.
+
 ## Playground
 
 The live dialog includes **Open nested dialog**, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a

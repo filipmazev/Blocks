@@ -49,6 +49,14 @@ trigger effects retain their application appearance settings.
 
 Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.
 
+### Motion and material response
+
+Pointer hover paints the existing hover color immediately, including a clearly semantic danger hover. Keyboard focus may use the shared surface with bounded
+settling. It does not change application selection or focus, enter the accessibility tree, or intercept pointer input. Danger items use their semantic surface.
+The surface remains inside the menu's scrolling coordinate space and reacts to dynamic rows. Dropdown and context-menu wrappers share the overlay
+materialization spring. Live reduced motion snaps movement; focus outlines remain available in forced colors. Inspect `/components/menu`,
+`/components/dropdown`, and `/components/context-menu`.
+
 ## Playground
 
 Open `/components/menu` for a working example and its current value or action result.

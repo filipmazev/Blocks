@@ -25,8 +25,8 @@ import { Subscription } from 'rxjs';
 
 import type { IPopoverDirectiveSettingsState } from '@primitives/interfaces/ipopover-directive-settings-state.interface';
 
-import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, resolveText, trackOverlayOrigin, uuidv4 } from '@filip.mazev/blocks/core';
-import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { BX_I18N, BxA11yService, BxOverlayPositionService, inheritOverlayTheme, resolveText, trackOverlayOrigin, uuidv4 } from '@filip.mazev/blocks/core';
+import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
 import { IPopoverConfig } from '@primitives/interfaces/ipopover-config.interface';
 import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
@@ -44,6 +44,7 @@ import { BX_POPOVER_DEFAULTS } from '@primitives/tokens/popover-defaults.token';
   }
 })
 export class PopoverDirective {
+  private readonly bxA11yService = inject(BxA11yService);
   private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly overlay = inject(Overlay);
   private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
@@ -93,6 +94,8 @@ export class PopoverDirective {
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
   private disconnectOrigin?: () => void;
+  private transition?: ReturnType<typeof createGlassTransition>;
+  private presentationRevision: number = 0;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.dispose());
@@ -121,6 +124,8 @@ export class PopoverDirective {
   /** Open the component's overlay using its current configuration and shared positioning/focus mechanisms. */
   public open(): void {
     if (!this.browser || this.isOpen() || this.popoverDisabled() || this.nativeElement.matches(':disabled, [aria-disabled="true"]')) return;
+
+    if (this.overlayRef) this.dispose();
 
     const config = this.settings();
     const overlay = this.overlay.create({
@@ -153,6 +158,8 @@ export class PopoverDirective {
 
     view.detectChanges();
     overlay.updatePosition();
+    this.transition = this.ngZone.runOutsideAngular(() => createGlassTransition(this.nativeElement, pane));
+    void this.ngZone.runOutsideAngular(() => this.transition?.enter());
 
     if (config.autoFocus ?? true) (this.tabbableElements()[0] ?? pane).focus({ preventScroll: true });
 
@@ -161,6 +168,7 @@ export class PopoverDirective {
 
   /**
    * Restores trigger focus by default when focus is inside the panel.
+   * Reports closed state immediately and retains an inert panel through the shared exit; reopening or destruction cancels stale completion.
    *
    * @param restoreFocus - Whether focus should return to the opening control after closing. Defaults to `true`.
    */
@@ -171,7 +179,19 @@ export class PopoverDirective {
 
     if (restoreFocus && pane.contains(this.nativeElement.ownerDocument.activeElement)) this.nativeElement.focus({ preventScroll: true });
 
-    this.dispose();
+    const revision = ++this.presentationRevision;
+    const transition = this.transition;
+
+    this.opened.set(false);
+    pane.inert = true;
+
+    const finish = (): void => {
+      if (revision === this.presentationRevision) this.dispose();
+    };
+
+    if (transition && !this.bxA11yService.isReducedMotion()) void this.ngZone.runOutsideAngular(() => transition.exit()).then(finish, finish);
+    else finish();
+
     this.openedChange.emit(false);
   }
 
@@ -221,6 +241,9 @@ export class PopoverDirective {
   }
 
   private dispose(): void {
+    ++this.presentationRevision;
+    this.transition?.destroy();
+    this.transition = undefined;
     this.opened.set(false);
     this.subscriptions.unsubscribe();
     this.subscriptions = new Subscription();

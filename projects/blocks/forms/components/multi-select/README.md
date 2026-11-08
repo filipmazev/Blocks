@@ -70,6 +70,12 @@ update when the application theme changes. Keyboard focus, forced colors, reduce
 Text inputs accept `ResolvableText`: plain text or `{ key: 'translation.key' }`. With `BX_I18N`, text is resolved reactively, including already-mounted controls
 when the adapter's `version` signal changes. Plain text works without an adapter.
 
+### Motion and material response
+
+The shared selection base supplies restrained overlay materialization and a traveling focused-row surface. Multiple selected rows retain their checkmarks and
+semantic fill; hover/focus movement never changes the selected values. Motion follows the actual scroll content and uses the existing surface renderer. Reduced
+motion snaps geometry; existing disabled/readonly, asynchronous pagination, retry, and focus behavior remain in force. Inspect `/components/multi-select`.
+
 ## Playground
 
 Open `/components/multi-select`. Enable select all, load another page, deselect one item and load again. Selection and intent events are shown separately. The

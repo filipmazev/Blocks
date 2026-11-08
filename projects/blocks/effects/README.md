@@ -44,14 +44,16 @@ and actionable surfaces get automatic hover/focus lighting; decorative container
 input does not turn a panel into an interactive surface. Wrappers inside `bx-form-field` retain field interaction; custom control wrappers outside a field can
 opt in with `bxSurfaceInteractive`. Components can override the default border and radius with their existing tokens.
 
-| Input                    | Default                                                      | Local override                                                                              |
-| ------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `bxSurfaceTranslucency`  | Global translucency                                          | 0–1                                                                                         |
-| `bxSurfaceGlassiness`    | Off unless selected                                          | `auto`, `off`, or `on`; baseline and accessibility settings take precedence                 |
-| `bxSurfaceInteractive`   | Automatic control/action detection                           | Boolean; explicitly enables or disables interaction lighting and press deformation          |
-| `bxSurfaceEmission`      | Theme accent (error color in invalid fields)                 | CSS color override, or `false` to disable automatic emission while retaining press feedback |
-| `bxSurfaceFocusEmission` | Fields: surface emission color; actions: keyboard focus only | Explicitly illuminate for any focus using this color                                        |
-| `bxReducedTransparency`  | Global setting                                               | Boolean                                                                                     |
+| Input                       | Default                                                      | Local override                                                                              |
+| --------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `bxSurfaceTranslucency`     | Global translucency                                          | 0–1                                                                                         |
+| `bxSurfaceGlassiness`       | Off unless selected                                          | `auto`, `off`, or `on`; baseline and accessibility settings take precedence                 |
+| `bxSurfaceInteractive`      | Automatic control/action detection                           | Boolean; explicitly enables or disables interaction lighting and press deformation          |
+| `bxSurfaceEmission`         | Theme accent (error color in invalid fields)                 | CSS color override, or `false` to disable automatic emission while retaining press feedback |
+| `bxSurfaceEmissionOrigin`   | Entire surface                                               | Descendant CSS selector for the visible light source; no match falls back to the host       |
+| `bxSurfaceEmissionStrength` | `1`                                                          | Local 0–2 emission multiplier; leaves reception and pressure feedback unchanged             |
+| `bxSurfaceFocusEmission`    | Fields: surface emission color; actions: keyboard focus only | Explicitly illuminate for any focus using this color                                        |
+| `bxReducedTransparency`     | Global setting                                               | Boolean                                                                                     |
 
 Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.
 
@@ -125,16 +127,19 @@ Checked, pressed, selected, and current states keep the light enabled. Expanded 
 become selected just by expanding. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from
 nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order,
 depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as `role="button"`), or explicitly enable
-`bxSurfaceInteractive` for a custom interaction. Use `bxSurfaceEmission` only to override the semantic color. The source is the element’s geometry, never the
-mouse coordinates.
+`bxSurfaceInteractive` for a custom interaction. Use `bxSurfaceEmission` to override the semantic color. The source follows the surface geometry, or the
+descendant selected by `bxSurfaceEmissionOrigin`, rather than mouse coordinates. For example, `bxSurfaceEmissionOrigin=".status-dot"` confines the emitted light
+to a status marker while hover, selection and keyboard focus remain on the whole control. When that descendant also owns a registered surface, its existing
+renderer paints the emitted rim too. Source teardown or an origin change clears the delegated rim. Unregistered descendants continue to supply bounds while the
+host paints its own rim.
 
-Presses use the shared pressure spring for a soft inset sheen. Blocks buttons also compress their content inside a fixed hit area; quick taps still receive a
-visible response. Pointer release/cancellation, keyboard release, focus loss, hidden documents, and teardown clear press state. Touch hover does not latch.
-Reduced motion uses static press feedback.
+Presses use the shared pressure spring for a soft inset sheen. Blocks buttons keep labels and icons undistorted inside a fixed hit area; quick taps still
+receive visible material feedback. Pointer release/cancellation, keyboard release, focus loss, hidden documents, and teardown clear press state. Touch hover
+does not latch. Reduced motion uses static press feedback.
 
-There is no drag-to-reposition interaction in this iteration. Spatial highlights are a lightweight lighting approximation, while backdrop blur uses browser
-compositing. These effects do not ray-trace arbitrary DOM content. Rendering quality can add supported enhancements, and baseline/solid modes remain available
-for constrained devices.
+The surface renderer does not reposition application content; controls own selection and pointer gestures. Spatial highlights are a lightweight lighting
+approximation, while backdrop blur uses browser compositing. These effects do not ray-trace arbitrary DOM content. Rendering quality can add supported
+enhancements, and baseline/solid modes remain available for constrained devices.
 
 ## Accessibility and lifecycle
 
@@ -145,6 +150,11 @@ The directive initializes only in the browser, runs decorative updates outside A
 mount a second engine surface on a host already owned by the directive or a Blocks component.
 
 ## Framework independent engine
+
+The stepper and tabs pilot shares `createSpringMotion`, `ISpringMotion`, `MOTION_PRESETS`, and `paintMotionStyles` from the runtime entry point. These extend
+the existing exact spring and lazy frame scheduler; they introduce no additional lighting renderer or theme token collection. See the
+[runtime motion contract](runtime/README.md#retargetable-selection-motion). The validated patterns also support slider/toggle feedback, moving menu/option
+highlights, and restrained overlay motion.
 
 The `@filip.mazev/blocks/effects/runtime` entry point included in Blocks exports the native DOM surface and transition APIs. Refer to its README for non-Angular
 use. The native runtime does not import Angular.

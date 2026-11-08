@@ -4,5 +4,19 @@
         "outDir": "../../out-tsc/spec",
         "types": ["jasmine"]
     },
-    "include": ["navigation/components/stepper/**/*.spec.ts", "navigation/components/step/**/*.spec.ts"]
+    "include": [
+        "navigation/components/stepper/**/*.spec.ts",
+        "navigation/components/step/**/*.spec.ts",
+        "primitives/components/tabs/**/*.spec.ts",
+        "effects/runtime/helpers/*.spec.ts",
+        "forms/components/slide-toggle/**/*.spec.ts",
+        "forms/components/button/**/*.spec.ts",
+        "forms/components/range-slider/**/*.spec.ts",
+        "forms/components/select/**/*.spec.ts",
+        "forms/components/multi-select/**/*.spec.ts",
+        "forms/components/autocomplete/**/*.spec.ts",
+        "forms/directives/slider/**/*.spec.ts",
+        "primitives/components/menu/**/*.spec.ts",
+        "primitives/components/collapsible/**/*.spec.ts"
+    ]
 }

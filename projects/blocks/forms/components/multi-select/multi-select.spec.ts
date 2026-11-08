@@ -13,6 +13,7 @@ describe('MultiSelect', () => {
 
     fixture = TestBed.createComponent(MultiSelect);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('options', []);
     await fixture.whenStable();
   });
 

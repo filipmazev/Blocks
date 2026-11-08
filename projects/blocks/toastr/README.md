@@ -191,6 +191,12 @@ important outcomes outside transient notifications. Use an inline alert or modal
 Reduced motion suppresses movement while preserving state; reduced transparency and forced colors use opaque presentation. Simple message text accepts strings
 or translation keys through `BX_I18N`; custom components own translation, keyboard access, accessible names, and descriptions for their own content.
 
+### Motion and material response
+
+Toasts use shorter 12px entrance travel, a restrained scale, and the shared fluid settling curve. Existing grid collapse coordinates neighboring stack movement
+when an item closes. Lifetime, pause/resume, semantic patches and close results remain independent of decorative motion. Live reduced motion removes travel and
+settling. Existing progress-light and opaque material behavior remains in place. Inspect `/toastr` with loading-to-success/error patches and stacked closes.
+
 ## Playground
 
 Open `/toastr` for initial configuration, live content/type/icon/surface/progress updates, paused lifetime resets, a loading-to-success transition, and a

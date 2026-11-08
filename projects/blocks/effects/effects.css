@@ -647,3 +647,26 @@
         background: Canvas !important;
     }
 }
+/* stylelint-disable-next-line scss/at-function-pattern -- The underscore keeps this Sass helper private. */
+.bx-selection-surface {
+    --bx-glass-surface: var(--bx-selection-surface, var(--bx-selection-row-surface, var(--bx-bg-element-hover)));
+    --bx-glass-edge: transparent;
+    --bx-glass-opacity: 1;
+    --bx-glass-min-opacity: 1;
+    --bx-glass-radius: 0.25rem;
+    --bx-glass-shadow: none;
+    position: absolute;
+    inset: 0 auto auto 0;
+    z-index: -1;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: var(--bx-glass-radius);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+@media (forced-colors: active) {
+    .bx-selection-surface {
+        display: none;
+    }
+}

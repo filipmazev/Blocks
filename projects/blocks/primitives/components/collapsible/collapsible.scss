@@ -19,6 +19,13 @@
 }
 
 .bx-collapsible-trigger {
+    --bx-glass-surface: transparent;
+    --bx-glass-edge: transparent;
+    --bx-glass-opacity: 0;
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-shadow: none;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -46,6 +53,9 @@
     }
 
     &:hover:not(:disabled, [aria-disabled='true']) {
+        --bx-glass-surface: var(--bx-bg-element-hover);
+        --bx-glass-opacity: 1;
+
         background: var(--bx-bg-element-hover);
     }
 
@@ -72,6 +82,24 @@
 .bx-collapsible-content {
     padding: var(--bx-collapsible-content-padding, #{spacing(4)});
     overflow-wrap: anywhere;
+}
+
+.bx-collapsible-reveal {
+    display: grid;
+    grid-template-rows: 0fr;
+
+    &.is-expanded {
+        grid-template-rows: 1fr;
+    }
+
+    &.is-animated {
+        transition: grid-template-rows var(--bx-collapsible-duration, 120ms) #{motion-easing(smooth)};
+    }
+}
+
+.bx-collapsible-clip {
+    min-block-size: 0;
+    overflow: hidden;
 }
 
 .bx-collapsible-title {

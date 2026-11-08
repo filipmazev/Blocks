@@ -8,7 +8,7 @@
     [style]="config()?.style?.wrapperStyles ?? ''"
     [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"
     [style.transform]="modalTransform()"
-    [style.transition]="isAnimated() && !isSwipingVertically() ? 'transform 300ms ease-in-out' : ''"
+    [class.is-motion-enabled]="isAnimated() && !isSwipingVertically()"
     [ngClass]="{
         'opened-bottom-sheet-modal': isAnimated()
     }">

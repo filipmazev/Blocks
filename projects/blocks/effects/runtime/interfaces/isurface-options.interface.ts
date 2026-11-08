@@ -17,6 +17,10 @@ export interface ISurfaceOptions {
    * press feedback and received lighting. An explicit `focusEmission` can still enable focus-only emission. Omission uses the theme accent/error color.
    */
   emission?: string | false;
+  /** Optional descendant CSS selector defining the visible light source bounds. Omission or no match uses the entire surface. */
+  emissionOrigin?: string;
+  /** Local emission multiplier, clamped to 0–2; defaults to 1. Reception and press feedback are independent. */
+  emissionStrength?: number;
   /** Override illumination for any focus. Omitted: editable fields illuminate on focus; actions illuminate only on keyboard focus. */
   focusEmission?: string;
   /** Whether motion should be reduced; omission follows the owning accessibility policy. Optional. */

@@ -41,6 +41,81 @@ describe('Stepper', () => {
     expect(component).toBeTruthy();
   });
 
+  it('registers passive marker and connector receivers without extra interactive controls', async () => {
+    fixture.componentRef.setInput('mode', 'navigation');
+    await fixture.whenStable();
+
+    const root: HTMLElement = fixture.nativeElement;
+
+    expect(root.querySelectorAll('.marker[data-bx-surface]').length).toBe(steps.length);
+    expect(root.querySelectorAll('.step-connector[data-bx-surface]').length).toBe(steps.length - 1);
+    expect(root.querySelectorAll('.step-connector-fill[data-bx-surface]').length).toBe(steps.length - 1);
+    expect(root.querySelectorAll('.step-body button, .marker button').length).toBe(0);
+  });
+
+  it('keeps card selection feedback local without a traveling selection accent', async () => {
+    fixture.componentRef.setInput('variant', 'cards');
+    fixture.componentRef.setInput('mode', 'navigation');
+    TestBed.inject(BxA11yService).setReducedMotion(true);
+    await fixture.whenStable();
+    fixture.componentRef.setInput('activeStep', 'review');
+    await fixture.whenStable();
+
+    const root: HTMLElement = fixture.nativeElement;
+    const current = root.querySelector<HTMLElement>('.step-item.is-current');
+
+    expect(root.querySelector('.step-selection')).toBeNull();
+    expect(current?.style.getPropertyValue('--step-activation')).toBe('1');
+    expect(current?.querySelector('.step-label')?.textContent).toContain('Review');
+  });
+
+  it('keeps an error marker contour authoritative while cached environmental tint catches up', async () => {
+    fixture.componentRef.setInput('variant', 'cards');
+    fixture.componentRef.setInput('steps', [{ ...steps[0], error: true }, ...steps.slice(1)]);
+    await fixture.whenStable();
+
+    const root: HTMLElement = fixture.nativeElement;
+    const marker = root.querySelector<HTMLElement>('.is-current .marker');
+
+    root.style.setProperty('--bx-border-danger', 'rgb(200, 30, 40)');
+    expect(marker?.closest('.step-item')?.classList.contains('is-error')).toBeTrue();
+    expect(marker && getComputedStyle(marker).borderColor).toBe('rgb(200, 30, 40)');
+    expect(marker && getComputedStyle(marker).getPropertyValue('--step-rim-semantic').trim()).toBe('0.15');
+  });
+
+  it('keeps segment fills continuous and fully tinted without extra inner geometry', async () => {
+    fixture.componentRef.setInput('variant', 'segments');
+    fixture.componentRef.setInput('steps', [{ ...steps[0], completed: true }, steps[1], steps[3]]);
+    fixture.componentRef.setInput('activeStep', 'optional');
+    TestBed.inject(BxA11yService).setReducedMotion(true);
+    await fixture.whenStable();
+
+    const root: HTMLElement = fixture.nativeElement;
+    const markers = root.querySelectorAll<HTMLElement>('.marker');
+
+    expect(root.querySelector('.segment-beam')).toBeNull();
+    expect(markers.length).toBe(3);
+    expect(getComputedStyle(markers[1]).getPropertyValue('--bx-glass-opacity').trim()).toBe('1');
+    expect(getComputedStyle(markers[1]).getPropertyValue('--bx-glass-min-opacity').trim()).toBe('1');
+  });
+
+  it('keeps decorative progression on the committed step when a wizard guard rejects navigation', async () => {
+    fixture.componentRef.setInput('mode', 'wizard');
+    fixture.componentRef.setInput('beforeTransition', () => false);
+    TestBed.inject(BxA11yService).setReducedMotion(true);
+    await fixture.whenStable();
+    await component.next();
+    await fixture.whenStable();
+
+    const root: HTMLElement = fixture.nativeElement;
+    const items = root.querySelectorAll<HTMLElement>('.step-item');
+
+    expect(items[0].style.getPropertyValue('--step-activation')).toBe('1');
+    expect(items[0].style.getPropertyValue('--step-completion')).toBe('0');
+    expect(items[1].style.getPropertyValue('--step-activation')).toBe('0');
+    expect(component.selectedStep()?.id).toBe('details');
+  });
+
   it('renders passive progress without focusable steps or wizard controls', async () => {
     fixture.componentRef.setInput('activeStep', 'review');
     await fixture.whenStable();

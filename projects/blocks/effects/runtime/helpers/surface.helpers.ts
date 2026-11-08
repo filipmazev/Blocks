@@ -5,7 +5,8 @@ import type { SurfaceLayer } from '@effects/runtime/types/surface-layer.types';
 import { DetailedRefractiveSurface } from '@effects/runtime/classes/detailed-refractive-surface';
 import { RefractiveSurface } from '@effects/runtime/classes/refractive-surface';
 import { Spring } from '@effects/runtime/classes/spring';
-import { mounted } from '@effects/runtime/constants/surface.constants';
+import { MOTION_PRESETS } from '@effects/runtime/constants/motion.constants';
+import { emissionPainters, mounted } from '@effects/runtime/constants/surface.constants';
 
 import type { ILightContribution, ILighting } from './scene.helpers';
 
@@ -128,6 +129,7 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
 
   let emitting = false;
   let emittingColor: string | undefined;
+  let emissionTarget: HTMLElement | undefined;
   let sourceColor: string | undefined;
 
   const layers = new Map<string, SurfaceLayer>();
@@ -210,11 +212,9 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
         options.focusEmission ??
         (element.closest('[data-bx-field-invalid="true"]') || element.matches('[aria-invalid="true"]') ? 'var(--bx-text-danger)' : 'var(--bx-primary)'));
 
-  const emit = (active: boolean, color = emissionColor()) => {
-    emitting = active;
-    emittingColor = color;
-
-    if (active && color) setLayer({ key: 'emitter', color, x: 50, y: 50, strength: 0, edgeStrength: 0.8 }, true);
+  const emissionStrength = (): number => finiteClamp(options.emissionStrength, 0, 2, 1);
+  const paintEmission = (active: boolean, color: string | undefined, strength: number): void => {
+    if (active && color) setLayer({ key: 'emitter', color, x: 50, y: 50, strength: 0, edgeStrength: Math.min(1, 0.8 * strength) }, true);
     else {
       const layer = layers.get('emitter');
 
@@ -222,10 +222,25 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
     }
   };
 
+  const emit = (active: boolean, color = emissionColor()): void => {
+    emitting = active;
+    emittingColor = color;
+
+    const origin = options.emissionOrigin ? element.querySelector<HTMLElement>(options.emissionOrigin) : null;
+    const target = origin && emissionPainters.has(origin) ? origin : element;
+
+    if (emissionTarget && emissionTarget !== target) emissionPainters.get(emissionTarget)?.(false, undefined, 0);
+
+    emissionTarget = target;
+    (emissionPainters.get(target) ?? paintEmission)(active, color, emissionStrength());
+  };
+
+  emissionPainters.set(element, paintEmission);
+
   const x = new Spring(25, { stiffness: 300, damping: 30 });
   const y = new Spring(0, { stiffness: 300, damping: 30 });
   const strength = new Spring(0.04, { stiffness: 300, damping: 30 });
-  const pressure = new Spring(0, { stiffness: 440, damping: 25 });
+  const pressure = new Spring(0, MOTION_PRESETS.elastic);
   const globalValue = (name: string) => inheritedAttribute(element.parentElement ?? element, name);
 
   const paint = () => {
@@ -486,6 +501,8 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
     },
     interactive,
     emission: emissionColor,
+    emissionOrigin: () => (options.emissionOrigin ? element.querySelector<HTMLElement>(options.emissionOrigin) : undefined) ?? element,
+    emissionStrength,
     resolveEmission(color) {
       // Reuse an existing decorative layer as a color probe. This resolves custom
       // properties, currentColor and theme-dependent functions in the emitter's scope.
@@ -527,6 +544,10 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
       if (disposed) return;
 
       disposed = true;
+
+      if (emissionTarget && emissionTarget !== element) emissionPainters.get(emissionTarget)?.(false, undefined, 0);
+
+      emissionPainters.delete(element);
       unsubscribe?.();
       unregister();
       refraction?.destroy();

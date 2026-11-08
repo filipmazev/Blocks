@@ -333,12 +333,13 @@ continuous completion bar above its vertical step list.
 
 Step bodies use `BxSurfaceDirective`, global materials and transparency fallbacks. Cards have a persistent neutral surface. Other variants keep transparent
 backgrounds, including selected and hovered steps. Hover feedback emphasizes the marker and underlines its label without moving content. Shared lighting
-attaches to the interactive button, so selection, hover and keyboard focus emit from the correct element. Markers and segments do not receive independent glass
-surfaces. Global Off and accessibility policies take precedence over component overrides. Theme and palette changes use semantic CSS variables on mounted
-instances. Active markers pair the accent fill with its on-accent foreground; completed markers use the matching subtle surface. Errors consistently use danger
-tokens for the marker, feedback and emitted light. Decorative outlines and dashed connectors are avoided; keyboard focus retains a visible outline. Horizontal
-labels are centered below markers, and vertical labels align with the marker center. Cards align their text stack to the top with a small marker offset, using
-the same icon-and-text arrangement as alerts and banners. No independent animation or lighting implementation is introduced.
+attaches to the interactive button, with emitted light positioned at the visible marker for non-card variants and the card surface for cards. Labels and empty
+button space do not extend a marker's light source. Markers and segments do not receive independent glass surfaces. Global Off and accessibility policies take
+precedence over component overrides. Theme and palette changes use semantic CSS variables on mounted instances. Active markers pair the accent fill with its
+on-accent foreground; completed markers use the matching subtle surface. Errors consistently use danger tokens for the marker, feedback and emitted light.
+Decorative outlines and dashed connectors are avoided; keyboard focus retains a visible outline. Horizontal labels are centered below markers, and vertical
+labels align with the marker center. Cards align their text stack to the top with a small marker offset, using the same icon-and-text arrangement as alerts and
+banners. No independent animation or lighting implementation is introduced.
 
 Custom labels use `<ng-template bxStepLabel let-step let-index="index" let-status="status">…</ng-template>` inside `bx-step`. Keep content non-interactive and
 preserve a meaningful plain `label`, which remains the button's accessible name. The custom label is decorative to avoid duplicated accessible names.
@@ -374,6 +375,26 @@ The step list scrolls inside a separate wrapper with space below its surfaces fo
 `responsive="scroll"` preserves labels with a reachable horizontal scroll region. `vertical` changes the list at the shared `sm` breakpoint. `compact` hides
 supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
 state during server rendering. Content wraps for long translations and constrained containers.
+
+### Material and motion pilot
+
+Markers and connectors receive environmental lighting through the existing surface engine. Circular indicators reuse its rim, material and pressure response;
+card presentations retain their card backing. Filled current indicators emit more strongly than tonal completed or neutral inactive indicators during engine
+interaction, with restrained extra error emphasis. Emission strength does not increase reception. Indicator mode remains passive unless interaction is enabled.
+Rounded hover highlights mix the semantic state color with the theme surface; they do not increase a dark elevation shadow. The traveling accent has no shadow,
+keeping its light-mode rim distinct from the marker's resting depth. Segment tracks keep their continuous geometry, with fully tinted active/completed fills so
+their existing material remains bright. Emission follows the visible segment surface. Error contours take precedence over cached environmental rim tint, and
+committed status changes urgently refresh marker lighting.
+
+A persistent selection accent travels between the committed positions, interpolating both axes and dimensions. It surrounds circular/segment markers and adapts
+to progress headers, including vertical and responsive layouts. Cards instead animate their own border and rim lighting in place; no accent travels across the
+unconnected space between cards. Velocity adds a small deformation along the travel axis. Connector completion fills independently of active position, so
+visiting a step never implies completing it. Circular indicators compress on press and recover on the shared spring. Rapid navigation retargets existing motion
+rather than restarting it. Rejected guards and unconfirmed controlled requests leave the selection accent at the committed step.
+
+Live reduced motion snaps the accent and completion fill and removes indicator deformation. Reduced transparency retains the shared opaque material fallback
+independently. Forced colors retain the explicit current/completed/error markers and hide the decorative traveling accent. Springs and observers are released
+with their component. No existing theme tokens were renamed or changed.
 
 ## Playground
 

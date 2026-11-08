@@ -86,8 +86,8 @@
     display: grid;
     grid-template-rows: 1fr;
     transition:
-        grid-template-rows 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-        margin 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        grid-template-rows 0.4s #{motion-easing(smooth)},
+        margin 0.4s #{motion-easing(smooth)};
     margin-bottom: spacing(4);
 
     &.is-bottom {
@@ -109,8 +109,8 @@
     min-height: 0;
     overflow: hidden;
     transition:
-        opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-        transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        opacity 0.4s ease-out,
+        transform 0.4s #{motion-easing(fluid)};
 
     &.default-wrapper {
         background-color: var(--bx-toast-bg, var(--bx-bg-surface));
@@ -126,16 +126,16 @@
     }
 
     &.anim-dir-top {
-        transform: translateY(-30px);
+        transform: translateY(-12px) scale(0.985);
     }
 
     &.anim-dir-bottom {
-        transform: translateY(30px);
+        transform: translateY(12px) scale(0.985);
     }
 
     &.show {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 
     &.no-animate {

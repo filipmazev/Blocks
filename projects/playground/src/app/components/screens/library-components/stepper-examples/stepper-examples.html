@@ -1,6 +1,10 @@
 <div class="stepper-examples">
     <section aria-labelledby="stepper-config-title">
         <h3 id="stepper-config-title">Presentation and behavior</h3>
+        <p>
+            Pilot material and motion: select steps rapidly, press a marker, and compare sizes and orientations. Appearance settings control the theme, reduced
+            motion, and opaque surfaces independently.
+        </p>
         <bx-stepper
             #preview
             [mode]="mode()"
@@ -47,6 +51,8 @@
         </div>
         <div class="actions">
             <button bx-button type="button" (click)="preview.reset()">Reset</button>
+            <button bx-button type="button" [disabled]="mode() === 'wizard' || readOnly()" (click)="active.set('plan')">Select Plan</button>
+            <button bx-button type="button" [disabled]="mode() === 'wizard' || readOnly()" (click)="active.set('ship')">Select Ship</button>
         </div>
         <bx-banner announcement="polite" [message]="status()" />
     </section>

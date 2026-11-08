@@ -53,9 +53,10 @@ export function observeGlassLighting(element: HTMLElement, light: (value: ILight
  * Invalidate a receiver after an application changes its geometry.
  *
  * @param element - Element whose surrounding geometry or source colors have changed.
+ * @param immediate - Snap environmental colors after urgent resampling for committed semantic changes. Defaults to false, preserving smooth lighting updates.
  */
-export function refreshGlassLighting(element: HTMLElement): void {
-  runtimeFor(element.ownerDocument).refreshElement(element);
+export function refreshGlassLighting(element: HTMLElement, immediate = false): void {
+  runtimeFor(element.ownerDocument).refreshElement(element, immediate);
 }
 
 /**

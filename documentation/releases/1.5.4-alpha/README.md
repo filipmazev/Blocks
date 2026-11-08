@@ -78,12 +78,11 @@ navigation's reduced-motion and keyboard-focus behavior.
 - Added eager, retained, and active-only content policies, configurable wizard controls, custom label/content templates, and an application-owned completion
   view. Reset clears workflow progress without clearing application-owned form values.
 - Added steps, segments, dots, progress, and cards in three sizes, horizontal/vertical layouts, and scroll, vertical, or compact responsive behavior. Connectors
-  are solid and aligned with their markers; small markers and dots leave room around status symbols. Card text uses the same top alignment as alerts and
-  banners.
-- Replaced split connector pieces with one continuous connector per gap, positioned from marker bounds and updated on layout changes. Horizontal scrollbars have
-  a reserved strip below the steps, keeping mobile WebKit overlay scrollbars clear of glass card surfaces and focus indicators.
-- Added `progressFormat="fraction"` for completed/enabled step counts such as `1/3` alongside the default percentage format. Both use the existing
-  `showPercentage` visibility input; explicit `progressValue` continues to override only the percentage and progress bar.
+  are solid and continuous between marker bounds and update on layout changes; small markers and dots leave room around status symbols. Card text uses the same
+  top alignment as alerts and banners. Horizontal scrollbars have a reserved strip below the steps, keeping mobile WebKit overlay scrollbars clear of glass card
+  surfaces and focus indicators.
+- Supports percentage progress and `progressFormat="fraction"` for completed/enabled step counts such as `1/3`. The `showPercentage` input controls visibility
+  for both formats; explicit `progressValue` overrides only the percentage and progress bar.
 - Uses Blocks semantic colors, shared glass and lighting, translation support, and configurable CSS variables. Non-card variants keep transparent selected
   backgrounds with marker/label hover feedback. Disabled steps are visibly muted; read-only presentation retains focus and progress with neutral markers.
 - Includes roving keyboard navigation, RTL support, accessible status descriptions, predictable wizard focus, and shared reduced-motion/transparency and
@@ -93,3 +92,63 @@ navigation's reduced-motion and keyboard-focus behavior.
 
 See the [Stepper guide](../../../projects/blocks/navigation/components/stepper/README.md) for public imports, runnable examples, configuration, and
 accessibility.
+
+## Material and motion refinement
+
+- Stepper markers and connectors now receive the existing engine's directional and ambient light independently of their emission. Current filled indicators emit
+  more strongly than tonal completed or neutral inactive indicators; errors receive restrained additional emphasis. Card surfaces retain their backing.
+- Rounded stepper highlights use semantic color mixed with the theme surface instead of an enlarged dark hover shadow; the traveling accent has no drop shadow.
+- Segment tracks retain a continuous, brighter fill without extra inner geometry. Descendant emission origins paint their registered rim as well as illuminating
+  neighbors. Error contours take precedence over cached ambient tint; semantic changes request urgent marker-lighting refresh.
+- Circular step indicators use the shared pressure spring for squash and recovery. A persistent selection accent travels between committed markers in both axes
+  and stretches modestly along its velocity. Cards use an in-place border/rim response without travel across unconnected cards. Completion fills remain separate
+  from active navigation. Rejected guards and unconfirmed controlled requests never advance the animated selection.
+- Tabs use one persistent lit selection surface with spring position/size interpolation and bounded velocity stretch. Pointer/touch dragging previews the
+  surface continuously and selects the nearest enabled tab on release. Escape, cancellation, outside release and stale gestures restore committed selection. New
+  `dragSelection` defaults to true; false restores native horizontal swipe scrolling. Click and keyboard selection remain available.
+- Added optional `bxSurfaceEmissionStrength` / runtime `emissionStrength` (0–2, default 1) without changing reception, pressure feedback, or existing defaults.
+  Added runtime `createSpringMotion`, `ISpringMotion`, `MOTION_PRESETS`, and `paintMotionStyles`, reusing the exact spring and shared lazy frame clock. Existing
+  design tokens and theme scales remain intact; no dependency or competing lighting renderer was added.
+- Live reduced motion snaps travel/fills and removes deformation. Reduced transparency independently uses existing opaque fallbacks. Native semantics, disabled
+  states, focus outlines, and committed selection remain authoritative. Motion controllers and observers stop on teardown.
+- Review `/components/stepper` and `/components/tabs`, including rapid selection, variable widths, overflow, dynamic tabs, guards, vertical layouts and the
+  independent accessibility settings in `/appearance`. The reviewed pilot direction also informs the shared rollout below.
+
+## Shared motion rollout
+
+- Recorded the reviewed material and interaction principles in `AGENTS.md`. Segment steppers retain continuous, brighter fills; cards keep local feedback.
+- Sliders and range sliders now use bounded velocity stretch and pressure recovery while preserving immediate native values and pointer precision. Range
+  deformation decreases as thumbs approach. Thumb and fill use the same received-light context; no new lens or palette was introduced.
+- Slide toggles retarget the shared checked-position spring, with bounded stretch, existing engine pressure response, stronger checked-state emission and RTL
+  travel. Initial state and live reduced motion snap without entrance movement. Buttons keep labels/icons undistorted and refine material pressure feedback
+  inside stationary hit areas.
+- Added reusable runtime `mountSelectionMotion`, `ISelectionMotion`, and `ISelectionMotionOptions` for one lit surface behind enabled menu/option rows. Menus,
+  selects, multi-selects and autocomplete share pointer/keyboard movement while preserving disabled states, selected values, checkmarks and focus outlines.
+- Shared overlay motion now combines retargetable opacity with a restrained 0.985–1 scale, preserving collision-aware positioning transforms. Dropdowns, context
+  menus, tooltips, select panels, autocomplete and popovers reuse the same controller. `IGlassTransitionOptions.scale: 1` retains opacity-only motion.
+  Autocomplete/popover exit makes old panels inert immediately and cancels stale completion on reopening or destruction.
+- Centered modals use restrained scale and opacity instead of growing content from zero. Larger side/sheet surfaces use a calmer shared curve; side entrance
+  frames clean up on close and destruction. Toasts use smaller travel and restrained settling with their existing coordinated stack collapse.
+- Collapsibles/accordions gain interruptible grid-height transitions, immediate inert/accessibility state, and local trigger material feedback. Initial
+  rendering and reduced motion remain immediate. Passive tags keep their established shape; their actions and pagination controls inherit button feedback.
+  Existing side-navigation width/reveal behavior remains the reference for larger navigation surfaces.
+- Existing theme tokens, palette roles, async data ownership, guards, and public selection contracts are retained. Shared CSS curves live in the existing motion
+  Sass helper; no dependency or parallel lighting system was added. Relevant guides and existing Playground examples document the behavior and review controls.
+
+### Interaction review refinements
+
+- Pointer hover on menu/option rows is immediate, with a clearly visible semantic danger backing. Keyboard focus can retain spatial settling; pointer hover
+  never waits for a traveling spring.
+- Removed button-label squeezing and offsets. The former `--bx-button-press-compression` and `--bx-button-press-offset` effects no longer apply; migrate their
+  overrides to supported material settings. Text and icons remain undistorted while the backing/rim responds to pressure.
+- Sliders and range sliders enlarge their existing magnifier while held, then spring back to a fully opaque resting thumb. Native values and centers remain
+  direct. Range enlargement respects actual pixel clearance to the neighboring thumb, without measuring layout on each input event. Reduced motion and
+  opaque-surface fallbacks remain independent.
+
+### Tab overflow and disclosure timing
+
+- Isolated tab-selection deformation in a clipped decorative layer. A separate viewport scrolls the actual tab row, preventing artificial horizontal scrollbar
+  changes during spring travel, including nested code-file tabs in the modal configurator. Genuine overflow, keyboard scrolling and drag edge scrolling remain
+  available.
+- Reduced collapsible/accordion height transitions from 220ms to 120ms. `--bx-collapsible-duration` optionally customizes the duration; live reduced motion
+  still removes the transition immediately.

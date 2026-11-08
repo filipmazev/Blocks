@@ -28,9 +28,17 @@ import type { IAutocompleteCompletionOptionState } from '@forms/interfaces/iauto
 import type { IAutocompleteFilteredOptionsState } from '@forms/interfaces/iautocomplete-filtered-options-state.interface';
 import type { IAutocompleteResolvedOptionsState } from '@forms/interfaces/iautocomplete-resolved-options-state.interface';
 
-import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+import {
+  BX_I18N,
+  BxA11yService,
+  BxOverlayPositionService,
+  inheritOverlayTheme,
+  ResolvableText,
+  resolveText,
+  trackOverlayOrigin
+} from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
+import { createGlassTransition, inheritGlassLighting, ISelectionMotion, mountSelectionMotion } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { BX_OVERLAY_CONTEXT, LoadingIndicator, LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
 
@@ -66,6 +74,7 @@ import { ILoadMoreRequest } from '@forms/interfaces/iload-more-request.interface
 })
 export class Autocomplete extends BxValueControl<string> {
   private readonly i18n = inject(BX_I18N, { optional: true });
+  private readonly bxA11yService = inject(BxA11yService);
   private readonly overlay = inject(Overlay);
   private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
   private readonly viewContainerRef = inject(ViewContainerRef);
@@ -211,9 +220,17 @@ export class Autocomplete extends BxValueControl<string> {
   private subscriptions: Subscription = new Subscription();
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
+  private selectionMotion?: ISelectionMotion;
+  private transition?: ReturnType<typeof createGlassTransition>;
+  private presentationRevision: number = 0;
 
   constructor() {
     super();
+    effect(() => {
+      const reducedMotion = this.bxA11yService.isReducedMotion();
+
+      this.selectionMotion?.update({ reducedMotion });
+    });
     this.destroyRef.onDestroy(() => this.dispose());
     effect(() => {
       if ((this.effectiveDisabled() || this.isReadonly()) && this.isOpen()) this.close();
@@ -227,7 +244,9 @@ export class Autocomplete extends BxValueControl<string> {
 
   /** Open the component's overlay using its current configuration and shared positioning/focus mechanisms. */
   public open(): void {
-    if (!this.browser || this.isOpen() || this.effectiveDisabled() || this.isReadonly()) return;
+    if (!this.browser || this.destroyRef.destroyed || this.isOpen() || this.effectiveDisabled() || this.isReadonly()) return;
+
+    if (this.overlayRef) this.dispose();
 
     const origin = this.anchor().nativeElement;
     const overlay = this.overlay.create({
@@ -265,10 +284,17 @@ export class Autocomplete extends BxValueControl<string> {
 
     view.detectChanges();
     overlay.updatePosition();
+
+    const list = overlay.overlayElement.querySelector<HTMLElement>('[role="listbox"]');
+
+    if (list) this.selectionMotion = this.ngZone.runOutsideAngular(() => mountSelectionMotion(list, { reducedMotion: this.bxA11yService.isReducedMotion() }));
+
+    this.transition = this.ngZone.runOutsideAngular(() => createGlassTransition(origin, overlay.overlayElement));
+    void this.ngZone.runOutsideAngular(() => this.transition?.enter());
     this.openedChange.emit(true);
   }
 
-  /** Close the component's overlay and apply its configured focus-restoration behavior. */
+  /** Report closed state and restore owned focus immediately; retain an inert panel through exit and discard stale completion after reopening. */
   public close(): void {
     if (!this.isOpen()) return;
 
@@ -276,7 +302,21 @@ export class Autocomplete extends BxValueControl<string> {
 
     if (pane?.contains(pane.ownerDocument.activeElement)) this.focus({ preventScroll: true });
 
-    this.dispose();
+    const revision = ++this.presentationRevision;
+
+    this.opened.set(false);
+
+    if (pane) pane.inert = true;
+
+    const finish = (): void => {
+      if (revision === this.presentationRevision) this.dispose();
+    };
+
+    const transition = this.transition;
+
+    if (transition && !this.bxA11yService.isReducedMotion()) void this.ngZone.runOutsideAngular(() => transition.exit()).then(finish, finish);
+    else finish();
+
     this.openedChange.emit(false);
   }
 
@@ -454,6 +494,11 @@ export class Autocomplete extends BxValueControl<string> {
   }
 
   private dispose(): void {
+    ++this.presentationRevision;
+    this.selectionMotion?.destroy();
+    this.selectionMotion = undefined;
+    this.transition?.destroy();
+    this.transition = undefined;
     this.opened.set(false);
     this.activeIndex.set(-1);
     this.subscriptions.unsubscribe();

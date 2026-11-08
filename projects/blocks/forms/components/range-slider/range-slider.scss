@@ -9,6 +9,7 @@
     --bx-slider-lens-end: var(--bx-range-end);
     --bx-slider-lens-track-color: var(--bx-bg-neutral);
     --bx-slider-fill-display: none;
+    --bx-slider-stretch-limit: clamp(0, (var(--bx-range-end) - var(--bx-range-start)) * 0.5, 0.065);
 
     position: relative;
     block-size: spacing(10);

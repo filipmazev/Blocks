@@ -45,6 +45,12 @@ is selected. A previously requested `'off'` remains off and continues to prevent
 
 ## Global material and theme contract
 
+Per-surface `emissionOrigin` optionally names a descendant selector for the visible light source. `emissionStrength` is a local 0–2 multiplier, defaulting to
+the historical strength of 1. It affects the emitted rim and neighboring illumination while leaving environmental reception and pressure feedback unchanged.
+These local settings are not application-wide appearance configuration. Existing callers need no migration. Registered descendant origins also paint the emitted
+rim through their existing surface controller; unregistered origins supply bounds and retain host rim painting. `refreshGlassLighting(element, true)` urgently
+resamples and snaps environmental colors for committed semantic changes; the omitted second argument preserves smooth lighting updates.
+
 The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component's border radius, size and
 layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.
 
@@ -142,21 +148,20 @@ more deliberate scene is needed. Gradient-backed reflectors can supply an explic
 
 ## Overlay fades
 
-Overlays fade in over 180 ms and out over 140 ms using the Web Animations API. Their dimensions, clipping and text size remain unchanged. The fade composites
-the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop
-root that cuts off the page behind the glass. Native opacity interpolation avoids per-frame style mutations and lighting invalidation. Reversing an active fade
-continues from its current opacity; the interrupted promise resolves to `cancelled`.
+Overlays use the shared retargetable spring for opacity and a restrained material scale, keeping layout dimensions and collision-aware positioning unchanged.
+The first material surface animates its own opacity and scale; the positioning pane retains its transform. Controller-owned paint avoids invalidating unrelated
+lighting receivers. Reversal preserves current position and velocity, and the interrupted promise resolves to `cancelled`.
 
-The transition temporarily owns the first material surface’s `opacity` and the target’s `visibility`. If no material is present, it fades the target. The
-overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both
-endpoints must belong to the same document. `refresh()` remains a compatibility no-op because a fade requires no geometry measurements.
+The transition temporarily owns the skin's `opacity`, `scale`, and `transform-origin`, plus the target's `visibility`. Without a material skin it animates the
+target. Supply an already positioned target and destroy the controller with its overlay. Both endpoints must belong to the same document. `refresh()` updates
+the scale origin after an overlay-positioning flip. Reduced motion snaps to the requested state without a running spring.
 
 ## Press feedback
 
 The delegated pointer and keyboard handlers drive the existing pressure spring, including a visible initial response for quick taps. A soft inset sheen sits
-within the material’s fixed clipping box. `--bx-glass-press` on the host exposes the current pressure to component content; Blocks buttons use it for a small
-compression without moving their hit area or overlay origin. Controller-owned pressure writes are excluded from scene invalidation, so a press does not resample
-the entire document every frame.
+within the material’s fixed clipping box. `--bx-glass-press` exposes current pressure to decorative material. Button text and icons remain undistorted, and the
+hit area and overlay origin stay fixed. Controller-owned pressure writes are excluded from scene invalidation, so a press does not resample the entire document
+every frame.
 
 Pointer cancellation, matching key release, focus loss during a keyboard press, document/window blur, disabled state, and teardown clear pressure. Touch does
 not latch hover emission, typing in a field does not activate keyboard pressure, and Space on a native link keeps its normal scrolling behavior. Reduced motion
@@ -233,3 +238,54 @@ Active borders stay painted when surfaces are partly clipped by the viewport, a 
 preserves their lighting without a fade. A partly exposed source can still emit, but each receiving interior/edge location must be uncovered. A visible area
 elsewhere on a receiver does not authorize light through an overlapping opaque panel. Fully covered surfaces remain excluded. Whole-source exposure checks share
 a short-lived cache and use bounded fallback probes only when the preferred point is covered; projected receiver points use separate visibility checks.
+
+## Retargetable selection motion
+
+`createSpringMotion(initial, render, options?)` builds scalar channels over the existing exact damped spring and shared lazy frame clock. The callback receives
+positions and velocities per second. `retarget(values, immediate = false)` preserves current velocity; `immediate: true` snaps, clears velocity and unsubscribes
+from frames. The initial and target arrays must contain the same number of finite values; invalid targets throw `RangeError` before changing any channel.
+`destroy()` stops animation permanently. Owners must destroy the controller and snap when their live reduced-motion preference changes. Without a browser
+animation clock, targets paint immediately. Settled channels leave no running frame loop; the scheduler bounds frame deltas after stalls.
+
+```ts
+import { createSpringMotion, MOTION_PRESETS, paintMotionStyles } from '@filip.mazev/blocks/effects/runtime';
+
+const motion = createSpringMotion(
+    [0, 100],
+    ([x, width]) => {
+        paintMotionStyles(selection, { transform: `translateX(${x}px)`, width: `${width}px` }, true);
+    },
+    MOTION_PRESETS.fluid
+);
+
+motion.retarget([160, 140]);
+// When reduced motion becomes active, snap the current destination:
+motion.retarget([160, 140], true);
+// When the owning view is destroyed:
+motion.destroy();
+```
+
+`paintMotionStyles(element, styles, geometry = false)` writes decorative CSS properties without invalidating unrelated lighting receivers. Pass `true` when
+moving/resizing a registered surface so its own lighting geometry is refreshed through the existing engine. The owner must restore any persistent element's
+styles if it outlives its motion view. The pilots remove their decorative surfaces with their views.
+
+`MOTION_PRESETS` exports `snappy`, `smooth`, `soft`, `elastic`, and `fluid` stiffness/damping/mass defaults, checked against `ISpringOptions`. Callers can
+supply custom spring options. These are motion characteristics, not new CSS theme tokens. The pilots cap deformation separately and remove it under reduced
+motion. Inspect `/components/stepper` and `/components/tabs`; use `/appearance` for accessibility and theme combinations. The same foundations serve sliders,
+toggles, menus and overlays.
+
+## Shared row and overlay motion
+
+`mountSelectionMotion(root, { selector?, reducedMotion? })` adds one noninteractive surface behind an existing `role="menu"` or `role="listbox"` container. The
+default selector is `[role="menuitem"], [role="option"]`. Disabled rows and nested lists are excluded. Pointer hover snaps immediately; actual focus and
+`aria-selected` changes may spring without changing selection. The controller remeasures dynamic/scrolling content, bounds stretch, and releases its observers
+and surface renderer on `destroy()`. Omitted motion policy follows live inherited/system preferences; call `update({ reducedMotion })` to change an explicit
+application override. Use a div container with unrestricted children. Set `--bx-selection-surface` to customize the backing; defaults use existing semantic
+hover/error surfaces. Focus rings and persistent selection/checkmarks remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this
+at their existing Playground routes.
+
+`createGlassTransition` now uses the shared retargetable spring for opacity and restrained scale. `IGlassTransitionOptions.scale` is the closed scale, clamped
+from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. The controller preserves the overlay's positioning transform, follows the opening side,
+restores owned styles, cancels superseded promises, and snaps on live reduced motion. `refresh()` updates its scale origin after a positioning flip. Existing
+enter/exit/destroy contracts remain available. Native CSS `motion-easing()` presets from `core/styles/helpers` supply restrained curves where continuous physics
+is unnecessary, including large modal surfaces and toast stack collapse. These Sass curves add no CSS token scale or generator-owned token changes.

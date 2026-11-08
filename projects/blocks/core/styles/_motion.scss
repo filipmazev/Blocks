@@ -1,5 +1,19 @@
+@use 'sass:map';
+
 @mixin bx-transition($property, $duration, $easing) {
     transition-property: #{$property};
     transition-duration: calc(#{$duration} * (1 - var(--bx-reduced-motion, 0)));
     transition-timing-function: #{$easing};
+}
+
+$motion-easings: (
+    snappy: linear(0, 0.32 12%, 0.78 30%, 0.97 52%, 1.012 70%, 1),
+    smooth: linear(0, 0.18 12%, 0.58 32%, 0.87 56%, 0.98 78%, 1),
+    soft: linear(0, 0.1 14%, 0.42 36%, 0.76 62%, 0.94 82%, 1),
+    elastic: linear(0, 0.4 16%, 0.9 40%, 1.025 66%, 0.997 86%, 1),
+    fluid: linear(0, 0.22 12%, 0.66 34%, 0.94 58%, 1.012 78%, 1)
+);
+
+@function motion-easing($preset: smooth) {
+    @return map.get($motion-easings, $preset);
 }

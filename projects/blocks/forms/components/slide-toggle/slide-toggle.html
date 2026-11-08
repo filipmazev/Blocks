@@ -33,9 +33,11 @@
             (change)="onToggle($event)"
             (blur)="onBlur()" />
         <div
+            #track
             class="bx-slide-toggle-track"
             bxSurface
             [bxSurfaceEmission]="showError() ? 'var(--bx-text-danger)' : 'var(--bx-accent)'"
+            [bxSurfaceEmissionStrength]="displayedChecked() ? 1.1 : 0.35"
             [class.is-checked]="displayedChecked()"
             [class.is-invalid]="showError()">
             <div class="bx-slide-toggle-thumb"></div>

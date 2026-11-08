@@ -54,6 +54,13 @@ focus states, or semantic control states.
 
 Use for immediate settings, with a label describing the enabled state. The native checkbox retains keyboard behavior and checked state.
 
+### Motion and material response
+
+The thumb retargets the shared elastic spring when the displayed checked state changes, including programmatic and deferred form updates. Velocity stretch and
+the engine's pressure response are bounded inside a stationary switch track. RTL uses the logical starting edge. The checked surface emits more strongly than
+the neutral track without increasing reception. Initial render snaps; live reduced motion snaps to the current state and removes deformation. Disabled and
+readonly behavior remains owned by the form control. Inspect `/components/slide-toggle` and `/appearance`.
+
 ## Playground
 
 Open `/components/slide-toggle` for a working example and its current value or action result.

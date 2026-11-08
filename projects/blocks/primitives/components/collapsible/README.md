@@ -62,6 +62,13 @@ between the heading and content. Accordion items share this appearance.
 Native button activation, aria-expanded and aria-controls connect the heading and panel. Hidden panels are inert. Programmatic collapse moves contained focus to
 the heading. Optional regions avoid filling the page with unnecessary landmarks.
 
+### Motion and material response
+
+After initialization, disclosure height uses a quick 120ms grid transition (customizable with `--bx-collapsible-duration`) that follows dynamic content. Rapid
+expand/collapse changes retarget the current layout. Closed content is immediately inert and hidden from accessibility APIs while its visual height settles;
+projected content stays mounted and lazy content follows the existing expanded-only lifecycle. The trigger keeps its title undistorted and uses local material
+feedback. Initial rendering and live reduced motion use immediate state changes. Inspect `/components/collapsible` and `/components/accordion`.
+
 ## Playground
 
 `/components/collapsible` includes live examples and shared appearance controls.

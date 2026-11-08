@@ -28,3 +28,10 @@ pixels. Reduced transparency, increased contrast and unsupported backdrop filter
 
 Native `[formField]` binding is supported alongside existing Angular form directives. `discrete` adds a formatted visible value; `displayWith(value)` controls
 that label. `showTickMarks` adds bounded native tick metadata. For a pair of values use [RangeSlider](../../components/range-slider/README.md).
+
+## Behavior and accessibility
+
+Native values, thumb centers, and fill endpoints update immediately. Holding enlarges the existing magnifying lens, with capped velocity stretch; release
+springs back to a fully opaque resting thumb; motion never delays the native value. The lens and fill share the existing engine's received lighting. Pointer
+cancellation, blur, hidden documents, disabled/readonly changes, and destruction release gesture state. Live reduced motion clears deformation and stops its
+clock. Existing glass/opaque fallbacks remain independent. Inspect `/components/slider` with rapid drags and `/appearance` for accessibility settings.

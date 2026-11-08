@@ -1,9 +1,22 @@
-import type { InputSignal, InputSignalWithTransform, ModelSignal, Signal } from '@angular/core';
+import type { InputSignal, InputSignalWithTransform, ModelSignal, Signal, WritableSignal } from '@angular/core';
 
 import { NgTemplateOutlet } from '@angular/common';
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, model, TemplateRef } from '@angular/core';
+import {
+  afterNextRender,
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  model,
+  signal,
+  TemplateRef
+} from '@angular/core';
 
-import { BX_I18N, ResolvableText, resolveText, uuidv4 } from '@filip.mazev/blocks/core';
+import { BX_I18N, BxA11yService, ResolvableText, resolveText, uuidv4 } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 
@@ -22,7 +35,11 @@ export class Collapsible {
   private readonly coordinator = inject(BX_ACCORDION_COORDINATOR, { optional: true });
   private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
+  protected readonly bxA11yService = inject(BxA11yService);
+
   private readonly generatedId: string = 'bx-collapsible-' + uuidv4();
+
+  protected readonly hasRendered: WritableSignal<boolean> = signal(false);
 
   protected readonly resolvedTitle: Signal<string> = computed(() => resolveText(this.title(), this.i18n));
   protected readonly level: Signal<number> = computed(() =>
@@ -66,10 +83,11 @@ export class Collapsible {
   public readonly region: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 
   constructor() {
+    afterNextRender(() => this.hasRendered.set(true));
     effect(() => {
       if (this.expanded()) return;
 
-      const panel = this.nativeElement.querySelector<HTMLElement>('.bx-collapsible-content');
+      const panel = this.nativeElement.querySelector<HTMLElement>('.bx-collapsible-reveal');
 
       if (panel?.contains(this.nativeElement.ownerDocument.activeElement)) this.focus();
     });

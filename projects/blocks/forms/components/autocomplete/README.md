@@ -93,6 +93,13 @@ The playground includes a runnable mock service with delayed initial/search/incr
 and a compact page-size control for exercising overflow transitions. Its load-more/error/retry footer shares the select/multi-select styling, with tonal accent
 actions. Source: `projects/playground/src/app/components/screens/library-components/essentials-examples/services/autocomplete-demo.service.ts`.
 
+### Motion and material response
+
+Suggestions use the shared overlay opacity/scale spring and a persistent surface following the active descendant or hovered enabled option. Typing and keyboard
+navigation retain their existing focus and selection contracts. Closing immediately reports the closed state, makes the old panel inert, and releases it after
+exit; reopening or destruction cancels stale completion. Reduced motion closes immediately. Async filtering and pagination remain application-owned. Inspect
+`/components/autocomplete` with rapid edits, keyboard selection, pending results, and `/appearance` settings.
+
 ## Playground
 
 `/components/autocomplete` includes live examples and shared appearance controls.

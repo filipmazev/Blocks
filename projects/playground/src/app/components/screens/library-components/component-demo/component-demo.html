@@ -220,20 +220,30 @@
                     }
                     @case ('slider') {
                         <div class="demo-stack control-width">
+                            <p>Drag quickly to compare immediate native precision with the thumb's bounded stretch and release settling.</p>
                             <label for="volume-demo">Volume</label
                             ><input bxSlider id="volume-demo" type="range" min="0" max="100" [formControl]="volume" /><output>{{ volume.value }}%</output
                             ><button type="button" bx-button (click)="volume.setValue(50)">Reset volume</button
                             ><label for="disabled-volume">Unavailable range</label><input bxSlider id="disabled-volume" type="range" value="30" disabled />
+                            <div class="demo-row">
+                                <button bx-button type="button" (click)="volume.setValue(20)">20%</button
+                                ><button bx-button type="button" (click)="volume.setValue(80)">80%</button>
+                            </div>
                         </div>
                     }
                     @case ('slide-toggle') {
                         <div class="demo-stack">
+                            <p>
+                                Toggle repeatedly or use the programmatic action while the thumb is moving. Appearance settings control reduced motion
+                                independently of opacity.
+                            </p>
                             <bx-slide-toggle
                                 label="Enable notifications"
                                 hint="Receive updates for important activity."
                                 [formControl]="enabled" /><bx-slide-toggle label="Unavailable setting" [formControl]="disabledCheck" /><output
                                 >Notifications are {{ enabled.value ? 'enabled' : 'disabled' }}.</output
                             >
+                            <button bx-button type="button" (click)="enabled.setValue(!enabled.value)">Toggle programmatically</button>
                         </div>
                     }
                     @case ('error') {
@@ -257,7 +267,10 @@
                     }
                     @case ('tabs') {
                         <div class="demo-stack">
-                            <bx-tabs ariaLabel="Project information" [variant]="tabsVariant()" [(selectedValue)]="selectedTab">
+                            <p>
+                                Switch quickly between unequal labels, resize the viewport, and use Appearance settings to compare motion and opaque surfaces.
+                            </p>
+                            <bx-tabs #pilotTabs ariaLabel="Project information" [variant]="tabsVariant()" [(selectedValue)]="selectedTab">
                                 <bx-tab label="Overview" value="overview" icon="book-open">
                                     <ng-template bxTabContent
                                         ><p>Keep related information together while showing one panel at a time.</p>
@@ -277,7 +290,7 @@
                                 </bx-tab>
                                 @if (showActivity()) {
                                     <bx-tab
-                                        label="Activity"
+                                        label="Recent project activity"
                                         value="activity"
                                         color="info"
                                         textColor="text-warn"
@@ -288,6 +301,13 @@
                                     >
                                 }
                                 <bx-tab label="Unavailable" value="unavailable" [disabled]="true" />
+                                @if (overflowTabs()) {
+                                    @for (index of extraTabs; track index) {
+                                        <bx-tab [label]="'Additional panel ' + index" [value]="'extra-' + index"
+                                            ><p>Panel {{ index }} keeps navigation reachable through the scrolling header.</p></bx-tab
+                                        >
+                                    }
+                                }
                             </bx-tabs>
                             <div class="demo-row">
                                 <button
@@ -316,6 +336,13 @@
                                 </button>
                             </div>
                             <output>Selected: {{ selectedTab() }}</output>
+                            <div class="demo-row">
+                                <button bx-button type="button" (click)="pilotTabs.select('overview')">Select overview</button>
+                                <button bx-button type="button" [disabled]="!showActivity()" (click)="pilotTabs.select('activity')">Select activity</button>
+                                <button bx-button type="button" [attr.aria-pressed]="overflowTabs()" (click)="overflowTabs.set(!overflowTabs())">
+                                    Overflow tabs
+                                </button>
+                            </div>
                         </div>
                     }
                     @case ('menu') {
