@@ -5,24 +5,29 @@
         <div class="progress-summary">
             <span>{{ summary() }}</span>
             @if (showPercentage()) {
-                <span>{{ progress().toFixed(0) }}%</span>
+                <span class="progress-value" dir="ltr">{{ progressDisplay() }}</span>
             }
         </div>
         <bx-progress-bar [value]="progress()" [label]="text().label" />
     }
-    <ol class="step-list">
-        @for (row of rows(); track row.step.id; let index = $index) {
-            <li
-                class="step-item"
-                [attr.data-status]="row.status"
-                [class.is-current]="row.step.id === selectedStep()?.id"
-                [class.is-complete]="row.complete"
-                [class.is-awaiting-confirmation]="row.awaitingConfirmation"
-                [class.is-unavailable]="unavailable(row.step)">
-                <ng-container [ngTemplateOutlet]="stepBody" [ngTemplateOutletContext]="{ $implicit: row, index }" />
-            </li>
-        }
-    </ol>
+    <div class="step-scroll">
+        <ol #stepList class="step-list">
+            @for (row of rows(); track row.step.id; let index = $index) {
+                <li
+                    class="step-item"
+                    [attr.data-status]="row.status"
+                    [class.is-current]="row.step.id === selectedStep()?.id"
+                    [class.is-complete]="row.complete"
+                    [class.is-awaiting-confirmation]="row.awaitingConfirmation"
+                    [class.is-unavailable]="unavailable(row.step)">
+                    @if (variant() === 'steps' && !$last) {
+                        <span #connector class="step-connector" aria-hidden="true"></span>
+                    }
+                    <ng-container [ngTemplateOutlet]="stepBody" [ngTemplateOutletContext]="{ $implicit: row, index }" />
+                </li>
+            }
+        </ol>
+    </div>
 </div>
 
 <ng-template #stepBody let-row let-index="index">
@@ -66,7 +71,7 @@
 </ng-template>
 
 <ng-template #visual let-row let-index="index">
-    <span class="marker" aria-hidden="true">
+    <span #marker class="marker" aria-hidden="true">
         @if (row.status === 'loading') {
             <bx-loading-spinner [size]="markerIconSize()" [decorative]="true" />
         } @else if (row.status === 'error') {

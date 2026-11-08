@@ -1,5 +1,13 @@
 import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
-import type { IStepDefinition, StepperMode, StepperOrientation, StepperResponsive, StepperSize, StepperVariant } from '@filip.mazev/blocks/navigation';
+import type {
+  IStepDefinition,
+  StepperMode,
+  StepperOrientation,
+  StepperProgressFormat,
+  StepperResponsive,
+  StepperSize,
+  StepperVariant
+} from '@filip.mazev/blocks/navigation';
 
 export const STEPPER_MODES: readonly IBxSelectOption<StepperMode>[] = [
   { label: 'Indicator', value: 'indicator' },
@@ -28,4 +36,9 @@ export const STEPPER_GALLERY_STEPS: readonly IStepDefinition[] = [
   { id: 'plan', label: 'Plan', completed: true },
   { id: 'build', label: 'Build' },
   { id: 'ship', label: 'Ship', optional: true }
+];
+
+export const STEPPER_PROGRESS_FORMATS: readonly IBxSelectOption<StepperProgressFormat>[] = [
+  { label: 'Percentage (33%)', value: 'percentage' },
+  { label: 'Completed steps (1/3)', value: 'fraction' }
 ];

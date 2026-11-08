@@ -15,6 +15,7 @@ import type {
   StepperGuard,
   StepperMode,
   StepperOrientation,
+  StepperProgressFormat,
   StepperResponsive,
   StepperSize,
   StepperVariant
@@ -31,6 +32,7 @@ import {
   STEPPER_GALLERY_STEPS,
   STEPPER_MODES,
   STEPPER_ORIENTATIONS,
+  STEPPER_PROGRESS_FORMATS,
   STEPPER_RESPONSIVE,
   STEPPER_SECTIONS,
   STEPPER_SIZE_OPTIONS,
@@ -74,6 +76,7 @@ export class StepperExamples {
 
   protected readonly modes: typeof STEPPER_MODES = STEPPER_MODES;
   protected readonly variants: typeof STEPPER_VARIANT_OPTIONS = STEPPER_VARIANT_OPTIONS;
+  protected readonly progressFormats: typeof STEPPER_PROGRESS_FORMATS = STEPPER_PROGRESS_FORMATS;
   protected readonly sizes: typeof STEPPER_SIZE_OPTIONS = STEPPER_SIZE_OPTIONS;
   protected readonly orientations: typeof STEPPER_ORIENTATIONS = STEPPER_ORIENTATIONS;
   protected readonly responsiveOptions: typeof STEPPER_RESPONSIVE = STEPPER_RESPONSIVE;
@@ -86,6 +89,7 @@ export class StepperExamples {
 
   protected readonly mode: WritableSignal<StepperMode> = signal<StepperMode>('navigation');
   protected readonly variant: WritableSignal<StepperVariant> = signal<StepperVariant>('steps');
+  protected readonly progressFormat: WritableSignal<StepperProgressFormat> = signal<StepperProgressFormat>('percentage');
   protected readonly size: WritableSignal<StepperSize> = signal<StepperSize>('md');
   protected readonly orientation: WritableSignal<StepperOrientation> = signal<StepperOrientation>('horizontal');
   protected readonly responsive: WritableSignal<StepperResponsive> = signal<StepperResponsive>('compact');
@@ -95,7 +99,6 @@ export class StepperExamples {
   protected readonly controlledActive: WritableSignal<string | null> = signal<string | null>('plan');
   protected readonly status: WritableSignal<string> = signal('Use the controls to explore presentation and behavior.');
   protected readonly sectionStatus: WritableSignal<string> = signal('Choose a section or scroll the content. The application confirms the active ID.');
-  protected readonly draft: WritableSignal<string> = signal('');
   protected readonly wizardStatus: WritableSignal<string> = signal('Enter a workspace name, then continue.');
   protected readonly nextOutcome: WritableSignal<'allow' | 'reject' | 'fail'> = signal('allow');
   protected readonly policy: WritableSignal<StepperContentPolicy> = signal<StepperContentPolicy>('retained');

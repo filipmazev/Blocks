@@ -7,6 +7,7 @@ export type StepperVariant = 'steps' | 'segments' | 'dots' | 'progress' | 'cards
 export type StepperSize = 'sm' | 'md' | 'lg';
 export type StepperOrientation = 'horizontal' | 'vertical';
 export type StepperResponsive = 'scroll' | 'vertical' | 'compact';
+export type StepperProgressFormat = 'percentage' | 'fraction';
 export type StepperContentPolicy = 'eager' | 'retained' | 'active';
 export type StepperSelectionMode = 'internal' | 'controlled';
 export type StepperSource = 'pointer' | 'keyboard' | 'programmatic' | 'controls';

@@ -76,6 +76,50 @@ describe('Stepper', () => {
     expect(component.progress()).toBe(100);
   });
 
+  it('shows completed/enabled step fractions without counting the active position or disabled steps', async () => {
+    fixture.componentRef.setInput('variant', 'progress');
+    fixture.componentRef.setInput('showPercentage', true);
+    fixture.componentRef.setInput('steps', [{ ...steps[0], completed: true }, ...steps.slice(1)]);
+    fixture.componentRef.setInput('activeStep', 'review');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('33%');
+    fixture.componentRef.setInput('progressFormat', 'fraction');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('1/3');
+    fixture.componentRef.setInput('progressValue', 42);
+    await fixture.whenStable();
+    expect(component.progress()).toBe(42);
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('1/3');
+    fixture.componentRef.setInput('progressFormat', 'percentage');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('42%');
+    fixture.componentRef.setInput('showPercentage', false);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value')).toBeNull();
+  });
+
+  it('updates fraction counts after completion changes and renders empty totals safely', async () => {
+    fixture.componentRef.setInput('variant', 'progress');
+    fixture.componentRef.setInput('showPercentage', true);
+    fixture.componentRef.setInput('progressFormat', 'fraction');
+    fixture.componentRef.setInput('steps', [
+      { ...steps[0], completed: true },
+      { ...steps[1], skipped: true },
+      { ...steps[2], completed: true }
+    ]);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('1/2');
+    fixture.componentRef.setInput('steps', [
+      { ...steps[0], completed: true },
+      { ...steps[1], completed: true }
+    ]);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('2/2');
+    fixture.componentRef.setInput('steps', []);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.progress-value').textContent.trim()).toBe('0/0');
+  });
+
   it('preserves IDs across reorder and falls back safely when the active step disappears or is disabled', async () => {
     fixture.componentRef.setInput('activeStep', 'review');
     fixture.componentRef.setInput('steps', [...steps].reverse());

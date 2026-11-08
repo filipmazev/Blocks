@@ -3653,7 +3653,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '0.5', 'var(--bx-alert-light-opacity, 0.32)']
+    defaults: ['0', '0.5', '1', 'var(--bx-alert-light-opacity, 0.32)']
   },
   {
     name: '--bx-glass-edge',
@@ -3680,7 +3680,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-collapsible-border, var(--bx-border-default))',
       'var(--bx-popover-border, var(--bx-border-default))',
       'var(--bx-tag-border, var(--bx-tag-role-border))',
-      'var(--bx-text-secondary)'
+      'var(--bx-text-secondary)',
+      'var(--step-state-border)'
     ]
   },
   {
@@ -3974,7 +3975,14 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '0.15', '0.45', 'calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469))', 'var(--bx-tag-outline-opacity, 0.12)']
+    defaults: [
+      '0',
+      '0.15',
+      '0.45',
+      'calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469))',
+      'var(--bx-glass-material-opacity)',
+      'var(--bx-tag-outline-opacity, 0.12)'
+    ]
   },
   {
     name: '--bx-glass-press',
@@ -4015,6 +4023,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-popover-radius, 0.75rem)',
       'var(--bx-rounded-lg, 0.75rem)',
       'var(--bx-rounded-sm, 0.25rem)',
+      'var(--bx-stepper-card-radius, 0.5rem)',
       'var(--bx-tag-radius, 0.25rem)'
     ]
   },
@@ -4061,7 +4070,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['1']
+    defaults: ['0', '1']
   },
   {
     name: '--bx-glass-rim-visibility',
@@ -4109,6 +4118,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     defaults: [
       'color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface))',
+      'transparent',
       'var(--btn-selected-surface, var(--bx-bg-neutral-active))',
       'var(--btn-theme-active)',
       'var(--btn-theme-base)',
@@ -4136,6 +4146,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-modal-bg, var(--bx-panel-bg, var(--bx-bg-surface)))',
       'var(--bx-panel-bg, var(--bx-modal-bg, var(--bx-bg-surface)))',
       'var(--bx-popover-background, var(--bx-bg-surface))',
+      'var(--bx-stepper-card-background, var(--bx-bg-surface))',
       'var(--bx-tag-background, var(--bx-bg-surface))',
       'var(--bx-tag-background, var(--bx-tag-role-fill))',
       'var(--bx-tag-background, var(--bx-tag-role-tonal))',
@@ -4150,6 +4161,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     defaults: [
+      'inherit',
       'var(--btn-theme-active-text, var(--btn-theme-text))',
       'var(--btn-theme-hover-text, var(--btn-theme-text))',
       'var(--btn-theme-text)',
@@ -4805,8 +4817,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 progress',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    defaults: ['var(--step-color)']
   },
   {
     name: '--bx-progress-height',
@@ -4814,8 +4826,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 progress',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    defaults: ['var(--step-thickness)']
   },
   {
     name: '--bx-progress-radius',
@@ -5913,6 +5925,132 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     reference: 'var(--bx-stack-gap)',
     category: 'components',
     group: 'Component \u00B7 stack',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-card-background',
+    reference: 'var(--bx-stepper-card-background)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-card-radius',
+    reference: 'var(--bx-stepper-card-radius)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-color',
+    reference: 'var(--bx-stepper-color)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-compact-active-width',
+    reference: 'var(--bx-stepper-compact-active-width)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-connector-thickness',
+    reference: 'var(--bx-stepper-connector-thickness)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-dot-size',
+    reference: 'var(--bx-stepper-dot-size)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-gap',
+    reference: 'var(--bx-stepper-gap)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-marker-radius',
+    reference: 'var(--bx-stepper-marker-radius)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-marker-size',
+    reference: 'var(--bx-stepper-marker-size)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-on-color',
+    reference: 'var(--bx-stepper-on-color)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-padding',
+    reference: 'var(--bx-stepper-padding)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-segment-length',
+    reference: 'var(--bx-stepper-segment-length)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-segment-radius',
+    reference: 'var(--bx-stepper-segment-radius)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    defaults: []
+  },
+  {
+    name: '--bx-stepper-thickness',
+    reference: 'var(--bx-stepper-thickness)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
     kind: 'value',
     scope: 'runtime',
     defaults: []

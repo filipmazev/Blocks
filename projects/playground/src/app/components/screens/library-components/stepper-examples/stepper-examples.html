@@ -16,12 +16,16 @@
             [surfaceEffects]="lighting()"
             [labels]="labels"
             [showPercentage]="true"
+            [progressFormat]="progressFormat()"
             [(activeStep)]="active"
             (stepRequested)="mode() !== 'wizard' && confirmPreview($event)" />
         <div class="config-grid">
             <bx-select label="Current step (activeStep ID)" [clearable]="false" [options]="currentStepOptions()" [(ngModel)]="active" />
             <bx-select label="Behavior" [clearable]="false" [options]="modes" [(ngModel)]="mode" />
             <bx-select label="Variant" [clearable]="false" [options]="variants" [(ngModel)]="variant" />
+            @if (variant() === 'progress') {
+                <bx-select label="Progress display" [clearable]="false" [options]="progressFormats" [(ngModel)]="progressFormat" />
+            }
             <bx-select label="Size" [clearable]="false" [options]="sizes" [(ngModel)]="size" />
             <bx-select label="Orientation" [clearable]="false" [options]="orientations" [(ngModel)]="orientation" />
             <bx-select label="Narrow screens" [clearable]="false" [options]="responsiveOptions" [(ngModel)]="responsive" />
@@ -159,8 +163,6 @@
         <bx-stepper #custom mode="wizard" variant="cards" [steps]="dynamicSteps()" [linear]="false" [controls]="false" [labels]="labels" />
         <ng-template #dynamicContent>
             <p>Active step: {{ custom.selectedStep()?.label }}. Component state follows stable IDs when definitions change.</p>
-            <bx-input-field label="Application-owned draft" [(ngModel)]="draft" />
-            <bx-banner [message]="'Current draft: ' + (draft() || 'Empty')" />
         </ng-template>
         <div class="actions">
             <button bx-button type="button" (click)="custom.previous()">Back</button>

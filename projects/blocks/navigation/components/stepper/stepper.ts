@@ -17,6 +17,7 @@ import {
   output,
   signal,
   untracked,
+  viewChild,
   viewChildren
 } from '@angular/core';
 
@@ -34,6 +35,7 @@ import type {
   StepperGuard,
   StepperMode,
   StepperOrientation,
+  StepperProgressFormat,
   StepperResponsive,
   StepperSelectionMode,
   StepperSize,
@@ -124,8 +126,12 @@ export class Stepper {
     return destination && !this.unavailable(destination) ? destination.id : null;
   });
 
+  private readonly stepList: Signal<ElementRef<HTMLOListElement> | undefined> = viewChild<ElementRef<HTMLOListElement>>('stepList');
+
   private readonly projectedSteps: Signal<readonly Step[]> = contentChildren(Step);
 
+  private readonly markers: Signal<readonly ElementRef<HTMLElement>[]> = viewChildren<ElementRef<HTMLElement>>('marker');
+  private readonly connectors: Signal<readonly ElementRef<HTMLElement>[]> = viewChildren<ElementRef<HTMLElement>>('connector');
   private readonly triggers: Signal<readonly ElementRef<HTMLButtonElement>[]> = viewChildren<ElementRef<HTMLButtonElement>>('trigger');
   private readonly panels: Signal<readonly ElementRef<HTMLElement>[]> = viewChildren<ElementRef<HTMLElement>>('panel');
 
@@ -177,6 +183,16 @@ export class Stepper {
     const resolved = resolveText(source, this.i18n, params);
 
     return resolved.replace(/\{(index|count|label|percent)\}/g, (_, key: keyof typeof params) => String(params[key]));
+  });
+  protected readonly progressDisplay: Signal<string> = computed(() => {
+    if (this.progressFormat() === 'percentage') return `${this.progress().toFixed(0)}%`;
+
+    this.validationRevision();
+
+    const enabled = this.definitions().filter((step) => !step.disabled);
+    const completed = enabled.filter((step) => this.stepperWorkflowService.isComplete(step)).length;
+
+    return `${completed}/${enabled.length}`;
   });
   protected readonly announcement: Signal<string> = computed(() => {
     if (this.isComplete()) return this.text().completed;
@@ -256,7 +272,9 @@ export class Stepper {
   public readonly completionContent: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown>>();
   /** Optional partial completion percentage on a 0–100 scale. Omission derives actual completed steps, excluding disabled steps. */
   public readonly progressValue: InputSignal<number | undefined> = input<number>();
-  /** Shows completion percentage beside the position summary. Defaults to false. */
+  /** Completion counter format: percentage (default) or completed/enabled steps as X/N. Fractions use actual completion, independent of progressValue. */
+  public readonly progressFormat: InputSignal<StepperProgressFormat> = input<StepperProgressFormat>('percentage');
+  /** Shows the completion counter beside the position summary; progressFormat selects percentage or fraction. Defaults to false. */
   public readonly showPercentage: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Translatable labels; individual instance values override BX_STEPPER_DEFAULTS and English defaults. */
   public readonly labels: InputSignal<Partial<IStepperLabels>> = input<Partial<IStepperLabels>>({});
@@ -314,6 +332,40 @@ export class Stepper {
           this.feedback.set(null);
         }
       });
+    });
+
+    afterRenderEffect((onCleanup) => {
+      const list = this.stepList()?.nativeElement;
+      const markers = this.markers().map((marker) => marker.nativeElement);
+      const connectors = this.connectors().map((connector) => connector.nativeElement);
+      const view = list?.ownerDocument.defaultView;
+
+      this.rows();
+      this.size();
+      this.orientation();
+      this.responsive();
+      this.showLabels();
+      this.showDescriptions();
+
+      if (!list || !connectors.length || !view) return;
+
+      const measure = (): void => this.positionConnectors(list, markers, connectors);
+
+      measure();
+
+      if (!view.ResizeObserver) return;
+
+      const observer = new view.ResizeObserver(measure);
+
+      observer.observe(list);
+
+      for (const marker of markers) {
+        observer.observe(marker);
+
+        if (marker.parentElement?.parentElement) observer.observe(marker.parentElement.parentElement);
+      }
+
+      onCleanup(() => observer.disconnect());
     });
 
     afterRenderEffect(() => {
@@ -442,6 +494,56 @@ export class Stepper {
   }
 
   //#region Helpers
+
+  private positionConnectors(list: HTMLElement, markers: readonly HTMLElement[], connectors: readonly HTMLElement[]): void {
+    const view = list.ownerDocument.defaultView;
+
+    if (!view || !list.isConnected) return;
+
+    const style = view.getComputedStyle(list);
+    const vertical = style.flexDirection === 'column';
+    const rtl = style.direction === 'rtl';
+    const bounds = markers.map((marker) => marker.getBoundingClientRect());
+    const owners = connectors.map((connector) => connector.parentElement?.getBoundingClientRect());
+    const placements = owners.map((owner, index) => {
+      const from = bounds[index];
+      const to = bounds[index + 1];
+
+      if (!owner || !from || !to) return null;
+
+      const center = rtl ? owner.right - from.right + from.width / 2 : from.left - owner.left + from.width / 2;
+
+      if (vertical) {
+        return [
+          `calc(${center}px - var(--step-connector) / 2)`,
+          `calc(${from.bottom - owner.top}px + var(--step-endpoint-gap))`,
+          'var(--step-connector)',
+          `max(0px, calc(${to.top - from.bottom}px - 2 * var(--step-endpoint-gap)))`
+        ];
+      }
+
+      const distance = rtl ? from.left - to.right : to.left - from.right;
+
+      return [
+        `calc(${center + from.width / 2}px + var(--step-endpoint-gap))`,
+        `calc(${from.top - owner.top + from.height / 2}px - var(--step-connector) / 2)`,
+        `max(0px, calc(${distance}px - 2 * var(--step-endpoint-gap)))`,
+        'var(--step-connector)'
+      ];
+    });
+
+    connectors.forEach((connector, index) => {
+      const placement = placements[index];
+
+      if (!placement) return;
+
+      connector.style.insetInlineStart = placement[0];
+      connector.style.insetBlockStart = placement[1];
+      connector.style.inlineSize = placement[2];
+      connector.style.blockSize = placement[3];
+      connector.style.visibility = 'visible';
+    });
+  }
 
   private status(step: IStepDefinition): StepperStatus {
     if (step.disabled) return 'disabled';

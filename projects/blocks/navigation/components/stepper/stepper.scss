@@ -11,7 +11,6 @@
     --step-on-color: var(--bx-stepper-on-color, var(--bx-on-accent));
     --step-indicator-width: var(--step-marker);
     --step-indicator-height: var(--step-marker);
-    --step-inset: calc(var(--step-padding) + 1px);
     --step-endpoint-gap: #{spacing(2)};
 
     display: flex;
@@ -46,21 +45,33 @@
 }
 
 .step-header,
+.step-scroll,
 .step-panels,
 .step-panel {
     min-inline-size: 0;
     max-inline-size: 100%;
 }
 
-.step-list {
-    display: flex;
-    gap: var(--step-gap);
-    margin: 0;
-    padding: spacing(1);
-    list-style: none;
+.step-scroll {
+    position: relative;
+
+    // IMPORTANT: Keep WebKit overlay scrollbars below composited glass surfaces and focus outlines.
+    padding-block-end: spacing(3);
+    isolation: isolate;
     overflow: auto;
     overscroll-behavior-inline: contain;
     scrollbar-width: thin;
+}
+
+.step-list {
+    display: flex;
+    gap: var(--step-gap);
+    box-sizing: border-box;
+    min-inline-size: 100%;
+    inline-size: max-content;
+    margin: 0;
+    padding: spacing(1);
+    list-style: none;
 }
 
 .step-item {
@@ -73,36 +84,6 @@
     flex: 1 0 8rem;
     min-inline-size: 0;
 
-    &:not(:first-child)::before,
-    &:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        inset-block-start: calc(var(--step-inset) + (var(--step-indicator-height) - var(--step-connector)) / 2);
-        inset-inline-start: calc(50% + var(--step-indicator-width) / 2 + var(--step-endpoint-gap));
-        inline-size: calc(50% + var(--step-gap) / 2 - var(--step-indicator-width) / 2 - var(--step-endpoint-gap));
-        block-size: var(--step-connector);
-        border-radius: radius(pill);
-        background: var(--bx-border-default);
-        pointer-events: none;
-    }
-
-    &:not(:first-child)::before {
-        inset-inline-start: calc(var(--step-gap) / -2);
-    }
-
-    &.is-complete + .step-item::before {
-        background: var(--step-color);
-    }
-
-    &.is-complete[data-status='error'] + .step-item::before {
-        background: var(--bx-bg-danger);
-    }
-
-    &.is-complete::after {
-        background: var(--step-state-color);
-    }
-
     &[data-status='error'] {
         --step-state-color: var(--bx-bg-danger);
         --step-state-text: var(--bx-text-danger);
@@ -113,6 +94,20 @@
     &.is-unavailable .step-body {
         opacity: 0.5;
     }
+}
+
+.step-connector {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    border-radius: radius(pill);
+    background: var(--bx-border-default);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.is-complete .step-connector {
+    background: var(--step-state-color);
 }
 
 .step-body {
@@ -481,31 +476,16 @@ button.step-body {
     }
 }
 
-:host(:not([data-variant='steps'])) .step-item::before,
-:host(:not([data-variant='steps'])) .step-item::after {
-    display: none;
-}
-
 @mixin vertical-layout {
     @include row-body;
 
     .step-list {
         flex-direction: column;
+        inline-size: 100%;
     }
 
     .step-item {
         flex: 0 0 auto;
-
-        &::before {
-            display: none;
-        }
-
-        &:not(:last-child)::after {
-            inset-block-start: calc(var(--step-inset) + var(--step-indicator-height) + var(--step-endpoint-gap));
-            inset-inline-start: calc(var(--step-inset) + (var(--step-indicator-width) - var(--step-connector)) / 2);
-            inline-size: var(--step-connector);
-            block-size: calc(100% + var(--step-gap) - var(--step-indicator-height) - 2 * var(--step-endpoint-gap));
-        }
     }
 }
 
@@ -594,8 +574,7 @@ button.step-body {
         color: CanvasText;
     }
 
-    .step-item::before,
-    .step-item::after {
+    .step-connector {
         background: CanvasText;
         forced-color-adjust: none;
     }

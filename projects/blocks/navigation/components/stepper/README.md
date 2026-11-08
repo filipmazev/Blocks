@@ -219,35 +219,49 @@ form values, explicit step overrides and form touched state remain application-o
 emits `completed` once until reset and may replace the panels with `completionContent`. Viewing the final step alone does not finish the workflow. Percentage
 represents completed enabled steps, so skipped optional steps intentionally need not yield 100%; supply `progressValue` for a different business metric.
 
+### Progress counter formats
+
+Show the completion counter at the top right of the progress variant with `showPercentage`. Existing usage continues to show percentages. Set
+`progressFormat="fraction"` to display completed enabled steps as `X/N`, for example `1/3` instead of `33%`:
+
+```html
+<bx-stepper variant="progress" [steps]="steps" [(activeStep)]="active" [showPercentage]="true" progressFormat="fraction" />
+```
+
+Both formats describe completion rather than the current position. Disabled steps are excluded, skipped steps do not count as complete, and an empty enabled
+step set displays `0/0`. `progressValue` overrides the percentage and bar only; the fraction always counts actual completed steps. Hide either counter format
+with `showPercentage="false"`.
+
 ## API
 
 ### Stepper inputs and models
 
-| Member                 | Type                         | Default / behavior                               |
-| ---------------------- | ---------------------------- | ------------------------------------------------ |
-| `mode`                 | `StepperMode`                | `indicator`, `navigation`, `wizard`              |
-| `steps`                | `readonly IStepDefinition[]` | Omitted for projected definitions                |
-| `activeStep`           | `model<string \| null>`      | `null`; stable ID with two-way binding           |
-| `variant`              | `StepperVariant`             | `steps`, `segments`, `dots`, `progress`, `cards` |
-| `size`                 | `StepperSize`                | `md`; also `sm`, `lg`                            |
-| `orientation`          | `StepperOrientation`         | `horizontal`; also `vertical`                    |
-| `responsive`           | `StepperResponsive`          | `scroll`; also `vertical`, `compact`             |
-| `showLabels`           | `boolean`                    | `true`                                           |
-| `showDescriptions`     | `boolean`                    | `true`                                           |
-| `indicatorInteractive` | `boolean`                    | `false`                                          |
-| `readOnly`, `readonly` | `boolean`                    | `false`; either blocks user/API edits            |
-| `linear`               | `boolean`                    | `true`; requires completed predecessors          |
-| `selectionMode`        | `StepperSelectionMode`       | `internal`; also `controlled`                    |
-| `beforeTransition`     | `StepperGuard`               | Optional application guard                       |
-| `controls`             | `boolean`                    | `true` in wizard mode only                       |
-| `contentPolicy`        | `StepperContentPolicy`       | `retained`; also `eager`, `active`               |
-| `focusOnChange`        | `boolean`                    | `true` for wizard panels only                    |
-| `completionContent`    | `TemplateRef<unknown>`       | Optional application completion view             |
-| `progressValue`        | `number`                     | Optional explicit 0–100 completion percentage    |
-| `showPercentage`       | `boolean`                    | `false`; progress presentation                   |
-| `labels`               | `Partial<IStepperLabels>`    | Shared defaults, then English                    |
-| `glassiness`           | Shared `GlassinessMode`      | Inherits global appearance for cards             |
-| `surfaceEffects`       | `boolean`                    | `true`; interactive step lighting                |
+| Member                 | Type                         | Default / behavior                                   |
+| ---------------------- | ---------------------------- | ---------------------------------------------------- |
+| `mode`                 | `StepperMode`                | `indicator`, `navigation`, `wizard`                  |
+| `steps`                | `readonly IStepDefinition[]` | Omitted for projected definitions                    |
+| `activeStep`           | `model<string \| null>`      | `null`; stable ID with two-way binding               |
+| `variant`              | `StepperVariant`             | `steps`, `segments`, `dots`, `progress`, `cards`     |
+| `size`                 | `StepperSize`                | `md`; also `sm`, `lg`                                |
+| `orientation`          | `StepperOrientation`         | `horizontal`; also `vertical`                        |
+| `responsive`           | `StepperResponsive`          | `scroll`; also `vertical`, `compact`                 |
+| `showLabels`           | `boolean`                    | `true`                                               |
+| `showDescriptions`     | `boolean`                    | `true`                                               |
+| `indicatorInteractive` | `boolean`                    | `false`                                              |
+| `readOnly`, `readonly` | `boolean`                    | `false`; either blocks user/API edits                |
+| `linear`               | `boolean`                    | `true`; requires completed predecessors              |
+| `selectionMode`        | `StepperSelectionMode`       | `internal`; also `controlled`                        |
+| `beforeTransition`     | `StepperGuard`               | Optional application guard                           |
+| `controls`             | `boolean`                    | `true` in wizard mode only                           |
+| `contentPolicy`        | `StepperContentPolicy`       | `retained`; also `eager`, `active`                   |
+| `focusOnChange`        | `boolean`                    | `true` for wizard panels only                        |
+| `completionContent`    | `TemplateRef<unknown>`       | Optional application completion view                 |
+| `progressValue`        | `number`                     | Optional explicit 0–100 completion percentage        |
+| `showPercentage`       | `boolean`                    | `false`; shows the progress counter in either format |
+| `progressFormat`       | `StepperProgressFormat`      | `percentage` (default) or `fraction` (`X/N`)         |
+| `labels`               | `Partial<IStepperLabels>`    | Shared defaults, then English                        |
+| `glassiness`           | Shared `GlassinessMode`      | Inherits global appearance for cards                 |
+| `surfaceEffects`       | `boolean`                    | `true`; interactive step lighting                    |
 
 ### Step metadata
 
@@ -294,10 +308,11 @@ Final completion requires all enabled required steps even in non-linear mode.
 
 ## Appearance and customization
 
-Sizes change marker diameter, segment thickness, spacing, typography and surface padding. Connectors remain thin and solid. Interactive controls retain a
-minimum 44 CSS pixel target. Segments use different thicknesses for `sm`, `md` and `lg`. Dots use compact filled, hollow and checked indicators; progress uses
-actual completion rather than active position. Dots measure 1.25 / 1.5 / 1.75rem across the size presets so status symbols have clear interior spacing. Step
-icons and spinners scale to 16 / 18 / 20 CSS pixels. Vertical progress keeps a horizontal continuous completion bar above its vertical step list.
+Sizes change marker diameter, segment thickness, spacing, typography and surface padding. Connectors remain thin and solid, with flush inner joins at fractional
+widths and unequal compact-step sizes. Interactive controls retain a minimum 44 CSS pixel target. Segments use different thicknesses for `sm`, `md` and `lg`.
+Dots use compact filled, hollow and checked indicators; progress uses actual completion rather than active position. Dots measure 1.25 / 1.5 / 1.75rem across
+the size presets so status symbols have clear interior spacing. Step icons and spinners scale to 16 / 18 / 20 CSS pixels. Vertical progress keeps a horizontal
+continuous completion bar above its vertical step list.
 
 | CSS custom property                 | Default                                                     |
 | ----------------------------------- | ----------------------------------------------------------- |
@@ -355,6 +370,7 @@ Status announcements cover loading, validation refusal, guard refusal, failures 
 repeated live announcement. `BxA11yService` and shared surface/progress/spinner policies handle live reduced-motion preferences. Semantic tokens, logical CSS
 and forced-colors rules preserve readable state across themes, RTL and accessibility modes.
 
+The step list scrolls inside a separate wrapper with space below its surfaces for native horizontal scrollbars, including WebKit overlay scrollbars.
 `responsive="scroll"` preserves labels with a reachable horizontal scroll region. `vertical` changes the list at the shared `sm` breakpoint. `compact` hides
 supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
 state during server rendering. Content wraps for long translations and constrained containers.
