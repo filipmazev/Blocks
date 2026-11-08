@@ -263,8 +263,9 @@ focus. A submenu consumes Escape before the drawer does. Resizing out of mobile 
 viewport observation are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key
 changes, without cross-tab synchronization.
 
-The fixed mobile drawer follows the visible viewport height and offset while open, including browser chrome, keyboard, and restored-page changes. Closing or
-switching presentation releases those listeners and restores the default panel geometry.
+The fixed mobile drawer follows the layout viewport while open, including window resizing and restored-page changes. Opening the search keyboard does not shrink
+or shift the drawer to the smaller visual viewport; the keyboard covers the lower portion instead. Closing or switching presentation releases the viewport
+listeners and restores the default panel geometry.
 
 For an inline mobile preview, use a positioned shell (`position: relative`) with a minimum height and `overflow: hidden`. Its drawer and scrim stay inside that
 shell and do not lock page scrolling. Off-screen drawer content is clipped without creating a scroll container, and focus capture uses `preventScroll` to keep

@@ -266,22 +266,17 @@ export class SideNav {
       const height = panel.style.height;
 
       this.ngZone.runOutsideAngular(() => {
-        // Match SidePanel's visible-viewport geometry when browser chrome or the keyboard moves it.
         const update = () => {
-          panel.style.top = `${view.visualViewport?.offsetTop ?? 0}px`;
-          panel.style.height = `${view.visualViewport?.height ?? view.innerHeight}px`;
+          panel.style.top = '0px';
+          panel.style.height = `${view.innerHeight}px`;
         };
 
         update();
         view.addEventListener('resize', update);
         view.addEventListener('pageshow', update);
-        view.visualViewport?.addEventListener('resize', update);
-        view.visualViewport?.addEventListener('scroll', update);
         onCleanup(() => {
           view.removeEventListener('resize', update);
           view.removeEventListener('pageshow', update);
-          view.visualViewport?.removeEventListener('resize', update);
-          view.visualViewport?.removeEventListener('scroll', update);
           panel.style.top = top;
           panel.style.height = height;
         });
@@ -302,7 +297,6 @@ export class SideNav {
 
           if (this.navigationStateService.revealItemId()) this.navigationFocusService.restore(true, false, false);
 
-          // CDK's automatic capture scrolls clipped ancestors to an off-screen right drawer during its slide.
           this.focusTrap()?.focusTrap.focusInitialElement({ preventScroll: true });
         },
         { injector: this.injector }
@@ -314,14 +308,15 @@ export class SideNav {
       this.presentation();
 
       untracked(() => {
-        // Presentation changes establish the closed geometry before an explicit open animates it.
         this.drawerAnimated.set(false);
         this.menuCascadeService.closeAll();
 
         if (this.mobileOpen()) this.close();
       });
     });
+
     effect(() => this.layoutChange.emit(this.layout()));
+
     this.navigationStateService.expansionRequested.pipe(takeUntilDestroyed()).subscribe((request) => this.openChildren(request));
     this.navigationStateService.activated.pipe(takeUntilDestroyed()).subscribe((item) => {
       ++this.renderRevision;
@@ -330,6 +325,7 @@ export class SideNav {
 
       if (this.isMobile()) this.close();
     });
+
     this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
       if (event instanceof NavigationEnd) {
         ++this.renderRevision;
@@ -338,6 +334,7 @@ export class SideNav {
         if (this.mobileOpen()) this.close();
       }
     });
+
     this.destroyRef.onDestroy(() => {
       this.scrollLockService.enableScroll(this.lockId);
     });
@@ -548,7 +545,6 @@ export class SideNav {
     const endTime = transition?.effect?.getComputedTiming().endTime;
     const currentTime = transition?.currentTime;
 
-    // Use the remaining animation time and overlap its final 60ms with the reveal instead of starting another full-duration wait after rendering.
     return typeof endTime === 'number' && typeof currentTime === 'number' ? Math.max(0, endTime - currentTime - 60) : 0;
   }
 
