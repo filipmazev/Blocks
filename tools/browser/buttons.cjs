@@ -181,6 +181,32 @@ test('reduced transparency and high contrast keep glass buttons opaque', async (
   for (const color of await backgrounds(page, '.preview-icon-button')) assert.equal(alpha(color), 1, color);
 });
 
+test('selected buttons retain a contour or underline without translucent lighting', async (t) => {
+  for (const mode of ['light', 'dark']) {
+    const page = await pageFor(t, mode);
+    await page.getByRole('switch', { name: 'Reduce transparency', exact: true }).locator('..').click();
+    await page.goto(origin + '/components/button');
+    await page.locator('.demo-stage .bx-btn-filled[data-bx-surface]').first().waitFor();
+    for (const variant of ['filled', 'tonal', 'icon', 'text']) {
+      const button = page.locator('.demo-stage .bx-btn-' + variant + ':not([disabled], [aria-disabled="true"])').first();
+      const resting = await button.evaluate((element) => getComputedStyle(element).boxShadow);
+      await button.evaluate((element) => element.setAttribute('aria-pressed', 'true'));
+      await page.waitForTimeout(250);
+      const selected = await button.evaluate((element) => ({
+        opaque: element.getAttribute('data-bx-reduced-transparency'),
+        shadow: getComputedStyle(element).boxShadow,
+        underline: getComputedStyle(element).textDecorationLine
+      }));
+      assert.equal(selected.opaque, 'true');
+      if (variant === 'text') assert.match(selected.underline, /underline/);
+      else {
+        assert.notEqual(selected.shadow, resting);
+        assert.match(selected.shadow, /inset/);
+      }
+    }
+  }
+});
+
 test('filled actions remain solid and text actions stay transparent at minimum translucency', async (t) => {
   const page = await pageFor(t);
   await translucency(page, 0);

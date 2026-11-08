@@ -1,9 +1,23 @@
 import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, input, OnDestroy, OnInit, output, signal, TemplateRef, viewChild } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  input,
+  OnDestroy,
+  output,
+  signal,
+  TemplateRef,
+  viewChild
+} from '@angular/core';
 
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { createSpringMotion, GestureVelocity, ISpringMotion, MOTION_PRESETS, projectMotion } from '@filip.mazev/blocks/effects/runtime';
 
 import { ModalConfig } from '@modal/classes/modal-config';
 import { ModalBanner } from '@modal/components/shared/ui/banner/modal-banner';
@@ -18,7 +32,8 @@ import * as bottomSheetConst from '@modal/constants/modal-bottom-sheet.constants
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './modal-bottom-sheet.scss'
 })
-export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDestroy {
+export class ModalBottomSheet<D = unknown, R = unknown> implements OnDestroy {
+  protected readonly hasInteracted: WritableSignal<boolean> = signal(false);
   protected readonly isSwipingVertically: WritableSignal<boolean> = signal(false);
 
   protected readonly modalTransform: Signal<string> = computed(() => {
@@ -61,150 +76,159 @@ export class ModalBottomSheet<D = unknown, R = unknown> implements OnInit, OnDes
   // eslint-disable-next-line @angular-eslint/no-output-native -- Preserve the public modal close event name.
   public readonly close: OutputEmitterRef<ModalCloseMode | undefined> = output<ModalCloseMode | undefined>();
 
-  protected downSwipeLimit: number = 0;
-  protected isTrackingSwipe: boolean = false;
-
-  private isTouchActive: boolean = false;
-  private bottomSheetInitiated: boolean = false;
   private cleanupListeners: (() => void) | null = null;
-  private globalResizeCleanup: (() => void) | null = null;
+  private cancelSwipe: (() => void) | undefined;
+  private returnMotion: ISpringMotion | undefined;
+  private suppressClick: boolean = false;
 
-  /** Initialize swipe-to-dismiss behavior and track touch versus precise-pointer input. */
-  public ngOnInit(): void {
-    this.startVerticalSwipeDetection();
-    this.monitorInputType();
+  constructor() {
+    afterNextRender(() => this.startVerticalSwipeDetection());
+    effect(() => {
+      if (this.config()?.disableClose || !this.isOpen() || this.isSwipingVerticallyFinished()) this.cancelSwipe?.();
+
+      if (!this.isAnimated()) this.returnMotion?.retarget([0], true);
+    });
   }
 
-  /** Remove swipe and viewport listeners owned by the bottom-sheet view. */
+  /** Remove swipe listeners and stop pending return motion when the view is destroyed. */
   public ngOnDestroy(): void {
-    this.stopVerticalSwipeDetection();
-    this.globalResizeCleanup?.();
+    this.cleanupListeners?.();
+    this.returnMotion?.destroy();
   }
 
   protected onDismissClick(event: MouseEvent): void {
-    if (!this.isTrackingSwipe || event.detail === 0) this.close.emit('cancel');
+    if (this.suppressClick && event.detail > 0) {
+      this.suppressClick = false;
+      event.preventDefault();
+
+      return;
+    }
+
+    if (!this.config()?.disableClose) this.close.emit('cancel');
   }
 
   //#region Helpers
 
   private startVerticalSwipeDetection(): void {
-    if (this.isTrackingSwipe) return;
-
-    const hasTouch = typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0);
-
-    if (!hasTouch) return;
-
-    this.initBottomSheetModalParams();
-    this.isTrackingSwipe = true;
-
     const target = this.verticalSwipeTarget()?.nativeElement;
+    const doc = target?.ownerDocument;
 
-    if (!target) return;
+    if (!target || !doc) return;
 
-    let limit = 0;
-
+    let pointerId: number | undefined;
     let startY = 0;
-    let startTime = 0;
-    let isPointerDown = false;
+    let offset = 0;
+    let moved = false;
+    let velocity: GestureVelocity | undefined;
 
-    const pointerDown = (event: PointerEvent) => {
-      if (this.config()?.disableClose) return;
+    const finish = (cancelled: boolean, timestamp: number): void => {
+      if (pointerId === undefined) return;
 
-      if (event.button !== 0 && event.pointerType === 'mouse') return;
+      const captured = pointerId;
+      const displacement = Math.max(0, this.currentTranslateY());
+      const speed = cancelled ? 0 : (velocity?.velocity(timestamp) ?? 0);
+      const height = this.elementRef()?.nativeElement.offsetHeight ?? 0;
+      const divisor = this.config()?.style?.mobileConfig?.downSwipeLimit;
+      const limit = height / (divisor && Number.isFinite(divisor) && divisor > 0 ? divisor : bottomSheetConst.MODAL_DOWN_SWIPE_LIMIT);
+      const dismiss = moved && !cancelled && !this.config()?.disableClose && projectMotion(displacement, speed, height / 2) > limit;
 
-      const modalHeight = this.elementRef()?.nativeElement.offsetHeight || 0;
+      pointerId = undefined;
+      this.isSwipingVertically.set(false);
+      this.suppressClick = moved;
 
-      limit = modalHeight / this.downSwipeLimit;
+      if (target.hasPointerCapture(captured)) target.releasePointerCapture(captured);
 
-      isPointerDown = true;
+      this.returnMotion?.destroy();
+      this.returnMotion = createSpringMotion([displacement], ([position]) => this.currentTranslateY.set(Math.max(0, position)), MOTION_PRESETS.snappy);
+      this.returnMotion.track([displacement], [speed]);
+      this.returnMotion.retarget([0], !this.isAnimated());
+
+      // The lifecycle host owns guards and the exit. Preview never dismisses an unconfirmed sheet.
+      if (dismiss) this.close.emit('cancel');
+    };
+
+    const cancel = (): void => finish(true, 0);
+    const pointerDown = (event: PointerEvent): void => {
+      if (!event.isPrimary || event.button !== 0 || pointerId !== undefined || this.config()?.disableClose || !this.isOpen()) return;
+
+      this.returnMotion?.destroy();
+      this.returnMotion = undefined;
+      pointerId = event.pointerId;
       startY = event.clientY;
-      startTime = event.timeStamp;
-
+      offset = this.currentTranslateY();
+      moved = false;
+      velocity = new GestureVelocity(event.clientY, event.timeStamp);
+      this.suppressClick = false;
+      this.hasInteracted.set(true);
       this.isSwipingVertically.set(true);
-
       target.setPointerCapture(event.pointerId);
     };
 
-    const pointerMove = (event: PointerEvent) => {
-      if (!isPointerDown) return;
+    const pointerMove = (event: PointerEvent): void => {
+      if (event.pointerId !== pointerId) return;
 
-      const currentY = event.clientY - startY;
+      if (this.config()?.disableClose) {
+        cancel();
+
+        return;
+      }
+
+      const distance = event.clientY - startY;
+
+      moved ||= Math.abs(distance) > 6;
+      velocity?.update(event.clientY, event.timeStamp);
 
       if (event.cancelable) event.preventDefault();
 
-      this.currentTranslateY.set(currentY);
+      this.currentTranslateY.set(Math.max(0, offset + distance));
     };
 
-    const pointerUp = (event: PointerEvent) => {
-      if (!isPointerDown) return;
+    const pointerUp = (event: PointerEvent): void => {
+      if (event.pointerId !== pointerId) return;
 
-      isPointerDown = false;
-      this.isSwipingVertically.set(false);
-      target.releasePointerCapture(event.pointerId);
-
-      const deltaY = event.clientY - startY;
-      const duration = event.timeStamp - startTime || 1;
-      const velocityY = deltaY / duration;
-
-      if (deltaY > limit || (velocityY > bottomSheetConst.MODAL_SWIPE_VELOCITY_THRESHOLD && deltaY > 0)) {
-        this.close.emit('cancel');
-      } else {
-        this.currentTranslateY.set(0);
-      }
+      pointerMove(event);
+      finish(false, event.timeStamp);
     };
 
-    target.addEventListener('pointerdown', pointerDown, { passive: false });
+    const pointerCancel = (event: PointerEvent): void => {
+      if (event.pointerId === pointerId) cancel();
+    };
+
+    const visibility = (): void => {
+      if (doc.hidden) cancel();
+    };
+
+    const keydown = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape' || pointerId === undefined) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      cancel();
+    };
+
+    this.cancelSwipe = cancel;
+    target.addEventListener('pointerdown', pointerDown);
     target.addEventListener('pointermove', pointerMove, { passive: false });
     target.addEventListener('pointerup', pointerUp);
-    target.addEventListener('pointercancel', pointerUp);
-
+    target.addEventListener('pointercancel', pointerCancel);
+    target.addEventListener('lostpointercapture', pointerCancel);
+    doc.addEventListener('keydown', keydown, true);
+    doc.addEventListener('visibilitychange', visibility);
+    doc.defaultView?.addEventListener('blur', cancel);
+    doc.defaultView?.addEventListener('resize', cancel);
     this.cleanupListeners = () => {
+      cancel();
+      this.cancelSwipe = undefined;
       target.removeEventListener('pointerdown', pointerDown);
       target.removeEventListener('pointermove', pointerMove);
       target.removeEventListener('pointerup', pointerUp);
-      target.removeEventListener('pointercancel', pointerUp);
+      target.removeEventListener('pointercancel', pointerCancel);
+      target.removeEventListener('lostpointercapture', pointerCancel);
+      doc.removeEventListener('keydown', keydown, true);
+      doc.removeEventListener('visibilitychange', visibility);
+      doc.defaultView?.removeEventListener('blur', cancel);
+      doc.defaultView?.removeEventListener('resize', cancel);
     };
-  }
-
-  private stopVerticalSwipeDetection(): void {
-    if (!this.isTrackingSwipe) return;
-
-    this.isTrackingSwipe = false;
-
-    if (this.cleanupListeners) {
-      this.cleanupListeners();
-      this.cleanupListeners = null;
-    }
-  }
-
-  private initBottomSheetModalParams(): void {
-    if (this.bottomSheetInitiated) return;
-
-    this.bottomSheetInitiated = true;
-
-    const config = this.config();
-    const style = config?.style?.mobileConfig;
-
-    this.downSwipeLimit = style?.downSwipeLimit && style.downSwipeLimit > 0 ? style.downSwipeLimit : bottomSheetConst.MODAL_DOWN_SWIPE_LIMIT;
-  }
-
-  private monitorInputType(): void {
-    if (this.globalResizeCleanup || typeof window === 'undefined') return;
-
-    const handler = (event: PointerEvent) => {
-      const isTouch = event.pointerType === 'touch';
-
-      if (isTouch && !this.isTouchActive) {
-        this.isTouchActive = true;
-        this.startVerticalSwipeDetection();
-      } else if (!isTouch && this.isTouchActive) {
-        this.isTouchActive = false;
-        this.stopVerticalSwipeDetection();
-      }
-    };
-
-    window.addEventListener('pointerdown', handler);
-    this.globalResizeCleanup = () => window.removeEventListener('pointerdown', handler);
   }
 
   //#endregion

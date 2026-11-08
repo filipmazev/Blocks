@@ -19,6 +19,10 @@
     min-block-size: spacing(10);
 }
 
+.theme-filter {
+    grid-column: 1 / -1;
+}
+
 bx-search-input {
     grid-column: 1 / -1;
 }
@@ -248,6 +252,10 @@ bx-search-input {
         grid-template-columns: minmax(12rem, 1fr) minmax(12rem, 22rem) auto;
     }
 
+    .theme-filter {
+        grid-column: 1 / -1;
+    }
+
     bx-search-input {
         grid-column: auto;
     }
@@ -276,4 +284,9 @@ bx-search-input {
     overflow-anchor: none;
     overscroll-behavior: contain;
     outline: none;
+}
+
+.category-option-label {
+    flex: 1;
+    text-align: start;
 }

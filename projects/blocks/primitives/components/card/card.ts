@@ -74,7 +74,7 @@ export class Card {
   public readonly headingLevel: InputSignal<number> = input(3);
   /** Card material/presentation variant using the shared Blocks semantic styles. Defaults to `'outlined'`. */
   public readonly variant: InputSignal<CardVariant> = input<CardVariant>('outlined');
-  /** Optional opaque presentation. Absent follows the global appearance. */
+  /** Optional opaque presentation. Absent follows global appearance; false cannot override an active global or operating-system reduced-transparency preference. */
   public readonly opaque: InputSignal<boolean | undefined> = input<boolean | undefined>(undefined);
   /** Whether the card mounts shared decorative surface effects. Defaults to true; false preserves the themed card styling for dense static collections. */
   public readonly surfaceEffects: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });

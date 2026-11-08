@@ -9,11 +9,11 @@
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: #{shadow(sm)};
-    --bx-glass-radius: var(--bx-rounded-lg, #{radius(lg)});
+    --bx-glass-radius: #{radius(lg)};
 
     background-color: var(--bx-glass-surface);
-    border: 1px solid var(--bx-glass-edge);
-    border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, #{radius(lg)}));
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius, #{radius(lg)});
     box-shadow: shadow(sm);
     padding: spacing(1);
     display: flex;
@@ -31,7 +31,7 @@
     }
 
     &.bx-menu-animated {
-        transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: transform 0.2s #{motion-easing(smooth)};
     }
 
     transform-origin: top;
@@ -44,7 +44,7 @@
 }
 
 :host([data-bx-surface]) {
-    border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, #{radius(lg)}));
+    border-radius: var(--bx-glass-radius, #{radius(lg)});
 
     --bx-glass-shadow: #{shadow(sm)};
 

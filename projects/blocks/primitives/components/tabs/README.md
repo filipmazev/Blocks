@@ -35,23 +35,23 @@ Use `variant="underline"` for file tabs or a full-width navigation strip. The de
 
 ## API
 
-| Declaration           | Input or method                 | Behavior                                                                                                    |
-| --------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `Tabs`                | `ariaLabel: ResolvableText`     | Accessible group name; defaults to `Tabs`.                                                                  |
-| `Tabs`                | `variant: TabsVariant`          | `segmented` or `underline`.                                                                                 |
-| `Tabs`                | `selectedValue: string \| null` | Two-way selection model with `selectedValueChange`.                                                         |
-| `Tabs`                | `select(value: string)`         | Selects an enabled tab by value.                                                                            |
-| `Tabs`                | `dragSelection: boolean`        | Defaults to true. Drag the selected surface with pointer or touch; release selects the nearest enabled tab. |
-| `Tab`                 | `label: ResolvableText`         | Required visible and accessible label.                                                                      |
-| `Tab`                 | `value: string`                 | Unique selection value.                                                                                     |
-| `Tab`                 | `disabled: boolean`             | Removes the tab from selection and keyboard navigation.                                                     |
-| `Tab`                 | `color: TabColor`               | `primary` (default), `accent`, `success`, `danger`, `info`, `warn`, or `grayscale`.                         |
-| `Tab`                 | `textColor: Color`              | Optional theme token for the header label and its icons.                                                    |
-| `Tab`                 | `highlightColor: Color`         | Overrides the selected tint, border, underline and emitted light. Defaults to the tab's color.              |
-| `Tab`                 | `contentColor: Color`           | Optional inherited text color for the panel's content.                                                      |
-| `Tab`                 | `icon: IconName`                | Optional leading Blocks icon.                                                                               |
-| `Tab`                 | `endIcon: IconName`             | Optional trailing Blocks icon.                                                                              |
-| `TabContentDirective` | `ng-template[bxTabContent]`     | Defers construction until selection and destroys the view when deselected.                                  |
+| Declaration           | Input or method                 | Behavior                                                                                                                |
+| --------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `Tabs`                | `ariaLabel: ResolvableText`     | Accessible group name; defaults to `Tabs`.                                                                              |
+| `Tabs`                | `variant: TabsVariant`          | `segmented` or `underline`.                                                                                             |
+| `Tabs`                | `selectedValue: string \| null` | Two-way selection model with `selectedValueChange`.                                                                     |
+| `Tabs`                | `select(value: string)`         | Selects an enabled tab by value.                                                                                        |
+| `Tabs`                | `dragSelection: boolean`        | Defaults to true. Drag with a pointer or hold then drag with touch; release selects using position and recent velocity. |
+| `Tab`                 | `label: ResolvableText`         | Required visible and accessible label.                                                                                  |
+| `Tab`                 | `value: string`                 | Unique selection value.                                                                                                 |
+| `Tab`                 | `disabled: boolean`             | Removes the tab from selection and keyboard navigation.                                                                 |
+| `Tab`                 | `color: TabColor`               | `primary` (default), `accent`, `success`, `danger`, `info`, `warn`, or `grayscale`.                                     |
+| `Tab`                 | `textColor: Color`              | Optional theme token for the header label and its icons.                                                                |
+| `Tab`                 | `highlightColor: Color`         | Overrides the selected tint, border, underline and emitted light. Defaults to the tab's color.                          |
+| `Tab`                 | `contentColor: Color`           | Optional inherited text color for the panel's content.                                                                  |
+| `Tab`                 | `icon: IconName`                | Optional leading Blocks icon.                                                                                           |
+| `Tab`                 | `endIcon: IconName`             | Optional trailing Blocks icon.                                                                                          |
+| `TabContentDirective` | `ng-template[bxTabContent]`     | Defers construction until selection and destroys the view when deselected.                                              |
 
 Labels accept strings or `{ key: 'translation.key' }` using `BX_I18N`. Removing or disabling the selected tab selects the first enabled tab. An empty or fully
 disabled group has no selected panel and a `null` model.
@@ -93,19 +93,27 @@ translucent tint and emits a restrained amount of its highlight color into nearb
 transitions apply to later interactions. Appearance settings and reduced motion follow `ThemingService` and `BxA11yService`, like other primitives. Forced
 colors use a visible selected outline.
 
+Reduced transparency gives the header and selected tint opaque fills. Foreground tab triggers leave that selection visible; hover uses a separate neutral fill.
+The selected shape and underline remain visible independently of text color, and live preference changes preserve selection, scrolling, and dragging.
+
 `--bx-tabs-panel-gap` customizes the space below the headers. Panels follow the page's natural scroll flow by default. For a bounded viewer, set
 `--bx-tabs-panel-overflow: auto` together with `--bx-tabs-max-panel-height` or a constrained group height to keep headers visible while content scrolls. Let the
 panel own scrolling instead of also adding scroll containers to nested code blocks. Header labels scroll horizontally only when the actual tab row exceeds the
-available width; the animated surface is clipped in a separate decorative layer so stretching and overshoot cannot create a scrollbar. the glass decoration sits
+available width; the animated surface is clipped in a separate decorative layer so stretching and overshoot cannot create a scrollbar. The glass decoration sits
 outside that scroll area.
 
 ## Keyboard and accessibility
 
-Press a header and drag horizontally to move the persistent selection surface. The surface interpolates its position and width between enabled headers, with
-bounded velocity stretch and pressure feedback. Panels, `selectedValue`, and ARIA selection remain committed until release. Release selects the nearest enabled
-header and focuses it. Escape, pointer cancellation, lost capture, window blur, vertical scrolling, or releasing outside the header cancels the preview. Changes
-to the tab list or external selection cancel stale gestures. Disabled tabs are never selected. Dragging near a scrolling header's edges advances its scroll
-position; the scrollbar, keyboard navigation, and ordinary click remain available. Set `[dragSelection]="false"` to prefer native horizontal swipe scrolling.
+Mouse and pen can press a header and drag immediately. Touch swipes retain native horizontal header scrolling and vertical page scrolling. Hold a tab for 200 ms
+before dragging to select instead; the material responds when the hold is ready. Pinch zoom and ordinary taps remain available. Set `[dragSelection]="false"` to
+disable selection dragging for every input without changing scrolling, clicks, or keyboard navigation.
+
+During selection dragging, the surface tracks the actual gesture and interpolates its width between enabled headers. Panels, `selectedValue`, and ARIA selection
+remain committed until release. A release projects recent velocity toward the nearest enabled header, bounded to a local tab span; a short pause removes
+momentum for precise placement. A flick can therefore reach the next tab before the pointer reaches its midpoint. The release spring retains gesture velocity.
+Escape, pointer cancellation, lost capture, window blur, vertical scrolling, or release beyond the header's vertical tolerance restores the committed selection.
+External selection, changed geometry and removed/disabled targets cancel stale gestures. Holding near an overflowing header's edges scrolls continuously using
+the shared frame clock. Release, cancellation and scroll boundaries stop that work.
 
 Programmatic changes and clicks use the same retargetable spring. Rapid changes preserve position and velocity, and variable-width headers resize the surface
 continuously. There is no entrance movement. Live reduced motion snaps selection and removes pressure/stretch while retaining direct manipulation and selected
@@ -124,5 +132,6 @@ unique generated IDs. Nested groups maintain independent selection and keyboard 
 Open `/components/tabs` for enabled and disabled tabs, dynamic selection, lazy content and both appearances. The modal and toast configurators also use Tabs for
 Documentation, Code Examples and source files.
 
-The pilot controls include unequal-width labels, programmatic selection, dynamic insertion/removal and an overflow list. Hold and drag a header to review
-selection tracking and release settling. Use `/appearance` for light/dark/custom palettes and independent reduced-motion and opaque-surface settings.
+The pilot controls include unequal-width labels, programmatic selection, dynamic insertion/removal and an overflow list. Compare quick touch swipes with
+hold-and-drag, slow placement with short flicks, and stationary edge scrolling. Use `/appearance` for light/dark/custom palettes and independent reduced-motion
+and opaque-surface settings.

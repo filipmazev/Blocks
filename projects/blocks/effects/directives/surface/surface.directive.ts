@@ -54,7 +54,7 @@ export class BxSurfaceDirective implements AfterViewInit {
   public readonly bxSurfaceFocusEmission: InputSignal<string | undefined> = input<string | undefined>();
   /**
    * Request opaque material for this surface; omission inherits application and system transparency preferences. Optional; omission leaves the value
-   * undefined.
+   * undefined. False cannot override an active application or operating-system reduced-transparency preference.
    */
   public readonly bxReducedTransparency: InputSignalWithTransform<boolean | undefined, unknown> = input<boolean | undefined, unknown>(undefined, {
     transform: optionalBoolean

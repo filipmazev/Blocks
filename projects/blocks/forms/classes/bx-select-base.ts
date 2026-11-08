@@ -514,8 +514,11 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   //#region Helpers
 
   private detachPanel(): void {
+    // Restore the positioning host before CDK detaches, then remove the panel in the same turn.
+    // Waiting for the signal to render would expose the transition's restored styles for a frame.
     this.onPanelDetach();
     this.isPanelAttached.set(false);
+    this.connectedOverlay()?.detachOverlay();
   }
 
   private typeahead(character: string): void {

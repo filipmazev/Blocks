@@ -263,6 +263,9 @@ focus. A submenu consumes Escape before the drawer does. Resizing out of mobile 
 viewport observation are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key
 changes, without cross-tab synchronization.
 
+The fixed mobile drawer follows the visible viewport height and offset while open, including browser chrome, keyboard, and restored-page changes. Closing or
+switching presentation releases those listeners and restores the default panel geometry.
+
 For an inline mobile preview, use a positioned shell (`position: relative`) with a minimum height and `overflow: hidden`. Its drawer and scrim stay inside that
 shell and do not lock page scrolling. Off-screen drawer content is clipped without creating a scroll container, and focus capture uses `preventScroll` to keep
 the surrounding content stationary during either slide direction. Keep the shell outside another `bxSurface`: Blocks intentionally disables blur for nested

@@ -108,7 +108,7 @@
     overflow: hidden;
     background: var(--bx-bg-surface);
     color: var(--bx-text-primary);
-    border: 1px solid var(--bx-border-default);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
     border-radius: var(--bx-top-nav-radius, #{radius(md)});
     box-shadow: shadow(lg);
 }

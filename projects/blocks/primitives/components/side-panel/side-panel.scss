@@ -13,8 +13,8 @@
     max-inline-size: 100%;
     overflow: visible;
     transition:
-        flex-basis var(--bx-panel-duration, 175ms) ease-in-out,
-        inline-size var(--bx-panel-duration, 175ms) ease-in-out;
+        flex-basis var(--bx-panel-duration, 175ms) #{motion-easing(smooth)},
+        inline-size var(--bx-panel-duration, 175ms) #{motion-easing(smooth)};
 }
 
 .panel-layer {
@@ -46,7 +46,7 @@
     max-inline-size: 100%;
     padding: var(--bx-panel-padding, #{spacing(4)});
     gap: var(--bx-panel-gap, #{spacing(4)});
-    transition: transform var(--bx-panel-duration, 175ms) ease-in-out;
+    transition: transform var(--bx-panel-duration, 175ms) #{motion-easing(smooth)};
     outline: none;
 
     &.panel-left {
@@ -85,7 +85,7 @@
     @include panel-footer;
 
     flex-wrap: wrap;
-    border-block-start: 1px solid var(--bx-border-default);
+    border-block-start: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
     padding-block-start: spacing(4);
 }
 
@@ -102,7 +102,7 @@
     inset: 0;
     background: var(--bx-panel-backdrop, var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%)));
     opacity: 0;
-    transition: opacity var(--bx-panel-duration, 175ms) ease-in-out;
+    transition: opacity var(--bx-panel-duration, 175ms) #{motion-easing(smooth)};
 
     .is-open > & {
         pointer-events: auto;
@@ -131,7 +131,7 @@
     inset-block: 0;
     inline-size: var(--bx-panel-resize-gutter, #{spacing(6)});
     z-index: 1;
-    transition: transform var(--bx-panel-duration, 175ms) ease-in-out;
+    transition: transform var(--bx-panel-duration, 175ms) #{motion-easing(smooth)};
 
     &.resize-right {
         left: var(--bx-panel-rendered-width);

@@ -1,7 +1,7 @@
 @use '../../../../core/styles/helpers' as *;
 
 @mixin navigation-item {
-    border: 1px solid transparent;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) transparent;
     border-radius: var(--bx-nav-item-radius, var(--bx-side-nav-item-radius, #{radius(md)}));
     background: var(--bx-nav-item-background, var(--bx-side-nav-item-background, transparent));
     color: var(--bx-text-primary);

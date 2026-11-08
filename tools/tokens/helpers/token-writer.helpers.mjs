@@ -52,6 +52,7 @@ export async function printTokenConstants(values, target) {
 
 /** Converts JSON-shaped token data into syntax nodes without embedding executable TypeScript in strings. */
 function literal(value) {
+  if (typeof value === 'boolean') return value ? ts.factory.createTrue() : ts.factory.createFalse();
   if (typeof value === 'string') return ts.factory.createStringLiteral(value);
   if (typeof value === 'number') return ts.factory.createNumericLiteral(value);
   if (Array.isArray(value)) return ts.factory.createArrayLiteralExpression(value.map(literal), true);

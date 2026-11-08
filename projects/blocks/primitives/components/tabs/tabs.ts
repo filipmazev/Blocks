@@ -25,11 +25,19 @@ import type { ITabGeometry } from '@primitives/interfaces/itab-geometry.interfac
 
 import { BX_I18N, BxA11yService, ResolvableText } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { createSpringMotion, ISpringMotion, MOTION_PRESETS, paintMotionStyles } from '@filip.mazev/blocks/effects/runtime';
+import {
+  createSpringMotion,
+  GestureVelocity,
+  ISpringMotion,
+  MOTION_PRESETS,
+  paintMotionStyles,
+  projectMotion,
+  subscribeFrame
+} from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 
 import { Tab } from '@primitives/components/tab/tab';
-import { DEFAULT_TABS_LABEL, DEFAULT_TABS_VARIANT, TAB_NAVIGATION_KEYS } from '@primitives/constants/tabs.constants';
+import { DEFAULT_TABS_LABEL, DEFAULT_TABS_VARIANT, TAB_DRAG, TAB_NAVIGATION_KEYS } from '@primitives/constants/tabs.constants';
 import { resolveTabText } from '@primitives/helpers/tabs.helpers';
 import { TabsVariant } from '@primitives/types/tabs.types';
 
@@ -78,7 +86,10 @@ export class Tabs {
   public readonly variant: InputSignal<TabsVariant> = input<TabsVariant>(DEFAULT_TABS_VARIANT);
   /** Accessible name of the tab list. Defaults to `'Tabs'`. */
   public readonly ariaLabel: InputSignal<ResolvableText> = input<ResolvableText>(DEFAULT_TABS_LABEL);
-  /** Allows pointer/touch dragging of the selection surface; release commits the nearest enabled tab. Defaults to true. Set false for native swipe scrolling. */
+  /**
+   * Enables selection dragging. Defaults to true. Touch swipes scroll natively; hold briefly before dragging to select.
+   * Release uses position and recent velocity to choose an enabled tab. False disables dragging while retaining scrolling, click and keyboard navigation.
+   */
   public readonly dragSelection: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
 
   /** Value of the active tab; supports controlled two-way selection. Defaults to `null`. */
@@ -89,6 +100,7 @@ export class Tabs {
   private restoreSelectionFocus: boolean = false;
   private drag: ITabDrag | null = null;
   private suppressClick: boolean = false;
+  private stopDragScroll: (() => void) | undefined;
 
   constructor() {
     effect(() => {
@@ -130,12 +142,14 @@ export class Tabs {
         this.drag &&
         (!this.dragSelection() ||
           this.drag.committedValue !== this.selectedValue() ||
+          this.geometryChanged() ||
           !triggers.some((trigger) => trigger.nativeElement === this.drag?.origin && !trigger.nativeElement.disabled))
       ) {
         this.finishDrag(true);
       }
 
-      this.positionSelection();
+      if (this.drag?.moved) this.previewDrag();
+      else this.positionSelection();
 
       const view = list?.ownerDocument.defaultView;
       const observer = view?.ResizeObserver
@@ -224,10 +238,44 @@ export class Tabs {
 
     const bounds = origin.getBoundingClientRect();
     const doc = origin.ownerDocument;
+    const touch = event.pointerType === 'touch';
     const cancel = (): void => this.finishDrag(true);
     const visibility = (): void => {
       if (doc.hidden) this.finishDrag(true);
     };
+
+    // Native panning stays available until a stationary hold claims selection dragging.
+    // Pointer preventDefault alone does not suppress a browser's touch scrolling.
+    const touchMove = (touchEvent: TouchEvent): void => {
+      if (touchEvent.touches.length !== 1) {
+        this.finishDrag(true);
+      } else if (this.drag?.armed && touchEvent.cancelable) {
+        touchEvent.preventDefault();
+      }
+    };
+
+    const touchStart = (touchEvent: TouchEvent): void => {
+      if (touchEvent.touches.length > 1) this.finishDrag(true);
+    };
+
+    const contextMenu = (menuEvent: Event): void => {
+      if (this.drag?.armed) menuEvent.preventDefault();
+    };
+
+    const hold = touch
+      ? doc.defaultView?.setTimeout(() => {
+          if (this.drag?.pointerId !== event.pointerId) return;
+
+          this.drag.armed = true;
+          this.moveSelection([candidate.left, candidate.top, candidate.width, candidate.height, 1]);
+        }, TAB_DRAG.holdDelay)
+      : undefined;
+
+    if (touch) {
+      doc.addEventListener('touchmove', touchMove, { passive: false });
+      doc.addEventListener('touchstart', touchStart, { passive: true });
+      origin.addEventListener('contextmenu', contextMenu);
+    }
 
     doc.defaultView?.addEventListener('blur', cancel);
     doc.addEventListener('visibilitychange', visibility);
@@ -239,15 +287,25 @@ export class Tabs {
       grabOffset: event.clientX - bounds.left - bounds.width / 2,
       committedValue: this.selectedValue(),
       moved: false,
+      armed: !touch,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      lastTime: event.timeStamp,
+      velocity: new GestureVelocity(event.clientX, event.timeStamp),
       candidate,
       geometry,
       cleanup: () => {
+        doc.defaultView?.clearTimeout(hold);
+        doc.removeEventListener('touchmove', touchMove);
+        doc.removeEventListener('touchstart', touchStart);
+        origin.removeEventListener('contextmenu', contextMenu);
         doc.defaultView?.removeEventListener('blur', cancel);
         doc.removeEventListener('visibilitychange', visibility);
       }
     };
     origin.setPointerCapture(event.pointerId);
-    this.moveSelection([candidate.left, candidate.top, candidate.width, candidate.height, 1]);
+
+    if (!touch) this.moveSelection([candidate.left, candidate.top, candidate.width, candidate.height, 1]);
   }
 
   protected onPointerMove(event: PointerEvent): void {
@@ -260,13 +318,13 @@ export class Tabs {
     const distanceX = Math.abs(event.clientX - drag.startX);
     const distanceY = Math.abs(event.clientY - drag.startY);
 
-    if (!drag.moved && distanceY > distanceX && distanceY > 6) {
+    if (!drag.moved && ((distanceY > distanceX && distanceY > TAB_DRAG.threshold) || (!drag.armed && Math.max(distanceX, distanceY) > TAB_DRAG.threshold))) {
       this.finishDrag(true);
 
       return;
     }
 
-    if (!drag.moved && distanceX < 6) return;
+    if (!drag.armed || (!drag.moved && distanceX < TAB_DRAG.threshold)) return;
 
     if (!drag.moved) {
       drag.moved = true;
@@ -274,33 +332,24 @@ export class Tabs {
     }
 
     event.preventDefault();
-
-    const bounds = viewport.getBoundingClientRect();
-    const scroll = event.clientX < bounds.left + 24 ? -16 : event.clientX > bounds.right - 24 ? 16 : 0;
-
-    if (scroll) viewport.scrollBy({ left: scroll, behavior: 'instant' });
-
-    const center = event.clientX - list.getBoundingClientRect().left - drag.grabOffset;
-    const geometry = [...drag.geometry].sort((first, second) => first.left - second.left);
-    const first = geometry[0];
-    const last = geometry[geometry.length - 1];
-    const x = Math.max(first.left + first.width / 2, Math.min(last.left + last.width / 2, center));
-    const right = geometry.findIndex((item) => item.left + item.width / 2 >= x);
-    const to = geometry[Math.max(0, right)];
-    const from = geometry[Math.max(0, right - 1)];
-    const fraction = Math.max(0, Math.min(1, (x - from.left - from.width / 2) / (to.left + to.width / 2 - from.left - from.width / 2 || 1)));
-    const width = from.width + (to.width - from.width) * fraction;
-    const height = from.height + (to.height - from.height) * fraction;
-
-    drag.candidate = fraction < 0.5 ? from : to;
-    this.moveSelection([x - width / 2, from.top + (to.top - from.top) * fraction, width, height, 1]);
+    this.sampleDrag(event);
+    this.previewDrag();
+    this.updateDragScroll();
   }
 
   protected onPointerEnd(event: PointerEvent, cancelled: boolean): void {
-    if (this.drag?.pointerId !== event.pointerId) return;
+    const drag = this.drag;
+
+    if (!drag || drag.pointerId !== event.pointerId) return;
 
     const bounds = this.tabViewport()?.nativeElement.getBoundingClientRect();
-    const outside = bounds ? event.clientY < bounds.top - 16 || event.clientY > bounds.bottom + 16 : true;
+    const outside = bounds ? event.clientY < bounds.top - TAB_DRAG.releaseSlop || event.clientY > bounds.bottom + TAB_DRAG.releaseSlop : true;
+
+    if (!cancelled && !outside && drag.moved) {
+      this.sampleDrag(event);
+      this.previewDrag();
+      this.previewDrag(true);
+    }
 
     this.finishDrag(cancelled || outside);
   }
@@ -315,16 +364,117 @@ export class Tabs {
 
   //#region Helpers
 
+  private sampleDrag(event: PointerEvent): void {
+    const drag = this.drag;
+
+    if (!drag) return;
+
+    drag.velocity.update(event.clientX, event.timeStamp);
+    drag.lastTime = event.timeStamp;
+    drag.lastX = event.clientX;
+    drag.lastY = event.clientY;
+  }
+
+  private previewDrag(project = false): void {
+    const drag = this.drag;
+    const list = this.tabList()?.nativeElement;
+
+    if (!drag || !list) return;
+
+    const geometry = drag.geometry;
+    const first = geometry[0];
+    const last = geometry[geometry.length - 1];
+    const center = drag.lastX - list.getBoundingClientRect().left - drag.grabOffset;
+    const x = Math.max(first.left + first.width / 2, Math.min(last.left + last.width / 2, center));
+    const right = geometry.findIndex((item) => item.left + item.width / 2 >= x);
+    const to = geometry[Math.max(0, right)];
+    const from = geometry[Math.max(0, right - 1)];
+    const span = to.left + to.width / 2 - from.left - from.width / 2;
+    const fraction = Math.max(0, Math.min(1, (x - from.left - from.width / 2) / (span || 1)));
+    const width = from.width + (to.width - from.width) * fraction;
+    const height = from.height + (to.height - from.height) * fraction;
+    const limit = Math.max(from.width, to.width, span);
+    const sampledVelocity = drag.velocity.velocity(drag.lastTime);
+    const velocity =
+      (x <= first.left + first.width / 2 && sampledVelocity < 0) || (x >= last.left + last.width / 2 && sampledVelocity > 0) ? 0 : sampledVelocity;
+    const destination = project ? projectMotion(x, velocity, limit) : x;
+
+    drag.candidate = geometry.reduce((nearest, item) =>
+      Math.abs(item.left + item.width / 2 - destination) < Math.abs(nearest.left + nearest.width / 2 - destination) ? item : nearest
+    );
+
+    if (!project) {
+      const widthVelocity = span ? ((to.width - from.width) * velocity) / span : 0;
+
+      this.moveSelection([x - width / 2, from.top + (to.top - from.top) * fraction, width, height, 1], [velocity - widthVelocity / 2, 0, widthVelocity, 0, 0]);
+    }
+  }
+
+  private updateDragScroll(): void {
+    if (this.stopDragScroll || !this.drag?.moved) return;
+
+    this.stopDragScroll = subscribeFrame((delta, timestamp) => {
+      const drag = this.drag;
+      const viewport = this.tabViewport()?.nativeElement;
+
+      if (!drag || !viewport) return false;
+
+      const bounds = viewport.getBoundingClientRect();
+      const inside = drag.lastY >= bounds.top - TAB_DRAG.releaseSlop && drag.lastY <= bounds.bottom + TAB_DRAG.releaseSlop;
+      const edge = Math.min(TAB_DRAG.edgeSize, bounds.width / 3);
+      const direction = inside ? Math.max(-1, Math.min(1, (drag.lastX - bounds.left - edge) / edge)) : 0;
+      const speed = direction < 0 ? direction : inside ? Math.max(0, Math.min(1, (drag.lastX - bounds.right + edge) / edge)) : 0;
+      const previous = viewport.scrollLeft;
+
+      viewport.scrollBy({ left: speed * TAB_DRAG.scrollSpeed * delta, behavior: 'instant' });
+
+      if (!speed || viewport.scrollLeft === previous) {
+        this.stopDragScroll = undefined;
+
+        return false;
+      }
+
+      drag.lastTime = timestamp;
+      this.previewDrag();
+
+      return true;
+    });
+  }
+
+  private geometryChanged(): boolean {
+    const previous = this.drag?.geometry;
+    const current = this.measureTabs();
+
+    return (
+      !previous ||
+      previous.length !== current.length ||
+      current.some((item, index) => {
+        const old = previous[index];
+
+        return (
+          item.element !== old.element ||
+          item.value !== old.value ||
+          item.left !== old.left ||
+          item.top !== old.top ||
+          item.width !== old.width ||
+          item.height !== old.height
+        );
+      })
+    );
+  }
+
   private measureTabs(): ITabGeometry[] {
     const tabs = this.tabs();
 
-    return this.triggers().flatMap(({ nativeElement: element }) => {
-      const tab = tabs.find((item) => item.triggerId === element.id);
+    return this.triggers()
+      .flatMap(({ nativeElement: element }) => {
+        const tab = tabs.find((item) => item.triggerId === element.id);
 
-      return !tab || element.disabled
-        ? []
-        : [{ element, value: tab.value(), left: element.offsetLeft, top: element.offsetTop, width: element.offsetWidth, height: element.offsetHeight }];
-    });
+        return !tab || element.disabled
+          ? []
+          : [{ element, value: tab.value(), left: element.offsetLeft, top: element.offsetTop, width: element.offsetWidth, height: element.offsetHeight }];
+      })
+      .sort((first, second) => first.left - second.left);
   }
 
   private positionSelection(): void {
@@ -352,7 +502,7 @@ export class Tabs {
     this.selectionVisible.set(true);
   }
 
-  private moveSelection(target: readonly number[]): void {
+  private moveSelection(target: readonly number[], velocities?: readonly number[]): void {
     const surface = this.selection()?.nativeElement;
 
     if (!surface) return;
@@ -376,7 +526,9 @@ export class Tabs {
       },
       MOTION_PRESETS.fluid
     );
-    this.selectionMotion.retarget(target, this.bxA11yService.isReducedMotion() || !this.selectionReady);
+
+    if (velocities && !this.bxA11yService.isReducedMotion()) this.selectionMotion.track(target, velocities);
+    else this.selectionMotion.retarget(target, this.bxA11yService.isReducedMotion() || !this.selectionReady);
   }
 
   private finishDrag(cancelled: boolean): void {
@@ -385,6 +537,8 @@ export class Tabs {
     if (!drag) return;
 
     this.drag = null;
+    this.stopDragScroll?.();
+    this.stopDragScroll = undefined;
     this.dragging.set(false);
     drag.cleanup();
 

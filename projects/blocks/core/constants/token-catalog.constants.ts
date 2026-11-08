@@ -7,8 +7,23 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#356fe8']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#356fe8'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/button/button.ts',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/progress-bar/progress-bar.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-accent-active',
@@ -16,8 +31,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(14.1333333333%, 29.6%, 61.8666666667%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(14.1333333333%, 29.6%, 61.8666666667%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-accent-hover',
@@ -25,8 +44,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(17.6666666667%, 37%, 77.3333333333%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(17.6666666667%, 37%, 77.3333333333%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss'
+    ]
   },
   {
     name: '--bx-accent-subtle',
@@ -34,8 +62,23 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(90.4941176471%, 93.2235294118%, 98.9176470588%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(90.4941176471%, 93.2235294118%, 98.9176470588%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-accordion-gap',
@@ -43,8 +86,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 accordion',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/accordion/accordion.scss']
   },
   {
     name: '--bx-alert-background',
@@ -52,8 +99,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['color-mix(in srgb, var(--bx-bg-surface) 92%, var(--bx-alert-role-background))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-border',
@@ -61,8 +112,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['color-mix(in srgb, var(--bx-alert-role-border) 44.8%, transparent)', 'var(--bx-alert-role-border)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-color',
@@ -70,8 +125,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-alert-role-color)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-emission',
@@ -80,7 +139,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 alert',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss', 'projects/blocks/primitives/components/alert/alert.ts']
   },
   {
     name: '--bx-alert-gap',
@@ -88,8 +151,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-light-opacity',
@@ -97,8 +164,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.32'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-min-opacity',
@@ -106,8 +177,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.2'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-padding',
@@ -115,8 +190,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-radius',
@@ -124,8 +203,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-lg, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-rim-opacity',
@@ -133,8 +216,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.8'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-alert-role-background',
@@ -143,7 +230,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 alert',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss', 'projects/blocks/primitives/components/alert/alert.ts']
   },
   {
     name: '--bx-alert-role-border',
@@ -152,7 +243,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 alert',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss', 'projects/blocks/primitives/components/alert/alert.ts']
   },
   {
     name: '--bx-alert-role-color',
@@ -161,7 +256,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 alert',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss', 'projects/blocks/primitives/components/alert/alert.ts']
   },
   {
     name: '--bx-alert-shadow',
@@ -169,8 +268,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 alert',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [
+      'var(--bx-shadow-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1))',
+      'var(--bx-shadow-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)), 0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 44%, transparent)'
+    ],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
   {
     name: '--bx-autocomplete-background',
@@ -178,8 +284,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 autocomplete',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
   },
   {
     name: '--bx-autocomplete-completion-color',
@@ -187,8 +297,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 autocomplete',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
   },
   {
     name: '--bx-autocomplete-panel-height',
@@ -196,8 +310,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 autocomplete',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['18rem'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
   },
   {
     name: '--bx-autocomplete-panel-padding',
@@ -205,8 +323,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 autocomplete',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
   },
   {
     name: '--bx-autocomplete-radius',
@@ -214,8 +336,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 autocomplete',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-lg, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
   },
   {
     name: '--bx-backdrop-color',
@@ -224,7 +350,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 backdrop',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-bg-canvas',
@@ -232,8 +362,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-bg-danger',
@@ -241,8 +375,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f4e5e5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f4e5e5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/stepper/stepper.ts',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-bg-danger-active',
@@ -250,8 +397,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#de9e9e']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#de9e9e'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/components/menu-item/menu-item.scss']
   },
   {
     name: '--bx-bg-danger-disabled',
@@ -259,8 +410,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fffcfc']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fffcfc'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-bg-danger-hover',
@@ -268,8 +423,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ead0d0']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ead0d0'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/runtime/helpers/selection-motion.helpers.ts',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss'
+    ]
   },
   {
     name: '--bx-bg-danger-subtle',
@@ -277,8 +441,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fffcfc']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fffcfc'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-bg-element',
@@ -286,8 +463,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f5f5f5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f5f5f5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/progress-bar/progress-bar.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-bg-element-active',
@@ -295,8 +489,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#d4d4d4']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#d4d4d4'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/skeleton/skeleton.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-bg-element-hover',
@@ -304,8 +511,31 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e5e5e5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e5e5e5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/helpers/selection-motion.helpers.ts',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss'
+    ]
   },
   {
     name: '--bx-bg-info',
@@ -313,8 +543,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e5eef7']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e5eef7'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-bg-info-active',
@@ -322,8 +556,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#97cace']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#97cace'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-info-disabled',
@@ -331,8 +569,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fbfdff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fbfdff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-bg-info-hover',
@@ -340,8 +582,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#d0ddea']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#d0ddea'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-info-subtle',
@@ -349,8 +595,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fbfdff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fbfdff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-bg-neutral',
@@ -358,8 +608,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f5f5f5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f5f5f5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
+    ]
   },
   {
     name: '--bx-bg-neutral-active',
@@ -367,8 +634,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e5e5e5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e5e5e5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-neutral-hover',
@@ -376,8 +647,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fafafa']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fafafa'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss'
+    ]
   },
   {
     name: '--bx-bg-success',
@@ -385,8 +669,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e6f4e6']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e6f4e6'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-bg-success-active',
@@ -394,8 +682,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#98d6a0']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#98d6a0'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-success-disabled',
@@ -403,8 +695,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fcfffc']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fcfffc'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-bg-success-hover',
@@ -412,8 +708,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#d1ead0']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#d1ead0'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-success-subtle',
@@ -421,8 +721,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fcfffc']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fcfffc'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-bg-surface',
@@ -430,8 +734,38 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fafafa']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fafafa'],
+    fallbacks: ['Canvas'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.ts'
+    ]
   },
   {
     name: '--bx-bg-surface-alt',
@@ -439,8 +773,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Backgrounds and surfaces',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fafafa']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fafafa'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss'
+    ]
   },
   {
     name: '--bx-bg-warn',
@@ -448,8 +792,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f7f0e3']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f7f0e3'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-bg-warn-active',
@@ -457,8 +805,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e7c892']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e7c892'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-warn-disabled',
@@ -466,8 +818,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fffefb']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fffefb'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-bg-warn-hover',
@@ -475,8 +831,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#eae3d0']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#eae3d0'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-bg-warn-subtle',
@@ -484,8 +844,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fffefb']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#fffefb'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-border-accent',
@@ -493,8 +857,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/checkbox/checkbox.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-border-brand',
@@ -502,8 +882,41 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)'],
+    fallbacks: ['Highlight', 'currentColor'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-border-danger',
@@ -511,8 +924,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f76d6d']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f76d6d'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-border-default',
@@ -520,8 +950,41 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Borders',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#d4d4d4']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#d4d4d4'],
+    fallbacks: ['GrayText'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/helpers/surface.helpers.ts',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-border-info',
@@ -529,8 +992,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#5fb7c3']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#5fb7c3'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-border-strong',
@@ -538,8 +1005,73 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Borders',
     kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#a1a1a1'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
+  },
+  {
+    name: '--bx-border-style',
+    reference: 'var(--bx-border-style)',
+    category: 'borders',
+    group: 'Border geometry',
+    kind: 'value',
     scope: 'global',
-    defaults: ['#a1a1a1']
+    themeEditable: true,
+    defaults: ['solid'],
+    fallbacks: ['solid'],
+    selectors: [':root', ':where(.high-contrast, .bx-high-contrast-scope)'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-border-subtle',
@@ -547,8 +1079,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Borders',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e5e5e5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e5e5e5'],
+    fallbacks: ['GrayText'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss'
+    ]
   },
   {
     name: '--bx-border-success',
@@ -556,8 +1099,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#5fc370']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#5fc370'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-border-warn',
@@ -565,8 +1112,58 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#e4ad55'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
+  },
+  {
+    name: '--bx-border-width',
+    reference: 'var(--bx-border-width)',
+    category: 'borders',
+    group: 'Border geometry',
+    kind: 'value',
     scope: 'global',
-    defaults: ['#e4ad55']
+    themeEditable: true,
+    defaults: ['1px'],
+    fallbacks: ['1px'],
+    selectors: [':root', ':where(.high-contrast, .bx-high-contrast-scope)'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-button-press-shadow',
@@ -575,7 +1172,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 button',
     kind: 'value',
     scope: 'local',
-    defaults: ['none']
+    themeEditable: false,
+    defaults: ['none'],
+    fallbacks: ['inset 0 2px 4px var(--bx-border-default)'],
+    selectors: [':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))'],
+    sources: ['projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-card-background',
@@ -583,8 +1184,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element)', 'var(--bx-bg-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-border',
@@ -592,8 +1197,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-brand)', 'var(--bx-border-default)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-color',
@@ -601,8 +1210,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-primary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-disabled-opacity',
@@ -610,8 +1223,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.6'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-focus-color',
@@ -619,8 +1236,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-card-highlight, var(--bx-border-brand))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-highlight',
@@ -628,8 +1249,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-brand)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss', 'projects/blocks/primitives/components/card/card.ts']
   },
   {
     name: '--bx-card-hover-background',
@@ -637,8 +1262,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element-hover)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-padding',
@@ -646,8 +1275,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-pressed-background',
@@ -655,8 +1288,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element-active)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-radius',
@@ -664,8 +1301,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-lg, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-selected-background',
@@ -673,8 +1314,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element-active)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-selected-border',
@@ -682,8 +1327,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-card-border, var(--bx-border-brand))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-shadow',
@@ -691,8 +1340,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['none', 'var(--bx-shadow-md, 0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-card-title-size',
@@ -700,8 +1353,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 card',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1.125rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-checkbox-size',
@@ -709,8 +1366,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 checkbox',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1.125rem'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss']
   },
   {
     name: '--bx-chip-action-size',
@@ -719,7 +1380,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 chip',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-chip-min-height, 2.5rem)', 'var(--bx-chip-min-height, 2rem)']
+    themeEditable: false,
+    defaults: ['var(--bx-chip-min-height, var(--bx-space-10, 2.5rem))', 'var(--bx-chip-min-height, var(--bx-space-8, 2rem))'],
+    fallbacks: [],
+    selectors: ['.bx-chip', '.bx-chip.is-small'],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-background',
@@ -727,8 +1392,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)', 'var(--bx-chip-role-background)', 'var(--bx-chip-role-fill)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-border',
@@ -736,8 +1405,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-chip-role-border)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-color',
@@ -745,8 +1418,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-chip-role-on-fill)', 'var(--bx-chip-role-text)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-fill-opacity',
@@ -754,8 +1431,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-hover-background',
@@ -763,8 +1444,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['color-mix(in srgb, currentcolor 10%, transparent)', 'transparent'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-min-height',
@@ -772,8 +1457,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-10, 2.5rem)', 'var(--bx-space-8, 2rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-radius',
@@ -781,8 +1470,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-pill, 9999px)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-remove-background',
@@ -790,8 +1483,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 chip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-glass-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss']
   },
   {
     name: '--bx-chip-role-background',
@@ -800,7 +1497,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 chip',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss', 'projects/blocks/primitives/components/chip/chip.ts']
   },
   {
     name: '--bx-chip-role-border',
@@ -809,7 +1510,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 chip',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss', 'projects/blocks/primitives/components/chip/chip.ts']
   },
   {
     name: '--bx-chip-role-fill',
@@ -818,7 +1523,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 chip',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss', 'projects/blocks/primitives/components/chip/chip.ts']
   },
   {
     name: '--bx-chip-role-on-fill',
@@ -827,7 +1536,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 chip',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss', 'projects/blocks/primitives/components/chip/chip.ts']
   },
   {
     name: '--bx-chip-role-text',
@@ -836,7 +1549,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 chip',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/chip/chip.scss', 'projects/blocks/primitives/components/chip/chip.ts']
   },
   {
     name: '--bx-collapsible-background',
@@ -844,8 +1561,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-collapsible-border',
@@ -853,8 +1574,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-default)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-collapsible-content-padding',
@@ -862,8 +1587,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-collapsible-duration',
@@ -871,8 +1600,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['120ms'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-collapsible-padding',
@@ -880,8 +1613,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem) var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-collapsible-radius',
@@ -889,8 +1626,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 collapsible',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-color-accent-100',
@@ -898,8 +1639,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(90.4941176471%, 93.2235294118%, 98.9176470588%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(90.4941176471%, 93.2235294118%, 98.9176470588%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss'
+    ]
   },
   {
     name: '--bx-color-accent-1000',
@@ -907,8 +1657,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(1.662745098%, 3.4823529412%, 7.2784313725%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(1.662745098%, 3.4823529412%, 7.2784313725%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-200',
@@ -916,8 +1670,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#abc5ff']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#abc5ff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-color-accent-300',
@@ -925,8 +1683,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#6d9aff']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#6d9aff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-400',
@@ -934,8 +1696,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#4c82f2']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#4c82f2'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-50',
@@ -943,8 +1709,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(96.831372549%, 97.7411764706%, 99.6392156863%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(96.831372549%, 97.7411764706%, 99.6392156863%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss'
+    ]
   },
   {
     name: '--bx-color-accent-500',
@@ -952,8 +1727,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#356fe8']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#356fe8'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-600',
@@ -961,8 +1740,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(17.6666666667%, 37%, 77.3333333333%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(17.6666666667%, 37%, 77.3333333333%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-700',
@@ -970,8 +1753,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(14.1333333333%, 29.6%, 61.8666666667%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(14.1333333333%, 29.6%, 61.8666666667%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-800',
@@ -979,8 +1766,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-accent-900',
@@ -988,8 +1779,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(4.9882352941%, 10.4470588235%, 21.8352941176%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(4.9882352941%, 10.4470588235%, 21.8352941176%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-100',
@@ -998,7 +1793,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#dceaff']
+    themeEditable: false,
+    defaults: ['#dceaff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-1000',
@@ -1007,7 +1806,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0c1f40']
+    themeEditable: false,
+    defaults: ['#0c1f40'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-200',
@@ -1016,7 +1819,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#bfd9ff']
+    themeEditable: false,
+    defaults: ['#bfd9ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-300',
@@ -1025,7 +1832,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#72a7ff']
+    themeEditable: false,
+    defaults: ['#72a7ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-400',
@@ -1034,7 +1845,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#589dff']
+    themeEditable: false,
+    defaults: ['#589dff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-50',
@@ -1043,7 +1858,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#eff6ff']
+    themeEditable: false,
+    defaults: ['#eff6ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-500',
@@ -1052,7 +1871,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#217eff']
+    themeEditable: false,
+    defaults: ['#217eff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-600',
@@ -1061,7 +1884,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1465df']
+    themeEditable: false,
+    defaults: ['#1465df'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-700',
@@ -1070,7 +1897,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1350b5']
+    themeEditable: false,
+    defaults: ['#1350b5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-800',
@@ -1079,7 +1910,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#15418d']
+    themeEditable: false,
+    defaults: ['#15418d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-azure-900',
@@ -1088,7 +1923,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 azure',
     kind: 'color',
     scope: 'global',
-    defaults: ['#16386f']
+    themeEditable: false,
+    defaults: ['#16386f'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-100',
@@ -1097,7 +1936,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#dceaff']
+    themeEditable: false,
+    defaults: ['#dceaff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-1000',
@@ -1106,7 +1949,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0c1f40']
+    themeEditable: false,
+    defaults: ['#0c1f40'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-200',
@@ -1115,7 +1962,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#bfd9ff']
+    themeEditable: false,
+    defaults: ['#bfd9ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-300',
@@ -1124,7 +1975,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#91bdff']
+    themeEditable: false,
+    defaults: ['#91bdff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-400',
@@ -1133,7 +1988,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#589dff']
+    themeEditable: false,
+    defaults: ['#589dff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-50',
@@ -1142,7 +2001,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#eff6ff']
+    themeEditable: false,
+    defaults: ['#eff6ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-500',
@@ -1151,7 +2014,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#217eff']
+    themeEditable: false,
+    defaults: ['#217eff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-600',
@@ -1160,7 +2027,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1465df']
+    themeEditable: false,
+    defaults: ['#1465df'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-700',
@@ -1169,7 +2040,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1350b5']
+    themeEditable: false,
+    defaults: ['#1350b5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-800',
@@ -1178,7 +2053,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#15418d']
+    themeEditable: false,
+    defaults: ['#15418d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-blue-900',
@@ -1187,7 +2066,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 blue',
     kind: 'color',
     scope: 'global',
-    defaults: ['#16386f']
+    themeEditable: false,
+    defaults: ['#16386f'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-100',
@@ -1196,7 +2079,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(96.5647058824%, 91.4823529412%, 91.7647058824%)']
+    themeEditable: false,
+    defaults: ['rgb(96.5647058824%, 91.4823529412%, 91.7647058824%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-1000',
@@ -1205,7 +2092,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(5.7098039216%, 2.3215686275%, 2.5098039216%)']
+    themeEditable: false,
+    defaults: ['rgb(5.7098039216%, 2.3215686275%, 2.5098039216%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-200',
@@ -1214,7 +2105,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e69ba4']
+    themeEditable: false,
+    defaults: ['#e69ba4'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-300',
@@ -1223,7 +2118,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['#d36b77']
+    themeEditable: false,
+    defaults: ['#d36b77'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-400',
@@ -1232,7 +2131,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['#c55964']
+    themeEditable: false,
+    defaults: ['#c55964'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-50',
@@ -1241,7 +2144,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(98.8549019608%, 97.1607843137%, 97.2549019608%)']
+    themeEditable: false,
+    defaults: ['rgb(98.8549019608%, 97.1607843137%, 97.2549019608%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-500',
@@ -1250,7 +2157,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['#b64a50']
+    themeEditable: false,
+    defaults: ['#b64a50'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-600',
@@ -1259,7 +2170,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(60.6666666667%, 24.6666666667%, 26.6666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(60.6666666667%, 24.6666666667%, 26.6666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-700',
@@ -1268,7 +2183,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(48.5333333333%, 19.7333333333%, 21.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(48.5333333333%, 19.7333333333%, 21.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-800',
@@ -1277,7 +2196,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(34.2588235294%, 13.9294117647%, 15.0588235294%)']
+    themeEditable: false,
+    defaults: ['rgb(34.2588235294%, 13.9294117647%, 15.0588235294%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-brick-rose-900',
@@ -1286,7 +2209,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 brick-rose',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(17.1294117647%, 6.9647058824%, 7.5294117647%)']
+    themeEditable: false,
+    defaults: ['rgb(17.1294117647%, 6.9647058824%, 7.5294117647%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-100',
@@ -1295,7 +2222,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f7f7f5']
+    themeEditable: false,
+    defaults: ['#f7f7f5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-1000',
@@ -1304,7 +2235,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(1.2862745098%, 1.3176470588%, 1.4117647059%)']
+    themeEditable: false,
+    defaults: ['rgb(1.2862745098%, 1.3176470588%, 1.4117647059%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-200',
@@ -1313,7 +2248,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['#efefed']
+    themeEditable: false,
+    defaults: ['#efefed'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-300',
@@ -1322,7 +2261,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e2e2e0']
+    themeEditable: false,
+    defaults: ['#e2e2e0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-400',
@@ -1331,7 +2274,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['#77797d']
+    themeEditable: false,
+    defaults: ['#77797d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-50',
@@ -1340,7 +2287,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fdfdfc']
+    themeEditable: false,
+    defaults: ['#fdfdfc'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-500',
@@ -1349,7 +2300,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['#292a2d']
+    themeEditable: false,
+    defaults: ['#292a2d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-600',
@@ -1358,7 +2313,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(13.6666666667%, 14%, 15%)']
+    themeEditable: false,
+    defaults: ['rgb(13.6666666667%, 14%, 15%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-700',
@@ -1367,7 +2326,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(10.9333333333%, 11.2%, 12%)']
+    themeEditable: false,
+    defaults: ['rgb(10.9333333333%, 11.2%, 12%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-800',
@@ -1376,7 +2339,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)']
+    themeEditable: false,
+    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-carbon-900',
@@ -1385,7 +2352,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 carbon',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(3.8588235294%, 3.9529411765%, 4.2352941176%)']
+    themeEditable: false,
+    defaults: ['rgb(3.8588235294%, 3.9529411765%, 4.2352941176%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-100',
@@ -1394,7 +2365,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(90.4941176471%, 93.2235294118%, 98.9176470588%)']
+    themeEditable: false,
+    defaults: ['rgb(90.4941176471%, 93.2235294118%, 98.9176470588%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-1000',
@@ -1403,7 +2378,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(1.662745098%, 3.4823529412%, 7.2784313725%)']
+    themeEditable: false,
+    defaults: ['rgb(1.662745098%, 3.4823529412%, 7.2784313725%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-200',
@@ -1412,7 +2391,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['#abc5ff']
+    themeEditable: false,
+    defaults: ['#abc5ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-300',
@@ -1421,7 +2404,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['#6d9aff']
+    themeEditable: false,
+    defaults: ['#6d9aff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-400',
@@ -1430,7 +2417,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['#4c82f2']
+    themeEditable: false,
+    defaults: ['#4c82f2'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-50',
@@ -1439,7 +2430,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(96.831372549%, 97.7411764706%, 99.6392156863%)']
+    themeEditable: false,
+    defaults: ['rgb(96.831372549%, 97.7411764706%, 99.6392156863%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-500',
@@ -1448,7 +2443,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['#356fe8']
+    themeEditable: false,
+    defaults: ['#356fe8'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-600',
@@ -1457,7 +2456,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(17.6666666667%, 37%, 77.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(17.6666666667%, 37%, 77.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-700',
@@ -1466,7 +2469,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(14.1333333333%, 29.6%, 61.8666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(14.1333333333%, 29.6%, 61.8666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-800',
@@ -1475,7 +2482,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)']
+    themeEditable: false,
+    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cobalt-900',
@@ -1484,7 +2495,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cobalt',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(4.9882352941%, 10.4470588235%, 21.8352941176%)']
+    themeEditable: false,
+    defaults: ['rgb(4.9882352941%, 10.4470588235%, 21.8352941176%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-100',
@@ -1493,7 +2508,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(92.8941176471%, 91.1058823529%, 95.8117647059%)']
+    themeEditable: false,
+    defaults: ['rgb(92.8941176471%, 91.1058823529%, 95.8117647059%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-1000',
@@ -1502,7 +2521,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(3.262745098%, 2.0705882353%, 5.2078431373%)']
+    themeEditable: false,
+    defaults: ['rgb(3.262745098%, 2.0705882353%, 5.2078431373%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-200',
@@ -1511,7 +2534,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(83.4196078431%, 79.2470588235%, 90.2274509804%)']
+    themeEditable: false,
+    defaults: ['rgb(83.4196078431%, 79.2470588235%, 90.2274509804%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-300',
@@ -1520,7 +2547,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(71.5764705882%, 64.4235294118%, 83.2470588235%)']
+    themeEditable: false,
+    defaults: ['rgb(71.5764705882%, 64.4235294118%, 83.2470588235%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-400',
@@ -1529,7 +2560,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(55.5882352941%, 44.4117647059%, 73.8235294118%)']
+    themeEditable: false,
+    defaults: ['rgb(55.5882352941%, 44.4117647059%, 73.8235294118%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-50',
@@ -1538,7 +2573,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(97.631372549%, 97.0352941176%, 98.6039215686%)']
+    themeEditable: false,
+    defaults: ['rgb(97.631372549%, 97.0352941176%, 98.6039215686%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-500',
@@ -1547,7 +2586,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#6842a6']
+    themeEditable: false,
+    defaults: ['#6842a6'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-600',
@@ -1556,7 +2599,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(34.6666666667%, 22%, 55.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(34.6666666667%, 22%, 55.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-700',
@@ -1565,7 +2612,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(27.7333333333%, 17.6%, 44.2666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(27.7333333333%, 17.6%, 44.2666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-800',
@@ -1574,7 +2625,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(19.5764705882%, 12.4235294118%, 31.2470588235%)']
+    themeEditable: false,
+    defaults: ['rgb(19.5764705882%, 12.4235294118%, 31.2470588235%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cool-violet-900',
@@ -1583,7 +2638,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cool-violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(9.7882352941%, 6.2117647059%, 15.6235294118%)']
+    themeEditable: false,
+    defaults: ['rgb(9.7882352941%, 6.2117647059%, 15.6235294118%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-100',
@@ -1592,7 +2651,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(88.3764705882%, 94.8235294118%, 96.3764705882%)']
+    themeEditable: false,
+    defaults: ['rgb(88.3764705882%, 94.8235294118%, 96.3764705882%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-1000',
@@ -1601,7 +2664,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(0.2509803922%, 4.5490196078%, 5.5843137255%)']
+    themeEditable: false,
+    defaults: ['rgb(0.2509803922%, 4.5490196078%, 5.5843137255%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-200',
@@ -1610,7 +2677,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['#78d8e6']
+    themeEditable: false,
+    defaults: ['#78d8e6'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-300',
@@ -1619,7 +2690,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['#22b8d0']
+    themeEditable: false,
+    defaults: ['#22b8d0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-400',
@@ -1628,7 +2703,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['#12a4bf']
+    themeEditable: false,
+    defaults: ['#12a4bf'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-50',
@@ -1637,7 +2716,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(96.1254901961%, 98.2745098039%, 98.7921568627%)']
+    themeEditable: false,
+    defaults: ['rgb(96.1254901961%, 98.2745098039%, 98.7921568627%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-500',
@@ -1646,7 +2729,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0891b2']
+    themeEditable: false,
+    defaults: ['#0891b2'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-600',
@@ -1655,7 +2742,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(2.6666666667%, 48.3333333333%, 59.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(2.6666666667%, 48.3333333333%, 59.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-700',
@@ -1664,7 +2755,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(2.1333333333%, 38.6666666667%, 47.4666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(2.1333333333%, 38.6666666667%, 47.4666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-800',
@@ -1673,7 +2768,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(1.5058823529%, 27.2941176471%, 33.5058823529%)']
+    themeEditable: false,
+    defaults: ['rgb(1.5058823529%, 27.2941176471%, 33.5058823529%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyan-900',
@@ -1682,7 +2781,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyan',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(0.7529411765%, 13.6470588235%, 16.7529411765%)']
+    themeEditable: false,
+    defaults: ['rgb(0.7529411765%, 13.6470588235%, 16.7529411765%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-100',
@@ -1691,7 +2794,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#cdd6df']
+    themeEditable: false,
+    defaults: ['#cdd6df'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-1000',
@@ -1700,7 +2807,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#05080a']
+    themeEditable: false,
+    defaults: ['#05080a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-200',
@@ -1709,7 +2820,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#a8b8c6']
+    themeEditable: false,
+    defaults: ['#a8b8c6'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-300',
@@ -1718,7 +2833,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#7e96a9']
+    themeEditable: false,
+    defaults: ['#7e96a9'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-400',
@@ -1727,7 +2846,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#5d788c']
+    themeEditable: false,
+    defaults: ['#5d788c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-50',
@@ -1736,7 +2859,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ebeff2']
+    themeEditable: false,
+    defaults: ['#ebeff2'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-500',
@@ -1745,7 +2872,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#3e5669']
+    themeEditable: false,
+    defaults: ['#3e5669'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-600',
@@ -1754,7 +2885,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#283c4c']
+    themeEditable: false,
+    defaults: ['#283c4c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-700',
@@ -1763,7 +2898,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1b2936']
+    themeEditable: false,
+    defaults: ['#1b2936'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-800',
@@ -1772,7 +2911,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#121a21']
+    themeEditable: false,
+    defaults: ['#121a21'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-slate-900',
@@ -1781,7 +2924,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-slate',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0b1015']
+    themeEditable: false,
+    defaults: ['#0b1015'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-100',
@@ -1790,7 +2937,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fffdd1']
+    themeEditable: false,
+    defaults: ['#fffdd1'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-1000',
@@ -1799,7 +2950,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#141300']
+    themeEditable: false,
+    defaults: ['#141300'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-200',
@@ -1808,7 +2963,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fff9a3']
+    themeEditable: false,
+    defaults: ['#fff9a3'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-300',
@@ -1817,7 +2976,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fff370']
+    themeEditable: false,
+    defaults: ['#fff370'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-400',
@@ -1826,7 +2989,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffeb33']
+    themeEditable: false,
+    defaults: ['#ffeb33'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-50',
@@ -1835,7 +3002,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fffef2']
+    themeEditable: false,
+    defaults: ['#fffef2'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-500',
@@ -1844,7 +3015,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e6da00']
+    themeEditable: false,
+    defaults: ['#e6da00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-600',
@@ -1853,7 +3028,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ccbd00']
+    themeEditable: false,
+    defaults: ['#ccbd00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-700',
@@ -1862,7 +3041,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#998e00']
+    themeEditable: false,
+    defaults: ['#998e00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-800',
@@ -1871,7 +3054,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#665e00']
+    themeEditable: false,
+    defaults: ['#665e00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-cyber-yellow-900',
@@ -1880,7 +3067,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 cyber-yellow',
     kind: 'color',
     scope: 'global',
-    defaults: ['#332f00']
+    themeEditable: false,
+    defaults: ['#332f00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-100',
@@ -1889,7 +3080,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f4e5e5']
+    themeEditable: false,
+    defaults: ['#f4e5e5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-1000',
@@ -1898,7 +3093,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0e0c0c']
+    themeEditable: false,
+    defaults: ['#0e0c0c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-200',
@@ -1907,7 +3106,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ead0d0']
+    themeEditable: false,
+    defaults: ['#ead0d0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-300',
@@ -1916,7 +3119,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#de9e9e']
+    themeEditable: false,
+    defaults: ['#de9e9e'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-400',
@@ -1925,7 +3132,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f76d6d']
+    themeEditable: false,
+    defaults: ['#f76d6d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-50',
@@ -1934,7 +3145,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fffcfc']
+    themeEditable: false,
+    defaults: ['#fffcfc'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-500',
@@ -1943,7 +3158,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#d94d4d']
+    themeEditable: false,
+    defaults: ['#d94d4d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-600',
@@ -1952,7 +3171,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#c93d3d']
+    themeEditable: false,
+    defaults: ['#c93d3d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-700',
@@ -1961,7 +3184,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ba2e2e']
+    themeEditable: false,
+    defaults: ['#ba2e2e'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-800',
@@ -1970,7 +3197,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#722222']
+    themeEditable: false,
+    defaults: ['#722222'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-danger-900',
@@ -1979,7 +3210,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 danger',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2b1717']
+    themeEditable: false,
+    defaults: ['#2b1717'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-100',
@@ -1988,7 +3223,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(98.1647058824%, 92.2352941176%, 89.2235294118%)']
+    themeEditable: false,
+    defaults: ['rgb(98.1647058824%, 92.2352941176%, 89.2235294118%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-1000',
@@ -1997,7 +3236,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(6.7764705882%, 2.8235294118%, 0.8156862745%)']
+    themeEditable: false,
+    defaults: ['rgb(6.7764705882%, 2.8235294118%, 0.8156862745%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-200',
@@ -2006,7 +3249,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f5a365']
+    themeEditable: false,
+    defaults: ['#f5a365'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-300',
@@ -2015,7 +3262,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f27b35']
+    themeEditable: false,
+    defaults: ['#f27b35'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-400',
@@ -2024,7 +3275,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e96926']
+    themeEditable: false,
+    defaults: ['#e96926'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-50',
@@ -2033,7 +3288,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(99.3882352941%, 97.4117647059%, 96.4078431373%)']
+    themeEditable: false,
+    defaults: ['rgb(99.3882352941%, 97.4117647059%, 96.4078431373%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-500',
@@ -2042,7 +3301,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['#d85a1a']
+    themeEditable: false,
+    defaults: ['#d85a1a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-600',
@@ -2051,7 +3314,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(72%, 30%, 8.6666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(72%, 30%, 8.6666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-700',
@@ -2060,7 +3327,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(57.6%, 24%, 6.9333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(57.6%, 24%, 6.9333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-800',
@@ -2069,7 +3340,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(40.6588235294%, 16.9411764706%, 4.8941176471%)']
+    themeEditable: false,
+    defaults: ['rgb(40.6588235294%, 16.9411764706%, 4.8941176471%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-ember-900',
@@ -2078,7 +3353,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 ember',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(20.3294117647%, 8.4705882353%, 2.4470588235%)']
+    themeEditable: false,
+    defaults: ['rgb(20.3294117647%, 8.4705882353%, 2.4470588235%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-100',
@@ -2087,7 +3366,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#edf8c8']
+    themeEditable: false,
+    defaults: ['#edf8c8'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-1000',
@@ -2096,7 +3379,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#212c03']
+    themeEditable: false,
+    defaults: ['#212c03'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-200',
@@ -2105,7 +3392,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ddf19c']
+    themeEditable: false,
+    defaults: ['#ddf19c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-300',
@@ -2114,7 +3405,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#cae96a']
+    themeEditable: false,
+    defaults: ['#cae96a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-400',
@@ -2123,7 +3418,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#bee046']
+    themeEditable: false,
+    defaults: ['#bee046'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-50',
@@ -2132,7 +3431,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f7fce8']
+    themeEditable: false,
+    defaults: ['#f7fce8'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-500',
@@ -2141,7 +3444,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#b0d624']
+    themeEditable: false,
+    defaults: ['#b0d624'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-600',
@@ -2150,7 +3457,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#92b518']
+    themeEditable: false,
+    defaults: ['#92b518'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-700',
@@ -2159,7 +3470,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#718f10']
+    themeEditable: false,
+    defaults: ['#718f10'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-800',
@@ -2168,7 +3483,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#556d0c']
+    themeEditable: false,
+    defaults: ['#556d0c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-green-900',
@@ -2177,7 +3496,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 green',
     kind: 'color',
     scope: 'global',
-    defaults: ['#3c4e08']
+    themeEditable: false,
+    defaults: ['#3c4e08'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-100',
@@ -2186,7 +3509,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(91.7176470588%, 93.6470588235%, 99.5294117647%)']
+    themeEditable: false,
+    defaults: ['rgb(91.7176470588%, 93.6470588235%, 99.5294117647%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-1000',
@@ -2195,7 +3522,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(2.4784313725%, 3.7647058824%, 7.6862745098%)']
+    themeEditable: false,
+    defaults: ['rgb(2.4784313725%, 3.7647058824%, 7.6862745098%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-200',
@@ -2204,7 +3535,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(80.6745098039%, 85.1764705882%, 98.9019607843%)']
+    themeEditable: false,
+    defaults: ['rgb(80.6745098039%, 85.1764705882%, 98.9019607843%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-300',
@@ -2213,7 +3548,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(66.8705882353%, 74.5882352941%, 98.1176470588%)']
+    themeEditable: false,
+    defaults: ['rgb(66.8705882353%, 74.5882352941%, 98.1176470588%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-400',
@@ -2222,7 +3561,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(48.2352941176%, 60.2941176471%, 97.0588235294%)']
+    themeEditable: false,
+    defaults: ['rgb(48.2352941176%, 60.2941176471%, 97.0588235294%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-50',
@@ -2231,7 +3574,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(97.2392156863%, 97.8823529412%, 99.8431372549%)']
+    themeEditable: false,
+    defaults: ['rgb(97.2392156863%, 97.8823529412%, 99.8431372549%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-500',
@@ -2240,7 +3587,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['#4f78f5']
+    themeEditable: false,
+    defaults: ['#4f78f5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-600',
@@ -2249,7 +3600,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(26.3333333333%, 40%, 81.6666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(26.3333333333%, 40%, 81.6666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-700',
@@ -2258,7 +3613,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(21.0666666667%, 32%, 65.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(21.0666666667%, 32%, 65.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-800',
@@ -2267,7 +3626,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(14.8705882353%, 22.5882352941%, 46.1176470588%)']
+    themeEditable: false,
+    defaults: ['rgb(14.8705882353%, 22.5882352941%, 46.1176470588%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-indigo-900',
@@ -2276,7 +3639,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 indigo',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(7.4352941176%, 11.2941176471%, 23.0588235294%)']
+    themeEditable: false,
+    defaults: ['rgb(7.4352941176%, 11.2941176471%, 23.0588235294%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-100',
@@ -2285,7 +3652,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e5eef7']
+    themeEditable: false,
+    defaults: ['#e5eef7'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-1000',
@@ -2294,7 +3665,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0c0d0e']
+    themeEditable: false,
+    defaults: ['#0c0d0e'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-200',
@@ -2303,7 +3678,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#d0ddea']
+    themeEditable: false,
+    defaults: ['#d0ddea'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-300',
@@ -2312,7 +3691,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#97cace']
+    themeEditable: false,
+    defaults: ['#97cace'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-400',
@@ -2321,7 +3704,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#5fb7c3']
+    themeEditable: false,
+    defaults: ['#5fb7c3'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-50',
@@ -2330,7 +3717,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fbfdff']
+    themeEditable: false,
+    defaults: ['#fbfdff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-500',
@@ -2339,7 +3730,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#3e90b5']
+    themeEditable: false,
+    defaults: ['#3e90b5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-600',
@@ -2348,7 +3743,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2e7cae']
+    themeEditable: false,
+    defaults: ['#2e7cae'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-700',
@@ -2357,7 +3756,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1e69a7']
+    themeEditable: false,
+    defaults: ['#1e69a7'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-800',
@@ -2366,7 +3769,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1a4469']
+    themeEditable: false,
+    defaults: ['#1a4469'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-information-900',
@@ -2375,7 +3782,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 information',
     kind: 'color',
     scope: 'global',
-    defaults: ['#17202b']
+    themeEditable: false,
+    defaults: ['#17202b'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-100',
@@ -2384,7 +3795,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(97.2235294118%, 99.5294117647%, 90.8705882353%)']
+    themeEditable: false,
+    defaults: ['rgb(97.2235294118%, 99.5294117647%, 90.8705882353%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-1000',
@@ -2393,7 +3808,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(6.1490196078%, 7.6862745098%, 1.9137254902%)']
+    themeEditable: false,
+    defaults: ['rgb(6.1490196078%, 7.6862745098%, 1.9137254902%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-200',
@@ -2402,7 +3821,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(93.5215686275%, 98.9019607843%, 78.6980392157%)']
+    themeEditable: false,
+    defaults: ['rgb(93.5215686275%, 98.9019607843%, 78.6980392157%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-300',
@@ -2411,7 +3834,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(88.8941176471%, 98.1176470588%, 63.4823529412%)']
+    themeEditable: false,
+    defaults: ['rgb(88.8941176471%, 98.1176470588%, 63.4823529412%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-400',
@@ -2420,7 +3847,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(82.6470588235%, 97.0588235294%, 42.9411764706%)']
+    themeEditable: false,
+    defaults: ['rgb(82.6470588235%, 97.0588235294%, 42.9411764706%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-50',
@@ -2429,7 +3860,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(99.0745098039%, 99.8431372549%, 96.9568627451%)']
+    themeEditable: false,
+    defaults: ['rgb(99.0745098039%, 99.8431372549%, 96.9568627451%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-500',
@@ -2438,7 +3873,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['#c4f53d']
+    themeEditable: false,
+    defaults: ['#c4f53d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-600',
@@ -2447,7 +3886,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(65.3333333333%, 81.6666666667%, 20.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(65.3333333333%, 81.6666666667%, 20.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-700',
@@ -2456,7 +3899,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(52.2666666667%, 65.3333333333%, 16.2666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(52.2666666667%, 65.3333333333%, 16.2666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-800',
@@ -2465,7 +3912,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(36.8941176471%, 46.1176470588%, 11.4823529412%)']
+    themeEditable: false,
+    defaults: ['rgb(36.8941176471%, 46.1176470588%, 11.4823529412%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-lime-900',
@@ -2474,7 +3925,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 lime',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(18.4470588235%, 23.0588235294%, 5.7411764706%)']
+    themeEditable: false,
+    defaults: ['rgb(18.4470588235%, 23.0588235294%, 5.7411764706%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-100',
@@ -2483,7 +3938,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f5f5f5']
+    themeEditable: false,
+    defaults: ['#f5f5f5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-1000',
@@ -2492,7 +3951,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0b0b0b']
+    themeEditable: false,
+    defaults: ['#0b0b0b'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-200',
@@ -2501,7 +3964,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e5e5e5']
+    themeEditable: false,
+    defaults: ['#e5e5e5'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-color-neutral-300',
@@ -2510,7 +3977,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#d4d4d4']
+    themeEditable: false,
+    defaults: ['#d4d4d4'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-400',
@@ -2519,7 +3990,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#a1a1a1']
+    themeEditable: false,
+    defaults: ['#a1a1a1'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-50',
@@ -2528,7 +4003,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fafafa']
+    themeEditable: false,
+    defaults: ['#fafafa'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-color-neutral-500',
@@ -2537,7 +4016,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#737373']
+    themeEditable: false,
+    defaults: ['#737373'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-600',
@@ -2546,7 +4029,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#525252']
+    themeEditable: false,
+    defaults: ['#525252'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-700',
@@ -2555,7 +4042,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#404040']
+    themeEditable: false,
+    defaults: ['#404040'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-800',
@@ -2564,7 +4055,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#262626']
+    themeEditable: false,
+    defaults: ['#262626'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-neutral-900',
@@ -2573,7 +4068,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 neutral',
     kind: 'color',
     scope: 'global',
-    defaults: ['#171717']
+    themeEditable: false,
+    defaults: ['#171717'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-100',
@@ -2582,7 +4081,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffedd4']
+    themeEditable: false,
+    defaults: ['#ffedd4'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-1000',
@@ -2591,7 +4094,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#441306']
+    themeEditable: false,
+    defaults: ['#441306'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-200',
@@ -2600,7 +4107,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffd6a7']
+    themeEditable: false,
+    defaults: ['#ffd6a7'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-300',
@@ -2609,7 +4120,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffb86a']
+    themeEditable: false,
+    defaults: ['#ffb86a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-400',
@@ -2618,7 +4133,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ff8904']
+    themeEditable: false,
+    defaults: ['#ff8904'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-50',
@@ -2627,7 +4146,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fff7ed']
+    themeEditable: false,
+    defaults: ['#fff7ed'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-500',
@@ -2636,7 +4159,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ff6900']
+    themeEditable: false,
+    defaults: ['#ff6900'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-600',
@@ -2645,7 +4172,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f54900']
+    themeEditable: false,
+    defaults: ['#f54900'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-700',
@@ -2654,7 +4185,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ca3500']
+    themeEditable: false,
+    defaults: ['#ca3500'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-800',
@@ -2663,7 +4198,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#9f2d00']
+    themeEditable: false,
+    defaults: ['#9f2d00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-orange-900',
@@ -2672,7 +4211,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 orange',
     kind: 'color',
     scope: 'global',
-    defaults: ['#551111']
+    themeEditable: false,
+    defaults: ['#551111'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-100',
@@ -2680,8 +4223,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f7f7f5']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#f7f7f5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-1000',
@@ -2689,8 +4236,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(1.2862745098%, 1.3176470588%, 1.4117647059%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(1.2862745098%, 1.3176470588%, 1.4117647059%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-200',
@@ -2698,8 +4249,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#efefed']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#efefed'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-300',
@@ -2707,8 +4262,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#e2e2e0']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#e2e2e0'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-400',
@@ -2716,8 +4275,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#77797d']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#77797d'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-50',
@@ -2725,8 +4288,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#fdfdfc']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#fdfdfc'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-500',
@@ -2734,8 +4301,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#292a2d']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['#292a2d'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-600',
@@ -2743,8 +4314,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(13.6666666667%, 14%, 15%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(13.6666666667%, 14%, 15%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-700',
@@ -2752,8 +4327,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(10.9333333333%, 11.2%, 12%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(10.9333333333%, 11.2%, 12%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-800',
@@ -2761,8 +4340,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-primary-900',
@@ -2770,8 +4353,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Palette \u00B7 primary',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(3.8588235294%, 3.9529411765%, 4.2352941176%)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['rgb(3.8588235294%, 3.9529411765%, 4.2352941176%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-100',
@@ -2780,7 +4367,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e6d4ff']
+    themeEditable: false,
+    defaults: ['#e6d4ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-1000',
@@ -2789,7 +4380,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0b001a']
+    themeEditable: false,
+    defaults: ['#0b001a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-200',
@@ -2798,7 +4393,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#cfa3ff']
+    themeEditable: false,
+    defaults: ['#cfa3ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-300',
@@ -2807,7 +4406,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#b36bff']
+    themeEditable: false,
+    defaults: ['#b36bff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-400',
@@ -2816,7 +4419,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#922fff']
+    themeEditable: false,
+    defaults: ['#922fff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-50',
@@ -2825,7 +4432,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f4ebff']
+    themeEditable: false,
+    defaults: ['#f4ebff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-500',
@@ -2834,7 +4445,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#6d00ff']
+    themeEditable: false,
+    defaults: ['#6d00ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-600',
@@ -2843,7 +4458,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#5700cc']
+    themeEditable: false,
+    defaults: ['#5700cc'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-700',
@@ -2852,7 +4471,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#410099']
+    themeEditable: false,
+    defaults: ['#410099'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-800',
@@ -2861,7 +4484,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2c0066']
+    themeEditable: false,
+    defaults: ['#2c0066'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-purple-900',
@@ -2870,7 +4497,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 purple',
     kind: 'color',
     scope: 'global',
-    defaults: ['#160033']
+    themeEditable: false,
+    defaults: ['#160033'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-100',
@@ -2879,7 +4510,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fadcda']
+    themeEditable: false,
+    defaults: ['#fadcda'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-1000',
@@ -2888,7 +4523,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2e0200']
+    themeEditable: false,
+    defaults: ['#2e0200'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-200',
@@ -2897,7 +4536,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f5b0ab']
+    themeEditable: false,
+    defaults: ['#f5b0ab'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-300',
@@ -2906,7 +4549,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ef8079']
+    themeEditable: false,
+    defaults: ['#ef8079'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-400',
@@ -2915,7 +4562,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ea4c43']
+    themeEditable: false,
+    defaults: ['#ea4c43'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-50',
@@ -2924,7 +4575,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fdf1f0']
+    themeEditable: false,
+    defaults: ['#fdf1f0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-500',
@@ -2933,7 +4588,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e3241b']
+    themeEditable: false,
+    defaults: ['#e3241b'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-600',
@@ -2942,7 +4601,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#be1810']
+    themeEditable: false,
+    defaults: ['#be1810'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-700',
@@ -2951,7 +4614,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#991009']
+    themeEditable: false,
+    defaults: ['#991009'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-800',
@@ -2960,7 +4627,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#750904']
+    themeEditable: false,
+    defaults: ['#750904'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-red-900',
@@ -2969,7 +4640,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 red',
     kind: 'color',
     scope: 'global',
-    defaults: ['#520401']
+    themeEditable: false,
+    defaults: ['#520401'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-100',
@@ -2978,7 +4653,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e6f4e6']
+    themeEditable: false,
+    defaults: ['#e6f4e6'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-1000',
@@ -2987,7 +4666,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0c0e0c']
+    themeEditable: false,
+    defaults: ['#0c0e0c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-200',
@@ -2996,7 +4679,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#d1ead0']
+    themeEditable: false,
+    defaults: ['#d1ead0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-300',
@@ -3005,7 +4692,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#98d6a0']
+    themeEditable: false,
+    defaults: ['#98d6a0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-400',
@@ -3014,7 +4705,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#5fc370']
+    themeEditable: false,
+    defaults: ['#5fc370'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-50',
@@ -3023,7 +4718,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fcfffc']
+    themeEditable: false,
+    defaults: ['#fcfffc'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-500',
@@ -3032,7 +4731,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#3fa94e']
+    themeEditable: false,
+    defaults: ['#3fa94e'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-600',
@@ -3041,7 +4744,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2e9c3e']
+    themeEditable: false,
+    defaults: ['#2e9c3e'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-700',
@@ -3050,7 +4757,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1e8f2d']
+    themeEditable: false,
+    defaults: ['#1e8f2d'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-800',
@@ -3059,7 +4770,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#1a5d22']
+    themeEditable: false,
+    defaults: ['#1a5d22'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-success-900',
@@ -3068,7 +4783,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 success',
     kind: 'color',
     scope: 'global',
-    defaults: ['#172b18']
+    themeEditable: false,
+    defaults: ['#172b18'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-100',
@@ -3077,7 +4796,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffedd4']
+    themeEditable: false,
+    defaults: ['#ffedd4'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-1000',
@@ -3086,7 +4809,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#441306']
+    themeEditable: false,
+    defaults: ['#441306'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-200',
@@ -3095,7 +4822,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffd6a7']
+    themeEditable: false,
+    defaults: ['#ffd6a7'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-300',
@@ -3104,7 +4835,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ffb86a']
+    themeEditable: false,
+    defaults: ['#ffb86a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-400',
@@ -3113,7 +4848,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ff8904']
+    themeEditable: false,
+    defaults: ['#ff8904'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-50',
@@ -3122,7 +4861,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fff7ed']
+    themeEditable: false,
+    defaults: ['#fff7ed'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-500',
@@ -3131,7 +4874,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ff6900']
+    themeEditable: false,
+    defaults: ['#ff6900'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-600',
@@ -3140,7 +4887,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f54900']
+    themeEditable: false,
+    defaults: ['#f54900'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-700',
@@ -3149,7 +4900,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#ca3500']
+    themeEditable: false,
+    defaults: ['#ca3500'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-800',
@@ -3158,7 +4913,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#9f2d00']
+    themeEditable: false,
+    defaults: ['#9f2d00'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-tangerine-900',
@@ -3167,7 +4926,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 tangerine',
     kind: 'color',
     scope: 'global',
-    defaults: ['#551111']
+    themeEditable: false,
+    defaults: ['#551111'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-100',
@@ -3176,7 +4939,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(88.6117647059%, 94.9647058824%, 94.4%)']
+    themeEditable: false,
+    defaults: ['rgb(88.6117647059%, 94.9647058824%, 94.4%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-1000',
@@ -3185,7 +4952,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(0.4078431373%, 4.6431372549%, 4.2666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(0.4078431373%, 4.6431372549%, 4.2666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-200',
@@ -3194,7 +4965,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(73.4274509804%, 88.2509803922%, 86.9333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(73.4274509804%, 88.2509803922%, 86.9333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-300',
@@ -3203,7 +4978,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(54.4470588235%, 79.8588235294%, 77.6%)']
+    themeEditable: false,
+    defaults: ['rgb(54.4470588235%, 79.8588235294%, 77.6%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-400',
@@ -3212,7 +4991,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(28.8235294118%, 68.5294117647%, 65%)']
+    themeEditable: false,
+    defaults: ['rgb(28.8235294118%, 68.5294117647%, 65%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-50',
@@ -3221,7 +5004,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(96.2039215686%, 98.3215686275%, 98.1333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(96.2039215686%, 98.3215686275%, 98.1333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-500',
@@ -3230,7 +5017,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0d9488']
+    themeEditable: false,
+    defaults: ['#0d9488'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-600',
@@ -3239,7 +5030,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(4.3333333333%, 49.3333333333%, 45.3333333333%)']
+    themeEditable: false,
+    defaults: ['rgb(4.3333333333%, 49.3333333333%, 45.3333333333%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-700',
@@ -3248,7 +5043,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(3.4666666667%, 39.4666666667%, 36.2666666667%)']
+    themeEditable: false,
+    defaults: ['rgb(3.4666666667%, 39.4666666667%, 36.2666666667%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-800',
@@ -3257,7 +5056,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(2.4470588235%, 27.8588235294%, 25.6%)']
+    themeEditable: false,
+    defaults: ['rgb(2.4470588235%, 27.8588235294%, 25.6%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-teal-900',
@@ -3266,7 +5069,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 teal',
     kind: 'color',
     scope: 'global',
-    defaults: ['rgb(1.2235294118%, 13.9294117647%, 12.8%)']
+    themeEditable: false,
+    defaults: ['rgb(1.2235294118%, 13.9294117647%, 12.8%)'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-100',
@@ -3275,7 +5082,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e6d4ff']
+    themeEditable: false,
+    defaults: ['#e6d4ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-1000',
@@ -3284,7 +5095,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0b001a']
+    themeEditable: false,
+    defaults: ['#0b001a'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-200',
@@ -3293,7 +5108,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#cfa3ff']
+    themeEditable: false,
+    defaults: ['#cfa3ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-300',
@@ -3302,7 +5121,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#b36bff']
+    themeEditable: false,
+    defaults: ['#b36bff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-400',
@@ -3311,7 +5134,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#922fff']
+    themeEditable: false,
+    defaults: ['#922fff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-50',
@@ -3320,7 +5147,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f4ebff']
+    themeEditable: false,
+    defaults: ['#f4ebff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-500',
@@ -3329,7 +5160,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#6d00ff']
+    themeEditable: false,
+    defaults: ['#6d00ff'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-600',
@@ -3338,7 +5173,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#5700cc']
+    themeEditable: false,
+    defaults: ['#5700cc'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-700',
@@ -3347,7 +5186,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#410099']
+    themeEditable: false,
+    defaults: ['#410099'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-800',
@@ -3356,7 +5199,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2c0066']
+    themeEditable: false,
+    defaults: ['#2c0066'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-violet-900',
@@ -3365,7 +5212,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 violet',
     kind: 'color',
     scope: 'global',
-    defaults: ['#160033']
+    themeEditable: false,
+    defaults: ['#160033'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-100',
@@ -3374,7 +5225,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#f7f0e3']
+    themeEditable: false,
+    defaults: ['#f7f0e3'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-1000',
@@ -3383,7 +5238,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#0e0d0c']
+    themeEditable: false,
+    defaults: ['#0e0d0c'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-200',
@@ -3392,7 +5251,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#eae3d0']
+    themeEditable: false,
+    defaults: ['#eae3d0'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-300',
@@ -3401,7 +5264,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e7c892']
+    themeEditable: false,
+    defaults: ['#e7c892'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-400',
@@ -3410,7 +5277,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#e4ad55']
+    themeEditable: false,
+    defaults: ['#e4ad55'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-50',
@@ -3419,7 +5290,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#fffefb']
+    themeEditable: false,
+    defaults: ['#fffefb'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-500',
@@ -3428,7 +5303,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#c68d36']
+    themeEditable: false,
+    defaults: ['#c68d36'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-600',
@@ -3437,7 +5316,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#b77d27']
+    themeEditable: false,
+    defaults: ['#b77d27'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-700',
@@ -3446,7 +5329,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#a96d18']
+    themeEditable: false,
+    defaults: ['#a96d18'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-800',
@@ -3455,7 +5342,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#6a4817']
+    themeEditable: false,
+    defaults: ['#6a4817'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-color-warn-900',
@@ -3464,7 +5355,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Palette \u00B7 warn',
     kind: 'color',
     scope: 'global',
-    defaults: ['#2b2317']
+    themeEditable: false,
+    defaults: ['#2b2317'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-container-max-width',
@@ -3472,8 +5367,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 container',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1024px', '1280px', '640px', '768px', 'none'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/container/container.scss']
   },
   {
     name: '--bx-container-padding',
@@ -3482,7 +5381,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 container',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-page-padding-inline, clamp(1rem, 3vw, 2.5rem))']
+    themeEditable: false,
+    defaults: ['var(--bx-page-padding-inline, clamp(var(--bx-space-4, 1rem), 3vw, var(--bx-space-10, 2.5rem)))'],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: ['.page-layout'],
+    sources: ['projects/blocks/primitives/components/container/container.scss', 'projects/blocks/primitives/components/page-container/page-container.scss']
   },
   {
     name: '--bx-divider-color',
@@ -3490,8 +5393,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-default)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-divider-font-size',
@@ -3499,8 +5406,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.8125rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-divider-gap',
@@ -3508,8 +5419,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-divider-margin',
@@ -3517,8 +5432,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)', 'var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-divider-min-height',
@@ -3526,8 +5445,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-6, 1.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-divider-style',
@@ -3535,8 +5458,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-style, solid)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss', 'projects/blocks/primitives/components/divider/divider.ts']
   },
   {
     name: '--bx-divider-text',
@@ -3544,8 +5471,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-divider-thickness',
@@ -3553,8 +5484,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 divider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-width, 1px)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
   {
     name: '--bx-field-adornment-gap',
@@ -3562,8 +5497,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 field',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['global']
   },
   {
     name: '--bx-field-adornment-padding',
@@ -3571,8 +5510,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 field',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [],
+    sources: ['global']
   },
   {
     name: '--bx-field-padding-bottom',
@@ -3580,8 +5523,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 field',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/form-field/form-field.scss']
   },
   {
     name: '--bx-field-radius',
@@ -3589,8 +5536,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 field',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss'
+    ]
   },
   {
     name: '--bx-field-subscript-height',
@@ -3599,7 +5555,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 field',
     kind: 'value',
     scope: 'local',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['var(--bx-space-6, 1.5rem)'],
+    selectors: ['[role=radiogroup]'],
+    sources: ['projects/blocks/forms/components/form-field/form-field.scss', 'projects/blocks/forms/components/radio-group/radio-group.scss']
   },
   {
     name: '--bx-field-support-padding',
@@ -3608,7 +5568,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 field',
     kind: 'value',
     scope: 'local',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [':host'],
+    sources: ['projects/blocks/forms/components/form-field/form-field.scss', 'projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-glass-accent',
@@ -3616,8 +5580,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'local',
-    defaults: ['var(--bx-primary)']
+    scope: 'theme',
+    themeEditable: false,
+    defaults: ['var(--bx-primary)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global']
   },
   {
     name: '--bx-glass-blur',
@@ -3625,8 +5593,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [
+      'calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469))',
+      'var(--bx-glass-material-blur, 10px)'
+    ],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-decoration-opacity',
@@ -3635,7 +5610,36 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '0.5', '1', 'var(--bx-alert-light-opacity, 0.32)']
+    themeEditable: false,
+    defaults: ['0', '0.5', '1', 'var(--bx-alert-light-opacity, 0.32)'],
+    fallbacks: ['1'],
+    selectors: [
+      '.bx-alert',
+      '.bx-collapsible-trigger',
+      '.bx-menu-item-btn',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.marker',
+      '.step-body',
+      '.step-connector',
+      '.step-selection',
+      '.toast-wrapper.no-bg[data-bx-surface]',
+      ':host(.bx-btn-text)',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':host([data-variant=cards]) .step-body'
+    ],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-glass-edge',
@@ -3643,7 +5647,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'local',
+    scope: 'theme',
+    themeEditable: false,
     defaults: [
       'color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent)',
       'color-mix(in srgb, var(--bx-text-danger) 40%, var(--bx-border-default))',
@@ -3660,15 +5665,127 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-border-default)',
       'var(--bx-border-strong)',
       'var(--bx-card-border, var(--bx-border-default))',
-      'var(--bx-card-selected-border, var(--bx-card-border, var(--bx-border-default)))',
+      'var(--bx-card-selected-border, var(--bx-card-border, var(--bx-border-brand)))',
       'var(--bx-chip-border, var(--bx-chip-role-border))',
       'var(--bx-collapsible-border, var(--bx-border-default))',
+      'var(--bx-glass-text)',
       'var(--bx-popover-border, var(--bx-border-default))',
       'var(--bx-tag-border, var(--bx-tag-role-border))',
       'var(--bx-text-primary)',
       'var(--bx-text-secondary)',
       'var(--step-state-border)',
       'var(--step-state-color)'
+    ],
+    fallbacks: ['var(--bx-border-default)', 'var(--bx-border-strong)', 'var(--bx-border-subtle, GrayText)'],
+    selectors: [
+      '.blocks-catalog-theme',
+      '.bx-alert',
+      '.bx-autocomplete-panel',
+      '.bx-checkbox-box[data-bx-surface]',
+      '.bx-checkbox-box[data-bx-surface].is-checked',
+      '.bx-checkbox-box[data-bx-surface].is-invalid',
+      '.bx-chip',
+      '.bx-collapsible',
+      '.bx-collapsible-trigger',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button))',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)).is-open:not(:disabled)',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)).is-readonly.is-keyboard-focused:focus-within',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)):focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)):focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)):has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface]',
+      '.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-radio-circle[data-bx-surface]:not(.is-invalid)',
+      '.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid)',
+      '.bx-input-wrapper[data-bx-surface]',
+      '.bx-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-input-wrapper[data-bx-surface].is-open:not(:disabled)',
+      '.bx-input-wrapper[data-bx-surface].is-readonly.is-keyboard-focused:focus-within',
+      '.bx-input-wrapper[data-bx-surface]:focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-input-wrapper[data-bx-surface]:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-input-wrapper[data-bx-surface]:has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-menu-wrapper',
+      '.bx-popover-surface',
+      '.bx-radio-circle[data-bx-surface]',
+      '.bx-radio-circle[data-bx-surface].is-checked',
+      '.bx-radio-circle[data-bx-surface].is-invalid',
+      '.bx-search-input-wrapper[data-bx-surface]',
+      '.bx-search-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-search-input-wrapper[data-bx-surface].is-open:not(:disabled)',
+      '.bx-search-input-wrapper[data-bx-surface].is-readonly.is-keyboard-focused:focus-within',
+      '.bx-search-input-wrapper[data-bx-surface]:focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-search-input-wrapper[data-bx-surface]:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-search-input-wrapper[data-bx-surface]:has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-select-panel[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface].is-invalid',
+      '.bx-select-trigger[data-bx-surface].is-open:not(:disabled)',
+      '.bx-select-trigger[data-bx-surface].is-readonly.is-keyboard-focused:focus-within',
+      '.bx-select-trigger[data-bx-surface]:focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-select-trigger[data-bx-surface]:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-select-trigger[data-bx-surface]:has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-selection-surface',
+      '.bx-slide-toggle-track[data-bx-surface]',
+      '.bx-slide-toggle-track[data-bx-surface].is-checked',
+      '.bx-slide-toggle-track[data-bx-surface].is-invalid',
+      '.bx-tab-header',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tag',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.is-awaiting-confirmation .marker',
+      '.is-complete .marker',
+      '.is-current .marker',
+      '.is-error .marker',
+      '.is-unavailable .marker',
+      '.marker',
+      '.step-body',
+      '.step-connector',
+      '.step-connector-fill',
+      '.step-selection',
+      ':host',
+      ':host(.is-readonly) .is-current .marker',
+      ':host(.is-readonly) .is-error .marker',
+      ':host(.is-readonly) .marker',
+      ':host(:is([aria-pressed=true],\n[aria-selected=true],\n[aria-expanded=true][aria-haspopup]:not([aria-haspopup=false]),\n[aria-current]:not([aria-current=false], [aria-current=""])):not(.bx-btn-non-interactive, [aria-disabled=true]))',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':host(:not([data-bx-surface]))',
+      ':host([data-bx-surface])',
+      ':host([data-bx-surface]):hover:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host([data-clickable=true]:hover:not(.is-disabled, .is-readonly))',
+      ':host([data-selected=true])',
+      ':host([data-variant=cards]) .step-body',
+      ':host([data-variant=cards]) button.step-body:hover:not(:disabled, [aria-disabled=true])',
+      ':host([data-variant=cards].is-readonly) .is-current .step-body',
+      ':host([data-variant=segments]) .is-complete .marker',
+      ':host([data-variant=segments]) .is-current .marker',
+      'button.step-body:hover:not(:disabled, [aria-disabled=true]) .marker'
+    ],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
     ]
   },
   {
@@ -3678,7 +5795,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-1',
@@ -3687,7 +5808,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-10',
@@ -3696,7 +5821,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-11',
@@ -3705,7 +5834,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-12',
@@ -3714,7 +5847,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-13',
@@ -3723,7 +5860,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-14',
@@ -3732,7 +5873,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-15',
@@ -3741,7 +5886,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-2',
@@ -3750,7 +5899,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-3',
@@ -3759,7 +5912,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-4',
@@ -3768,7 +5925,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-5',
@@ -3777,7 +5938,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-6',
@@ -3786,7 +5951,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-7',
@@ -3795,7 +5964,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-8',
@@ -3804,7 +5977,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-environment-color-9',
@@ -3813,7 +5990,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent']
+    themeEditable: false,
+    defaults: ['transparent'],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-light-color',
@@ -3822,7 +6003,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-light-strength',
@@ -3831,7 +6016,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-light-x',
@@ -3839,8 +6028,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-light-y',
@@ -3848,8 +6041,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-lit-edge',
@@ -3858,7 +6055,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-lit-edge-bottom',
@@ -3866,8 +6067,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-glass-edge)'],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts', 'projects/blocks/primitives/components/tooltip/tooltip.scss']
   },
   {
     name: '--bx-glass-lit-edge-left',
@@ -3875,8 +6080,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-glass-edge)'],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts', 'projects/blocks/primitives/components/tooltip/tooltip.scss']
   },
   {
     name: '--bx-glass-lit-edge-right',
@@ -3884,8 +6093,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-glass-edge)'],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts', 'projects/blocks/primitives/components/tooltip/tooltip.scss']
   },
   {
     name: '--bx-glass-lit-edge-top',
@@ -3893,8 +6106,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-glass-edge)'],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts', 'projects/blocks/primitives/components/tooltip/tooltip.scss']
   },
   {
     name: '--bx-glass-material-blur',
@@ -3903,7 +6120,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(4px + 24px * var(--bx-glass-material-strength) * var(--bx-glass-material-strength))']
+    themeEditable: false,
+    defaults: ['calc(4px + 24px * var(--bx-glass-material-strength) * var(--bx-glass-material-strength))'],
+    fallbacks: ['10px'],
+    selectors: ['.bx-btn', '[data-bx-surface]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-material-opacity',
@@ -3912,8 +6133,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       'calc(\n      0.06 + 1.02 * var(--bx-glass-material-strength) - 0.28 * var(--bx-glass-material-strength) * var(--bx-glass-material-strength)\n  )'
+    ],
+    fallbacks: ['0.5'],
+    selectors: ['.bx-btn', '[data-bx-surface]'],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss'
     ]
   },
   {
@@ -3923,7 +6152,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5))']
+    themeEditable: false,
+    defaults: ['calc(var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5))'],
+    fallbacks: [],
+    selectors: ['.bx-btn', '[data-bx-surface]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-glass-material-strength',
@@ -3932,7 +6165,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(0.5 * var(--bx-glass-material-position) + 0.35 * var(--bx-glass-material-position) * var(--bx-glass-material-position))']
+    themeEditable: false,
+    defaults: ['calc(0.5 * var(--bx-glass-material-position) + 0.35 * var(--bx-glass-material-position) * var(--bx-glass-material-position))'],
+    fallbacks: ['0.1469'],
+    selectors: ['.bx-btn', '[data-bx-surface]'],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-glass-min-opacity',
@@ -3941,6 +6178,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       '0',
       '0.45',
@@ -3953,6 +6191,65 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-chip-fill-opacity, 1)',
       'var(--bx-modal-material-opacity, 0.52)',
       'var(--bx-tag-fill-opacity, 0.85)'
+    ],
+    fallbacks: ['0'],
+    selectors: [
+      '.bx-alert',
+      '.bx-checkbox-box[data-bx-surface]',
+      '.bx-checkbox-box[data-bx-surface].is-checked',
+      '.bx-chip.is-filled',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button))',
+      '.bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface]',
+      '.bx-input-wrapper[data-bx-surface]',
+      '.bx-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-nav-panel',
+      '.bx-radio-circle[data-bx-surface]',
+      '.bx-radio-circle[data-bx-surface].is-checked',
+      '.bx-search-input-wrapper[data-bx-surface]',
+      '.bx-search-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-select-trigger[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface].is-invalid',
+      '.bx-selection-surface',
+      '.bx-slide-toggle-track[data-bx-surface]',
+      '.bx-slide-toggle-track[data-bx-surface].is-checked',
+      '.bx-tag.is-filled',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.bx-top-nav-bar',
+      '.is-current .marker',
+      '.marker',
+      '.panel-surface',
+      '.toast-wrapper[data-bx-surface]',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))',
+      ':host(:not([data-bx-surface]))',
+      ':host([data-bx-surface])',
+      ':host([data-variant=segments]) .marker',
+      '[data-bx-surface]'
+    ],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/helpers/surface.helpers.ts',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
     ]
   },
   {
@@ -3962,6 +6259,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       '0',
       '0.15',
@@ -3972,6 +6270,62 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469))',
       'var(--bx-glass-material-opacity)',
       'var(--bx-tag-outline-opacity, 0.12)'
+    ],
+    fallbacks: ['0', 'var(--bx-glass-material-opacity, 0.5)'],
+    selectors: [
+      '.bx-collapsible-trigger',
+      '.bx-collapsible-trigger:hover:not(:disabled, [aria-disabled=true])',
+      '.bx-selection-surface',
+      '.bx-tab-header',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tab-trigger:hover:not(:disabled, .is-selected)',
+      '.bx-tag.is-outlined',
+      '.marker',
+      '.step-body',
+      '.step-connector',
+      '.step-selection',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':host([data-variant=cards]) .step-body',
+      ':host([data-variant=segments]) .marker'
+    ],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss'
+    ]
+  },
+  {
+    name: '--bx-glass-opaque-surface',
+    reference: 'var(--bx-glass-opaque-surface)',
+    category: 'effects',
+    group: 'Glass and appearance',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [
+      'color-mix(in srgb, var(--step-selection-color, var(--step-color)) 22%, var(--bx-bg-surface))',
+      'transparent',
+      'var(--bx-bg-element-hover)',
+      'var(--bx-glass-surface)',
+      'var(--bx-glass-surface, var(--bx-bg-surface, Canvas))'
+    ],
+    fallbacks: ['var(--bx-glass-surface, var(--bx-bg-surface))'],
+    selectors: [
+      '.bx-tab-trigger',
+      '.bx-tab-trigger:hover:not(:disabled, .is-selected)',
+      '.step-selection',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':where([data-bx-surface])'
+    ],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss'
     ]
   },
   {
@@ -3981,7 +6335,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['0'],
+    selectors: ['[data-bx-surface]'],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/helpers/surface.helpers.ts',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss'
+    ]
   },
   {
     name: '--bx-glass-press-opacity',
@@ -3990,7 +6353,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['0.6'],
+    selectors: [':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))'],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-glass-radius',
@@ -3999,25 +6366,86 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       '0',
-      '0.25rem',
-      '0.5rem',
       '50%',
-      '9999px',
       'inherit',
-      'var(--bx-alert-radius, 0.75rem)',
+      'var(--bx-alert-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-autocomplete-radius, var(--bx-rounded-lg, 0.75rem))',
-      'var(--bx-card-radius, 0.75rem)',
-      'var(--bx-chip-radius, 9999px)',
-      'var(--bx-collapsible-radius, 0.5rem)',
-      'var(--bx-popover-radius, 0.75rem)',
+      'var(--bx-card-radius, var(--bx-rounded-lg, 0.75rem))',
+      'var(--bx-chip-radius, var(--bx-rounded-pill, 9999px))',
+      'var(--bx-collapsible-radius, var(--bx-rounded-md, 0.5rem))',
+      'var(--bx-popover-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-rounded-lg, 0.75rem)',
+      'var(--bx-rounded-md, 0.5rem)',
+      'var(--bx-rounded-pill, 9999px)',
       'var(--bx-rounded-sm, 0.25rem)',
-      'var(--bx-stepper-card-radius, 0.5rem)',
-      'var(--bx-stepper-marker-radius, 9999px)',
-      'var(--bx-stepper-segment-radius, 9999px)',
-      'var(--bx-tag-radius, 0.25rem)'
+      'var(--bx-stepper-card-radius, var(--bx-rounded-md, 0.5rem))',
+      'var(--bx-stepper-marker-radius, var(--bx-rounded-pill, 9999px))',
+      'var(--bx-stepper-segment-radius, var(--bx-rounded-pill, 9999px))',
+      'var(--bx-tag-radius, var(--bx-rounded-sm, 0.25rem))'
+    ],
+    fallbacks: [
+      'var(--bx-rounded-lg, 0)',
+      'var(--bx-rounded-lg, 0.75rem)',
+      'var(--bx-rounded-md, 0.5rem)',
+      'var(--bx-rounded-pill, 9999px)',
+      'var(--bx-rounded-sm, 0.25rem)'
+    ],
+    selectors: [
+      '.bx-alert',
+      '.bx-autocomplete-panel',
+      '.bx-chip',
+      '.bx-collapsible',
+      '.bx-menu-wrapper',
+      '.bx-nav-back',
+      '.bx-nav-hamburger',
+      '.bx-nav-panel',
+      '.bx-nav-panel-toggle',
+      '.bx-nav-search-toggle',
+      '.bx-popover-surface',
+      '.bx-select-panel[data-bx-surface]',
+      '.bx-selection-surface',
+      '.bx-tab-header',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tag',
+      '.bx-tag.is-number-only',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.bx-top-nav-close',
+      '.bx-top-nav-search-toggle',
+      '.marker',
+      '.step-body',
+      '.step-connector',
+      '.step-connector-fill',
+      '.step-selection',
+      ':host',
+      ':host(.bx-tabs-underline) .bx-tab-selection',
+      ':host([data-variant=cards]) .step-body',
+      ':host([data-variant=progress]) .step-selection',
+      ':host([data-variant=segments]) .marker'
+    ],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
     ]
   },
   {
@@ -4026,8 +6454,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['transparent'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-reflection-strength',
@@ -4035,8 +6467,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-reflection-x',
@@ -4044,8 +6480,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-reflection-y',
@@ -4053,8 +6493,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/surface.helpers.ts']
   },
   {
     name: '--bx-glass-rim-opacity',
@@ -4063,7 +6507,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '1']
+    themeEditable: false,
+    defaults: ['0', '1'],
+    fallbacks: ['0.5', '1'],
+    selectors: ['.marker', '.panel-surface', '.step-body', '.step-connector', '.step-selection', ':host([data-variant=cards]) .step-body', '[data-bx-surface]'],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-glass-rim-visibility',
@@ -4072,6 +6527,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       '0',
       '0.25',
@@ -4081,6 +6537,35 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'calc(0.25 + clamp(0, var(--step-activation, 0), 1) * 0.4)',
       'calc(var(--step-rim-interaction, 0.8) * var(--step-rim-semantic, 1))',
       'var(--bx-alert-rim-opacity, 0.8)'
+    ],
+    fallbacks: ['1'],
+    selectors: [
+      '.bx-alert',
+      '.bx-collapsible-trigger',
+      '.bx-menu-item-btn',
+      '.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid)',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.marker',
+      '.step-body',
+      '.step-connector',
+      '.step-selection',
+      ':host(.bx-btn-text)',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':host([data-variant=cards]) .step-body',
+      ':host([data-variant=segments]) .marker'
+    ],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
     ]
   },
   {
@@ -4090,25 +6575,127 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
-      '0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)',
-      '0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-      '0 2px 4px rgb(0 0 0 / 8%)',
-      '0 4px 12px rgba(0, 0, 0, 0.15)',
-      '0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px -16px color-mix(in srgb, var(--bx-toast-emission) 55%, transparent)',
-      '0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12)',
       '0 8px 18px -10px color-mix(in srgb, var(--bx-text-danger) 65%, transparent)',
-      '0 8px 20px rgba(0, 0, 0, 0.12)',
       'inset 0 -2px 0 var(--bx-tab-highlight, var(--bx-border-brand))',
+      'inset 0 0 0 2px var(--bx-glass-text)',
       'inset 0 2px 4px var(--bx-border-default)',
       'none',
-      'var(--bx-alert-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1))',
-      'var(--bx-alert-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1), 0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 44%, transparent))',
+      'var(--bx-alert-shadow, var(--bx-shadow-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)))',
+      'var(--bx-alert-shadow, var(--bx-shadow-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)), 0 8px 24px -16px color-mix(in srgb, var(--bx-alert-emission) 44%, transparent))',
       'var(--bx-button-press-shadow, inset 0 2px 4px var(--bx-border-default))',
-      'var(--bx-card-shadow, 0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12))',
       'var(--bx-card-shadow, none)',
-      'var(--bx-popover-shadow, 0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1))',
+      'var(--bx-card-shadow, var(--bx-shadow-md, 0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12)))',
+      'var(--bx-popover-shadow, var(--bx-shadow-lg, 0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)))',
+      'var(--bx-shadow-control, 0 2px 4px rgba(0, 0, 0, 0.08))',
+      'var(--bx-shadow-lg, 0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1))',
+      'var(--bx-shadow-md, 0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12))',
+      'var(--bx-shadow-modal, 0 8px 20px rgba(0, 0, 0, 0.12))',
+      'var(--bx-shadow-sm, 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1))',
+      'var(--bx-shadow-toast, 0 4px 12px rgba(0, 0, 0, 0.15))',
+      'var(--bx-shadow-toast, 0 4px 12px rgba(0, 0, 0, 0.15)), 0 8px 24px -16px color-mix(in srgb, var(--bx-toast-emission) 55%, transparent)',
       'var(--bx-tag-shadow, none)'
+    ],
+    fallbacks: ['var(--bx-shadow-surface, 0 2px 6px rgba(0, 0, 0, 0.08))'],
+    selectors: [
+      '.bx-alert',
+      '.bx-alert.has-emission',
+      '.bx-autocomplete-panel',
+      '.bx-checkbox-box[data-bx-surface]',
+      '.bx-chip',
+      '.bx-collapsible',
+      '.bx-collapsible-trigger',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button))',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)).is-open:not(:disabled)',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)).is-readonly.is-keyboard-focused:focus-within',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)):focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)):focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button)):has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface]',
+      '.bx-input-wrapper[data-bx-surface]',
+      '.bx-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-input-wrapper[data-bx-surface].is-open:not(:disabled)',
+      '.bx-input-wrapper[data-bx-surface].is-readonly.is-keyboard-focused:focus-within',
+      '.bx-input-wrapper[data-bx-surface]:focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-input-wrapper[data-bx-surface]:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-input-wrapper[data-bx-surface]:has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-menu-wrapper',
+      '.bx-popover-surface',
+      '.bx-radio-circle[data-bx-surface]',
+      '.bx-search-input-wrapper[data-bx-surface]',
+      '.bx-search-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-search-input-wrapper[data-bx-surface].is-open:not(:disabled)',
+      '.bx-search-input-wrapper[data-bx-surface].is-readonly.is-keyboard-focused:focus-within',
+      '.bx-search-input-wrapper[data-bx-surface]:focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-search-input-wrapper[data-bx-surface]:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-search-input-wrapper[data-bx-surface]:has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-select-panel[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface].is-invalid',
+      '.bx-select-trigger[data-bx-surface].is-open:not(:disabled)',
+      '.bx-select-trigger[data-bx-surface].is-readonly.is-keyboard-focused:focus-within',
+      '.bx-select-trigger[data-bx-surface]:focus-visible:not(:disabled, [readonly], [aria-readonly=true])',
+      '.bx-select-trigger[data-bx-surface]:focus-within:not(.is-disabled, :disabled, .is-readonly, [readonly], [aria-readonly=true], :has([readonly], [aria-readonly=true]))',
+      '.bx-select-trigger[data-bx-surface]:has(.bx-readonly.is-keyboard-focused):focus-within',
+      '.bx-selection-surface',
+      '.bx-slide-toggle-track[data-bx-surface]',
+      '.bx-tab-header',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tag',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.marker',
+      '.panel-surface',
+      '.step-body',
+      '.step-connector',
+      '.step-selection',
+      '.toast-wrapper.has-emission',
+      '.toast-wrapper.no-bg[data-bx-surface]',
+      '.toast-wrapper[data-bx-surface]',
+      ':host',
+      ':host(.bx-tabs-underline) .bx-tab-selection',
+      ':host(:active:not(.bx-btn-non-interactive, [disabled], [aria-disabled=true]))',
+      ':host(:is([aria-pressed=true],\n[aria-selected=true],\n[aria-expanded=true][aria-haspopup]:not([aria-haspopup=false]),\n[aria-current]:not([aria-current=false], [aria-current=""])):not(.bx-btn-non-interactive, [aria-disabled=true]))',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':host(:not([data-bx-surface]))',
+      ':host(:not([data-bx-surface])).bx-btn-is-elevated',
+      ':host([data-bx-surface])',
+      ':host([data-bx-surface]).bx-btn-is-elevated',
+      ':host([data-clickable=true]):is(:active, .is-keyboard-pressed):not(.is-disabled, .is-readonly)',
+      ':host([data-variant=elevated])',
+      ':host([data-variant=segments]) .marker',
+      ':host([data-variant=segments]) .step-item button.step-body:hover:not(:disabled, [aria-disabled=true]) .marker',
+      '[data-bx-surface]',
+      '[data-bx-surface].is-invalid'
+    ],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
     ]
   },
   {
@@ -4117,7 +6704,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'local',
+    scope: 'theme',
+    themeEditable: false,
     defaults: [
       'Canvas',
       'CanvasText',
@@ -4166,6 +6754,121 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--step-selection-color, var(--step-color))',
       'var(--step-state-background)',
       'var(--step-state-color)'
+    ],
+    fallbacks: ['var(--bx-bg-surface)', 'var(--bx-bg-surface, Canvas)'],
+    selectors: [
+      '.blocks-catalog-theme',
+      '.bx-alert',
+      '.bx-autocomplete-panel',
+      '.bx-checkbox-box[data-bx-surface]',
+      '.bx-checkbox-box[data-bx-surface].is-checked',
+      '.bx-checkbox-box[data-bx-surface].is-invalid',
+      '.bx-chip',
+      '.bx-chip.is-filled',
+      '.bx-chip.is-outlined',
+      '.bx-collapsible',
+      '.bx-collapsible-trigger',
+      '.bx-collapsible-trigger:hover:not(:disabled, [aria-disabled=true])',
+      '.bx-field-control > :where([data-bx-surface]:not(button[bx-button], a[bx-button], bx-button))',
+      '.bx-field-wrapper.is-invalid > .bx-field-control > [data-bx-surface]',
+      '.bx-inline-wrapper:not(.is-disabled) .bx-radio-circle[data-bx-surface]:not(.is-invalid).is-checked',
+      '.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-radio-circle[data-bx-surface]:not(.is-invalid)',
+      '.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-radio-circle[data-bx-surface]:not(.is-invalid).is-checked',
+      '.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid)',
+      '.bx-inline-wrapper:not(.is-disabled, .is-readonly):hover .bx-slide-toggle-track[data-bx-surface]:not(.is-invalid).is-checked',
+      '.bx-input-wrapper[data-bx-surface]',
+      '.bx-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-menu-wrapper',
+      '.bx-popover-surface',
+      '.bx-radio-circle[data-bx-surface]',
+      '.bx-radio-circle[data-bx-surface].is-checked',
+      '.bx-radio-circle[data-bx-surface].is-invalid',
+      '.bx-search-input-wrapper[data-bx-surface]',
+      '.bx-search-input-wrapper[data-bx-surface].is-invalid',
+      '.bx-select-panel[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface]',
+      '.bx-select-trigger[data-bx-surface].is-invalid',
+      '.bx-selection-surface',
+      '.bx-slide-toggle-track[data-bx-surface]',
+      '.bx-slide-toggle-track[data-bx-surface].is-checked',
+      '.bx-slide-toggle-track[data-bx-surface].is-invalid',
+      '.bx-tab-header',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
+      '.bx-tag',
+      '.bx-tag.is-filled',
+      '.bx-tag.is-outlined',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.is-awaiting-confirmation .marker',
+      '.is-complete .marker',
+      '.is-current .marker',
+      '.is-error .marker',
+      '.is-unavailable .marker',
+      '.marker',
+      '.panel-surface',
+      '.step-body',
+      '.step-connector',
+      '.step-connector-fill',
+      '.step-item:not(.is-current) button.step-body:hover:not(:disabled, [aria-disabled=true]) .marker',
+      '.step-selection',
+      '.toast-wrapper[data-bx-surface]',
+      ':host',
+      ':host(.bx-btn-tonal)',
+      ':host(.bx-btn-tonal):active:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host(.bx-btn-tonal):hover:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host(.is-readonly) .is-error .marker',
+      ':host(.is-readonly) .marker',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined)):active:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined)):hover:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host(:is([aria-pressed=true],\n[aria-selected=true],\n[aria-expanded=true][aria-haspopup]:not([aria-haspopup=false]),\n[aria-current]:not([aria-current=false], [aria-current=""])):not(.bx-btn-non-interactive, [aria-disabled=true]))',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
+      ':host(:not([data-bx-surface]))',
+      ':host([data-bx-surface])',
+      ':host([data-bx-surface]):hover:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host([data-clickable=true]):is(:active, .is-keyboard-pressed):not(.is-disabled, .is-readonly)',
+      ':host([data-clickable=true]:hover:not(.is-disabled, .is-readonly))',
+      ':host([data-selected=true])',
+      ':host([data-variant=cards]) .step-body',
+      ':host([data-variant=filled])',
+      ':host([data-variant=segments]) .is-awaiting-confirmation .marker',
+      ':host([data-variant=segments]) .is-complete .marker',
+      ':host([data-variant=segments]) .is-current .marker',
+      ':host([data-variant=segments]) .is-error .marker',
+      ':host([data-variant=segments]) .is-unavailable .marker',
+      ':host([data-variant=segments]) .marker',
+      ':host([data-variant=segments]) .step-item button.step-body:hover:not(:disabled, [aria-disabled=true]) .marker',
+      ':host([data-variant=segments].is-readonly) .is-error .marker',
+      ':host([data-variant=segments].is-readonly) .marker',
+      '[data-bx-surface]'
+    ],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
     ]
   },
   {
@@ -4174,7 +6877,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'local',
+    scope: 'theme',
+    themeEditable: false,
     defaults: [
       'CanvasText',
       'HighlightText',
@@ -4206,6 +6910,87 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-toast-text, var(--bx-text-primary))',
       'var(--step-on-color)',
       'var(--step-state-text)'
+    ],
+    fallbacks: ['var(--bx-text-primary)', 'var(--bx-text-primary, CanvasText)'],
+    selectors: [
+      '.blocks-catalog-theme',
+      '.bx-alert',
+      '.bx-autocomplete-panel',
+      '.bx-checkbox-box[data-bx-surface]',
+      '.bx-checkbox-box[data-bx-surface].is-checked',
+      '.bx-checkbox-box[data-bx-surface].is-invalid',
+      '.bx-chip',
+      '.bx-chip.is-filled',
+      '.bx-collapsible',
+      '.bx-menu-wrapper',
+      '.bx-popover-surface',
+      '.bx-radio-circle[data-bx-surface]',
+      '.bx-radio-circle[data-bx-surface].is-checked',
+      '.bx-radio-circle[data-bx-surface].is-invalid',
+      '.bx-select-panel[data-bx-surface]',
+      '.bx-slide-toggle-track[data-bx-surface]',
+      '.bx-slide-toggle-track[data-bx-surface].is-checked',
+      '.bx-slide-toggle-track[data-bx-surface].is-invalid',
+      '.bx-tab-trigger',
+      '.bx-tab-trigger.is-selected',
+      '.bx-tab-trigger:hover:not(:disabled, .is-selected)',
+      '.bx-tag',
+      '.bx-tag.is-filled',
+      '.bx-tooltip-surface[data-bx-surface]',
+      '.is-awaiting-confirmation .marker',
+      '.is-complete .marker',
+      '.is-current .marker',
+      '.is-error .marker',
+      '.is-unavailable .marker',
+      '.marker',
+      '.panel-surface',
+      '.step-body',
+      '.step-item:not(.is-current) button.step-body:hover:not(:disabled, [aria-disabled=true]) .marker',
+      '.toast-wrapper[data-bx-surface]',
+      ':host',
+      ':host(.is-readonly) .is-current .marker',
+      ':host(.is-readonly) .is-error .marker',
+      ':host(.is-readonly) .marker',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined)):active:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined)):hover:not(.bx-btn-non-interactive, [aria-disabled=true])',
+      ':host(:not([data-bx-surface]))',
+      ':host(:not([data-bx-surface])).bx-btn-color-danger',
+      ':host(:not([data-bx-surface])).bx-btn-color-info',
+      ':host(:not([data-bx-surface])).bx-btn-color-success',
+      ':host(:not([data-bx-surface])).bx-btn-color-warn',
+      ':host([data-bx-surface])',
+      ':host([data-bx-surface]).bx-btn-color-danger',
+      ':host([data-bx-surface]).bx-btn-color-info',
+      ':host([data-bx-surface]).bx-btn-color-success',
+      ':host([data-bx-surface]).bx-btn-color-warn',
+      '[data-bx-surface]'
+    ],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
     ]
   },
   {
@@ -4215,7 +7000,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Glass and appearance',
     kind: 'value',
     scope: 'local',
-    defaults: ['1']
+    themeEditable: false,
+    defaults: ['1'],
+    fallbacks: [],
+    selectors: ['.bx-tooltip-surface[data-bx-surface]'],
+    sources: ['projects/blocks/effects/runtime/helpers/surface.helpers.ts', 'projects/blocks/primitives/components/tooltip/tooltip.scss']
   },
   {
     name: '--bx-grid-columns',
@@ -4223,8 +7012,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 grid',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['repeat(auto-fit, minmax(min(100%, var(--bx-grid-min-column, 16rem)), 1fr))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/grid/grid.scss', 'projects/blocks/primitives/components/grid/grid.ts']
   },
   {
     name: '--bx-grid-gap',
@@ -4232,8 +7025,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 grid',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-layout-gap, var(--bx-space-4, 1rem))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/grid/grid.scss']
   },
   {
     name: '--bx-grid-min-column',
@@ -4241,8 +7038,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 grid',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['16rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/grid/grid.scss', 'projects/blocks/primitives/components/grid/grid.ts']
   },
   {
     name: '--bx-layout-gap',
@@ -4251,6 +7052,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 layout',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       'var(--bx-space-0, 0)',
       'var(--bx-space-1, 0.25rem)',
@@ -4262,7 +7064,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-space-5, 1.25rem)',
       'var(--bx-space-6, 1.5rem)',
       'var(--bx-space-8, 2rem)'
-    ]
+    ],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [
+      ':host([data-gap="0"])',
+      ':host([data-gap="1"])',
+      ':host([data-gap="10"])',
+      ':host([data-gap="12"])',
+      ':host([data-gap="2"])',
+      ':host([data-gap="3"])',
+      ':host([data-gap="4"])',
+      ':host([data-gap="5"])',
+      ':host([data-gap="6"])',
+      ':host([data-gap="8"])'
+    ],
+    sources: ['projects/blocks/primitives/components/grid/grid.scss', 'projects/blocks/primitives/components/stack/stack.scss']
   },
   {
     name: '--bx-load-more-padding',
@@ -4271,7 +7087,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 load',
     kind: 'value',
     scope: 'local',
-    defaults: ['0.5rem 0.75rem']
+    themeEditable: false,
+    defaults: ['var(--bx-space-2, 0.5rem) var(--bx-space-3, 0.75rem)'],
+    fallbacks: ['var(--bx-space-2, 0.5rem) 0'],
+    selectors: ['.bx-autocomplete-scroll', '.bx-select-menu-container'],
+    sources: [
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/shared/load-more/load-more-footer.scss'
+    ]
   },
   {
     name: '--bx-loading-color',
@@ -4279,8 +7104,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 loading',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/loading-indicator/loading-indicator.scss']
   },
   {
     name: '--bx-loading-gap',
@@ -4288,8 +7117,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 loading',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/loading-indicator/loading-indicator.scss']
   },
   {
     name: '--bx-menu-item-gap',
@@ -4297,8 +7130,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 menu',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/menu/menu.scss']
   },
   {
     name: '--bx-menu-min-width',
@@ -4306,8 +7143,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 menu',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['12rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/menu/menu.scss']
   },
   {
     name: '--bx-modal-backdrop-background',
@@ -4316,7 +7157,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-side-nav-backdrop, var(--bx-backdrop-color))']
+    themeEditable: false,
+    defaults: ['var(--bx-side-nav-backdrop, var(--bx-backdrop-color))'],
+    fallbacks: ['rgb(0 0 0 / 32%)', 'rgb(0 0 0 / 50%)', 'rgba(0, 0, 0, 0.32)'],
+    selectors: ['.bx-nav-backdrop'],
+    sources: [
+      'projects/blocks/modal/components/modal-core/modal-core.scss',
+      'projects/blocks/modal/components/shared/ui/backdrop/modal-backdrop.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-modal-backdrop-blur',
@@ -4324,8 +7174,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 modal',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['8px'],
+    selectors: [],
+    sources: ['projects/blocks/modal/components/shared/ui/backdrop/modal-backdrop.scss']
   },
   {
     name: '--bx-modal-backdrop-fill',
@@ -4334,7 +7188,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent', 'var(--bx-modal-backdrop-tone)']
+    themeEditable: false,
+    defaults: ['transparent', 'var(--bx-modal-backdrop-tone)'],
+    fallbacks: ['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0.6)', 'var(--bx-modal-backdrop-background, rgba(0, 0, 0, 0.32))'],
+    selectors: [':host', ':host(.has-backdrop)', ':host(.has-backdrop.is-nested)', ':host-context([data-bx-reduced-transparency=true])'],
+    sources: ['projects/blocks/modal/components/modal-core/modal-core.scss', 'projects/blocks/modal/components/shared/ui/backdrop/modal-backdrop.scss']
   },
   {
     name: '--bx-modal-backdrop-position',
@@ -4343,7 +7201,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['absolute']
+    themeEditable: false,
+    defaults: ['absolute'],
+    fallbacks: ['fixed'],
+    selectors: [':host(.is-inline.is-mobile) .bx-nav-backdrop'],
+    sources: ['projects/blocks/modal/components/shared/ui/backdrop/modal-backdrop.scss', 'projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-modal-backdrop-tone',
@@ -4352,7 +7214,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['rgb(0 0 0 / 60%)', 'var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%))', 'var(--bx-modal-backdrop-background, rgb(0 0 0 / 50%))']
+    themeEditable: false,
+    defaults: ['rgb(0 0 0 / 60%)', 'var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%))', 'var(--bx-modal-backdrop-background, rgb(0 0 0 / 50%))'],
+    fallbacks: [],
+    selectors: [':host', ':host-context([data-bx-reduced-transparency=true])'],
+    sources: ['projects/blocks/modal/components/modal-core/modal-core.scss']
   },
   {
     name: '--bx-modal-backdrop-z-index',
@@ -4361,7 +7227,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['300']
+    themeEditable: false,
+    defaults: ['300'],
+    fallbacks: ['400'],
+    selectors: ['.bx-nav-backdrop'],
+    sources: ['projects/blocks/modal/components/shared/ui/backdrop/modal-backdrop.scss', 'projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-modal-bg',
@@ -4369,8 +7239,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 modal',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)', 'var(--bx-panel-bg, var(--bx-bg-surface))'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-modal-dimming-background',
@@ -4379,7 +7258,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['transparent', 'var(--bx-modal-backdrop-tone)']
+    themeEditable: false,
+    defaults: ['transparent', 'var(--bx-modal-backdrop-tone)'],
+    fallbacks: ['transparent'],
+    selectors: [':host', ':host(.has-backdrop)', ':host(.has-backdrop.is-nested)', ':host-context([data-bx-reduced-transparency=true])'],
+    sources: [
+      'projects/blocks/modal/components/modal-core/modal-core.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss'
+    ]
   },
   {
     name: '--bx-modal-material-opacity',
@@ -4387,8 +7275,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 modal',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.52'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/modal-core/modal-core.ts',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss'
+    ]
   },
   {
     name: '--bx-modal-mobile-swipe-line-color',
@@ -4396,8 +7293,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 modal',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-default)'],
+    selectors: [],
+    sources: ['projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss']
   },
   {
     name: '--bx-modal-scale',
@@ -4406,7 +7307,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 modal',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '1']
+    themeEditable: false,
+    defaults: ['0', '1'],
+    fallbacks: ['1'],
+    selectors: ['.centered-modal-frame.centered-modal-animate-in', 'from', 'to'],
+    sources: ['projects/blocks/modal/components/views/centered/modal-centered.scss']
   },
   {
     name: '--bx-modal-text',
@@ -4414,8 +7319,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 modal',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-panel-text, var(--bx-text-primary))', 'var(--bx-text-primary)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-nav-item-active-background',
@@ -4424,7 +7339,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 nav',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-top-nav-item-active-background, var(--bx-accent-subtle))']
+    themeEditable: false,
+    defaults: ['var(--bx-top-nav-item-active-background, var(--bx-accent-subtle))'],
+    fallbacks: ['var(--bx-side-nav-item-active-background, var(--bx-accent-subtle))'],
+    selectors: [':host'],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-nav-item-background',
@@ -4433,7 +7352,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 nav',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-top-nav-item-background, transparent)']
+    themeEditable: false,
+    defaults: ['var(--bx-top-nav-item-background, transparent)'],
+    fallbacks: ['var(--bx-side-nav-item-background, transparent)'],
+    selectors: [':host'],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-nav-item-gap',
@@ -4442,7 +7365,14 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 nav',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-top-nav-item-gap, 0.5rem)']
+    themeEditable: false,
+    defaults: ['var(--bx-top-nav-item-gap, var(--bx-space-2, 0.5rem))'],
+    fallbacks: ['var(--bx-side-nav-item-gap, var(--bx-space-2, 0.5rem))'],
+    selectors: [':host'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss'
+    ]
   },
   {
     name: '--bx-nav-item-hover-background',
@@ -4451,7 +7381,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 nav',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-top-nav-item-hover-background, var(--bx-accent-subtle))']
+    themeEditable: false,
+    defaults: ['var(--bx-top-nav-item-hover-background, var(--bx-accent-subtle))'],
+    fallbacks: ['var(--bx-side-nav-item-hover-background, var(--bx-accent-subtle))'],
+    selectors: [':host'],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-nav-item-radius',
@@ -4460,7 +7394,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 nav',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-top-nav-item-radius, 0.5rem)']
+    themeEditable: false,
+    defaults: ['var(--bx-top-nav-item-radius, var(--bx-rounded-md, 0.5rem))'],
+    fallbacks: ['var(--bx-side-nav-item-radius, var(--bx-rounded-md, 0.5rem))'],
+    selectors: [':host'],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-nav-level-offset',
@@ -4469,7 +7407,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 nav',
     kind: 'value',
     scope: 'local',
-    defaults: ['-1rem', '1rem']
+    themeEditable: false,
+    defaults: ['-var(--bx-space-4, 1rem)', 'var(--bx-space-4, 1rem)'],
+    fallbacks: [],
+    selectors: [
+      '.bx-nav-level-items.is-animated',
+      '.bx-nav-level-items.is-animated.is-backward',
+      '.bx-nav-level-items.is-animated:dir(rtl)',
+      '.bx-nav-level-items.is-animated:dir(rtl).is-backward'
+    ],
+    sources: ['projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss']
   },
   {
     name: '--bx-on-accent',
@@ -4477,8 +7424,20 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-on-accent-active',
@@ -4486,8 +7445,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-on-accent-hover',
@@ -4495,8 +7458,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-on-primary',
@@ -4504,8 +7471,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
   },
   {
     name: '--bx-on-primary-active',
@@ -4513,8 +7484,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-on-primary-hover',
@@ -4522,8 +7497,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ffffff']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ffffff'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-origin',
@@ -4532,7 +7511,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 origin',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/core/helpers/overlay-origin.helpers.ts']
   },
   {
     name: '--bx-overlay-anchor-left',
@@ -4541,7 +7524,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 overlay',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['global', 'projects/blocks/core/helpers/overlay-origin.helpers.ts']
   },
   {
     name: '--bx-overlay-anchor-top',
@@ -4550,7 +7537,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 overlay',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['global', 'projects/blocks/core/helpers/overlay-origin.helpers.ts']
   },
   {
     name: '--bx-overlay-layer-z-index',
@@ -4559,7 +7550,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 overlay',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['global', 'projects/blocks/core/helpers/overlay-origin.helpers.ts']
   },
   {
     name: '--bx-page-description-color',
@@ -4567,8 +7562,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-header/page-header.scss']
   },
   {
     name: '--bx-page-description-width',
@@ -4576,8 +7575,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['48rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-header/page-header.scss']
   },
   {
     name: '--bx-page-gap',
@@ -4585,8 +7588,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-8, 2rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-container/page-container.scss']
   },
   {
     name: '--bx-page-padding-block',
@@ -4594,8 +7601,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['clamp(var(--bx-space-4, 1rem), 3vw, var(--bx-space-10, 2.5rem))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-container/page-container.scss']
   },
   {
     name: '--bx-page-padding-inline',
@@ -4603,8 +7614,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['clamp(var(--bx-space-4, 1rem), 3vw, var(--bx-space-10, 2.5rem))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-container/page-container.scss']
   },
   {
     name: '--bx-page-section-color',
@@ -4612,8 +7627,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-brand)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-header/page-header.scss']
   },
   {
     name: '--bx-page-title-color',
@@ -4621,8 +7640,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-heading)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-header/page-header.scss']
   },
   {
     name: '--bx-page-title-size',
@@ -4630,8 +7653,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 page',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['clamp(2rem, 4vw, 3rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/page-header/page-header.scss']
   },
   {
     name: '--bx-panel-backdrop',
@@ -4639,8 +7666,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-modal-backdrop-background, rgba(0, 0, 0, 0.32))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-panel-bg',
@@ -4648,8 +7679,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)', 'var(--bx-modal-bg, var(--bx-bg-surface))'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-panel-close-size',
@@ -4657,8 +7697,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2rem'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-panel-duration',
@@ -4667,7 +7715,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 panel',
     kind: 'value',
     scope: 'local',
-    defaults: ['0ms']
+    themeEditable: false,
+    defaults: ['0ms'],
+    fallbacks: ['175ms'],
+    selectors: ['.panel-layer'],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss', 'projects/blocks/primitives/components/side-panel/side-panel.ts']
   },
   {
     name: '--bx-panel-gap',
@@ -4675,8 +7727,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-panel-padding',
@@ -4684,8 +7740,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-panel-rendered-width',
@@ -4694,7 +7754,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 panel',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-panel-resize-gutter',
@@ -4703,7 +7767,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 panel',
     kind: 'value',
     scope: 'local',
-    defaults: ['1.5rem']
+    themeEditable: false,
+    defaults: ['var(--bx-space-6, 1.5rem)'],
+    fallbacks: ['var(--bx-space-6, 1.5rem)'],
+    selectors: [':host'],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss', 'projects/blocks/primitives/components/side-panel/side-panel.ts']
   },
   {
     name: '--bx-panel-text',
@@ -4711,8 +7779,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-modal-text, var(--bx-text-primary))', 'var(--bx-text-primary)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-panel-z-index',
@@ -4720,8 +7797,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 panel',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['300'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-popover-background',
@@ -4729,8 +7810,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-border',
@@ -4738,8 +7823,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-default)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-color',
@@ -4747,8 +7836,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-primary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-max-width',
@@ -4756,8 +7849,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['24rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-padding',
@@ -4765,8 +7862,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-radius',
@@ -4774,8 +7875,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-lg, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-shadow',
@@ -4783,8 +7888,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-shadow-lg, 0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-popover-width',
@@ -4792,8 +7901,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 popover',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['max-content'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/popover/popover.scss']
   },
   {
     name: '--bx-primary',
@@ -4801,8 +7914,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#292a2d']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#292a2d'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/runtime/helpers/surface.helpers.ts',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/button/button.ts',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/primitives/components/card/card.ts',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-primary-active',
@@ -4810,8 +7939,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(10.9333333333%, 11.2%, 12%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(10.9333333333%, 11.2%, 12%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-primary-hover',
@@ -4819,8 +7952,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(13.6666666667%, 14%, 15%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(13.6666666667%, 14%, 15%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-primary-subtle',
@@ -4828,8 +7965,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f7f7f5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f7f7f5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-progress-color',
@@ -4838,7 +7985,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 progress',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--step-color)']
+    themeEditable: false,
+    defaults: ['var(--step-color)'],
+    fallbacks: ['var(--bx-accent)'],
+    selectors: [':host([data-variant=progress])'],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss', 'projects/blocks/primitives/components/progress-bar/progress-bar.scss']
   },
   {
     name: '--bx-progress-height',
@@ -4847,7 +7998,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 progress',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--step-thickness)']
+    themeEditable: false,
+    defaults: ['var(--step-thickness)'],
+    fallbacks: ['4px'],
+    selectors: [':host([data-variant=progress])'],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss', 'projects/blocks/primitives/components/progress-bar/progress-bar.scss']
   },
   {
     name: '--bx-progress-radius',
@@ -4855,8 +8010,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 progress',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-pill, 9999px)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/progress-bar/progress-bar.scss']
   },
   {
     name: '--bx-progress-track',
@@ -4864,8 +8023,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 progress',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/progress-bar/progress-bar.scss']
   },
   {
     name: '--bx-radio-group-gap',
@@ -4873,8 +8036,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 radio',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.5rem'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/radio-group/radio-group.scss']
   },
   {
     name: '--bx-range-end',
@@ -4883,7 +8050,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 range',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-range-start',
@@ -4892,7 +8063,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 range',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-reduced-motion',
@@ -4900,8 +8075,23 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'other',
     group: 'Accessibility',
     kind: 'value',
-    scope: 'local',
-    defaults: ['0', '1']
+    scope: 'global',
+    themeEditable: false,
+    defaults: ['0', '1'],
+    fallbacks: ['0'],
+    selectors: ['.bx-reduce-motion-forced', ':root'],
+    sources: [
+      'global',
+      'projects/blocks/core/services/bx-a11y.service.ts',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-refraction-arc',
@@ -4910,7 +8100,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['linear-gradient(#000000 0 0)', 'var(--bx-refraction-arc-glint)', 'var(--bx-refraction-arc-rim)']
+    themeEditable: false,
+    defaults: ['linear-gradient(#000000 0 0)', 'var(--bx-refraction-arc-glint)', 'var(--bx-refraction-arc-rim)'],
+    fallbacks: [],
+    selectors: ['.bx-refraction-fold', '.bx-refraction-glint', '.bx-refraction-rim', '.bx-refraction-spec'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-arc-glint',
@@ -4919,7 +8113,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts']
   },
   {
     name: '--bx-refraction-arc-rim',
@@ -4928,7 +8126,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts']
   },
   {
     name: '--bx-refraction-blur',
@@ -4937,8 +8139,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       'max(\n      var(--bx-refraction-min-blur, 0.5px),\n      var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469)))\n  )'
+    ],
+    fallbacks: [],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts',
+      'projects/blocks/effects/runtime/classes/refractive-surface.ts'
     ]
   },
   {
@@ -4947,8 +8157,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['#ffffff'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-caustic-o',
@@ -4957,7 +8171,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(0.35 * (1 - var(--bx-refraction-dark, 0)))']
+    themeEditable: false,
+    defaults: ['calc(0.35 * (1 - var(--bx-refraction-dark, 0)))'],
+    fallbacks: ['0.7'],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-dark',
@@ -4966,7 +8184,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '1']
+    themeEditable: false,
+    defaults: ['0', '1'],
+    fallbacks: ['0'],
+    selectors: ['[data-theme=dark]', '[data-theme=light]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-edge-depth',
@@ -4975,7 +8197,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(var(--bx-refraction-r) * var(--bx-refraction-fold-k, 0.39))', 'calc(var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1))']
+    themeEditable: false,
+    defaults: ['calc(var(--bx-refraction-r) * var(--bx-refraction-fold-k, 0.39))', 'calc(var(--bx-refraction-rim-fade, 2px) * var(--bx-refraction-s, 1))'],
+    fallbacks: [],
+    selectors: ['.bx-refraction-edge', '.bx-refraction-fold'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-edge-radius',
@@ -4984,7 +8210,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-refraction-r)']
+    themeEditable: false,
+    defaults: ['var(--bx-refraction-r)'],
+    fallbacks: [],
+    selectors: ['.bx-refraction-edge'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-edge-width',
@@ -4993,7 +8223,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['0px', 'calc(var(--bx-refraction-rim-w, 0.7px) * var(--bx-refraction-s, 1))']
+    themeEditable: false,
+    defaults: ['0px', 'calc(var(--bx-refraction-rim-w, 0.7px) * var(--bx-refraction-s, 1))'],
+    fallbacks: [],
+    selectors: ['.bx-refraction-edge', '.bx-refraction-fold'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-fold-exp',
@@ -5002,7 +8236,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts']
   },
   {
     name: '--bx-refraction-fold-k',
@@ -5010,8 +8248,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.39'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts']
   },
   {
     name: '--bx-refraction-fold-sat',
@@ -5020,7 +8262,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts']
   },
   {
     name: '--bx-refraction-glint-exp',
@@ -5029,7 +8275,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(1.35 + 0.1 * var(--bx-refraction-dark, 0))']
+    themeEditable: false,
+    defaults: ['calc(1.35 + 0.1 * var(--bx-refraction-dark, 0))'],
+    fallbacks: [],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-glint-sat',
@@ -5038,7 +8288,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(3.1 - 1.1 * var(--bx-refraction-dark, 0))']
+    themeEditable: false,
+    defaults: ['calc(3.1 - 1.1 * var(--bx-refraction-dark, 0))'],
+    fallbacks: [],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-material-opacity',
@@ -5047,7 +8301,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1)']
+    themeEditable: false,
+    defaults: ['clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1)'],
+    fallbacks: ['0.72'],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-min-blur',
@@ -5055,8 +8313,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.5px'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-min-opacity',
@@ -5065,7 +8327,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['max(0.72, var(--bx-modal-material-opacity, 0.52))']
+    themeEditable: false,
+    defaults: ['max(0.72, var(--bx-modal-material-opacity, 0.52))'],
+    fallbacks: ['0.72'],
+    selectors: ['[data-bx-surface]'],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss'
+    ]
   },
   {
     name: '--bx-refraction-r',
@@ -5074,7 +8345,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts',
+      'projects/blocks/effects/runtime/classes/refractive-surface.ts'
+    ]
   },
   {
     name: '--bx-refraction-reflection-opacity',
@@ -5082,8 +8361,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-rim-exp',
@@ -5092,7 +8375,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(0.84 + 0.41 * var(--bx-refraction-dark, 0))']
+    themeEditable: false,
+    defaults: ['calc(0.84 + 0.41 * var(--bx-refraction-dark, 0))'],
+    fallbacks: [],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-rim-fade',
@@ -5100,8 +8387,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2px'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-rim-sat',
@@ -5110,7 +8401,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(2.2 - 0.9 * var(--bx-refraction-dark, 0))']
+    themeEditable: false,
+    defaults: ['calc(2.2 - 0.9 * var(--bx-refraction-dark, 0))'],
+    fallbacks: [],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-rim-w',
@@ -5118,8 +8413,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.7px'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-s',
@@ -5127,8 +8426,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-saturation',
@@ -5137,7 +8440,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/effects/runtime/classes/detailed-refractive-surface.ts', 'projects/blocks/effects/runtime/classes/refractive-surface.ts']
   },
   {
     name: '--bx-refraction-spec',
@@ -5146,7 +8453,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)))']
+    themeEditable: false,
+    defaults: ['calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)))'],
+    fallbacks: ['0.13'],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-state-opacity',
@@ -5155,7 +8466,13 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['0.9']
+    themeEditable: false,
+    defaults: ['0.9'],
+    fallbacks: ['0'],
+    selectors: [
+      '[data-bx-refraction=true]:is(:active,\n[aria-pressed=true],\n[aria-selected=true],\n[aria-checked=true],\n[aria-expanded=true][aria-haspopup]:not([aria-haspopup=false]))'
+    ],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-tint',
@@ -5163,8 +8480,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Refraction',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['transparent'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-refraction-underlay',
@@ -5173,7 +8494,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Refraction',
     kind: 'value',
     scope: 'local',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['0.14'],
+    selectors: ['[data-bx-refraction=true]'],
+    sources: ['projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-resize-grip-background',
@@ -5181,8 +8506,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 resize',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-resize-grip-border',
@@ -5190,8 +8519,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 resize',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-default)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-resize-grip-color',
@@ -5199,8 +8532,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 resize',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-resize-grip-duration',
@@ -5208,8 +8545,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 resize',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['150ms'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-resize-rail-color',
@@ -5217,8 +8558,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 resize',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-resize-grip-background, var(--bx-bg-element))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
   },
   {
     name: '--bx-rounded-2xl',
@@ -5227,7 +8572,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['1.5rem']
+    themeEditable: true,
+    defaults: ['1.5rem'],
+    fallbacks: ['1.5rem'],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-rounded-3xl',
@@ -5236,7 +8585,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['1.875rem']
+    themeEditable: true,
+    defaults: ['1.875rem'],
+    fallbacks: ['1.875rem'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss']
   },
   {
     name: '--bx-rounded-lg',
@@ -5245,7 +8598,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['0.75rem']
+    themeEditable: true,
+    defaults: ['0.75rem'],
+    fallbacks: ['0', '0.75rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/popover/popover.scss'
+    ]
   },
   {
     name: '--bx-rounded-md',
@@ -5254,7 +8625,26 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['0.5rem']
+    themeEditable: true,
+    defaults: ['0.5rem'],
+    fallbacks: ['0.5rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-rounded-none',
@@ -5263,7 +8653,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['0'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
+    ]
   },
   {
     name: '--bx-rounded-pill',
@@ -5272,7 +8671,27 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['9999px']
+    themeEditable: false,
+    defaults: ['9999px'],
+    fallbacks: ['9999px'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/progress-bar/progress-bar.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-rounded-sm',
@@ -5281,7 +8700,35 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['0.25rem']
+    themeEditable: true,
+    defaults: ['0.25rem'],
+    fallbacks: ['0.25rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/icons/components/icon/icon.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/skeleton/skeleton.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-rounded-xl',
@@ -5290,7 +8737,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Corner radii',
     kind: 'radius',
     scope: 'global',
-    defaults: ['1rem']
+    themeEditable: true,
+    defaults: ['1rem'],
+    fallbacks: ['1rem'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/toastr/components/toast-core/toast-core.scss']
   },
   {
     name: '--bx-scroll-bg',
@@ -5298,8 +8749,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Scrollbars',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f5f5f5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f5f5f5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-scroll-thumb',
@@ -5307,8 +8762,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Scrollbars',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(10.9333333333%, 11.2%, 12%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(10.9333333333%, 11.2%, 12%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-scroll-thumb-hover',
@@ -5316,8 +8775,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Scrollbars',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-search-feedback-gap',
@@ -5325,8 +8788,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 search',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/search-input/search-input.scss']
   },
   {
     name: '--bx-select-option-gap',
@@ -5334,8 +8801,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 select',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-select-panel-background',
@@ -5343,8 +8814,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 select',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface-alt)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-select-panel-border',
@@ -5352,8 +8827,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 select',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-strong)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-select-panel-height',
@@ -5361,8 +8840,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 select',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['22rem'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-select-panel-shadow',
@@ -5370,8 +8853,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 select',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-shadow-lg, 0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1))'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-select-tag-gap',
@@ -5379,8 +8866,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 select',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
   {
     name: '--bx-selection-row-surface',
@@ -5388,8 +8879,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 selection',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element-hover)'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/effects/runtime/helpers/selection-motion.helpers.ts']
   },
   {
     name: '--bx-selection-surface',
@@ -5397,8 +8892,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 selection',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-selection-row-surface, var(--bx-bg-element-hover))'],
+    selectors: [],
+    sources: ['projects/blocks/effects/effects.scss']
+  },
+  {
+    name: '--bx-shadow-control',
+    reference: 'var(--bx-shadow-control)',
+    category: 'shadows',
+    group: 'Elevation and shadows',
+    kind: 'shadow',
+    scope: 'global',
+    themeEditable: true,
+    defaults: ['0 2px 4px rgba(0, 0, 0, 0.08)'],
+    fallbacks: ['0 2px 4px rgba(0, 0, 0, 0.08)'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
     name: '--bx-shadow-lg',
@@ -5407,7 +8919,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Elevation and shadows',
     kind: 'shadow',
     scope: 'global',
-    defaults: ['0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)']
+    themeEditable: true,
+    defaults: ['0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)'],
+    fallbacks: ['0 12px 20px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1)'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/popover/popover.scss'
+    ]
   },
   {
     name: '--bx-shadow-md',
@@ -5416,7 +8939,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Elevation and shadows',
     kind: 'shadow',
     scope: 'global',
-    defaults: ['0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12)']
+    themeEditable: true,
+    defaults: ['0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12)'],
+    fallbacks: ['0 4px 8px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.12)'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/components/card/card.scss']
   },
   {
     name: '--bx-shadow-modal',
@@ -5425,7 +8952,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Elevation and shadows',
     kind: 'shadow',
     scope: 'global',
-    defaults: ['0 8px 20px rgba(0, 0, 0, 0.12)']
+    themeEditable: true,
+    defaults: ['0 8px 20px rgba(0, 0, 0, 0.12)'],
+    fallbacks: ['0 8px 20px rgba(0, 0, 0, 0.12)'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-shadow-sm',
@@ -5434,7 +8971,35 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Elevation and shadows',
     kind: 'shadow',
     scope: 'global',
-    defaults: ['0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)']
+    themeEditable: true,
+    defaults: ['0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)'],
+    fallbacks: ['0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
+    ]
+  },
+  {
+    name: '--bx-shadow-surface',
+    reference: 'var(--bx-shadow-surface)',
+    category: 'shadows',
+    group: 'Elevation and shadows',
+    kind: 'shadow',
+    scope: 'global',
+    themeEditable: true,
+    defaults: ['0 2px 6px rgba(0, 0, 0, 0.08)'],
+    fallbacks: ['0 2px 6px rgba(0, 0, 0, 0.08)'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/effects/effects.scss']
   },
   {
     name: '--bx-shadow-toast',
@@ -5443,7 +9008,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Elevation and shadows',
     kind: 'shadow',
     scope: 'global',
-    defaults: ['0 4px 12px rgba(0, 0, 0, 0.15)']
+    themeEditable: true,
+    defaults: ['0 4px 12px rgba(0, 0, 0, 0.15)'],
+    fallbacks: ['0 4px 12px rgba(0, 0, 0, 0.15)'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/toastr/components/toast-core/toast-core.scss']
   },
   {
     name: '--bx-shadow-xl',
@@ -5452,7 +9021,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Elevation and shadows',
     kind: 'shadow',
     scope: 'global',
-    defaults: ['0 24px 32px -5px rgba(0, 0, 0, 0.25), 0 10px 12px -5px rgba(0, 0, 0, 0.15)']
+    themeEditable: true,
+    defaults: ['0 24px 32px -5px rgba(0, 0, 0, 0.25), 0 10px 12px -5px rgba(0, 0, 0, 0.15)'],
+    fallbacks: ['0 24px 32px -5px rgba(0, 0, 0, 0.25), 0 10px 12px -5px rgba(0, 0, 0, 0.15)'],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-side-nav-backdrop',
@@ -5460,8 +9033,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-backdrop-color)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-side-nav-collapsed-width',
@@ -5469,8 +9046,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['4.5rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss', 'projects/blocks/navigation/components/side-nav/side-nav.ts']
   },
   {
     name: '--bx-side-nav-duration',
@@ -5478,8 +9059,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['250ms'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-side-nav-easing',
@@ -5487,8 +9072,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['ease'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-side-nav-height',
@@ -5496,8 +9085,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['38rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-side-nav-item-active-background',
@@ -5505,8 +9098,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-accent-subtle)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss']
   },
   {
     name: '--bx-side-nav-item-background',
@@ -5514,8 +9111,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['transparent'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss']
   },
   {
     name: '--bx-side-nav-item-gap',
@@ -5523,8 +9124,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
   },
   {
     name: '--bx-side-nav-item-hover-background',
@@ -5532,8 +9140,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-accent-subtle)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss']
   },
   {
     name: '--bx-side-nav-item-radius',
@@ -5541,8 +9153,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
   },
   {
     name: '--bx-side-nav-label-duration',
@@ -5550,8 +9169,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['90ms'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
     name: '--bx-side-nav-label-opacity',
@@ -5560,7 +9183,14 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 side',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '1']
+    themeEditable: false,
+    defaults: ['0', '1'],
+    fallbacks: ['1'],
+    selectors: ['.bx-nav-content:has(:focus-visible)', ':host', ':host(.is-expanding)'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
   },
   {
     name: '--bx-side-nav-label-transition-duration',
@@ -5569,7 +9199,14 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 side',
     kind: 'value',
     scope: 'local',
-    defaults: ['0ms', 'var(--bx-side-nav-label-duration, 90ms)']
+    themeEditable: false,
+    defaults: ['0ms', 'var(--bx-side-nav-label-duration, 90ms)'],
+    fallbacks: ['0ms'],
+    selectors: ['.bx-nav-content:has(:focus-visible)', ':host', ':host(.is-animated:not(.is-mobile))', ':host(.is-expanding)'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
   },
   {
     name: '--bx-side-nav-width',
@@ -5577,8 +9214,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 side',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['17rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss', 'projects/blocks/navigation/components/side-nav/side-nav.ts']
   },
   {
     name: '--bx-skeleton-background',
@@ -5586,8 +9227,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 skeleton',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-element-active)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/skeleton/skeleton.scss']
   },
   {
     name: '--bx-skeleton-duration',
@@ -5595,8 +9240,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 skeleton',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1.6s'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/skeleton/skeleton.scss']
   },
   {
     name: '--bx-skeleton-gap',
@@ -5604,8 +9253,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 skeleton',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/skeleton/skeleton.scss']
   },
   {
     name: '--bx-skeleton-height',
@@ -5613,8 +9266,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 skeleton',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1rem', 'var(--bx-space-10, 2.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/skeleton/skeleton.scss', 'projects/blocks/primitives/components/skeleton/skeleton.ts']
   },
   {
     name: '--bx-skeleton-last-line-width',
@@ -5622,8 +9279,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 skeleton',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['70%'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/skeleton/skeleton.scss']
   },
   {
     name: '--bx-skeleton-radius',
@@ -5631,8 +9292,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 skeleton',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-sm, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/skeleton/skeleton.scss']
   },
   {
     name: '--bx-slider-center-y',
@@ -5640,8 +9305,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-expansion-limit',
@@ -5649,8 +9318,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.45'],
+    selectors: [],
+    sources: ['global']
   },
   {
     name: '--bx-slider-fill-display',
@@ -5659,7 +9332,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['none']
+    themeEditable: false,
+    defaults: ['none'],
+    fallbacks: ['block'],
+    selectors: ['.bx-range-slider'],
+    sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-slider-lens-blur',
@@ -5667,8 +9344,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1.5px'],
+    selectors: [],
+    sources: ['global']
   },
   {
     name: '--bx-slider-lens-display',
@@ -5677,7 +9358,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['none']
+    themeEditable: false,
+    defaults: ['none'],
+    fallbacks: ['block'],
+    selectors: [
+      '.bx-slider-thumb',
+      '[data-bx-reduced-transparency=true] .bx-slider-thumb',
+      '[data-bx-reduced-transparency=true] input.bx-slider::-moz-range-thumb',
+      '[data-bx-reduced-transparency=true] input.bx-slider::-webkit-slider-thumb',
+      'input.bx-slider::-moz-range-thumb',
+      'input.bx-slider::-webkit-slider-thumb'
+    ],
+    sources: ['global']
   },
   {
     name: '--bx-slider-lens-end',
@@ -5686,7 +9378,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-range-end)']
+    themeEditable: false,
+    defaults: ['var(--bx-range-end)'],
+    fallbacks: ['var(--bx-slider-position, 0.5)'],
+    selectors: ['.bx-range-slider'],
+    sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-slider-lens-end-offset',
@@ -5695,7 +9391,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel))']
+    themeEditable: false,
+    defaults: ['calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-end, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel))'],
+    fallbacks: [],
+    selectors: ['.bx-slider-thumb'],
+    sources: ['global']
   },
   {
     name: '--bx-slider-lens-inset',
@@ -5704,7 +9404,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(var(--bx-slider-thumb-size, 1.5rem) / 2 * var(--bx-slider-magnification, 1.5))']
+    themeEditable: false,
+    defaults: ['calc(var(--bx-slider-thumb-size, var(--bx-space-6, 1.5rem)) / 2 * var(--bx-slider-magnification, 1.5))'],
+    fallbacks: [],
+    selectors: ['.bx-slider-thumb'],
+    sources: ['global']
   },
   {
     name: '--bx-slider-lens-start',
@@ -5713,7 +9417,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-range-start)']
+    themeEditable: false,
+    defaults: ['var(--bx-range-start)'],
+    fallbacks: ['0'],
+    selectors: ['.bx-range-slider'],
+    sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-slider-lens-start-offset',
@@ -5722,7 +9430,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel))']
+    themeEditable: false,
+    defaults: ['calc(var(--bx-slider-lens-inset) + var(--bx-slider-lens-start, 0) * var(--bx-slider-lens-travel))'],
+    fallbacks: [],
+    selectors: ['.bx-slider-thumb'],
+    sources: ['global']
   },
   {
     name: '--bx-slider-lens-track-color',
@@ -5731,7 +9443,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-bg-neutral)']
+    themeEditable: false,
+    defaults: ['var(--bx-bg-neutral)'],
+    fallbacks: ['var(--bx-bg-neutral)'],
+    selectors: ['.bx-range-slider'],
+    sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-slider-lens-travel',
@@ -5740,7 +9456,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc((var(--bx-slider-track-width) - var(--bx-slider-thumb-size, 1.5rem)) * var(--bx-slider-magnification, 1.5))']
+    themeEditable: false,
+    defaults: ['calc((var(--bx-slider-track-width) - var(--bx-slider-thumb-size, var(--bx-space-6, 1.5rem))) * var(--bx-slider-magnification, 1.5))'],
+    fallbacks: [],
+    selectors: ['.bx-slider-thumb'],
+    sources: ['global']
   },
   {
     name: '--bx-slider-lens-width',
@@ -5749,7 +9469,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5))']
+    themeEditable: false,
+    defaults: ['calc(var(--bx-slider-track-width) * var(--bx-slider-magnification, 1.5))'],
+    fallbacks: [],
+    selectors: ['.bx-slider-thumb'],
+    sources: ['global']
   },
   {
     name: '--bx-slider-light-color',
@@ -5757,8 +9481,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-accent)'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-light-strength',
@@ -5766,8 +9494,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.18', '0.25'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-light-x',
@@ -5775,8 +9507,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['35%'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-light-y',
@@ -5784,8 +9520,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0%'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-magnification',
@@ -5793,8 +9533,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1.5'],
+    selectors: [],
+    sources: ['global']
   },
   {
     name: '--bx-slider-neighbor-limit',
@@ -5802,8 +9546,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.45'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-physical-position',
@@ -5812,7 +9560,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['calc(1 - var(--bx-slider-position, 0.5))']
+    themeEditable: false,
+    defaults: ['calc(1 - var(--bx-slider-position, 0.5))'],
+    fallbacks: ['var(--bx-slider-position, 0.5)'],
+    selectors: ['.bx-slider-thumb:dir(rtl)'],
+    sources: ['global']
   },
   {
     name: '--bx-slider-position',
@@ -5820,8 +9572,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.5'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-pressure',
@@ -5829,8 +9585,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-progress',
@@ -5838,8 +9598,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-stretch',
@@ -5847,8 +9611,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-stretch-limit',
@@ -5857,7 +9625,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 slider',
     kind: 'value',
     scope: 'local',
-    defaults: ['clamp(0, (var(--bx-range-end) - var(--bx-range-start)) * 0.5, 0.065)']
+    themeEditable: false,
+    defaults: ['clamp(0, (var(--bx-range-end) - var(--bx-range-start)) * 0.5, 0.065)'],
+    fallbacks: ['0.065'],
+    selectors: ['.bx-range-slider'],
+    sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-slider-thumb-size',
@@ -5865,8 +9637,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-6, 1.5rem)'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
     name: '--bx-slider-track-start',
@@ -5874,8 +9650,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0', '0px'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-slider-track-width',
@@ -5883,8 +9663,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 slider',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['100%'],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
     name: '--bx-space-0',
@@ -5893,7 +9677,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['0']
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['0'],
+    selectors: [':root'],
+    sources: ['global', 'projects/blocks/primitives/components/grid/grid.scss', 'projects/blocks/primitives/components/stack/stack.scss']
   },
   {
     name: '--bx-space-1',
@@ -5902,7 +9690,38 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['0.25rem']
+    themeEditable: true,
+    defaults: ['0.25rem'],
+    fallbacks: ['0.25rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/icons/components/icon/icon.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/stack/stack.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-space-10',
@@ -5911,7 +9730,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['2.5rem']
+    themeEditable: true,
+    defaults: ['2.5rem'],
+    fallbacks: ['2.5rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/skeleton/skeleton.scss',
+      'projects/blocks/primitives/components/stack/stack.scss'
+    ]
   },
   {
     name: '--bx-space-12',
@@ -5920,7 +9757,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['3rem']
+    themeEditable: true,
+    defaults: ['3rem'],
+    fallbacks: ['3rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/stack/stack.scss'
+    ]
   },
   {
     name: '--bx-space-2',
@@ -5929,7 +9778,50 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['0.5rem']
+    themeEditable: true,
+    defaults: ['0.5rem'],
+    fallbacks: ['0.5rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox/checkbox.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/shared/load-more/load-more-footer.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/accordion/accordion.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/loading-indicator/loading-indicator.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/page-header/page-header.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/skeleton/skeleton.scss',
+      'projects/blocks/primitives/components/stack/stack.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tag/tag.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss'
+    ]
   },
   {
     name: '--bx-space-3',
@@ -5938,7 +9830,36 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['0.75rem']
+    themeEditable: true,
+    defaults: ['0.75rem'],
+    fallbacks: ['0.75rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/stack/stack.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/primitives/components/virtual-collection/virtual-collection.scss',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-space-4',
@@ -5947,7 +9868,39 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['1rem']
+    themeEditable: true,
+    defaults: ['1rem'],
+    fallbacks: ['1rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/container/container.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/page-header/page-header.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/stack/stack.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-space-5',
@@ -5956,7 +9909,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['1.25rem']
+    themeEditable: true,
+    defaults: ['1.25rem'],
+    fallbacks: ['1.25rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/stack/stack.scss'
+    ]
   },
   {
     name: '--bx-space-6',
@@ -5965,7 +9928,30 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['1.5rem']
+    themeEditable: true,
+    defaults: ['1.5rem'],
+    fallbacks: ['1.5rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/stack/stack.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-space-8',
@@ -5974,7 +9960,22 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Spacing scale',
     kind: 'spacing',
     scope: 'global',
-    defaults: ['2rem']
+    themeEditable: true,
+    defaults: ['2rem'],
+    fallbacks: ['2rem'],
+    selectors: [':root'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/chip/chip.scss',
+      'projects/blocks/primitives/components/grid/grid.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/stack/stack.scss'
+    ]
   },
   {
     name: '--bx-spinner-color',
@@ -5982,8 +9983,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 spinner',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['currentColor'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/loading-spinner/loading-spinner.scss']
   },
   {
     name: '--bx-spinner-size',
@@ -5991,8 +9996,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 spinner',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['20px'],
+    selectors: [],
+    sources: [
+      'projects/blocks/primitives/components/loading-spinner/loading-spinner.scss',
+      'projects/blocks/primitives/components/loading-spinner/loading-spinner.ts'
+    ]
   },
   {
     name: '--bx-spinner-stroke',
@@ -6000,8 +10012,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 spinner',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2px'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/loading-spinner/loading-spinner.scss']
   },
   {
     name: '--bx-stack-gap',
@@ -6009,8 +10025,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stack',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-layout-gap, var(--bx-space-4, 1rem))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/stack/stack.scss']
   },
   {
     name: '--bx-stepper-card-background',
@@ -6018,8 +10038,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-card-radius',
@@ -6027,8 +10051,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-color',
@@ -6036,8 +10064,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-accent)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-compact-active-width',
@@ -6045,8 +10077,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['8rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-connector-thickness',
@@ -6054,8 +10090,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2px'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-dot-size',
@@ -6063,8 +10103,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['calc(var(--bx-space-6, 1.5rem) + var(--bx-space-1, 0.25rem))', 'var(--bx-space-5, 1.25rem)', 'var(--bx-space-6, 1.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-gap',
@@ -6072,8 +10116,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)', 'var(--bx-space-3, 0.75rem)', 'var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-marker-radius',
@@ -6081,8 +10129,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-pill, 9999px)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-marker-size',
@@ -6090,8 +10142,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['calc(var(--bx-space-6, 1.5rem) + var(--bx-space-1, 0.25rem))', 'var(--bx-space-10, 2.5rem)', 'var(--bx-space-8, 2rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-on-color',
@@ -6099,8 +10155,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-on-accent)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-padding',
@@ -6108,8 +10168,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)', 'var(--bx-space-3, 0.75rem)', 'var(--bx-space-4, 1rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-segment-length',
@@ -6117,8 +10181,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-10, 2.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-segment-radius',
@@ -6126,8 +10194,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-pill, 9999px)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-stepper-thickness',
@@ -6135,8 +10207,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.125rem', '0.25rem', '0.5rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
   },
   {
     name: '--bx-tab-highlight',
@@ -6144,8 +10220,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tab',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-border-brand)', 'var(--bx-primary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-tab-selected-text',
@@ -6153,8 +10233,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tab',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-brand)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-tab-text',
@@ -6162,8 +10246,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tab',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-primary)', 'var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-tabs-max-panel-height',
@@ -6171,8 +10259,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tabs',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['none'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-tabs-panel-gap',
@@ -6180,8 +10272,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tabs',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0', 'var(--bx-space-6, 1.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-tabs-panel-overflow',
@@ -6189,8 +10285,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tabs',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['visible'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
     name: '--bx-tag-background',
@@ -6198,8 +10298,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)', 'var(--bx-tag-role-fill)', 'var(--bx-tag-role-tonal)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-border',
@@ -6207,8 +10311,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-tag-role-border)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-color',
@@ -6216,8 +10324,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-tag-role-on-fill)', 'var(--bx-tag-role-text)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-counter-background',
@@ -6225,8 +10337,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['color-mix(in srgb, currentcolor 12%, transparent)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-counter-radius',
@@ -6234,8 +10350,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-sm, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-disabled-opacity',
@@ -6243,8 +10363,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.5'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-fill-opacity',
@@ -6252,8 +10376,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.85'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-font-size',
@@ -6261,8 +10389,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.75rem', '0.8125rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-gap',
@@ -6270,8 +10402,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-number-padding',
@@ -6279,8 +10415,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.35em'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-number-size',
@@ -6288,8 +10428,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1.5rem', '1.875rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-outline-opacity',
@@ -6297,8 +10441,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.12'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-padding',
@@ -6306,8 +10454,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem) var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-radius',
@@ -6315,8 +10467,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-sm, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-tag-role-border',
@@ -6325,7 +10481,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 tag',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss', 'projects/blocks/primitives/components/tag/tag.ts']
   },
   {
     name: '--bx-tag-role-fill',
@@ -6334,7 +10494,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 tag',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss', 'projects/blocks/primitives/components/tag/tag.ts']
   },
   {
     name: '--bx-tag-role-on-fill',
@@ -6343,7 +10507,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 tag',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss', 'projects/blocks/primitives/components/tag/tag.ts']
   },
   {
     name: '--bx-tag-role-text',
@@ -6352,7 +10520,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 tag',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss', 'projects/blocks/primitives/components/tag/tag.ts']
   },
   {
     name: '--bx-tag-role-tonal',
@@ -6361,7 +10533,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 tag',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss', 'projects/blocks/primitives/components/tag/tag.ts']
   },
   {
     name: '--bx-tag-shadow',
@@ -6369,8 +10545,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tag',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['none'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tag/tag.scss']
   },
   {
     name: '--bx-text-accent',
@@ -6378,8 +10558,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Accent',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(9.9764705882%, 20.8941176471%, 43.6705882353%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-text-brand',
@@ -6387,8 +10583,22 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Primary and brand',
     kind: 'color',
-    scope: 'global',
-    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(7.7176470588%, 7.9058823529%, 8.4705882353%)'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/page-header/page-header.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts'
+    ]
   },
   {
     name: '--bx-text-danger',
@@ -6396,8 +10606,32 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Danger',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#ba2e2e']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ba2e2e'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/runtime/helpers/surface.helpers.ts',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/checkbox/checkbox.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/form-field/form-field.ts',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/shared/load-more/load-more-footer.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-text-heading',
@@ -6405,8 +10639,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Text',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#171717']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#171717'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/page-header/page-header.scss'
+    ]
   },
   {
     name: '--bx-text-info',
@@ -6414,8 +10661,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Information',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#1e69a7']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#1e69a7'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-text-inverse',
@@ -6423,8 +10679,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Text',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#f5f5f5']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#f5f5f5'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/effects/runtime/classes/scene-runtime.ts']
   },
   {
     name: '--bx-text-primary',
@@ -6432,8 +10692,48 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Text',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#404040']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#404040'],
+    fallbacks: ['CanvasText'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/components/checkbox-indicator/checkbox-indicator.scss',
+      'projects/blocks/forms/components/checkbox/checkbox.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/radio-button/radio-button.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/menu/menu.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/popover/popover.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
+      'projects/blocks/primitives/components/tooltip/tooltip.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/toast-core/toast-core.scss'
+    ]
   },
   {
     name: '--bx-text-secondary',
@@ -6441,8 +10741,37 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Text',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#525252']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#525252'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/range-slider/range-slider.scss',
+      'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/card/card.scss',
+      'projects/blocks/primitives/components/collapsible/collapsible.scss',
+      'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/loading-indicator/loading-indicator.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/page-header/page-header.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss'
+    ]
   },
   {
     name: '--bx-text-success',
@@ -6450,8 +10779,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Success',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#1e8f2d']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#1e8f2d'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-text-warn',
@@ -6459,8 +10797,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'colors',
     group: 'Warning',
     kind: 'color',
-    scope: 'global',
-    defaults: ['#a96d18']
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#a96d18'],
+    fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
   },
   {
     name: '--bx-toast-bg',
@@ -6468,8 +10815,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 toast',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-bg-surface)'],
+    selectors: [],
+    sources: ['projects/blocks/toastr/components/toast-core/toast-core.scss']
   },
   {
     name: '--bx-toast-emission',
@@ -6478,7 +10829,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 toast',
     kind: 'value',
     scope: 'runtime',
-    defaults: []
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/toastr/components/toast-core/toast-core.scss']
   },
   {
     name: '--bx-toast-light-x',
@@ -6486,8 +10841,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 toast',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/toastr/components/toast-core/toast-core.scss', 'projects/blocks/toastr/components/toast-core/toast-core.ts']
   },
   {
     name: '--bx-toast-text',
@@ -6495,8 +10854,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 toast',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-primary)'],
+    selectors: [],
+    sources: ['projects/blocks/toastr/components/toast-core/toast-core.scss']
   },
   {
     name: '--bx-toggle-direction',
@@ -6505,7 +10868,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 toggle',
     kind: 'value',
     scope: 'local',
-    defaults: ['-1']
+    themeEditable: false,
+    defaults: ['-1'],
+    fallbacks: ['1'],
+    selectors: ['.bx-slide-toggle-track:dir(rtl)'],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-toggle-inline-size',
@@ -6513,8 +10880,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 toggle',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['auto'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-toggle-justify-content',
@@ -6522,8 +10893,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 toggle',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['start'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-toggle-position',
@@ -6532,7 +10907,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 toggle',
     kind: 'value',
     scope: 'local',
-    defaults: ['0', '1']
+    themeEditable: false,
+    defaults: ['0', '1'],
+    fallbacks: ['0'],
+    selectors: ['.bx-slide-toggle-track', '.bx-slide-toggle-track.is-checked'],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss', 'projects/blocks/forms/components/slide-toggle/slide-toggle.ts']
   },
   {
     name: '--bx-toggle-stretch',
@@ -6540,8 +10919,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 toggle',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss', 'projects/blocks/forms/components/slide-toggle/slide-toggle.ts']
   },
   {
     name: '--bx-toggle-thumb-edge',
@@ -6550,7 +10933,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 toggle',
     kind: 'value',
     scope: 'local',
-    defaults: ['color-mix(in srgb, var(--bx-accent) 18%, var(--bx-border-strong))', 'var(--bx-color-accent-200)']
+    themeEditable: false,
+    defaults: ['color-mix(in srgb, var(--bx-accent) 18%, var(--bx-border-strong))', 'var(--bx-color-accent-200)'],
+    fallbacks: [],
+    selectors: ['.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid)', '.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid).is-checked'],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-toggle-thumb-surface',
@@ -6559,7 +10946,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 toggle',
     kind: 'value',
     scope: 'local',
-    defaults: ['var(--bx-color-accent-100)', 'var(--bx-color-neutral-200)']
+    themeEditable: false,
+    defaults: ['var(--bx-color-accent-100)', 'var(--bx-color-neutral-200)'],
+    fallbacks: [],
+    selectors: ['.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid)', '.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid).is-checked'],
+    sources: ['projects/blocks/forms/components/slide-toggle/slide-toggle.scss']
   },
   {
     name: '--bx-tooltip-arrow-edge',
@@ -6568,12 +10959,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 tooltip',
     kind: 'value',
     scope: 'local',
+    themeEditable: false,
     defaults: [
       'var(--bx-glass-lit-edge-bottom, var(--bx-glass-edge))',
       'var(--bx-glass-lit-edge-left, var(--bx-glass-edge))',
       'var(--bx-glass-lit-edge-right, var(--bx-glass-edge))',
       'var(--bx-glass-lit-edge-top, var(--bx-glass-edge))'
-    ]
+    ],
+    fallbacks: ['var(--bx-glass-edge)'],
+    selectors: [
+      ':host-context(.bx-overlay-pos-bottom) .bx-tooltip-surface',
+      ':host-context(.bx-overlay-pos-left) .bx-tooltip-surface',
+      ':host-context(.bx-overlay-pos-right) .bx-tooltip-surface',
+      ':host-context(.bx-overlay-pos-top) .bx-tooltip-surface'
+    ],
+    sources: ['projects/blocks/primitives/components/tooltip/tooltip.scss']
   },
   {
     name: '--bx-tooltip-arrow-x',
@@ -6581,8 +10981,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tooltip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tooltip/tooltip.scss', 'projects/blocks/primitives/directives/tooltip/tooltip.directive.ts']
   },
   {
     name: '--bx-tooltip-arrow-y',
@@ -6590,8 +10994,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 tooltip',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tooltip/tooltip.scss', 'projects/blocks/primitives/directives/tooltip/tooltip.directive.ts']
   },
   {
     name: '--bx-top-nav-available-height',
@@ -6599,8 +11007,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['calc(100dvh - var(--bx-space-4, 1rem))'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-gap',
@@ -6608,8 +11020,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-height',
@@ -6617,8 +11033,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['3.75rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-item-active-background',
@@ -6626,8 +11046,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-accent-subtle)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-item-background',
@@ -6635,8 +11059,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['transparent'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-item-gap',
@@ -6644,8 +11072,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-item-hover-background',
@@ -6653,8 +11085,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-accent-subtle)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-item-radius',
@@ -6662,8 +11098,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-padding-block',
@@ -6671,8 +11111,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-padding-inline',
@@ -6680,8 +11124,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-panel-max-height',
@@ -6689,8 +11137,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['32rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss', 'projects/blocks/navigation/components/top-nav/top-nav.ts']
   },
   {
     name: '--bx-top-nav-panel-width',
@@ -6698,8 +11150,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['24rem'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss', 'projects/blocks/navigation/components/top-nav/top-nav.ts']
   },
   {
     name: '--bx-top-nav-radius',
@@ -6707,8 +11163,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
     name: '--bx-top-nav-top',
@@ -6716,8 +11176,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 top',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss', 'projects/blocks/navigation/components/top-nav/top-nav.ts']
   },
   {
     name: '--bx-translucency',
@@ -6725,8 +11189,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'effects',
     group: 'Glass and appearance',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.5'],
+    selectors: [],
+    sources: [
+      'projects/blocks/effects/effects.scss',
+      'projects/blocks/effects/runtime/constants/appearance-configuration.constants.ts',
+      'projects/blocks/effects/runtime/helpers/appearance-configuration.helpers.ts',
+      'projects/blocks/effects/runtime/helpers/surface.helpers.ts'
+    ]
   },
   {
     name: '--bx-virtual-column-gap',
@@ -6735,7 +11208,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 virtual',
     kind: 'value',
     scope: 'local',
-    defaults: ['0.75rem']
+    themeEditable: false,
+    defaults: ['var(--bx-space-3, 0.75rem)'],
+    fallbacks: [],
+    selectors: [':host'],
+    sources: ['projects/blocks/primitives/components/virtual-collection/virtual-collection.scss']
   },
   {
     name: '--bx-virtual-columns',
@@ -6743,8 +11220,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 virtual',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['1'],
+    selectors: [],
+    sources: [
+      'projects/blocks/primitives/components/virtual-collection/virtual-collection.scss',
+      'projects/blocks/primitives/components/virtual-collection/virtual-collection.ts'
+    ]
   },
   {
     name: '--bx-virtual-min-column-width',
@@ -6752,8 +11236,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 virtual',
     kind: 'value',
-    scope: 'runtime',
-    defaults: []
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['7rem'],
+    selectors: [],
+    sources: [
+      'projects/blocks/primitives/components/virtual-collection/virtual-collection.scss',
+      'projects/blocks/primitives/components/virtual-collection/virtual-collection.ts'
+    ]
   },
   {
     name: '--bx-virtual-row-gap',
@@ -6762,7 +11253,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Component \u00B7 virtual',
     kind: 'value',
     scope: 'local',
-    defaults: ['0.75rem']
+    themeEditable: false,
+    defaults: ['var(--bx-space-3, 0.75rem)'],
+    fallbacks: [],
+    selectors: [':host'],
+    sources: ['projects/blocks/primitives/components/virtual-collection/virtual-collection.scss']
   },
   {
     name: '--bx-z-base',
@@ -6771,7 +11266,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['1']
+    themeEditable: false,
+    defaults: ['1'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-dropdown',
@@ -6780,7 +11279,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['100']
+    themeEditable: false,
+    defaults: ['100'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-fixed',
@@ -6789,7 +11292,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['300']
+    themeEditable: false,
+    defaults: ['300'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-modal',
@@ -6798,7 +11305,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['400']
+    themeEditable: false,
+    defaults: ['400'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-popover',
@@ -6807,7 +11318,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['500']
+    themeEditable: false,
+    defaults: ['500'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-sticky',
@@ -6816,7 +11331,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['200']
+    themeEditable: false,
+    defaults: ['200'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-toast',
@@ -6825,7 +11344,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['9999']
+    themeEditable: false,
+    defaults: ['9999'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   },
   {
     name: '--bx-z-tooltip',
@@ -6834,6 +11357,10 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     group: 'Stacking layers',
     kind: 'number',
     scope: 'global',
-    defaults: ['600']
+    themeEditable: false,
+    defaults: ['600'],
+    fallbacks: [],
+    selectors: [':root'],
+    sources: ['global']
   }
 ];

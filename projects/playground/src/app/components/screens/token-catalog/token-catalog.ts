@@ -5,6 +5,7 @@ import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, Elemen
 import { FormsModule } from '@angular/forms';
 
 import type { ICssToken } from '@filip.mazev/blocks/core';
+import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
 import type { IVirtualCollectionConfig, VirtualTrackBy } from '@filip.mazev/blocks/primitives';
 import type { ITokenCatalogChunk } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-chunk.interface';
 import type { ITokenCatalogColor } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-color.interface';
@@ -12,8 +13,8 @@ import type { ITokenCatalogEntry } from '@playground/components/screens/token-ca
 import type { ITokenCatalogGroup } from '@playground/components/screens/token-catalog/interfaces/itoken-catalog-group.interface';
 import type { TokenCatalogCategory, TokenCopyFormat } from '@playground/components/screens/token-catalog/types/token-catalog.types';
 
-import { BxA11yService, CSS_TOKEN_CATALOG, ThemingService } from '@filip.mazev/blocks/core';
-import { Button, MultiSelect, SearchInput } from '@filip.mazev/blocks/forms';
+import { BxA11yService, CSS_TOKEN_CATALOG, THEME_CSS_VARIABLES, ThemingService } from '@filip.mazev/blocks/core';
+import { Button, MultiSelect, SearchInput, SlideToggle } from '@filip.mazev/blocks/forms';
 import {
   Accordion,
   Card,
@@ -25,6 +26,7 @@ import {
   MenuItem,
   PageContainer,
   Tag,
+  TooltipDirective,
   VirtualCollection,
   VirtualItemDirective
 } from '@filip.mazev/blocks/primitives';
@@ -36,6 +38,7 @@ import {
 } from '@playground/components/screens/token-catalog/constants/token-catalog.constants';
 import { createCatalogEntries } from '@playground/components/screens/token-catalog/helpers/token-catalog.helpers';
 import { formatCatalogColor } from '@playground/components/screens/token-catalog/helpers/token-color.helpers';
+import { TokenCatalogPreferencesService } from '@playground/components/screens/token-catalog/services/token-catalog-preferences.service';
 import { Readme } from '@playground/components/shared/readme/readme';
 import { ScrollToTop } from '@playground/components/shared/scroll-to-top/scroll-to-top';
 
@@ -49,6 +52,7 @@ import { Highlight } from 'ngx-highlightjs';
     Button,
     MultiSelect,
     SearchInput,
+    SlideToggle,
     Accordion,
     Divider,
     Card,
@@ -62,8 +66,10 @@ import { Highlight } from 'ngx-highlightjs';
     ContextMenuDirective,
     Menu,
     MenuItem,
-    Tag
+    Tag,
+    TooltipDirective
   ],
+  providers: [TokenCatalogPreferencesService],
   templateUrl: './token-catalog.html',
   styleUrl: './token-catalog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -71,11 +77,16 @@ import { Highlight } from 'ngx-highlightjs';
 export class TokenCatalog {
   private readonly bxA11yService = inject(BxA11yService);
   private readonly clipboard = inject(Clipboard);
+  private readonly tokenCatalogPreferencesService = inject(TokenCatalogPreferencesService);
   private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   protected readonly themingService = inject(ThemingService);
 
   private readonly entries: readonly ITokenCatalogEntry[] = createCatalogEntries();
+  private readonly themeNames: ReadonlySet<string> = new Set(THEME_CSS_VARIABLES);
+  private readonly themeCategories: ReadonlySet<TokenCatalogCategory> = new Set(
+    this.entries.filter((entry) => this.themeNames.has(entry.name)).map((entry) => entry.category)
+  );
   private readonly liveTokens: readonly ICssToken[] = CSS_TOKEN_CATALOG.filter((token) => token.scope === 'global' || token.scope === 'theme');
   private readonly colorCache: Map<string, ITokenCatalogColor | null> = new Map();
 
@@ -99,24 +110,30 @@ export class TokenCatalog {
   protected readonly entryKey: VirtualTrackBy<ITokenCatalogEntry> = (entry) => entry.id;
   protected readonly colorVirtualConfig: IVirtualCollectionConfig = { layout: 'grid', minColumnWidth: '10rem', estimatedRowHeight: 288, overscan: 800 };
   protected readonly tokenVirtualConfig: IVirtualCollectionConfig = { layout: 'grid', minColumnWidth: '15rem', estimatedRowHeight: 576, overscan: 800 };
-  protected readonly categories: typeof TOKEN_CATALOG_CATEGORIES = TOKEN_CATALOG_CATEGORIES;
   protected readonly copyFormats: typeof TOKEN_COPY_FORMATS = TOKEN_COPY_FORMATS;
   protected readonly variableCount: number = CSS_TOKEN_CATALOG.length;
 
   protected readonly searchTerm: WritableSignal<string> = signal('');
   protected readonly copyStatus: WritableSignal<string> = signal('');
 
+  protected readonly themeOnly: WritableSignal<boolean> = signal(this.tokenCatalogPreferencesService.initialThemeOnly);
   protected readonly selectedCategories: WritableSignal<readonly TokenCatalogCategory[]> = signal<readonly TokenCatalogCategory[]>([]);
   protected readonly liveValues: WritableSignal<Readonly<Record<string, string>>> = signal({});
   protected readonly expansionOverrides: WritableSignal<ReadonlyMap<string, boolean>> = signal(new Map<string, boolean>());
 
+  protected readonly categories: Signal<readonly IBxSelectOption<TokenCatalogCategory>[]> = computed(() =>
+    TOKEN_CATALOG_CATEGORIES.map((option) => ({ ...option, disabled: this.themeOnly() && !this.themeCategories.has(option.value) }))
+  );
   protected readonly filteredEntries: Signal<readonly ITokenCatalogEntry[]> = computed(() => {
     const terms = this.searchTerm().toLowerCase().trim().split(/\s+/).filter(Boolean);
     const categories = this.selectedCategories();
+    const themeOnly = this.themeOnly();
     const liveValues = terms.length ? this.normalizedLiveValues() : undefined;
     const colorValues = terms.some((term) => /#|rgba?\(/.test(term)) ? this.colorSearch() : undefined;
 
     return this.entries.filter((entry) => {
+      if (themeOnly && !this.themeNames.has(entry.name)) return false;
+
       if (categories.length && !categories.includes(entry.category)) return false;
 
       if (!terms.length) return true;
@@ -186,6 +203,8 @@ export class TokenCatalog {
   private colorContext: CanvasRenderingContext2D | null = null;
 
   constructor() {
+    if (this.themeOnly()) this.expansionOverrides.set(new Map(this.groups().map((group) => [group.id, true])));
+
     afterRenderEffect(() => {
       this.themingService.activeTheme();
       this.themingService.palette();
@@ -243,7 +262,7 @@ export class TokenCatalog {
   }
 
   protected categoryTitle(category: TokenCatalogCategory): string {
-    const option = this.categories.find((item) => item.value === category);
+    const option = this.categories().find((item) => item.value === category);
 
     return typeof option?.label === 'string' ? option.label : category;
   }
@@ -287,8 +306,13 @@ export class TokenCatalog {
   }
 
   protected updateCategories(values: readonly TokenCatalogCategory[] | null | undefined): void {
-    this.selectedCategories.set(values ?? []);
-    this.expansionOverrides.set(new Map<string, boolean>());
+    this.selectedCategories.set((values ?? []).filter((category) => !this.themeOnly() || this.themeCategories.has(category)));
+  }
+
+  protected updateThemeOnly(enabled: boolean): void {
+    this.themeOnly.set(enabled);
+    this.tokenCatalogPreferencesService.saveThemeOnly(enabled);
+    this.updateCategories(this.selectedCategories());
   }
 
   protected renderMore(group: ITokenCatalogGroup): void {

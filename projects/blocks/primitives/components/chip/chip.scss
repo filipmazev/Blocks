@@ -19,7 +19,7 @@
     align-items: stretch;
     min-inline-size: 0;
     max-inline-size: 100%;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     background: var(--bx-glass-surface);
     color: var(--bx-glass-text);
@@ -127,7 +127,7 @@ button {
     margin: -1px;
     margin-inline-start: 0;
     padding: 0;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: 50%;
     background: var(--bx-chip-remove-background, var(--bx-glass-surface));
 

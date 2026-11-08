@@ -185,7 +185,7 @@
     --bx-glass-shadow: #{shadow(toast)};
     --bx-glass-min-opacity: 0.8;
 
-    border: 1px solid var(--bx-border-default);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
     border-radius: radius(xl);
 }
 

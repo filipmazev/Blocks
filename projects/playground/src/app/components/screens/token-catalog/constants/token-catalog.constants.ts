@@ -1,12 +1,15 @@
 import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
 import type { TokenCatalogCategory, TokenCopyFormat } from '@playground/components/screens/token-catalog/types/token-catalog.types';
 
+export const TOKEN_CATALOG_THEME_ONLY_STORAGE_KEY: string = 'blocks.token-catalog.theme-only.v1';
+
 export const TOKEN_CATALOG_CATEGORIES: readonly IBxSelectOption<TokenCatalogCategory>[] = [
   { value: 'colors', label: 'Colors' },
   { value: 'pairs', label: 'Color pairs' },
   { value: 'spacing', label: 'Spacing' },
   { value: 'radii', label: 'Corner radii' },
   { value: 'shadows', label: 'Shadows' },
+  { value: 'borders', label: 'Border geometry' },
   { value: 'layers', label: 'Stacking layers' },
   { value: 'effects', label: 'Glass and effects' },
   { value: 'components', label: 'Component variables' },

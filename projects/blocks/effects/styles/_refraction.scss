@@ -276,7 +276,7 @@
 
 :is([data-bx-reduced-transparency='true'], .high-contrast, .bx-high-contrast-scope) {
     &[data-bx-refraction='true'] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
     }
 
     .bx-refraction-layer {
@@ -286,14 +286,14 @@
 
 .high-contrast [data-bx-surface],
 .bx-high-contrast-scope [data-bx-surface] {
-    background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    background: var(--bx-glass-opaque-surface) !important;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     [data-bx-refraction='true'] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
     }
 
     .bx-refraction-layer {

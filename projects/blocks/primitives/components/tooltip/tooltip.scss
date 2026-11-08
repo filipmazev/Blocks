@@ -7,12 +7,12 @@
 }
 
 .bx-tooltip-surface[data-bx-surface] {
-    --bx-glass-radius: var(--bx-rounded-sm, #{radius(sm)});
+    --bx-glass-radius: #{radius(sm)};
 
     position: relative;
     padding: spacing(1) spacing(2);
-    border: 1px solid var(--bx-glass-edge);
-    border-radius: var(--bx-glass-radius, var(--bx-rounded-sm, #{radius(sm)}));
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
+    border-radius: var(--bx-glass-radius, #{radius(sm)});
     font-size: 0.75rem;
     font-family: inherit;
     max-width: min(22rem, calc(100vw - #{spacing(6)}));
@@ -39,7 +39,7 @@
         box-sizing: border-box;
         border-radius: radius(none);
         background: var(--bx-glass-surface);
-        border: 0 solid var(--bx-tooltip-arrow-edge, var(--bx-glass-edge));
+        border: 0 var(--bx-border-style, solid) var(--bx-tooltip-arrow-edge, var(--bx-glass-edge));
         transform: translate(-50%, -50%) rotate(45deg);
         pointer-events: none;
     }
@@ -62,10 +62,10 @@
 }
 
 :host-context(.bx-overlay-pos-bottom) .bx-tooltip-surface::after {
-    top: -1px;
+    top: calc(-1 * var(--bx-border-width, 1px));
     left: clamp(#{spacing(3)}, var(--bx-tooltip-arrow-x, 50%), calc(100% - #{spacing(3)}));
-    border-top-width: 1px;
-    border-left-width: 1px;
+    border-top-width: var(--bx-border-width, 1px);
+    border-left-width: var(--bx-border-width, 1px);
 }
 
 :host-context(.bx-overlay-pos-top) .bx-tooltip-surface {
@@ -73,10 +73,10 @@
 }
 
 :host-context(.bx-overlay-pos-top) .bx-tooltip-surface::after {
-    top: calc(100% + 1px);
+    top: calc(100% + var(--bx-border-width, 1px));
     left: clamp(#{spacing(3)}, var(--bx-tooltip-arrow-x, 50%), calc(100% - #{spacing(3)}));
-    border-right-width: 1px;
-    border-bottom-width: 1px;
+    border-right-width: var(--bx-border-width, 1px);
+    border-bottom-width: var(--bx-border-width, 1px);
 }
 
 :host-context(.bx-overlay-pos-left) .bx-tooltip-surface {
@@ -84,10 +84,10 @@
 }
 
 :host-context(.bx-overlay-pos-left) .bx-tooltip-surface::after {
-    left: calc(100% + 1px);
+    left: calc(100% + var(--bx-border-width, 1px));
     top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
-    border-top-width: 1px;
-    border-right-width: 1px;
+    border-top-width: var(--bx-border-width, 1px);
+    border-right-width: var(--bx-border-width, 1px);
 }
 
 :host-context(.bx-overlay-pos-right) .bx-tooltip-surface {
@@ -95,10 +95,10 @@
 }
 
 :host-context(.bx-overlay-pos-right) .bx-tooltip-surface::after {
-    left: -1px;
+    left: calc(-1 * var(--bx-border-width, 1px));
     top: clamp(#{spacing(2)}, var(--bx-tooltip-arrow-y, 50%), calc(100% - #{spacing(2)}));
-    border-bottom-width: 1px;
-    border-left-width: 1px;
+    border-bottom-width: var(--bx-border-width, 1px);
+    border-left-width: var(--bx-border-width, 1px);
 }
 
 @media (forced-colors: active) {

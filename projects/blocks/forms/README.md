@@ -102,6 +102,13 @@ All existing form ellipsis and full-selection fit measurement use the public `Tr
 same opt-out. The public `TruncatedTextPipe` (`bxTruncatedText`) and `truncatedText()` helper support custom feedback. See the
 [shared truncation guide](../primitives/directives/truncate/README.md).
 
+### Motion and direct input
+
+Shared surfaces provide immediate pressure feedback with a stronger touch response and a subtler precise-pointer response. Press interruption preserves spring
+velocity, while text and icons retain their shape. Sliders and range sliders retain native precise value tracking; release prediction is reserved for discrete
+navigation and dismissal. Option surfaces are clipped independently from scrollable results, and pointer hover remains immediate. Field feedback uses brief
+shared curves. See the [library motion contract](../effects/runtime/README.md#fluid-interaction-across-blocks).
+
 ## Playground
 
 Open `/components/signal-forms` for multiple controls, sync/async/cross-field rules, pending state, custom messages, server errors, disabled submission, dynamic

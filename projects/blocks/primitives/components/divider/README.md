@@ -30,7 +30,8 @@ Also exports `DividerOrientation` and `DividerStyle`. The stack example addition
 ## Appearance and customization
 
 `--bx-divider-color`, `--bx-divider-thickness`, `--bx-divider-margin`, `--bx-divider-gap`, `--bx-divider-text`, `--bx-divider-font-size` and
-`--bx-divider-min-height` override shared defaults.
+`--bx-divider-min-height` override shared defaults. Thickness falls back to `--bx-border-width` (`1px`). The explicit `lineStyle` input defaults to `solid` and
+continues to take precedence over shared border style. Spacing follows the live shared spacing tokens.
 
 ## Behavior and accessibility
 

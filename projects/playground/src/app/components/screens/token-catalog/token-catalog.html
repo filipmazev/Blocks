@@ -15,16 +15,24 @@
                     (ngModelChange)="updateSearch($event)" />
                 <bx-multi-select
                     label="Categories"
-                    placeholder="All tokens"
+                    placeholder="All categories"
                     floatLabel="always"
                     subscriptSizing="dynamic"
-                    clearLabel="Show all tokens"
+                    clearLabel="Show all categories"
                     [clearable]="true"
                     [showSelectAll]="false"
-                    [options]="categories"
+                    [options]="categories()"
+                    [optionTemplate]="categoryOption"
                     [ngModel]="selectedCategories()"
                     (ngModelChange)="updateCategories($event)" />
                 <button bx-button type="button" variant="tonal" color="grayscale" [disabled]="!groups().length" (click)="collapseAll()">Collapse all</button>
+                <bx-slide-toggle
+                    class="theme-filter"
+                    label="Theme controls only"
+                    hint="Show shared colors, borders, corners, shadows, and spacing for creating themes. Turn off to browse component hooks, effects, and other advanced tokens."
+                    subscriptSizing="dynamic"
+                    [checked]="themeOnly()"
+                    (checkedChange)="updateThemeOnly($event)" />
             </div>
 
             <div class="catalog-summary">
@@ -193,3 +201,9 @@
     </div>
     <app-scroll-to-top [container]="tokenScroll" [boundary]="tokenResults" />
 </div>
+
+<ng-template #categoryOption let-option>
+    <span class="category-option-label" [bxTooltip]="option.disabled ? 'Disabled in the &quot;Theme controls only&quot; mode.' : ''">{{
+        option.resolvedStr
+    }}</span>
+</ng-template>

@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 
 import { BxA11yService, findScrollContainer } from '@filip.mazev/blocks/core';
+import { subscribeFrame } from '@filip.mazev/blocks/effects/runtime';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
@@ -48,6 +49,7 @@ export class ScrollToTop {
   private target: HTMLElement | undefined;
   private frame: number | undefined;
   private disconnect: (() => void) | undefined;
+  private cancelScroll: (() => void) | undefined;
 
   constructor() {
     afterNextRender(() => {
@@ -63,26 +65,69 @@ export class ScrollToTop {
       });
     });
     this.destroyRef.onDestroy(() => {
+      this.cancelScroll?.();
       this.disconnect?.();
       this.nativeElement.ownerDocument.defaultView?.cancelAnimationFrame(this.frame ?? 0);
     });
   }
 
   protected scrollToTop(): void {
+    this.cancelScroll?.();
+
     const target = this.target;
 
     if (!target) return;
 
     const boundary = this.boundary() ?? this.nativeElement.closest<HTMLElement>('main');
-    const top = Math.max(0, target.scrollTop - this.getScrollDistance());
+    const start = target.scrollTop;
 
     (boundary?.hasAttribute('tabindex') ? boundary : target).focus({ preventScroll: true });
-    target.scrollTo({ top, behavior: this.bxA11yService.isReducedMotion() ? 'instant' : 'smooth' });
+
+    // Virtual row measurements can interrupt native smooth scrolling. Own this bounded trip and
+    // remeasure its destination each frame, while leaving user scrolling free to cancel it.
+    this.ngZone.runOutsideAngular(() => {
+      const document = target.ownerDocument;
+      const cancel = () => this.cancelScroll?.();
+      const events = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+
+      let elapsed = 0;
+      let settled = 0;
+
+      const stop = subscribeFrame((delta) => {
+        elapsed += delta;
+
+        const progress = this.bxA11yService.isReducedMotion() ? 1 : Math.min(1, elapsed / 0.45);
+        const destination = Math.max(0, Math.min(target.scrollHeight - target.clientHeight, target.scrollTop - this.getScrollDistance()));
+        const top = start + (destination - start) * (1 - (1 - progress) ** 3);
+
+        target.scrollTo({ top, behavior: 'instant' });
+        settled = progress === 1 && Math.abs(target.scrollTop - destination) < 1 ? settled + 1 : 0;
+
+        if (settled >= 3 || elapsed >= 0.65) {
+          cancel();
+
+          return false;
+        }
+
+        return true;
+      });
+
+      for (const event of events) document.addEventListener(event, cancel, { capture: true, passive: true });
+
+      this.cancelScroll = () => {
+        stop();
+
+        for (const event of events) document.removeEventListener(event, cancel, true);
+
+        this.cancelScroll = undefined;
+      };
+    });
   }
 
   //#region Helpers
 
   private connect(): void {
+    this.cancelScroll?.();
     this.disconnect?.();
     this.target = this.container() ?? findScrollContainer(this.nativeElement);
 

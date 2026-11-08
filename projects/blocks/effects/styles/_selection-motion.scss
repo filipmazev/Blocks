@@ -1,5 +1,14 @@
 @use '../../core/styles/helpers' as *;
 
+/* IMPORTANT: Spring overshoot must not enlarge the menu or listbox scrollable area. */
+.bx-selection-layer {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+    z-index: -1;
+}
+
 .bx-selection-surface {
     --bx-glass-surface: var(--bx-selection-surface, var(--bx-selection-row-surface, var(--bx-bg-element-hover)));
     --bx-glass-edge: transparent;

@@ -65,7 +65,7 @@ export class SceneRuntime {
 
     this.pressedPointer = event.pointerId;
     this.pressed = this.find(event);
-    this.pressed?.hooks.press();
+    this.pressed?.hooks.press(event.pointerType);
     this.updateEmitter();
   };
   private up: (event?: PointerEvent) => void = (event?: PointerEvent) => {

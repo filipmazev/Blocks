@@ -236,8 +236,12 @@ custom actions, descriptions, errors, and form controls. Keep actions reachable 
 
 Centered dialogs combine opacity with a restrained 0.975–1 material scale instead of growing content from zero. Their existing viewport dimming layer remains
 independent. Side dialogs and bottom sheets use the shared smooth curve for large surfaces; side entrance frames are cancelled on close or destruction.
-Bottom-sheet dragging remains direct, with restrained recovery after an unsuccessful dismiss gesture. Live reduced motion removes decorative movement. Close
-guards, focus/stacking and reactive patches retain their existing lifecycle. Inspect `/modal` in centered, side and mobile sheet layouts.
+Bottom-sheet handles support mouse, pen and touch dragging with direct tracking. Release uses recent velocity and a bounded projected destination, so a short
+flick can request dismissal without traversing the whole threshold. A pause removes momentum. Cancellation, lost capture, Escape during a gesture, blur and
+hidden documents restore the sheet without requesting dismissal. Tapping or keyboard-activating the handle remains an alternative to dragging. Failed gestures
+return using the shared spring; successful gestures still pass through the existing close guard before the lifecycle host starts the exit. Live reduced motion
+removes decorative movement. Close guards, focus/stacking and reactive patches retain their existing lifecycle. Inspect `/modal` in centered, side and mobile
+sheet layouts.
 
 ## Playground
 

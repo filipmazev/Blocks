@@ -1,99 +1,100 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'variables' as *;
+@use 'mixins' as *;
 @use 'palettes' as *;
 
 @each $key, $val in $spacing {
     .bx-p-#{$key} {
-        padding: #{$val};
+        padding: #{spacing($key)};
     }
 
     .bx-pt-#{$key} {
-        padding-top: #{$val};
+        padding-top: #{spacing($key)};
     }
 
     .bx-pr-#{$key} {
-        padding-right: #{$val};
+        padding-right: #{spacing($key)};
     }
 
     .bx-pb-#{$key} {
-        padding-bottom: #{$val};
+        padding-bottom: #{spacing($key)};
     }
 
     .bx-pl-#{$key} {
-        padding-left: #{$val};
+        padding-left: #{spacing($key)};
     }
 
     .bx-px-#{$key} {
-        padding-left: #{$val};
-        padding-right: #{$val};
+        padding-left: #{spacing($key)};
+        padding-right: #{spacing($key)};
     }
 
     .bx-py-#{$key} {
-        padding-top: #{$val};
-        padding-bottom: #{$val};
+        padding-top: #{spacing($key)};
+        padding-bottom: #{spacing($key)};
     }
 
     .bx-m-#{$key} {
-        margin: #{$val};
+        margin: #{spacing($key)};
     }
 
     .bx-mt-#{$key} {
-        margin-top: #{$val};
+        margin-top: #{spacing($key)};
     }
 
     .bx-mr-#{$key} {
-        margin-right: #{$val};
+        margin-right: #{spacing($key)};
     }
 
     .bx-mb-#{$key} {
-        margin-bottom: #{$val};
+        margin-bottom: #{spacing($key)};
     }
 
     .bx-ml-#{$key} {
-        margin-left: #{$val};
+        margin-left: #{spacing($key)};
     }
 
     .bx-mx-#{$key} {
-        margin-left: #{$val};
-        margin-right: #{$val};
+        margin-left: #{spacing($key)};
+        margin-right: #{spacing($key)};
     }
 
     .bx-my-#{$key} {
-        margin-top: #{$val};
-        margin-bottom: #{$val};
+        margin-top: #{spacing($key)};
+        margin-bottom: #{spacing($key)};
     }
 }
 
 @each $key, $val in $radiuses {
     .bx-rounded-#{$key} {
-        border-radius: #{$val};
+        border-radius: #{radius($key)};
     }
 
     .bx-rounded-t-#{$key} {
-        border-top-left-radius: #{$val};
-        border-top-right-radius: #{$val};
+        border-top-left-radius: #{radius($key)};
+        border-top-right-radius: #{radius($key)};
     }
 
     .bx-rounded-b-#{$key} {
-        border-bottom-left-radius: #{$val};
-        border-bottom-right-radius: #{$val};
+        border-bottom-left-radius: #{radius($key)};
+        border-bottom-right-radius: #{radius($key)};
     }
 
     .bx-rounded-l-#{$key} {
-        border-top-left-radius: #{$val};
-        border-bottom-left-radius: #{$val};
+        border-top-left-radius: #{radius($key)};
+        border-bottom-left-radius: #{radius($key)};
     }
 
     .bx-rounded-r-#{$key} {
-        border-top-right-radius: #{$val};
-        border-bottom-right-radius: #{$val};
+        border-top-right-radius: #{radius($key)};
+        border-bottom-right-radius: #{radius($key)};
     }
 }
 
 @each $key, $val in $shadows {
     .bx-shadow-#{$key} {
-        box-shadow: #{$val};
+        box-shadow: #{shadow($key)};
     }
 }
 
@@ -122,6 +123,10 @@
 }
 
 :root {
+    @each $key, $val in $borders {
+        --bx-border-#{$key}: #{$val};
+    }
+
     @each $key, $val in $spacing {
         --bx-space-#{$key}: #{$val};
     }

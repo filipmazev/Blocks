@@ -38,3 +38,8 @@ export type {
   IGlassScene as GlassScene
 } from '@effects/runtime/types/runtime.types';
 export type { ILighting as GlassLighting } from '@effects/runtime/helpers/scene.helpers';
+
+export { subscribeFrame } from '@effects/runtime/helpers/frame-scheduler.helpers';
+export type { FrameCallback } from '@effects/runtime/types/frame-scheduler.types';
+export { GestureVelocity } from '@effects/runtime/classes/gesture-velocity';
+export { projectMotion } from '@effects/runtime/helpers/gesture-motion.helpers';

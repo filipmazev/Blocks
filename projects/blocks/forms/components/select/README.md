@@ -83,6 +83,9 @@ surface follows pointer or keyboard focus between enabled rows; selection, check
 scrolling coordinates and is remeasured after content/size changes. No data requests are owned by motion. Live reduced motion snaps geometry, while opaque
 material and forced-color fallbacks remain independent. Inspect `/components/select`, `/components/multi-select`, and `/appearance`.
 
+Closing cleans up and detaches the connected overlay in the same turn when its exit finishes. Switching to another selector or dismissing with Escape does not
+briefly repaint the closed panel; reopening during an exit retargets the existing transition.
+
 ## Playground
 
 Open `/components/select` for mock pagination, external filtering, loading, failed requests and retry. Switch page sizes to exercise the scroll and

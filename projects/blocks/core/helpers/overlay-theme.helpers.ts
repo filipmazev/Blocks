@@ -1,5 +1,8 @@
+import { THEME_CSS_VARIABLES } from '@core/constants/tokens.constants';
+
 /**
  * Copy the source's active theme/appearance context to an overlay pane and return cleanup.
+ * Ancestor class/style changes and inline theme-token changes on the source update an already-open pane.
  *
  * @param source - Element whose inherited theme and appearance the overlay should follow.
  * @param pane - Overlay pane receiving synchronized theme classes, attributes, and CSS variables.
@@ -42,9 +45,21 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
 
   refresh();
 
-  const observer = new MutationObserver(refresh);
+  const themeStyle = () => THEME_CSS_VARIABLES.map((name) => source.style.getPropertyValue(name)).join('\n');
 
-  observer.observe(source, { attributes: true, attributeFilter: ['class', 'dir', 'data-theme'] });
+  let previousThemeStyle = themeStyle();
+
+  const observer = new win.MutationObserver((records) => {
+    const nextThemeStyle = themeStyle();
+    const sourceThemeChanged = nextThemeStyle !== previousThemeStyle;
+
+    previousThemeStyle = nextThemeStyle;
+
+    // Surface animation writes inline state frequently; only source theme edits require a recopy.
+    if (sourceThemeChanged || records.some((record) => record.target !== source || record.attributeName !== 'style')) refresh();
+  });
+
+  observer.observe(source, { attributes: true, attributeFilter: ['class', 'style', 'dir', 'data-theme'] });
 
   for (let scope = source.parentElement; scope; scope = scope.parentElement) {
     observer.observe(scope, { attributes: true, attributeFilter: ['class', 'style', 'dir', 'data-theme'] });

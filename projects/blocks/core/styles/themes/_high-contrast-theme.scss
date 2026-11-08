@@ -160,6 +160,9 @@ $high-contrast-dark-theme: validate-theme(
 ) !default;
 
 :where(.high-contrast, .bx-high-contrast-scope) {
+    --bx-border-width: 1px !important;
+    --bx-border-style: solid !important;
+
     [data-bx-surface] {
         color: var(--bx-glass-text, var(--bx-text-primary)) !important;
         border-color: var(--bx-glass-edge, var(--bx-border-strong));
@@ -171,7 +174,7 @@ $high-contrast-dark-theme: validate-theme(
 
     [data-bx-surface],
     .bx-glass-material {
-        background: var(--bx-glass-surface, var(--bx-bg-surface)) !important;
+        background: var(--bx-glass-opaque-surface, var(--bx-glass-surface, var(--bx-bg-surface))) !important;
         /* stylelint-disable-next-line property-no-vendor-prefix -- Required to disable glass in older Safari. */
         -webkit-backdrop-filter: none !important;
         backdrop-filter: none !important;

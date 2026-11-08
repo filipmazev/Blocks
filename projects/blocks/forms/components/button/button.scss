@@ -11,7 +11,7 @@
     outline: none;
     text-decoration: none;
     box-sizing: border-box;
-    border: 1px solid transparent;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) transparent;
 
     &.bx-btn-animated {
         transition:
@@ -176,7 +176,7 @@
 
     border-color: var(--bx-glass-edge);
 
-    --bx-glass-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+    --bx-glass-shadow: #{shadow(control)};
 
     color: var(--bx-glass-text);
     background: var(--bx-glass-surface);
@@ -254,6 +254,13 @@
     ):not(.bx-btn-non-interactive, [aria-disabled='true'])
 ) {
     --bx-glass-surface: var(--btn-selected-surface, var(--bx-bg-neutral-active));
+    --bx-glass-edge: var(--bx-glass-text);
+    --bx-glass-shadow: inset 0 0 0 2px var(--bx-glass-text);
+
+    @media (forced-colors: active) {
+        outline: 2px solid Highlight;
+        outline-offset: -2px;
+    }
 }
 
 :host(.bx-btn-tonal) {
@@ -304,6 +311,16 @@
 
     --bx-glass-decoration-opacity: 0;
     --bx-glass-rim-visibility: 0;
+
+    &:is(
+        [aria-pressed='true'],
+        [aria-selected='true'],
+        [aria-expanded='true'][aria-haspopup]:not([aria-haspopup='false']),
+        [aria-current]:not([aria-current='false'], [aria-current=''])
+    ) {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
 
     &:active:not(.bx-btn-non-interactive, [aria-disabled='true']) {
         text-decoration: underline;

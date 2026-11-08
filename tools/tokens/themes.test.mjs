@@ -222,3 +222,69 @@ test('ng add offers only current palettes and generates compilable Sass for ever
     assert.ok(angular.projects.demo.architect.build.options.styles.includes('node_modules/@filip.mazev/blocks/effects/effects.css'));
   }
 });
+
+test('foundation helpers and utilities retain defaults while responding to runtime theme tokens', () => {
+  const compiled = sass.compileString(
+    `@use 'index' as bx;
+     .consumer {
+       padding: bx.spacing(4);
+       border-radius: bx.radius(lg);
+       box-shadow: bx.shadow(md);
+       margin: bx.spacing(4, $static: true) * 2;
+     }`,
+    { loadPaths: ['node_modules', 'projects/blocks/core/styles'] }
+  ).css;
+  const rules = new Map();
+  postcss
+    .parse(compiled)
+    .walkRules((rule) =>
+      rules.set(rule.selector, Object.fromEntries(rule.nodes.filter((node) => node.type === 'decl').map((node) => [node.prop, node.value])))
+    );
+  assert.equal(rules.get('.consumer').padding, 'var(--bx-space-4, 1rem)');
+  assert.equal(rules.get('.consumer')['border-radius'], 'var(--bx-rounded-lg, 0.75rem)');
+  assert.match(rules.get('.consumer')['box-shadow'], /^var\(--bx-shadow-md, /);
+  assert.equal(rules.get('.consumer').margin, '2rem');
+  assert.equal(rules.get('.bx-p-4').padding, rules.get('.consumer').padding);
+  assert.equal(rules.get('.bx-rounded-lg')['border-radius'], rules.get('.consumer')['border-radius']);
+  assert.equal(rules.get('.bx-shadow-md')['box-shadow'], rules.get('.consumer')['box-shadow']);
+  assert.throws(
+    () => sass.compileString("@use 'helpers' as bx; .bad { padding: bx.spacing(7); }", { loadPaths: ['projects/blocks/core/styles'] }),
+    /Unknown spacing token/
+  );
+});
+
+test('the generated theme contract excludes runtime state and distinguishes declarations from fallbacks', async () => {
+  const { CSS_TOKEN_CATALOG } = await sourceModule('projects/blocks/core/constants/token-catalog.constants.ts');
+  const { THEME_CSS_VARIABLES } = await sourceModule('projects/blocks/core/constants/tokens.constants.ts');
+  const tokens = new Map(CSS_TOKEN_CATALOG.map((token) => [token.name, token]));
+  assert.equal(new Set(THEME_CSS_VARIABLES).size, THEME_CSS_VARIABLES.length);
+  assert.deepEqual(
+    CSS_TOKEN_CATALOG.filter((token) => token.themeEditable)
+      .map((token) => token.name)
+      .sort(),
+    [...THEME_CSS_VARIABLES].sort()
+  );
+  for (const name of THEME_CSS_VARIABLES) {
+    const token = tokens.get(name);
+    assert.ok(['theme', 'global'].includes(token.scope), name);
+    assert.ok(token.defaults.length, name);
+    assert.ok(token.selectors.length, name);
+  }
+  assert.equal(tokens.get('--bx-primary').scope, 'theme');
+  assert.equal(tokens.get('--bx-rounded-lg').scope, 'global');
+  assert.equal(tokens.get('--bx-card-radius').scope, 'local');
+  assert.deepEqual(tokens.get('--bx-card-radius').defaults, []);
+  assert.ok(tokens.get('--bx-card-radius').fallbacks.some((value) => value.includes('--bx-rounded-lg')));
+  assert.ok(tokens.get('--bx-card-radius').sources.includes('projects/blocks/primitives/components/card/card.scss'));
+  for (const name of [
+    '--bx-glass-press',
+    '--bx-card-radius',
+    '--bx-z-modal',
+    '--bx-rounded-pill',
+    '--bx-rounded-none',
+    '--bx-space-0',
+    '--bx-color-primary-500'
+  ]) {
+    assert.equal(tokens.get(name).themeEditable, false, name);
+  }
+});

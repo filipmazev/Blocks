@@ -76,6 +76,21 @@ export function createSpringMotion(
 
       paint();
     },
+    track(values, velocities = values.map(() => 0)) {
+      if (destroyed) return;
+
+      if (values.length !== springs.length || velocities.length !== springs.length || [...values, ...velocities].some((value) => !Number.isFinite(value))) {
+        throw new RangeError('Motion coordinates and velocities must be finite and match the initial channel count.');
+      }
+
+      stop?.();
+      stop = undefined;
+      springs.forEach((spring, index) => {
+        spring.snap(values[index]);
+        spring.velocity = velocities[index];
+      });
+      paint();
+    },
     destroy() {
       destroyed = true;
       stop?.();

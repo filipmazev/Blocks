@@ -70,9 +70,9 @@ space.
 Existing variables: `--bx-card-background`, `--bx-card-color`, `--bx-card-border`, `--bx-card-radius`, `--bx-card-shadow`, `--bx-card-padding` and
 `--bx-card-title-size`.
 
-Interactive variables: `--bx-card-highlight` (defaults to `--bx-primary`), `--bx-card-selected-background` (element active), `--bx-card-selected-border`
-(ordinary card border), `--bx-card-hover-background` (element hover), `--bx-card-pressed-background` (element active), `--bx-card-focus-color` (highlight), and
-`--bx-card-disabled-opacity` (0.6).
+Interactive variables: `--bx-card-highlight` (defaults to `--bx-primary`), `--bx-card-selected-background` (element active), `--bx-card-selected-border` (custom
+card border or semantic brand border), `--bx-card-hover-background` (element hover), `--bx-card-pressed-background` (element active), `--bx-card-focus-color`
+(highlight), and `--bx-card-disabled-opacity` (0.6).
 
 `highlightColor` overrides `--bx-card-highlight` with a typed Blocks token. Selected cards resolve their highlight in their own theme scope and emit the same
 persistent border light as selected Blocks controls, without adding a second selection outline. Keyboard focus retains its own visible ring. Colors follow the
@@ -93,6 +93,9 @@ the card. Long content wraps. Combine with Grid and Container for responsive pag
 
 The surface engine respects reduced motion and transparency; forced colors uses a static selected border and visible keyboard focus. No decorative motion is
 needed to identify selection.
+
+Setting `opaque` to false follows the application material only when neither the application nor the OS requests reduced transparency. An active accessibility
+preference takes precedence; selected cards retain their semantic contour in opaque presentation.
 
 ## Playground
 

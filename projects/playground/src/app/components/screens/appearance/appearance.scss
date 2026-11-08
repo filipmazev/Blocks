@@ -318,7 +318,7 @@ legend {
     }
 
     .settings-section {
-        margin-block-start: spacing(7);
+        margin-block-start: calc(#{spacing(6)} + #{spacing(1)});
         padding-block-start: spacing(6);
     }
 

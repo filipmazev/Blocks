@@ -37,10 +37,9 @@ Generated category maps are imported directly. Runtime filtering performs lookup
 [official Lucide source](https://github.com/lucide-icons/lucide) through a pinned local build snapshot; the
 [generator guide](../../../../../../../tools/icons/README.md) documents synchronization.
 
-Preferences use the versioned `blocks.icon-catalog.v1` local-storage record. Restore validates dimensions, stroke bounds, and current category identifiers;
-malformed/unknown values fall back safely. Older records containing multiple categories restore only the first valid generated category. Writes are debounced
-for 200 ms and flushed on navigation or page exit. Reset updates storage immediately. Storage denial and server rendering are supported without throwing. Search
-and derived result lists are not persisted.
+Filters are local to the current visit. Each navigation back to the catalog or page reload starts with all categories, 24 px icons, a 1.5 stroke width and an
+empty search. Changes remain while opening and closing panels during the same visit. The catalog does not read or write saved filter preferences; legacy
+`blocks.icon-catalog.v1` records are ignored. Reset all restores the default size, stroke width and category selection immediately.
 
 ## Appearance and customization
 

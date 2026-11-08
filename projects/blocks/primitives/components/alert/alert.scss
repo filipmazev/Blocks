@@ -20,7 +20,7 @@
     align-items: flex-start;
     gap: var(--bx-alert-gap, #{spacing(3)});
     padding: var(--bx-alert-padding, #{spacing(4)});
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     background: var(--bx-glass-surface);
     color: var(--bx-glass-text);

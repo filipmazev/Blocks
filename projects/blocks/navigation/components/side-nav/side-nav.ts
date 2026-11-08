@@ -15,6 +15,7 @@ import {
   Injector,
   input,
   model,
+  NgZone,
   output,
   signal,
   TemplateRef,
@@ -85,6 +86,7 @@ export class SideNav {
   private readonly bxA11yService = inject(BxA11yService);
   private readonly injector = inject(Injector);
   private readonly focusMonitor = inject(FocusMonitor);
+  private readonly ngZone = inject(NgZone);
 
   protected readonly navigationStateService = inject(NavigationStateService);
   protected readonly navigationFocusService = inject(NavigationFocusService);
@@ -253,6 +255,37 @@ export class SideNav {
 
       untracked(() => this.scrollLockService.disableScroll(this.lockId, { handleTouchInput: false }));
       onCleanup(() => this.scrollLockService.enableScroll(this.lockId));
+    });
+    effect((onCleanup) => {
+      const panel = this.panelElement()?.nativeElement;
+      const view = this.document.defaultView;
+
+      if (!panel || !view || !this.isMobile() || !this.mobileOpen() || this.resolvedConfig().position === 'inline') return;
+
+      const top = panel.style.top;
+      const height = panel.style.height;
+
+      this.ngZone.runOutsideAngular(() => {
+        // Match SidePanel's visible-viewport geometry when browser chrome or the keyboard moves it.
+        const update = () => {
+          panel.style.top = `${view.visualViewport?.offsetTop ?? 0}px`;
+          panel.style.height = `${view.visualViewport?.height ?? view.innerHeight}px`;
+        };
+
+        update();
+        view.addEventListener('resize', update);
+        view.addEventListener('pageshow', update);
+        view.visualViewport?.addEventListener('resize', update);
+        view.visualViewport?.addEventListener('scroll', update);
+        onCleanup(() => {
+          view.removeEventListener('resize', update);
+          view.removeEventListener('pageshow', update);
+          view.visualViewport?.removeEventListener('resize', update);
+          view.visualViewport?.removeEventListener('scroll', update);
+          panel.style.top = top;
+          panel.style.height = height;
+        });
+      });
     });
     effect((onCleanup) => {
       if (!this.isMobile() || !this.mobileOpen()) return;

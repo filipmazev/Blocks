@@ -8,9 +8,10 @@
     [style]="config()?.style?.wrapperStyles ?? ''"
     [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"
     [style.transform]="modalTransform()"
-    [class.is-motion-enabled]="isAnimated() && !isSwipingVertically()"
+    [style.--anim-duration.ms]="isAnimated() ? animationDuration() : 0"
+    [class.is-motion-enabled]="isAnimated() && isSwipingVerticallyFinished()"
     [ngClass]="{
-        'opened-bottom-sheet-modal': isAnimated()
+        'opened-bottom-sheet-modal': isAnimated() && !hasInteracted()
     }">
     <button
         #verticalSwipeTarget

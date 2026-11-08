@@ -21,8 +21,11 @@ export interface ISurfaceHooks {
   focusEmission?(): string | undefined;
   /** Updates whether the surface emits light, optionally selecting its emission color. */
   emit?(active: boolean, color?: string): void;
-  /** Starts the pressed-state deformation for this surface. */
-  press(): void;
+  /**
+   * Starts material pressure feedback without changing the hit target or committed state.
+   * @param pointerType - Native pointer modality; omission denotes keyboard activation. Touch receives stronger feedback than precise pointers.
+   */
+  press(pointerType?: string): void;
   /** Releases the pressed-state deformation for this surface. */
   release(): void;
   /** Synchronizes surface state from its current DOM attributes and configuration. */

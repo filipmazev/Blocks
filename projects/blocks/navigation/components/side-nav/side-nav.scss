@@ -56,7 +56,7 @@ bx-navigation-level {
     height: 100dvh;
     min-height: 0;
     overflow: hidden;
-    border-inline-end: 1px solid var(--bx-border-default);
+    border-inline-end: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
     z-index: z(fixed);
 }
 
@@ -77,7 +77,7 @@ bx-navigation-level {
 }
 
 .bx-nav-footer {
-    border-block-start: 1px solid var(--bx-border-default);
+    border-block-start: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
 }
 
 .bx-nav-panel-toggle,
@@ -132,7 +132,7 @@ bx-navigation-level {
 
 .bx-nav-section-heading,
 .bx-nav-section-toggle {
-    border: 1px solid transparent;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) transparent;
     border-radius: var(--bx-side-nav-item-radius, #{radius(md)});
     background: transparent;
     color: var(--bx-text-secondary);
@@ -275,7 +275,7 @@ bx-navigation-level {
         left: auto;
         right: 0;
         border-inline-end: 0;
-        border-inline-start: 1px solid var(--bx-border-default);
+        border-inline-start: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
     }
 
     .bx-nav-hamburger {
@@ -291,7 +291,7 @@ bx-navigation-level {
     .bx-nav-panel {
         position: fixed;
         height: 100dvh;
-        min-height: 100dvh;
+        min-height: 0;
         width: min(var(--bx-side-nav-width, 17rem), calc(100dvw - #{spacing(12)}));
         transform: translateX(-100%);
         visibility: hidden;

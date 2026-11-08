@@ -26,6 +26,7 @@ export class DetailedRefractiveSurface {
     const restore = rememberStyles(host, ['--bx-refraction-r']);
 
     let radius = readRadius(host);
+    let borderWidths = '';
 
     const rim = 1.3,
       reflect = true,
@@ -267,13 +268,27 @@ export class DetailedRefractiveSurface {
       const nw = Math.round(host.offsetWidth);
       const nh = Math.round(host.offsetHeight);
       const nextRadius = readRadius(host);
+      const style = view.getComputedStyle(host);
+      const nextBorders = ['top', 'right', 'bottom', 'left'].map((side) => style.getPropertyValue(`border-${side}-width`)).join(' ');
+      const bordersChanged = nextBorders !== borderWidths;
+
+      borderWidths = nextBorders;
 
       if (nextRadius !== radius) {
         radius = nextRadius;
         refr = null;
       }
 
-      if (disposed || nw < 8 || nh < 8 || (nw === w && nh === h && refr)) return;
+      if (disposed || nw < 8 || nh < 8) return;
+
+      if (nw === w && nh === h && refr) {
+        if (bordersChanged) {
+          rebuildReflection();
+          sync();
+        }
+
+        return;
+      }
 
       w = nw;
       h = nh;
@@ -347,6 +362,9 @@ export class DetailedRefractiveSurface {
     // scrolls past with nothing changing right underneath (one flat colour),
     // the reflection holds a stale picture and catches up in a jump: a flicker.
     const refresh = () => {
+      // Theme geometry can change without a ResizeObserver notification.
+      onResize();
+
       const now = view.performance.now();
 
       if (!disposed && !paused && now - lastRefresh >= 80) {

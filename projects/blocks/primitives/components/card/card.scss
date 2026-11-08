@@ -12,7 +12,7 @@
     flex-direction: column;
     box-sizing: border-box;
     min-inline-size: 0;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     background: var(--bx-glass-surface);
     color: var(--bx-glass-text);
@@ -55,7 +55,7 @@
 
 :host([data-selected='true']) {
     --bx-glass-surface: var(--bx-card-selected-background, var(--bx-bg-element-active));
-    --bx-glass-edge: var(--bx-card-selected-border, var(--bx-card-border, var(--bx-border-default)));
+    --bx-glass-edge: var(--bx-card-selected-border, var(--bx-card-border, var(--bx-border-brand)));
 }
 
 :host(.is-disabled) {
@@ -112,7 +112,7 @@
 }
 
 .bx-card-footer {
-    border-block-start: 1px solid var(--bx-glass-edge);
+    border-block-start: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
 }
 
 .bx-card-media {

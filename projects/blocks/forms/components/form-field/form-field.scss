@@ -71,7 +71,7 @@
     overflow-wrap: anywhere;
 
     &.bx-animated {
-        animation: bx-slide-down 0.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        animation: bx-slide-down 0.12s #{motion-easing(smooth)} forwards;
     }
 
     .bx-field-error-text {

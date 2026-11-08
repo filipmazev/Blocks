@@ -14,6 +14,7 @@ $exports: (
     export-token('SPACING_VALUES', bx.$spacing),
     export-token('RADIUS_VALUES', bx.$radiuses),
     export-token('SHADOW_VALUES', bx.$shadows),
+    export-token('BORDER_VALUES', bx.$borders),
     export-token('Z_INDEX_VALUES', bx.$z-index),
     export-token('BREAKPOINTS', bx.$breakpoints)
 );

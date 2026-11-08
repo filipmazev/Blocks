@@ -23,7 +23,7 @@
     box-sizing: border-box;
     inline-size: 100%;
     padding: spacing(3);
-    border: 1px solid var(--bx-border-strong);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
     border-radius: radius(sm);
     background: var(--bx-bg-neutral);
     color: var(--bx-text-primary);

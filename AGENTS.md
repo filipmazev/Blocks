@@ -169,6 +169,15 @@ reorganizing unrelated code.
 
 ## Motion and lighting refinement
 
+- Apply Apple's [Motion](https://developer.apple.com/design/human-interface-guidelines/motion),
+  [Gestures](https://developer.apple.com/design/human-interface-guidelines/gestures), and
+  [Designing Fluid Interfaces](https://developer.apple.com/videos/play/wwdc2018/803/) principles throughout Blocks. Keep response immediate, motion purposeful,
+  input interruptible, and keyboard/tap alternatives available. Use the effects runtime guide's family coverage when reviewing shared changes.
+- Track actual input during direct manipulation. Use recent velocity and a bounded projected endpoint to choose discrete release destinations; a pause removes
+  momentum and a reversal changes intent immediately. Hand gesture velocity to the existing spring. Never predict precise slider values or bypass state guards.
+- Preserve native scroll and zoom gestures. Distinguish optional selection dragging from scrolling before claiming touch movement. Touch pressure may be
+  stronger than precise-pointer feedback; both preserve text, hit targets and accessible state. Cancellation must never be interpreted as a successful release.
+
 - Preserve each component's established silhouette and material. Calibrate existing fill, reception, and emission before adding inner rails, outlines, beams, or
   other decorative geometry. Thin progress tracks and segments should remain continuous and readable.
 - Use traveling selection surfaces when their destinations share a clear spatial relationship, such as tabs or connected step indicators. Separate cards use

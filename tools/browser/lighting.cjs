@@ -66,6 +66,53 @@ async function pageFor(t, canvas = false, mount = false) {
 }
 const ambient = (page) => page.evaluate(() => lighting.contributions.filter((light) => light.ambient));
 
+test('opaque materials resolve locally and accessibility takes precedence over surface opt-outs', async (t) => {
+  const page = await pageFor(t, false, true);
+  const result = await page.evaluate(() => {
+    const appearance = runtime.configureAppearance(document.documentElement, { reducedTransparency: true, reducedMotion: false });
+    receiver.style.setProperty('--bx-glass-surface', 'rgb(255 0 0 / 15%)');
+    receiver.style.setProperty('--bx-glass-opaque-surface', 'rgb(250 220 220)');
+    handles[0].update({ reducedTransparency: false });
+    const child = document.createElement('div');
+    child.style.setProperty('--bx-glass-surface', 'rgb(30 40 50)');
+    receiver.append(child);
+    const surface = runtime.mountSurface(child, { reducedTransparency: false });
+    const opaque = {
+      parent: getComputedStyle(receiver).backgroundColor,
+      child: getComputedStyle(child).backgroundColor,
+      preference: child.getAttribute('data-bx-reduced-transparency'),
+      motion: child.getAttribute('data-bx-reduced-motion'),
+      blur: getComputedStyle(child).backdropFilter
+    };
+    appearance.update({ reducedTransparency: false });
+    const restored = child.getAttribute('data-bx-reduced-transparency');
+    surface.update({ reducedTransparency: true });
+    const local = child.getAttribute('data-bx-reduced-transparency');
+    surface.destroy();
+    child.remove();
+    appearance.destroy();
+    return { opaque, restored, local };
+  });
+  assert.deepEqual(result, {
+    opaque: { parent: 'rgb(250, 220, 220)', child: 'rgb(30, 40, 50)', preference: 'true', motion: 'false', blur: 'none' },
+    restored: 'false',
+    local: 'true'
+  });
+});
+
+test('live OS reduced transparency overrides an explicit local false', async (t) => {
+  if (process.env.BLOCKS_BROWSER === 'webkit') return t.skip('CDP media-feature emulation is Chromium-only.');
+  const page = await pageFor(t, false, true);
+  await page.evaluate(() => handles[0].update({ reducedTransparency: false }));
+  const session = await page.context().newCDPSession(page);
+  for (const value of ['reduce', 'no-preference']) {
+    await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value }] });
+    await page.waitForFunction((expected) => receiver.getAttribute('data-bx-reduced-transparency') === expected, String(value === 'reduce'));
+    assert.equal(await page.evaluate(() => matchMedia('(prefers-reduced-transparency: reduce)').matches), value === 'reduce');
+  }
+  await session.detach();
+});
+
 test('scrolling updates image lighting within three frames even during the sampling cooldown', async (t) => {
   const page = await pageFor(t);
   await page.evaluate(async () => {
@@ -211,11 +258,11 @@ test('environmental colors blend continuously while visible and finish promptly'
   assert.equal(await page.evaluate(() => receiver.querySelector('.bx-glass-environment').getAnimations().length), 0);
 });
 
-test('overlay fades use native animation, reverse continuously and clean up without frame style writes', async (t) => {
+test('overlay springs reverse continuously, restore styles and stop settled writes', async (t) => {
   const page = await pageFor(t);
   const result = await page.evaluate(async () => {
     const target = document.createElement('div');
-    target.style.cssText = 'position:fixed;inset:20px;width:200px;height:100px;opacity:.8';
+    target.style.cssText = 'position:fixed;inset:20px;width:200px;height:100px;opacity:.8;transform:translateX(24px)';
     document.body.append(target);
     const transition = runtime.createGlassTransition(receiver, target);
     const mutations = [];
@@ -231,8 +278,12 @@ test('overlay fades use native animation, reverse continuously and clean up with
     const hidden = getComputedStyle(target).visibility;
     const reopened = await transition.enter();
     const opacity = getComputedStyle(target).opacity;
-    // Only visibility changes at the settled boundaries may mutate inline styles.
+    const transform = target.style.transform;
     const opacityWritten = target.style.opacity !== '0.8';
+    await new Promise(requestAnimationFrame);
+    mutations.length = 0;
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+    const idleMutations = mutations.length;
     transition.destroy();
     observer.disconnect();
     return {
@@ -244,7 +295,8 @@ test('overlay fades use native animation, reverse continuously and clean up with
       reopened,
       opacity,
       opacityWritten,
-      mutations: mutations.length,
+      transform,
+      idleMutations,
       animations: target.getAnimations().length
     };
   });
@@ -256,7 +308,8 @@ test('overlay fades use native animation, reverse continuously and clean up with
   assert.equal(result.reopened, 'finished');
   assert.equal(result.opacity, '0.8');
   assert.equal(result.opacityWritten, false);
-  assert.ok(result.mutations <= 3, JSON.stringify(result));
+  assert.equal(result.transform, 'translateX(24px)');
+  assert.equal(result.idleMutations, 0, JSON.stringify(result));
   assert.equal(result.animations, 0);
 });
 

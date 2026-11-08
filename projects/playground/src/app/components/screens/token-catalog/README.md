@@ -1,17 +1,19 @@
 # Tokens page
 
 Browse and search Blocks colors, color companions, spacing, corner radii, shadows, stacking layers, effects, component properties, utility classes, and Sass
-breakpoints at `/tokens`. The page uses Blocks search, multiselect, select, button, accordion, and card components. Only the first result section opens by
-default. Collapse all beside Categories closes every result section. Category titles and Blocks dividers separate the matching groups; their labels follow the
-category filter. With at least 48 displayed cards across expanded sections, cards mount in small batches near the viewport. Smaller displayed sets bypass
-viewport observation and stay mounted. Distant batches release their component instances while preserving their measured space, and focused batches stay
-mounted. Other groups mount their batch placeholders when opened. Dense cards keep shared themed styling with decorative surface effects disabled.
+breakpoints at `/tokens`. The page uses Blocks search, multiselect, select, button, accordion, and card components. Theme-only mode opens all result sections on
+entry; full-inventory mode opens only the first. Collapse all beside Categories closes every result section. Category titles and Blocks dividers separate the
+matching groups; their labels follow the category filter. With at least 48 displayed cards across expanded sections, cards mount in small batches near the
+viewport. Smaller displayed sets bypass viewport observation and stay mounted. Distant batches release their component instances while preserving their measured
+space, and focused batches stay mounted. Other groups mount their batch placeholders when opened. Dense cards keep shared themed styling with decorative surface
+effects disabled.
 
 ## Import
 
 ```ts
 import {
     CSS_TOKEN_CATALOG,
+    THEME_CSS_VARIABLES,
     CSS_VARIABLES,
     CSS_VARIABLE_REFERENCES,
     SEMANTIC_PAIRS,
@@ -32,7 +34,7 @@ Sass helpers are available through `@filip.mazev/blocks/core/styles/helpers`. In
 
 .notice {
     padding: var(--bx-space-4);
-    border: 1px solid var(--bx-border-danger);
+    border: var(--bx-border-width) var(--bx-border-style) var(--bx-border-danger);
     border-radius: var(--bx-rounded-md);
     background: var(--bx-bg-danger);
     color: var(--bx-text-danger);
@@ -58,15 +60,19 @@ palettes such as `carbon`, `danger`, and `teal` expose their complete shade scal
 
 ## API
 
-| Export                                                                    | Purpose                                                                                                                                              |
-| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CSS_TOKEN_CATALOG`                                                       | Readonly `ICssToken` metadata for all discovered `--bx-*` variables, including declarations, fallbacks, selectors, sources, groups, and availability |
-| `CSS_VARIABLES`, `CSS_VARIABLE_REFERENCES`                                | Names and `var(...)` references, with the corresponding `CssVariable` and `CssVariableReference` unions                                              |
-| `SEMANTIC_COLOR_TOKENS`, `PALETTE_NAMES`, `SHADE_NUMBERS`, `COLOR_TOKENS` | Supported color inputs, palettes, and shade scales                                                                                                   |
-| `SEMANTIC_PAIRS`, `getComplementaryToken()`                               | Explicit semantic companions and the shared palette/fallback companion rules                                                                         |
-| `SPACING_VALUES`, `RADIUS_VALUES`, `SHADOW_VALUES`, `Z_INDEX_VALUES`      | Default Sass scale values serialized as CSS values                                                                                                   |
-| `BREAKPOINTS`                                                             | Numeric pixel thresholds for Sass helpers and responsive services; these are not CSS custom properties                                               |
-| `UTILITY_CLASSES` and family arrays                                       | Actual classes emitted by the global Sass entry point, including semantic color utilities                                                            |
+| Export                                                                                | Purpose                                                                                                                                              |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CSS_TOKEN_CATALOG`                                                                   | Readonly `ICssToken` metadata for all discovered `--bx-*` variables, including declarations, fallbacks, selectors, sources, groups, and availability |
+| `CSS_VARIABLES`, `CSS_VARIABLE_REFERENCES`                                            | Names and `var(...)` references, with the corresponding `CssVariable` and `CssVariableReference` unions                                              |
+| `SEMANTIC_COLOR_TOKENS`, `PALETTE_NAMES`, `SHADE_NUMBERS`, `COLOR_TOKENS`             | Supported color inputs, palettes, and shade scales                                                                                                   |
+| `SEMANTIC_PAIRS`, `getComplementaryToken()`                                           | Explicit semantic companions and the shared palette/fallback companion rules                                                                         |
+| `SPACING_VALUES`, `RADIUS_VALUES`, `SHADOW_VALUES`, `BORDER_VALUES`, `Z_INDEX_VALUES` | Default Sass scale values serialized as CSS values                                                                                                   |
+| `BREAKPOINTS`                                                                         | Numeric pixel thresholds for Sass helpers and responsive services; these are not CSS custom properties                                               |
+| `UTILITY_CLASSES` and family arrays                                                   | Actual classes emitted by the global Sass entry point, including semantic color utilities                                                            |
+
+`THEME_CSS_VARIABLES` and `ThemeCssVariable` identify the application theme subset. `ICssToken.themeEditable` marks that same set. `defaults` contains actual
+declarations; `fallbacks` contains separate `var()` alternatives; `selectors` and `sources` describe where tokens are declared and referenced. The catalog
+combines declarations and labeled fallbacks for display and includes source paths in search.
 
 Availability has explicit meaning:
 
@@ -113,8 +119,12 @@ properties; filter `CSS_TOKEN_CATALOG` by scope when building a list of globally
 
 Use the playground toolbar to change the palette, light/dark mode, high contrast, or appearance. Swatches and shape previews use CSS variables directly. Color
 cards display the current HEX value; other global/theme cards display their current computed value and separate source defaults. Component/effect values show
-their declarations and fallbacks instead of suggesting a document-level computed value. Borders are grouped with their semantic color roles; Blocks does not
-currently emit a separate border-width or border-style scale.
+their declarations and fallbacks instead of suggesting a document-level computed value. Semantic border colors remain in Colors; Border geometry exposes shared
+width and style. The **Theme controls only** slide toggle defaults to enabled, remembers the chosen mode across refreshes and visits, and shows the curated
+`THEME_CSS_VARIABLES` set. Its hint explains the scope; turn it off to browse component hooks, effects and the rest of the inventory. Other entries are labeled
+Advanced inventory; they remain discoverable for targeted customization and debugging. See Core's
+[token audit and migration guide](../../../../../../blocks/core/README.md#theme-token-audit-and-customization-contract) for layer ownership, live override
+examples and the `$static: true` Sass compatibility option.
 
 Spacing and radius scales follow their numeric/source scale order. Color tiles stay compact; other tiles have wider columns and more padding. Radius samples are
 large enough to distinguish the larger corners. Shadow samples use a light neutral preview canvas in both themes so the actual shadow remains visible.
@@ -125,9 +135,14 @@ theme, palette sections, and companion sections without long title prefixes.
 ## Behavior and accessibility
 
 Search is case insensitive and matches every entered word against names, references, category, group, scope, default/fallback values, companions, and source
-paths. Changing search or categories opens only the first matching section; other sections remain available to open individually. Choose multiple categories to
-include any selected family, for example Colors and Color pairs. Clear the category selection to return to All tokens; All tokens is the absence of filtering
-rather than a selectable option. Search and counts cover the complete catalog regardless of which batches are mounted.
+paths. On page entry, theme-only mode opens every section; full-inventory mode opens only the first section. Section expansion and category filters are local to
+the current visit; only the mode toggle is stored. Unavailable browser storage falls back to the enabled default without blocking interaction. Changing search
+opens only the first matching section. Category changes preserve explicitly expanded or collapsed sections, including when a category is hidden and later
+restored. Other sections remain available to open individually. Choose multiple categories to include any selected family, for example Colors and Color pairs.
+Clear the category selection to remove category filtering; turn off **Theme controls only** to include the full inventory. All categories is the absence of a
+category filter rather than a selectable option. Search and counts cover the complete catalog regardless of which batches are mounted. In **Theme controls
+only** mode, categories without theme tokens are disabled and explain why on hover. Enabling the mode removes those categories from the current selection while
+retaining supported categories. Search text does not change which categories are available.
 
 Each expanded group initially exposes up to two 24-token chunks. Primitives' `InfiniteScrollDirective` progressively reveals another two chunks at the group
 boundary, including filling a short viewport from this finite local dataset. A keyboard-accessible Show more action remains available while chunks remain.

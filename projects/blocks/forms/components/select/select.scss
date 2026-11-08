@@ -15,7 +15,7 @@
     background-color: var(--bx-bg-neutral);
     border-radius: radius(sm) radius(sm) 0 0;
     border: none;
-    border-bottom: 1px solid var(--bx-border-strong);
+    border-bottom: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
     padding: 0;
     padding-inline-end: spacing(3);
     cursor: pointer;
@@ -48,7 +48,7 @@
     height: 2px;
     background-color: var(--bx-primary);
     transform: scaleX(0);
-    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.2s #{motion-easing(smooth)};
     transform-origin: center;
     z-index: 2;
 }
@@ -104,9 +104,9 @@
     pointer-events: none;
     z-index: 2;
     transition:
-        top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-        transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-        font-size 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+        top 0.2s #{motion-easing(smooth)},
+        transform 0.2s #{motion-easing(smooth)},
+        font-size 0.2s #{motion-easing(smooth)},
         color 0.15s ease;
 }
 
@@ -150,7 +150,7 @@
     width: 100%;
     max-width: 100%;
     background-color: var(--bx-glass-surface, var(--bx-bg-surface));
-    border: 1px solid var(--bx-glass-edge, var(--bx-border-default));
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge, var(--bx-border-default));
     border-radius: radius(lg);
     box-shadow: shadow(sm);
     overflow: hidden;
@@ -162,7 +162,7 @@
     align-items: center;
     padding: spacing(1);
     flex-shrink: 0;
-    border-bottom: 1px solid var(--bx-border-subtle);
+    border-bottom: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-subtle);
 }
 
 .bx-select-menu-container {
@@ -262,7 +262,7 @@
 }
 
 .bx-select-panel[data-bx-surface] {
-    --bx-glass-radius: var(--bx-rounded-lg, #{radius(lg)});
+    --bx-glass-radius: #{radius(lg)};
     --bx-glass-surface: var(--bx-bg-surface);
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
@@ -323,7 +323,7 @@
 }
 
 .bx-select-trigger.is-outline {
-    border: 1px solid var(--bx-border-strong);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
     border-radius: var(--bx-field-radius, #{radius(md)});
 }
 

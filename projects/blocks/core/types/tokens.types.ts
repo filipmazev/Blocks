@@ -1,6 +1,8 @@
 // Types derive from generated Sass data; maintain contracts here as ordinary TypeScript.
 
 import type {
+  BORDER_CSS_VARIABLES,
+  BORDER_VALUES,
   BREAKPOINTS,
   COLOR_TOKENS,
   CSS_VARIABLE_REFERENCES,
@@ -24,6 +26,7 @@ import type {
   SPACING_UTILITY_CLASSES,
   SPACING_VALUES,
   THEME_COLOR_TOKENS,
+  THEME_CSS_VARIABLES,
   UTILITY_CLASSES,
   Z_INDEX_CSS_VARIABLES,
   Z_INDEX_UTILITY_CLASSES,
@@ -45,6 +48,7 @@ export type SemanticPairValue = (typeof SEMANTIC_PAIRS)[SemanticPairKey];
 export type SpacingKey = keyof typeof SPACING_VALUES;
 export type RadiusKey = keyof typeof RADIUS_VALUES;
 export type ShadowKey = keyof typeof SHADOW_VALUES;
+export type BorderKey = keyof typeof BORDER_VALUES;
 export type ZIndexKey = keyof typeof Z_INDEX_VALUES;
 
 export type SemanticCssVariable = (typeof SEMANTIC_CSS_VARIABLES)[number];
@@ -54,6 +58,9 @@ export type GlassCssVariable = (typeof GLASS_CSS_VARIABLES)[number];
 export type SpacingCssVariable = (typeof SPACING_CSS_VARIABLES)[number];
 export type RadiusCssVariable = (typeof RADIUS_CSS_VARIABLES)[number];
 export type ShadowCssVariable = (typeof SHADOW_CSS_VARIABLES)[number];
+export type BorderCssVariable = (typeof BORDER_CSS_VARIABLES)[number];
+/** Curated semantic color, spacing, radius, elevation, and border properties suitable for application theme overrides. */
+export type ThemeCssVariable = (typeof THEME_CSS_VARIABLES)[number];
 export type ZIndexCssVariable = (typeof Z_INDEX_CSS_VARIABLES)[number];
 
 export type BreakpointKey = keyof typeof BREAKPOINTS;

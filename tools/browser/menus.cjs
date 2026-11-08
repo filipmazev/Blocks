@@ -126,7 +126,7 @@ test('select uses an opaque container and follows document scrolling without pan
   await page.locator('.bx-overlay-anchored').waitFor();
   await opaque(page, '.bx-select-panel');
   assert.equal(
-    await page.locator('.bx-select-menu-container [role="listbox"] [data-bx-surface], .bx-select-menu-container [role="listbox"] .bx-glass-decoration').count(),
+    await page.locator('.bx-select-menu-container [role="option"][data-bx-surface], .bx-select-menu-container [role="option"] .bx-glass-decoration').count(),
     0
   );
   assert.equal(await page.getByRole('option', { name: 'Skopje', selected: true }).count(), 1);
@@ -277,17 +277,27 @@ test('token copy menus keep hover and keyboard feedback without creating semanti
       element.append(probe);
       const expected = getComputedStyle(probe).backgroundColor;
       probe.remove();
-      return { expected, actual: getComputedStyle(element).backgroundColor };
+      const surface = element.closest('[role="menu"]').querySelector('.bx-selection-surface');
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d');
+      const rgba = (color) => {
+        context.clearRect(0, 0, 1, 1);
+        context.fillStyle = color;
+        context.fillRect(0, 0, 1, 1);
+        return [...context.getImageData(0, 0, 1, 1).data];
+      };
+      return { expected: rgba(expected), actual: rgba(getComputedStyle(surface).backgroundColor) };
     });
-    assert.equal(hover.actual, hover.expected);
-    assert.equal(await page.locator('.cdk-overlay-pane [data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+    assert.deepEqual(hover.actual, hover.expected);
+    assert.equal(await page.locator('.cdk-overlay-pane :is([data-bx-light-source="emitter"], [data-bx-light-source^="hover:"])').count(), 0);
   }
   await page.mouse.move(0, 0);
   await page.keyboard.press('ArrowDown');
   const focused = page.locator('.cdk-overlay-pane [role="menuitem"]:focus-visible');
   await focused.waitFor();
   assert.notEqual(await focused.evaluate((element) => getComputedStyle(element).outlineStyle), 'none');
-  assert.equal(await page.locator('.cdk-overlay-pane [data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+  assert.equal(await page.locator('.cdk-overlay-pane :is([data-bx-light-source="emitter"], [data-bx-light-source^="hover:"])').count(), 0);
   await page.keyboard.press('Escape');
   await menu.waitFor({ state: 'detached' });
   await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce', forcedColors: 'active' });
@@ -296,7 +306,7 @@ test('token copy menus keep hover and keyboard feedback without creating semanti
   await menu.waitFor();
   await page.keyboard.press('ArrowDown');
   await focused.waitFor();
-  assert.equal(await page.locator('.cdk-overlay-pane [data-bx-light-source="emitter"], [data-bx-light-source^="hover:"]').count(), 0);
+  assert.equal(await page.locator('.cdk-overlay-pane :is([data-bx-light-source="emitter"], [data-bx-light-source^="hover:"])').count(), 0);
   await page.keyboard.press('Escape');
   await menu.waitFor({ state: 'detached' });
   await card.waitFor({ state: 'visible' });
@@ -434,4 +444,114 @@ test('document positioning accounts for fixed-layer offsets and positioned bodie
   assert.ok(Math.abs(result.expected.y - 4) < 1, JSON.stringify(result.expected));
   aligned(result);
   assert.equal(result.mutations, 0);
+});
+
+test('select panels finish exiting without flashing, including when switching controls', async (t) => {
+  const page = await pageFor(t, 'select');
+  const trigger = page.getByRole('combobox', { name: 'Location', exact: true });
+
+  for (const action of ['escape', 'switch']) {
+    await trigger.click();
+    await page.waitForTimeout(650);
+    await page.locator('.bx-select-panel').evaluate((panel) => {
+      const pane = panel.closest('.cdk-overlay-pane');
+      const started = performance.now();
+      window.menuCloseFrames = [];
+      const sample = () => {
+        window.menuCloseFrames.push({
+          connected: panel.isConnected,
+          visibility: getComputedStyle(pane).visibility,
+          opacity: Number(getComputedStyle(panel).opacity)
+        });
+        if (performance.now() - started < 1000) requestAnimationFrame(sample);
+      };
+      requestAnimationFrame(sample);
+    });
+
+    if (action === 'escape') await page.keyboard.press('Escape');
+    else await page.getByRole('combobox', { name: 'Page size', exact: true }).click();
+
+    await page.waitForTimeout(1100);
+    const frames = await page.evaluate(() => window.menuCloseFrames);
+    const visible = frames.filter((frame) => frame.connected && frame.visibility !== 'hidden');
+
+    assert.ok(
+      visible.some((frame) => frame.opacity < 0.1),
+      `${action}: exit animation must be sampled`
+    );
+    assert.ok(
+      frames.some((frame) => !frame.connected),
+      `${action}: panel must finish detaching`
+    );
+    for (let index = 1; index < visible.length; index++) {
+      assert.ok(visible[index].opacity <= visible[index - 1].opacity + 0.05, `${action}: closing panel flashed back to opacity ${visible[index].opacity}`);
+    }
+    await page.keyboard.press('Escape');
+    await page.locator('.bx-select-panel').waitFor({ state: 'detached' });
+  }
+});
+
+test('multiselect pointer exit restores selection immediately and hides mouse-only focus', async (t) => {
+  const page = await pageFor(t, 'context-menu');
+  for (const count of [0, 1, 2]) {
+    await page.goto(`${origin}/tokens`);
+    await page.getByRole('combobox', { name: 'Categories', exact: true }).click();
+    for (const name of ['Spacing', 'Corner radii'].slice(0, count)) {
+      await page.getByRole('option', { name, exact: true }).click();
+    }
+    await page.getByRole('option', { name: 'Border geometry', exact: true }).hover();
+    const list = page.locator('.cdk-overlay-pane [role="listbox"]');
+    for (const selected of [true, false]) {
+      await page.getByRole('option', { name: 'Border geometry', exact: true }).evaluate((option) => {
+        const surface = option.closest('[role="listbox"]').querySelector('.bx-selection-surface');
+        const start = performance.now();
+        window.selectionClickFrames = [];
+        const sample = () => {
+          window.selectionClickFrames.push(surface.getBoundingClientRect().top - option.getBoundingClientRect().top);
+          if (performance.now() - start < 200) requestAnimationFrame(sample);
+        };
+        sample();
+      });
+      await page.getByRole('option', { name: 'Border geometry', exact: true }).click();
+      await page.waitForTimeout(240);
+      assert.equal(await page.getByRole('option', { name: 'Border geometry', exact: true }).getAttribute('aria-selected'), String(selected));
+      const deltas = await page.evaluate(() => window.selectionClickFrames);
+      assert.ok(deltas.length > 1 && deltas.every((delta) => Math.abs(delta) < 1), `selection changed the hovered row: ${deltas}`);
+    }
+    await list.evaluate((root) => {
+      window.pointerExitFrames = [];
+      root.addEventListener(
+        'pointerleave',
+        () => {
+          const surface = root.querySelector('.bx-selection-surface');
+          const focused = root.querySelector('[role="option"]:focus-visible');
+          const selected = focused ?? root.querySelector('[aria-selected="true"]');
+          const start = performance.now();
+          const sample = () => {
+            window.pointerExitFrames.push({
+              visibility: getComputedStyle(surface).visibility,
+              delta: selected ? surface.getBoundingClientRect().top - selected.getBoundingClientRect().top : null
+            });
+            if (performance.now() - start < 150) requestAnimationFrame(sample);
+          };
+          sample();
+        },
+        { once: true }
+      );
+    });
+    await page.mouse.move(1100, 850);
+    await page.waitForTimeout(220);
+    const frames = await page.evaluate(() => window.pointerExitFrames);
+    assert.ok(frames.length > 1);
+    for (const frame of frames) {
+      if (count === 0) assert.equal(frame.visibility, 'hidden', 'mouse-only focus must not keep a hover highlight');
+      else assert.ok(Math.abs(frame.delta) < 1, `pointer exit swept across rows: ${JSON.stringify(frame)}`);
+    }
+    assert.equal(await list.locator('[aria-selected="true"]').count(), count);
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(600);
+    assert.equal(await list.locator('.bx-selection-surface').evaluate((element) => getComputedStyle(element).visibility), 'visible');
+    await page.keyboard.press('Escape');
+    await list.waitFor({ state: 'detached' });
+  }
 });

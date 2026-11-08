@@ -45,6 +45,7 @@ export function createTokenData({ values, variables, classes }) {
     ['SPACING', 'SPACING_VALUES', 'space'],
     ['RADIUS', 'RADIUS_VALUES', 'rounded'],
     ['SHADOW', 'SHADOW_VALUES', 'shadow'],
+    ['BORDER', 'BORDER_VALUES', 'border'],
     ['Z_INDEX', 'Z_INDEX_VALUES', 'z']
   ]) {
     constants[`${family}_CSS_VARIABLES`] = names(segment, Object.keys(constants[map]));
@@ -56,6 +57,7 @@ export function createTokenData({ values, variables, classes }) {
     ...constants.SPACING_CSS_VARIABLES,
     ...constants.RADIUS_CSS_VARIABLES,
     ...constants.SHADOW_CSS_VARIABLES,
+    ...constants.BORDER_CSS_VARIABLES,
     ...constants.Z_INDEX_CSS_VARIABLES
   ];
 
@@ -64,6 +66,13 @@ export function createTokenData({ values, variables, classes }) {
   }
 
   constants.CSS_VARIABLES = [...variables.keys()].sort();
+  constants.THEME_CSS_VARIABLES = [
+    ...constants.SEMANTIC_CSS_VARIABLES,
+    ...constants.SPACING_CSS_VARIABLES.filter((name) => name !== `${prefix}space-0`),
+    ...constants.RADIUS_CSS_VARIABLES.filter((name) => ![`${prefix}rounded-none`, `${prefix}rounded-pill`].includes(name)),
+    ...constants.SHADOW_CSS_VARIABLES,
+    ...constants.BORDER_CSS_VARIABLES
+  ];
   constants.CSS_VARIABLE_REFERENCES = constants.CSS_VARIABLES.map((name) => `var(${name})`);
   constants.SPACING_UTILITY_CLASSES = classes.filter((name) => /^bx-(?:p|m)[trblxy]?-/.test(name));
   constants.RADIUS_UTILITY_CLASSES = classes.filter((name) => name.startsWith('bx-rounded-'));
@@ -82,7 +91,7 @@ export function createTokenData({ values, variables, classes }) {
       ? 'theme'
       : foundations.includes(name) || entry.selectors.has(':root')
         ? 'global'
-        : entry.defaults.size
+        : entry.defaults.size || entry.fallbacks.size
           ? 'local'
           : 'runtime';
 
@@ -91,7 +100,11 @@ export function createTokenData({ values, variables, classes }) {
       reference: `var(${name})`,
       ...metadata,
       scope,
-      defaults: [...entry.defaults].sort()
+      themeEditable: constants.THEME_CSS_VARIABLES.includes(name),
+      defaults: [...entry.defaults].sort(),
+      fallbacks: [...entry.fallbacks].sort(),
+      selectors: [...entry.selectors].sort(),
+      sources: [...entry.scopes].sort()
     };
   });
 
@@ -100,6 +113,10 @@ export function createTokenData({ values, variables, classes }) {
 
 /** Assigns stable catalog categories and readable role groups without duplicating token values. */
 function describeToken(key, constants) {
+  if (constants.BORDER_CSS_VARIABLES.includes(`--${constants.TOKEN_PREFIX}${constants.TOKEN_DELIMITER}${key}`)) {
+    return { category: 'borders', group: 'Border geometry', kind: 'value' };
+  }
+
   if (key.startsWith(`${constants.TOKEN_COLOR_DELIMITER}-`)) {
     const palette = key.slice(constants.TOKEN_COLOR_DELIMITER.length + 1).replace(/-\d+$/, '');
 

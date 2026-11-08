@@ -27,6 +27,10 @@ async function pageFor(t, path = '/components/tabs', options = {}) {
   return page;
 }
 const header = (page, label = 'Project information') => page.getByRole('tablist', { name: label, exact: true });
+const colorAlpha = (color) => {
+  const match = color.match(/\/\s*([\d.e+-]+)\s*\)|rgba\([^,]+,[^,]+,[^,]+,\s*([\d.e+-]+)\)/);
+  return match ? Number(match[1] ?? match[2]) : 1;
+};
 async function selected(list, label) {
   await list.getByRole('tab', { name: label, exact: true, selected: true }).waitFor();
 }
@@ -61,13 +65,13 @@ test('tabs support roving focus, wrapping, disabled tabs and lazy panel state', 
   await selected(list, 'Details');
   assert.equal(await page.getByRole('textbox', { name: 'Project note' }).count(), 0);
   await list.getByRole('tab', { name: 'Details', exact: true }).press('End');
-  await selected(list, 'Activity');
-  await list.getByRole('tab', { name: 'Activity', exact: true }).press('ArrowRight');
+  await selected(list, 'Recent project activity');
+  await list.getByRole('tab', { name: 'Recent project activity', exact: true }).press('ArrowRight');
   await selected(list, 'Overview');
   assert.equal(await page.getByRole('textbox', { name: 'Project note' }).inputValue(), 'Persistent project note');
   await list.getByRole('tab', { name: 'Overview', exact: true }).press('ArrowLeft');
-  await selected(list, 'Activity');
-  await list.getByRole('tab', { name: 'Activity', exact: true }).press('Home');
+  await selected(list, 'Recent project activity');
+  await list.getByRole('tab', { name: 'Recent project activity', exact: true }).press('Home');
   await selected(list, 'Overview');
   assert.equal(await list.getByRole('tab', { name: 'Unavailable', exact: true }).isDisabled(), true);
   await checkRelationships(list);
@@ -81,11 +85,11 @@ test('selection falls back when a tab is disabled or removed and both appearance
   await page.getByRole('button', { name: 'Disable details', exact: true }).click();
   await selected(list, 'Overview');
   await page.waitForFunction(() => document.querySelector('.demo-stage output').textContent.includes('overview'));
-  await list.getByRole('tab', { name: 'Activity', exact: true }).click();
-  await selected(list, 'Activity');
+  await list.getByRole('tab', { name: 'Recent project activity', exact: true }).click();
+  await selected(list, 'Recent project activity');
   await page.getByRole('button', { name: 'Show activity', exact: true }).click();
   await selected(list, 'Overview');
-  assert.equal(await list.getByRole('tab', { name: 'Activity', exact: true }).count(), 0);
+  assert.equal(await list.getByRole('tab', { name: 'Recent project activity', exact: true }).count(), 0);
   await page.getByRole('button', { name: 'Underline appearance', exact: true }).click();
   await page.locator('.demo-stage bx-tabs.bx-tabs-underline').waitFor();
   await checkRelationships(list);
@@ -111,13 +115,57 @@ test('tab headers avoid spurious scrollbars and selected primary light persists 
   assert.ok(geometry.y <= 1, JSON.stringify(geometry));
   assert.equal(geometry.outerX, 'visible');
   assert.equal(geometry.outerY, 'visible');
-  assert.match(geometry.background, /rgba|\/\s*0\./);
-  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-header > .bx-glass-rim [data-bx-light-source^="hover:"]'));
+  assert.ok(colorAlpha(geometry.background) < 0.01, geometry.background);
+  // The selected trigger owns its semantic emission; parent reflections depend on geometry and occlusion.
   await list.getByRole('tab', { name: 'Details', exact: true }).click();
   await selected(list, 'Details');
   await list.getByRole('tab', { name: 'Details', exact: true }).evaluate((element) => element.blur());
   await page.mouse.move(250, 90);
   await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-trigger.is-selected .bx-glass-rim [data-bx-light-source="emitter"]'));
+});
+
+test('opaque tabs keep the selection visible through live preference and appearance changes', async (t) => {
+  for (const colorScheme of ['light', 'dark']) {
+    const page = await pageFor(t, '/components/tabs', { colorScheme });
+    const list = header(page);
+    const sample = () =>
+      list.evaluate((element) => {
+        const trigger = element.querySelector('[aria-selected="true"]');
+        const selection = element.querySelector('.bx-tab-selection');
+        const rect = trigger.getBoundingClientRect();
+        const selectedRect = selection.getBoundingClientRect();
+        return {
+          opaque: element.getAttribute('data-bx-reduced-transparency'),
+          background: getComputedStyle(element).backgroundColor,
+          trigger: getComputedStyle(trigger).backgroundColor,
+          selection: getComputedStyle(selection).backgroundColor,
+          visible: getComputedStyle(selection).visibility,
+          aligned: Math.abs(rect.x - selectedRect.x) < 1 && Math.abs(rect.width - selectedRect.width) < 1,
+          geometry: { x: rect.x, width: rect.width, selectionX: selectedRect.x, selectionWidth: selectedRect.width },
+          blur: getComputedStyle(element).backdropFilter
+        };
+      });
+    for (const underline of [false, true]) {
+      if (underline) await page.getByRole('button', { name: 'Underline appearance', exact: true }).click();
+      await page.evaluate(() => window.ng.getComponent(document.querySelector('app-root')).themingService.setAppearance({ reducedTransparency: true }));
+      await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-trigger').getAttribute('data-bx-reduced-transparency') === 'true');
+      await list.getByRole('tab', { name: 'Overview', exact: true }).press('ArrowRight');
+      await selected(list, 'Details');
+      await page.waitForTimeout(700);
+      const opaque = await sample();
+      assert.equal(opaque.opaque, 'true');
+      assert.equal(opaque.trigger, 'rgba(0, 0, 0, 0)', JSON.stringify(opaque));
+      assert.notEqual(opaque.selection, opaque.background);
+      assert.equal(opaque.visible, 'visible');
+      assert.equal(opaque.aligned, true, JSON.stringify(opaque));
+      assert.equal(opaque.blur, 'none');
+      await page.evaluate(() => window.ng.getComponent(document.querySelector('app-root')).themingService.setAppearance({ reducedTransparency: false }));
+      await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-trigger').getAttribute('data-bx-reduced-transparency') === 'false');
+      await selected(list, 'Details');
+      await list.getByRole('tab', { name: 'Details', exact: true }).press('Home');
+      await selected(list, 'Overview');
+    }
+  }
 });
 
 test('initial tab frames use their glass styles without an opaque button-color flash', async (t) => {
@@ -144,8 +192,7 @@ test('initial tab frames use their glass styles without an opaque button-color f
   for (const frame of frames)
     for (const tab of frame) {
       assert.equal(tab.skin, true);
-      const match = tab.background.match(/\/\s*([\d.]+)\s*\)|rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\)/);
-      const alpha = match ? Number(match[1] ?? match[2]) : 1;
+      const alpha = colorAlpha(tab.background);
       assert.ok(alpha <= (tab.selected ? 0.5 : 0.01), JSON.stringify(tab));
     }
 });
@@ -160,11 +207,11 @@ test('RTL navigation and narrow headers preserve page width and hide vertical he
     element.dir = 'rtl';
   });
   await list.getByRole('tab', { name: 'Overview', exact: true }).press('ArrowRight');
-  await selected(list, 'Activity');
-  await list.getByRole('tab', { name: 'Activity', exact: true }).press('ArrowLeft');
+  await selected(list, 'Recent project activity');
+  await list.getByRole('tab', { name: 'Recent project activity', exact: true }).press('ArrowLeft');
   await selected(list, 'Overview');
   const geometry = await list.evaluate((element) => ({
-    overflow: getComputedStyle(element.querySelector('.bx-tab-list')).overflowY,
+    overflow: getComputedStyle(element.querySelector('.bx-tab-viewport')).overflowY,
     y: element.querySelector('.bx-tab-list').scrollHeight - element.querySelector('.bx-tab-list').clientHeight,
     right: element.getBoundingClientRect().right,
     containerRight: element.closest('.demo-stage').getBoundingClientRect().right
@@ -191,14 +238,21 @@ test('individual tab colors, highlight overrides, panel text and both icons are 
     return getComputedStyle(element).color === expected;
   };
   assert.equal(await details.evaluate(matchesToken, 'text-accent'), true);
-  await list.getByRole('tab', { name: 'Activity', exact: true }).click();
-  await selected(list, 'Activity');
-  const activity = list.getByRole('tab', { name: 'Activity', exact: true });
+  await list.getByRole('tab', { name: 'Recent project activity', exact: true }).click();
+  await selected(list, 'Recent project activity');
+  const activity = list.getByRole('tab', { name: 'Recent project activity', exact: true });
   assert.equal(await activity.evaluate(matchesToken, 'text-warn'), true);
   assert.equal(await page.locator('.demo-stage [role="tabpanel"]:not([hidden])').evaluate(matchesToken, 'text-info'), true);
   await page.waitForFunction(() => {
-    const emitter = document.querySelector('.demo-stage .bx-tab-trigger.is-selected [data-bx-light-source="emitter"]');
-    return emitter?.style.backgroundImage.includes('--bx-text-warn');
+    const emitter = document.querySelector('.demo-stage .bx-tab-trigger.is-selected .bx-glass-rim [data-bx-light-source="emitter"]');
+    if (!emitter) return false;
+    const probe = document.createElement('span');
+    const color = 'color-mix(in srgb, color-mix(in srgb, var(--bx-text-warn) 15%, transparent) 80%, transparent)';
+    probe.style.backgroundImage = `linear-gradient(${color}, ${color})`;
+    emitter.parentElement.append(probe);
+    const expected = getComputedStyle(probe).backgroundImage;
+    probe.remove();
+    return getComputedStyle(emitter).backgroundImage === expected;
   });
 });
 
@@ -209,7 +263,7 @@ test('narrow tab headers scroll independently and unbounded panels stay in page 
     hasTouch: true,
     isMobile: mobile
   });
-  const list = page.locator('.demo-stage .bx-tab-list');
+  const list = page.locator('.demo-stage .bx-tab-viewport');
   await list.scrollIntoViewIfNeeded();
   const geometry = await list.evaluate((element) => ({
     width: element.clientWidth,
@@ -235,7 +289,7 @@ test('narrow tab headers scroll independently and unbounded panels stay in page 
     await list.hover();
     await page.mouse.wheel(250, 0);
   }
-  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-list').scrollLeft > 50);
+  await page.waitForFunction(() => document.querySelector('.demo-stage .bx-tab-viewport').scrollLeft > 50);
 });
 
 for (const route of ['/modal', '/toastr']) {

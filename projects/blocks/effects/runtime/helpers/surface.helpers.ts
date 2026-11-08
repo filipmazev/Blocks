@@ -119,7 +119,6 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
   let unsubscribe: (() => void) | undefined;
   let reducedMotion = false;
   let unifiedLighting = false;
-  let pressed = false;
   let paintedPressure: string | undefined;
   let refraction: RefractiveSurface | DetailedRefractiveSurface | undefined;
   let detailedRefraction = false;
@@ -264,7 +263,7 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
       x.snap(x.target);
       y.snap(y.target);
       strength.snap(strength.target);
-      pressure.snap(pressed && interactive() ? 1 : 0);
+      pressure.snap(reducedMotion ? 0 : pressure.target);
       paint();
 
       return;
@@ -379,7 +378,7 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
 
     reducedMotion = options.reducedMotion ?? (inheritedMotion === null || inheritedMotion === undefined ? motion.matches : inheritedMotion === 'true');
 
-    const reducedTransparency = options.reducedTransparency ?? (inheritedTransparency === 'true' || transparency.matches);
+    const reducedTransparency = options.reducedTransparency === true || inheritedTransparency === 'true' || transparency.matches;
 
     element.setAttribute('data-bx-reduced-transparency', String(reducedTransparency));
     element.setAttribute('data-bx-reduced-motion', String(reducedMotion));
@@ -458,15 +457,13 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
       }
     }
 
-    if (!interactive()) pressed = false;
-
     if (reducedMotion || !interactive()) {
       unsubscribe?.();
       unsubscribe = undefined;
       x.snap(x.target);
       y.snap(y.target);
       strength.snap(strength.target);
-      pressure.snap(pressed ? 1 : 0);
+      pressure.snap(0);
       paint();
     }
 
@@ -486,11 +483,9 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
     else element.style.removeProperty(property);
   }
 
+  // Apply the material before registering scene measurements.
   paint();
   sync();
-
-  // Apply the material before the first style read to avoid transitioning from legacy colors.
-  if (view.getComputedStyle(element).position === 'static') element.style.position = 'relative';
 
   const unregister = registerSurface(element, {
     light: lighting,
@@ -516,18 +511,18 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
     },
     focusEmission: () => options.focusEmission ?? (isFieldSurface(element) ? emissionColor() : undefined),
     emit,
-    press() {
+    press(pointerType) {
       if (!interactive()) return;
 
-      pressed = true;
-      // Give even a quick tap visible compression before the shared spring returns to rest.
-      pressure.snap(reducedMotion ? 1 : Math.max(0.4, pressure.value));
-      pressure.target = 1;
+      pressure.target = reducedMotion ? 0 : pointerType === 'touch' ? 1 : 0.65;
+
+      // Initial contact is immediate; repeated presses preserve the moving spring's velocity.
+      if (pressure.value === 0 && pressure.velocity === 0) pressure.value = pressure.target * 0.4;
+
       paint();
       animate();
     },
     release() {
-      pressed = false;
       pressure.target = 0;
       animate();
     }

@@ -42,8 +42,9 @@ export class RefractiveSurface {
     this.update();
   }
 
+  /** Reconcile live corner and border tokens, including changes that do not resize the surface. */
   public refresh(): void {
-    // Refraction samples only its own box, which the browser invalidates with the backdrop.
+    this.update();
   }
 
   public setVisible(visible: boolean): void {
@@ -61,6 +62,11 @@ export class RefractiveSurface {
     const width = this.host.offsetWidth;
     const height = this.host.offsetHeight;
     const radius = readRadius(this.host);
+    const style = this.view.getComputedStyle(this.host);
+
+    for (const side of ['top', 'right', 'bottom', 'left']) {
+      setStyle(this.pane, side, `${-(parseFloat(style.getPropertyValue(`border-${side}-width`)) || 0)}px`);
+    }
 
     if (width < 8 || height < 8 || (width === this.width && height === this.height && radius === this.radius)) return;
 
@@ -77,12 +83,6 @@ export class RefractiveSurface {
     setAttr(this.filter.tiltRamp, 'href', map.tiltRamp);
     layoutRefractionFilter(this.filter, map, width, height);
     this.host.style.setProperty('--bx-refraction-r', `${Math.max(0.01, Math.min(radius, width / 2, height / 2))}px`);
-
-    const style = this.view.getComputedStyle(this.host);
-
-    for (const side of ['top', 'right', 'bottom', 'left']) {
-      setStyle(this.pane, side, `${-(parseFloat(style.getPropertyValue(`border-${side}-width`)) || 0)}px`);
-    }
   }
 
   public destroy(): void {

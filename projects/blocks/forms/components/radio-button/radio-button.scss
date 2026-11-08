@@ -53,7 +53,7 @@
     width: 1.125rem;
     height: 1.125rem;
     background-color: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-strong);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
     border-radius: radius(pill);
     transition: border-color 0.15s ease;
 
@@ -86,7 +86,7 @@
     background-color: var(--bx-on-accent);
     border-radius: radius(pill);
     transform: scale(0);
-    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.2s #{motion-easing(smooth)};
 }
 
 .is-invalid .bx-radio-inner {
@@ -99,7 +99,7 @@
     --bx-glass-edge: var(--bx-border-strong);
     --bx-glass-min-opacity: 0.65;
 
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     box-sizing: border-box;
 
     --bx-glass-text: var(--bx-text-primary);

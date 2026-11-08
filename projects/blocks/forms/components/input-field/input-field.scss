@@ -16,7 +16,7 @@
     box-sizing: border-box;
     background-color: var(--bx-bg-neutral);
     border-radius: radius(sm) radius(sm) 0 0;
-    border-bottom: 1px solid var(--bx-border-strong);
+    border-bottom: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
 
     &:hover:not(.is-disabled, .is-readonly) {
         background-color: var(--bx-bg-neutral-hover);
@@ -38,7 +38,7 @@
     height: 2px;
     background-color: var(--bx-primary);
     transform: scaleX(0);
-    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform 0.2s #{motion-easing(smooth)};
     transform-origin: center;
     z-index: 2;
 }
@@ -112,9 +112,9 @@
     color: var(--bx-text-secondary);
     z-index: 2;
     transition:
-        top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-        transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
-        font-size 0.2s cubic-bezier(0.25, 0.8, 0.25, 1),
+        top 0.2s #{motion-easing(smooth)},
+        transform 0.2s #{motion-easing(smooth)},
+        font-size 0.2s #{motion-easing(smooth)},
         color 0.15s ease;
 }
 
@@ -171,7 +171,7 @@
     align-self: stretch;
     background: transparent;
     border: none;
-    border-inline-start: 1px solid var(--bx-border-subtle);
+    border-inline-start: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-subtle);
     color: var(--bx-text-secondary);
     cursor: pointer;
     outline: none;
@@ -243,7 +243,7 @@ textarea.bx-native-input {
 }
 
 .bx-input-wrapper.is-outline {
-    border: 1px solid var(--bx-border-strong);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
     border-radius: var(--bx-field-radius, #{radius(md)});
 }
 

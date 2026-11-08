@@ -1,5 +1,9 @@
 :where([data-bx-surface]) {
-    border: 1px solid var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
+    /* IMPORTANT: Resolve the opaque material locally; nested surfaces must not inherit a parent's fallback color. */
+    --bx-glass-opaque-surface: var(--bx-glass-surface, var(--bx-bg-surface, Canvas));
+
+    position: relative;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
     border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, 0));
 }
 
@@ -10,7 +14,7 @@
     background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
     -webkit-backdrop-filter: blur(var(--bx-glass-blur, var(--bx-glass-material-blur, 10px))) saturate(1.15);
     backdrop-filter: blur(var(--bx-glass-blur, var(--bx-glass-material-blur, 10px))) saturate(1.15);
-    box-shadow: var(--bx-glass-shadow, 0 2px 6px rgb(0 0 0 / 8%));
+    box-shadow: var(--bx-glass-shadow, var(--bx-shadow-surface, 0 2px 6px rgb(0 0 0 / 8%)));
     color: var(--bx-glass-text, var(--bx-text-primary, CanvasText));
     border-color: var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
 }
@@ -293,7 +297,7 @@
 }
 
 [data-bx-surface][data-bx-reduced-transparency='true'] {
-    background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    background: var(--bx-glass-opaque-surface) !important;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
@@ -309,13 +313,13 @@
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     [data-bx-surface] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
     }
 }
 
 @media (prefers-reduced-transparency: reduce) {
     [data-bx-surface]:not([data-bx-reduced-transparency='false']) {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -341,7 +345,7 @@
     }
 
     [data-bx-surface] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }

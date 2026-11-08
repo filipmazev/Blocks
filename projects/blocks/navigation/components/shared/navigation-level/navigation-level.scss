@@ -48,7 +48,7 @@
     padding: spacing(1) spacing(2);
     max-height: min(12rem, 40dvh);
     overflow: auto;
-    border-block-end: 1px solid var(--bx-border-default);
+    border-block-end: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
 }
 
 .bx-nav-level-heading {
@@ -128,7 +128,7 @@
 .bx-nav-level-items.is-animated {
     --bx-nav-level-offset: #{spacing(4)};
 
-    animation: bx-nav-level-enter 160ms ease-out;
+    animation: bx-nav-level-enter 120ms #{motion-easing(smooth)};
 
     &.is-backward {
         --bx-nav-level-offset: -#{spacing(4)};

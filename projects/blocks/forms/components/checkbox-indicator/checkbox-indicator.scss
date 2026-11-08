@@ -22,7 +22,7 @@
     block-size: var(--bx-checkbox-size, 1.125rem);
     line-height: 0;
     background-color: var(--bx-bg-surface);
-    border: 1px solid var(--bx-border-strong);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
     border-radius: var(--bx-rounded-sm);
     color: var(--bx-text-primary);
 
@@ -51,7 +51,7 @@
     --bx-glass-edge: var(--bx-border-strong);
     --bx-glass-min-opacity: 0.65;
 
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     box-sizing: border-box;
 
     --bx-glass-text: var(--bx-text-primary);

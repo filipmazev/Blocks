@@ -71,6 +71,7 @@
 
 .step-selection {
     --bx-glass-surface: var(--step-selection-color, var(--step-color));
+    --bx-glass-opaque-surface: color-mix(in srgb, var(--step-selection-color, var(--step-color)) 22%, var(--bx-bg-surface));
     --bx-glass-edge: color-mix(in srgb, var(--step-selection-color, var(--step-color)) 65%, transparent);
     --bx-glass-opacity: 0.22;
     --bx-glass-radius: #{radius(pill)};
@@ -84,7 +85,7 @@
     z-index: 1;
     box-sizing: border-box;
     visibility: hidden;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     pointer-events: none;
     transform-origin: center;
@@ -187,7 +188,7 @@
     min-inline-size: 0;
     min-block-size: 2.75rem;
     padding: var(--step-padding);
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     background: transparent;
     font: inherit;
@@ -234,7 +235,7 @@ button.step-body {
     box-sizing: border-box;
     inline-size: var(--step-indicator-width);
     block-size: var(--step-indicator-height);
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     font-weight: 600;
     line-height: 1;

@@ -22,6 +22,8 @@
 }
 
 .touch-hitbox {
+    touch-action: pan-x pinch-zoom;
+    user-select: none;
     padding: 0;
     border: 0;
     background: transparent;
@@ -78,7 +80,7 @@
 }
 
 .opened-bottom-sheet-modal {
-    animation: opened-bottom-sheet-modal-anim 0.35s;
+    animation: opened-bottom-sheet-modal-anim var(--anim-duration, 175ms) #{motion-easing(smooth)};
 }
 
 .bottom-sheet-modal-top-bar {
@@ -104,32 +106,12 @@
 }
 
 @keyframes opened-bottom-sheet-modal-anim {
-    0% {
+    from {
         transform: translateY(100%);
     }
 
-    100% {
-        transform: translateY(0%);
-    }
-}
-
-@keyframes opened-bottom-sheet-modal-anim {
-    0% {
-        transform: translateY(100%);
-    }
-
-    100% {
-        transform: translateY(0%);
-    }
-}
-
-@keyframes opened-bottom-sheet-modal-anim {
-    0% {
-        transform: translateY(100%);
-    }
-
-    100% {
-        transform: translateY(0%);
+    to {
+        transform: translateY(0);
     }
 }
 
@@ -138,5 +120,5 @@
 }
 
 .bottom-sheet-modal-style.is-motion-enabled {
-    transition: transform 300ms #{motion-easing(smooth)};
+    transition: transform var(--anim-duration, 175ms) #{motion-easing(smooth)};
 }

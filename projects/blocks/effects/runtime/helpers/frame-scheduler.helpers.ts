@@ -3,8 +3,9 @@ import type { FrameCallback } from '@effects/runtime/types/frame-scheduler.types
 import { FRAME_SCHEDULER } from '@effects/runtime/constants/frame-scheduler.constants';
 
 /**
- * All effects share one lazy clock. Returning false removes the callback.
- * @param callback - Frame callback receiving animation timing; the returned function unsubscribes it.
+ * Subscribe to the shared lazy clock; no work is scheduled without a browser animation frame API.
+ * @param callback - Receives elapsed seconds (capped at 0.064) and a monotonic timestamp in milliseconds. Return false to stop.
+ * @returns Idempotent cleanup function; call it on cancellation or teardown. The clock stops after its last subscriber leaves.
  */
 export function subscribeFrame(callback: FrameCallback): () => void {
   return FRAME_SCHEDULER.subscribe(callback);

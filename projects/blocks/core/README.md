@@ -183,11 +183,107 @@ Use shared spacing, radius, elevation, motion, z-index, and responsive helpers. 
 [appearance guide](../../playground/src/app/components/screens/appearance/README.md) for palette pairs, semantic colors, translucency, glassiness, and
 application-wide rendering configuration.
 
+### Theme-token audit and customization contract
+
+The token audit separates application theme controls from the full CSS implementation inventory. The generated catalog currently contains 743 properties; 90 are
+theme controls: 65 semantic colors, nine nonzero spacing steps, six ordinary radii, eight shadows, and two border properties. Component hooks remain available
+for targeted overrides; their presence in the inventory does not make them independent theme settings.
+
+| Layer                             | Source of truth                                                 | Intended use                                                                       |
+| --------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Theme colors                      | `_theme-engine.scss`, palette maps and explicit theme overrides | Background, foreground, interaction and semantic border colors per light/dark mode |
+| Theme geometry and elevation      | `_variables.scss`                                               | Shared spacing, corner radii, shadows, border width and border style               |
+| Component overrides               | Owning component README                                         | Optional local exceptions that fall back to shared tokens                          |
+| Appearance and optical rendering  | Appearance APIs and Effects guides                              | Translucency, lighting, refraction and pressure feedback                           |
+| Runtime and layout infrastructure | Owning runtime or service                                       | Animation coordinates, measurements, stacking, accessibility state and breakpoints |
+
+`THEME_CSS_VARIABLES` and its `ThemeCssVariable` union provide the curated application theme contract. `ICssToken.themeEditable` marks the same set in
+`CSS_TOKEN_CATALOG`. Named palettes and primary/accent shade aliases remain advanced color inputs. Zero spacing, square corners and pill/circular radii remain
+structural values outside the curated editor set. No existing CSS property or component override was removed.
+
+The audit corrected four obstacles to live theming:
+
+- `spacing()`, `radius()` and `shadow()` previously baked values into component CSS. They now emit CSS-variable references with the configured Sass value as
+  fallback. Corresponding utility classes use exactly the same references.
+- Ordinary component borders now use `--bx-border-width` (default `1px`) and `--bx-border-style` (default `solid`). Existing semantic border colors still choose
+  the contour color. Local divider thickness and explicit line-style inputs take precedence.
+- Resting button and generic surface shadows now use `--bx-shadow-control` and `--bx-shadow-surface`; both preserve their previous values. Existing elevation,
+  modal and toast shadow names remain intact.
+- Catalog discovery now records actual declaring selectors, source paths and separate fallback expressions. A reference or fallback is not a global declaration.
+  Source-level inline theme-token edits also update already-open overlays without reacting to every animation-state write.
+
+Focus rings, selected-state outlines, inset pressure, lighting rims, slider optics and semantic emission are deliberately separate from resting borders and
+shadows. High-contrast surfaces retain solid borders and suppress shadows; forced-color rules remain authoritative. Shapes that are deliberately square,
+circular or inherited keep those contracts. Custom colors must be checked together with their hover, active and foreground partners; changing `primary` alone
+does not derive the other roles or regenerate palette shades.
+
+### Applying and exporting overrides
+
+The future studio can preview and export the same custom-property values. A plain CSS block is valid in `styles.scss`; an additional Sass theme format is not
+required. Keep the existing global Blocks import and `bx-theme(...)` setup, then place application overrides after the theme selectors:
+
+```scss
+:root {
+    --bx-rounded-sm: 0.375rem;
+    --bx-rounded-md: 0.75rem;
+    --bx-rounded-lg: 1rem;
+    --bx-border-width: 1px;
+    --bx-border-style: solid;
+    --bx-shadow-md: 0 6px 18px rgb(0 0 0 / 14%);
+}
+
+:root:not(.dark):not(.high-contrast) {
+    --bx-bg-surface: #f8f9fc;
+    --bx-text-primary: #263044;
+}
+
+:root.dark:not(.high-contrast) {
+    --bx-bg-surface: #171c28;
+    --bx-text-primary: #e7ebf3;
+}
+```
+
+Scope an override block to a container to customize only that subtree. The nearest declared token wins through normal CSS inheritance; explicit component inputs
+and local hooks can override shared defaults. Open overlays inherit their source context. Keep application color overrides out of high-contrast selectors. A
+preview should remove its inline overrides when reset or when accessibility mode takes precedence; inline colors otherwise outrank stylesheet themes. Runtime
+updates to stylesheet rule contents alone do not notify existing overlay observers; preview changes should use a scope's inline properties or classes.
+
+Shadow values can be a shadow list or `none` when used alone. For tokens composed with semantic emission (notably `shadow-sm` in alerts and `shadow-toast`), use
+`0 0 0 0 transparent` to remove resting elevation while retaining a valid composed shadow list. Optical and semantic layers remain separately controlled.
+
+### Sass compatibility
+
+The helper signatures remain source-compatible for CSS declarations. They now return CSS expressions rather than Sass numbers/lists by default. For compile-time
+arithmetic or Sass list manipulation, opt into the previous value with `$static: true`, or access the corresponding public Sass map:
+
+```scss
+@use '@filip.mazev/blocks/core/styles/helpers' as bx;
+
+.example {
+    padding: bx.spacing(4);
+    margin-block-end: calc(bx.spacing(4) * 2);
+    border-radius: bx.radius(lg);
+    box-shadow: bx.shadow(md);
+}
+
+$fixed-gap: bx.spacing(4, $static: true) * 2;
+```
+
+Unknown spacing/radius/shadow keys now fail compilation with a descriptive error instead of silently omitting a declaration. Breakpoint helpers and `z()` retain
+their compile-time behavior. The existing `$spacing`, `$radiuses`, `$shadows` and new `$borders` maps remain configurable before the global Sass entry point is
+loaded. The catalog describes the default library configuration, not application-specific Sass map overrides.
+
+The toolbar studio, theme persistence, import/export UI and undo/redo remain a separate implementation phase. Its starting contract is the curated theme set,
+with per-mode semantic colors and shared geometry; it must not serialize every discovered effect or component property.
+
 ## Behavior and accessibility
 
 Use injected shared services and signal derivation for updates under OnPush. Browser measurement and overlay work must wait for rendering and remain safe for
 SSR. Clean up locks, observers, listeners, subscriptions, timers, and asynchronous work with their owning view. Respect reduced motion, reduced transparency,
 forced colors, native semantics, focus visibility, and accessible naming in custom integrations.
+
+Reduced-motion styling also clears animation and transition delays, so disabling motion never leaves content waiting invisibly. The
+[library motion contract](../effects/runtime/README.md#fluid-interaction-across-blocks) describes the shared interaction policy and review routes across Blocks.
 
 ## Playground
 

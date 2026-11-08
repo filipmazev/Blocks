@@ -6,7 +6,7 @@
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: none;
 
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: radius(lg);
 
     &::after {

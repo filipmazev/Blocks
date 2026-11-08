@@ -163,13 +163,19 @@ function collectCss(css, scope, variables, classes) {
       const entry = recordVariable(variables, declaration.prop, scope);
 
       entry.defaults.add(declaration.value);
+
+      for (let parent = declaration.parent; parent; parent = parent.parent) {
+        if (parent.type === 'rule') {
+          postcss.list.comma(parent.selector).forEach((selector) => entry.selectors.add(selector));
+        }
+      }
     }
 
     collectValueReferences(declaration.value, scope, variables);
   });
 }
 
-/** Collects token names referenced by CSS var() expressions without recording their fallbacks. */
+/** Collects token names and fallback expressions separately from actual declarations. */
 function collectValueReferences(value, scope, variables) {
   const parsed = valueParser(value);
 
@@ -182,7 +188,13 @@ function collectValueReferences(value, scope, variables) {
 
     if (!TOKEN_PATTERN.test(name)) return;
 
-    recordVariable(variables, name, scope);
+    const entry = recordVariable(variables, name, scope);
+
+    if (separatorIndex !== -1) {
+      const fallback = valueParser.stringify(node.nodes.slice(separatorIndex + 1)).trim();
+
+      if (fallback) entry.fallbacks.add(fallback);
+    }
   });
 }
 
@@ -221,6 +233,7 @@ function recordVariable(variables, name, scope) {
       name,
       scopes: new Set(),
       selectors: new Set(),
+      fallbacks: new Set(),
       defaults: new Set()
     };
 

@@ -16,3 +16,12 @@ export const TAB_COLOR_TOKENS: Readonly<Record<TabColor, Color>> = {
   warn: 'text-warn',
   grayscale: 'text-primary'
 };
+
+/** Internal gesture tuning; distances are CSS pixels and velocity is pixels per second. */
+export const TAB_DRAG = {
+  threshold: 6,
+  holdDelay: 200,
+  releaseSlop: 32,
+  edgeSize: 32,
+  scrollSpeed: 480
+} as const;

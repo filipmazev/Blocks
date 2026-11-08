@@ -14,6 +14,13 @@ Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has 
 
 ## Accessibility and lifecycle
 
+- Reduced-transparency tab triggers no longer cover the active selection surface. Stepper highlights retain a soft opaque tint instead of becoming solid accent
+  blocks. Buttons expose persistent selected contours (text buttons use an underline), and selected cards default to the semantic brand border.
+- Local `opaque: false` and surface `reducedTransparency: false` now defer to active application or OS accessibility preferences. Remove the owning preference
+  to restore translucency; local options can still request opacity. Custom alpha-based materials can provide `--bx-glass-opaque-surface` for an opaque tint.
+- Surface positioning now defaults through CSS instead of an inline runtime override, preserving absolutely positioned selection indicators when component
+  styles arrive after surface initialization.
+
 - Reduced motion removes the width animation, reveal delay, and fade. Changing the preference while the rail opens reveals content immediately.
 - Keyboard focus reveals content immediately. Accessible control names remain available while labels are visually fading; icons and focus indicators remain
   independent of the text fade.
@@ -105,7 +112,8 @@ accessibility.
   from active navigation. Rejected guards and unconfirmed controlled requests never advance the animated selection.
 - Tabs use one persistent lit selection surface with spring position/size interpolation and bounded velocity stretch. Pointer/touch dragging previews the
   surface continuously and selects the nearest enabled tab on release. Escape, cancellation, outside release and stale gestures restore committed selection. New
-  `dragSelection` defaults to true; false restores native horizontal swipe scrolling. Click and keyboard selection remain available.
+  `dragSelection` defaults to true; false disables selection dragging; native touch swipe scrolling remains available with either setting. Click and keyboard
+  selection remain available.
 - Added optional `bxSurfaceEmissionStrength` / runtime `emissionStrength` (0–2, default 1) without changing reception, pressure feedback, or existing defaults.
   Added runtime `createSpringMotion`, `ISpringMotion`, `MOTION_PRESETS`, and `paintMotionStyles`, reusing the exact spring and shared lazy frame clock. Existing
   design tokens and theme scales remain intact; no dependency or competing lighting renderer was added.
@@ -152,3 +160,15 @@ accessibility.
   available.
 - Reduced collapsible/accordion height transitions from 220ms to 120ms. `--bx-collapsible-duration` optionally customizes the duration; live reduced motion
   still removes the transition immediately.
+
+## Fluid interaction across the library
+
+- Restored native horizontal touch scrolling in tabs. A short hold begins selection dragging; release uses bounded recent-velocity projection, with direct
+  tracking, preserved spring velocity and continuous edge scrolling. Pausing removes flick momentum.
+- Added shared `GestureVelocity`, `projectMotion`, `ISpringMotion.track`, and `subscribeFrame` APIs to the effects runtime. Gesture previews remain separate
+  from committed state, guards, native scrolling and precise input values.
+- Bottom-sheet handles now support touch, pen and mouse, with predicted release intent and spring recovery. Cancellation, lost capture, blur and Escape during
+  dragging restore the sheet without dismissing it; accepted release requests still use the modal close guard.
+- Shared surface pressure adapts to the input modality and preserves velocity through repeated presses. Reduced motion removes deformation and all CSS delays.
+- Menu and option selection surfaces use a clipped decorative layer so spring overshoot cannot create scrolling. Field, disclosure and panel feedback uses
+  shared motion curves. The runtime guide records interaction contracts and Playground review routes across component families.

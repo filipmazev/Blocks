@@ -72,7 +72,7 @@
     box-shadow: shadow(modal);
     color: var(--bx-modal-text, var(--bx-text-primary));
     backdrop-filter: blur(12px);
-    border: 1px solid transparent;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) transparent;
     background-color: var(--bx-modal-bg, var(--bx-bg-surface));
 }
 
@@ -159,7 +159,7 @@
     height: 2rem;
     padding: 0;
     border: none;
-    border-radius: var(--bx-rounded-sm, #{radius(sm)});
+    border-radius: #{radius(sm)};
     background: transparent;
     color: inherit;
     cursor: pointer;

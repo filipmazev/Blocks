@@ -21,9 +21,12 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
 
   if (!view) throw new Error('Selection motion requires a browser document.');
 
+  const layer = root.ownerDocument.createElement('span');
   const surface = root.ownerDocument.createElement('span');
   const restore = rememberStyles(root, ['position', 'isolation']);
 
+  layer.className = 'bx-selection-layer';
+  layer.setAttribute('aria-hidden', 'true');
   surface.className = 'bx-selection-surface';
   surface.setAttribute('aria-hidden', 'true');
   root.dataset['bxSelectionSurface'] = 'true';
@@ -31,12 +34,14 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
   if (view.getComputedStyle(root).position === 'static') root.style.position = 'relative';
 
   root.style.isolation = 'isolate';
-  root.prepend(surface);
+  layer.append(surface);
+  root.prepend(layer);
 
   const skin = mountSurface(surface, { interactive: false, emission: false, reducedMotion: initial.reducedMotion });
 
   let options = { ...initial };
   let active: HTMLElement | null = null;
+  let hovered: HTMLElement | null = null;
   let motion: ISpringMotion | undefined;
   let destroyed = false;
   let pointerActive = false;
@@ -103,10 +108,20 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     surface.style.visibility = 'visible';
   };
 
-  const fallback = (): HTMLElement | null => row(root.ownerDocument.activeElement) ?? row(root.querySelector('[aria-selected="true"]'));
+  const fallback = (): HTMLElement | null => {
+    const focused = row(root.ownerDocument.activeElement);
+
+    return focused?.matches(':focus-visible') ? focused : row(root.querySelector('[aria-selected="true"]'));
+  };
+
   const focus = (event: FocusEvent): void => {
-    pointerActive = false;
-    active = row(event.target) ?? fallback();
+    const focused = row(event.target);
+
+    pointerActive = !focused?.matches(':focus-visible');
+
+    if (!pointerActive) hovered = null;
+
+    active = focused ?? fallback();
     measure();
   };
 
@@ -115,6 +130,8 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
 
     const next = row(event.target);
 
+    hovered = next;
+
     if (next === active && pointerActive) return;
 
     pointerActive = true;
@@ -122,8 +139,12 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     measure();
   };
 
-  const leave = (): void => {
-    pointerActive = false;
+  const leave = (event: Event): void => {
+    // Leaving a hovered list restores its selected/focused row without sweeping across other options.
+    pointerActive = event.type === 'pointerleave' || !row(event.target)?.matches(':focus-visible');
+
+    if (event.type === 'pointerleave') hovered = null;
+
     active = fallback();
     measure();
   };
@@ -135,9 +156,11 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
 
   const observer = view.ResizeObserver ? new view.ResizeObserver(measure) : undefined;
   const mutation = new view.MutationObserver((records) => {
-    if (!records.some((record) => !surface.contains(record.target))) return;
+    if (!records.some((record) => !layer.contains(record.target))) return;
 
-    if (!eligible(active) || records.some((record) => record.attributeName === 'aria-selected')) active = fallback();
+    if (!eligible(active) || records.some((record) => record.attributeName === 'aria-selected')) {
+      active = pointerActive && eligible(hovered) ? hovered : fallback();
+    }
 
     measure();
   });
@@ -173,7 +196,7 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
       root.removeEventListener('focusout', leave);
       preference.removeEventListener('change', onPreference);
       root.ownerDocument.removeEventListener(configurationEvent, onPreference);
-      surface.remove();
+      layer.remove();
       delete root.dataset['bxSelectionSurface'];
       restore();
     }

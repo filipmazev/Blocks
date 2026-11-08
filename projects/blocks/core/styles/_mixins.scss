@@ -19,16 +19,40 @@
     }
 }
 
-@function spacing($key) {
-    @return map.get($spacing, $key);
+@function spacing($key, $static: false) {
+    @if not map.has-key($spacing, $key) {
+        @error "Unknown spacing token '#{$key}'.";
+    }
+
+    @if $static {
+        @return map.get($spacing, $key);
+    }
+
+    @return var(--bx-space-#{$key}, #{map.get($spacing, $key)});
 }
 
-@function radius($key) {
-    @return map.get($radiuses, $key);
+@function radius($key, $static: false) {
+    @if not map.has-key($radiuses, $key) {
+        @error "Unknown radius token '#{$key}'.";
+    }
+
+    @if $static {
+        @return map.get($radiuses, $key);
+    }
+
+    @return var(--bx-rounded-#{$key}, #{map.get($radiuses, $key)});
 }
 
-@function shadow($key) {
-    @return map.get($shadows, $key);
+@function shadow($key, $static: false) {
+    @if not map.has-key($shadows, $key) {
+        @error "Unknown shadow token '#{$key}'.";
+    }
+
+    @if $static {
+        @return map.get($shadows, $key);
+    }
+
+    @return var(--bx-shadow-#{$key}, #{map.get($shadows, $key)});
 }
 
 @function z($key) {

@@ -52,6 +52,9 @@ use the primary palette role; accent buttons use the second tone; success, dange
 noninteractive buttons do not emit. Pointer focus alone does not keep an action illuminated after the pointer leaves; focus stays on the native control and
 keyboard focus remains visible. Touch does not latch hover illumination. No additional effects directive or lighting configuration is needed.
 
+Selected actions also retain an inset contour independently of lighting or transparency. Selected text buttons underline their label. These cues track the same
+ARIA selection states and do not change the hit target or label dimensions.
+
 Filled buttons retain their semantic background and paired foreground color across translucency settings and reduced transparency, including hover and press.
 Filled actions use an opaque palette fill and a foreground matched to each interaction state. Surface lighting remains active; tonal and outlined actions retain
 translucency. Text buttons have no background, border, shadow or backdrop blur; hover underlines the label and keyboard focus retains a visible outline. Tonal

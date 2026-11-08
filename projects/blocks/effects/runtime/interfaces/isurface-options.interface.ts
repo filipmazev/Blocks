@@ -25,6 +25,6 @@ export interface ISurfaceOptions {
   focusEmission?: string;
   /** Whether motion should be reduced; omission follows the owning accessibility policy. Optional. */
   reducedMotion?: boolean;
-  /** Whether opaque presentation is requested; omission follows the owning appearance policy. Optional. */
+  /** Optional opaque presentation request. Defaults to inheritance; false cannot override an owning or operating-system reduced-transparency preference. */
   reducedTransparency?: boolean;
 }

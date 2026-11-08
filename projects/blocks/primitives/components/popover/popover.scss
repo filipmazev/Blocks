@@ -17,7 +17,7 @@
     inline-size: var(--bx-popover-width, max-content);
     max-inline-size: min(var(--bx-popover-max-width, 24rem), calc(100vw - #{spacing(4)}));
     overflow: clip;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     background: var(--bx-glass-surface);
     color: var(--bx-glass-text);

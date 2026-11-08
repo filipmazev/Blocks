@@ -69,12 +69,12 @@
     --bx-glass-surface: var(--bx-autocomplete-background, var(--bx-bg-surface));
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
-    --bx-glass-radius: var(--bx-autocomplete-radius, var(--bx-rounded-lg, #{radius(lg)}));
+    --bx-glass-radius: var(--bx-autocomplete-radius, #{radius(lg)});
     --bx-glass-shadow: #{shadow(lg)};
 
     inline-size: 100%;
     min-inline-size: 0;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
     background: var(--bx-glass-surface);
     color: var(--bx-glass-text);

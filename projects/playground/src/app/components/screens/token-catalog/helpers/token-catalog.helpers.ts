@@ -31,11 +31,11 @@ export function createCatalogEntries(): readonly ITokenCatalogEntry[] {
       category: token.category,
       group,
       kind: token.kind,
-      scope: token.scope,
-      defaults: token.defaults,
+      scope: `${token.scope} · ${token.themeEditable ? 'Theme control' : 'Advanced inventory'}`,
+      defaults: [...token.defaults, ...token.fallbacks.map((value) => `Fallback: ${value}`)],
       companion: '',
       companionReference: '',
-      search: ''
+      search: token.sources.join(' ')
     }));
   });
   const pairs: ITokenCatalogEntry[] = COLOR_TOKENS.flatMap((token) => {
@@ -108,6 +108,7 @@ export function createCatalogEntries(): readonly ITokenCatalogEntry[] {
     ...entry,
     search: [
       entry.name,
+      entry.search,
       entry.reference,
       entry.category,
       entry.group,

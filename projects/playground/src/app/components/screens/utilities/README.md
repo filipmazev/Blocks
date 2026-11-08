@@ -67,8 +67,8 @@ content viewports.
 | Color-token helpers, `resolveThemeId()`          | Semantic/palette selection, CSS reference, complementary/inverted tokens, saved palette validation                    |
 | `BxOverlayPositionService`, origin/theme helpers | Preferred placement, viewport fallback, tracked origin, inherited theme, teardown                                     |
 
-The [token catalog](../token-catalog/README.md) at `/tokens` covers `CSS_TOKEN_CATALOG`, CSS reference types, utility classes, foundation scales, and all color
-companions. Focused color-helper examples live in the utilities section above.
+The [token catalog](../token-catalog/README.md) at `/tokens` covers `CSS_TOKEN_CATALOG`, the curated `THEME_CSS_VARIABLES` theme contract, CSS reference types,
+utility classes, foundation scales, and all color companions. Focused color-helper examples live in the utilities section above.
 
 Other public utilities retain their established guides:
 
@@ -81,9 +81,10 @@ Other public utilities retain their established guides:
 | Form state/defaults, `BxBaseControl`, `FormSettingsService`     | [Forms](../../../../../../blocks/forms/README.md) and [Truncate](../../../../../../blocks/primitives/directives/truncate/README.md)                                                                                                         |
 | Navigation, modal, notification and effects services            | Their [Navigation](../../../../../../blocks/navigation/README.md), [Modal](../../../../../../blocks/modal/README.md), [Toastr](../../../../../../blocks/toastr/README.md), and [Effects](../../../../../../blocks/effects/README.md) guides |
 
-The effects runtime's shared motion helpers (`createSpringMotion`, `mountSelectionMotion`, `createGlassTransition`) retain their focused
-[Effects guide](../../../../../../blocks/effects/README.md) and [runtime API guide](../../../../../../blocks/effects/runtime/README.md), with interactive
-coverage at `/components/tabs`, `/components/stepper`, `/components/slider`, `/components/slide-toggle`, `/components/menu`, and the select/overlay pages.
+The effects runtime's shared motion helpers (`createSpringMotion`, `GestureVelocity`, `projectMotion`, `subscribeFrame`, `mountSelectionMotion`,
+`createGlassTransition`) retain their focused [Effects guide](../../../../../../blocks/effects/README.md) and
+[runtime API guide](../../../../../../blocks/effects/runtime/README.md), with interactive coverage at `/components/tabs`, `/components/stepper`,
+`/components/slider`, `/components/slide-toggle`, `/components/menu`, and the select/overlay pages.
 
 Internal coordination services, implementation classes, and type-only contracts do not receive separate playground pages.
 

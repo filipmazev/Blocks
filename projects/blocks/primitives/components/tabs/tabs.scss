@@ -25,7 +25,7 @@
     width: fit-content;
     max-width: 100%;
     padding: spacing(1);
-    border: 1px solid var(--bx-border-default);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
     border-radius: radius(md);
 }
 
@@ -71,12 +71,11 @@
     visibility: hidden;
     pointer-events: none;
     transform-origin: center;
-    border: 1px solid var(--bx-glass-edge);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
     border-radius: var(--bx-glass-radius);
 }
 
 :host(.bx-tabs-draggable) .bx-tab-trigger:not(:disabled) {
-    touch-action: pan-y pinch-zoom;
     user-select: none;
 }
 
@@ -85,7 +84,9 @@
 }
 
 .bx-tab-trigger {
+    // IMPORTANT: The header supplies opacity; painting another backing here would cover the traveling selection.
     --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-opaque-surface: transparent;
     --bx-glass-text: var(--bx-tab-text, var(--bx-text-secondary));
     --bx-glass-edge: transparent;
     --bx-glass-radius: #{radius(sm)};
@@ -101,7 +102,7 @@
     gap: spacing(2);
     flex: none;
     padding: spacing(2) spacing(3);
-    border: 1px solid transparent;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) transparent;
     border-radius: radius(sm);
     font: inherit;
     font-size: 0.875rem;
@@ -109,6 +110,7 @@
     cursor: pointer;
 
     &:hover:not(:disabled, .is-selected) {
+        --bx-glass-opaque-surface: var(--bx-bg-element-hover);
         --bx-glass-text: var(--bx-tab-text, var(--bx-text-primary));
         --bx-glass-opacity: 0.15;
     }
@@ -138,6 +140,7 @@
 
 :host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected {
     --bx-glass-surface: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, var(--bx-bg-surface));
+    --bx-glass-opaque-surface: var(--bx-glass-surface);
     --bx-glass-edge: color-mix(in srgb, var(--bx-tab-highlight, var(--bx-primary)) 35%, transparent);
     --bx-glass-opacity: 0.45;
     --bx-glass-decoration-opacity: 0.5;
@@ -169,7 +172,7 @@
         width: auto;
         padding: 0;
         border: 0;
-        border-bottom: 1px solid var(--bx-border-default);
+        border-bottom: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
         border-radius: 0;
     }
 
@@ -179,7 +182,7 @@
 
     .bx-tab-trigger {
         padding: spacing(3) spacing(4);
-        border-inline-end: 1px solid var(--bx-border-default);
+        border-inline-end: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
         border-radius: 0;
         font-size: 0.8rem;
     }

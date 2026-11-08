@@ -167,14 +167,6 @@ export class IconCatalog {
       this.scrollContainer.set(this.catalogScroll()?.nativeElement);
     });
     effect(() => {
-      this.iconCatalogPreferencesService.save({
-        version: 1,
-        size: this.selectedSize(),
-        strokeWidth: this.selectedStrokeWidth(),
-        categories: this.selectedCategories()
-      });
-    });
-    effect(() => {
       this.selectedCode();
       this.copyStatus.set('');
     });
@@ -226,8 +218,6 @@ export class IconCatalog {
     this.selectedSize.set(ICON_CATALOG_DEFAULTS.size);
     this.selectedStrokeWidth.set(ICON_CATALOG_DEFAULTS.strokeWidth);
     this.selectedCategories.set([]);
-    this.iconCatalogPreferencesService.save(ICON_CATALOG_DEFAULTS);
-    this.iconCatalogPreferencesService.flush();
     this.resetScroll();
   }
 

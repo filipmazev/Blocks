@@ -54,6 +54,10 @@ resamples and snaps environmental colors for committed semantic changes; the omi
 The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component's border radius, size and
 layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.
 
+Live radius and border-width token changes refresh both refraction renderers, even when the surface dimensions stay fixed. Optical maps retain their caches
+until geometry changes; border-only changes update layer insets. Theme controls use Core's
+[curated token contract](../../core/README.md#theme-token-audit-and-customization-contract); optical and animation properties remain advanced runtime state.
+
 `mountSurface(element)` includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their
 border and nearby surfaces on interaction or an active ARIA state. Decorative containers receive nearby light without their own hover effect, even when they
 contain a single input such as a slider. Only wrappers within `bx-form-field` infer interactivity from their input; other custom wrappers can opt in with
@@ -86,15 +90,38 @@ browser/accessibility fallbacks.
 
 Local color aliases preserve component intent:
 
-| Glass alias          | Blocks fallback      |
-| -------------------- | -------------------- |
-| `--bx-glass-surface` | `--bx-bg-surface`    |
-| `--bx-glass-text`    | `--bx-text-primary`  |
-| `--bx-glass-edge`    | `--bx-border-subtle` |
-| `--bx-glass-accent`  | `--bx-primary`       |
+| Glass alias                 | Blocks fallback            |
+| --------------------------- | -------------------------- |
+| `--bx-glass-surface`        | `--bx-bg-surface`          |
+| `--bx-glass-opaque-surface` | local `--bx-glass-surface` |
+| `--bx-glass-text`           | `--bx-text-primary`        |
+| `--bx-glass-edge`           | `--bx-border-subtle`       |
+| `--bx-glass-accent`         | `--bx-primary`             |
 
 For example, a success toast can set `--bx-glass-surface: var(--bx-bg-success)` and retain its established semantic appearance. Outside Blocks, system colors
 supply neutral fallbacks.
+
+Use opaque semantic colors for `--bx-glass-surface` and let the material opacity control translucency. When a custom surface color contains alpha, supply an
+opaque `--bx-glass-opaque-surface` on that element. The override also applies to increased contrast and unsupported backdrop filtering; it resolves locally on
+each surface, so nested controls retain their own colors. For example, an accent wash can use
+`--bx-glass-opaque-surface: color-mix(in srgb, var(--bx-accent) 22%, var(--bx-bg-surface))` to retain a soft tint without transparency.
+
+Composite controls keep their opaque backing separate from their hit targets. Tabs paint the header and traveling selected surface, while the foreground
+triggers remain unpainted so they cannot cover the highlight. Reduced transparency does not disable selection motion, direct manipulation, or lighting.
+
+Reduced-transparency state review covers these shared patterns:
+
+| Family                                            | Opaque state feedback                                                                                          |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Tabs and connected steppers                       | Separate selection backing; opaque tint stays distinct from the header and solid current marker.               |
+| Buttons, cards and chips                          | Persistent selection contour; text buttons retain an underline.                                                |
+| Menus, select/autocomplete options and navigation | Solid semantic hover/active colors on an opaque container; selected options retain their selection indicators. |
+| Checkbox, radio and switch controls               | Opaque checked fill with a check, dot or thumb position.                                                       |
+| Sliders and progress                              | Opaque thumb or filled track; value and progress geometry remain available.                                    |
+| Alerts, tags, dialogs and toasts                  | Opaque semantic/content surfaces; borders, icons and text preserve meaning independently of decorative light.  |
+
+Transparent foreground hit targets, hover washes and lighting over an opaque parent are intentional composition, not translucent windows into page content. When
+customizing a state color with alpha, define its opaque counterpart and check selected, hovered, focused, disabled and readonly states in both themes.
 
 ## Spatial lighting and reflections
 
@@ -187,9 +214,9 @@ applies static pressure feedback immediately and removes it on release.
   refraction adds SVG backdrop passes for refraction and rim reflection. `auto` chooses baseline for coarse pointers, data saving or low reported CPU
   concurrency; capability checks guard enhancements. Hardware hints are conservative defaults, not measured frame-rate guarantees.
 - Operating-system reduced motion/transparency, increased contrast and forced colors receive simpler rendering. A global `reducedTransparency: false` leaves the
-  OS transparency preference enabled; explicit surface options can override it. An explicit reduced-motion setting takes precedence so Blocks can preserve its
-  existing manual accessibility override; omit it to follow the OS. Reduced motion finishes transitions immediately. Unsupported backdrop filtering or color
-  mixing produces an opaque fallback.
+  OS transparency preference enabled; local surface options cannot turn off an owning or OS transparency preference. An explicit reduced-motion setting takes
+  precedence so Blocks can preserve its existing manual accessibility override; omit it to follow the OS. Reduced motion finishes transitions immediately.
+  Unsupported backdrop filtering or color mixing produces an opaque fallback.
 - Backdrop filters still have a cost. Use one outer material for large sections, avoid full-screen stacked filtered panels, and profile actual target devices
   before treating any frame-rate target as verified.
 
@@ -277,15 +304,75 @@ toggles, menus and overlays.
 ## Shared row and overlay motion
 
 `mountSelectionMotion(root, { selector?, reducedMotion? })` adds one noninteractive surface behind an existing `role="menu"` or `role="listbox"` container. The
-default selector is `[role="menuitem"], [role="option"]`. Disabled rows and nested lists are excluded. Pointer hover snaps immediately; actual focus and
-`aria-selected` changes may spring without changing selection. The controller remeasures dynamic/scrolling content, bounds stretch, and releases its observers
-and surface renderer on `destroy()`. Omitted motion policy follows live inherited/system preferences; call `update({ reducedMotion })` to change an explicit
-application override. Use a div container with unrestricted children. Set `--bx-selection-surface` to customize the backing; defaults use existing semantic
-hover/error surfaces. Focus rings and persistent selection/checkmarks remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this
-at their existing Playground routes.
+default selector is `[role="menuitem"], [role="option"]`. Disabled rows and nested lists are excluded. Pointer hover and exit restore the backing immediately;
+pointer exit hides it when there is no selected or keyboard-focused row. Mouse-only focus does not keep a hover highlight after exit. Pointer
+selection/deselection retains the hovered row without traveling to another selected option. Actual keyboard focus and `aria-selected` changes may spring without
+changing selection. The controller remeasures dynamic/scrolling content, bounds stretch, and releases its observers and surface renderer on `destroy()`. Omitted
+motion policy follows live inherited/system preferences; call `update({ reducedMotion })` to change an explicit application override. Use a div container with
+unrestricted children. Set `--bx-selection-surface` to customize the backing; defaults use existing semantic hover/error surfaces. Focus rings and persistent
+selection/checkmarks remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this at their existing Playground routes.
 
 `createGlassTransition` now uses the shared retargetable spring for opacity and restrained scale. `IGlassTransitionOptions.scale` is the closed scale, clamped
 from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. The controller preserves the overlay's positioning transform, follows the opening side,
 restores owned styles, cancels superseded promises, and snaps on live reduced motion. `refresh()` updates its scale origin after a positioning flip. Existing
 enter/exit/destroy contracts remain available. Native CSS `motion-easing()` presets from `core/styles/helpers` supply restrained curves where continuous physics
 is unnecessary, including large modal surfaces and toast stack collapse. These Sass curves add no CSS token scale or generator-owned token changes.
+
+## Fluid interaction across Blocks
+
+Blocks applies Apple's [motion guidance](https://developer.apple.com/design/human-interface-guidelines/motion),
+[gesture guidance](https://developer.apple.com/design/human-interface-guidelines/gestures), and
+[Designing Fluid Interfaces](https://developer.apple.com/videos/play/wwdc2018/803/) through the shared runtime. The web interaction contract remains native:
+scrolling, zoom, keyboard activation, focus, disabled/readonly state and application guards take precedence over decorative motion.
+
+| Interaction family                                               | Motion contract                                                                                                                                                  | Playground review                                                                                |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Buttons, chips, checkbox/radio controls and interactive surfaces | Immediate material pressure; stronger for touch, subtler for mouse/pen/keyboard. Repeated presses retain spring velocity. Labels and hit targets stay stable.    | `/components/button`, `/components/checkbox`, `/components/radio`, `/components/chip`            |
+| Tabs                                                             | Native touch scrolling; hold to select by dragging. Actual position drives the preview; bounded velocity projection chooses the release destination.             | `/components/tabs`                                                                               |
+| Sliders, range sliders and resize handles                        | Direct values and geometry follow actual input. No predicted value changes. Decorative feedback releases independently.                                          | `/components/slider`, `/components/range-slider`, `/components/resize-handle`                    |
+| Toggles and stepper selection                                    | Retarget committed state without restarting springs. Stepper guards and application confirmation remain authoritative; separate cards use local feedback.        | `/components/slide-toggle`, `/components/stepper`                                                |
+| Menus, select, multiselect and autocomplete                      | Pointer hover is immediate. Keyboard selection can settle spatially. A clipped decorative layer cannot create scroll overflow.                                   | `/components/menu`, `/components/select`, `/components/multi-select`, `/components/autocomplete` |
+| Fields, errors and disclosures                                   | Brief feedback uses shared curves. Error text remains available; disclosure state changes immediately and can be reversed.                                       | `/components/input-field`, `/components/collapsible`                                             |
+| Navigation, side panels and modal views                          | Large surfaces use restrained motion; dimensions and viewport constraints remain authoritative. Bottom-sheet releases use recent velocity and guarded dismissal. | `/components/side-nav`, `/components/side-panel`, `/modal`                                       |
+| Dropdowns, popovers and tooltips                                 | Shared overlay springs preserve positioning and cancel superseded completion promises.                                                                           | `/components/dropdown`, `/components/popover`, `/components/tooltip`                             |
+| Toasts, progress, loading and skeletons                          | Status and lifetime remain independent of decorative motion. Reduced motion retains static state, text and accessible feedback.                                  | `/toastr`, `/components/progress-bar`, `/components/loading-spinner`, `/components/skeleton`     |
+
+Use live reduced-motion and reduced-transparency preferences independently. Reduced motion removes travel, deformation and transition delays, while direct
+manipulation, focus, semantics and loading state remain available. Reduced transparency changes material opacity without disabling useful lighting. Check light
+and dark themes, constrained widths, zoom, RTL, interrupted gestures and cancellation. Browser automation does not replace physical iOS Safari touch review.
+
+### Gesture sampling and handoff
+
+`GestureVelocity` samples recent scalar motion in coordinate units per second. `update(position, timestamp)` filters event samples, responds immediately to a
+reversal and ignores stale timestamps. `velocity(timestamp)` returns zero after a 100 ms stationary pause. Coordinates must use the same space throughout a
+gesture; scroll offsets must not masquerade as pointer velocity.
+
+`projectMotion(position, velocity, limit, seconds = 0.16)` chooses a bounded prospective destination. It throws `RangeError` for nonfinite coordinates or
+negative bounds. Use it to select a discrete snap destination or request dismissal; do not use prediction to change precise slider values or to bypass guards.
+The projection horizon is Blocks tuning, not an Apple-prescribed constant.
+
+`ISpringMotion.track(values, velocities?)` paints direct manipulation immediately, stops pending frames, and retains the supplied velocities for the next
+`retarget()`. Omitted velocities are zero. Both arrays must contain finite values and match the initial channel count; invalid inputs throw `RangeError` without
+partially changing the channels. Snap with `retarget(values, true)` under reduced motion, and call `destroy()` on teardown.
+
+```ts
+import { createSpringMotion, GestureVelocity, projectMotion } from '@filip.mazev/blocks/effects/runtime';
+
+const velocity = new GestureVelocity(0, 0);
+const motion = createSpringMotion([0], ([position]) => {
+    selection.style.transform = `translateX(${position}px)`;
+});
+
+velocity.update(24, 32);
+motion.track([24], [velocity.velocity(32)]);
+const destination = projectMotion(24, velocity.velocity(32), 100);
+// Resolve destination to an allowed snap point before committing application state.
+motion.retarget([destination]);
+// When the owning view is destroyed:
+motion.destroy();
+```
+
+`subscribeFrame(callback)` exposes the existing shared lazy clock for coordinated work such as drag edge scrolling. Its `FrameCallback` receives bounded elapsed
+seconds and an animation timestamp in milliseconds. Return `false` when settled or blocked; call the returned cleanup function on release, cancellation and
+teardown. Without `requestAnimationFrame`, it schedules no work. It is not an automatic reduced-motion policy: callers must distinguish useful direct
+interaction from optional decorative movement. Tabs demonstrate continuous edge scrolling with this clock.

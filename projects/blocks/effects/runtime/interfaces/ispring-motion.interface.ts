@@ -6,6 +6,12 @@ export interface ISpringMotion {
    * @param immediate - Snap and stop the clock, for initialization or reduced motion. Defaults to false.
    */
   retarget(values: readonly number[], immediate?: boolean): void;
+  /**
+   * Paint direct manipulation immediately and retain its velocity for the next retarget; no frames run until retargeted.
+   * @param values - Finite current coordinates, matching the initial channel count.
+   * @param velocities - Optional finite velocities per second for each channel; omission uses zero. Must match the channel count.
+   */
+  track(values: readonly number[], velocities?: readonly number[]): void;
   /** Stop pending frames permanently; subsequent retarget calls have no effect. */
   destroy(): void;
 }

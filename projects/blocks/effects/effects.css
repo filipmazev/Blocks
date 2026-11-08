@@ -1,6 +1,9 @@
 /* Generated from effects.scss by tools/build-effects-styles.mjs. */
 :where([data-bx-surface]) {
-    border: 1px solid var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
+    /* IMPORTANT: Resolve the opaque material locally; nested surfaces must not inherit a parent's fallback color. */
+    --bx-glass-opaque-surface: var(--bx-glass-surface, var(--bx-bg-surface, Canvas));
+    position: relative;
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
     border-radius: var(--bx-glass-radius, var(--bx-rounded-lg, 0));
 }
 
@@ -10,7 +13,7 @@
     background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
     -webkit-backdrop-filter: blur(var(--bx-glass-blur, var(--bx-glass-material-blur, 10px))) saturate(1.15);
     backdrop-filter: blur(var(--bx-glass-blur, var(--bx-glass-material-blur, 10px))) saturate(1.15);
-    box-shadow: var(--bx-glass-shadow, 0 2px 6px rgba(0, 0, 0, 0.08));
+    box-shadow: var(--bx-glass-shadow, var(--bx-shadow-surface, 0 2px 6px rgba(0, 0, 0, 0.08)));
     color: var(--bx-glass-text, var(--bx-text-primary, CanvasText));
     border-color: var(--bx-glass-edge, var(--bx-border-subtle, GrayText));
 }
@@ -271,7 +274,7 @@
 }
 
 [data-bx-surface][data-bx-reduced-transparency='true'] {
-    background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    background: var(--bx-glass-opaque-surface) !important;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
@@ -287,12 +290,12 @@
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     [data-bx-surface] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
     }
 }
 @media (prefers-reduced-transparency: reduce) {
     [data-bx-surface]:not([data-bx-reduced-transparency='false']) {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -315,7 +318,7 @@
         border-color: currentcolor;
     }
     [data-bx-surface] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -621,7 +624,7 @@
 }
 
 :is([data-bx-reduced-transparency='true'], .high-contrast, .bx-high-contrast-scope)[data-bx-refraction='true'] {
-    background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    background: var(--bx-glass-opaque-surface) !important;
 }
 :is([data-bx-reduced-transparency='true'], .high-contrast, .bx-high-contrast-scope) .bx-refraction-layer {
     display: none;
@@ -629,14 +632,14 @@
 
 .high-contrast [data-bx-surface],
 .bx-high-contrast-scope [data-bx-surface] {
-    background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+    background: var(--bx-glass-opaque-surface) !important;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     [data-bx-refraction='true'] {
-        background: var(--bx-glass-surface, var(--bx-bg-surface, Canvas)) !important;
+        background: var(--bx-glass-opaque-surface) !important;
     }
     .bx-refraction-layer {
         display: none;
@@ -648,12 +651,21 @@
     }
 }
 /* stylelint-disable-next-line scss/at-function-pattern -- The underscore keeps this Sass helper private. */
+/* IMPORTANT: Spring overshoot must not enlarge the menu or listbox scrollable area. */
+.bx-selection-layer {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+    z-index: -1;
+}
+
 .bx-selection-surface {
     --bx-glass-surface: var(--bx-selection-surface, var(--bx-selection-row-surface, var(--bx-bg-element-hover)));
     --bx-glass-edge: transparent;
     --bx-glass-opacity: 1;
     --bx-glass-min-opacity: 1;
-    --bx-glass-radius: 0.25rem;
+    --bx-glass-radius: var(--bx-rounded-sm, 0.25rem);
     --bx-glass-shadow: none;
     position: absolute;
     inset: 0 auto auto 0;

@@ -393,8 +393,9 @@ visiting a step never implies completing it. Circular indicators compress on pre
 rather than restarting it. Rejected guards and unconfirmed controlled requests leave the selection accent at the committed step.
 
 Live reduced motion snaps the accent and completion fill and removes indicator deformation. Reduced transparency retains the shared opaque material fallback
-independently. Forced colors retain the explicit current/completed/error markers and hide the decorative traveling accent. Springs and observers are released
-with their component. No existing theme tokens were renamed or changed.
+independently: the traveling accent uses a soft opaque tint, preserving the contrast of the solid current marker and its label. Forced colors retain the
+explicit current/completed/error markers and hide the decorative traveling accent. Springs and observers are released with their component. No existing theme
+tokens were renamed or changed.
 
 ## Playground
 

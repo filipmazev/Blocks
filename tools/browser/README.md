@@ -34,6 +34,8 @@ keyboard or rubber-band compositor behavior; confirm those on an iPhone.
 Button translucency regressions cover the complete slider range (including the minimum tint/blur backing for active refraction and the classic fallback), light
 and dark appearances, tint before surface mounting, reduced transparency, high contrast, solid filled actions and transparent text actions. With motion enabled,
 they also check immediate material updates across visible surfaces and sustained image-color sampling on all four article controls during nested scrolling.
+Selected button checks retain a contour or text underline with reduced transparency. The native runtime suite checks live OS preference changes, local opt-out
+precedence, and independently resolved opaque colors on nested surfaces.
 
 ```sh
 BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/buttons.cjs
@@ -42,7 +44,9 @@ BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright BLOCKS_BROWSER=webkit node -
 
 Tabs and the overview's Bring home control have a separate playground suite covering keyboard navigation, disabled and removed tabs, lazy panels, nested
 source-file tabs, RTL, narrow layouts, horizontal touch gestures in Chrome and wheel scrolling in WebKit, natural panel flow, code blocks without nested
-horizontal scrollers, selected lighting and the Blocks button integration:
+horizontal scrollers, selected lighting and the Blocks button integration.
+
+The suite also switches reduced transparency on and off while tabs are mounted, checking the visible selection backing and geometry in both themes and variants.
 
 ```sh
 BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/tabs.cjs
@@ -71,3 +75,9 @@ without a browser. Run GPU-heavy browser suites sequentially when profiling the 
 
 Select positioning regressions explicitly target the Location control and use the Page size control to load all 24 fixture options before measuring. They select
 Skopje through the UI instead of relying on the demo's initial selection. Search assertions count option rows rather than pagination actions.
+
+Select closing checks sample animation frames through DOM detachment, covering Escape and switching to a second selector so a completed fade cannot flash back
+to full opacity before Angular removes its panel.
+
+Multi-select hover checks cover leaving the menu with zero, one, or several selections: the backing hides or restores immediately without sweeping across
+options. Selecting and deselecting a hovered row keeps the backing beneath that row. Keyboard navigation remains available after pointer exit.
