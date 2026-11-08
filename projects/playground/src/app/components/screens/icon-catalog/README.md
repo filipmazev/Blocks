@@ -1,7 +1,7 @@
 # Lucide icon catalog
 
-Browse generated Lucide icons with search, official category filters, progressive rendering, and a nonmodal customization inspector. Catalog-wide preferences
-survive navigation and reloads; per-icon inspector changes remain separate and last for the current visit.
+Browse generated Lucide icons with search, official category filters, progressive rendering, and a nonmodal customization inspector. Filters and per-icon
+inspector customizations remain local to the current visit.
 
 ## Import
 
@@ -65,10 +65,11 @@ preserve scroll position. A Show more button gives keyboard users an explicit ro
 Search matches case-insensitive partial words in any order, treating spaces, hyphens, and underscores as separators. For example, `arrow down`, `down arrow`,
 and `arrow-down` find `arrow-down`; this follows the Tokens catalog's word-matching behavior.
 
-A single active-panel signal coordinates Filters and Details. Closing preserves filter and inspector settings; tile highlighting is shown only while Details is
-open. Panels use complementary region semantics, optional focus restoration, a close control, and Escape dismissal; the page remains interactive without focus
-trapping, scroll locking, or modal semantics. Existing Blocks controls provide labeled keyboard-accessible sliders and selections. Setting information tooltips
-support focus, hover, and touch tap.
+A single active-panel signal coordinates Filters and Details. Opening either panel closes the global Theme Studio; opening Theme Studio closes the catalog
+panel, preserving the current visit's filter and inspector settings. Closing preserves filter and inspector settings; tile highlighting is shown only while
+Details is open. Panels use complementary region semantics, optional focus restoration, a close control, and Escape dismissal; the page remains interactive
+without focus trapping, scroll locking, or modal semantics. Existing Blocks controls provide labeled keyboard-accessible sliders and selections. Setting
+information tooltips support focus, hover, and touch tap.
 
 Scroll to catalog top appears after scrolling 400 pixels past the start of the results in the actual scroll viewport, staying hidden while reading the
 documentation above the catalog. Its threshold follows documentation expansion and viewport changes. It uses a Blocks tooltip without touch long-press and

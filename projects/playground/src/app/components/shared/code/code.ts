@@ -16,8 +16,9 @@ import { Highlight } from 'ngx-highlightjs';
 })
 export class Code {
   public readonly files: InputSignal<ICodeFile[]> = input.required<ICodeFile[]>();
+  public readonly maxHeight: InputSignal<string> = input('45rem');
 
   protected codeContent(file: ICodeFile): string {
-    return CODE_SNIPPETS[file.path.replace(/^\/+/, '')] ?? `This snippet is unavailable: ${file.title}`;
+    return file.content ?? CODE_SNIPPETS[file.path.replace(/^\/+/, '')] ?? `This snippet is unavailable: ${file.title}`;
   }
 }

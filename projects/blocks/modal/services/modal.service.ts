@@ -1,6 +1,8 @@
+import type { WritableSignal } from '@angular/core';
+
 import { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, createComponent, EnvironmentInjector, inject, Injectable, Injector, Renderer2, RendererFactory2, Type } from '@angular/core';
+import { ApplicationRef, createComponent, EnvironmentInjector, inject, Injectable, Injector, Renderer2, RendererFactory2, signal, Type } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 
@@ -31,7 +33,8 @@ export class ModalService implements IModalService {
   private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
 
   private readonly renderer: Renderer2;
-  private readonly modals: Set<IModalStackEntry> = new Set<IModalStackEntry>();
+
+  private readonly modals: WritableSignal<ReadonlySet<IModalStackEntry>> = signal(new Set<IModalStackEntry>());
 
   constructor() {
     this.renderer = this.rendererFactory2.createRenderer(null, null);
@@ -73,7 +76,7 @@ export class ModalService implements IModalService {
     try {
       this.applicationRef.attachView(wrapperRef.hostView);
       this.document.body.appendChild(wrapperRef.location.nativeElement);
-      this.modals.add(modal);
+      this.modals.update((current) => new Set(current).add(modal));
       this.syncNestingDepth();
 
       // Content constructors can synchronously open children; register and append the parent first.
@@ -103,6 +106,8 @@ export class ModalService implements IModalService {
     } catch (error) {
       if (!wrapperRef.hostView.destroyed) wrapperRef.destroy();
 
+      this.unregister(modal);
+
       throw error;
     }
   }
@@ -128,7 +133,13 @@ export class ModalService implements IModalService {
    * @typeParam C - Angular content component implementing the corresponding data and result contract.
    */
   public unregister<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): void {
-    this.modals.delete(modal);
+    this.modals.update((current) => {
+      const next = new Set(current);
+
+      next.delete(modal);
+
+      return next;
+    });
     this.syncNestingDepth();
   }
 
@@ -138,7 +149,7 @@ export class ModalService implements IModalService {
    * @param onNavigate - Indicates if the closeAll is triggered by navigation event.
    */
   public closeAll(onNavigate: boolean = false): void {
-    this.modals.forEach((modal) => {
+    this.modals().forEach((modal) => {
       if (modal.config().disableCloseOnNavigation !== true || !onNavigate) {
         modal.close('cancel', undefined, true);
       }
@@ -154,7 +165,7 @@ export class ModalService implements IModalService {
    * @returns True if a modal with the specified component type is open, false otherwise.
    */
   public find<D, R>(componentType: Type<IModal<D, R>>): boolean {
-    for (const modal of this.modals) {
+    for (const modal of this.modals()) {
       if (modal.componentType === componentType) {
         return true;
       }
@@ -164,12 +175,12 @@ export class ModalService implements IModalService {
   }
 
   /**
-   * Gets the count of currently open modals.
+   * Read the reactive count of registered modals, including opening and closing dialogs. Reading in a template or computed tracks stack changes.
    *
    * @returns The number of open modals.
    */
   public modalsCount(): number {
-    return this.modals.size;
+    return this.modals().size;
   }
 
   /**
@@ -182,13 +193,13 @@ export class ModalService implements IModalService {
    * @returns True only for the last registered modal; background dialogs must not handle Escape.
    */
   public isTopmost<D, R, C extends IModal<D, R> = IModal<D, R>>(modal: ModalRef<D, R, C>): boolean {
-    return [...this.modals].at(-1) === modal;
+    return [...this.modals()].at(-1) === modal;
   }
 
   //#region Helpers
 
   private syncNestingDepth(): void {
-    for (const [depth, modal] of [...this.modals].entries()) modal.setNestingDepth(depth);
+    for (const [depth, modal] of [...this.modals()].entries()) modal.setNestingDepth(depth);
   }
 
   private createSubscriptions(): void {

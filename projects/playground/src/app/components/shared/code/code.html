@@ -1,4 +1,4 @@
-<bx-tabs class="code-viewer" variant="underline" ariaLabel="Code files">
+<bx-tabs class="code-viewer" variant="underline" ariaLabel="Code files" [style.--bx-tabs-max-panel-height]="maxHeight()">
     @for (file of files(); track file.path) {
         <bx-tab [label]="file.title" [value]="file.path">
             <ng-template bxTabContent>

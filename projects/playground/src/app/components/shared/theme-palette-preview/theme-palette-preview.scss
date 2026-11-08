@@ -1,0 +1,76 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    align-self: center;
+}
+
+.palette-stage {
+    position: relative;
+    inline-size: min(100%, 27rem);
+    aspect-ratio: 1;
+    margin-inline: auto;
+
+    // IMPORTANT: Rotated positioning wrappers are larger than the artwork and must not expand the page's scrollable bounds.
+    overflow: clip;
+}
+
+.palette-ring {
+    position: absolute;
+    inset: 0;
+}
+
+.panel-position {
+    position: absolute;
+    inset: 0;
+    transform: rotate(calc(var(--panel-index) * 60deg + 8deg));
+    pointer-events: none;
+
+    &:nth-child(1) {
+        --panel-color: var(--bx-primary);
+    }
+
+    &:nth-child(2) {
+        --panel-color: color-mix(in srgb, var(--bx-text-info) 70%, var(--bx-accent));
+    }
+
+    &:nth-child(3) {
+        --panel-color: color-mix(in srgb, var(--bx-text-success) 80%, var(--bx-primary));
+    }
+
+    &:nth-child(4) {
+        --panel-color: var(--bx-accent);
+    }
+
+    &:nth-child(5) {
+        --panel-color: color-mix(in srgb, var(--bx-text-warn) 80%, var(--bx-primary));
+    }
+
+    &:nth-child(6) {
+        --panel-color: color-mix(in srgb, var(--bx-text-danger) 75%, var(--bx-accent));
+    }
+}
+
+.glass-panel {
+    --bx-card-radius: #{radius(xl)};
+    --bx-card-background: var(--panel-color);
+    --bx-card-border: color-mix(in srgb, var(--panel-color) 45%, var(--bx-border-default));
+    --bx-card-shadow: #{shadow(sm)};
+    --bx-glass-min-opacity: 0.4;
+    --bx-refraction-min-opacity: 0.4;
+
+    position: absolute;
+    inset-block-start: 8%;
+    inset-inline-start: 29%;
+    inline-size: 42%;
+    block-size: 30%;
+    transform: rotate(-14deg);
+    pointer-events: auto;
+}
+
+@media (forced-colors: active) {
+    .glass-panel {
+        border: 1px solid CanvasText;
+    }
+}

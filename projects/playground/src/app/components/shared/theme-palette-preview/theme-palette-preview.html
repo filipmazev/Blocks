@@ -1,0 +1,9 @@
+<div class="palette-stage" (pointerenter)="setHovered($event, true)" (pointerleave)="setHovered($event, false)" (pointercancel)="setHovered($event, false)">
+    <div #ring class="palette-ring">
+        @for (panel of panels; track panel) {
+            <div class="panel-position" [style.--panel-index]="panel">
+                <bx-card #surfacePanel class="glass-panel" bxSurface bxSurfaceGlassiness="auto" [bxSurfaceInteractive]="false" [surfaceEffects]="false" />
+            </div>
+        }
+    </div>
+</div>

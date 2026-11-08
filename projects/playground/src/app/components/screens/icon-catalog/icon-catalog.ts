@@ -35,6 +35,7 @@ import {
 import { IconCatalogPreferencesService } from '@playground/components/screens/icon-catalog/services/icon-catalog-preferences.service';
 import { Readme } from '@playground/components/shared/readme/readme';
 import { ScrollToTop } from '@playground/components/shared/scroll-to-top/scroll-to-top';
+import { ThemeStudioService } from '@playground/services/theme-studio.service';
 
 import { Highlight } from 'ngx-highlightjs';
 
@@ -70,6 +71,7 @@ import { Highlight } from 'ngx-highlightjs';
 })
 export class IconCatalog {
   private readonly clipboard = inject(Clipboard);
+  private readonly themeStudioService = inject(ThemeStudioService);
   private readonly iconCatalogPreferencesService = inject(IconCatalogPreferencesService);
   private readonly windowDimensionsService = inject(WindowDimensionsService);
 
@@ -163,6 +165,9 @@ export class IconCatalog {
   });
 
   constructor() {
+    effect(() => {
+      if (this.themeStudioService.open()) this.activePanel.set(null);
+    });
     afterNextRender(() => {
       this.scrollContainer.set(this.catalogScroll()?.nativeElement);
     });
@@ -194,12 +199,14 @@ export class IconCatalog {
     if (!this.customizations().has(name)) this.customizations.update((previous) => new Map(previous).set(name, this.initialCustomization()));
 
     this.selectedIcon.set(name);
-    this.activePanel.set('details');
+    this.panelChanged('details', true);
   }
 
   protected panelChanged(panel: Exclude<IconCatalogPanel, null>, open: boolean): void {
-    if (open) this.activePanel.set(panel);
-    else if (this.activePanel() === panel) this.activePanel.set(null);
+    if (open) {
+      this.themeStudioService.open.set(false);
+      this.activePanel.set(panel);
+    } else if (this.activePanel() === panel) this.activePanel.set(null);
   }
 
   protected customize(patch: Partial<IIconCatalogCustomization>): void {

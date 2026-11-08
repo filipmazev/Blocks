@@ -47,6 +47,10 @@ support keyboard scrolling; short inline API names remain inline code.
 Keep Angular packages, CLI, builder and ng-packagr on major 22 with TypeScript 6. The checked-in lockfile preserves compatible versions. Runtime Markdown and
 Mermaid dependencies are no longer needed by the playground. Do not mix Angular 21 tooling with Angular 22.
 
+The toolbar's [Theme Studio](../../shared/theme-studio/README.md) edits shared colors, borders, corners, spacing and resting shadows while previewing any page.
+It exports SCSS with a named built-in base and separate light/dark colors. Material and accessibility preferences remain on this screen; high contrast and
+forced colors suspend Studio overrides without erasing the draft.
+
 ## API
 
 ```ts
@@ -72,7 +76,7 @@ retain their own legibility constraints.
 `themingService.appearance()` is the current typed configuration; `themingService.resetAppearance()` restores defaults. Changes apply to existing components and
 open overlays. `translucency` is 0–1, defaulting to the balanced midpoint of 0.5. It adjusts tint and blur together: the minimum is nearly clear with light
 blur, while the maximum caps tint near 72.5% to retain a glassy appearance. `reducedTransparency: true` supplies fully opaque surfaces and preserves the chosen
-translucency for when transparency is restored. Quality is `auto`, `baseline`, or `enhanced`. Reduced motion continues through `BxA11yService`; system
+translucency for when transparency is restored. The playground offers `auto` and `baseline` rendering. Reduced motion continues through `BxA11yService`; system
 transparency and contrast preferences remain respected. Previously saved tint preferences migrate to translucency, and a saved solid preference becomes reduced
 transparency.
 
@@ -142,8 +146,7 @@ warning, danger and information retain their status meanings across palettes.
 
 Canvas backgrounds stay neutral white or black, leaving application background styling to the consuming app. Cards, toolbars, navigation and default controls
 use neutral white/black/gray surfaces. Explicit primary and accent actions retain their palette roles. Scrollbars use a solid primary shade. The playground's
-Oddity canvas uses subtle tints from both tones over the neutral canvas. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral
-surfaces.
+material sample places both tones behind a shared glass surface. Cyberpunk retains yellow actions and blue-slate supporting controls over neutral surfaces.
 
 Carbon / Cobalt combines a deep neutral charcoal with a saturated cobalt-blue accent. Its dark appearance uses neutral off-white primary actions instead of a
 pale colored tint. Azure / Ember pairs blue with burnt orange, while Brick Rose / Cyan pairs a muted rose-red with cyan. Their dark action shades are tuned
@@ -174,13 +177,12 @@ transparency** for opaque surfaces.
 
 ```html
 <button bx-button variant="icon" glassiness="auto" aria-label="Bookmark">…</button>
-<section bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="enhanced">…</section>
+<section bxSurface bxSurfaceGlassiness="auto">…</section>
 ```
 
 `themingService.setAppearance({ translucency: 0.5, glassiness: 'auto' })` sets the shared scale and browser policy. It does not select every component. Off
-disables selected glassiness; browser opt-in allows testing future support. Automatic uses one refraction pass. Enhanced adds full reflection and bevel layers,
-with a bounded reflection region and throttled invalidation. The five Appearance preview controls use the automatic path; the three overview feature cards and
-toast wrappers request Enhanced. Device budgets, baseline quality and accessibility still take precedence.
+disables selected glassiness; browser opt-in allows testing future support. Automatic uses one refraction pass on selected surfaces. Device budgets, baseline
+quality and accessibility preferences take precedence.
 
 Text, placeholders and icons keep their theme or component foreground colors while scrolling. Active refraction retains a default minimum of 72% tint for
 readability, increasing to about 74.9% tint at the slider midpoint and 89% at maximum. Blur starts at 0.5px, reaches about 0.8px at the midpoint and 9.2px at
@@ -222,6 +224,9 @@ Dropdowns expose `#actions="bxDropdown"`, `open()`, `close()`, `toggle()`, `isOp
 after motion settles, with revision guards for reopening. Focus and keyboard behavior remain native. No dragging or repositioning behavior was added in this
 iteration.
 
+The Theme picker includes a **Create a theme** action. It opens the existing Theme Studio sidebar beside Appearance, retaining the current palette and draft.
+Customize and preview here, then export the theme from Studio. The action does not navigate or reset existing changes.
+
 ## Behavior and accessibility
 
 Appearance updates propagate through the shared theme and effects services to mounted components and overlays. Reduced motion takes precedence over requested
@@ -242,10 +247,9 @@ changes around an automatically lit surface. Static scenes do no ongoing samplin
 existing adaptive polling loop and backs off when unchanged. Media pixels are cached and color-only changes reuse the existing edge positions without hit
 testing. Hidden pages and reduced-motion receivers stop live media checks.
 
-Baseline uses one material layer and directional lighting. Enhanced rendering adds colored reflection and a specular edge; active refraction also adds SVG
-backdrop passes for refraction and edge reflection. Use Glassiness Off or Baseline when the added GPU cost is unsuitable. Auto mode considers CSS capability,
-coarse-pointer devices, reduced-cost device signals and data-saving preference. Explicit enhanced mode still requires the relevant CSS support. Reduced
-transparency, unsupported backdrop filters, and increased contrast provide opaque presentation.
+Baseline uses blur, tint and directional lighting. Automatic adapts material detail and refraction to CSS capability, coarse-pointer devices, reduced-cost
+device signals and data-saving preference. Use Glassiness Off or Baseline when the added GPU cost is unsuitable. Reduced transparency, unsupported backdrop
+filters and increased contrast provide opaque presentation.
 
 Input and scene observation are shared per document. Scene updates batch a bounded number of visible surfaces; geometry reads precede writes. Animation frames
 stop when springs settle. Background scrolling can still cause browser GPU work even while JavaScript is idle: measure the real target devices before choosing
@@ -264,17 +268,18 @@ themingService.setApplicationTheme(null); // Follow the system appearance.
 
 The Surfaces section places its Surface Appearance title beside the scrolling journal on wide layouts and above it on smaller screens. The padded pill slider
 sits below the demo, followed by its description; Reset restores surface preferences. Its Blocks Advanced settings disclosure contains rendering and glassiness
-options. Rendering, glassiness, translucency and reduced transparency are saved together in `blocks-appearance` and restored on refresh, including Enhanced.
-Baseline temporarily sets Glassiness to Off and disables all glassiness choices, including browser opt-in. Switching back to Automatic or Enhanced restores the
-previous Automatic or browser opt-in policy; an explicitly chosen Off remains Off. Enhanced stays available from Baseline when the remembered policy permits it.
-This also applies to `themingService.setAppearance()` and restored preferences. `themingService.preferredGlassiness()` exposes the requested policy while
-`themingService.appearance().glassiness` reflects the effective value. Turning Glassiness Off intentionally returns Enhanced to Automatic. Theme palettes and
-accessibility preferences have independent sections; resetting surfaces changes only surface preferences.
+options. Automatic and Baseline are the available rendering choices. Rendering, glassiness, translucency and reduced transparency are saved together in
+`blocks-appearance` and restored on refresh. Opening this page normalizes previously saved rendering choices that are no longer offered to Automatic, preserving
+other appearance preferences. Baseline temporarily sets Glassiness to Off and disables all glassiness choices, including browser opt-in. Switching back to
+Automatic restores the previous Automatic or browser opt-in policy; an explicitly chosen Off remains Off. `themingService.preferredGlassiness()` exposes the
+requested policy while `themingService.appearance().glassiness` reflects the effective value. Theme palettes and accessibility preferences have independent
+sections; resetting surfaces changes only surface preferences.
 
-The top bar provides a single Appearance link. On wide screens, selectable Blocks cards offer Light, Dark and Auto. On screens at the shared `sm` breakpoint or
-narrower, Light and Dark appear side by side with portrait previews and an Automatic slide toggle below. Automatic highlights the currently active mode and
-follows system changes; choosing the other card disables Auto, while choosing the already active card keeps it enabled. Turning Auto off preserves the current
-mode. Mode and palette preferences remain available on this page and persist across refreshes.
+The top bar provides Appearance and Theme Studio actions; edited themes also expose a compact preview pause/resume action. On wide screens, selectable Blocks
+cards offer Light, Dark and Auto. On screens at the shared `sm` breakpoint or narrower, Light and Dark appear side by side with portrait previews and an
+Automatic slide toggle below. Automatic highlights the currently active mode and follows system changes; choosing the other card disables Auto, while choosing
+the already active card keeps it enabled. Turning Auto off preserves the current mode. Mode and palette preferences remain available on this page and persist
+across refreshes.
 
 Open `/appearance` to adjust the live application preferences and preview the material over scrollable content. Use `/components` to inspect individual controls
 and their colocated API documentation. The playground screen, its template/styles, and this guide live together.

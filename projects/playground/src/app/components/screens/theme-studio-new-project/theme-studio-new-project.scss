@@ -1,0 +1,19 @@
+@use 'core/styles/helpers' as *;
+
+.new-project-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(4);
+    max-inline-size: 48rem;
+    min-inline-size: 0;
+
+    h2,
+    p {
+        margin: 0;
+    }
+}
+
+.project-status {
+    min-block-size: 3rem;
+}

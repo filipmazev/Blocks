@@ -1,0 +1,264 @@
+<div class="studio-theme-controls">
+    <bx-tabs
+        class="studio-mode"
+        ariaLabel="Theme mode"
+        [selectedValue]="themeStudioService.themingService.activeTheme() === 'dark' ? 'dark' : 'light'"
+        (selectedValueChange)="modeChanged($event)">
+        <bx-tab label="Light" icon="sun" value="light" />
+        <bx-tab label="Dark" icon="moon" value="dark" />
+    </bx-tabs>
+    <bx-select
+        label="Theme"
+        subscriptSizing="dynamic"
+        [options]="palettes"
+        [value]="themeStudioService.themingService.palette()"
+        [clearable]="false"
+        [optionTemplate]="paletteOption"
+        [triggerTemplate]="paletteTrigger"
+        (valueChange)="paletteChanged($event)" />
+    <ng-template #paletteOption let-option
+        ><span class="palette-choice"
+            ><span class="palette-swatches" aria-hidden="true">
+                @for (color of paletteColors(option.value); track $index) {
+                    <span [style.background-color]="color"></span>
+                }</span
+            >{{ option.label }}</span
+        ></ng-template
+    >
+    <ng-template #paletteTrigger let-value let-labels="labels"
+        ><span class="palette-choice"
+            ><span class="palette-swatches" aria-hidden="true">
+                @for (color of paletteColors(value); track $index) {
+                    <span [style.background-color]="color"></span>
+                }</span
+            >{{ labels.join(', ') }}</span
+        ></ng-template
+    >
+</div>
+<a bx-button variant="tonal" routerLink="/studio">Explore Theme Studio</a>
+<div class="studio-settings">
+    <bx-select
+        label="Corner radius"
+        subscriptSizing="dynamic"
+        placeholder="Custom values"
+        [options]="styles"
+        [value]="selectedRadius() === 'custom' ? null : selectedRadius()"
+        [floatLabel]="selectedRadius() === 'custom' ? 'always' : 'auto'"
+        [hint]="selectedRadius() === 'custom' ? 'Choose a preset to replace your custom radii.' : undefined"
+        [clearable]="false"
+        (valueChange)="setScale('radius', $event)" />
+    <bx-select
+        label="Base color"
+        subscriptSizing="dynamic"
+        placeholder="Custom colors"
+        [options]="bases"
+        [value]="baseSelection() === 'custom' ? null : baseSelection()"
+        [floatLabel]="baseSelection() === 'custom' ? 'always' : 'auto'"
+        [hint]="baseSelection() === 'custom' ? 'Choose a base to replace your custom neutral colors.' : undefined"
+        [clearable]="false"
+        (valueChange)="setBase($event)" />
+    <bx-select
+        label="Menu color"
+        subscriptSizing="dynamic"
+        placeholder="Custom colors"
+        [options]="menus"
+        [value]="menuSelection('color') === 'custom' ? null : menuSelection('color')"
+        [floatLabel]="menuSelection('color') === 'custom' ? 'always' : 'auto'"
+        [hint]="menuSelection('color') === 'custom' ? 'Choose a preset to replace these custom colors.' : undefined"
+        [clearable]="false"
+        (valueChange)="setMenu('color', $event)" />
+    <bx-select
+        label="Menu accent"
+        subscriptSizing="dynamic"
+        placeholder="Custom colors"
+        [options]="menus"
+        [value]="menuSelection('accent') === 'custom' ? null : menuSelection('accent')"
+        [floatLabel]="menuSelection('accent') === 'custom' ? 'always' : 'auto'"
+        [hint]="menuSelection('accent') === 'custom' ? 'Choose a preset to replace these custom colors.' : undefined"
+        [clearable]="false"
+        (valueChange)="setMenu('accent', $event)" />
+</div>
+<p class="studio-note">
+    Menu colors use shared surface and hover tokens, so cards and other controls follow them too. Colors are separate for light and dark modes.
+</p>
+<bx-tabs class="studio-tabs" ariaLabel="Theme sections" [(selectedValue)]="activeTab">
+    <bx-tab label="Colors" value="colors">
+        <ng-template bxTabContent>
+            @for (control of commonColors; track control.name) {
+                <ng-container [ngTemplateOutlet]="colorControl" [ngTemplateOutletContext]="{ $implicit: control }" />
+            }
+            <bx-collapsible title="Advanced colors" [contentTemplate]="advancedContent">
+                <ng-template #advancedContent>
+                    <p>Related hover, active and foreground roles remain independent. Changing one color does not regenerate the palette.</p>
+                    @for (control of advancedColors; track control.name) {
+                        <ng-container [ngTemplateOutlet]="colorControl" [ngTemplateOutletContext]="{ $implicit: control }" />
+                    }
+                </ng-template>
+            </bx-collapsible>
+        </ng-template>
+    </bx-tab>
+    <bx-tab label="Layout" value="layout">
+        <ng-template bxTabContent>
+            <div class="layout-settings">
+                <bx-select
+                    label="Corner radius"
+                    subscriptSizing="dynamic"
+                    placeholder="Custom values"
+                    [options]="styles"
+                    [value]="selectedRadius() === 'custom' ? null : selectedRadius()"
+                    [floatLabel]="selectedRadius() === 'custom' ? 'always' : 'auto'"
+                    [hint]="selectedRadius() === 'custom' ? 'Choose a preset to replace your custom radii.' : undefined"
+                    [clearable]="false"
+                    (valueChange)="setScale('radius', $event)" />
+                <bx-select
+                    label="Spacing"
+                    subscriptSizing="dynamic"
+                    placeholder="Custom values"
+                    [options]="densities"
+                    [value]="selectedDensity() === 'custom' ? null : selectedDensity()"
+                    [floatLabel]="selectedDensity() === 'custom' ? 'always' : 'auto'"
+                    [hint]="selectedDensity() === 'custom' ? 'Choose a preset to replace your custom spacing.' : undefined"
+                    [clearable]="false"
+                    (valueChange)="setScale('spacing', $event)" />
+                <bx-select
+                    label="Border style"
+                    subscriptSizing="dynamic"
+                    [options]="borderStyles"
+                    [value]="themeStudioService.value('--bx-border-style')"
+                    [clearable]="false"
+                    (valueChange)="setBorderStyle($event)" />
+                <div class="border-slider">
+                    <label class="range-label" for="studio-border-width"
+                        >Border width <output>{{ borderWidth() }}px</output></label
+                    >
+                    <input
+                        bxSlider
+                        id="studio-border-width"
+                        type="range"
+                        min="0"
+                        max="8"
+                        step="0.25"
+                        [value]="borderWidth()"
+                        (pointerdown)="themeStudioService.beginEdit()"
+                        (input)="setBorderWidth($event)"
+                        (change)="themeStudioService.finishEdit()"
+                        (blur)="themeStudioService.finishEdit()"
+                        (pointercancel)="themeStudioService.cancelEdit()" />
+                </div>
+            </div>
+        </ng-template>
+    </bx-tab>
+    <bx-tab label="Shadows" value="shadows">
+        <ng-template bxTabContent>
+            <div class="shadow-settings" (focusin)="themeStudioService.beginEdit()" (focusout)="themeStudioService.finishEdit()">
+                <bx-select
+                    label="Apply shadow to"
+                    subscriptSizing="dynamic"
+                    [options]="shadowTargets"
+                    [value]="shadowTarget()"
+                    [clearable]="false"
+                    (valueChange)="shadowTarget.set($event?.toString() ?? 'all')" />
+                <div class="shadow-preview" [style.box-shadow]="themeStudioService.effective(shadowNames()[0])">Shadow preview</div>
+                <label class="color-label" for="studio-shadow-color">Shadow color</label>
+                <input
+                    id="studio-shadow-color"
+                    class="color-picker"
+                    type="color"
+                    [value]="shadow().color"
+                    (input)="setShadow('color', $event)"
+                    (change)="themeStudioService.finishEdit()" />
+                @for (range of shadowRanges; track range.key) {
+                    <label class="range-label" [for]="'studio-shadow-' + range.key"
+                        >{{ range.label }} <output>{{ shadow()[range.key] }}{{ range.unit }}</output></label
+                    >
+                    <input
+                        bxSlider
+                        type="range"
+                        step="1"
+                        [id]="'studio-shadow-' + range.key"
+                        [min]="range.min"
+                        [max]="range.max"
+                        [value]="shadow()[range.key]"
+                        (pointerdown)="themeStudioService.beginEdit()"
+                        (input)="setShadow(range.key, $event)"
+                        (change)="themeStudioService.finishEdit()"
+                        (pointercancel)="themeStudioService.cancelEdit()" />
+                }
+                <p class="studio-note">
+                    Adjusting a control creates one shadow layer for the selected targets. Imported shadow lists remain intact until edited. Semantic lighting
+                    remains independent.
+                </p>
+                <button type="button" bx-button variant="tonal" color="grayscale" (click)="resetShadow()">
+                    <bx-icon name="rotate-ccw" size="16" />Reset selected shadows
+                </button>
+            </div>
+        </ng-template>
+    </bx-tab>
+    <bx-tab label="Export" value="export">
+        <ng-template bxTabContent>
+            <div class="export-actions">
+                <button type="button" bx-button variant="tonal" [disabled]="!!themeStudioService.invalidCount()" (click)="copy()">
+                    <bx-icon name="copy" size="16" />Use theme
+                </button>
+                <button type="button" bx-button variant="tonal" (click)="importTheme()"><bx-icon name="upload" size="16" />Import theme</button>
+                <button type="button" bx-button variant="tonal" [disabled]="!!themeStudioService.invalidCount()" (click)="download('json')">
+                    <bx-icon name="download" size="16" />Download JSON
+                </button>
+            </div>
+            <app-code class="export-code" maxHeight="24rem" [files]="exportFiles()" />
+            <bx-collapsible title="Studio guide" [contentTemplate]="guideContent"
+                ><ng-template #guideContent><app-readme path="projects/playground/src/app/components/shared/theme-studio/README.md" /></ng-template
+            ></bx-collapsible>
+        </ng-template>
+    </bx-tab>
+</bx-tabs>
+<ng-template #colorControl let-control>
+    <div class="token-control" (focusin)="themeStudioService.beginEdit()" (focusout)="themeStudioService.finishEdit()">
+        <div class="token-heading">
+            <span>{{ control.label }}</span
+            ><button
+                bx-button
+                type="button"
+                variant="tonal"
+                color="grayscale"
+                [disabled]="!themeStudioService.overridden(control.name)"
+                [attr.aria-label]="'Reset ' + control.label"
+                (click)="themeStudioService.reset(control.name)">
+                <bx-icon name="rotate-ccw" size="16" />Reset
+            </button>
+        </div>
+        <div class="color-inputs">
+            <input
+                type="color"
+                class="color-picker"
+                [attr.aria-label]="'Pick ' + control.label"
+                [value]="colorHex(control.name)"
+                (input)="changeColor(control.name, $event)"
+                (change)="themeStudioService.finishEdit()" />
+            <bx-input-field
+                errorPolicy="always"
+                subscriptSizing="dynamic"
+                [label]="control.label"
+                [value]="themeStudioService.value(control.name)"
+                [error]="themeStudioService.error(control.name)"
+                [invalid]="!!themeStudioService.error(control.name)"
+                [spellcheck]="false"
+                (valueChange)="themeStudioService.edit(control.name, $event?.toString() ?? '')" />
+        </div>
+        <label class="range-label" [for]="control.name + '-opacity'"
+            >Opacity <output>{{ colorOpacity(control.name) }}%</output></label
+        >
+        <input
+            bxSlider
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            [id]="control.name + '-opacity'"
+            [value]="colorOpacity(control.name)"
+            (pointerdown)="themeStudioService.beginEdit()"
+            (input)="changeOpacity(control.name, $event)"
+            (change)="themeStudioService.finishEdit()"
+            (pointercancel)="themeStudioService.cancelEdit()" />
+    </div>
+</ng-template>

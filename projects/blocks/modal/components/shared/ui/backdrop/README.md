@@ -63,6 +63,9 @@ focus states, or semantic control states.
 
 ## Behavior and accessibility
 
+When animated, the backdrop fades its blur and fill over 175ms on opening and closing. Starting styles establish the entrance before first paint; changing
+direction continues from the current opacity. With `isAnimated` false, presentation changes immediately.
+
 Open through `ModalService` so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. `Modal` content receives its typed
 data and `ModalRef`; call `modal.close(mode, result)` to return a result. Do not instantiate service-owned view wrappers as general page containers.
 

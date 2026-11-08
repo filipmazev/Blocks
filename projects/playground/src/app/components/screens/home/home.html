@@ -1,23 +1,19 @@
-<oddity-canvas class="oddity-canvas" [config]="look()" />
-
-<div #lightGarden class="home-container light-garden">
+<div #lightGarden class="home-container">
     <header class="hero">
         <div class="hero-content">
-            <p class="eyebrow">Blocks · Angular components</p>
-            <h1>Build with clarity.<br /><span>Give it depth.</span></h1>
-            <p class="hero-subtitle">
-                A modular UI library with shared theming, accessible controls, and materials that feel at home throughout your application.
-            </p>
+            <h1>Build with <span>Blocks.</span></h1>
+            <p class="hero-subtitle">Angular components with shared theming and accessible controls.</p>
             <div class="hero-actions">
                 <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon name="arrow-right" size="20" /></a>
                 <a bx-button variant="tonal" color="accent" routerLink="/components">Browse components</a>
             </div>
         </div>
+        <app-theme-material-preview />
     </header>
     <section class="features" aria-labelledby="features-title">
         <div class="features-heading">
             <div class="features-title" [attr.data-bx-reduced-motion]="isReducedMotion()">
-                <h2 id="features-title">Built on the Blocks foundations</h2>
+                <h2 id="features-title">Explore Blocks</h2>
                 <span
                     class="orb-hint"
                     bxTooltip="Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces."
@@ -45,6 +41,7 @@
             }
         </div>
     </section>
+    <bx-divider class="home-divider" />
     <footer class="home-footer">
         <span>Designed &amp; developed by Filip Mazev</span>
 

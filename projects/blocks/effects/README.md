@@ -57,6 +57,8 @@ opt in with `bxSurfaceInteractive`. Components can override the default border a
 
 Omit local inputs to keep the surface connected to application settings. A deliberate local override continues to take precedence until removed.
 
+Noninteractive surfaces retain received lighting but do not apply pointer pressure or the refractive active tint.
+
 Disable automatic emission independently of press feedback and received lighting with `[bxSurfaceEmission]="false"`. This also suppresses the default keyboard
 focus emission. An explicit `bxSurfaceFocusEmission` can opt the surface back into focus-only emission. Hiding decoration with CSS opacity does not disable a
 source in the lighting runtime.

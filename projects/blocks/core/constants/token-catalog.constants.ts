@@ -6212,6 +6212,9 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.bx-selection-surface',
       '.bx-slide-toggle-track[data-bx-surface]',
       '.bx-slide-toggle-track[data-bx-surface].is-checked',
+      '.bx-tab-header',
+      '.bx-tab-selection',
+      '.bx-tab-trigger',
       '.bx-tag.is-filled',
       '.bx-tooltip-surface[data-bx-surface]',
       '.bx-top-nav-bar',
@@ -6220,6 +6223,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.panel-surface',
       '.toast-wrapper[data-bx-surface]',
       ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))',
+      ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
       ':host(:not([data-bx-surface]))',
       ':host([data-bx-surface])',
       ':host([data-variant=segments]) .marker',
@@ -6247,6 +6251,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/primitives/components/alert/alert.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
+      'projects/blocks/primitives/components/tabs/tabs.scss',
       'projects/blocks/primitives/components/tag/tag.scss',
       'projects/blocks/primitives/components/tooltip/tooltip.scss',
       'projects/blocks/toastr/components/toast-core/toast-core.scss'
@@ -7299,19 +7304,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-border-default)'],
     selectors: [],
     sources: ['projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss']
-  },
-  {
-    name: '--bx-modal-scale',
-    reference: 'var(--bx-modal-scale)',
-    category: 'components',
-    group: 'Component \u00B7 modal',
-    kind: 'value',
-    scope: 'local',
-    themeEditable: false,
-    defaults: ['0', '1'],
-    fallbacks: ['1'],
-    selectors: ['.centered-modal-frame.centered-modal-animate-in', 'from', 'to'],
-    sources: ['projects/blocks/modal/components/views/centered/modal-centered.scss']
   },
   {
     name: '--bx-modal-text',
@@ -8470,7 +8462,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: ['0.9'],
     fallbacks: ['0'],
     selectors: [
-      '[data-bx-refraction=true]:is(:active,\n[aria-pressed=true],\n[aria-selected=true],\n[aria-checked=true],\n[aria-expanded=true][aria-haspopup]:not([aria-haspopup=false]))'
+      '[data-bx-refraction=true]:is(:active[data-bx-surface-interactive=true],\n[aria-pressed=true],\n[aria-selected=true],\n[aria-checked=true],\n[aria-expanded=true][aria-haspopup]:not([aria-haspopup=false]))'
     ],
     sources: ['projects/blocks/effects/effects.scss']
   },

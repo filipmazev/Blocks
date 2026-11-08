@@ -1,7 +1,7 @@
 import type { ComponentType } from '@angular/cdk/portal';
-import type { ComponentRef, Signal, WritableSignal } from '@angular/core';
+import type { AfterRenderRef, ComponentRef, Signal, WritableSignal } from '@angular/core';
 
-import { signal } from '@angular/core';
+import { afterNextRender, signal } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 
@@ -37,6 +37,7 @@ export class ModalRef<D = unknown, R = unknown, C extends IModal<D, R> = IModal<
   private contentRef?: ComponentRef<C>;
   private containerRef?: ComponentRef<ModalCore<D, R, C>>;
   private closeTimeout?: ReturnType<typeof setTimeout>;
+  private closeRender?: AfterRenderRef;
 
   constructor(
     config: ModalConfig<D, R>,
@@ -185,6 +186,25 @@ export class ModalRef<D = unknown, R = unknown, C extends IModal<D, R> = IModal<
     this.modalState.next(ModalState.CLOSING);
 
     const duration = this.containerRef?.instance.isAnimated() ? this.containerRef.instance.animationDuration : 0;
+    const container = this.containerRef;
+
+    if (duration && container?.instance.effectiveLayout() === 'center') {
+      this.closeRender = afterNextRender(
+        {
+          read: () => {
+            const element: HTMLElement = container.location.nativeElement;
+            const layers = element.querySelectorAll('.centered-modal-frame, .centered-modal-content-wrapper, .modal-backdrop');
+            const animations = Array.from(layers).flatMap((layer) => layer.getAnimations());
+
+            // Wait for rendered exit motion, including the dimming pseudo-element, without waiting on application content animations.
+            void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => this.finishClose(result));
+          }
+        },
+        { injector: container.injector }
+      );
+
+      return;
+    }
 
     this.closeTimeout = setTimeout(() => this.finishClose(result), duration);
   }
@@ -193,6 +213,7 @@ export class ModalRef<D = unknown, R = unknown, C extends IModal<D, R> = IModal<
     if (this.modalState.value === ModalState.CLOSED) return;
 
     clearTimeout(this.closeTimeout);
+    this.closeRender?.destroy();
     this.subscriptions.unsubscribe();
     this.modalState.next(ModalState.CLOSED);
 

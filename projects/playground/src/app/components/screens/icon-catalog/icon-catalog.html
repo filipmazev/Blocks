@@ -160,7 +160,7 @@
                         [variant]="hasActiveFilters() ? 'filled' : 'tonal'"
                         [color]="hasActiveFilters() ? 'accent' : 'grayscale'"
                         [attr.aria-expanded]="activePanel() === 'filters'"
-                        (click)="activePanel.set(activePanel() === 'filters' ? null : 'filters')">
+                        (click)="panelChanged('filters', activePanel() !== 'filters')">
                         <bx-icon name="sliders-horizontal" size="20" /> Filters
                     </button>
                     <bx-search-input

@@ -93,6 +93,9 @@ translucent tint and emits a restrained amount of its highlight color into nearb
 transitions apply to later interactions. Appearance settings and reduced motion follow `ThemingService` and `BxA11yService`, like other primitives. Forced
 colors use a visible selected outline.
 
+Tabs resolve their own minimum material opacity inside panels and dialogs. Inactive triggers stay transparent so a containing surface cannot cover the moving
+selection with its opacity floor. Header, selection and label stacking keep their existing clipping and motion behavior.
+
 Reduced transparency gives the header and selected tint opaque fills. Foreground tab triggers leave that selection visible; hover uses a separate neutral fill.
 The selected shape and underline remain visible independently of text color, and live preference changes preserve selection, scrolling, and dragging.
 

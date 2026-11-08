@@ -1,5 +1,6 @@
 import type { Signal, WritableSignal } from '@angular/core';
 
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
@@ -44,6 +45,7 @@ import * as animConst from '@modal/constants/modal-animation.constants';
 
 @Component({
   selector: 'bx-modal',
+  hostDirectives: [CdkTrapFocus],
   imports: [NgClass, NgTemplateOutlet, ModalCentered, ModalSide, ModalBackdrop],
   host: {
     '[class.has-backdrop]': 'config().style.hasBackdrop',
@@ -55,6 +57,7 @@ import * as animConst from '@modal/constants/modal-animation.constants';
   styleUrl: './modal-core.scss'
 })
 export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit, OnDestroy {
+  private readonly cdkTrapFocus = inject(CdkTrapFocus, { self: true });
   private readonly modalService = inject(ModalService);
   private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
   private readonly scrollLockService = inject(ScrollLockService);
@@ -139,6 +142,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   private _currentVcr: ViewContainerRef | null = null;
 
   constructor() {
+    this.cdkTrapFocus.autoCapture = true;
     this.initKeyboardSubscription();
 
     effect(() => {

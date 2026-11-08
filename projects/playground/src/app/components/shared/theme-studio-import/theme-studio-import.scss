@@ -1,0 +1,43 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    gap: spacing(3);
+    padding-block-end: spacing(4);
+    padding-inline-end: spacing(3);
+    box-sizing: border-box;
+}
+
+.file-choice,
+.import-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+}
+
+.file-choice span {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    font-size: 0.875rem;
+}
+
+.import-footer {
+    inline-size: 100%;
+    flex: 1 1 100%;
+    min-inline-size: 0;
+}
+
+.import-actions {
+    justify-content: flex-end;
+}
+
+.import-status {
+    margin: 0 0 spacing(2);
+    block-size: 2.5rem;
+    overflow: auto;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+}

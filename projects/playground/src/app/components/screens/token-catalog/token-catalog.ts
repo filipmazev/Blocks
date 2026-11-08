@@ -41,6 +41,7 @@ import { formatCatalogColor } from '@playground/components/screens/token-catalog
 import { TokenCatalogPreferencesService } from '@playground/components/screens/token-catalog/services/token-catalog-preferences.service';
 import { Readme } from '@playground/components/shared/readme/readme';
 import { ScrollToTop } from '@playground/components/shared/scroll-to-top/scroll-to-top';
+import { ThemeStudioService } from '@playground/services/theme-studio.service';
 
 import { Highlight } from 'ngx-highlightjs';
 
@@ -76,6 +77,7 @@ import { Highlight } from 'ngx-highlightjs';
 })
 export class TokenCatalog {
   private readonly bxA11yService = inject(BxA11yService);
+  private readonly themeStudioService = inject(ThemeStudioService);
   private readonly clipboard = inject(Clipboard);
   private readonly tokenCatalogPreferencesService = inject(TokenCatalogPreferencesService);
   private readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -206,6 +208,7 @@ export class TokenCatalog {
     if (this.themeOnly()) this.expansionOverrides.set(new Map(this.groups().map((group) => [group.id, true])));
 
     afterRenderEffect(() => {
+      this.themeStudioService.revision();
       this.themingService.activeTheme();
       this.themingService.palette();
       this.themingService.highContrast();

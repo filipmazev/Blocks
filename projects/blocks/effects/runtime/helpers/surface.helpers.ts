@@ -62,7 +62,14 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
     '--bx-glass-lit-edge-left'
   ];
   const restoreStyles = rememberStyles(element, ownProperties);
-  const attributes = ['data-bx-surface', 'data-bx-reduced-transparency', 'data-bx-reduced-motion', 'data-bx-glass-renderer', 'data-bx-refraction'];
+  const attributes = [
+    'data-bx-surface',
+    'data-bx-reduced-transparency',
+    'data-bx-reduced-motion',
+    'data-bx-glass-renderer',
+    'data-bx-refraction',
+    'data-bx-surface-interactive'
+  ];
   const originalAttributes = new Map(attributes.map((name) => [name, element.getAttribute(name)]));
   const restoreAttributes = rememberAttributes(element, attributes);
   const originals = new Map(
@@ -372,6 +379,8 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
 
   const sync = () => {
     if (element.getAttribute('data-bx-surface') !== 'glass') element.setAttribute('data-bx-surface', 'glass');
+
+    element.setAttribute('data-bx-surface-interactive', String(interactive()));
 
     const inheritedMotion = globalValue('data-bx-reduced-motion') ?? originalAttributes.get('data-bx-reduced-motion');
     const inheritedTransparency = globalValue('data-bx-reduced-transparency') ?? originalAttributes.get('data-bx-reduced-transparency');

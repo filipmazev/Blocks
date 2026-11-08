@@ -1,4 +1,4 @@
-import type { BxAppearanceConfig, DeviceTheme } from '@filip.mazev/blocks/core';
+import type { DeviceTheme } from '@filip.mazev/blocks/core';
 import type { GlassinessMode } from '@filip.mazev/blocks/effects/runtime';
 import type { IAppearanceChoice } from '@playground/components/screens/appearance/interfaces/iappearance-choice.interface';
 
@@ -8,9 +8,8 @@ export const APPEARANCE_MODES: readonly IAppearanceChoice<DeviceTheme | 'auto'>[
   { value: 'auto', label: 'Auto' }
 ];
 
-export const APPEARANCE_QUALITIES: readonly IAppearanceChoice<BxAppearanceConfig['quality']>[] = [
+export const APPEARANCE_QUALITIES: readonly IAppearanceChoice<'auto' | 'baseline'>[] = [
   { value: 'auto', label: 'Automatic' },
-  { value: 'enhanced', label: 'Enhanced' },
   { value: 'baseline', label: 'Baseline' }
 ];
 

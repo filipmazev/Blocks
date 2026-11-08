@@ -54,6 +54,11 @@ focus states, or semantic control states.
 Open through `ModalService` so focus management, close guards, backdrop behavior, lifecycle and cleanup remain coordinated. `Modal` content receives its typed
 data and `ModalRef`; call `modal.close(mode, result)` to return a result. Do not instantiate service-owned view wrappers as general page containers.
 
+The centered entrance and exit retain the centered zoom and content fade. Transform and opacity animate on their owning layers rather than propagating an
+inherited custom property through every filtered descendant. Starting styles apply before first paint; the dimming cutout follows the frame. The content,
+dimming cutout and blur backdrop fade out together over 175ms. Teardown waits for the rendered exit transitions to finish, including an interrupted entrance,
+rather than counting from the close request. Live reduced motion removes the transitions.
+
 ## Playground
 
 Open `/components/modal-centered` for a working example and its current value or action result.

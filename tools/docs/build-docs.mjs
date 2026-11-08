@@ -46,11 +46,21 @@ async function collect(directory) {
 await collect('projects/blocks');
 await collect('documentation');
 await collect('projects/playground/src/app/components/screens/appearance');
+await collect('projects/playground/src/app/components/screens/home');
 await collect('projects/playground/src/app/components/screens/utilities');
 await collect('projects/playground/src/app/components/screens/token-catalog');
 await collect('projects/playground/src/app/components/screens/icon-catalog');
 await collect('projects/playground/src/app/components/screens/tools');
 await collect('projects/playground/src/app/components/shared/sidenav');
+await collect('projects/playground/src/app/components/shared/theme-studio');
+await collect('projects/playground/src/app/components/shared/theme-material-preview');
+await collect('projects/playground/src/app/components/shared/theme-palette-preview');
+await collect('projects/playground/src/app/components/shared/theme-studio-setup');
+await collect('projects/playground/src/app/components/shared/theme-studio-import');
+await collect('projects/playground/src/app/components/shared/theme-studio-preview-dialog');
+await collect('projects/playground/src/app/components/screens/theme-studio-demo');
+await collect('projects/playground/src/app/components/screens/installation');
+await collect('projects/playground/src/app/components/screens/theme-studio-new-project');
 await collect('projects/playground/src/app/components/screens/library-components/page-examples');
 files.sort();
 const documents = {};
@@ -93,6 +103,15 @@ for (const entry of catalog) {
 }
 
 routes.set('projects/playground/src/app/components/screens/appearance/README.md', 'appearance');
+routes.set('projects/playground/src/app/components/screens/home/README.md', 'home');
+routes.set('projects/playground/src/app/components/shared/theme-material-preview/README.md', 'home');
+routes.set('projects/playground/src/app/components/shared/theme-palette-preview/README.md', 'studio');
+routes.set('projects/playground/src/app/components/shared/theme-studio/README.md', 'studio');
+routes.set('projects/playground/src/app/components/shared/theme-studio-setup/README.md', 'studio');
+routes.set('projects/playground/src/app/components/shared/theme-studio-import/README.md', 'studio');
+routes.set('projects/playground/src/app/components/shared/theme-studio-preview-dialog/README.md', 'studio');
+routes.set('projects/playground/src/app/components/screens/theme-studio-demo/README.md', 'studio');
+routes.set('projects/playground/src/app/components/screens/theme-studio-new-project/README.md', 'studio/new-project');
 routes.set('projects/playground/src/app/components/screens/utilities/README.md', 'utilities');
 for (const file of files) {
   const utility = /^projects\/playground\/src\/app\/components\/screens\/utilities\/components\/([^/]+)\/README\.md$/.exec(file);
@@ -117,7 +136,8 @@ for (const guide of ['components/step', 'directives/step-content', 'directives/s
 routes.set('projects/blocks/modal/README.md', 'modal');
 routes.set('projects/blocks/toastr/README.md', 'toastr');
 routes.set('projects/blocks/core/README.md', 'components');
-routes.set('projects/blocks/README.md', 'home');
+routes.set('projects/blocks/README.md', 'installation');
+routes.set('projects/playground/src/app/components/screens/installation/README.md', 'installation');
 for (const file of files) {
   const release = /^documentation\/releases\/([^/]+)\/README\.md$/.exec(file);
   if (release) routes.set(file, `release-notes/${release[1]}`);

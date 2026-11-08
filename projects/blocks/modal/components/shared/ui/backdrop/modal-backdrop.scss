@@ -20,6 +20,22 @@
     transform-origin: center;
     background: var(--bx-modal-backdrop-fill, var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%)));
     backdrop-filter: blur(var(--bx-modal-backdrop-blur, 8px));
+
+    &.backdrop-fade-in {
+        opacity: 1;
+        transition: opacity 175ms linear;
+    }
+
+    &.backdrop-fade-out {
+        opacity: 0;
+        transition: opacity 175ms linear;
+    }
+}
+
+@starting-style {
+    .modal-backdrop.backdrop-fade-in {
+        opacity: 0;
+    }
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

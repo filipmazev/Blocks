@@ -1,49 +1,60 @@
 @use 'core/styles/helpers' as *;
 
 :host {
-    padding: clamp(1rem, 3vw, 2.5rem);
     display: block;
 }
 
 .home-container {
-    max-width: 80rem;
-    margin-inline: auto;
-    z-index: 10;
+    --orb-garden-radius: 0;
+
     position: relative;
+    min-block-size: calc(100dvh - 4rem);
+    padding: clamp(1rem, 3vw, 2.5rem);
 }
 
 .hero {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: spacing(10);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
+    gap: spacing(12);
     align-items: center;
-    padding-block: spacing(10) spacing(12);
+    padding-block: spacing(12);
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: spacing(6);
 }
 
 .hero h1 {
+    max-inline-size: 12ch;
+    margin: 0;
     font-size: clamp(2.5rem, 4.3vw, 4.5rem);
+    line-height: 1.08;
 }
 
 .hero h1 span {
-    color: var(--bx-text-brand);
+    color: var(--bx-text-accent);
 }
 
 .hero-subtitle {
     color: var(--bx-text-secondary);
     font-size: 1.125rem;
-    max-width: 35rem;
+    max-inline-size: 30ch;
+    margin: 0;
+    line-height: 1.6;
 }
 
 .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: spacing(3);
-    margin-top: spacing(8);
+    margin-block-start: spacing(2);
 }
 
 .features {
-    padding-block: spacing(8);
-    border-top: 1px solid var(--bx-border-default);
+    padding-block: spacing(12);
 }
 
 .features-heading {
@@ -96,12 +107,12 @@
 .feature-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: spacing(4);
+    gap: spacing(6);
 }
 
 .feature-card {
     display: block;
-    padding: spacing(6);
+    padding: spacing(8);
     border: 1px solid var(--bx-border-default);
     border-radius: radius(lg);
     background: color-mix(in srgb, var(--bx-bg-surface) 80%, transparent);
@@ -139,7 +150,6 @@
     flex-wrap: wrap;
     gap: spacing(4);
     padding-block: spacing(6);
-    border-top: 1px solid var(--bx-border-default);
     font-size: 0.8rem;
     color: var(--bx-text-secondary);
 
@@ -151,15 +161,7 @@
 
 @include respond-down(xl) {
     .hero {
-        gap: spacing(6);
-    }
-
-    .hero-preview {
-        padding: spacing(4);
-    }
-
-    .preview-card {
-        padding: spacing(6);
+        gap: spacing(10);
     }
 }
 
@@ -172,44 +174,6 @@
     .hero {
         padding-top: spacing(4);
     }
-
-    .hero-preview {
-        min-height: 20rem;
-    }
-}
-
-.preview-background {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    pointer-events: none;
-}
-
-.oddity-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    width: 100vw;
-    height: 100dvh;
-}
-
-.light-garden {
-    --orb-garden-radius: 1.5rem;
-
-    position: relative;
-    max-width: none;
-    min-height: calc(100dvh - 7rem);
-    padding: spacing(6);
-    border: 1px solid var(--bx-border-subtle);
-    border-bottom-width: 3px;
-    border-radius: var(--orb-garden-radius);
-    background: color-mix(in srgb, var(--bx-bg-canvas) 14%, transparent);
-    box-shadow:
-        inset 0 1px 0 color-mix(in srgb, white 15%, transparent),
-        inset 0 -8px 18px -16px var(--bx-text-primary);
 }
 
 .orb-nest {
@@ -241,15 +205,14 @@
     text-transform: uppercase;
 }
 
-@include respond-down(md) {
-    .light-garden {
-        padding: spacing(3);
-    }
-}
-
 .home-container > .hero,
 .home-container > .features,
-.home-container > .home-footer {
+.home-container > .home-footer,
+.home-container > .home-divider {
     max-width: 80rem;
     margin-inline: auto;
+}
+
+.home-divider {
+    --bx-divider-margin: 0;
 }

@@ -1,0 +1,27 @@
+<bx-page-container pageDescription="Initialize an Angular application, install Blocks, and apply your Studio theme.">
+    <div class="new-project-content">
+        <a bx-button variant="text" routerLink="/studio">Back to component preview</a>
+        <bx-tabs ariaLabel="Package manager" [(selectedValue)]="manager">
+            @for (item of managers; track item) {
+                <bx-tab [label]="item" [value]="item" />
+            }
+        </bx-tabs>
+        <h2>1. Create an Angular workspace</h2>
+        <p>
+            These commands use Angular 22 and an SCSS global stylesheet. Use a compatible Node version from the
+            <a routerLink="/installation">Blocks installation guide</a>.
+        </p>
+        <app-code maxHeight="12rem" [files]="createFiles()" />
+        <button type="button" bx-button variant="tonal" (click)="copy(create())"><bx-icon name="copy" size="16" />Copy create command</button>
+        <h2>2. Install and configure Blocks</h2>
+        <app-code maxHeight="12rem" [files]="setupFiles()" />
+        <button type="button" bx-button variant="tonal" (click)="copy(setup())"><bx-icon name="copy" size="16" />Copy setup command</button>
+        <h2>3. Apply your theme</h2>
+        <p>
+            Open Theme Studio and select Copy / setup. Copy the generated SCSS into <code>styles.scss</code> after existing palette rules. Merge the Blocks
+            import, retain the effects stylesheet and high-contrast theme, and set <code>data-theme="light"</code> or <code>data-theme="dark"</code> on the
+            root.
+        </p>
+        <p role="status" class="project-status">{{ status() }}</p>
+    </div>
+</bx-page-container>

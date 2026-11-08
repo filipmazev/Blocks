@@ -37,7 +37,8 @@ config.destroy();
 `configureAppearance` owns one root scope, merges updates, and restores the attributes and inline properties it owned on destroy. Mount it on
 `document.documentElement` to include overlays. Per-surface options override the global configuration; omitted options inherit it. There must be only one
 configuration controller per root and one surface controller per element. `surface.update(options)` replaces that surface's local options so `{}` returns it to
-global settings.
+global settings. Noninteractive surfaces receive environmental light without pointer pressure or the refractive active tint. Their resolved interaction state is
+restored with other owned attributes on teardown.
 
 Setting application `quality: 'baseline'` temporarily sets `glassiness: 'off'`, including during initialization and partial updates. Switching back to
 `quality: 'auto'` or `'enhanced'` restores the requested glassiness policy. An explicit `glassiness` update replaces that preference, including while baseline

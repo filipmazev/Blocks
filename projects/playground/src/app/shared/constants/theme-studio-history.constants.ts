@@ -1,0 +1,2 @@
+export const STUDIO_HISTORY_LIMIT = 30;
+export const STUDIO_HISTORY_BUDGET = 2 * 1024 * 1024;

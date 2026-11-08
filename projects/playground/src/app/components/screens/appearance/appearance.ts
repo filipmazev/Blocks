@@ -1,6 +1,6 @@
 import type { Signal } from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import type { IBxAppearanceConfig } from '@core/interfaces/ibx-appearance-config.interface';
@@ -16,6 +16,7 @@ import { AppearanceModePreview } from '@playground/components/screens/appearance
 import { AppearancePreview } from '@playground/components/screens/appearance/appearance-preview/appearance-preview';
 import { APPEARANCE_MODES, APPEARANCE_QUALITIES, GLASSINESS_MODES } from '@playground/components/screens/appearance/constants/appearance-controls.constants';
 import { Readme } from '@playground/components/shared/readme/readme';
+import { ThemeStudioService } from '@playground/services/theme-studio.service';
 
 import { Highlight } from 'ngx-highlightjs';
 
@@ -47,6 +48,7 @@ export class Appearance {
   private readonly windowDimensionsService = inject(WindowDimensionsService);
 
   protected readonly themingService = inject(ThemingService);
+  protected readonly themeStudioService = inject(ThemeStudioService);
 
   protected readonly appearance: Signal<IBxAppearanceConfig> = this.themingService.appearance;
   protected readonly reducedMotion: Signal<boolean> = this.bxA11yService.isReducedMotion;
@@ -70,7 +72,7 @@ export class Appearance {
     return 'Stronger tint and blur';
   });
 
-  protected readonly qualities: readonly IAppearanceChoice<'auto' | 'baseline' | 'enhanced'>[] = APPEARANCE_QUALITIES;
+  protected readonly qualities: readonly IAppearanceChoice<'auto' | 'baseline'>[] = APPEARANCE_QUALITIES;
   protected readonly glassinessModes: readonly IAppearanceChoice<GlassinessMode>[] = GLASSINESS_MODES;
   protected readonly codeExample: 'const themingService = inject(ThemingService);\n\n// Balanced glass throughout the application, including open overlays.\nthemingService.setAppearance({ translucency: 0.5 });\n\n// Browser policy for explicitly selected glassy controls.\nthemingService.setAppearance({ glassiness: \'auto\' });\n\n// Opaque surfaces are an accessibility preference.\nthemingService.setAppearance({ reducedTransparency: true });\n\n// Opt in only the controls that benefit from refraction.\n<button bx-button variant="icon" glassiness="auto">…</button>\n<section bxSurface bxSurfaceGlassiness="auto">…</section>' = `const themingService = inject(ThemingService);
 
@@ -86,6 +88,12 @@ themingService.setAppearance({ reducedTransparency: true });
 // Opt in only the controls that benefit from refraction.
 <button bx-button variant="icon" glassiness="auto">…</button>
 <section bxSurface bxSurfaceGlassiness="auto">…</section>`;
+
+  constructor() {
+    effect(() => {
+      if (!this.qualities.some((choice) => choice.value === this.appearance().quality)) this.themingService.setAppearance({ quality: 'auto' });
+    });
+  }
 
   protected updateAppearance(settings: Partial<BxAppearanceConfig>): void {
     this.themingService.setAppearance(settings);

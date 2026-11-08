@@ -1,0 +1,110 @@
+<div *appModalHeader class="setup-header">
+    <bx-stepper
+        mode="navigation"
+        variant="steps"
+        size="sm"
+        responsive="compact"
+        [showDescriptions]="false"
+        [showPercentage]="false"
+        [labels]="{ label: 'Theme setup steps' }"
+        [steps]="steps"
+        [activeStep]="activeStep()"
+        (stepRequested)="selectStep($event.id)" />
+</div>
+@switch (activeStep()) {
+    @case ('configure') {
+        <div class="setup-step">
+            <h3 #stepTitle tabindex="-1">Choose your setup</h3>
+            <bx-tabs class="selector-tabs" ariaLabel="Project setup" [(selectedValue)]="projectKind"
+                ><bx-tab label="Existing project" value="existing" /><bx-tab label="New project" value="new"
+            /></bx-tabs>
+            <p>
+                {{
+                    projectKind() === 'new'
+                        ? 'Create an Angular workspace, install Blocks, then apply your theme.'
+                        : 'Install Blocks in your Angular workspace, then apply your theme.'
+                }}
+            </p>
+            <bx-tabs class="selector-tabs" ariaLabel="Package manager" [(selectedValue)]="manager">
+                @for (item of managers; track item) {
+                    <bx-tab [label]="item" [value]="item" />
+                }
+            </bx-tabs>
+            <bx-tabs class="selector-tabs" ariaLabel="Theme installation method" [(selectedValue)]="method"
+                ><bx-tab label="Quick setup" value="quick" /><bx-tab label="Manual setup" value="manual"
+            /></bx-tabs>
+        </div>
+    }
+    @case ('install') {
+        <div class="setup-step">
+            @if (projectKind() === 'new') {
+                <h3 #stepTitle tabindex="-1">Create an Angular workspace</h3>
+                <div class="command-block">
+                    <app-code maxHeight="12rem" [files]="createFiles()" /><button
+                        bx-button
+                        type="button"
+                        variant="tonal"
+                        (click)="copy(create(), 'Create command')">
+                        <bx-icon name="copy" size="16" />Copy create command
+                    </button>
+                </div>
+            }
+            <h3>{{ method() === 'quick' ? 'Initialize Blocks' : 'Install Blocks' }}</h3>
+            @if (method() === 'quick') {
+                <p>Run the schematic from your Angular workspace. It installs Blocks and configures the selected built-in base and effects stylesheet.</p>
+                <div class="command-block">
+                    <app-code maxHeight="12rem" [files]="commandFiles()" /><button
+                        bx-button
+                        type="button"
+                        variant="tonal"
+                        (click)="copy(command(), 'Setup command')">
+                        <bx-icon name="copy" size="16" />Copy command
+                    </button>
+                </div>
+                <p class="note">The next step applies your Studio customizations with the generated SCSS.</p>
+            } @else {
+                <div class="command-block">
+                    <app-code maxHeight="12rem" [files]="installFiles()" /><button
+                        bx-button
+                        type="button"
+                        variant="tonal"
+                        (click)="copy(manualCommand(), 'Install command')">
+                        <bx-icon name="copy" size="16" />Copy install command
+                    </button>
+                </div>
+                <p>Add <code>@filip.mazev/blocks/effects/effects.css</code> to your global styles. The next step supplies the theme SCSS.</p>
+            }
+            <a bx-button variant="tonal" routerLink="/installation" (click)="close()">See the package setup</a>
+        </div>
+    }
+    @case ('apply') {
+        <div class="setup-step">
+            <h3 #stepTitle tabindex="-1">Apply your theme</h3>
+            <p>Paste the theme into <code>styles.scss</code> after existing palette rules. Merge the Blocks import so global styles load once.</p>
+            <div class="command-block code-inset">
+                <app-code maxHeight="24rem" [files]="themeFiles()" /><button
+                    bx-button
+                    type="button"
+                    variant="tonal"
+                    (click)="copy(themeStudioService.scss(), 'Theme SCSS')">
+                    <bx-icon name="copy" size="16" />Copy theme SCSS
+                </button>
+            </div>
+            <p>Set <code>data-theme="light"</code> or <code>data-theme="dark"</code> on the root. Keep your normal high-contrast theme installed.</p>
+            <div class="setup-actions">
+                <a bx-button variant="tonal" routerLink="/studio/new-project" (click)="close()">Initialize a new project</a
+                ><a bx-button variant="tonal" routerLink="/installation" (click)="close()">See the package setup</a>
+            </div>
+        </div>
+    }
+}
+<div *appModalFooter class="setup-footer">
+    <p class="setup-status" role="status">{{ status() }}</p>
+    <div class="setup-navigation">
+        <button bx-button type="button" variant="tonal" color="grayscale" [disabled]="activeStep() === 'configure'" (click)="moveStep(-1)">
+            <bx-icon name="arrow-left" size="16" />Back</button
+        ><button bx-button type="button" variant="tonal" (click)="activeStep() === 'apply' ? close() : moveStep(1)">
+            {{ activeStep() === 'apply' ? 'Done' : 'Next' }}<bx-icon size="16" [name]="activeStep() === 'apply' ? 'check' : 'arrow-right'" />
+        </button>
+    </div>
+</div>

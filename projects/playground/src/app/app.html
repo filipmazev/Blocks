@@ -25,6 +25,35 @@
             </ng-template>
             <ng-template bxTopNavActions>
                 <div class="toolbar-actions">
+                    @if (themeStudioService.overrideCount()) {
+                        <button
+                            bx-button
+                            type="button"
+                            class="preview-recovery"
+                            variant="tonal"
+                            color="grayscale"
+                            [attr.aria-label]="themeStudioService.preview() ? 'Pause theme preview' : 'Resume theme preview'"
+                            [attr.aria-pressed]="themeStudioService.preview()"
+                            (click)="themeStudioService.preview.set(!themeStudioService.preview())">
+                            <bx-icon size="20" [name]="themeStudioService.preview() ? 'eye-off' : 'eye'" />
+                        </button>
+                    }
+                    <button
+                        bx-button
+                        type="button"
+                        class="studio-button"
+                        aria-label="Theme Studio"
+                        variant="tonal"
+                        color="grayscale"
+                        aria-controls="theme-studio-panel"
+                        [appStudioAurora]="themeStudioService.overrideCount() > 0 && themeStudioService.preview() && !themeStudioService.suspended()"
+                        [attr.aria-expanded]="themeStudioService.open()"
+                        (click)="themeStudioService.open.set(!themeStudioService.open())">
+                        <span class="studio-aurora-halo" aria-hidden="true"></span><span class="studio-aurora" aria-hidden="true"></span
+                        ><span class="studio-light-origin" aria-hidden="true"></span><span class="studio-light-origin" aria-hidden="true"></span
+                        ><span class="studio-light-origin" aria-hidden="true"></span><span class="studio-light-origin" aria-hidden="true"></span
+                        ><bx-icon name="palette" size="20" /><span>Theme Studio</span>
+                    </button>
                     <a
                         bx-button
                         class="appearance-button"
@@ -37,8 +66,95 @@
                 </div>
             </ng-template>
         </bx-top-nav>
-        <main class="app-content-container" id="main-content" tabindex="-1">
-            <router-outlet />
-        </main>
+        <bx-side-panel-layout class="studio-layout">
+            <bx-side-panel
+                panelId="theme-studio-panel"
+                placement="right"
+                ariaLabel="Theme Studio"
+                closeLabel="Close Theme Studio"
+                resizeLabel="Resize Theme Studio"
+                [resizable]="true"
+                [resizeMinWidth]="studioMinWidth"
+                [resizeMaxWidth]="studioMaxWidth"
+                [breakpoints]="{ '2xl': 'push' }"
+                [closeOnEscape]="modalService.modalsCount() === 0"
+                [(width)]="studioWidth"
+                [(open)]="themeStudioService.open">
+                <div bxSidePanelHeader class="studio-heading">
+                    <h2 class="studio-title">Theme Studio</h2>
+                    <div class="studio-history" role="group" aria-label="Theme history">
+                        <span
+                            class="history-action"
+                            role="group"
+                            aria-label="Undo history"
+                            bxTooltipTouch="longpress"
+                            [attr.tabindex]="themeStudioService.canUndo() ? null : 0"
+                            [bxTooltip]="themeStudioService.undoHint()">
+                            <button
+                                bx-button
+                                type="button"
+                                variant="tonal"
+                                color="grayscale"
+                                aria-keyshortcuts="Control+Z Meta+Z"
+                                [disabled]="!themeStudioService.canUndo()"
+                                (click)="themeStudioService.undo()">
+                                <bx-icon name="undo-2" size="16" />Undo
+                            </button>
+                        </span>
+                        <span
+                            class="history-action"
+                            role="group"
+                            aria-label="Redo history"
+                            bxTooltipTouch="longpress"
+                            [attr.tabindex]="themeStudioService.canRedo() ? null : 0"
+                            [bxTooltip]="themeStudioService.redoHint()">
+                            <button
+                                bx-button
+                                type="button"
+                                variant="tonal"
+                                color="grayscale"
+                                aria-keyshortcuts="Control+Shift+Z Meta+Shift+Z"
+                                [disabled]="!themeStudioService.canRedo()"
+                                (click)="themeStudioService.redo()">
+                                <bx-icon name="redo-2" size="16" />Redo
+                            </button>
+                        </span>
+                        <button bx-button type="button" variant="tonal" color="primary" (click)="themeStudioService.randomize()">
+                            <bx-icon name="dices" size="16" />Randomize
+                        </button>
+                    </div>
+                </div>
+                <app-theme-studio #studio />
+                <div bxSidePanelFooter class="studio-footer">
+                    <p class="studio-status" role="status" [attr.tabindex]="themeStudioService.status() ? 0 : null">{{ themeStudioService.status() }}</p>
+                    <bx-slide-toggle
+                        label="Live preview"
+                        subscriptSizing="dynamic"
+                        [checked]="themeStudioService.preview()"
+                        (checkedChange)="themeStudioService.preview.set($event)" />
+                    @if (themeStudioService.suspended()) {
+                        <p role="status">Preview suspended for high contrast or forced colors. Your draft is retained.</p>
+                    }
+                    @if (themeStudioService.invalidCount()) {
+                        <p role="status">Fix {{ themeStudioService.invalidCount() }} invalid value(s) before exporting. Preview keeps the last valid values.</p>
+                    }
+                    <div class="studio-actions">
+                        <button bx-button type="button" variant="tonal" (click)="themeStudioService.resetAll()">
+                            <bx-icon name="rotate-ccw" size="16" />Reset
+                        </button>
+                        <button bx-button type="button" variant="tonal" (click)="studio.importTheme()"><bx-icon name="upload" size="16" />Import</button>
+                        <button bx-button type="button" variant="tonal" [disabled]="!!themeStudioService.invalidCount()" (click)="studio.copy()">
+                            <bx-icon name="copy" size="16" />Copy / setup
+                        </button>
+                        <button bx-button type="button" variant="tonal" [disabled]="!!themeStudioService.invalidCount()" (click)="studio.download()">
+                            <bx-icon name="download" size="16" />Download
+                        </button>
+                    </div>
+                </div>
+            </bx-side-panel>
+            <main class="app-content-container" id="main-content" tabindex="-1">
+                <router-outlet />
+            </main>
+        </bx-side-panel-layout>
     </div>
 </div>

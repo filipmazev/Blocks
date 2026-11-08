@@ -1,0 +1,77 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.setup-step,
+.command-block,
+.setup-footer {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    gap: spacing(4);
+}
+
+.setup-step {
+    padding-block-end: spacing(4);
+
+    h3,
+    p {
+        margin: 0;
+    }
+}
+
+.command-block {
+    align-items: stretch;
+
+    > button {
+        align-self: flex-start;
+    }
+}
+
+.setup-actions,
+.setup-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(2);
+}
+
+.setup-navigation {
+    justify-content: space-between;
+}
+
+.setup-footer {
+    inline-size: 100%;
+    flex: 1 1 100%;
+    gap: spacing(2);
+}
+
+.setup-status {
+    margin: 0;
+    block-size: 2.5rem;
+    overflow: auto;
+    font-size: 0.875rem;
+}
+
+.note {
+    color: var(--bx-text-secondary);
+}
+
+.code-inset {
+    padding-inline-end: spacing(3);
+}
+
+.selector-tabs {
+    --bx-tabs-panel-gap: 0;
+}
+
+.setup-header {
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.setup-step {
+    padding-inline-end: spacing(3);
+}

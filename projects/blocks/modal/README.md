@@ -85,6 +85,9 @@ For custom header/footer content, add `ModalHeaderDirective` and `ModalFooterDir
 | `afterClosed()`                       | Observe the final `IModalCloseResult<R \| undefined>` with `state` and optional `data`. |
 | `config()`                            | Read the authoritative reactive configuration.                                          |
 
+`modalsCount()` is reactive when read in an Angular template or computed. It includes dialogs while opening and closing, until unregister completes. A nonmodal
+owner can bind its `closeOnEscape` to `modalService.modalsCount() === 0` so a dialog handles Escape independently.
+
 Use supported configuration and slots to customize the dialog. Applications do not need to inspect its component references or DOM.
 
 ### Configuration
@@ -195,7 +198,8 @@ modal-specific overrides, falling back to `--bx-panel-bg` / `--bx-panel-text` an
 0.52 opacity floor and shared appearance preferences. Left/right modal panels have four square corners; centered dialogs and bottom sheets retain their shapes.
 
 The first dialog paints dimming outside its surface, while the shared backdrop retains blur and pointer dismissal. This prevents the root surface from blending
-with its own black scrim. Its centered animation keeps dimming on an unscaled frame, so the backdrop remains viewport-sized during zoom.
+with its own black scrim. Its centered animation keeps the dimming cutout aligned with the zooming frame; the oversized dimming shadow continues to cover the
+viewport.
 
 ### Nested dialogs
 
@@ -221,6 +225,15 @@ this.modalGlobalSettingsService.nestedOpacityFloors.set([0.9, 1]);
 `hasBackdrop: false` keeps that dialog's backdrop off. Reduced-transparency and forced-color modes retain the opaque fallback.
 
 ## Behavior and accessibility
+
+Centered entrance and exit retain the centered zoom and content fade. Transform and opacity animate directly on their owning layers, without propagating an
+animated custom property through filtered descendants. Starting styles apply before the first paint, and the dimming cutout follows the frame. On close,
+content, dimming and the blur backdrop fade together over 175ms; teardown waits for the rendered transitions to finish rather than using a timer started before
+rendering. Closing during entrance continues from the current visual state. Reduced motion removes the transitions.
+
+Modal hosts use the Angular CDK focus trap across the banner, custom header, scrolling content and footer. Opening captures keyboard focus; closing restores the
+previously focused element when it remains connected, including when dismissing a responsive bottom sheet or nested dialog. Runtime header patches retain the
+mounted focus trap.
 
 Open content through `ModalService` so focus handling, Escape/backdrop dismissal, close guards, scroll locks, layout, and cleanup stay coordinated.
 `ScrollLockService` keeps separate locks for concurrent overlays. Closing one overlay does not unlock another. Reduced motion takes precedence over requested

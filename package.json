@@ -61,7 +61,6 @@
         "@modelcontextprotocol/sdk": "^1.26.0",
         "express": "^5.1.0",
         "ngx-highlightjs": "^14.0.1",
-        "oddity-angular": "^0.2.1",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0"
     },

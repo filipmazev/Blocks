@@ -78,6 +78,10 @@ Sass is the source of truth. `npm run tools:generate-tokens` evaluates the maps 
 pass the repository's lint/format pipeline. Maintain color/type contracts in ordinary TypeScript. See the catalog guide for generation, availability, and the
 migration of `meta-*` Sass metadata out of the color-token union.
 
+The playground's [Theme Studio](../../playground/src/app/components/shared/theme-studio/README.md) opens from the toolbar on every page. It edits the curated
+shared token contract, previews both modes across pages and overlays, and exports a complete named-base SCSS theme. Runtime appearance remains owned by
+`ThemingService`; high contrast and forced colors suspend Studio overrides.
+
 ### `BxShortcutService`
 
 Shares shortcut definitions between menu hints and application-owned keyboard handlers. It resolves OS overrides, normalizes modifier aliases, formats platform
@@ -219,8 +223,8 @@ does not derive the other roles or regenerate palette shades.
 
 ### Applying and exporting overrides
 
-The future studio can preview and export the same custom-property values. A plain CSS block is valid in `styles.scss`; an additional Sass theme format is not
-required. Keep the existing global Blocks import and `bx-theme(...)` setup, then place application overrides after the theme selectors:
+The playground Studio previews and exports the same validated custom-property values. A plain CSS block is valid in `styles.scss`; an additional Sass theme
+format is not required. Keep the existing global Blocks import and `bx-theme(...)` setup, then place application overrides after the theme selectors:
 
 ```scss
 :root {
@@ -232,12 +236,12 @@ required. Keep the existing global Blocks import and `bx-theme(...)` setup, then
     --bx-shadow-md: 0 6px 18px rgb(0 0 0 / 14%);
 }
 
-:root:not(.dark):not(.high-contrast) {
+:root:not([data-theme='dark']):not(.high-contrast) {
     --bx-bg-surface: #f8f9fc;
     --bx-text-primary: #263044;
 }
 
-:root.dark:not(.high-contrast) {
+:root[data-theme='dark']:not(.high-contrast) {
     --bx-bg-surface: #171c28;
     --bx-text-primary: #e7ebf3;
 }
@@ -273,8 +277,8 @@ Unknown spacing/radius/shadow keys now fail compilation with a descriptive error
 their compile-time behavior. The existing `$spacing`, `$radiuses`, `$shadows` and new `$borders` maps remain configurable before the global Sass entry point is
 loaded. The catalog describes the default library configuration, not application-specific Sass map overrides.
 
-The toolbar studio, theme persistence, import/export UI and undo/redo remain a separate implementation phase. Its starting contract is the curated theme set,
-with per-mode semantic colors and shared geometry; it must not serialize every discovered effect or component property.
+The toolbar Studio and `/studio` preview provide coordinated geometry controls, structured shadows, import/export and session undo/redo. They use the curated
+theme set with per-mode semantic colors and shared geometry; runtime effect and component properties remain outside the theme document.
 
 ## Behavior and accessibility
 

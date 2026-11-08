@@ -151,6 +151,30 @@ export const ROUTES: Routes = [
   ),
   withInAppNavigation(
     {
+      path: 'installation',
+      loadComponent: () => import('@playground/components/screens/installation/installation').then((m) => m.Installation),
+      title: 'Installation · Blocks'
+    },
+    { label: 'Installation', breadcrumb: 'Installation', section: 'Start', menu: false }
+  ),
+  withInAppNavigation(
+    {
+      path: 'studio/new-project',
+      loadComponent: () => import('@playground/components/screens/theme-studio-new-project/theme-studio-new-project').then((m) => m.ThemeStudioNewProject),
+      title: 'New Blocks project · Blocks'
+    },
+    { label: 'New Blocks project', breadcrumb: 'New project', section: 'Tools', menu: false }
+  ),
+  withInAppNavigation(
+    {
+      path: 'studio',
+      loadComponent: () => import('@playground/components/screens/theme-studio-demo/theme-studio-demo').then((m) => m.ThemeStudioDemo),
+      title: 'Theme Studio · Blocks'
+    },
+    { label: 'Theme Studio', breadcrumb: 'Theme Studio', icon: { name: 'palette' }, section: 'Start', menu: true, order: 2.5 }
+  ),
+  withInAppNavigation(
+    {
       path: 'tools',
       loadComponent: () => import('@playground/components/screens/tools/tools').then((m) => m.Tools),
       title: 'Tools · Blocks'

@@ -17,12 +17,6 @@
     z-index: 0;
 }
 
-@property --bx-modal-scale {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1;
-}
-
 .centered-modal-frame {
     position: relative;
     isolation: isolate;
@@ -36,16 +30,16 @@
     max-block-size: 95dvh;
     border-radius: radius(lg);
 
-    /* IMPORTANT: Resize the clear opening instead of scaling its spread shadow, keeping dimming across the viewport during zoom. */
+    /* IMPORTANT: Zoom the frame and its dimming cutout together without propagating animated values through filtered descendants. */
     &::before {
         content: '';
         position: absolute;
         left: 50%;
         top: 50%;
         z-index: -1;
-        inline-size: calc(100% * var(--bx-modal-scale, 1));
-        block-size: calc(100% * var(--bx-modal-scale, 1));
-        border-radius: calc(#{radius(lg)} * var(--bx-modal-scale, 1));
+        inline-size: 100%;
+        block-size: 100%;
+        border-radius: inherit;
         transform: translate(-50%, -50%);
         box-shadow: 0 0 0 100vmax var(--bx-modal-dimming-background, transparent);
         pointer-events: none;
@@ -54,8 +48,6 @@
 
 .centered-modal-content-wrapper {
     pointer-events: auto;
-    scale: calc(0.975 + var(--bx-modal-scale, 1) * 0.025);
-    opacity: var(--bx-modal-scale, 1);
     min-inline-size: 0;
     min-block-size: 0;
     display: flex;
@@ -117,32 +109,46 @@
 }
 
 .centered-modal-frame.centered-modal-animate-in {
-    --bx-modal-scale: 0;
+    transform: scale(1);
+    transition: transform 175ms #{motion-easing(snappy)};
 
-    animation: centered-modal-animate-in 175ms #{motion-easing(snappy)} forwards;
+    &::before {
+        opacity: 1;
+        transition: opacity 175ms linear;
+    }
 }
 
 .centered-modal-frame.centered-modal-animate-out {
-    animation: centered-modal-animate-out 150ms ease-out forwards;
-}
+    transform: scale(0.975);
+    transition: transform 175ms ease-in-out;
 
-@keyframes centered-modal-animate-in {
-    from {
-        --bx-modal-scale: 0;
-    }
-
-    to {
-        --bx-modal-scale: 1;
+    &::before {
+        opacity: 0;
+        transition: opacity 175ms linear;
     }
 }
 
-@keyframes centered-modal-animate-out {
-    from {
-        --bx-modal-scale: 1;
+.centered-modal-content-wrapper.centered-modal-animate-in {
+    opacity: 1;
+    transition: opacity 175ms #{motion-easing(snappy)};
+}
+
+.centered-modal-content-wrapper.centered-modal-animate-out {
+    opacity: 0;
+    transition: opacity 175ms linear;
+}
+
+@starting-style {
+    .centered-modal-frame.centered-modal-animate-in {
+        transform: scale(0.975);
+
+        &::before {
+            opacity: 0;
+        }
     }
 
-    to {
-        --bx-modal-scale: 0;
+    .centered-modal-content-wrapper.centered-modal-animate-in {
+        opacity: 0;
     }
 }
 

@@ -44,7 +44,7 @@ export class Readme {
     const route = destination.pathname.slice(base.pathname.length);
 
     if (
-      !/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(
+      !/^(?:home|glass|appearance|installation|studio(?:\/new-project)?|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(
         route
       )
     )

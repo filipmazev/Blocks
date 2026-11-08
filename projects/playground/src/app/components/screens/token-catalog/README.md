@@ -8,6 +8,9 @@ viewport. Smaller displayed sets bypass viewport observation and stay mounted. D
 space, and focused batches stay mounted. Other groups mount their batch placeholders when opened. Dense cards keep shared themed styling with decorative surface
 effects disabled.
 
+The toolbar's [Theme Studio](../../shared/theme-studio/README.md) edits the curated theme controls and exports SCSS. Catalog swatches, displayed values,
+color-copy formats and value search update with preview edits and resets. Existing theme-only filtering and expansion preferences remain independent.
+
 ## Import
 
 ```ts

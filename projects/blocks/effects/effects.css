@@ -375,7 +375,7 @@
 }
 
 [data-bx-refraction='true']:is(
-    :active,
+    :active[data-bx-surface-interactive='true'],
     [aria-pressed='true'],
     [aria-selected='true'],
     [aria-checked='true'],

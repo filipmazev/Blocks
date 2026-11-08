@@ -96,16 +96,12 @@
                                     subscriptSizing="dynamic"
                                     [label]="option.label"
                                     [value]="option.value"
-                                    [disabled]="option.value === 'enhanced' && themingService.preferredGlassiness() === 'off'"
                                     [ngModel]="appearance().quality"
                                     (ngModelChange)="updateAppearance({ quality: $event })" />
                             }
                         </div>
                     </fieldset>
-                    <p class="section-note">
-                        Automatic balances detail and performance. Enhanced adds reflections and bevels to selected surfaces but may reduce performance.
-                        Baseline uses blur and tint and turns glassiness off.
-                    </p>
+                    <p class="section-note">Automatic balances detail and performance. Baseline uses blur and tint and turns glassiness off.</p>
                 </div>
                 <div>
                     <fieldset class="rendering-options">
@@ -152,7 +148,18 @@
                     >{{ palette.label }}
                 </button>
             }
+            <button
+                bx-button
+                type="button"
+                variant="tonal"
+                color="primary"
+                aria-controls="theme-studio-panel"
+                [attr.aria-expanded]="themeStudioService.open()"
+                (click)="themeStudioService.open.set(true)">
+                <bx-icon name="plus" size="18" />Create a theme
+            </button>
         </div>
+        <p class="section-note">Customize the current palette in Theme Studio, preview your changes here, then export it for your application.</p>
     </section>
 
     <section class="settings-section" aria-labelledby="accessibility-title">
