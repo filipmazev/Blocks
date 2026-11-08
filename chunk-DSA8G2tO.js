@@ -3978,9 +3978,9 @@ blur and opaque accessibility fallbacks), a Blocks icon-only close button with h
 focus. A submenu consumes Escape before the drawer does. Resizing out of mobile mode closes the drawer and releases its lock. Browser-only persistence and
 viewport observation are guarded; unavailable/malformed storage falls back to usable defaults. Storage is scoped by your chosen key and is read when that key
 changes, without cross-tab synchronization.</p>
-<p>The fixed mobile drawer follows the layout viewport while open, including window resizing and restored-page changes. Opening the search keyboard does not
-shrink or shift the drawer to the smaller visual viewport; the keyboard covers the lower portion instead. Closing or switching presentation releases the
-viewport listeners and restores the default panel geometry.</p>
+<p>The fixed mobile drawer follows the layout viewport while open, including window resizing and restored-page changes. Opening the search keyboard does not shrink
+or shift the drawer to the smaller visual viewport; the keyboard covers the lower portion instead. Closing or switching presentation releases the viewport
+listeners and restores the default panel geometry.</p>
 <p>For an inline mobile preview, use a positioned shell (<code>position: relative</code>) with a minimum height and <code>overflow: hidden</code>. Its drawer and scrim stay inside that
 shell and do not lock page scrolling. Off-screen drawer content is clipped without creating a scroll container, and focus capture uses <code>preventScroll</code> to keep
 the surrounding content stationary during either slide direction. Keep the shell outside another <code>bxSurface</code>: Blocks intentionally disables blur for nested
