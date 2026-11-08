@@ -1,4 +1,4 @@
-import{Ci as ot,Ji as te,Jr as it,L as Fm,S as D,Y as Hr,aa as ve,at as Jn,ct as Ka,in as Te,ra as v,un as V,wi as p,wr as g}from"./chunk-B79cUMdP.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
+import{$i as v,Er as g,Lr as it,Si as p,Sr as er,Wi as te,Yi as ts,Zr as k$1,_a as xe,bn as Um,ka as z,s as $r,un as Te,xi as ot}from"./chunk-Dt37D5SH.js";var x={"documentation/releases/1.4.20/README.md":`<h1>Blocks 1.4.20</h1>
 <p>Published October 31, 2026 on the Release channel (<code>latest</code>). Install this exact version with <code>npm install @filip.mazev/blocks@1.4.20</code>.</p>
 <p><a href="https://www.npmjs.com/package/@filip.mazev/blocks/v/1.4.20">View version 1.4.20 on NPM</a>.</p>
 <p>Blocks 1.4.20 brings together the unified Angular UI package, semantic themes, appearance effects, forms, navigation, notifications and icons developed leading
@@ -650,12 +650,11 @@ attempts mark controls touched, optional steps can be skipped, and completion re
 <li>Added eager, retained, and active-only content policies, configurable wizard controls, custom label/content templates, and an application-owned completion
 view. Reset clears workflow progress without clearing application-owned form values.</li>
 <li>Added steps, segments, dots, progress, and cards in three sizes, horizontal/vertical layouts, and scroll, vertical, or compact responsive behavior. Connectors
-are solid and aligned with their markers; small markers and dots leave room around status symbols. Card text uses the same top alignment as alerts and
-banners.</li>
-<li>Replaced split connector pieces with one continuous connector per gap, positioned from marker bounds and updated on layout changes. Horizontal scrollbars have
-a reserved strip below the steps, keeping mobile WebKit overlay scrollbars clear of glass card surfaces and focus indicators.</li>
-<li>Added <code>progressFormat=&quot;fraction&quot;</code> for completed/enabled step counts such as <code>1/3</code> alongside the default percentage format. Both use the existing
-<code>showPercentage</code> visibility input; explicit <code>progressValue</code> continues to override only the percentage and progress bar.</li>
+are solid and continuous between marker bounds and update on layout changes; small markers and dots leave room around status symbols. Card text uses the same
+top alignment as alerts and banners. Horizontal scrollbars have a reserved strip below the steps, keeping mobile WebKit overlay scrollbars clear of glass card
+surfaces and focus indicators.</li>
+<li>Supports percentage progress and <code>progressFormat=&quot;fraction&quot;</code> for completed/enabled step counts such as <code>1/3</code>. The <code>showPercentage</code> input controls visibility
+for both formats; explicit <code>progressValue</code> overrides only the percentage and progress bar.</li>
 <li>Uses Blocks semantic colors, shared glass and lighting, translation support, and configurable CSS variables. Non-card variants keep transparent selected
 backgrounds with marker/label hover feedback. Disabled steps are visibly muted; read-only presentation retains focus and progress with neutral markers.</li>
 <li>Includes roving keyboard navigation, RTL support, accessible status descriptions, predictable wizard focus, and shared reduced-motion/transparency and
@@ -665,6 +664,66 @@ confirmation and dynamic steps. Colocated guides and browser regression coverage
 </ul>
 <p>See the <a href="components/stepper">Stepper guide</a> for public imports, runnable examples, configuration, and
 accessibility.</p>
+<h2>Material and motion refinement</h2>
+<ul>
+<li>Stepper markers and connectors now receive the existing engine&#39;s directional and ambient light independently of their emission. Current filled indicators emit
+more strongly than tonal completed or neutral inactive indicators; errors receive restrained additional emphasis. Card surfaces retain their backing.</li>
+<li>Rounded stepper highlights use semantic color mixed with the theme surface instead of an enlarged dark hover shadow; the traveling accent has no drop shadow.</li>
+<li>Segment tracks retain a continuous, brighter fill without extra inner geometry. Descendant emission origins paint their registered rim as well as illuminating
+neighbors. Error contours take precedence over cached ambient tint; semantic changes request urgent marker-lighting refresh.</li>
+<li>Circular step indicators use the shared pressure spring for squash and recovery. A persistent selection accent travels between committed markers in both axes
+and stretches modestly along its velocity. Cards use an in-place border/rim response without travel across unconnected cards. Completion fills remain separate
+from active navigation. Rejected guards and unconfirmed controlled requests never advance the animated selection.</li>
+<li>Tabs use one persistent lit selection surface with spring position/size interpolation and bounded velocity stretch. Pointer/touch dragging previews the
+surface continuously and selects the nearest enabled tab on release. Escape, cancellation, outside release and stale gestures restore committed selection. New
+<code>dragSelection</code> defaults to true; false restores native horizontal swipe scrolling. Click and keyboard selection remain available.</li>
+<li>Added optional <code>bxSurfaceEmissionStrength</code> / runtime <code>emissionStrength</code> (0\u20132, default 1) without changing reception, pressure feedback, or existing defaults.
+Added runtime <code>createSpringMotion</code>, <code>ISpringMotion</code>, <code>MOTION_PRESETS</code>, and <code>paintMotionStyles</code>, reusing the exact spring and shared lazy frame clock. Existing
+design tokens and theme scales remain intact; no dependency or competing lighting renderer was added.</li>
+<li>Live reduced motion snaps travel/fills and removes deformation. Reduced transparency independently uses existing opaque fallbacks. Native semantics, disabled
+states, focus outlines, and committed selection remain authoritative. Motion controllers and observers stop on teardown.</li>
+<li>Review <code>/components/stepper</code> and <code>/components/tabs</code>, including rapid selection, variable widths, overflow, dynamic tabs, guards, vertical layouts and the
+independent accessibility settings in <code>/appearance</code>. The reviewed pilot direction also informs the shared rollout below.</li>
+</ul>
+<h2>Shared motion rollout</h2>
+<ul>
+<li>Recorded the reviewed material and interaction principles in <code>AGENTS.md</code>. Segment steppers retain continuous, brighter fills; cards keep local feedback.</li>
+<li>Sliders and range sliders now use bounded velocity stretch and pressure recovery while preserving immediate native values and pointer precision. Range
+deformation decreases as thumbs approach. Thumb and fill use the same received-light context; no new lens or palette was introduced.</li>
+<li>Slide toggles retarget the shared checked-position spring, with bounded stretch, existing engine pressure response, stronger checked-state emission and RTL
+travel. Initial state and live reduced motion snap without entrance movement. Buttons keep labels/icons undistorted and refine material pressure feedback
+inside stationary hit areas.</li>
+<li>Added reusable runtime <code>mountSelectionMotion</code>, <code>ISelectionMotion</code>, and <code>ISelectionMotionOptions</code> for one lit surface behind enabled menu/option rows. Menus,
+selects, multi-selects and autocomplete share pointer/keyboard movement while preserving disabled states, selected values, checkmarks and focus outlines.</li>
+<li>Shared overlay motion now combines retargetable opacity with a restrained 0.985\u20131 scale, preserving collision-aware positioning transforms. Dropdowns, context
+menus, tooltips, select panels, autocomplete and popovers reuse the same controller. <code>IGlassTransitionOptions.scale: 1</code> retains opacity-only motion.
+Autocomplete/popover exit makes old panels inert immediately and cancels stale completion on reopening or destruction.</li>
+<li>Centered modals use restrained scale and opacity instead of growing content from zero. Larger side/sheet surfaces use a calmer shared curve; side entrance
+frames clean up on close and destruction. Toasts use smaller travel and restrained settling with their existing coordinated stack collapse.</li>
+<li>Collapsibles/accordions gain interruptible grid-height transitions, immediate inert/accessibility state, and local trigger material feedback. Initial
+rendering and reduced motion remain immediate. Passive tags keep their established shape; their actions and pagination controls inherit button feedback.
+Existing side-navigation width/reveal behavior remains the reference for larger navigation surfaces.</li>
+<li>Existing theme tokens, palette roles, async data ownership, guards, and public selection contracts are retained. Shared CSS curves live in the existing motion
+Sass helper; no dependency or parallel lighting system was added. Relevant guides and existing Playground examples document the behavior and review controls.</li>
+</ul>
+<h3>Interaction review refinements</h3>
+<ul>
+<li>Pointer hover on menu/option rows is immediate, with a clearly visible semantic danger backing. Keyboard focus can retain spatial settling; pointer hover
+never waits for a traveling spring.</li>
+<li>Removed button-label squeezing and offsets. The former <code>--bx-button-press-compression</code> and <code>--bx-button-press-offset</code> effects no longer apply; migrate their
+overrides to supported material settings. Text and icons remain undistorted while the backing/rim responds to pressure.</li>
+<li>Sliders and range sliders enlarge their existing magnifier while held, then spring back to a fully opaque resting thumb. Native values and centers remain
+direct. Range enlargement respects actual pixel clearance to the neighboring thumb, without measuring layout on each input event. Reduced motion and
+opaque-surface fallbacks remain independent.</li>
+</ul>
+<h3>Tab overflow and disclosure timing</h3>
+<ul>
+<li>Isolated tab-selection deformation in a clipped decorative layer. A separate viewport scrolls the actual tab row, preventing artificial horizontal scrollbar
+changes during spring travel, including nested code-file tabs in the modal configurator. Genuine overflow, keyboard scrolling and drag edge scrolling remain
+available.</li>
+<li>Reduced collapsible/accordion height transitions from 220ms to 120ms. <code>--bx-collapsible-duration</code> optionally customizes the duration; live reduced motion
+still removes the transition immediately.</li>
+</ul>
 `,"projects/blocks/README.md":`<h1>@filip.mazev/blocks</h1>
 <p>Blocks is a modular Angular UI library with shared theming, accessibility, translations, form behavior and overlay infrastructure. Its public entry points ship
 in one package, alongside the installation schematic.</p>
@@ -947,6 +1006,16 @@ opt in with <code>bxSurfaceInteractive</code>. Components can override the defau
 <td>CSS color override, or <code>false</code> to disable automatic emission while retaining press feedback</td>
 </tr>
 <tr>
+<td><code>bxSurfaceEmissionOrigin</code></td>
+<td>Entire surface</td>
+<td>Descendant CSS selector for the visible light source; no match falls back to the host</td>
+</tr>
+<tr>
+<td><code>bxSurfaceEmissionStrength</code></td>
+<td><code>1</code></td>
+<td>Local 0\u20132 emission multiplier; leaves reception and pressure feedback unchanged</td>
+</tr>
+<tr>
 <td><code>bxSurfaceFocusEmission</code></td>
 <td>Fields: surface emission color; actions: keyboard focus only</td>
 <td>Explicitly illuminate for any focus using this color</td>
@@ -1007,20 +1076,27 @@ Checked, pressed, selected, and current states keep the light enabled. Expanded 
 become selected just by expanding. Plain panels, sections and other decorative containers remain passive receivers, while their edges pick up subtle color from
 nearby foreground and background content. The runtime samples CSS backgrounds and local pixels from visible images, video and canvas, then uses paint order,
 depth and distance to shape the edge tint. Give a custom clickable element its appropriate role (such as <code>role=&quot;button&quot;</code>), or explicitly enable
-<code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> only to override the semantic color. The source is the element\u2019s geometry, never the
-mouse coordinates.</p>
-<p>Presses use the shared pressure spring for a soft inset sheen. Blocks buttons also compress their content inside a fixed hit area; quick taps still receive a
-visible response. Pointer release/cancellation, keyboard release, focus loss, hidden documents, and teardown clear press state. Touch hover does not latch.
-Reduced motion uses static press feedback.</p>
-<p>There is no drag-to-reposition interaction in this iteration. Spatial highlights are a lightweight lighting approximation, while backdrop blur uses browser
-compositing. These effects do not ray-trace arbitrary DOM content. Rendering quality can add supported enhancements, and baseline/solid modes remain available
-for constrained devices.</p>
+<code>bxSurfaceInteractive</code> for a custom interaction. Use <code>bxSurfaceEmission</code> to override the semantic color. The source follows the surface geometry, or the
+descendant selected by <code>bxSurfaceEmissionOrigin</code>, rather than mouse coordinates. For example, <code>bxSurfaceEmissionOrigin=&quot;.status-dot&quot;</code> confines the emitted light
+to a status marker while hover, selection and keyboard focus remain on the whole control. When that descendant also owns a registered surface, its existing
+renderer paints the emitted rim too. Source teardown or an origin change clears the delegated rim. Unregistered descendants continue to supply bounds while the
+host paints its own rim.</p>
+<p>Presses use the shared pressure spring for a soft inset sheen. Blocks buttons keep labels and icons undistorted inside a fixed hit area; quick taps still
+receive visible material feedback. Pointer release/cancellation, keyboard release, focus loss, hidden documents, and teardown clear press state. Touch hover
+does not latch. Reduced motion uses static press feedback.</p>
+<p>The surface renderer does not reposition application content; controls own selection and pointer gestures. Spatial highlights are a lightweight lighting
+approximation, while backdrop blur uses browser compositing. These effects do not ray-trace arbitrary DOM content. Rendering quality can add supported
+enhancements, and baseline/solid modes remain available for constrained devices.</p>
 <h2>Accessibility and lifecycle</h2>
 <p><code>BxA11yService</code> controls reduced motion. Reduced transparency, unsupported backdrop filters and forced colors use opaque surfaces. Give controls visible or
 accessible labels independently of the glass decoration.</p>
 <p>The directive initializes only in the browser, runs decorative updates outside Angular and tears down its resources when the host is destroyed. Do not directly
 mount a second engine surface on a host already owned by the directive or a Blocks component.</p>
 <h2>Framework independent engine</h2>
+<p>The stepper and tabs pilot shares <code>createSpringMotion</code>, <code>ISpringMotion</code>, <code>MOTION_PRESETS</code>, and <code>paintMotionStyles</code> from the runtime entry point. These extend
+the existing exact spring and lazy frame scheduler; they introduce no additional lighting renderer or theme token collection. See the
+<a href="runtime/README.md#retargetable-selection-motion">runtime motion contract</a>. The validated patterns also support slider/toggle feedback, moving menu/option
+highlights, and restrained overlay motion.</p>
 <p>The <code>@filip.mazev/blocks/effects/runtime</code> entry point included in Blocks exports the native DOM surface and transition APIs. Refer to its README for non-Angular
 use. The native runtime does not import Angular.</p>
 <h2>Playground</h2>
@@ -1119,6 +1195,11 @@ global settings.</p>
 <code>quality: &#39;auto&#39;</code> or <code>&#39;enhanced&#39;</code> restores the requested glassiness policy. An explicit <code>glassiness</code> update replaces that preference, including while baseline
 is selected. A previously requested <code>&#39;off&#39;</code> remains off and continues to prevent Enhanced rendering.</p>
 <h2>Global material and theme contract</h2>
+<p>Per-surface <code>emissionOrigin</code> optionally names a descendant selector for the visible light source. <code>emissionStrength</code> is a local 0\u20132 multiplier, defaulting to
+the historical strength of 1. It affects the emitted rim and neighboring illumination while leaving environmental reception and pressure feedback unchanged.
+These local settings are not application-wide appearance configuration. Existing callers need no migration. Registered descendant origins also paint the emitted
+rim through their existing surface controller; unregistered origins supply bounds and retain host rim painting. <code>refreshGlassLighting(element, true)</code> urgently
+resamples and snaps environmental colors for committed semantic changes; the omitted second argument preserves smooth lighting updates.</p>
 <p>The renderer defines no brand palette or spacing system. It uses the existing Blocks semantic tokens and preserves each component&#39;s border radius, size and
 layout. Load the glass CSS once after your theme CSS, and set border radius on your native element when using the package outside Blocks.</p>
 <p><code>mountSurface(element)</code> includes a default token-based border. Buttons, links, native field surfaces and actionable ARIA roles automatically illuminate their
@@ -1241,18 +1322,17 @@ reflects surroundings into the edge. Raster lighting samples use a shared 32-by-
 capture arbitrary DOM into a texture or implement ray tracing. Registered foreground/background objects remain available as explicit reflection proxies when a
 more deliberate scene is needed. Gradient-backed reflectors can supply an explicit representative color.</p>
 <h2>Overlay fades</h2>
-<p>Overlays fade in over 180 ms and out over 140 ms using the Web Animations API. Their dimensions, clipping and text size remain unchanged. The fade composites
-the material surface itself, keeping its configured blur and tint throughout. The surrounding positioning pane stays opaque so it does not create a backdrop
-root that cuts off the page behind the glass. Native opacity interpolation avoids per-frame style mutations and lighting invalidation. Reversing an active fade
-continues from its current opacity; the interrupted promise resolves to <code>cancelled</code>.</p>
-<p>The transition temporarily owns the first material surface\u2019s <code>opacity</code> and the target\u2019s <code>visibility</code>. If no material is present, it fades the target. The
-overlay positioner retains all geometry and transforms. Supply an already positioned target and destroy the transition when its overlay is removed. Both
-endpoints must belong to the same document. <code>refresh()</code> remains a compatibility no-op because a fade requires no geometry measurements.</p>
+<p>Overlays use the shared retargetable spring for opacity and a restrained material scale, keeping layout dimensions and collision-aware positioning unchanged.
+The first material surface animates its own opacity and scale; the positioning pane retains its transform. Controller-owned paint avoids invalidating unrelated
+lighting receivers. Reversal preserves current position and velocity, and the interrupted promise resolves to <code>cancelled</code>.</p>
+<p>The transition temporarily owns the skin&#39;s <code>opacity</code>, <code>scale</code>, and <code>transform-origin</code>, plus the target&#39;s <code>visibility</code>. Without a material skin it animates the
+target. Supply an already positioned target and destroy the controller with its overlay. Both endpoints must belong to the same document. <code>refresh()</code> updates
+the scale origin after an overlay-positioning flip. Reduced motion snaps to the requested state without a running spring.</p>
 <h2>Press feedback</h2>
 <p>The delegated pointer and keyboard handlers drive the existing pressure spring, including a visible initial response for quick taps. A soft inset sheen sits
-within the material\u2019s fixed clipping box. <code>--bx-glass-press</code> on the host exposes the current pressure to component content; Blocks buttons use it for a small
-compression without moving their hit area or overlay origin. Controller-owned pressure writes are excluded from scene invalidation, so a press does not resample
-the entire document every frame.</p>
+within the material\u2019s fixed clipping box. <code>--bx-glass-press</code> exposes current pressure to decorative material. Button text and icons remain undistorted, and the
+hit area and overlay origin stay fixed. Controller-owned pressure writes are excluded from scene invalidation, so a press does not resample the entire document
+every frame.</p>
 <p>Pointer cancellation, matching key release, focus loss during a keyboard press, document/window blur, disabled state, and teardown clear pressure. Touch does
 not latch hover emission, typing in a field does not activate keyboard pressure, and Space on a native link keeps its normal scrolling behavior. Reduced motion
 applies static pressure feedback immediately and removes it on release.</p>
@@ -1319,6 +1399,47 @@ Decorative native-control receivers can pass their hit target as the third argum
 preserves their lighting without a fade. A partly exposed source can still emit, but each receiving interior/edge location must be uncovered. A visible area
 elsewhere on a receiver does not authorize light through an overlapping opaque panel. Fully covered surfaces remain excluded. Whole-source exposure checks share
 a short-lived cache and use bounded fallback probes only when the preferred point is covered; projected receiver points use separate visibility checks.</p>
+<h2>Retargetable selection motion</h2>
+<p><code>createSpringMotion(initial, render, options?)</code> builds scalar channels over the existing exact damped spring and shared lazy frame clock. The callback receives
+positions and velocities per second. <code>retarget(values, immediate = false)</code> preserves current velocity; <code>immediate: true</code> snaps, clears velocity and unsubscribes
+from frames. The initial and target arrays must contain the same number of finite values; invalid targets throw <code>RangeError</code> before changing any channel.
+<code>destroy()</code> stops animation permanently. Owners must destroy the controller and snap when their live reduced-motion preference changes. Without a browser
+animation clock, targets paint immediately. Settled channels leave no running frame loop; the scheduler bounds frame deltas after stalls.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts"><span class="hljs-keyword">import</span> { createSpringMotion, <span class="hljs-variable constant_">MOTION_PRESETS</span>, paintMotionStyles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@filip.mazev/blocks/effects/runtime&#x27;</span>;
+
+<span class="hljs-keyword">const</span> motion = <span class="hljs-title function_">createSpringMotion</span>(
+    [<span class="hljs-number">0</span>, <span class="hljs-number">100</span>],
+    <span class="hljs-function">(<span class="hljs-params">[x, width]</span>) =&gt;</span> {
+        <span class="hljs-title function_">paintMotionStyles</span>(selection, { <span class="hljs-attr">transform</span>: <span class="hljs-string">\`translateX(<span class="hljs-subst">\${x}</span>px)\`</span>, <span class="hljs-attr">width</span>: <span class="hljs-string">\`<span class="hljs-subst">\${width}</span>px\`</span> }, <span class="hljs-literal">true</span>);
+    },
+    <span class="hljs-variable constant_">MOTION_PRESETS</span>.<span class="hljs-property">fluid</span>
+);
+
+motion.<span class="hljs-title function_">retarget</span>([<span class="hljs-number">160</span>, <span class="hljs-number">140</span>]);
+<span class="hljs-comment">// When reduced motion becomes active, snap the current destination:</span>
+motion.<span class="hljs-title function_">retarget</span>([<span class="hljs-number">160</span>, <span class="hljs-number">140</span>], <span class="hljs-literal">true</span>);
+<span class="hljs-comment">// When the owning view is destroyed:</span>
+motion.<span class="hljs-title function_">destroy</span>();</code></pre>
+<p><code>paintMotionStyles(element, styles, geometry = false)</code> writes decorative CSS properties without invalidating unrelated lighting receivers. Pass <code>true</code> when
+moving/resizing a registered surface so its own lighting geometry is refreshed through the existing engine. The owner must restore any persistent element&#39;s
+styles if it outlives its motion view. The pilots remove their decorative surfaces with their views.</p>
+<p><code>MOTION_PRESETS</code> exports <code>snappy</code>, <code>smooth</code>, <code>soft</code>, <code>elastic</code>, and <code>fluid</code> stiffness/damping/mass defaults, checked against <code>ISpringOptions</code>. Callers can
+supply custom spring options. These are motion characteristics, not new CSS theme tokens. The pilots cap deformation separately and remove it under reduced
+motion. Inspect <code>/components/stepper</code> and <code>/components/tabs</code>; use <code>/appearance</code> for accessibility and theme combinations. The same foundations serve sliders,
+toggles, menus and overlays.</p>
+<h2>Shared row and overlay motion</h2>
+<p><code>mountSelectionMotion(root, { selector?, reducedMotion? })</code> adds one noninteractive surface behind an existing <code>role=&quot;menu&quot;</code> or <code>role=&quot;listbox&quot;</code> container. The
+default selector is <code>[role=&quot;menuitem&quot;], [role=&quot;option&quot;]</code>. Disabled rows and nested lists are excluded. Pointer hover snaps immediately; actual focus and
+<code>aria-selected</code> changes may spring without changing selection. The controller remeasures dynamic/scrolling content, bounds stretch, and releases its observers
+and surface renderer on <code>destroy()</code>. Omitted motion policy follows live inherited/system preferences; call <code>update({ reducedMotion })</code> to change an explicit
+application override. Use a div container with unrestricted children. Set <code>--bx-selection-surface</code> to customize the backing; defaults use existing semantic
+hover/error surfaces. Focus rings and persistent selection/checkmarks remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this
+at their existing Playground routes.</p>
+<p><code>createGlassTransition</code> now uses the shared retargetable spring for opacity and restrained scale. <code>IGlassTransitionOptions.scale</code> is the closed scale, clamped
+from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. The controller preserves the overlay&#39;s positioning transform, follows the opening side,
+restores owned styles, cancels superseded promises, and snaps on live reduced motion. <code>refresh()</code> updates its scale origin after a positioning flip. Existing
+enter/exit/destroy contracts remain available. Native CSS <code>motion-easing()</code> presets from <code>core/styles/helpers</code> supply restrained curves where continuous physics
+is unnecessary, including large modal surfaces and toast stack collapse. These Sass curves add no CSS token scale or generator-owned token changes.</p>
 `,"projects/blocks/forms/README.md":`<h1>Forms</h1>
 <p>Blocks fields use Angular 22 native signal control contracts and support Signal Forms, Reactive Forms, Template-driven Forms and standalone models. The library
 supplies presentation, interaction and accessible feedback; Angular owns validation and submission.</p>
@@ -1555,6 +1676,11 @@ normal/loading/retry text through <code>ILoadMoreConfig</code>; custom footer te
 <p>The playground includes a runnable mock service with delayed initial/search/incremental requests, failure followed by explicit successful retry, empty results
 and a compact page-size control for exercising overflow transitions. Its load-more/error/retry footer shares the select/multi-select styling, with tonal accent
 actions. Source: <code>projects/playground/src/app/components/screens/library-components/essentials-examples/services/autocomplete-demo.service.ts</code>.</p>
+<h3>Motion and material response</h3>
+<p>Suggestions use the shared overlay opacity/scale spring and a persistent surface following the active descendant or hovered enabled option. Typing and keyboard
+navigation retain their existing focus and selection contracts. Closing immediately reports the closed state, makes the old panel inert, and releases it after
+exit; reopening or destruction cancels stale completion. Reduced motion closes immediately. Async filtering and pagination remain application-owned. Inspect
+<code>/components/autocomplete</code> with rapid edits, keyboard selection, pending results, and <code>/appearance</code> settings.</p>
 <h2>Playground</h2>
 <p><code>/components/autocomplete</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/forms/components/button/README.md":`<h1>Button</h1>
@@ -1602,11 +1728,10 @@ and outlined buttons keep their glass backing.</p>
 <span class="hljs-variable language_">this</span>.<span class="hljs-property">themingService</span>.<span class="hljs-title function_">setAppearance</span>({ <span class="hljs-attr">reducedTransparency</span>: <span class="hljs-literal">true</span> });</code></pre>
 <p><code>BxA11yService</code> controls reduced motion; reduced transparency and forced colors receive opaque presentation. Glass is decorative and does not replace labels,
 focus states, or semantic control states.</p>
-<p>Press feedback applies to every <code>bx-button</code> variant. Translucent glass buttons deepen their inset reflection, gather a soft theme-colored sheen, and compress
-their content slightly while held. Solid filled and floating actions use their semantic pressed color and the same content compression, without an extra sheen
-or inset ring. The existing shared pressure spring returns the content and material to rest, including quick taps. The button\u2019s hit area, layout, and overlay
-origin stay fixed. Mouse, touch, Enter, and Space activation use the same pressure state; release, cancellation, blur, or removal clears it. Text buttons and
-<code>[surfaceEffects]=&quot;false&quot;</code> retain native press feedback without decorative lighting.</p>
+<p>Press feedback keeps button labels and icons undistorted. Translucent glass buttons deepen their existing inset reflection and gather a soft theme-colored
+sheen; solid filled and floating actions use their semantic pressed color. The shared pressure spring returns the material to rest, including quick taps. The
+hit area, text geometry, layout, and overlay origin stay fixed. Release, cancellation, blur, and removal clear pressure. Text buttons and surface opt-outs
+retain native press feedback.</p>
 <table>
 <thead>
 <tr>
@@ -1615,14 +1740,6 @@ origin stay fixed. Mouse, touch, Enter, and Space activation use the same pressu
 </tr>
 </thead>
 <tbody><tr>
-<td><code>--bx-button-press-compression</code></td>
-<td><code>0.035</code>; content shrinks by 3.5% at full pressure</td>
-</tr>
-<tr>
-<td><code>--bx-button-press-offset</code></td>
-<td><code>1px</code>; content moves down at full pressure</td>
-</tr>
-<tr>
 <td><code>--bx-button-press-shadow</code></td>
 <td>Semantic inset shadow for translucent buttons; <code>none</code> for solid filled/floating actions</td>
 </tr>
@@ -1631,14 +1748,20 @@ origin stay fixed. Mouse, touch, Enter, and Space activation use the same pressu
 <td><code>0.6</code> for translucent buttons; <code>0</code> for solid filled/floating actions</td>
 </tr>
 </tbody></table>
-<p>Reduced motion keeps static pressed-color, inset, or underline feedback without compression or rebound. Reduced transparency retains each variant\u2019s pressed
-appearance on the opaque surface. Forced colors uses a visible pressed outline, and disabled/noninteractive controls do not animate or illuminate.</p>
+<p>The former <code>--bx-button-press-compression</code> and <code>--bx-button-press-offset</code> content effects have been removed deliberately; remove those overrides when migrating.
+Customize the supported material variables instead. Reduced motion keeps static color/inset/underline feedback. Reduced transparency retains the opaque pressed
+appearance. Forced colors preserve a visible pressed outline; disabled and noninteractive controls do not illuminate.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use the native <code>button[bx-button]</code> selector for actions and <code>a[bx-button]</code> with a real <code>href</code> for navigation. Give icon-only actions an accessible label.
 Disabled actions do not emit an action through a click listener.</p>
 <p><code>surfaceEffects</code> defaults to <code>true</code>. Set <code>[surfaceEffects]=&quot;false&quot;</code> for dense collections such as the icon catalog to retain Blocks button styling, theme
 updates, focus, loading and disabled behavior without mounting per-button runtime glass lighting or deformation. It can be changed while mounted. An explicitly
 applied <code>bxSurface</code> directive continues to own its surface independently.</p>
+<h3>Motion and material response</h3>
+<p>Surface-backed buttons reuse the existing pressure spring on their material, with fixed text and icon geometry. Repeated presses remain responsive, and reduced
+motion retains static press feedback. Inspect <code>/components/button</code>.</p>
+<p>Filled/floating intent emits more strongly than outlined, tonal, icon, or grayscale intent. Danger and warning receive modest semantic emphasis. This local
+calibration uses the existing surface engine and leaves environmental reception independent; original fills, colors, and public appearance inputs remain intact.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/button</code> for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results.
 Press and release with mouse, touch, Enter, or Space, then move the pointer away while leaving focus on the button to inspect its resting state. The global
@@ -1934,6 +2057,10 @@ and after failed pages. The application owns request cancellation and page/curso
 update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
 <p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls
 when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h3>Motion and material response</h3>
+<p>The shared selection base supplies restrained overlay materialization and a traveling focused-row surface. Multiple selected rows retain their checkmarks and
+semantic fill; hover/focus movement never changes the selected values. Motion follows the actual scroll content and uses the existing surface renderer. Reduced
+motion snaps geometry; existing disabled/readonly, asynchronous pagination, retry, and focus behavior remain in force. Inspect <code>/components/multi-select</code>.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/multi-select</code>. Enable select all, load another page, deselect one item and load again. Selection and intent events are shown separately. The
 page includes fake requests, failure/retry, page-size controls and live translation changes.</p>
@@ -2088,6 +2215,11 @@ readonly and disabled state are supported.</p>
 update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
 <p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls
 when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h3>Motion and material response</h3>
+<p>Both thumbs reuse the native slider&#39;s enlarged pressed magnifier and spring back to fully opaque resting thumbs without delaying pointer precision or changing
+range ordering. Horizontal expansion is capped by the actual pixel clearance between thumbs, using cached container geometry, and velocity stretch decreases as
+the selected interval narrows, preserving clarity when thumbs approach. Release and cancellation settle independently. Live reduced motion removes deformation;
+reduced transparency keeps the existing opaque thumbs. Inspect <code>/components/range-slider</code> with close and overlapping endpoints.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/range-slider</code> for a live pair, labels and ticks.</p>
 <p>The rail shares the normal slider&#39;s border, inset shadow, neutral background and pill radius, with the selected interval filled between the two thumb centers.</p>
@@ -2296,6 +2428,11 @@ out of a native popover. Selection and the application-owned search term remain 
 update when the application theme changes. Keyboard focus, forced colors, reduced transparency and <code>BxA11yService</code> reduced-motion preferences remain supported.</p>
 <p>Text inputs accept <code>ResolvableText</code>: plain text or <code>{ key: &#39;translation.key&#39; }</code>. With <code>BX_I18N</code>, text is resolved reactively, including already-mounted controls
 when the adapter&#39;s <code>version</code> signal changes. Plain text works without an adapter.</p>
+<h3>Motion and material response</h3>
+<p>Select and multi-select overlays use the shared retargetable opacity/scale spring, anchored to the side chosen by overlay positioning. A persistent engine
+surface follows pointer or keyboard focus between enabled rows; selection, checkmarks and focus outlines remain authoritative. The highlight moves in the list&#39;s
+scrolling coordinates and is remeasured after content/size changes. No data requests are owned by motion. Live reduced motion snaps geometry, while opaque
+material and forced-color fallbacks remain independent. Inspect <code>/components/select</code>, <code>/components/multi-select</code>, and <code>/appearance</code>.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/select</code> for mock pagination, external filtering, loading, failed requests and retry. Switch page sizes to exercise the scroll and
 fallback-action states.</p>
@@ -2369,6 +2506,11 @@ emits color; disabled controls do neither.</p>
 focus states, or semantic control states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Use for immediate settings, with a label describing the enabled state. The native checkbox retains keyboard behavior and checked state.</p>
+<h3>Motion and material response</h3>
+<p>The thumb retargets the shared elastic spring when the displayed checked state changes, including programmatic and deferred form updates. Velocity stretch and
+the engine&#39;s pressure response are bounded inside a stationary switch track. RTL uses the logical starting edge. The checked surface emits more strongly than
+the neutral track without increasing reception. Initial render snaps; live reduced motion snaps to the current state and removes deformation. Disabled and
+readonly behavior remains owned by the form control. Inspect <code>/components/slide-toggle</code> and <code>/appearance</code>.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/slide-toggle</code> for a working example and its current value or action result.</p>
 <h2>Switch semantics</h2>
@@ -2496,6 +2638,11 @@ pixels. Reduced transparency, increased contrast and unsupported backdrop filter
 <h2>Labels and ticks</h2>
 <p>Native <code>[formField]</code> binding is supported alongside existing Angular form directives. <code>discrete</code> adds a formatted visible value; <code>displayWith(value)</code> controls
 that label. <code>showTickMarks</code> adds bounded native tick metadata. For a pair of values use <a href="components/range-slider">RangeSlider</a>.</p>
+<h2>Behavior and accessibility</h2>
+<p>Native values, thumb centers, and fill endpoints update immediately. Holding enlarges the existing magnifying lens, with capped velocity stretch; release
+springs back to a fully opaque resting thumb; motion never delays the native value. The lens and fill share the existing engine&#39;s received lighting. Pointer
+cancellation, blur, hidden documents, disabled/readonly changes, and destruction release gesture state. Live reduced motion clears deformation and stops its
+clock. Existing glass/opaque fallbacks remain independent. Inspect <code>/components/slider</code> with rapid drags and <code>/appearance</code> for accessibility settings.</p>
 `,"projects/blocks/forms/directives/suffix/README.md":`<h1>Field suffix</h1>
 <p>Composable content and native integration for the shared field frame.</p>
 <h2>Import</h2>
@@ -2819,6 +2966,11 @@ animation; reduced transparency and forced colors receive opaque backdrop presen
 header and footer remain reachable.</p>
 <p>Header text accepts <code>ResolvableText</code> and updates through the optional <code>BX_I18N</code> adapter. Content components own the translation and accessible naming of their
 custom actions, descriptions, errors, and form controls. Keep actions reachable in constrained viewports and preserve focus when completing asynchronous work.</p>
+<h3>Motion and material response</h3>
+<p>Centered dialogs combine opacity with a restrained 0.975\u20131 material scale instead of growing content from zero. Their existing viewport dimming layer remains
+independent. Side dialogs and bottom sheets use the shared smooth curve for large surfaces; side entrance frames are cancelled on close or destruction.
+Bottom-sheet dragging remains direct, with restrained recovery after an unsuccessful dismiss gesture. Live reduced motion removes decorative movement. Close
+guards, focus/stacking and reactive patches retain their existing lifecycle. Inspect <code>/modal</code> in centered, side and mobile sheet layouts.</p>
 <h2>Playground</h2>
 <p>The live dialog includes <strong>Open nested dialog</strong>, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a
 child returns to its parent. The confirm-close guard exercises the same independent backdrop and depth policy.</p>
@@ -4078,12 +4230,13 @@ continuous completion bar above its vertical step list.</p>
 </tbody></table>
 <p>Step bodies use <code>BxSurfaceDirective</code>, global materials and transparency fallbacks. Cards have a persistent neutral surface. Other variants keep transparent
 backgrounds, including selected and hovered steps. Hover feedback emphasizes the marker and underlines its label without moving content. Shared lighting
-attaches to the interactive button, so selection, hover and keyboard focus emit from the correct element. Markers and segments do not receive independent glass
-surfaces. Global Off and accessibility policies take precedence over component overrides. Theme and palette changes use semantic CSS variables on mounted
-instances. Active markers pair the accent fill with its on-accent foreground; completed markers use the matching subtle surface. Errors consistently use danger
-tokens for the marker, feedback and emitted light. Decorative outlines and dashed connectors are avoided; keyboard focus retains a visible outline. Horizontal
-labels are centered below markers, and vertical labels align with the marker center. Cards align their text stack to the top with a small marker offset, using
-the same icon-and-text arrangement as alerts and banners. No independent animation or lighting implementation is introduced.</p>
+attaches to the interactive button, with emitted light positioned at the visible marker for non-card variants and the card surface for cards. Labels and empty
+button space do not extend a marker&#39;s light source. Markers and segments do not receive independent glass surfaces. Global Off and accessibility policies take
+precedence over component overrides. Theme and palette changes use semantic CSS variables on mounted instances. Active markers pair the accent fill with its
+on-accent foreground; completed markers use the matching subtle surface. Errors consistently use danger tokens for the marker, feedback and emitted light.
+Decorative outlines and dashed connectors are avoided; keyboard focus retains a visible outline. Horizontal labels are centered below markers, and vertical
+labels align with the marker center. Cards align their text stack to the top with a small marker offset, using the same icon-and-text arrangement as alerts and
+banners. No independent animation or lighting implementation is introduced.</p>
 <p>Custom labels use <code>&lt;ng-template bxStepLabel let-step let-index=&quot;index&quot; let-status=&quot;status&quot;&gt;\u2026&lt;/ng-template&gt;</code> inside <code>bx-step</code>. Keep content non-interactive and
 preserve a meaningful plain <code>label</code>, which remains the button&#39;s accessible name. The custom label is decorative to avoid duplicated accessible names.</p>
 <p>Unavailable steps use muted markers and reduced visual emphasis. Completed steps with <code>editable: false</code> receive the same unavailable treatment when revisiting
@@ -4110,6 +4263,22 @@ and forced-colors rules preserve readable state across themes, RTL and accessibi
 <code>responsive=&quot;scroll&quot;</code> preserves labels with a reachable horizontal scroll region. <code>vertical</code> changes the list at the shared <code>sm</code> breakpoint. <code>compact</code> hides
 supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
 state during server rendering. Content wraps for long translations and constrained containers.</p>
+<h3>Material and motion pilot</h3>
+<p>Markers and connectors receive environmental lighting through the existing surface engine. Circular indicators reuse its rim, material and pressure response;
+card presentations retain their card backing. Filled current indicators emit more strongly than tonal completed or neutral inactive indicators during engine
+interaction, with restrained extra error emphasis. Emission strength does not increase reception. Indicator mode remains passive unless interaction is enabled.
+Rounded hover highlights mix the semantic state color with the theme surface; they do not increase a dark elevation shadow. The traveling accent has no shadow,
+keeping its light-mode rim distinct from the marker&#39;s resting depth. Segment tracks keep their continuous geometry, with fully tinted active/completed fills so
+their existing material remains bright. Emission follows the visible segment surface. Error contours take precedence over cached environmental rim tint, and
+committed status changes urgently refresh marker lighting.</p>
+<p>A persistent selection accent travels between the committed positions, interpolating both axes and dimensions. It surrounds circular/segment markers and adapts
+to progress headers, including vertical and responsive layouts. Cards instead animate their own border and rim lighting in place; no accent travels across the
+unconnected space between cards. Velocity adds a small deformation along the travel axis. Connector completion fills independently of active position, so
+visiting a step never implies completing it. Circular indicators compress on press and recover on the shared spring. Rapid navigation retargets existing motion
+rather than restarting it. Rejected guards and unconfirmed controlled requests leave the selection accent at the committed step.</p>
+<p>Live reduced motion snaps the accent and completion fill and removes indicator deformation. Reduced transparency retains the shared opaque material fallback
+independently. Forced colors retain the explicit current/completed/error markers and hide the decorative traveling accent. Springs and observers are released
+with their component. No existing theme tokens were renamed or changed.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/stepper</code> for all modes, variants, sizes and orientations; English/Spanish/French/German text changes; appearance controls; a scroll-driven
 section navigator; validated Reactive Forms and Signal Forms; asynchronous save success, guard refusal and failure/retry; optional/disabled/non-editable steps;
@@ -4957,6 +5126,11 @@ between the heading and content. Accordion items share this appearance.</p>
 <h2>Behavior and accessibility</h2>
 <p>Native button activation, aria-expanded and aria-controls connect the heading and panel. Hidden panels are inert. Programmatic collapse moves contained focus to
 the heading. Optional regions avoid filling the page with unnecessary landmarks.</p>
+<h3>Motion and material response</h3>
+<p>After initialization, disclosure height uses a quick 120ms grid transition (customizable with <code>--bx-collapsible-duration</code>) that follows dynamic content. Rapid
+expand/collapse changes retarget the current layout. Closed content is immediately inert and hidden from accessibility APIs while its visual height settles;
+projected content stays mounted and lazy content follows the existing expanded-only lifecycle. The trigger keeps its title undistorted and uses local material
+feedback. Initial rendering and live reduced motion use immediate state changes. Inspect <code>/components/collapsible</code> and <code>/components/accordion</code>.</p>
 <h2>Playground</h2>
 <p><code>/components/collapsible</code> includes live examples and shared appearance controls.</p>
 `,"projects/blocks/primitives/components/container/README.md":`<h1>Content container</h1>
@@ -5272,6 +5446,10 @@ hint when the application actually implements it. Existing custom display hints 
 <p>Browsers, operating systems and assistive technology may reserve key combinations. Keep actions reachable by button, choose suitable bindings for your audience,
 and offer application-owned remapping where needed. See
 <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-keyshortcuts">MDN&#39;s aria-keyshortcuts guidance</a>.</p>
+<h3>Motion and material response</h3>
+<p>Inside a Blocks Menu, hover and keyboard focus share its moving material surface rather than independently painting a backing on every row. Disabled rows are
+excluded, semantic danger text remains visible, and focus outlines remain native to the item. Standalone items keep their local interaction styling. Inspect
+<code>/components/menu-item</code>; reduced motion snaps the shared surface.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/menu-item</code> or <code>/components/menu</code> for working menu-opening combinations and sequences, OS previews, disabled-command guards, an editable field,
 and visible action results.</p>
@@ -5304,6 +5482,12 @@ trigger effects retain their application appearance settings.</p>
 <p><code>BxA11yService</code> controls reduced motion. Forced colors preserve native contrast and focus states.</p>
 <h2>Behavior and accessibility</h2>
 <p>Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.</p>
+<h3>Motion and material response</h3>
+<p>Pointer hover paints the existing hover color immediately, including a clearly semantic danger hover. Keyboard focus may use the shared surface with bounded
+settling. It does not change application selection or focus, enter the accessibility tree, or intercept pointer input. Danger items use their semantic surface.
+The surface remains inside the menu&#39;s scrolling coordinate space and reacts to dynamic rows. Dropdown and context-menu wrappers share the overlay
+materialization spring. Live reduced motion snaps movement; focus outlines remain available in forced colors. Inspect <code>/components/menu</code>,
+<code>/components/dropdown</code>, and <code>/components/context-menu</code>.</p>
 <h2>Playground</h2>
 <p>Open <code>/components/menu</code> for a working example and its current value or action result.</p>
 `,"projects/blocks/primitives/components/page-container/README.md":`<h1>Page container</h1>
@@ -6061,6 +6245,11 @@ identifiers.</p>
 <td>Selects an enabled tab by value.</td>
 </tr>
 <tr>
+<td><code>Tabs</code></td>
+<td><code>dragSelection: boolean</code></td>
+<td>Defaults to true. Drag the selected surface with pointer or touch; release selects the nearest enabled tab.</td>
+</tr>
+<tr>
 <td><code>Tab</code></td>
 <td><code>label: ResolvableText</code></td>
 <td>Required visible and accessible label.</td>
@@ -6139,9 +6328,20 @@ transitions apply to later interactions. Appearance settings and reduced motion 
 colors use a visible selected outline.</p>
 <p><code>--bx-tabs-panel-gap</code> customizes the space below the headers. Panels follow the page&#39;s natural scroll flow by default. For a bounded viewer, set
 <code>--bx-tabs-panel-overflow: auto</code> together with <code>--bx-tabs-max-panel-height</code> or a constrained group height to keep headers visible while content scrolls. Let the
-panel own scrolling instead of also adding scroll containers to nested code blocks. Header labels scroll horizontally only when they exceed the available width;
-the glass decoration sits outside that scroll area.</p>
+panel own scrolling instead of also adding scroll containers to nested code blocks. Header labels scroll horizontally only when the actual tab row exceeds the
+available width; the animated surface is clipped in a separate decorative layer so stretching and overshoot cannot create a scrollbar. the glass decoration sits
+outside that scroll area.</p>
 <h2>Keyboard and accessibility</h2>
+<p>Press a header and drag horizontally to move the persistent selection surface. The surface interpolates its position and width between enabled headers, with
+bounded velocity stretch and pressure feedback. Panels, <code>selectedValue</code>, and ARIA selection remain committed until release. Release selects the nearest enabled
+header and focuses it. Escape, pointer cancellation, lost capture, window blur, vertical scrolling, or releasing outside the header cancels the preview. Changes
+to the tab list or external selection cancel stale gestures. Disabled tabs are never selected. Dragging near a scrolling header&#39;s edges advances its scroll
+position; the scrollbar, keyboard navigation, and ordinary click remain available. Set <code>[dragSelection]=&quot;false&quot;</code> to prefer native horizontal swipe scrolling.</p>
+<p>Programmatic changes and clicks use the same retargetable spring. Rapid changes preserve position and velocity, and variable-width headers resize the surface
+continuously. There is no entrance movement. Live reduced motion snaps selection and removes pressure/stretch while retaining direct manipulation and selected
+state. Reduced transparency uses the engine&#39;s opaque fallback independently. The moving surface remains a receiver in the existing lighting engine. Panels
+switch immediately to preserve dynamic content height; no panel-position animation is introduced. Programmatic replacement of a focused panel returns focus to
+the newly selected header.</p>
 <p>Tab enters the selected header; another Tab moves into its panel. Left and Right select and focus the next enabled header, wrapping at the ends and respecting
 right-to-left layout. Home and End select the first and last enabled tabs. Native Enter and Space activation also work.</p>
 <p>Each header has <code>role=&quot;tab&quot;</code>, roving <code>tabindex</code>, <code>aria-selected</code> and a matching <code>aria-controls</code>. Panels use <code>role=&quot;tabpanel&quot;</code>, a matching <code>aria-labelledby</code>, and
@@ -6149,6 +6349,8 @@ unique generated IDs. Nested groups maintain independent selection and keyboard 
 <h2>Playground</h2>
 <p>Open <code>/components/tabs</code> for enabled and disabled tabs, dynamic selection, lazy content and both appearances. The modal and toast configurators also use Tabs for
 Documentation, Code Examples and source files.</p>
+<p>The pilot controls include unequal-width labels, programmatic selection, dynamic insertion/removal and an overflow list. Hold and drag a header to review
+selection tracking and release settling. Use <code>/appearance</code> for light/dark/custom palettes and independent reduced-motion and opaque-surface settings.</p>
 `,"projects/blocks/primitives/components/tag/README.md":`<h1>Tag</h1>
 <p>Informational labels with semantic colors, tonal/filled/outlined variants, optional icons and counts, disabled presentation, and accessible tooltips. Tags do
 not imply a button or selection action.</p>
@@ -6607,6 +6809,11 @@ cleanup.</p>
 and a named dialog. See the <a href="components/popover">popover component guide</a> for working usage, API defaults, configuration, CSS variables and
 accessibility behavior.</p>
 <p>Playground: <code>/components/popover</code>.</p>
+<h2>Behavior and accessibility</h2>
+<p>Opening and closing share the effects runtime&#39;s restrained opacity/scale spring without modifying collision-aware overlay positioning. The scale origin follows
+the opening side. Close reports closed state and makes the panel inert immediately, then releases it after exit; reopening and teardown invalidate stale
+completion. Reduced motion skips spatial movement. Existing focus restoration, Escape, outside-click and nested-overlay policies remain authoritative. Inspect
+<code>/components/popover</code>.</p>
 `,"projects/blocks/primitives/directives/resize-handle/README.md":`<h1>Resize handle</h1>
 <p><code>ResizeHandleDirective</code> supplies a reusable, focusable resize separator. It adjusts an application-owned numeric size from pointer dragging or the keyboard,
 without positioning elements, applying dimensions to targets, or owning table/list/panel data.</p>
@@ -7235,6 +7442,10 @@ toastrGlobalSettingsService.<span class="hljs-title function_">update</span>({ <
 important outcomes outside transient notifications. Use an inline alert or modal when acknowledgment is required.</p>
 <p>Reduced motion suppresses movement while preserving state; reduced transparency and forced colors use opaque presentation. Simple message text accepts strings
 or translation keys through <code>BX_I18N</code>; custom components own translation, keyboard access, accessible names, and descriptions for their own content.</p>
+<h3>Motion and material response</h3>
+<p>Toasts use shorter 12px entrance travel, a restrained scale, and the shared fluid settling curve. Existing grid collapse coordinates neighboring stack movement
+when an item closes. Lifetime, pause/resume, semantic patches and close results remain independent of decorative motion. Live reduced motion removes travel and
+settling. Existing progress-light and opaque material behavior remains in place. Inspect <code>/toastr</code> with loading-to-success/error patches and stacked closes.</p>
 <h2>Playground</h2>
 <p>Open <code>/toastr</code> for initial configuration, live content/type/icon/surface/progress updates, paused lifetime resets, a loading-to-success transition, and a
 queued-patch example. Open <code>/components/toast-core</code> for custom content, and <code>/components/simple-toast</code> for semantic notifications.</p>
@@ -7966,6 +8177,9 @@ companions. Focused color-helper examples live in the utilities section above.</
 <td>Their <a href="../../../../../../blocks/navigation/README.md">Navigation</a>, <a href="modal">Modal</a>, <a href="toastr">Toastr</a>, and <a href="components/surface">Effects</a> guides</td>
 </tr>
 </tbody></table>
+<p>The effects runtime&#39;s shared motion helpers (<code>createSpringMotion</code>, <code>mountSelectionMotion</code>, <code>createGlassTransition</code>) retain their focused
+<a href="components/surface">Effects guide</a> and <a href="../../../../../../blocks/effects/runtime/README.md">runtime API guide</a>, with interactive
+coverage at <code>/components/tabs</code>, <code>/components/stepper</code>, <code>/components/slider</code>, <code>/components/slide-toggle</code>, <code>/components/menu</code>, and the select/overlay pages.</p>
 <p>Internal coordination services, implementation classes, and type-only contracts do not receive separate playground pages.</p>
 <h2>Appearance and customization</h2>
 <p>The overview uses Blocks search, cards, grids, stacks, tags, icons, links styled as buttons, and alerts. Every demo uses public Blocks controls and shared theme
@@ -9853,7 +10067,7 @@ dd {
     overflow: auto;
     overscroll-behavior: contain;
 }
-`};var k=class i{document=p(te);router=p(Hr);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let c=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||i)};static ɵcmp=V({type:i,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&ve(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),Jn(4,`article`,2),it()),n&2&&(D(4),Ka(`innerHTML`,s.readmeContent(),Fm))},styles:[`
+`};var k=class i{document=p(te);router=p($r);readmeContent=v(()=>{let e=this.path().replace(/^\/+/,``);return x[w[e]??e]??`<p>This documentation page is unavailable. Run npm run tools:build-docs after adding a README.</p>`});path=g.required();navigateDocumentation(e){if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;let s=e.target?.closest?.(`a[href]`);if(!s||s.hasAttribute(`download`)||s.target&&s.target!==`_self`)return;let a=new URL(s.href,this.document.baseURI),t=new URL(`.`,this.document.baseURI);if(a.origin!==t.origin||!a.pathname.startsWith(t.pathname))return;let c=a.pathname.slice(t.pathname.length);/^(?:home|glass|appearance|utilities(?:\/[^/?#]+)?|components(?:\/[^/?#]+)?|release-notes(?:\/[^/?#]+)?|modal|toastr|tokens|icons|icon-catalog)\/?$/.test(c)&&(e.preventDefault(),this.router.navigateByUrl(`/${c}${a.search}${a.hash}`))}static ɵfac=function(n){return new(n||i)};static ɵcmp=z({type:i,selectors:[[`app-readme`]],hostBindings:function(n,s){n&1&&xe(`click`,function(t){return s.navigateDocumentation(t)})},inputs:{path:[1,`path`]},decls:5,vars:1,consts:[[1,`readme-container`],[1,`readme-header`],[1,`readme-content`,3,`innerHTML`]],template:function(n,s){n&1&&(ot(0,`div`,0)(1,`div`,1)(2,`span`),Te(3,`Documentation`),it()(),er(4,`article`,2),it()),n&2&&(k$1(4),ts(`innerHTML`,s.readmeContent(),Um))},styles:[`
 [_nghost-%COMP%] {
   display: block;
   min-width: 0;
