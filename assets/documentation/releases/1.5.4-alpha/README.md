@@ -80,12 +80,16 @@ navigation's reduced-motion and keyboard-focus behavior.
 - Added steps, segments, dots, progress, and cards in three sizes, horizontal/vertical layouts, and scroll, vertical, or compact responsive behavior. Connectors
   are solid and aligned with their markers; small markers and dots leave room around status symbols. Card text uses the same top alignment as alerts and
   banners.
+- Replaced split connector pieces with one continuous connector per gap, positioned from marker bounds and updated on layout changes. Horizontal scrollbars have
+  a reserved strip below the steps, keeping mobile WebKit overlay scrollbars clear of glass card surfaces and focus indicators.
+- Added `progressFormat="fraction"` for completed/enabled step counts such as `1/3` alongside the default percentage format. Both use the existing
+  `showPercentage` visibility input; explicit `progressValue` continues to override only the percentage and progress bar.
 - Uses Blocks semantic colors, shared glass and lighting, translation support, and configurable CSS variables. Non-card variants keep transparent selected
   backgrounds with marker/label hover feedback. Disabled steps are visibly muted; read-only presentation retains focus and progress with neutral markers.
 - Includes roving keyboard navigation, RTL support, accessible status descriptions, predictable wizard focus, and shared reduced-motion/transparency and
   forced-color behavior. Shared text defaults are configurable through `BX_STEPPER_DEFAULTS` and per-instance labels.
 - Added the `/components/stepper` playground with appearance controls, section navigation, form validation, asynchronous save failure/retry, controlled
-  confirmation, dynamic steps, and nearby draft previews. Colocated guides and browser regression coverage document the supported integration patterns.
+  confirmation and dynamic steps. Colocated guides and browser regression coverage document the supported integration patterns.
 
 See the [Stepper guide](../../../projects/blocks/navigation/components/stepper/README.md) for public imports, runnable examples, configuration, and
 accessibility.

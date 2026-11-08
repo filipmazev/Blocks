@@ -652,12 +652,16 @@ view. Reset clears workflow progress without clearing application-owned form val
 <li>Added steps, segments, dots, progress, and cards in three sizes, horizontal/vertical layouts, and scroll, vertical, or compact responsive behavior. Connectors
 are solid and aligned with their markers; small markers and dots leave room around status symbols. Card text uses the same top alignment as alerts and
 banners.</li>
+<li>Replaced split connector pieces with one continuous connector per gap, positioned from marker bounds and updated on layout changes. Horizontal scrollbars have
+a reserved strip below the steps, keeping mobile WebKit overlay scrollbars clear of glass card surfaces and focus indicators.</li>
+<li>Added <code>progressFormat=&quot;fraction&quot;</code> for completed/enabled step counts such as <code>1/3</code> alongside the default percentage format. Both use the existing
+<code>showPercentage</code> visibility input; explicit <code>progressValue</code> continues to override only the percentage and progress bar.</li>
 <li>Uses Blocks semantic colors, shared glass and lighting, translation support, and configurable CSS variables. Non-card variants keep transparent selected
 backgrounds with marker/label hover feedback. Disabled steps are visibly muted; read-only presentation retains focus and progress with neutral markers.</li>
 <li>Includes roving keyboard navigation, RTL support, accessible status descriptions, predictable wizard focus, and shared reduced-motion/transparency and
 forced-color behavior. Shared text defaults are configurable through <code>BX_STEPPER_DEFAULTS</code> and per-instance labels.</li>
 <li>Added the <code>/components/stepper</code> playground with appearance controls, section navigation, form validation, asynchronous save failure/retry, controlled
-confirmation, dynamic steps, and nearby draft previews. Colocated guides and browser regression coverage document the supported integration patterns.</li>
+confirmation and dynamic steps. Colocated guides and browser regression coverage document the supported integration patterns.</li>
 </ul>
 <p>See the <a href="components/stepper">Stepper guide</a> for public imports, runnable examples, configuration, and
 accessibility.</p>
@@ -3753,6 +3757,13 @@ template directive when creation policy matters.</p>
 form values, explicit step overrides and form touched state remain application-owned. Reset forms separately when starting a fresh draft. A successful Finish
 emits <code>completed</code> once until reset and may replace the panels with <code>completionContent</code>. Viewing the final step alone does not finish the workflow. Percentage
 represents completed enabled steps, so skipped optional steps intentionally need not yield 100%; supply <code>progressValue</code> for a different business metric.</p>
+<h3>Progress counter formats</h3>
+<p>Show the completion counter at the top right of the progress variant with <code>showPercentage</code>. Existing usage continues to show percentages. Set
+<code>progressFormat=&quot;fraction&quot;</code> to display completed enabled steps as <code>X/N</code>, for example <code>1/3</code> instead of <code>33%</code>:</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">bx-stepper</span> <span class="hljs-attr">variant</span>=<span class="hljs-string">&quot;progress&quot;</span> [<span class="hljs-attr">steps</span>]=<span class="hljs-string">&quot;steps&quot;</span> [(<span class="hljs-attr">activeStep</span>)]=<span class="hljs-string">&quot;active&quot;</span> [<span class="hljs-attr">showPercentage</span>]=<span class="hljs-string">&quot;true&quot;</span> <span class="hljs-attr">progressFormat</span>=<span class="hljs-string">&quot;fraction&quot;</span> /&gt;</span></code></pre>
+<p>Both formats describe completion rather than the current position. Disabled steps are excluded, skipped steps do not count as complete, and an empty enabled
+step set displays <code>0/0</code>. <code>progressValue</code> overrides the percentage and bar only; the fraction always counts actual completed steps. Hide either counter format
+with <code>showPercentage=&quot;false&quot;</code>.</p>
 <h2>API</h2>
 <h3>Stepper inputs and models</h3>
 <table>
@@ -3861,7 +3872,12 @@ represents completed enabled steps, so skipped optional steps intentionally need
 <tr>
 <td><code>showPercentage</code></td>
 <td><code>boolean</code></td>
-<td><code>false</code>; progress presentation</td>
+<td><code>false</code>; shows the progress counter in either format</td>
+</tr>
+<tr>
+<td><code>progressFormat</code></td>
+<td><code>StepperProgressFormat</code></td>
+<td><code>percentage</code> (default) or <code>fraction</code> (<code>X/N</code>)</td>
 </tr>
 <tr>
 <td><code>labels</code></td>
@@ -3991,10 +4007,11 @@ independently.</p>
 selection updates. Missing destinations are rejected without throwing. Skipping a final optional step finishes the workflow while keeping that step skipped.
 Final completion requires all enabled required steps even in non-linear mode.</p>
 <h2>Appearance and customization</h2>
-<p>Sizes change marker diameter, segment thickness, spacing, typography and surface padding. Connectors remain thin and solid. Interactive controls retain a
-minimum 44 CSS pixel target. Segments use different thicknesses for <code>sm</code>, <code>md</code> and <code>lg</code>. Dots use compact filled, hollow and checked indicators; progress uses
-actual completion rather than active position. Dots measure 1.25 / 1.5 / 1.75rem across the size presets so status symbols have clear interior spacing. Step
-icons and spinners scale to 16 / 18 / 20 CSS pixels. Vertical progress keeps a horizontal continuous completion bar above its vertical step list.</p>
+<p>Sizes change marker diameter, segment thickness, spacing, typography and surface padding. Connectors remain thin and solid, with flush inner joins at fractional
+widths and unequal compact-step sizes. Interactive controls retain a minimum 44 CSS pixel target. Segments use different thicknesses for <code>sm</code>, <code>md</code> and <code>lg</code>.
+Dots use compact filled, hollow and checked indicators; progress uses actual completion rather than active position. Dots measure 1.25 / 1.5 / 1.75rem across
+the size presets so status symbols have clear interior spacing. Step icons and spinners scale to 16 / 18 / 20 CSS pixels. Vertical progress keeps a horizontal
+continuous completion bar above its vertical step list.</p>
 <table>
 <thead>
 <tr>
@@ -4089,7 +4106,8 @@ turn off <code>focusOnChange</code> when your application owns focus. If no pane
 <p>Status announcements cover loading, validation refusal, guard refusal, failures and completion. Wizard panel names identify selection changes without another
 repeated live announcement. <code>BxA11yService</code> and shared surface/progress/spinner policies handle live reduced-motion preferences. Semantic tokens, logical CSS
 and forced-colors rules preserve readable state across themes, RTL and accessibility modes.</p>
-<p><code>responsive=&quot;scroll&quot;</code> preserves labels with a reachable horizontal scroll region. <code>vertical</code> changes the list at the shared <code>sm</code> breakpoint. <code>compact</code> hides
+<p>The step list scrolls inside a separate wrapper with space below its surfaces for native horizontal scrollbars, including WebKit overlay scrollbars.
+<code>responsive=&quot;scroll&quot;</code> preserves labels with a reachable horizontal scroll region. <code>vertical</code> changes the list at the shared <code>sm</code> breakpoint. <code>compact</code> hides
 supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
 state during server rendering. Content wraps for long translations and constrained containers.</p>
 <h2>Playground</h2>
