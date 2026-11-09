@@ -4,6 +4,7 @@
 test runner. It covers spatial colors, proximity, ambient/semantic layering, checked-control emission, label hover, disabled controls, canvas caching, mutation
 coalescing, source removal, overlay boundaries, teardown, reduced motion, failed readbacks, image positioning and shadow-root media. Scrolling checks cover
 prompt resampling, interpolated image pixels, continuously changing canvases, short environmental color blends and retained lighting on viewport re-entry.
+Material shielding checks cover glass and solid containers, external CSS and passive canvas colors, retained local sources, reparenting and inherited portals.
 
 Use an existing Playwright installation (the repository does not add a browser dependency):
 

@@ -137,7 +137,7 @@ Set these variables on the component or a theme scope:
 | ----------------------------- | --------------------------------------------------------------------------- |
 | `--bx-panel-bg`               | `--bx-modal-bg`, then `--bx-bg-surface`                                     |
 | `--bx-panel-text`             | `--bx-modal-text`, then `--bx-text-primary`                                 |
-| `--bx-panel-material-opacity` | Global material + 10 opacity points; minimum 52%, default about 69.6%       |
+| `--bx-panel-material-opacity` | Global material + 45 opacity points; minimum 52%, default about 90.6%       |
 | `--bx-panel-padding`          | Shared spacing 4                                                            |
 | `--bx-panel-gap`              | Shared spacing 4                                                            |
 | `--bx-panel-z-index`          | Shared fixed layer, below modal overlays                                    |

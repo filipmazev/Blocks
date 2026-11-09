@@ -21,7 +21,7 @@
 
 [data-bx-surface],
 .bx-btn {
-    --bx-glass-material-position: calc(2 * var(--bx-translucency, 0.5) - var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5));
+    --bx-glass-material-position: calc(1.08 * var(--bx-translucency, 0.5) - 0.08 * var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5));
     --bx-glass-material-strength: calc(0.85 * var(--bx-glass-material-position));
     --bx-glass-material-blur: calc(4px + 24px * var(--bx-glass-material-strength) * var(--bx-glass-material-strength));
     --bx-glass-material-opacity: calc(

@@ -448,6 +448,7 @@ export class AmbientSampler {
         rect.left <= bounds.right + 96 &&
         rect.bottom >= bounds.top - 96 &&
         rect.top <= bounds.bottom + 96 &&
+        this.isMaterialSource(source, entry.element, visibility) &&
         targetBoundaries.has(visibility.ambientBoundary(source, false))
       );
     });
@@ -592,6 +593,9 @@ export class AmbientSampler {
   ): IVisualSource | undefined {
     for (const element of elements) {
       if (element === entry.element || this.isInside(element, entry.element)) continue;
+
+      // A containing material receives the backdrop itself; its children must not sample the unfiltered layers behind it.
+      if (!this.isMaterialSource(element, entry.element, visibility)) continue;
 
       if (options.skipAncestors && this.isInside(entry.element, element)) continue;
 
@@ -844,6 +848,19 @@ export class AmbientSampler {
     }
 
     return false;
+  }
+
+  private isMaterialSource(source: Element, receiver: HTMLElement, visibility: ReturnType<typeof lightingVisibility>): boolean {
+    const material = visibility.materialBoundary(receiver);
+
+    if (!material || this.isInside(source, material)) return true;
+
+    if (this.isInside(receiver, material)) return false;
+
+    // Portals inherit their origin's shielding while keeping sources from their own physical overlay available.
+    const localBoundary = visibility.ambientBoundary(receiver, false);
+
+    return localBoundary !== this.doc.documentElement && this.isInside(source, localBoundary);
   }
 
   private layerElement(element: Element, visibility: ReturnType<typeof lightingVisibility>): HTMLElement {

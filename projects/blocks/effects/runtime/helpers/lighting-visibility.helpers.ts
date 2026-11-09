@@ -45,6 +45,7 @@ export function lightingVisibility(doc: Document, view: Window) {
   const layers = new Map<HTMLElement, HTMLElement>();
   const ambientBoundaries = new Map<Element, HTMLElement>();
   const ambientSourceBoundaries = new Map<Element, HTMLElement>();
+  const materials = new Map<Element, Element | null>();
   const hitStacks = new Map<string, Element[]>();
   const exposure = new Map<HTMLElement, boolean>();
   const clippingBounds = new Map<Element, DOMRect>();
@@ -127,6 +128,20 @@ export function lightingVisibility(doc: Document, view: Window) {
     for (const ancestor of visited) cache.set(ancestor, doc.documentElement);
 
     return doc.documentElement;
+  };
+
+  const materialBoundary = (element: Element): Element | null => {
+    if (materials.has(element)) return materials.get(element) ?? null;
+
+    const root = element.getRootNode() as ShadowRoot;
+    const parent = element.parentElement ?? root.host;
+    const material = parent ? (parent.matches('[data-bx-surface]') ? parent : materialBoundary(parent)) : null;
+    const origin = lightingOrigin(element);
+    const result = material ?? (origin !== element ? materialBoundary(origin) : null);
+
+    materials.set(element, result);
+
+    return result;
   };
 
   const boundary = (element: HTMLElement): HTMLElement => {
@@ -269,5 +284,5 @@ export function lightingVisibility(doc: Document, view: Window) {
     return visible;
   };
 
-  return { boundary, layer, exposed, pointExposed, style, elementsAt, ambientBoundary };
+  return { boundary, layer, exposed, pointExposed, style, elementsAt, ambientBoundary, materialBoundary };
 }

@@ -1,6 +1,6 @@
 import type { Signal, WritableSignal } from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 
@@ -62,7 +62,10 @@ export class App {
     { initialValue: this.router.url }
   );
 
+  private readonly studioPanel: Signal<SidePanel | undefined> = viewChild(SidePanel);
+
   protected readonly catalogRoute: Signal<boolean> = computed(() => /^\/(icons|tokens)(?:[/?#]|$)/.test(this.currentUrl()));
+  protected readonly studioResizable: Signal<boolean> = computed(() => this.studioPanel()?.currentLayoutMode() === 'push');
 
   protected readonly studioWidth: WritableSignal<number | string> = signal(480);
 
@@ -86,6 +89,10 @@ export class App {
       this.document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
 
       if (this.document.defaultView) this.highlightLoader.setTheme(dark ? 'assets/styles/vs2015.css' : 'assets/styles/github.css');
+    });
+
+    effect(() => {
+      if (!this.studioResizable() && this.studioWidth() !== this.studioMinWidth) this.studioWidth.set(this.studioMinWidth);
     });
   }
 

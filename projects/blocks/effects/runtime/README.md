@@ -73,10 +73,10 @@ different semantic color; `interactive` explicitly overrides automatic control/a
 | `reducedTransparency` | boolean                        | root `data-bx-reduced-transparency`                                           |
 | `reducedMotion`       | boolean                        | root `data-bx-reduced-motion`                                                 |
 
-Translucency controls tint and blur together. Material strength is `m = 0.85 × (2 × translucency − translucency²)`. Tint is `0.06 + 1.02m − 0.28m²`,
-existing-material blur is `4 + 24m²` px, and glassiness blur is `0.5 + 12m²` px. The default remains 0.5 (50% of the slider), now providing about 59.6% classic
-tint and 13.8px blur. Both endpoints stay unchanged, and maximum classic tint is about 72.5%. Navigation, panels and modals add 10 opacity points to that global
-material, with a 52% readability minimum and about 69.6% opacity at the default. Reduced transparency provides opaque surfaces without losing the preference.
+Translucency controls tint and blur together. Material strength is `m = 0.85 × (1.08 × translucency − 0.08 × translucency²)`. Tint is `0.06 + 1.02m − 0.28m²`,
+existing-material blur is `4 + 24m²` px, and glassiness blur is `0.5 + 12m²` px. The default remains 0.5 (50% of the slider), now providing about 45.6% classic
+tint and 8.7px blur. Both endpoints stay unchanged, and maximum classic tint is about 72.5%. Navigation, panels and modals add 45 opacity points to that global
+material, with a 52% readability minimum and about 90.6% opacity at the default. Reduced transparency provides opaque surfaces without losing the preference.
 
 Opt in per element with `mountSurface(element, { glassiness: 'auto' })`. Omitted surfaces keep their existing material.
 `configureAppearance(root, { glassiness: 'auto' })` is a browser policy for selected surfaces, not a global opt-in. Automatic uses one refraction pass on
@@ -160,6 +160,11 @@ visible images, video and canvas, including `pointer-events: none` backdrops. Hi
 and distance reduce the contribution. CSS gradients are approximated from their color stops. If the browser blocks pixel access to cross-origin or tainted
 media, the runtime falls back to the element's computed CSS colors. Asset loads, layout/scroll changes, and visual class/style changes refresh the samples; call
 `refreshGlassLighting(element)` after application-driven changes to a custom surface's surroundings.
+
+Containing surfaces shield their nested receivers from raw environmental colors outside that material. The outer surface receives the backdrop lighting and the
+browser displays its blurred, translucent backing; children sample the containing material and sources inside it. This applies to glass and solid containers,
+including panel headers, bodies and footers, and crosses open shadow roots. It prevents a background swatch or passive canvas from casting a sharp highlight
+through a panel onto each control. Portalled receivers inherit the same shielding from their trigger's containing material.
 
 Portalled overlays can call `inheritGlassLighting(overlay, trigger)` before mounting their surfaces to receive light from the trigger's context. Call the
 returned cleanup function after removing the overlay. Tooltips and menus use this connection to preserve dialog boundaries and receive nearby colors. Tooltips

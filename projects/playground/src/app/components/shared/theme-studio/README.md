@@ -88,11 +88,12 @@ storage behavior. There is no named-preset storage or cloud sharing.
 The Export tab renders live SCSS in the shared highlighted code preview, with spacing between its actions and code and a gutter beside nested scrollbars.
 
 The editor uses Blocks forms, sliders, tabs, disclosures, SidePanel/SidePanelLayout and responsive Modal. It overlays on narrow screens and pushes at the shared
-`2xl` breakpoint. Its initial width is 480px, with pointer/touch/keyboard resizing from 480px to 624px (30% larger); a smaller available container takes
-precedence. The chosen width remains while navigating and reopening. The toolbar remains outside panel bounds. Header history, footer actions and the close
-control stay outside the editor's scroll region. The editor has bottom padding so its final disclosure remains separated from the footer. The compact toolbar
-preview action remains available when extreme spacing makes the editor difficult to use. Its tooltip explains how pausing restores the original theme without
-discarding edits. Enabled preview uses the shared primary filled button treatment; paused preview uses a neutral tonal button.
+`2xl` breakpoint. Push mode supports pointer/touch/keyboard resizing from 480px to 624px (30% larger). Overlay mode removes the resize handle and resets the
+width to its original 480px, including when a breakpoint changes during a resize; a smaller available container takes precedence. The chosen push-mode width
+remains while navigating and reopening until the panel enters overlay mode. The toolbar remains outside panel bounds. Header history, footer actions and the
+close control stay outside the editor's scroll region. The editor has bottom padding so its final disclosure remains separated from the footer. The compact
+toolbar preview action remains available when extreme spacing makes the editor difficult to use. Its tooltip explains how pausing restores the original theme
+without discarding edits. Enabled preview uses the shared primary filled button treatment; paused preview uses a neutral tonal button.
 
 Preset guidance lives in each select's information tooltip, available on hover, keyboard focus or a dedicated touch tap. The help actions stay present for both
 preset and custom values, keeping the editor's rows stable when randomizing or importing a theme.
@@ -122,10 +123,12 @@ be selected with the keyboard. Import keeps confirmation and status in a fixed m
 copy, download and randomize actions use tonal Blocks buttons with icons. Copy failures provide a manual route; download URLs and temporary anchors are cleaned
 up on success and failure.
 
-High contrast and forced colors suspend Studio overrides without erasing the draft. Reduced motion and transparency remain live, independent preferences.
-Preview diffs only owned root custom properties, preserves previous inline values and priorities, and restores them on reset, preview off or destruction. If
-another owner changes a property, Studio relinquishes it until preview is toggled or the token is reset. Baselines come from isolated palette scopes and
-generated geometry, never previous preview overrides. Token catalog values, copy formats and search refresh with preview edits.
+High contrast and forced colors suspend Studio overrides without erasing the draft. Reduced motion and transparency remain live, independent preferences. The
+panel material receives environmental lighting and shields its controls from direct background colors. Translucent backing still shows the browser's diffused
+backdrop; sources inside the panel can illuminate nearby controls through the shared effects runtime. Preview diffs only owned root custom properties, preserves
+previous inline values and priorities, and restores them on reset, preview off or destruction. If another owner changes a property, Studio relinquishes it until
+preview is toggled or the token is reset. Baselines come from isolated palette scopes and generated geometry, never previous preview overrides. Token catalog
+values, copy formats and search refresh with preview edits.
 
 Opening Studio closes icon Filters/Details. Opening either catalog panel closes Studio while retaining its draft and preview. Catalog filtering and visit-local
 icon settings keep their existing behavior.

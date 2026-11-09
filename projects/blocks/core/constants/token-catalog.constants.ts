@@ -5597,7 +5597,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: [
-      'calc(0.5px + 12px * var(--bx-glass-material-strength, 0.6375) * var(--bx-glass-material-strength, 0.6375))',
+      'calc(0.5px + 12px * var(--bx-glass-material-strength, 0.442) * var(--bx-glass-material-strength, 0.442))',
       'var(--bx-glass-material-blur, 10px)'
     ],
     selectors: [],
@@ -6137,7 +6137,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [
       'calc(\n      0.06 + 1.02 * var(--bx-glass-material-strength) - 0.28 * var(--bx-glass-material-strength) * var(--bx-glass-material-strength)\n  )'
     ],
-    fallbacks: ['0.5', '0.5965'],
+    fallbacks: ['0.4561', '0.5'],
     selectors: ['.bx-btn', '[data-bx-surface]'],
     sources: [
       'projects/blocks/effects/effects.scss',
@@ -6159,7 +6159,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['calc(2 * var(--bx-translucency, 0.5) - var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5))'],
+    defaults: ['calc(1.08 * var(--bx-translucency, 0.5) - 0.08 * var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5))'],
     fallbacks: [],
     selectors: ['.bx-btn', '[data-bx-surface]'],
     sources: ['projects/blocks/effects/effects.scss']
@@ -6173,7 +6173,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: ['calc(0.85 * var(--bx-glass-material-position))'],
-    fallbacks: ['0.1469', '0.6375'],
+    fallbacks: ['0.1469', '0.442'],
     selectors: ['.bx-btn', '[data-bx-surface]'],
     sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/primitives/components/tabs/tabs.scss']
   },
@@ -6191,13 +6191,13 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '0.65',
       '0.8',
       '1',
-      'max(\n      var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)),\n      var(--bx-modal-material-opacity, 0)\n  )',
+      'max(\n      var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1)),\n      var(--bx-modal-material-opacity, 0)\n  )',
       'var(--bx-alert-min-opacity, 0.2)',
       'var(--bx-chip-fill-opacity, 1)',
-      'var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1))',
-      'var(--bx-side-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1))',
+      'var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1))',
+      'var(--bx-side-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1))',
       'var(--bx-tag-fill-opacity, 0.85)',
-      'var(--bx-top-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1))'
+      'var(--bx-top-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1))'
     ],
     fallbacks: ['0'],
     selectors: [
@@ -7792,7 +7792,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)'],
+    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1)'],
     selectors: [],
     sources: [
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
@@ -8208,7 +8208,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [
-      'max(\n      var(--bx-refraction-min-blur, 0.5px),\n      var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.6375) * var(--bx-glass-material-strength, 0.6375)))\n  )'
+      'max(\n      var(--bx-refraction-min-blur, 0.5px),\n      var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.442) * var(--bx-glass-material-strength, 0.442)))\n  )'
     ],
     fallbacks: [],
     selectors: ['[data-bx-refraction=true]'],
@@ -8369,7 +8369,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.6375), 1)'],
+    defaults: ['clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.442), 1)'],
     fallbacks: ['0.72'],
     selectors: ['[data-bx-refraction=true]'],
     sources: ['projects/blocks/effects/effects.scss']
@@ -8521,7 +8521,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.6375)))'],
+    defaults: ['calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.442)))'],
     fallbacks: ['0.13'],
     selectors: ['[data-bx-refraction=true]'],
     sources: ['projects/blocks/effects/effects.scss']
@@ -9297,7 +9297,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)'],
+    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1)'],
     selectors: [],
     sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
@@ -11221,7 +11221,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)'],
+    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1)'],
     selectors: [],
     sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },

@@ -169,9 +169,9 @@ supported.
 
 ### Glassiness and translucency
 
-The **Translucency** slider controls tint and blur. Its default stays at 50%, with a denser backing of about 59.6% classic tint and 13.8px blur. The clear
+The **Translucency** slider controls tint and blur. Its default stays at 50%, with a lighter backing of about 45.6% classic tint and 8.7px blur. The clear
 minimum and maximum of about 72.5% classic tint remain unchanged; active refraction adds the stronger readability floor below. Navigation, side panels and
-modals add 10 opacity points to the global material, reaching about 69.6% at the default; a 52% minimum protects readability at low settings. Use **Reduce
+modals add 45 opacity points to the global material, reaching about 90.6% at the default; a 52% minimum protects readability at low settings. Use **Reduce
 transparency** for opaque surfaces.
 
 **Glassiness** is a per-element enhancement on supported browsers. Ordinary components keep their existing material. Select individual controls:
@@ -186,7 +186,7 @@ disables selected glassiness; browser opt-in allows testing future support. Auto
 quality and accessibility preferences take precedence.
 
 Text, placeholders and icons keep their theme or component foreground colors while scrolling. Active refraction retains a default minimum of 72% tint for
-readability, increasing to about 84.8% tint at the slider midpoint and 89% at maximum. Blur starts at 0.5px, reaches about 5.4px at the midpoint and 9.2px at
+readability, increasing to about 80.8% tint at the slider midpoint and 89% at maximum. Blur starts at 0.5px, reaches about 2.8px at the midpoint and 9.2px at
 maximum, keeping low settings sharper. Active, selected and open-popup controls have a stronger 90% minimum backing, and existing component opacity constraints
 can demand more. The sampler supplies decorative edge lighting; it never chooses text or icon colors. Custom material and foreground overrides remain
 application-owned. See the [effects README](../../../../../../blocks/effects/README.md#glassiness-and-translucency) for material variables and

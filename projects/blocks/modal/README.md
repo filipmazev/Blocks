@@ -195,7 +195,7 @@ The dialog inherits palette, semantic tokens, and appearance from `ThemingServic
 
 All modal layouts share the declarative SidePanel's translucent surface material and semantic background tokens. `--bx-modal-bg` and `--bx-modal-text` remain
 modal-specific overrides, falling back to `--bx-panel-bg` / `--bx-panel-text` and then `--bx-bg-surface` / `--bx-text-primary`. Root dialogs use the shared
-panel readability backing: 10 opacity points above the global material, with a 52% minimum and about 69.6% opacity at the 50% slider default.
+panel readability backing: 45 opacity points above the global material, with a 52% minimum and about 90.6% opacity at the 50% slider default.
 `--bx-panel-material-opacity` overrides this floor; nesting can require a stronger backing. Left/right modal panels have four square corners; centered dialogs
 and bottom sheets retain their shapes.
 

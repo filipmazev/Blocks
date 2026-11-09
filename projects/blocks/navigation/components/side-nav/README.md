@@ -184,7 +184,7 @@ Use application-wide `sideNav` defaults in `defineNavigation`, then instance ove
 | `--bx-side-nav-duration`, `--bx-side-nav-easing`                              | `250ms`, `ease`; reduced motion takes precedence                            |
 | `--bx-side-nav-label-duration`                                                | `90ms` label fade as desktop expansion finishes; reduced motion skips it    |
 | `--bx-side-nav-backdrop`                                                      | Shared backdrop color with a neutral scrim fallback                         |
-| `--bx-side-nav-material-opacity`                                              | Global material + 10 opacity points; minimum 52%, default about 69.6%       |
+| `--bx-side-nav-material-opacity`                                              | Global material + 45 opacity points; minimum 52%, default about 90.6%       |
 
 Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and
 fragments do not clear selection. Only the most specific matching item receives the selected tonal background and border. For example,

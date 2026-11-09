@@ -569,6 +569,82 @@ test('lighting boundaries isolate overlays and removing sources clears their col
   assert.ok(!(await ambient(page)).some((light) => light.color === 'rgb(0, 0, 255)'));
 });
 
+test('containing materials shield nested receivers from external CSS and passive raster colors', async (t) => {
+  const page = await pageFor(t, true);
+  await page.evaluate(() => {
+    const panel = document.createElement('aside');
+    panel.id = 'material-panel';
+    panel.style.cssText = 'position:absolute;left:270px;top:140px;width:400px;height:320px;--bx-glass-surface:#202020;--bx-glass-opacity:0.4';
+    document.body.append(panel);
+    receiver.style.cssText = 'position:absolute;left:30px;top:40px;width:320px;height:180px';
+    panel.append(receiver);
+    handles.push(runtime.mountSurface(panel));
+    const local = document.createElement('div');
+    local.id = 'local-color';
+    local.style.cssText = 'position:absolute;left:30px;top:225px;width:320px;height:30px;background:rgb(255,170,0)';
+    panel.append(local);
+  });
+  await page.waitForFunction(() =>
+    document.querySelector('#material-panel > .bx-glass-rim > .bx-glass-environment')?.getAttribute('style')?.includes('rgb(0 200 120')
+  );
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === 'rgb(255, 170, 0)'));
+  for (const solid of [false, true]) {
+    await page.evaluate((solid) => {
+      document.getElementById('material-panel').setAttribute('data-bx-surface', solid ? 'solid' : 'glass');
+      runtime.refreshGlassLighting(receiver);
+    }, solid);
+    await page.waitForTimeout(300);
+    const colors = (await ambient(page)).map((light) => light.color);
+    assert.ok(colors.includes('rgb(255, 170, 0)'), 'sources inside the panel remain available');
+    assert.ok(!colors.some((color) => color.startsWith('rgb(0 200 120') || color === 'rgb(255, 0, 0)' || color === 'rgb(0, 0, 255)'), colors.join(', '));
+  }
+  await page.evaluate(() => {
+    const host = document.createElement('div');
+    document.getElementById('material-panel').append(host);
+    host.attachShadow({ mode: 'open' }).append(receiver);
+  });
+  await page.waitForTimeout(300);
+  assert.ok((await ambient(page)).every((light) => !light.color.startsWith('rgb(0 200 120')));
+  assert.ok((await ambient(page)).some((light) => light.color === 'rgb(255, 170, 0)'));
+  await page.evaluate(() => document.body.append(receiver));
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color.startsWith('rgb(0 200 120')));
+});
+
+test('portalled receivers inherit the material shielding of their origin', async (t) => {
+  const page = await pageFor(t, true);
+  await page.evaluate(() => {
+    const panel = document.createElement('div');
+    panel.style.cssText = 'position:absolute;left:100px;top:140px;width:130px;height:260px;--bx-glass-surface:#202020';
+    const origin = document.createElement('button');
+    origin.style.cssText = 'width:80px;height:40px';
+    panel.append(origin);
+    const local = document.createElement('div');
+    local.style.cssText = 'position:absolute;left:100px;top:40px;width:30px;height:180px;background:rgb(255,170,0)';
+    panel.append(local);
+    document.body.append(panel);
+    handles.push(runtime.mountSurface(panel));
+    handles.push({ destroy: runtime.inheritGlassLighting(receiver, origin) });
+    runtime.refreshGlassLighting(receiver);
+  });
+  await page.waitForFunction(() => lighting.contributions.every((light) => !light.color.startsWith('rgb(0 200 120')));
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === 'rgb(255, 170, 0)'));
+  assert.ok(!(await ambient(page)).some((light) => light.color === 'rgb(255, 0, 0)' || light.color === 'rgb(0, 0, 255)'));
+  await page.evaluate(() => {
+    const pane = document.createElement('div');
+    pane.className = 'cdk-overlay-pane';
+    pane.style.cssText = 'position:absolute;left:280px;top:160px;width:400px;height:240px';
+    document.body.append(pane);
+    receiver.style.left = '20px';
+    receiver.style.top = '20px';
+    pane.append(receiver);
+    const local = document.createElement('div');
+    local.style.cssText = 'position:absolute;left:350px;top:20px;width:30px;height:180px;background:rgb(0,170,170)';
+    pane.append(local);
+  });
+  await page.waitForFunction(() => lighting.contributions.some((light) => light.color === 'rgb(0, 170, 170)'));
+  assert.ok((await ambient(page)).every((light) => !light.color.startsWith('rgb(0 200 120')));
+});
+
 test('inherited overlay backgrounds do not become ambient sources for the page', async (t) => {
   const page = await pageFor(t);
   await page.evaluate(() => {

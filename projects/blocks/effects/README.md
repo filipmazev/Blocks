@@ -72,12 +72,13 @@ Blocks checkbox that switches automatic emission on and off.
 
 ## Glassiness and translucency
 
-Translucency controls tint and blur from 0 to 1, with a default of 0.5. Its material strength is `0.85 × (2 × value − value²)`. The slider retains its 50%
-default, with a denser backing of about 59.6% tint and 13.8px blur at that midpoint. The endpoints remain 6% and about 72.5% tint. Active refraction uses the
-stronger readability floor described below. Reduce transparency remains the explicit opaque presentation.
+Translucency controls tint and blur from 0 to 1, with a default of 0.5. Its material strength is `0.85 × (1.08 × value − 0.08 × value²)`. The slider retains its
+50% default, with a lighter backing of about 45.6% tint and 8.7px blur at that midpoint. The endpoints remain 6% and about 72.5% tint. Active refraction uses
+the stronger readability floor described below. The midpoint exposes about 35% more backdrop than the previous curve. Reduce transparency remains the explicit
+opaque presentation.
 
-Navigation, SidePanel and modal surfaces follow the global material with 10 percentage points of extra opacity, bounded by a 52% readability minimum. Their
-default backing is about 69.6% opaque, retaining visible translucency. `--bx-side-nav-material-opacity`, `--bx-top-nav-material-opacity` and
+Navigation, SidePanel and modal surfaces follow the global material with 45 percentage points of extra opacity, bounded by a 52% readability minimum. Their
+default backing is about 90.6% opaque, retaining visible translucency. `--bx-side-nav-material-opacity`, `--bx-top-nav-material-opacity` and
 `--bx-panel-material-opacity` override those component floors. Modal nesting can require an even stronger backing.
 
 Glassiness is an opt-in enhancement. Ordinary components keep the existing material. Select individual buttons or custom surfaces:
@@ -101,8 +102,8 @@ beyond a surface, and reflection invalidation is rate limited.
 
 Text, placeholders and icons retain their theme or component foreground colors as content moves underneath. Refraction uses a fixed readability backing instead
 of sampling the backdrop to change text color. At the clearest slider setting its default tint is at least 72%, with 0.5px blur. Blur follows the slider from
-0.5px through about 5.4px at the midpoint to 9.2px at maximum, preserving a sharper refractive appearance at low settings. Increasing translucency adds tint and
-blur; the default midpoint is about 84.8% tint and the maximum about 89%. Active, selected and open-popup controls use at least 90% tint for their semantic
+0.5px through about 2.8px at the midpoint to 9.2px at maximum, preserving a sharper refractive appearance at low settings. Increasing translucency adds tint and
+blur; the default midpoint is about 80.8% tint and the maximum about 89%. Active, selected and open-popup controls use at least 90% tint for their semantic
 foregrounds. Component opacity constraints can request a stronger backing. Reduced transparency still supplies the fully opaque presentation.
 
 Customize `--bx-refraction-min-opacity` (0.72), `--bx-refraction-min-blur` (0.5px), or `--bx-refraction-blur` for application-specific materials. Custom

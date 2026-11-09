@@ -16,7 +16,7 @@
     --bx-glass-surface: #{$background};
     --bx-glass-text: #{$text};
     --bx-glass-shadow: #{shadow(modal)};
-    --bx-glass-min-opacity: var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1));
+    --bx-glass-min-opacity: var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1));
     --bx-glass-rim-opacity: 1;
 
     background: $background;
@@ -32,7 +32,7 @@
     );
 
     --bx-glass-min-opacity: max(
-        var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)),
+        var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.4561) + 0.45, 1)),
         var(--bx-modal-material-opacity, 0)
     );
     --bx-refraction-min-opacity: max(0.72, var(--bx-modal-material-opacity, 0.52));

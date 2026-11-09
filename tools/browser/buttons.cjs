@@ -133,8 +133,8 @@ test('glass buttons respond across the scale with a readable refraction floor in
         opacities.every((opacity) => Math.abs(opacity - opacities[0]) < 0.002),
         `${mode}/${value}: ${colors}`
       );
-      const position = value * value;
-      const strength = 0.5 * position + 0.35 * position * position;
+      const position = 1.08 * value - 0.08 * value * value;
+      const strength = 0.85 * position;
       const expected = refracted ? 0.72 + 0.2 * strength : 0.06 + 1.02 * strength - 0.28 * strength * strength;
       assert.ok(
         opacities.every((opacity) => Math.abs(opacity - expected) < 0.002),
@@ -159,8 +159,8 @@ test('glass buttons respond across the scale with a readable refraction floor in
         clone.remove();
         return colors;
       });
-    const position = 0.1 * 0.1;
-    const strength = 0.5 * position + 0.35 * position * position;
+    const position = 1.08 * 0.1 - 0.08 * 0.1 * 0.1;
+    const strength = 0.85 * position;
     const fallback = 0.06 + 1.02 * strength - 0.28 * strength * strength;
     assert.ok(Math.abs(alpha(colors[1]) - fallback) < 0.002, String(colors));
     assert.ok(refracted ? alpha(colors[0]) >= 0.72 : Math.abs(alpha(colors[0]) - alpha(colors[1])) < 0.002, String(colors));

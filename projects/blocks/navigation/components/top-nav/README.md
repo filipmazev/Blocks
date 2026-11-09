@@ -141,7 +141,7 @@ filter. Keep the component outside another `bxSurface` when demonstrating bar bl
 | `--bx-top-nav-top`                                                          | Resolved sticky offset                                                |
 | `--bx-top-nav-panel-width`, `--bx-top-nav-panel-max-height`                 | Resolved width/height settings                                        |
 | `--bx-top-nav-height`, `--bx-top-nav-gap`                                   | `3.75rem` minimum height and shared spacing 2 between bar regions     |
-| `--bx-top-nav-material-opacity`                                             | Global material + 10 opacity points; minimum 52%, default about 69.6% |
+| `--bx-top-nav-material-opacity`                                             | Global material + 45 opacity points; minimum 52%, default about 90.6% |
 | `--bx-top-nav-padding-inline`, `--bx-top-nav-padding-block`                 | Shared spacing 3 and spacing 2                                        |
 | `--bx-top-nav-radius`                                                       | Shared medium radius                                                  |
 | `--bx-top-nav-item-radius`, `--bx-top-nav-item-gap`                         | Shared medium radius, spacing 2                                       |
