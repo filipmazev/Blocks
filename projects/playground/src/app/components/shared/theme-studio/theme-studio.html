@@ -79,17 +79,21 @@
         (valueChange)="setMenu('accent', $event)" />
 </div>
 <p class="studio-note">
-    Menu colors use shared surface and hover tokens, so cards and other controls follow them too. Colors are separate for light and dark modes.
+    Menu colors use shared surface and hover tokens, so cards and other controls follow them too. Preview and edit matching light and dark colors below.
 </p>
 <bx-tabs class="studio-tabs" ariaLabel="Theme sections" [(selectedValue)]="activeTab">
     <bx-tab label="Colors" value="colors">
         <ng-template bxTabContent>
+            <ng-container [ngTemplateOutlet]="autoResolveControl" />
             @for (control of commonColors; track control.name) {
                 <ng-container [ngTemplateOutlet]="colorControl" [ngTemplateOutletContext]="{ $implicit: control }" />
             }
             <bx-collapsible title="Advanced colors" [contentTemplate]="advancedContent">
                 <ng-template #advancedContent>
-                    <p>Related hover, active and foreground roles remain independent. Changing one color does not regenerate the palette.</p>
+                    <p>
+                        Related hover, active and foreground roles remain independent. Auto resolution updates the opposite mode of edited tokens; other roles
+                        remain independent.
+                    </p>
                     @for (control of advancedColors; track control.name) {
                         <ng-container [ngTemplateOutlet]="colorControl" [ngTemplateOutletContext]="{ $implicit: control }" />
                     }
@@ -99,6 +103,7 @@
     </bx-tab>
     <bx-tab label="Layout" value="layout">
         <ng-template bxTabContent>
+            <ng-container [ngTemplateOutlet]="autoResolveControl" />
             <div class="layout-settings">
                 <bx-select
                     label="Corner radius"
@@ -150,6 +155,7 @@
     </bx-tab>
     <bx-tab label="Shadows" value="shadows">
         <ng-template bxTabContent>
+            <ng-container [ngTemplateOutlet]="autoResolveControl" />
             <div class="shadow-settings" (focusin)="themeStudioService.beginEdit()" (focusout)="themeStudioService.finishEdit()">
                 <bx-select
                     label="Apply shadow to"
@@ -212,53 +218,162 @@
         </ng-template>
     </bx-tab>
 </bx-tabs>
+<ng-template #autoResolveControl>
+    <bx-slide-toggle
+        class="auto-resolve"
+        label="Auto resolve opposite theme colors"
+        subscriptSizing="dynamic"
+        labelPosition="before"
+        [checked]="themeStudioService.autoResolve()"
+        (checkedChange)="themeStudioService.setAutoResolve($event)" />
+</ng-template>
 <ng-template #colorControl let-control>
     <div class="token-control" (focusin)="themeStudioService.beginEdit()" (focusout)="themeStudioService.finishEdit()">
+        @let opposite = themeStudioService.oppositeMode();
+        @let expanded = expandedColors().includes(control.name) || !themeStudioService.autoResolve();
+        <span class="token-title">{{ control.label }}</span>
+        <ng-container
+            [ngTemplateOutlet]="colorEditor"
+            [ngTemplateOutletContext]="{ $implicit: control, mode: themeStudioService.themingService.activeTheme(), preview: oppositePreview }" />
+        <ng-template #oppositePreview>
+            @if (!expanded) {
+                <div class="opposite-preview">
+                    <input
+                        type="color"
+                        class="color-picker opposite-swatch"
+                        bxTooltip="Click to edit"
+                        placement="top"
+                        [attr.aria-label]="'Edit ' + opposite + ' ' + control.label"
+                        [attr.aria-controls]="control.name + '-' + opposite + '-editor'"
+                        [attr.aria-expanded]="false"
+                        [value]="colorHex(control.name, opposite)"
+                        (click)="openColorEditor(control.name, opposite, $event)" />
+                    <span class="opposite-value">
+                        <span>{{ themeStudioService.effective(control.name, opposite) }}</span>
+                        <bx-icon
+                            class="mode-icon"
+                            size="14"
+                            [ariaLabel]="opposite === 'light' ? 'Light mode' : 'Dark mode'"
+                            [name]="opposite === 'light' ? 'sun' : 'moon'" />
+                        <span>{{ opposite === 'light' ? 'Light' : 'Dark' }}</span>
+                        <ng-container [ngTemplateOutlet]="oppositeBadge" />
+                    </span>
+                    <ng-container [ngTemplateOutlet]="oppositeActions" />
+                </div>
+            }
+        </ng-template>
+        <ng-template #oppositeBadge>
+            <bx-tag
+                size="small"
+                color="neutral"
+                [text]="themeStudioService.automatic(control.name, opposite) ? 'Auto' : 'Manual'"
+                [tooltip]="
+                    themeStudioService.automatic(control.name, opposite)
+                        ? 'Automatically resolved from the other mode for contrast. Edit this color to stop automatic updates for this token; Choose Auto to restore automatic resolution.'
+                        : 'Automatic updates are off for this color. Choose Auto or enable auto resolution to resume automatic updates.'
+                " />
+        </ng-template>
+        <ng-template #oppositeActions>
+            <div class="opposite-actions">
+                @if (themeStudioService.differsFromAuto(control.name, opposite)) {
+                    <button
+                        bx-button
+                        type="button"
+                        variant="tonal"
+                        color="grayscale"
+                        [attr.aria-label]="'Auto resolve ' + opposite + ' ' + control.label"
+                        (click)="themeStudioService.useAutoColor(control.name, opposite)">
+                        Auto
+                    </button>
+                }
+                @if (themeStudioService.autoResolve()) {
+                    <button
+                        bx-button
+                        type="button"
+                        variant="icon"
+                        color="grayscale"
+                        [attr.aria-label]="(expanded ? 'Collapse ' : 'Edit ') + opposite + ' ' + control.label"
+                        [attr.aria-expanded]="expanded"
+                        [attr.aria-controls]="control.name + '-' + opposite + '-editor'"
+                        (click)="toggleColorEditor(control.name)">
+                        <bx-icon size="16" [name]="expanded ? 'chevron-up' : 'pencil'" />
+                    </button>
+                }
+            </div>
+        </ng-template>
+        <div [hidden]="!expanded" [id]="control.name + '-' + opposite + '-editor'">
+            @if (expanded) {
+                <div class="opposite-editor">
+                    <div class="opposite-heading">
+                        <span class="mode-label">
+                            <bx-icon class="mode-icon" size="14" [name]="opposite === 'light' ? 'sun' : 'moon'" />
+                            {{ opposite === 'light' ? 'Light' : 'Dark' }}
+                            <ng-container [ngTemplateOutlet]="oppositeBadge" />
+                        </span>
+                        <ng-container [ngTemplateOutlet]="oppositeActions" />
+                    </div>
+                    <ng-container [ngTemplateOutlet]="colorEditor" [ngTemplateOutletContext]="{ $implicit: control, mode: opposite, opposite: true }" />
+                    <bx-divider class="opposite-divider" decorative />
+                </div>
+            }
+        </div>
+    </div>
+</ng-template>
+<ng-template #colorEditor let-control let-mode="mode" let-opposite="opposite" let-preview="preview">
+    @if (!opposite) {
         <div class="token-heading">
-            <span>{{ control.label }}</span
-            ><button
+            <button
                 bx-button
                 type="button"
                 variant="tonal"
                 color="grayscale"
-                [disabled]="!themeStudioService.overridden(control.name)"
-                [attr.aria-label]="'Reset ' + control.label"
-                (click)="themeStudioService.reset(control.name)">
+                [disabled]="
+                    !themeStudioService.overridden(control.name, mode) && !themeStudioService.overridden(control.name, themeStudioService.oppositeMode())
+                "
+                [attr.aria-label]="'Reset ' + control.label + ' in both modes'"
+                (click)="themeStudioService.reset(control.name, mode)">
                 <bx-icon name="rotate-ccw" size="16" />Reset
             </button>
         </div>
-        <div class="color-inputs">
-            <input
-                type="color"
-                class="color-picker"
-                [attr.aria-label]="'Pick ' + control.label"
-                [value]="colorHex(control.name)"
-                (input)="changeColor(control.name, $event)"
-                (change)="themeStudioService.finishEdit()" />
-            <bx-input-field
-                errorPolicy="always"
-                subscriptSizing="dynamic"
-                [label]="control.label"
-                [value]="themeStudioService.value(control.name)"
-                [error]="themeStudioService.error(control.name)"
-                [invalid]="!!themeStudioService.error(control.name)"
-                [spellcheck]="false"
-                (valueChange)="themeStudioService.edit(control.name, $event?.toString() ?? '')" />
-        </div>
-        <label class="range-label" [for]="control.name + '-opacity'"
-            >Opacity <output>{{ colorOpacity(control.name) }}%</output></label
-        >
+    }
+    <div class="color-inputs">
         <input
-            bxSlider
-            type="range"
-            min="0"
-            max="100"
-            step="1"
-            [id]="control.name + '-opacity'"
-            [value]="colorOpacity(control.name)"
-            (pointerdown)="themeStudioService.beginEdit()"
-            (input)="changeOpacity(control.name, $event)"
-            (change)="themeStudioService.finishEdit()"
-            (pointercancel)="themeStudioService.cancelEdit()" />
+            #colorPicker
+            type="color"
+            class="color-picker"
+            [attr.data-token]="control.name"
+            [attr.data-mode]="mode"
+            [attr.aria-label]="'Pick ' + mode + ' ' + control.label"
+            [value]="colorHex(control.name, mode)"
+            (input)="changeColor(control.name, $event, mode)"
+            (change)="themeStudioService.finishEdit()" />
+        <bx-input-field
+            errorPolicy="always"
+            subscriptSizing="dynamic"
+            [label]="(mode === 'light' ? 'Light ' : 'Dark ') + control.label"
+            [value]="themeStudioService.value(control.name, mode)"
+            [error]="themeStudioService.error(control.name, mode)"
+            [invalid]="!!themeStudioService.error(control.name, mode)"
+            [spellcheck]="false"
+            (valueChange)="themeStudioService.edit(control.name, $event?.toString() ?? '', mode)" />
     </div>
+    @if (preview) {
+        <ng-container [ngTemplateOutlet]="preview" />
+    }
+    <label class="range-label" [for]="control.name + '-' + mode + '-opacity'"
+        >Opacity <output>{{ colorOpacity(control.name, mode) }}%</output></label
+    >
+    <input
+        bxSlider
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        [attr.aria-label]="mode + ' ' + control.label + ' opacity'"
+        [id]="control.name + '-' + mode + '-opacity'"
+        [value]="colorOpacity(control.name, mode)"
+        (pointerdown)="themeStudioService.beginEdit()"
+        (input)="changeOpacity(control.name, $event, mode)"
+        (change)="themeStudioService.finishEdit()"
+        (pointercancel)="themeStudioService.cancelEdit()" />
 </ng-template>

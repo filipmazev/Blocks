@@ -12,6 +12,15 @@ export function studioColorContrast(foreground: string, background: string, cont
 
   if (!fg || !bg || (bg.length === 9 && !bg.endsWith('ff'))) return 0;
 
+  return studioHexContrast(fg, bg);
+}
+
+/** Measure sRGB contrast for serialized colors, compositing foreground alpha over an opaque background.
+ * @param fg - Six- or eight-digit foreground hex.
+ * @param bg - Six-digit opaque background hex.
+ * @returns Relative luminance contrast ratio.
+ */
+export function studioHexContrast(fg: string, bg: string): number {
   const alpha = fg.length === 9 ? parseInt(fg.slice(7), 16) / 255 : 1;
   const channels = (hex: string) => [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16) / 255);
   const base = channels(bg);

@@ -1,48 +1,50 @@
-<div #lightGarden class="home-container">
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Build with <span>Blocks.</span></h1>
-            <p class="hero-subtitle">Angular components with shared theming and accessible controls.</p>
-            <div class="hero-actions">
-                <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon name="arrow-right" size="20" /></a>
-                <a bx-button variant="tonal" color="accent" routerLink="/components">Browse components</a>
+<bx-page-container #lightGarden [showBreadcrumbs]="false" [autoResolveTitlesFromNavigation]="false">
+    <bx-page-content>
+        <header class="hero">
+            <div class="hero-content">
+                <h1>Build with <span>Blocks.</span></h1>
+                <p class="hero-subtitle">Angular components with shared theming and accessible controls.</p>
+                <div class="hero-actions">
+                    <a bx-button variant="filled" color="primary" routerLink="/appearance">Configure appearance<bx-icon name="arrow-right" size="20" /></a>
+                    <a bx-button variant="tonal" color="accent" routerLink="/components">Browse components</a>
+                </div>
             </div>
-        </div>
-        <app-theme-material-preview />
-    </header>
-    <section class="features" aria-labelledby="features-title">
-        <div class="features-heading">
-            <div class="features-title" [attr.data-bx-reduced-motion]="isReducedMotion()">
-                <h2 id="features-title">Explore Blocks</h2>
-                <span
-                    class="orb-hint"
-                    bxTooltip="Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces."
-                    placement="top"
-                    [class.is-visible]="orb.showWakeHint()"
-                    [inert]="!orb.showWakeHint()"
-                    [attr.aria-hidden]="!orb.showWakeHint()"
-                    [attr.tabindex]="orb.showWakeHint() ? 0 : -1"
-                    >Hover on the orb to wake it up</span
-                >
+            <app-theme-material-preview />
+        </header>
+
+        <section class="features" aria-labelledby="features-title">
+            <div class="features-heading">
+                <div class="features-title" [attr.data-bx-reduced-motion]="isReducedMotion()">
+                    <h2 id="features-title">Explore Blocks</h2>
+                    <span
+                        class="orb-hint"
+                        bxTooltip="Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces."
+                        placement="top"
+                        [class.is-visible]="orb.showWakeHint()"
+                        [inert]="!orb.showWakeHint()"
+                        [attr.aria-hidden]="!orb.showWakeHint()"
+                        [attr.tabindex]="orb.showWakeHint() ? 0 : -1"
+                        >Hover on the orb to wake it up</span
+                    >
+                </div>
+                <app-light-orb #orb [stage]="lightGardenElement().nativeElement" [cards]="featureGrid" />
             </div>
-            <app-light-orb #orb [stage]="lightGarden" [cards]="featureGrid" />
-        </div>
-        <div #featureGrid class="feature-grid">
-            @for (feature of features; track feature.title) {
-                <a bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="auto" class="feature-card" [routerLink]="feature.route"
-                    ><bx-icon size="24" color="text-accent" [name]="feature.icon" />
-                    @if (feature.icon === 'palette') {
-                        <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
-                    }
-                    <h3>{{ feature.title }}</h3>
-                    <p>{{ feature.description }}</p>
-                    <span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span>
-                </a>
-            }
-        </div>
-    </section>
-    <bx-divider class="home-divider" />
-    <footer class="home-footer">
+            <div #featureGrid class="feature-grid">
+                @for (feature of features; track feature.title) {
+                    <a bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="auto" class="feature-card" [routerLink]="feature.route"
+                        ><bx-icon size="24" color="text-accent" [name]="feature.icon" />
+                        @if (feature.icon === 'palette') {
+                            <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
+                        }
+                        <h3>{{ feature.title }}</h3>
+                        <p>{{ feature.description }}</p>
+                        <span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span>
+                    </a>
+                }
+            </div>
+        </section>
+    </bx-page-content>
+    <bx-page-footer class="home-footer">
         <span>Designed &amp; developed by Filip Mazev</span>
 
         <span>Blocks {{ version }}</span>
@@ -61,5 +63,5 @@
                 >GitHub <bx-icon name="arrow-up-right" size="16"
             /></a>
         </div>
-    </footer>
-</div>
+    </bx-page-footer>
+</bx-page-container>

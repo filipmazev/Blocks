@@ -12,6 +12,11 @@ Private playground screen using the public Blocks entry points and the existing 
 Open `/studio` and choose **Customize theme**. The editor stays available while you inspect the live color roles, spacing sample, field, foreground pairs and
 inherited dialog. **Randomize theme** applies a coherent starting point through the existing service.
 
+In the editor, color changes resolve an opposite-mode equivalent by default. Sun/moon icons identify both colors; the smaller strip previews the opposite mode.
+Its pencil opens a second editor, and manually changing that value protects it from subsequent automatic updates. The switch beneath the section tabs disables
+automatic resolution globally and shows both editors. The top Reset restores the current palette color and resolves its opposite; an Auto button releases a
+differing opposite-mode manual override.
+
 ## API
 
 Draft state belongs to `ThemeStudioService`; palette, mode and appearance remain owned by `ThemingService`. The screen introduces no parallel theme state.

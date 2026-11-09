@@ -19,7 +19,8 @@ Merge an existing Blocks import instead of loading global styles twice. Keep the
 1. Open Theme Studio from the toolbar or the [component preview](../../screens/theme-studio-demo/README.md).
 2. Use the Light/Dark segmented selector and Theme palette dropdown at the top. Palette options and the selected value show the same paired swatches as
    Appearance. Below Explore Theme Studio, choose Corner radius, Base color, Menu color and Menu accent.
-3. Adjust common colors with color pickers and opacity sliders. Advanced semantic roles remain available in a disclosure.
+3. Adjust common colors with color pickers and opacity sliders. Sun/moon icons identify both modes. The strip below each editor previews its opposite-mode
+   color; use its pencil to expand a second editor. Advanced semantic roles remain available in a disclosure.
 4. Choose Default, None, Small, Medium or Large corner radii; Layout also offers coordinated spacing and border settings.
 5. Use Shadows to choose a target and edit color, opacity, blur, spread and X/Y offsets. All targets share the edited shadow when All resting shadows is
    selected.
@@ -64,6 +65,30 @@ shared semantic palette roles; generated color overrides use six-digit hex, or e
 checks use these serialized colors. Preview, JSON and SCSS retain the same values; Undo restores the preceding draft. Existing imported or manually entered
 color formats remain supported. Inherited palette colors also prepopulate the editor in hex without becoming overrides. It does not certify overall
 accessibility of a consumer's content.
+
+### Opposite-mode colors
+
+**Auto resolve opposite theme colors**, below the section tabs, is enabled initially. Editing a token maps its hue and saturation onto the opposite palette's
+semantic lightness, retaining alpha. Lightness is adjusted toward 4.5:1 for text/surface pairs and 3:1 for borders against surfaces. Related destination colors
+include existing overrides. Generated colors are recomputed when their related colors change, and enter the ordinary light/dark draft, live preview and export.
+Manual source colors are never adjusted. Transparency and incompatible manual pairs can prevent those contrast targets; this does not certify the whole theme.
+
+The compact opposite-mode row sits directly below the current picker and text field. Its shorter swatch matches the picker width; the value aligns with the text
+field, followed by a muted sun/moon icon and the opposite mode's name. The shorter swatch uses the same native picker frame with a smaller corner radius and
+enough height to show the color. Hovering shows “Click to edit”; pressing it expands editing and opens the picker. The Auto/Manual badge sits beside the mode
+text on the left; its tooltip explains automatic updates. Action buttons remain at the right. The pencil expands the same picker, text and opacity controls
+beneath the current editor, ending with a subtle divider. Expanding alone keeps automatic resolution active.
+
+Each token has one Reset at the top. It restores the current mode's original palette color, discards the opposite mode's manual override and resolves that mode
+from the restored color, including when the global switch is off. The opposite mode has an **Auto** button instead of Reset. It appears when its manual color
+differs from the automatically resolved value. Choosing Auto restores that value and releases the manual override; entering the same automatic value also
+releases it. Editing the opposite mode preserves the current mode's color. Other tokens continue resolving independently.
+
+Turning the global switch off displays both editors and stops automatic updates; turning it on preserves manual overrides. The Auto button can resolve an
+individual color while the switch is off, without enabling global updates. Undo/Redo restores both colors and their automatic/manual choices.
+
+Imported color overrides are treated as manual. Coordinated presets and Randomize supply both modes without marking individual colors as manual. The automatic
+setting and manual markers last for the application session; JSON/SCSS export the resolved colors, using the existing schema.
 
 ### Import and export
 

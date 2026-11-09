@@ -6,7 +6,7 @@ import { afterRenderEffect, computed, DOCUMENT, inject, Injectable, OnDestroy, P
 import type { BxThemeId, ThemeCssVariable } from '@filip.mazev/blocks/core';
 import type { IThemeStudioDocument } from '@playground/interfaces/itheme-studio-document.interface';
 import type { IThemeStudioSnapshot } from '@playground/interfaces/itheme-studio-snapshot.interface';
-import type { StudioMode, StudioValues } from '@playground/types/theme-studio.types';
+import type { StudioColorToken, StudioMode, StudioValues } from '@playground/types/theme-studio.types';
 
 import { BORDER_VALUES, RADIUS_VALUES, SHADOW_VALUES, SPACING_VALUES, ThemingService } from '@filip.mazev/blocks/core';
 
@@ -16,6 +16,7 @@ import { STUDIO_HISTORY_LIMIT } from '@playground/shared/constants/theme-studio-
 import { studioColorContrast } from '@playground/shared/helpers/theme-studio-contrast.helpers';
 import { exportStudioScss } from '@playground/shared/helpers/theme-studio-export.helpers';
 import { boundStudioHistory } from '@playground/shared/helpers/theme-studio-history.helpers';
+import { studioOppositeColor } from '@playground/shared/helpers/theme-studio-opposite.helpers';
 import { randomStudioTheme } from '@playground/shared/helpers/theme-studio-random.helpers';
 import { isStudioDocument, normalizeStudioValue } from '@playground/shared/helpers/theme-studio-validation.helpers';
 
@@ -29,6 +30,8 @@ export class ThemeStudioService implements OnDestroy {
 
   public readonly themingService = inject(ThemingService);
 
+  private readonly modeBaselines: WritableSignal<Readonly<Record<StudioMode, StudioValues>>> = signal({ light: {}, dark: {} });
+  private readonly manualColors: WritableSignal<readonly string[]> = signal([]);
   private readonly shared: WritableSignal<StudioValues> = signal({});
   private readonly light: WritableSignal<StudioValues> = signal({});
   private readonly dark: WritableSignal<StudioValues> = signal({});
@@ -37,6 +40,7 @@ export class ThemeStudioService implements OnDestroy {
 
   private readonly transaction: WritableSignal<IThemeStudioSnapshot | null> = signal(null);
 
+  private readonly autoResolveEnabled: WritableSignal<boolean> = signal(true);
   private readonly undoLimited: WritableSignal<boolean> = signal(false);
   private readonly forcedColors: WritableSignal<boolean> = signal(false);
 
@@ -48,7 +52,8 @@ export class ThemeStudioService implements OnDestroy {
   public readonly open: WritableSignal<boolean> = signal(false);
   public readonly preview: WritableSignal<boolean> = signal(true);
 
-  public readonly baseline: WritableSignal<StudioValues> = signal({});
+  public readonly autoResolve: Signal<boolean> = computed(() => this.autoResolveEnabled());
+  public readonly baseline: Signal<StudioValues> = computed(() => this.modeBaselines()[this.themingService.activeTheme()]);
 
   public readonly status: WritableSignal<string> = signal('');
 
@@ -85,6 +90,7 @@ export class ThemeStudioService implements OnDestroy {
   );
 
   private media: MediaQueryList | undefined;
+  private colorContext: CanvasRenderingContext2D | null = null;
 
   constructor() {
     const win = isPlatformBrowser(this.platformId) ? this.document.defaultView : null;
@@ -96,10 +102,10 @@ export class ThemeStudioService implements OnDestroy {
     }
 
     afterRenderEffect(() => {
-      const mode = this.themingService.activeTheme();
       const palette = this.themingService.palette();
 
-      this.baseline.set(this.measureBaseline(palette, mode));
+      this.modeBaselines.set({ light: this.measureBaseline(palette, 'light'), dark: this.measureBaseline(palette, 'dark') });
+      untracked(() => this.syncAutomaticColors());
     });
 
     afterRenderEffect(() => {
@@ -115,8 +121,8 @@ export class ThemeStudioService implements OnDestroy {
     this.themeStudioPreviewService.apply({});
   }
 
-  public edit(name: ThemeCssVariable, raw: string): void {
-    const key = this.editKey(name);
+  public edit(name: ThemeCssVariable, raw: string, mode: StudioMode = this.themingService.activeTheme()): void {
+    const key = this.editKey(name, mode);
     const value = normalizeStudioValue(name, raw);
     const control = STUDIO_CONTROLS.find((item) => item.name === name);
     const property =
@@ -146,57 +152,91 @@ export class ThemeStudioService implements OnDestroy {
       return next;
     });
 
-    if (valid) this.valuesFor(name).update((values) => ({ ...values, [name]: value }));
+    if (valid) {
+      this.valuesFor(name, mode).update((values) => ({ ...values, [name]: value }));
+
+      if (control?.family === 'Colors') {
+        const sourceKey = this.editKey(name);
+        const matchesAuto = mode !== this.themingService.activeTheme() && this.colorMatchesAuto(name, mode);
+
+        this.manualColors.update((keys) => {
+          const next = [...new Set([...keys, sourceKey, key])];
+
+          return matchesAuto ? next.filter((entry) => entry !== key) : next;
+        });
+
+        if (matchesAuto) {
+          this.editedText.update((text) => Object.fromEntries(Object.entries(text).filter(([entry]) => entry !== key)));
+        }
+
+        this.syncAutomaticColors();
+      }
+    }
   }
 
-  public value(name: ThemeCssVariable): string {
-    return this.editedText()[this.editKey(name)] ?? this.valuesFor(name)()[name] ?? this.base(name);
+  public value(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): string {
+    return this.editedText()[this.editKey(name, mode)] ?? this.valuesFor(name, mode)()[name] ?? this.modeBaselines()[mode][name] ?? '';
   }
 
   public base(name: ThemeCssVariable): string {
     return this.baseline()[name] ?? '';
   }
 
-  public error(name: ThemeCssVariable): string {
-    return this.errors()[this.editKey(name)] ?? '';
+  public error(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): string {
+    return this.errors()[this.editKey(name, mode)] ?? '';
   }
 
-  public overridden(name: ThemeCssVariable): boolean {
-    return this.valuesFor(name)()[name] !== undefined || this.editedText()[this.editKey(name)] !== undefined;
+  public overridden(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): boolean {
+    return this.valuesFor(name, mode)()[name] !== undefined || this.editedText()[this.editKey(name, mode)] !== undefined;
   }
 
-  public effective(name: ThemeCssVariable): string {
-    return this.valuesFor(name)()[name] ?? this.baseline()[name] ?? '';
+  public effective(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): string {
+    return this.valuesFor(name, mode)()[name] ?? this.modeBaselines()[mode][name] ?? '';
   }
 
-  public reset(name: ThemeCssVariable): void {
+  public reset(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): void {
     this.finishEdit();
     this.recordChange();
 
-    const key = this.editKey(name);
+    const color = STUDIO_CONTROLS.find((control) => control.name === name)?.family === 'Colors';
+    const opposite: StudioMode = mode === 'light' ? 'dark' : 'light';
+    const keys = color ? [this.editKey(name, mode), this.editKey(name, opposite)] : [this.editKey(name, mode)];
 
-    this.valuesFor(name).update((values) => {
-      const next = { ...values };
+    for (const target of color ? [mode, opposite] : [mode]) {
+      this.valuesFor(name, target).update((values) => {
+        const next = { ...values };
 
-      Reflect.deleteProperty(next, name);
+        Reflect.deleteProperty(next, name);
 
-      return next;
-    });
-    this.editedText.update((values) => {
-      const next = { ...values };
+        return next;
+      });
+    }
 
-      Reflect.deleteProperty(next, key);
+    this.editedText.update((values) => Object.fromEntries(Object.entries(values).filter(([key]) => !keys.includes(key))));
+    this.errors.update((values) => Object.fromEntries(Object.entries(values).filter(([key]) => !keys.includes(key))));
+    this.manualColors.update((entries) => entries.filter((key) => !keys.includes(key)));
 
-      return next;
-    });
-    this.errors.update((values) => {
-      const next = { ...values };
+    if (color) this.resumeAutomaticColor(name, opposite);
 
-      Reflect.deleteProperty(next, key);
+    this.syncAutomaticColors();
+    this.status.set(`Reset ${name} to its original ${mode} value${color ? ' and automatically resolved its opposite mode' : ''}.`);
+  }
 
-      return next;
-    });
-    this.status.set(`Reset ${name} to its inherited base value.`);
+  public differsFromAuto(name: ThemeCssVariable, mode: StudioMode): boolean {
+    if (!this.manualColors().includes(this.editKey(name, mode))) return false;
+
+    const automatic = this.resolveAutomaticColor(name, mode);
+    const current = this.colorContext ? formatCatalogColor(this.effective(name, mode), this.colorContext)?.hex : undefined;
+
+    return automatic !== undefined && current !== automatic;
+  }
+
+  public useAutoColor(name: ThemeCssVariable, mode: StudioMode): void {
+    this.finishEdit();
+    this.recordChange();
+    this.resumeAutomaticColor(name, mode);
+    this.syncAutomaticColors();
+    this.status.set(`Restored automatic ${mode} color for ${name}.`);
   }
 
   public resetAll(): void {
@@ -207,6 +247,7 @@ export class ThemeStudioService implements OnDestroy {
     this.dark.set({});
     this.editedText.set({});
     this.errors.set({});
+    this.manualColors.set([]);
     this.themingService.setPalette('carbon-cobalt');
     this.status.set('Reset to Carbon / Cobalt and cleared all Studio overrides. Mode and appearance preferences retained.');
   }
@@ -241,6 +282,25 @@ export class ThemeStudioService implements OnDestroy {
       ...Object.keys(light),
       ...Object.keys(dark)
     ]);
+    this.syncAutomaticColors();
+  }
+
+  public setAutoResolve(enabled: boolean): void {
+    if (enabled === this.autoResolve()) return;
+
+    this.finishEdit();
+    this.recordChange();
+    this.autoResolveEnabled.set(enabled);
+
+    if (enabled) this.syncAutomaticColors();
+  }
+
+  public automatic(name: ThemeCssVariable, mode: StudioMode): boolean {
+    return this.autoResolve() && !this.manualColors().includes(this.editKey(name, mode));
+  }
+
+  public oppositeMode(): StudioMode {
+    return this.themingService.activeTheme() === 'dark' ? 'light' : 'dark';
   }
 
   public sample(palette: BxThemeId, mode: StudioMode): StudioValues {
@@ -296,7 +356,7 @@ export class ThemeStudioService implements OnDestroy {
       color: (family, shade) => styles?.getPropertyValue(`--bx-color-${family}-${shade}`).trim() ?? ''
     });
 
-    this.restore({ document: next, mode: this.themingService.applicationTheme(), text: {}, errors: {} });
+    this.restore({ document: next, mode: this.themingService.applicationTheme(), text: {}, errors: {}, manualColors: [] });
     this.status.set('Randomized palette, neutral base, menu colors, corners and shadows. Spacing is unchanged. Undo restores your previous draft.');
   }
 
@@ -326,6 +386,85 @@ export class ThemeStudioService implements OnDestroy {
 
   //#region Helpers
 
+  private resolveAutomaticColor(name: ThemeCssVariable, mode: StudioMode): string | undefined {
+    if (!isPlatformBrowser(this.platformId)) return undefined;
+
+    this.colorContext ??= this.document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+
+    if (!this.colorContext) return undefined;
+
+    const source: StudioMode = mode === 'light' ? 'dark' : 'light';
+    const bases = this.modeBaselines();
+
+    return studioOppositeColor(
+      name as StudioColorToken,
+      this.effective(name, source),
+      bases[source],
+      bases[mode],
+      { ...bases[mode], ...this.valuesFor(name, mode)() },
+      this.colorContext
+    );
+  }
+
+  private colorMatchesAuto(name: ThemeCssVariable, mode: StudioMode): boolean {
+    const automatic = this.resolveAutomaticColor(name, mode);
+    const current = this.colorContext ? formatCatalogColor(this.effective(name, mode), this.colorContext)?.hex : undefined;
+
+    return automatic !== undefined && current === automatic;
+  }
+
+  private resumeAutomaticColor(name: ThemeCssVariable, mode: StudioMode): void {
+    const value = this.resolveAutomaticColor(name, mode);
+
+    if (!value) return;
+
+    const key = this.editKey(name, mode);
+    const source: StudioMode = mode === 'light' ? 'dark' : 'light';
+    const sourceKey = this.editKey(name, source);
+
+    this.manualColors.update((keys) => [...new Set([...keys.filter((entry) => entry !== key), sourceKey])]);
+    this.valuesFor(name, mode).update((values) => ({ ...values, [name]: value }));
+    this.editedText.update((values) => Object.fromEntries(Object.entries(values).filter(([entry]) => entry !== key)));
+    this.errors.update((values) => Object.fromEntries(Object.entries(values).filter(([entry]) => entry !== key)));
+  }
+
+  private syncAutomaticColors(): void {
+    if (!this.autoResolve() || !isPlatformBrowser(this.platformId)) return;
+
+    this.colorContext ??= this.document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+
+    if (!this.colorContext) return;
+
+    const bases = this.modeBaselines();
+    const manual = this.manualColors();
+    const rank = (name: string): number => (name.startsWith('--bx-on-') || name.startsWith('--bx-text-') || name.startsWith('--bx-border-') ? 1 : 0);
+    const controls = STUDIO_CONTROLS.filter((control) => control.family === 'Colors').sort((a, b) => rank(a.name) - rank(b.name));
+
+    for (const source of ['light', 'dark'] as const) {
+      const target: StudioMode = source === 'light' ? 'dark' : 'light';
+      const sourceValues = source === 'light' ? this.light() : this.dark();
+      const targetSignal = target === 'light' ? this.light : this.dark;
+      const overrides = { ...targetSignal() };
+      const colors = { ...bases[target], ...overrides };
+
+      for (const control of controls) {
+        const name = control.name as StudioColorToken;
+        const value = sourceValues[name] ?? bases[source][name];
+
+        if (!value || !manual.includes(`${source}:${name}`) || manual.includes(`${target}:${name}`)) continue;
+
+        const resolved = studioOppositeColor(name, value, bases[source], bases[target], colors, this.colorContext);
+
+        if (resolved) {
+          overrides[name] = resolved;
+          colors[name] = resolved;
+        }
+      }
+
+      targetSignal.set(overrides);
+    }
+  }
+
   private setHistory(past: readonly IThemeStudioSnapshot[], future: readonly IThemeStudioSnapshot[]): void {
     const bounded = boundStudioHistory(past, future);
 
@@ -342,16 +481,28 @@ export class ThemeStudioService implements OnDestroy {
     this.shared.set(next.shared);
     this.light.set(next.light);
     this.dark.set(next.dark);
+    this.manualColors.update((keys) => keys.filter((key) => !names.some((name) => key.endsWith(`:${name}`))));
     this.editedText.update((text) => Object.fromEntries(Object.entries(text).filter(([key]) => !names.some((name) => key.endsWith(`:${name}`)))));
     this.errors.update((errors) => Object.fromEntries(Object.entries(errors).filter(([key]) => !names.some((name) => key.endsWith(`:${name}`)))));
   }
 
   private snapshot(): IThemeStudioSnapshot {
-    return { document: this.themeDocument(), mode: this.themingService.applicationTheme(), text: this.editedText(), errors: this.errors() };
+    return {
+      document: this.themeDocument(),
+      mode: this.themingService.applicationTheme(),
+      text: this.editedText(),
+      errors: this.errors(),
+      manualColors: this.manualColors(),
+      autoResolve: this.autoResolve()
+    };
   }
 
   private sameSnapshot(first: IThemeStudioSnapshot | null, second: IThemeStudioSnapshot): boolean {
-    return !!first && JSON.stringify([first.document, first.text, first.errors]) === JSON.stringify([second.document, second.text, second.errors]);
+    return (
+      !!first &&
+      JSON.stringify([first.document, first.text, first.errors, first.manualColors, first.autoResolve]) ===
+        JSON.stringify([second.document, second.text, second.errors, second.manualColors, second.autoResolve])
+    );
   }
 
   private recordChange(): void {
@@ -366,20 +517,20 @@ export class ThemeStudioService implements OnDestroy {
     this.dark.set(snapshot.document.dark);
     this.editedText.set(snapshot.text);
     this.errors.set(snapshot.errors);
+    this.manualColors.set(
+      snapshot.manualColors ?? (['light', 'dark'] as const).flatMap((mode) => Object.keys(snapshot.document[mode]).map((name) => `${mode}:${name}`))
+    );
+    this.autoResolveEnabled.set(snapshot.autoResolve ?? this.autoResolve());
     this.themingService.setPalette(snapshot.document.palette);
     this.themingService.setApplicationTheme(snapshot.mode);
   }
 
-  private valuesFor(name: ThemeCssVariable): WritableSignal<StudioValues> {
-    return STUDIO_CONTROLS.find((item) => item.name === name)?.family === 'Colors'
-      ? this.themingService.activeTheme() === 'dark'
-        ? this.dark
-        : this.light
-      : this.shared;
+  private valuesFor(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): WritableSignal<StudioValues> {
+    return STUDIO_CONTROLS.find((item) => item.name === name)?.family === 'Colors' ? (mode === 'dark' ? this.dark : this.light) : this.shared;
   }
 
-  private editKey(name: ThemeCssVariable): string {
-    return `${STUDIO_CONTROLS.find((item) => item.name === name)?.family === 'Colors' ? this.themingService.activeTheme() : 'shared'}:${name}`;
+  private editKey(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): string {
+    return `${STUDIO_CONTROLS.find((item) => item.name === name)?.family === 'Colors' ? mode : 'shared'}:${name}`;
   }
 
   private measureBaseline(palette: BxThemeId, mode: StudioMode): StudioValues {

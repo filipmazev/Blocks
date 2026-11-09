@@ -56,15 +56,6 @@ p {
     letter-spacing: -0.035em;
 }
 
-.eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: spacing(2);
-    color: var(--bx-text-accent);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
 .action-row {
     display: flex;
     flex-wrap: wrap;

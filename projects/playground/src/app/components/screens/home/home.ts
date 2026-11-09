@@ -1,12 +1,12 @@
 import type { Signal } from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, effect, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import type { IHomeFeaturesState } from '@playground/components/screens/home/interfaces/ihome-features-state.interface';
 
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { Divider, TooltipDirective } from '@filip.mazev/blocks/primitives';
+import { PageContainer, PageContent, PageFooter, TooltipDirective } from '@filip.mazev/blocks/primitives';
 
 import { BxA11yService } from '@core/services/bx-a11y.service';
 import { Button } from '@forms/components/button/button';
@@ -18,7 +18,7 @@ import { PackageReleaseService } from '@playground/services/package-release.serv
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, Icon, Button, BxSurfaceDirective, ThemeMaterialPreview, LightOrb, TooltipDirective, Divider],
+  imports: [RouterLink, PageContainer, PageContent, PageFooter, Icon, Button, BxSurfaceDirective, ThemeMaterialPreview, LightOrb, TooltipDirective],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -51,6 +51,10 @@ export class Home {
       route: '/components/side-nav'
     }
   ];
+
+  protected readonly lightGardenElement: Signal<ElementRef<HTMLElement>> = viewChild.required('lightGarden', {
+    read: ElementRef<HTMLElement>
+  });
 
   constructor() {
     effect(() => {

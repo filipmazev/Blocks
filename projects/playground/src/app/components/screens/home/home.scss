@@ -4,14 +4,6 @@
     display: block;
 }
 
-.home-container {
-    --orb-garden-radius: 0;
-
-    position: relative;
-    min-block-size: calc(100dvh - 4rem);
-    padding: clamp(1rem, 3vw, 2.5rem);
-}
-
 .hero {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
@@ -203,16 +195,4 @@
     font-size: 0.55rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-}
-
-.home-container > .hero,
-.home-container > .features,
-.home-container > .home-footer,
-.home-container > .home-divider {
-    max-width: 80rem;
-    margin-inline: auto;
-}
-
-.home-divider {
-    --bx-divider-margin: 0;
 }

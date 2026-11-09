@@ -1,7 +1,18 @@
 import type { Signal, WritableSignal } from '@angular/core';
 
 import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DOCUMENT, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  DOCUMENT,
+  ElementRef,
+  inject,
+  PLATFORM_ID,
+  signal,
+  viewChildren
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import type { ThemeCssVariable } from '@filip.mazev/blocks/core';
@@ -12,10 +23,10 @@ import type { IThemeStudioShadow } from '@playground/interfaces/itheme-studio-sh
 import type { StudioColorToken, StudioMode, StudioValues } from '@playground/types/theme-studio.types';
 
 import { RADIUS_CSS_VARIABLES, SHADOW_CSS_VARIABLES, SPACING_CSS_VARIABLES, THEME_PALETTES } from '@filip.mazev/blocks/core';
-import { Button, InputField, Select, SliderDirective } from '@filip.mazev/blocks/forms';
+import { Button, InputField, Select, SliderDirective, SlideToggle } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { ModalService } from '@filip.mazev/blocks/modal';
-import { Collapsible, Tab, TabContentDirective, Tabs } from '@filip.mazev/blocks/primitives';
+import { Collapsible, Divider, Tab, TabContentDirective, Tabs, Tag, TooltipDirective } from '@filip.mazev/blocks/primitives';
 
 import { formatCatalogColor } from '@playground/components/screens/token-catalog/helpers/token-color.helpers';
 import { Code } from '@playground/components/shared/code/code';
@@ -41,17 +52,38 @@ import { readStudioShadow, writeStudioShadow } from '@playground/shared/helpers/
 
 @Component({
   selector: 'app-theme-studio',
-  imports: [NgTemplateOutlet, RouterLink, Button, InputField, Select, SliderDirective, Icon, Collapsible, Tabs, Tab, TabContentDirective, Readme, Code],
+  imports: [
+    NgTemplateOutlet,
+    RouterLink,
+    Button,
+    InputField,
+    Select,
+    SlideToggle,
+    SliderDirective,
+    Icon,
+    Collapsible,
+    Divider,
+    Tabs,
+    Tab,
+    TabContentDirective,
+    Tag,
+    TooltipDirective,
+    Readme,
+    Code
+  ],
   templateUrl: './theme-studio.html',
   styleUrl: './theme-studio.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeStudio {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly modalService = inject(ModalService);
 
   public readonly themeStudioService = inject(ThemeStudioService);
+
+  private readonly colorPickers: Signal<readonly ElementRef<HTMLInputElement>[]> = viewChildren<ElementRef<HTMLInputElement>>('colorPicker');
 
   protected readonly styles: readonly IBxSelectOption<string>[] = STUDIO_STYLE_OPTIONS;
   protected readonly bases: typeof STUDIO_BASE_OPTIONS = STUDIO_BASE_OPTIONS;
@@ -67,6 +99,8 @@ export class ThemeStudio {
   protected readonly advancedColors: readonly IThemeStudioControl[] = STUDIO_CONTROLS.filter(
     (control) => control.family === 'Colors' && !STUDIO_COMMON_COLORS.includes(control.name as StudioColorToken)
   );
+
+  protected readonly expandedColors: WritableSignal<readonly ThemeCssVariable[]> = signal([]);
 
   protected readonly activeTab: WritableSignal<string | null> = signal('colors');
   protected readonly shadowTarget: WritableSignal<string> = signal('all');
@@ -226,31 +260,63 @@ export class ThemeStudio {
           : 'custom';
   }
 
-  protected colorHex(name: ThemeCssVariable): string {
-    return this.resolveColor(this.themeStudioService.effective(name))?.hex.slice(0, 7) ?? '#000000';
+  protected toggleColorEditor(name: ThemeCssVariable): void {
+    this.expandedColors.update((names) => (names.includes(name) ? names.filter((entry) => entry !== name) : [...names, name]));
   }
 
-  protected colorOpacity(name: ThemeCssVariable): number {
-    const hex = this.resolveColor(this.themeStudioService.effective(name))?.hex;
+  protected openColorEditor(name: ThemeCssVariable, mode: StudioMode, event: Event): void {
+    event.preventDefault();
+    this.expandedColors.update((names) => (names.includes(name) ? names : [...names, name]));
+
+    // Render synchronously to keep the native picker within this user activation.
+    this.changeDetectorRef.detectChanges();
+
+    const picker = this.colorPickers().find(
+      ({ nativeElement }) => nativeElement.dataset['token'] === name && nativeElement.dataset['mode'] === mode
+    )?.nativeElement;
+
+    if (!picker) return;
+
+    picker.focus({ preventScroll: true });
+
+    if (typeof picker.showPicker === 'function') {
+      try {
+        picker.showPicker();
+
+        return;
+      } catch {
+        // Fall back to native activation where showPicker is restricted.
+      }
+    }
+
+    picker.click();
+  }
+
+  protected colorHex(name: ThemeCssVariable, mode: StudioMode = this.themeStudioService.themingService.activeTheme()): string {
+    return this.resolveColor(this.themeStudioService.effective(name, mode))?.hex.slice(0, 7) ?? '#000000';
+  }
+
+  protected colorOpacity(name: ThemeCssVariable, mode: StudioMode = this.themeStudioService.themingService.activeTheme()): number {
+    const hex = this.resolveColor(this.themeStudioService.effective(name, mode))?.hex;
 
     return hex?.length === 9 ? Math.round((parseInt(hex.slice(7), 16) / 255) * 100) : 100;
   }
 
-  protected changeColor(name: ThemeCssVariable, event: Event): void {
+  protected changeColor(name: ThemeCssVariable, event: Event, mode: StudioMode = this.themeStudioService.themingService.activeTheme()): void {
     const hex = (event.target as HTMLInputElement).value;
-    const alpha = Math.round((this.colorOpacity(name) / 100) * 255)
+    const alpha = Math.round((this.colorOpacity(name, mode) / 100) * 255)
       .toString(16)
       .padStart(2, '0');
 
-    this.themeStudioService.edit(name, `${hex}${alpha === 'ff' ? '' : alpha}`);
+    this.themeStudioService.edit(name, `${hex}${alpha === 'ff' ? '' : alpha}`, mode);
   }
 
-  protected changeOpacity(name: ThemeCssVariable, event: Event): void {
+  protected changeOpacity(name: ThemeCssVariable, event: Event, mode: StudioMode = this.themeStudioService.themingService.activeTheme()): void {
     const alpha = Math.round((Number((event.target as HTMLInputElement).value) / 100) * 255)
       .toString(16)
       .padStart(2, '0');
 
-    this.themeStudioService.edit(name, `${this.colorHex(name)}${alpha === 'ff' ? '' : alpha}`);
+    this.themeStudioService.edit(name, `${this.colorHex(name, mode)}${alpha === 'ff' ? '' : alpha}`, mode);
   }
 
   protected setBorderStyle(value: unknown): void {

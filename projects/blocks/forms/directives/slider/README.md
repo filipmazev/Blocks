@@ -35,3 +35,6 @@ Native values, thumb centers, and fill endpoints update immediately. Holding enl
 springs back to a fully opaque resting thumb; motion never delays the native value. The lens and fill share the existing engine's received lighting. Pointer
 cancellation, blur, hidden documents, disabled/readonly changes, and destruction release gesture state. Live reduced motion clears deformation and stops its
 clock. Existing glass/opaque fallbacks remain independent. Inspect `/components/slider` with rapid drags and `/appearance` for accessibility settings.
+
+Removing a slider also removes its decorative wrapper. Conditional views and template outlets can repeatedly show or hide the control without leaving extra
+sliders behind.

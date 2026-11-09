@@ -181,7 +181,11 @@ export class SliderDirective {
         input.removeEventListener('pointerdown', press);
         input.removeEventListener('blur', release);
         this.motion?.destroy();
-        shell.replaceWith(input);
+
+        // Embedded views can detach their root input before destruction; never reinsert that removed control.
+        if (input.parentNode === shell) shell.replaceWith(input);
+        else shell.remove();
+
         this.shell = this.thumb = undefined;
       });
     });

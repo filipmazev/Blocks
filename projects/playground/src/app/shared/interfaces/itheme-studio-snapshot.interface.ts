@@ -6,5 +6,7 @@ export interface IThemeStudioSnapshot {
   readonly document: IThemeStudioDocument;
   readonly mode: StudioMode | null;
   readonly text: Readonly<Record<string, string>>;
+  readonly manualColors?: readonly string[];
+  readonly autoResolve?: boolean;
   readonly errors: Readonly<Record<string, string>>;
 }
