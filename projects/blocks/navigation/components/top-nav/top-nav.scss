@@ -21,7 +21,7 @@
 }
 
 .bx-top-nav-bar {
-    --bx-glass-min-opacity: 0.72;
+    --bx-glass-min-opacity: var(--bx-top-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1));
 
     display: flex;
     flex-wrap: wrap;

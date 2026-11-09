@@ -39,6 +39,7 @@ import { BX_I18N, BxA11yService, ResolvableText, resolveText } from '@filip.maze
     '[attr.aria-valuenow]': 'boundedValue()',
     '[attr.aria-valuemin]': 'minSize()',
     '[attr.aria-valuemax]': 'finiteMax()',
+    'aria-keyshortcuts': 'Enter',
     '[attr.data-bx-resize-axis]': 'horizontal() ? "horizontal" : "vertical"',
     '[class.bx-resizing]': 'resizing()',
     '[class.bx-resize-visible]': 'indicatorVisible()',
@@ -48,6 +49,7 @@ import { BX_I18N, BxA11yService, ResolvableText, resolveText } from '@filip.maze
     '[style.cursor]': 'resizeDisabled() ? "default" : horizontal() ? "col-resize" : "row-resize"',
     '(keydown)': 'onKeydown($event)',
     '(keyup)': 'onKeyup($event)',
+    '(dblclick)': 'onDoubleClick($event)',
     '(blur)': 'onBlur()'
   }
 })
@@ -198,6 +200,15 @@ export class ResizeHandleDirective {
 
     if (this.resizeDisabled() || this.session?.source === 'pointer' || event.altKey || event.ctrlKey || event.metaKey) return;
 
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (!event.repeat) this.reset('keyboard');
+
+      return;
+    }
+
     const horizontal = this.horizontal();
     const backward = horizontal ? 'ArrowLeft' : 'ArrowUp';
     const forward = horizontal ? 'ArrowRight' : 'ArrowDown';
@@ -231,7 +242,22 @@ export class ResizeHandleDirective {
     if (this.session?.source === 'keyboard') this.finish(false);
   }
 
+  protected onDoubleClick(event: MouseEvent): void {
+    if (this.resizeDisabled() || event.button !== 0) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.reset('pointer');
+  }
+
   //#region Helpers
+
+  private reset(source: ResizeHandleSource): void {
+    this.finish(false);
+    this.begin(source);
+    this.commit(this.originalSize());
+    this.finish(false);
+  }
 
   private observeGeometry(): () => void {
     this.disconnectGeometry?.();

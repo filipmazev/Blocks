@@ -20,8 +20,8 @@
 
 [data-bx-surface],
 .bx-btn {
-    --bx-glass-material-position: calc(var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5));
-    --bx-glass-material-strength: calc(0.5 * var(--bx-glass-material-position) + 0.35 * var(--bx-glass-material-position) * var(--bx-glass-material-position));
+    --bx-glass-material-position: calc(2 * var(--bx-translucency, 0.5) - var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5));
+    --bx-glass-material-strength: calc(0.85 * var(--bx-glass-material-position));
     --bx-glass-material-blur: calc(4px + 24px * var(--bx-glass-material-strength) * var(--bx-glass-material-strength));
     --bx-glass-material-opacity: calc(
         0.06 + 1.02 * var(--bx-glass-material-strength) - 0.28 * var(--bx-glass-material-strength) * var(--bx-glass-material-strength)
@@ -353,12 +353,12 @@
 }
 /* IMPORTANT: SVG displacement and bevel masks adapted from Nordify (MIT). Imported once through effects.scss; component styles must not emit these rules. Preferences override the material even before the runtime's change listener runs. */
 [data-bx-refraction='true'] {
-    --bx-refraction-material-opacity: clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1);
+    --bx-refraction-material-opacity: clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.6375), 1);
     --bx-refraction-blur: max(
         var(--bx-refraction-min-blur, 0.5px),
-        var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469)))
+        var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.6375) * var(--bx-glass-material-strength, 0.6375)))
     );
-    --bx-refraction-spec: calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)));
+    --bx-refraction-spec: calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.6375)));
     --bx-refraction-glint-exp: calc(1.35 + 0.1 * var(--bx-refraction-dark, 0));
     --bx-refraction-glint-sat: calc(3.1 - 1.1 * var(--bx-refraction-dark, 0));
     --bx-refraction-rim-exp: calc(0.84 + 0.41 * var(--bx-refraction-dark, 0));

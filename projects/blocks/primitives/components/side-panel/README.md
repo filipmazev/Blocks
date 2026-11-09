@@ -69,7 +69,8 @@ from its left edge. Side panels expose width resizing only, even though the unde
 The default maximum is 50% of the containing region, retaining an outside backdrop area. The initial width is constrained to that maximum when resizing is
 enabled. `resizeDisableShrink` defaults to true: growth and return to the original rendered width are allowed. Set it to false to enable the default minimum of
 30% of the original width. Supply `resizeMinWidth`/`resizeMaxWidth` to use explicit pixel limits; available container width always takes precedence. The
-reference is the original rendered width at the first resize gesture. A custom initial width remains as simple as `[width]="360"`.
+reference is the original rendered width at the first resize gesture. Double-clicking the grip or pressing Enter while it is focused restores that width, within
+the current resize bounds. A custom initial width remains as simple as `[width]="360"`.
 
 ```html
 <bx-side-panel
@@ -132,15 +133,16 @@ zero and use `font: inherit` to retain the shared banner typography. The separat
 
 Set these variables on the component or a theme scope:
 
-| Variable                   | Default                                                                     |
-| -------------------------- | --------------------------------------------------------------------------- |
-| `--bx-panel-bg`            | `--bx-modal-bg`, then `--bx-bg-surface`                                     |
-| `--bx-panel-text`          | `--bx-modal-text`, then `--bx-text-primary`                                 |
-| `--bx-panel-padding`       | Shared spacing 4                                                            |
-| `--bx-panel-gap`           | Shared spacing 4                                                            |
-| `--bx-panel-z-index`       | Shared fixed layer, below modal overlays                                    |
-| `--bx-panel-resize-gutter` | Shared spacing 6; space between the panel and adjacent content for the grip |
-| `--bx-panel-backdrop`      | Shared backdrop fallback                                                    |
+| Variable                      | Default                                                                     |
+| ----------------------------- | --------------------------------------------------------------------------- |
+| `--bx-panel-bg`               | `--bx-modal-bg`, then `--bx-bg-surface`                                     |
+| `--bx-panel-text`             | `--bx-modal-text`, then `--bx-text-primary`                                 |
+| `--bx-panel-material-opacity` | Global material + 10 opacity points; minimum 52%, default about 69.6%       |
+| `--bx-panel-padding`          | Shared spacing 4                                                            |
+| `--bx-panel-gap`              | Shared spacing 4                                                            |
+| `--bx-panel-z-index`          | Shared fixed layer, below modal overlays                                    |
+| `--bx-panel-resize-gutter`    | Shared spacing 6; space between the panel and adjacent content for the grip |
+| `--bx-panel-backdrop`         | Shared backdrop fallback                                                    |
 
 Projected content remains under the consumer's control. Use semantic tokens and Blocks controls; long content can wrap, and the panel shrinks to narrow bounds.
 

@@ -1,3 +1,9 @@
+@use 'mixins' as *;
+
+.cdk-overlay-container {
+    z-index: z(popover);
+}
+
 .bx-overlay-tracked,
 .bx-overlay-tracked > .cdk-overlay-pane {
     transition: none !important;

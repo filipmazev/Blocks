@@ -73,10 +73,10 @@ different semantic color; `interactive` explicitly overrides automatic control/a
 | `reducedTransparency` | boolean                        | root `data-bx-reduced-transparency`                                           |
 | `reducedMotion`       | boolean                        | root `data-bx-reduced-motion`                                                 |
 
-Translucency controls tint and blur together. Material strength is `m = 0.5 × translucency² + 0.35 × translucency⁴`. Tint is `0.06 + 1.02m − 0.28m²`,
-existing-material blur is `4 + 24m²` px, and glassiness blur is `0.5 + 12m²` px. The default translucency is 0.5; the preceding midpoint falls around 70% on
-this scale. Both endpoints stay unchanged, and maximum classic tint is about 72.5%. Reduced transparency provides opaque surfaces without losing that
-preference.
+Translucency controls tint and blur together. Material strength is `m = 0.85 × (2 × translucency − translucency²)`. Tint is `0.06 + 1.02m − 0.28m²`,
+existing-material blur is `4 + 24m²` px, and glassiness blur is `0.5 + 12m²` px. The default remains 0.5 (50% of the slider), now providing about 59.6% classic
+tint and 13.8px blur. Both endpoints stay unchanged, and maximum classic tint is about 72.5%. Navigation, panels and modals add 10 opacity points to that global
+material, with a 52% readability minimum and about 69.6% opacity at the default. Reduced transparency provides opaque surfaces without losing the preference.
 
 Opt in per element with `mountSurface(element, { glassiness: 'auto' })`. Omitted surfaces keep their existing material.
 `configureAppearance(root, { glassiness: 'auto' })` is a browser policy for selected surfaces, not a global opt-in. Automatic uses one refraction pass on
@@ -84,7 +84,7 @@ supported browsers; unsupported engines keep the previous look. `on` permits tes
 `quality: 'enhanced'` adds the full reflection/bevel treatment, subject to application baseline and device policy.
 
 Foreground colors stay theme-owned. Refraction retains at least 72% tint for readable theme foregrounds. Blur ranges from 0.5px at the clearest setting to about
-0.8px at the midpoint and 9.2px at maximum; low settings preserve sharper refraction while the tint supplies the backing. Component opacity constraints can
+5.4px at the midpoint and 9.2px at maximum; low settings preserve sharper refraction while the tint supplies the backing. Component opacity constraints can
 request more backing. No text-contrast sampling, foreground switching, grouping or per-control contrast subscriptions are mounted. The existing shared sampler
 continues to supply decorative ambient edge lighting. See [appearance effects](../README.md#glassiness-and-translucency) for material variables and
 browser/accessibility fallbacks.

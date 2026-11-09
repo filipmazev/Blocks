@@ -59,7 +59,8 @@ directives when their existing focus, dismissal and accessibility behavior meets
 ## Appearance and customization
 
 The interactive example uses public Blocks components, semantic theme variables, and shared spacing and responsive helpers. It follows the active playground
-appearance. Open the source tab for the component and template.
+appearance. The trigger stretches to the placement select's height in a shared row and stacks below it on narrow screens. The card clips decorative surface
+layers, while its text region scrolls vertically only when viewport height requires it. Open the source tab for the component and template.
 
 ## Behavior and accessibility
 

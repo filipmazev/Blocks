@@ -44,8 +44,8 @@
         <div class="bx-nav-header">
             @if (headerTemplate(); as template) {
                 <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
-            } @else if (!isCollapsed()) {
-                <strong>{{ navigationStateService.text().ariaLabel }}</strong>
+            } @else {
+                <strong [style.visibility]="isCollapsed() ? 'hidden' : null">{{ navigationStateService.text().ariaLabel }}</strong>
             }
             @if (isMobile()) {
                 <button
@@ -58,48 +58,41 @@
                     (click)="closeFromControl($event)">
                     <bx-icon name="x" size="20" />
                 </button>
-            } @else if (resolvedConfig().collapsible) {
-                <button
-                    bx-button
-                    variant="icon"
-                    color="grayscale"
-                    class="bx-nav-panel-toggle"
-                    type="button"
-                    [attr.aria-label]="isCollapsed() ? navigationStateService.text().expandLabel : navigationStateService.text().collapseLabel"
-                    [attr.aria-expanded]="!isCollapsed()"
-                    (click)="toggleCollapsed()">
-                    <bx-icon size="20" [name]="(resolvedConfig().side === 'left') !== isCollapsed() ? 'panel-left-close' : 'panel-right-close'" />
-                </button>
             }
         </div>
         @if (resolvedConfig().searchable) {
-            @if (isCollapsed()) {
+            <div class="bx-nav-search-row">
                 <button
                     bx-button
                     variant="icon"
                     color="grayscale"
                     type="button"
                     class="bx-nav-search-toggle"
+                    [style.visibility]="isCollapsed() ? null : 'hidden'"
+                    [attr.inert]="isCollapsed() ? null : ''"
+                    [attr.aria-hidden]="isCollapsed() ? null : true"
                     [attr.aria-label]="navigationStateService.text().searchLabel"
                     (click)="expandSearch()">
                     <bx-icon name="search" size="20" />
                 </button>
-            } @else {
                 <bx-search-input
                     class="bx-nav-search"
                     subscriptSizing="dynamic"
+                    [style.visibility]="isCollapsed() ? 'hidden' : null"
+                    [attr.inert]="isCollapsed() ? '' : null"
+                    [attr.aria-hidden]="isCollapsed() ? true : null"
                     [compact]="true"
                     [placeholder]="navigationStateService.text().searchPlaceholder"
                     [ariaLabel]="navigationStateService.text().searchLabel"
                     [clearLabel]="navigationStateService.text().clearSearchLabel"
                     [ngModel]="query()"
                     (ngModelChange)="search($event)" />
-            }
+            </div>
         }
         @if (!query().trim() && navigationStateService.hasLevel()) {
             <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
         } @else {
-            <div class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
+            <div #rootScroll class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
                 <nav [attr.aria-label]="navigationStateService.text().ariaLabel">
                     @if (query().trim()) {
                         <div
@@ -176,8 +169,27 @@
                 </nav>
             </div>
         }
-        @if (footerTemplate(); as template) {
-            <footer class="bx-nav-footer"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></footer>
+        @if (footerTemplate() || (!isMobile() && resolvedConfig().collapsible)) {
+            <footer class="bx-nav-footer">
+                @if (footerTemplate(); as template) {
+                    <div class="bx-nav-footer-content"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></div>
+                }
+                @if (!isMobile() && resolvedConfig().collapsible) {
+                    <div class="bx-nav-collapse-bar">
+                        <button
+                            bx-button
+                            variant="icon"
+                            color="grayscale"
+                            class="bx-nav-panel-toggle"
+                            type="button"
+                            [attr.aria-label]="isCollapsed() ? navigationStateService.text().expandLabel : navigationStateService.text().collapseLabel"
+                            [attr.aria-expanded]="!isCollapsed()"
+                            (click)="toggleCollapsed()">
+                            <bx-icon size="20" [name]="(resolvedConfig().side === 'left') !== isCollapsed() ? 'panel-left-close' : 'panel-right-close'" />
+                        </button>
+                    </div>
+                }
+            </footer>
         }
         <span class="cdk-visually-hidden" role="status" aria-live="polite">
             @if (navigationStateService.searchResult().label) {

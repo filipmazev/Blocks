@@ -80,8 +80,28 @@ dd {
 .utility-overlay {
     display: block;
     inline-size: min(22rem, calc(100vw - #{spacing(8)}));
-    max-block-size: calc(100dvh - #{spacing(8)});
-    overflow: auto;
+    max-inline-size: 100%;
+    overflow: clip;
+}
+
+.utility-overlay-content {
+    max-block-size: calc(100dvh - #{spacing(8)} - #{spacing(5)} * 2 - var(--bx-border-width, 1px) * 2);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+}
+
+.overlay-position-controls {
+    display: grid;
+    gap: spacing(4);
+    align-items: stretch;
+
+    > button {
+        min-block-size: spacing(10);
+    }
+
+    @include respond-up(sm) {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
 }
 
 .lock-controls-content {

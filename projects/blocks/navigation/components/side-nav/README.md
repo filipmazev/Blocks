@@ -97,6 +97,9 @@ other toolbar actions, put an application-owned trigger in that toolbar’s flex
 `navigation.panelId`. A custom trigger can call `navigation.open($event)`, `close()`, or `toggle($event)` with `showMobileTrigger: false`. Passing the click
 event or opening button ensures focus returns to it even in browsers that do not focus buttons on pointer activation.
 
+The desktop collapse/expand control stays at the bottom of the footer, anchored to the same outer edge in both states. Custom footer content appears above it.
+Mobile close remains in the header.
+
 Header/footer slots use the modal pattern: directives register `ng-template` references with their containing component. `$implicit` and `collapsed` contain the
 effective compact presentation state; `mobile` identifies drawer presentation. Keep interactive projected content accessible and avoid fixed widths inside
 compact slots.
@@ -171,6 +174,8 @@ Use application-wide `sideNav` defaults in `defineNavigation`, then instance ove
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
 | `--bx-side-nav-width`                                                         | Resolved `width` configuration                                              |
 | `--bx-side-nav-collapsed-width`                                               | Resolved `collapsedWidth` configuration                                     |
+| `--bx-side-nav-icon-center`                                                   | Half the rail's inner width; shared centerline for brand and controls       |
+| `--bx-nav-icon-column-size`                                                   | Item icon column computed from rail width, padding and scrollbar gutters    |
 | `--bx-side-nav-height`                                                        | `38rem` for inline panels                                                   |
 | `--bx-side-nav-item-radius`                                                   | Shared medium radius                                                        |
 | `--bx-side-nav-item-background`                                               | Transparent, over the shared panel/menu surface                             |
@@ -179,16 +184,23 @@ Use application-wide `sideNav` defaults in `defineNavigation`, then instance ove
 | `--bx-side-nav-duration`, `--bx-side-nav-easing`                              | `250ms`, `ease`; reduced motion takes precedence                            |
 | `--bx-side-nav-label-duration`                                                | `90ms` label fade as desktop expansion finishes; reduced motion skips it    |
 | `--bx-side-nav-backdrop`                                                      | Shared backdrop color with a neutral scrim fallback                         |
+| `--bx-side-nav-material-opacity`                                              | Global material + 10 opacity points; minimum 52%, default about 69.6%       |
 
 Route activity comes from Angular Router matching and updates after navigation, redirects, and browser history changes. Query parameters, matrix parameters, and
 fragments do not clear selection. Only the most specific matching item receives the selected tonal background and border. For example,
 `/components/side-nav/overview` selects Side navigation rather than also selecting `/components`. Its owning section uses accent text without a second selected
 box, including custom trees whose child URLs do not share the parent URL. Only the exact current link receives `aria-current="page"`.
 
-The navigation region is the panel's sole vertical scroller. The compact rail reserves equal scrollbar gutters on both edges and centers icons in the remaining
-space, aligned with header, search, and footer controls. Both direct links and submenu icons show their labels in tooltips when compact. Activating its search
-icon expands the rail and focuses the search field without scrolling the page. The root and nested lists reserve their scrollbar gutters when content fits,
-preventing width shifts. Horizontal overflow is constrained, and labels wrap within the available width.
+The navigation region is the panel's sole vertical scroller. Both states reserve the same scrollbar gutters and retain the header, search row, icon insets and
+footer padding. The compact search action shares the input's reserved row, and the hidden input is inert, preserving layout without leaving an extra focus
+target. Both direct links and submenu icons show their labels in tooltips when compact. Activating its search icon expands the rail and focuses the search field
+without scrolling the page. The root and nested lists reserve their scrollbar gutters when content fits, preventing width shifts. Horizontal overflow is
+constrained, and labels wrap within the available width.
+
+Navigation icons remain centered in their compact highlights and share the logo/search/collapse centerline in both states. Custom item templates can give their
+leading icon `inline-size: var(--bx-nav-icon-column-size, auto)` and `justify-content: center`. Custom brand slots can use `--bx-side-nav-icon-center` to align
+a differently sized logo to that same axis. Existing collapsed sections stay collapsed when switching to the rail; their section actions remain available to
+enter the section.
 
 Desktop expansion lays out content at its final width behind the panel's clipping edge, preventing labels from repeatedly wrapping as the rail opens. Labels and
 disclosure arrows fade in with search during the final 60ms of the width transition, using its remaining running time. Initial expanded rendering and mobile
@@ -275,13 +287,13 @@ glass. Presentation changes establish the closed layout immediately; explicit op
 ## Playground
 
 Visit `/components/side-nav`. The application shell also uses `SideNav` with real `withInAppNavigation` routes, a persistent collapsible icon rail, its Blocks
-brand, and no footer. Components groups the five component categories, with Layout nested under Primitives; Tools groups the configurators behind its own
-overview. Tokens, Icons, and Utilities remain separate root entries. Existing component and configurator URLs remain valid. The dedicated demo supplies a
-four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item content, panel height, optional
-search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section, action, demo control,
-instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application shell’s responsive
-navigation. Desktop and mobile browse the same nested lists. Try `dsgn tkns`, `palette`, `tokens`, or `Palette` for flat contextual results, clear the search,
-and use the disclosures and Back control through all four levels.
+brand, and the built-in footer collapse control. Components groups the five component categories, with Layout nested under Primitives; Tools groups the
+configurators behind its own overview. Tokens, Icons, and Utilities remain separate root entries. Existing component and configurator URLs remain valid. The
+dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item
+content, panel height, optional search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section,
+action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application
+shell’s responsive navigation. Desktop and mobile browse the same nested lists. Try `dsgn tkns`, `palette`, `tokens`, or `Palette` for flat contextual results,
+clear the search, and use the disclosures and Back control through all four levels.
 
 The fixed drawer acquires its own `ScrollLockService` lock only while its mobile overlay presentation is open. Closing, route navigation, changing to desktop or
 inline presentation, and destruction release that lock; a concurrently open modal keeps its own lock. `--bx-side-nav-backdrop` remains available for an explicit

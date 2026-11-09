@@ -121,7 +121,7 @@ export class TooltipDirective {
       this.overlayRef = this.overlay.create({
         positionStrategy: strategy,
         scrollStrategy: this.overlay.scrollStrategies.noop(),
-        usePopover: this.overlayContext?.useTopLayer ?? !!this.elementRef.nativeElement.closest('dialog, [role="dialog"], [role="alertdialog"], [popover]'),
+        usePopover: this.overlayContext?.useTopLayer ?? true,
         hasBackdrop: false,
         panelClass: 'bx-tooltip-pane'
       });

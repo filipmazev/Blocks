@@ -4,6 +4,7 @@ import { A11yModule, CdkTrapFocus, FocusMonitor, FocusOrigin } from '@angular/cd
 import { NgTemplateOutlet } from '@angular/common';
 import {
   afterNextRender,
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -71,7 +72,8 @@ import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
     '[class.is-expanding]': 'expanding()',
     '[class.is-drawer-animated]': 'drawerAnimated() && !reducedMotion()',
     '[style.--bx-side-nav-width]': 'resolvedConfig().width',
-    '[style.--bx-side-nav-collapsed-width]': 'resolvedConfig().collapsedWidth'
+    '[style.--bx-side-nav-collapsed-width]': 'resolvedConfig().collapsedWidth',
+    '[style.--bx-side-nav-scrollbar-gutter.px]': 'rootScrollbarGutter()'
   }
 })
 export class SideNav {
@@ -101,10 +103,13 @@ export class SideNav {
   private readonly toggleElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('mobileToggle', { read: ElementRef<HTMLButtonElement> });
   private readonly panelElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('panel', { read: ElementRef<HTMLElement> });
   private readonly searchInput: Signal<SearchInput | undefined> = viewChild(SearchInput);
+  private readonly rootScroll: Signal<ElementRef<HTMLElement> | undefined> = viewChild('rootScroll', { read: ElementRef<HTMLElement> });
   private readonly focusTrap: Signal<CdkTrapFocus | undefined> = viewChild(CdkTrapFocus);
 
   protected readonly drawerAnimated: WritableSignal<boolean> = signal(false);
   protected readonly expanding: WritableSignal<boolean> = signal(false);
+
+  protected readonly rootScrollbarGutter: WritableSignal<number> = signal(0);
 
   protected readonly id: string = `bx-side-nav-${this.lockId}`;
 
@@ -181,6 +186,12 @@ export class SideNav {
   private renderRevision: number = 0;
 
   constructor() {
+    afterRenderEffect((onCleanup) => {
+      const element = this.rootScroll()?.nativeElement;
+
+      if (element) onCleanup(this.observeRootScrollbar(element));
+    });
+
     let previouslyCollapsed: boolean | undefined;
     let previousPresentation: string | undefined;
 
@@ -499,7 +510,7 @@ export class SideNav {
   }
 
   protected sectionCollapsed(group: INavigationTreeGroup): boolean {
-    return !this.isCollapsed() && !!group.collapsible && (this.saved().sections[group.id] ?? group.collapsed ?? false);
+    return !!group.collapsible && (this.saved().sections[group.id] ?? group.collapsed ?? false);
   }
 
   protected toggleSection(group: INavigationTreeGroup): void {
@@ -534,6 +545,35 @@ export class SideNav {
   }
 
   //#region Helpers
+
+  private observeRootScrollbar(element: HTMLElement): () => void {
+    const view = this.document.defaultView;
+
+    if (!view) return () => {};
+
+    return this.ngZone.runOutsideAngular(() => {
+      const measure = () => {
+        if (this.destroyRef.destroyed || !element.isConnected) return;
+
+        const style = view.getComputedStyle(element);
+        const borders = (parseFloat(style.borderLeftWidth) || 0) + (parseFloat(style.borderRightWidth) || 0);
+        const gutter = Math.max(0, element.offsetWidth - element.clientWidth - borders);
+
+        if (gutter !== untracked(this.rootScrollbarGutter)) this.ngZone.run(() => this.rootScrollbarGutter.set(gutter));
+      };
+
+      const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
+
+      observer?.observe(element);
+      view.addEventListener('resize', measure);
+      measure();
+
+      return () => {
+        observer?.disconnect();
+        view.removeEventListener('resize', measure);
+      };
+    });
+  }
 
   private resolveExpansionDelay(): number {
     const panel = this.panelElement()?.nativeElement;

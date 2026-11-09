@@ -10,7 +10,7 @@ Use `ResizeHandleDirective` and its edge/event contracts from `@filip.mazev/bloc
 ## Usage
 
 Choose left/right to resize width or top/bottom to resize height. Toggle shrink prevention and explicit bounds, then drag or use the focused handle's keyboard
-controls. Reset restores the example's 180px starting size.
+controls. Double-click the handle, press Enter while focused, or use Reset to restore the example's 180px starting size within the current bounds.
 
 ## API
 

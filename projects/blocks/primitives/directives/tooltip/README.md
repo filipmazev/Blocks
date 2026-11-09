@@ -67,6 +67,10 @@ Tooltips open on mouse hover and keyboard focus. Touch focus and compatibility m
 available while the visual tooltip is hidden, and existing `aria-describedby` references are preserved. Supply an accessible label independently for icon-only
 controls.
 
+Tooltips use the browser top layer by default, keeping them above sticky toolbars, panels and dialog content without taking focus. The nearest
+`bxOverlayContext` can explicitly opt out; unsupported browsers use the document overlay layer. Blocks global styles place that layer above fixed navigation.
+Opening a later modal still follows the browser's normal top-layer ordering. Escape dismisses the tooltip, and hiding or destroying it releases its overlay.
+
 Optional long press opens after 500 ms. Moving more than 10 CSS pixels, scrolling, another finger, cancellation, or releasing early cancels it. Releasing after
 a successful hold does not click the control; the hint dismisses after 1.5 seconds, or on another press or scrolling. Editable controls and existing text
 selections keep their native behavior. For dedicated non-selectable hold targets, apply `user-select: none` and `-webkit-touch-callout: none` in the target's

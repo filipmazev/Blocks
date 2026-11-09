@@ -136,16 +136,17 @@ custom trees. Service-generated groups retain the existing route visibility/acce
 The bar uses the shared Blocks surface. Its panel is an opaque menu surface with semantic colors and theme inheritance. It intentionally uses no nested backdrop
 filter. Keep the component outside another `bxSurface` when demonstrating bar blur, since Blocks suppresses nested glass passes.
 
-| CSS variable                                                                | Default                                                           |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `--bx-top-nav-top`                                                          | Resolved sticky offset                                            |
-| `--bx-top-nav-panel-width`, `--bx-top-nav-panel-max-height`                 | Resolved width/height settings                                    |
-| `--bx-top-nav-height`, `--bx-top-nav-gap`                                   | `3.75rem` minimum height and shared spacing 2 between bar regions |
-| `--bx-top-nav-padding-inline`, `--bx-top-nav-padding-block`                 | Shared spacing 3 and spacing 2                                    |
-| `--bx-top-nav-radius`                                                       | Shared medium radius                                              |
-| `--bx-top-nav-item-radius`, `--bx-top-nav-item-gap`                         | Shared medium radius, spacing 2                                   |
-| `--bx-top-nav-item-background`                                              | Transparent                                                       |
-| `--bx-top-nav-item-hover-background`, `--bx-top-nav-item-active-background` | Shared accent tonal surface                                       |
+| CSS variable                                                                | Default                                                               |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `--bx-top-nav-top`                                                          | Resolved sticky offset                                                |
+| `--bx-top-nav-panel-width`, `--bx-top-nav-panel-max-height`                 | Resolved width/height settings                                        |
+| `--bx-top-nav-height`, `--bx-top-nav-gap`                                   | `3.75rem` minimum height and shared spacing 2 between bar regions     |
+| `--bx-top-nav-material-opacity`                                             | Global material + 10 opacity points; minimum 52%, default about 69.6% |
+| `--bx-top-nav-padding-inline`, `--bx-top-nav-padding-block`                 | Shared spacing 3 and spacing 2                                        |
+| `--bx-top-nav-radius`                                                       | Shared medium radius                                                  |
+| `--bx-top-nav-item-radius`, `--bx-top-nav-item-gap`                         | Shared medium radius, spacing 2                                       |
+| `--bx-top-nav-item-background`                                              | Transparent                                                           |
+| `--bx-top-nav-item-hover-background`, `--bx-top-nav-item-active-background` | Shared accent tonal surface                                           |
 
 Only the most specific matching route gets selected styling. Query parameters, matrix parameters, fragments, and redirect URLs do not produce multiple selected
 routes. A horizontal ancestor may use accent text for context without acquiring the selected box. Section headings in the panel likewise use accent text. Page

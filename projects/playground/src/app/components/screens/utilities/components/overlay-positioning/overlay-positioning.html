@@ -3,8 +3,13 @@
         <bx-stack [gap]="4">
             <p>Choose a preferred side, open the preview, then scroll or resize. The position strategy falls back when space is limited.</p>
             <bx-checkbox label="Use top layer" [checked]="useTopLayer()" (checkedChange)="setTopLayer($event)" />
-            <bx-stack direction="responsive" align="center" [gap]="4">
-                <bx-select label="Preferred placement" [options]="placements" [value]="placement()" (valueChange)="setPlacement($event)" />
+            <div class="overlay-position-controls">
+                <bx-select
+                    label="Preferred placement"
+                    subscriptSizing="dynamic"
+                    [options]="placements"
+                    [value]="placement()"
+                    (valueChange)="setPlacement($event)" />
                 <button
                     bx-button
                     type="button"
@@ -15,7 +20,7 @@
                     (blur)="closeOverlay()">
                     {{ overlayOpen() ? 'Hide position preview' : 'Show position preview' }}
                 </button>
-            </bx-stack>
+            </div>
             <p>Focus stays on the trigger. Escape, moving focus away, an outside click, or scrolling the origin out of view closes the preview.</p>
             <p>Top-layer previews use measured positioning to follow scrolling. Ordinary previews use native CSS anchors where supported.</p>
         </bx-stack>
@@ -32,7 +37,7 @@
 
 <ng-template #overlayTemplate>
     <bx-card class="utility-overlay">
-        <div role="tooltip" [id]="overlayId">
+        <div class="utility-overlay-content" role="tooltip" [id]="overlayId">
             <bx-stack [gap]="3">
                 <strong>Positioned with Core utilities</strong>
                 <p>This surface follows its origin and inherits the active Blocks theme. Preferred placement: {{ placement() }}.</p>

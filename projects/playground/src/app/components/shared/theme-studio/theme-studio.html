@@ -41,40 +41,40 @@
         label="Corner radius"
         subscriptSizing="dynamic"
         placeholder="Custom values"
+        tooltip="Presets replace the current corner radii."
         [options]="styles"
         [value]="selectedRadius() === 'custom' ? null : selectedRadius()"
         [floatLabel]="selectedRadius() === 'custom' ? 'always' : 'auto'"
-        [hint]="selectedRadius() === 'custom' ? 'Choose a preset to replace your custom radii.' : undefined"
         [clearable]="false"
         (valueChange)="setScale('radius', $event)" />
     <bx-select
         label="Base color"
         subscriptSizing="dynamic"
         placeholder="Custom colors"
+        tooltip="Base presets replace neutral colors in both light and dark modes."
         [options]="bases"
         [value]="baseSelection() === 'custom' ? null : baseSelection()"
         [floatLabel]="baseSelection() === 'custom' ? 'always' : 'auto'"
-        [hint]="baseSelection() === 'custom' ? 'Choose a base to replace your custom neutral colors.' : undefined"
         [clearable]="false"
         (valueChange)="setBase($event)" />
     <bx-select
         label="Menu color"
         subscriptSizing="dynamic"
         placeholder="Custom colors"
+        tooltip="Menu presets replace surface and interaction colors in the current mode."
         [options]="menus"
         [value]="menuSelection('color') === 'custom' ? null : menuSelection('color')"
         [floatLabel]="menuSelection('color') === 'custom' ? 'always' : 'auto'"
-        [hint]="menuSelection('color') === 'custom' ? 'Choose a preset to replace these custom colors.' : undefined"
         [clearable]="false"
         (valueChange)="setMenu('color', $event)" />
     <bx-select
         label="Menu accent"
         subscriptSizing="dynamic"
         placeholder="Custom colors"
+        tooltip="Accent presets replace interaction highlights in the current mode."
         [options]="menus"
         [value]="menuSelection('accent') === 'custom' ? null : menuSelection('accent')"
         [floatLabel]="menuSelection('accent') === 'custom' ? 'always' : 'auto'"
-        [hint]="menuSelection('accent') === 'custom' ? 'Choose a preset to replace these custom colors.' : undefined"
         [clearable]="false"
         (valueChange)="setMenu('accent', $event)" />
 </div>
@@ -104,20 +104,20 @@
                     label="Corner radius"
                     subscriptSizing="dynamic"
                     placeholder="Custom values"
+                    tooltip="Presets replace the current corner radii."
                     [options]="styles"
                     [value]="selectedRadius() === 'custom' ? null : selectedRadius()"
                     [floatLabel]="selectedRadius() === 'custom' ? 'always' : 'auto'"
-                    [hint]="selectedRadius() === 'custom' ? 'Choose a preset to replace your custom radii.' : undefined"
                     [clearable]="false"
                     (valueChange)="setScale('radius', $event)" />
                 <bx-select
                     label="Spacing"
                     subscriptSizing="dynamic"
                     placeholder="Custom values"
+                    tooltip="Spacing presets replace the current spacing scale."
                     [options]="densities"
                     [value]="selectedDensity() === 'custom' ? null : selectedDensity()"
                     [floatLabel]="selectedDensity() === 'custom' ? 'always' : 'auto'"
-                    [hint]="selectedDensity() === 'custom' ? 'Choose a preset to replace your custom spacing.' : undefined"
                     [clearable]="false"
                     (valueChange)="setScale('spacing', $event)" />
                 <bx-select

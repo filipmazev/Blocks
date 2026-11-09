@@ -91,7 +91,11 @@ The editor uses Blocks forms, sliders, tabs, disclosures, SidePanel/SidePanelLay
 `2xl` breakpoint. Its initial width is 480px, with pointer/touch/keyboard resizing from 480px to 624px (30% larger); a smaller available container takes
 precedence. The chosen width remains while navigating and reopening. The toolbar remains outside panel bounds. Header history, footer actions and the close
 control stay outside the editor's scroll region. The editor has bottom padding so its final disclosure remains separated from the footer. The compact toolbar
-preview action remains available when extreme spacing makes the editor difficult to use.
+preview action remains available when extreme spacing makes the editor difficult to use. Its tooltip explains how pausing restores the original theme without
+discarding edits. Enabled preview uses the shared primary filled button treatment; paused preview uses a neutral tonal button.
+
+Preset guidance lives in each select's information tooltip, available on hover, keyboard focus or a dedicated touch tap. The help actions stay present for both
+preset and custom values, keeping the editor's rows stable when randomizing or importing a theme.
 
 Colors accept literal hex, rgb/rgba, hsl/hsla, black, white or transparent. Imported geometry accepts bounded px/rem/em values; shadows accept up to four
 literal layers. References, expressions and declaration delimiters are rejected. Invalid editing text retains the last valid preview and prevents export until
@@ -100,10 +104,10 @@ fixed or reset. Choosing a color preserves its alpha; opacity sliders change it 
 ## Behavior and accessibility
 
 Reset returns to Carbon / Cobalt and clears all Studio overrides; mode and appearance preferences remain unchanged. Reset is undoable. Randomize chooses a
-coordinated built-in palette and a curated recipe linking neutral base, menu treatment, interaction accent, spacing, corners and elevation. The recipes keep
-menu surfaces neutral and use one subtle brand or accent hue for interaction. Menu presets reuse the same semantic roles as the manual controls. Candidate
-recipes check primary and secondary text at 4.5:1 against canvas, surfaces and interaction fills in both modes. These checks cover the generated combinations,
-not every consumer-defined component state.
+coordinated built-in palette and a curated recipe linking neutral base, menu treatment, interaction accent, corners and elevation. Current spacing overrides
+remain unchanged so randomization preserves the layout's spacing. The recipes keep menu surfaces neutral and use one subtle brand or accent hue for interaction.
+Menu presets reuse the same semantic roles as the manual controls. Candidate recipes check primary and secondary text at 4.5:1 against canvas, surfaces and
+interaction fills in both modes. These checks cover the generated combinations, not every consumer-defined component state.
 
 While Studio is open, Ctrl/Cmd+Z undoes a theme change and Ctrl/Cmd+Shift+Z redoes it. Text inputs, textareas, editable content and open modals retain their
 normal keyboard behavior. At the retained history boundaries, focusable tooltip wrappers explain why Undo or Redo is unavailable. The Undo tooltip distinguishes

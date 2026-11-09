@@ -2,10 +2,6 @@
 @use './styles/common' as *;
 @use './styles/code';
 
-.cdk-overlay-container {
-    z-index: z(dropdown);
-}
-
 :root {
     @include bx-theme($carbon-cobalt-light-theme);
 

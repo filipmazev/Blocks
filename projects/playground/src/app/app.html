@@ -30,8 +30,14 @@
                             bx-button
                             type="button"
                             class="preview-recovery"
-                            variant="tonal"
-                            color="grayscale"
+                            bxTooltipTouch="longpress"
+                            [variant]="themeStudioService.preview() ? 'filled' : 'tonal'"
+                            [color]="themeStudioService.preview() ? 'primary' : 'grayscale'"
+                            [bxTooltip]="
+                                themeStudioService.preview()
+                                    ? 'Pause live preview to see the original theme. Your edits are kept.'
+                                    : 'Resume live preview to apply your Theme Studio edits.'
+                            "
                             [attr.aria-label]="themeStudioService.preview() ? 'Pause theme preview' : 'Resume theme preview'"
                             [attr.aria-pressed]="themeStudioService.preview()"
                             (click)="themeStudioService.preview.set(!themeStudioService.preview())">

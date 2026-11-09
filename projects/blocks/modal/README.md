@@ -194,8 +194,10 @@ The dialog inherits palette, semantic tokens, and appearance from `ThemingServic
 [appearance guide](../../playground/src/app/components/screens/appearance/README.md) for application-wide configuration.
 
 All modal layouts share the declarative SidePanel's translucent surface material and semantic background tokens. `--bx-modal-bg` and `--bx-modal-text` remain
-modal-specific overrides, falling back to `--bx-panel-bg` / `--bx-panel-text` and then `--bx-bg-surface` / `--bx-text-primary`. Root dialogs retain their normal
-0.52 opacity floor and shared appearance preferences. Left/right modal panels have four square corners; centered dialogs and bottom sheets retain their shapes.
+modal-specific overrides, falling back to `--bx-panel-bg` / `--bx-panel-text` and then `--bx-bg-surface` / `--bx-text-primary`. Root dialogs use the shared
+panel readability backing: 10 opacity points above the global material, with a 52% minimum and about 69.6% opacity at the 50% slider default.
+`--bx-panel-material-opacity` overrides this floor; nesting can require a stronger backing. Left/right modal panels have four square corners; centered dialogs
+and bottom sheets retain their shapes.
 
 The first dialog paints dimming outside its surface, while the shared backdrop retains blur and pointer dismissal. This prevents the root surface from blending
 with its own black scrim. Its centered animation keeps the dimming cutout aligned with the zooming frame; the oversized dimming shadow continues to cover the
@@ -204,9 +206,10 @@ viewport.
 ### Nested dialogs
 
 Each nested dialog restores an independent fixed backdrop and dims the parent normally. Opening or closing a child never changes the parent's material or turns
-its backdrop off. The first nested dialog uses a minimum 0.9 material opacity; the next nested dialog and deeper levels use 1. More opaque application or
-accessibility settings still take precedence. This policy applies to centered, side, and bottom-sheet layouts, including responsive layout changes and close
-guards. Depth follows the mounted modal stack and updates when an intervening dialog is removed; a dialog remains mounted through its close animation.
+its backdrop off. The first nested dialog requests at least 0.9 material opacity, in addition to the shared readability floor; the next nested dialog and deeper
+levels use 1. More opaque application or accessibility settings still take precedence. This policy applies to centered, side, and bottom-sheet layouts,
+including responsive layout changes and close guards. Depth follows the mounted modal stack and updates when an intervening dialog is removed; a dialog remains
+mounted through its close animation.
 
 Customize the floors through the shared settings service. Index zero is the first nested dialog; the last entry repeats for deeper levels. An empty array
 retains ordinary material at every depth. Values clamp to 0.52–1; nonfinite entries use the defaults for their depth. Replace the array when updating it;

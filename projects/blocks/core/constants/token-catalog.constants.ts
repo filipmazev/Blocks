@@ -5597,7 +5597,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: [
-      'calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469))',
+      'calc(0.5px + 12px * var(--bx-glass-material-strength, 0.6375) * var(--bx-glass-material-strength, 0.6375))',
       'var(--bx-glass-material-blur, 10px)'
     ],
     selectors: [],
@@ -6137,12 +6137,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [
       'calc(\n      0.06 + 1.02 * var(--bx-glass-material-strength) - 0.28 * var(--bx-glass-material-strength) * var(--bx-glass-material-strength)\n  )'
     ],
-    fallbacks: ['0.5'],
+    fallbacks: ['0.5', '0.5965'],
     selectors: ['.bx-btn', '[data-bx-surface]'],
     sources: [
       'projects/blocks/effects/effects.scss',
       'projects/blocks/forms/components/button/button.scss',
-      'projects/blocks/navigation/components/stepper/stepper.scss'
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
     ]
   },
   {
@@ -6153,7 +6159,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['calc(var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5))'],
+    defaults: ['calc(2 * var(--bx-translucency, 0.5) - var(--bx-translucency, 0.5) * var(--bx-translucency, 0.5))'],
     fallbacks: [],
     selectors: ['.bx-btn', '[data-bx-surface]'],
     sources: ['projects/blocks/effects/effects.scss']
@@ -6166,8 +6172,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['calc(0.5 * var(--bx-glass-material-position) + 0.35 * var(--bx-glass-material-position) * var(--bx-glass-material-position))'],
-    fallbacks: ['0.1469'],
+    defaults: ['calc(0.85 * var(--bx-glass-material-position))'],
+    fallbacks: ['0.1469', '0.6375'],
     selectors: ['.bx-btn', '[data-bx-surface]'],
     sources: ['projects/blocks/effects/effects.scss', 'projects/blocks/primitives/components/tabs/tabs.scss']
   },
@@ -6182,15 +6188,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [
       '0',
       '0.45',
-      '0.52',
       '0.65',
-      '0.72',
       '0.8',
       '1',
+      'max(\n      var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)),\n      var(--bx-modal-material-opacity, 0)\n  )',
       'var(--bx-alert-min-opacity, 0.2)',
       'var(--bx-chip-fill-opacity, 1)',
-      'var(--bx-modal-material-opacity, 0.52)',
-      'var(--bx-tag-fill-opacity, 0.85)'
+      'var(--bx-panel-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1))',
+      'var(--bx-side-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1))',
+      'var(--bx-tag-fill-opacity, 0.85)',
+      'var(--bx-top-nav-material-opacity, clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1))'
     ],
     fallbacks: ['0'],
     selectors: [
@@ -7283,7 +7290,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['0.52'],
+    fallbacks: ['0', '0.52'],
     selectors: [],
     sources: [
       'projects/blocks/modal/components/modal-core/modal-core.ts',
@@ -7322,6 +7329,40 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
+  },
+  {
+    name: '--bx-nav-compact-justify',
+    reference: 'var(--bx-nav-compact-justify)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['flex-start'],
+    fallbacks: ['center'],
+    selectors: [':host'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
+  },
+  {
+    name: '--bx-nav-icon-column-size',
+    reference: 'var(--bx-nav-icon-column-size)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [
+      'max(\n      0px,\n      calc(var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 4 - var(--bx-space-2, 0.5rem) * 2 - var(--bx-side-nav-scrollbar-gutter, 0px))\n  )'
+    ],
+    fallbacks: ['auto'],
+    selectors: ['.bx-side-nav-scroll'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
     ]
   },
   {
@@ -7378,6 +7419,22 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-side-nav-item-hover-background, var(--bx-accent-subtle))'],
     selectors: [':host'],
     sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
+  },
+  {
+    name: '--bx-nav-item-padding-inline',
+    reference: 'var(--bx-nav-item-padding-inline)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [':host'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
   },
   {
     name: '--bx-nav-item-radius',
@@ -7725,6 +7782,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-space-4, 1rem)'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/side-panel/side-panel.scss']
+  },
+  {
+    name: '--bx-panel-material-opacity',
+    reference: 'var(--bx-panel-material-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 panel',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/modal/components/views/side/modal-side.scss',
+      'projects/blocks/primitives/components/side-panel/side-panel.scss'
+    ]
   },
   {
     name: '--bx-panel-padding',
@@ -8133,7 +8208,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [
-      'max(\n      var(--bx-refraction-min-blur, 0.5px),\n      var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.1469) * var(--bx-glass-material-strength, 0.1469)))\n  )'
+      'max(\n      var(--bx-refraction-min-blur, 0.5px),\n      var(--bx-glass-blur, calc(0.5px + 12px * var(--bx-glass-material-strength, 0.6375) * var(--bx-glass-material-strength, 0.6375)))\n  )'
     ],
     fallbacks: [],
     selectors: ['[data-bx-refraction=true]'],
@@ -8294,7 +8369,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.1469), 1)'],
+    defaults: ['clamp(0, var(--bx-refraction-min-opacity, 0.72) + 0.2 * var(--bx-glass-material-strength, 0.6375), 1)'],
     fallbacks: ['0.72'],
     selectors: ['[data-bx-refraction=true]'],
     sources: ['projects/blocks/effects/effects.scss']
@@ -8446,7 +8521,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.1469)))'],
+    defaults: ['calc(0.08 + 0.12 * (1 - var(--bx-glass-material-strength, 0.6375)))'],
     fallbacks: ['0.13'],
     selectors: ['[data-bx-refraction=true]'],
     sources: ['projects/blocks/effects/effects.scss']
@@ -9085,6 +9160,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
+    name: '--bx-side-nav-icon-center',
+    reference: 'var(--bx-side-nav-icon-center)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['calc((var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 2) / 2)'],
+    fallbacks: [],
+    selectors: [':host'],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
+  },
+  {
     name: '--bx-side-nav-item-active-background',
     reference: 'var(--bx-side-nav-item-active-background)',
     category: 'components',
@@ -9199,6 +9287,32 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss'
     ]
+  },
+  {
+    name: '--bx-side-nav-material-opacity',
+    reference: 'var(--bx-side-nav-material-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
+  },
+  {
+    name: '--bx-side-nav-scrollbar-gutter',
+    reference: 'var(--bx-side-nav-scrollbar-gutter)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0px'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss', 'projects/blocks/navigation/components/side-nav/side-nav.ts']
   },
   {
     name: '--bx-side-nav-width',
@@ -9908,6 +10022,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/primitives/components/grid/grid.scss',
       'projects/blocks/primitives/components/stack/stack.scss'
@@ -11094,6 +11209,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
+  },
+  {
+    name: '--bx-top-nav-material-opacity',
+    reference: 'var(--bx-top-nav-material-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 top',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['clamp(0.52, var(--bx-glass-material-opacity, 0.5965) + 0.1, 1)'],
     selectors: [],
     sources: ['projects/blocks/navigation/components/top-nav/top-nav.scss']
   },

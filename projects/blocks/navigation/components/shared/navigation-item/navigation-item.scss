@@ -27,7 +27,7 @@
     justify-content: flex-start;
     gap: spacing(2);
     min-height: 2.75rem;
-    padding: spacing(2) spacing(3);
+    padding: spacing(2) var(--bx-nav-item-padding-inline, #{spacing(3)});
     font: inherit;
     font-size: 0.875rem;
     text-align: start;
@@ -79,6 +79,8 @@
 
 .bx-nav-icon {
     flex: none;
+    justify-content: center;
+    inline-size: var(--bx-nav-icon-column-size, auto);
 }
 
 .bx-nav-disclosure {
@@ -89,15 +91,15 @@
 }
 
 .is-compact {
-    justify-content: center;
+    justify-content: var(--bx-nav-compact-justify, center);
 
     .bx-nav-presentation {
-        justify-content: center;
+        justify-content: var(--bx-nav-compact-justify, center);
     }
 
     .bx-nav-link {
         flex: 1;
-        justify-content: center;
+        justify-content: var(--bx-nav-compact-justify, center);
         min-width: 0;
         padding-inline: 0;
     }

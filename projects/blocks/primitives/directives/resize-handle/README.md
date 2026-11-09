@@ -58,6 +58,10 @@ vertically stacked regions; `"left"` and `"right"` adjust width for columns or s
 The reference size is captured once at the first gesture unless `resizeInitialSize` is supplied. Changing between width and height axes resets the implicit
 reference. Width/height are measured from the selected physical axis; the owner can set different explicit limits when changing axes.
 
+Double-click the handle or press Enter while it is focused to restore that axis's original size. Reset uses `resizeInitialSize` when supplied, otherwise the
+first gesture's rendered size, and respects the current minimum, maximum, and container bounds. It emits the ordinary start, model-change, and completion events
+with pointer or keyboard source. Disabled handles ignore reset.
+
 By default shrinking below the original is disabled, so the effective minimum is the original size. To permit shrinking to the default 30% floor, set
 `[resizeDisableShrink]="false"`. Explicit minimum/maximum values replace the relative defaults. A smaller available container always wins over conflicting
 minimum constraints. Container resizing updates bounds through `ResizeObserver`; the directive constrains emitted values rather than changing application-owned
@@ -95,5 +99,5 @@ handles release listeners and styles without emitting late events. Browser geome
 
 ## Playground
 
-Open `/components/resize-handle` for all four edges, default relative bounds, explicit pixel limits, shrink prevention, keyboard resizing, and event feedback.
-`/components/side-panel` demonstrates width-model integration. `/icons` enables resizing only on Filters.
+Open `/components/resize-handle` for all four edges, default relative bounds, explicit pixel limits, shrink prevention, keyboard resizing, double-click/Enter
+reset, and event feedback. `/components/side-panel` demonstrates width-model integration. `/icons` enables resizing only on Filters.

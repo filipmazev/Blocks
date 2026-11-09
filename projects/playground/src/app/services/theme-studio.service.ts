@@ -297,7 +297,7 @@ export class ThemeStudioService implements OnDestroy {
     });
 
     this.restore({ document: next, mode: this.themingService.applicationTheme(), text: {}, errors: {} });
-    this.status.set('Randomized a coordinated palette, neutral base, menu colors and layout. Undo restores your previous draft.');
+    this.status.set('Randomized palette, neutral base, menu colors, corners and shadows. Spacing is unchanged. Undo restores your previous draft.');
   }
 
   public undo(): void {

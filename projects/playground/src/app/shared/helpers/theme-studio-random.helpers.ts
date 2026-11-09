@@ -2,13 +2,13 @@ import type { IThemeStudioDocument } from '@playground/interfaces/itheme-studio-
 import type { IThemeStudioRandomContext } from '@playground/interfaces/itheme-studio-random-context.interface';
 import type { StudioMode, StudioSharedToken, StudioValues } from '@playground/types/theme-studio.types';
 
-import { RADIUS_VALUES, SHADOW_VALUES, SPACING_VALUES, THEME_PALETTE_IDS } from '@filip.mazev/blocks/core';
+import { RADIUS_VALUES, SHADOW_VALUES, THEME_PALETTE_IDS } from '@filip.mazev/blocks/core';
 
 import { STUDIO_RANDOM_RECIPES } from '@playground/shared/constants/theme-studio-random.constants';
 
 import { studioBaseColors, studioMenuColors } from './theme-studio-colors.helpers';
 
-/** Generate a coordinated theme from a tested built-in palette and modest, shared geometry multipliers.
+/** Generate a coordinated theme from a tested built-in palette and modest corner/elevation multipliers, preserving current spacing.
  * @param context - Current draft and readers for authoritative semantic and primitive colors.
  * @param random - Random source returning a number in [0, 1); injectable for deterministic checks.
  * @returns A complete versioned draft with inherited built-in light/dark roles and hex color overrides, retaining alpha in eight-digit hex.
@@ -59,14 +59,12 @@ export function randomStudioTheme(context: IThemeStudioRandomContext, random: ()
   const recipes = changed.length ? changed : readable;
   const recipe = recipes[Math.floor(random() * recipes.length)];
 
-  if (!recipe) return { version: 1, palette, shared: {}, light: {}, dark: {} };
+  const spacing = Object.fromEntries(Object.entries(context.current.shared).filter(([name]) => name.startsWith('--bx-space-')));
 
-  const { spacing, corners, elevation } = recipe;
-  const shared: Partial<Record<StudioSharedToken, string>> = { '--bx-border-width': '1px', '--bx-border-style': 'solid' };
+  if (!recipe) return { version: 1, palette, shared: spacing, light: {}, dark: {} };
 
-  for (const [key, value] of Object.entries(SPACING_VALUES)) {
-    if (key !== '0') shared[`--bx-space-${key}` as StudioSharedToken] = `${Number((parseFloat(value) * spacing).toFixed(4))}rem`;
-  }
+  const { corners, elevation } = recipe;
+  const shared: Partial<Record<StudioSharedToken, string>> = { ...spacing, '--bx-border-width': '1px', '--bx-border-style': 'solid' };
 
   for (const [key, value] of Object.entries(RADIUS_VALUES)) {
     if (key !== 'none' && key !== 'pill') shared[`--bx-rounded-${key}` as StudioSharedToken] = `${Number((parseFloat(value) * corners).toFixed(4))}rem`;
