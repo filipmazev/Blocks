@@ -24,6 +24,8 @@ export class SceneRuntime {
   private readonly renderedStyles: WeakMap<HTMLElement, string | null> = SURFACE_RENDERED_STYLES;
   private readonly projections: Map<string, ILightProjection> = new Map<string, ILightProjection>();
 
+  private scrolling: boolean = false;
+  private scrollTarget: HTMLElement | null = null;
   private entries: Map<HTMLElement, IEntry> = new Map<HTMLElement, IEntry>();
   private scenes: Set<ISceneEntry> = new Set<ISceneEntry>();
   private observer?: IntersectionObserver;
@@ -159,8 +161,6 @@ export class SceneRuntime {
     this.updateEmitter();
   };
   private sync: () => void = () => {
-    // Children inherit resolved material preferences from their nearest surface.
-    // Angular mounts child surfaces first, so registration order is insufficient.
     const ordered = [...this.entries.values()].sort((a, b) => {
       const position = a.element.compareDocumentPosition(b.element);
 
@@ -181,34 +181,16 @@ export class SceneRuntime {
   private scroll: (event: Event) => void = (event: Event) => {
     const root = event.target as HTMLElement | null;
 
-    if (root?.nodeType !== 1) {
-      this.refresh();
+    this.scrollTarget = root?.nodeType === 1 ? root : null;
 
-      return;
-    }
+    if (this.scrolling) return;
 
-    const area = root.getBoundingClientRect();
-    const nearby: IEntry[] = [];
+    this.scrolling = true;
+    this.view.requestAnimationFrame(() => {
+      this.scrolling = false;
 
-    this.refreshEntries(
-      [...this.entries.values()].filter((entry) => {
-        if (!entry.visible) return false;
-
-        if (root.contains(entry.element)) return true;
-
-        const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
-
-        // Prioritize controls over the scrolling pixels. Nearby surfaces still
-        // refresh, but must not crowd those controls out of every sample batch.
-        if (bounds.right > area.left && bounds.left < area.right && bounds.bottom > area.top && bounds.top < area.bottom) return true;
-
-        if (bounds.right >= area.left - 160 && bounds.left <= area.right + 160 && bounds.bottom >= area.top - 160 && bounds.top <= area.bottom + 160)
-          nearby.push(entry);
-
-        return false;
-      })
-    );
-    this.ambient.invalidate(nearby);
+      if (this.connected) this.flushScroll(this.scrollTarget);
+    });
   };
 
   constructor(private doc: Document) {
@@ -257,8 +239,6 @@ export class SceneRuntime {
         { rootMargin: '64px' }
       );
 
-    // Watch semantic and visual source changes once per document. Lighting's
-    // own decoration writes are excluded so sampling cannot trigger a loop.
     if (typeof view.MutationObserver === 'function')
       this.stateObserver = new view.MutationObserver((records) => {
         const changed = new Set<IEntry>();
@@ -335,7 +315,6 @@ export class SceneRuntime {
           this.ambient.invalidate();
         }
 
-        // Angular can mount a child before its parent. Reconcile newly nested materials before the next paint.
         if (themeChanged || records.some((record) => record.attributeName === 'data-bx-surface')) this.sync();
 
         if (!changed.size && !visualChanged) return;
@@ -360,7 +339,6 @@ export class SceneRuntime {
     this.queue.add(entry);
     this.schedule();
 
-    // New overlays can cover receivers which already have highlights. Re-evaluate those as well.
     if (overlay) this.refresh();
 
     return () => {
@@ -448,6 +426,35 @@ export class SceneRuntime {
 
   //#region Helpers
 
+  private flushScroll(root: HTMLElement | null): void {
+    if (!root) {
+      this.refreshEntries([...this.entries.values()].filter((entry) => entry.visible));
+
+      return;
+    }
+
+    const area = root.getBoundingClientRect();
+    const nearby: IEntry[] = [];
+
+    this.refreshEntries(
+      [...this.entries.values()].filter((entry) => {
+        if (!entry.visible) return false;
+
+        if (root.contains(entry.element)) return true;
+
+        const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+
+        if (bounds.right > area.left && bounds.left < area.right && bounds.bottom > area.top && bounds.top < area.bottom) return true;
+
+        if (bounds.right >= area.left - 160 && bounds.left <= area.right + 160 && bounds.bottom >= area.top - 160 && bounds.top <= area.bottom + 160)
+          nearby.push(entry);
+
+        return false;
+      })
+    );
+    this.ambient.invalidate(nearby);
+  }
+
   private refreshEntries(entries: IEntry[], immediate = false): void {
     if (immediate) this.ambient.reset(entries);
 
@@ -480,7 +487,6 @@ export class SceneRuntime {
 
       if (found.element.closest(disabledSelector)) return undefined;
 
-      // A decorative surface inside a button/link is still part of that action.
       if (found.hooks.interactive()) return found;
     }
 
@@ -533,7 +539,6 @@ export class SceneRuntime {
           this.scope(source.element) === this.scope(entry.element) || this.scope(source.element) === this.scope(lightingOrigin(entry.element) as HTMLElement)
       );
 
-      // A panel may have finished its opening animation since its surfaces were registered.
       if (affected) {
         entry.bounds = undefined;
         entry.lastLighting = undefined;
@@ -677,7 +682,6 @@ export class SceneRuntime {
     this.stopFrame = subscribeFrame(() => {
       this.projections.clear();
 
-      // Bound lighting work when hundreds of components become visible or a global setting changes.
       const batch = Array.from(this.queue).slice(0, 24);
       const visibility = lightingVisibility(this.doc, this.view);
       const emissions = [...this.emitting].map(([emitter, color]) => {
@@ -698,8 +702,9 @@ export class SceneRuntime {
             true
           )
         }));
+
       const sceneData = new Map<ISceneEntry, { lights: IPointLight[]; reflections: IReflection[] }>();
-      // Read only scenes used by this batch; avoid measuring offscreen or unrelated objects.
+
       const projections = batch
         .filter((entry) => {
           if (!entry.visible || !entry.element.isConnected || (entry.resuming && this.ambient.isPending(entry))) return false;
@@ -728,7 +733,7 @@ export class SceneRuntime {
 
           const data = nearest ? sceneData.get(nearest) : undefined;
           const sceneRoot = nearest?.root ?? entry.element;
-          // Explicit scene lights and an active semantic element share the same spatial model.
+
           const boundary = visibility.boundary(entry.element);
           const inheritedBoundary = visibility.boundary(origin);
           const candidates = (data?.lights ?? []).filter((light) => {
@@ -739,7 +744,6 @@ export class SceneRuntime {
           const lights = this.selectSceneLights(entry, candidates, visibility);
 
           for (const { emitter, light } of activeLights) {
-            // Context inheritance only receives light. Internal sources retain the overlay's physical boundary and stacking layer.
             const target = visibility.boundary(emitter.element) === boundary ? entry.element : origin;
 
             if (
@@ -769,7 +773,6 @@ export class SceneRuntime {
 
       for (const entry of batch) this.queue.delete(entry);
 
-      // The browser clips each active border; source occlusion only gates light cast onto other surfaces.
       for (const { emitter, color } of emissions) emitter.hooks.emit?.(true, color);
 
       for (const [entry, lighting] of projections) {
@@ -784,7 +787,6 @@ export class SceneRuntime {
 
         const after = entry.element.getAttribute('style');
 
-        // Native receivers (e.g. the slider thumb) paint on their host, not a decoration child.
         if (before !== after) this.renderedStyles.set(entry.element, after);
       }
 
@@ -901,20 +903,40 @@ export class SceneRuntime {
     }
 
     const target = entry.hooks.hitTarget ?? entry.element;
-    // A source crossing the border covers the exact edge probe; retry just inside so a partly overlapping light still lights that edge.
+
     const insideX = projection.edgeX + (bounds.left + bounds.width / 2 - projection.edgeX) * 0.06;
     const insideY = projection.edgeY + (bounds.top + bounds.height / 2 - projection.edgeY) * 0.06;
+    const interior = projection.weight > 0.001 && visibility.pointExposed(target, projection.x, projection.y, bounds);
 
-    // Whole-element exposure keeps partly clipped sources active; each receiving location must still be uncovered.
+    const edge =
+      projection.edgeWeight > 0.01 &&
+      (visibility.pointExposed(target, projection.edgeX, projection.edgeY, bounds) ||
+        visibility.pointExposed(target, insideX, insideY, bounds) ||
+        this.edgeProbes(projection, bounds).some((point) => visibility.pointExposed(target, point.x, point.y, bounds)));
+
     return this.rememberProjection(cacheKey, {
       ...projection,
-      weight: projection.weight > 0.001 && visibility.pointExposed(target, projection.x, projection.y, bounds) ? projection.weight : 0,
-      edgeWeight:
-        projection.edgeWeight > 0.01 &&
-        (visibility.pointExposed(target, projection.edgeX, projection.edgeY, bounds) || visibility.pointExposed(target, insideX, insideY, bounds))
-          ? projection.edgeWeight
-          : 0
+      weight: interior || edge ? projection.weight : 0,
+      edgeWeight: edge ? projection.edgeWeight : 0
     });
+  }
+
+  private edgeProbes(projection: ILightProjection, bounds: DOMRect): { x: number; y: number }[] {
+    const cx = bounds.left + bounds.width / 2;
+    const cy = bounds.top + bounds.height / 2;
+    const horizontal = Math.abs(projection.edgeY - cy) / Math.max(1, bounds.height) >= Math.abs(projection.edgeX - cx) / Math.max(1, bounds.width);
+    const stepX = bounds.width * 0.12;
+    const stepY = bounds.height * 0.12;
+
+    return horizontal
+      ? [
+          { x: projection.edgeX + stepX, y: projection.edgeY },
+          { x: projection.edgeX - stepX, y: projection.edgeY }
+        ]
+      : [
+          { x: projection.edgeX, y: projection.edgeY + stepY },
+          { x: projection.edgeX, y: projection.edgeY - stepY }
+        ];
   }
 
   private rememberProjection(key: string, projection: ILightProjection): ILightProjection {
@@ -996,7 +1018,6 @@ export class SceneRuntime {
     if (totalWeight > 0.001) {
       x = weightedX / totalWeight;
       y = weightedY / totalWeight;
-      // Flat panes must not brighten as the source reaches their middle; the sheen keeps its resting strength and only follows the light.
     }
 
     let reflectionStrength = 0,
@@ -1014,7 +1035,6 @@ export class SceneRuntime {
         reflectionStrength = weight;
         reflection = reflector.color;
 
-        // Signed depth gives background and foreground proxies opposite parallax around the surface normal.
         const direction = reflector.depth < 0 ? 1 : -1;
         const perspective = Math.max(80, Math.abs(reflector.depth) + reflector.radius * 0.5);
 
