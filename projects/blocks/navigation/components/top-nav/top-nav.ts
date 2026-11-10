@@ -127,7 +127,11 @@ export class TopNav {
   public readonly resolvedConfig: Signal<ITopNavResolvedConfigState> = computed(() => ({
     ...TOP_NAV_DEFAULTS,
     ...definedNavigationConfig(this.defaults?.topNav),
-    ...definedNavigationConfig(this.config())
+    ...definedNavigationConfig(this.config()),
+    breadcrumbConfig: {
+      ...definedNavigationConfig(this.defaults?.topNav?.breadcrumbConfig),
+      ...definedNavigationConfig(this.config().breadcrumbConfig)
+    }
   }));
   /** Whether the top navigation uses its compact overflow presentation. */
   public readonly isCompact: Signal<boolean> = computed(() => {

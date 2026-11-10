@@ -43,7 +43,9 @@
     <div class="bx-nav-content">
         <div class="bx-nav-header">
             @if (headerTemplate(); as template) {
-                <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
+                <div #headerContent class="bx-nav-header-content">
+                    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
+                </div>
             } @else {
                 <strong [style.visibility]="isCollapsed() ? 'hidden' : null">{{ navigationStateService.text().ariaLabel }}</strong>
             }
@@ -89,7 +91,7 @@
                     (ngModelChange)="search($event)" />
             </div>
         }
-        @if (!query().trim() && navigationStateService.hasLevel()) {
+        @if (!isCollapsed() && !query().trim() && navigationStateService.hasLevel()) {
             <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
         } @else {
             <div #rootScroll class="bx-side-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
@@ -102,7 +104,11 @@
                             [attr.aria-label]="navigationStateService.text().resultLabel"
                             (keydown)="menuKey($event)">
                             @for (entry of navigationStateService.searchResult().entries; track entry.item.id) {
-                                <bx-navigation-item [item]="entry.item" [context]="entry.context" />
+                                <bx-navigation-item
+                                    [item]="entry.item"
+                                    [context]="entry.context"
+                                    [contextItems]="entry.breadcrumbs ?? []"
+                                    [searchResult]="true" />
                             } @empty {
                                 <p class="bx-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                             }
@@ -118,8 +124,7 @@
                                             [class.is-active]="sectionActive(group)"
                                             [attr.aria-label]="group.title"
                                             [attr.data-section-id]="group.id"
-                                            [attr.aria-expanded]="navigationStateService.hasLevel() && navigationStateService.currentGroup()?.id === group.id"
-                                            [attr.aria-controls]="navigationStateService.hasLevel() ? navigationStateService.levelId : null"
+                                            [attr.aria-expanded]="false"
                                             (click)="openSection(group, $event)">
                                             <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
                                         </button>
@@ -172,7 +177,9 @@
         @if (footerTemplate() || (!isMobile() && resolvedConfig().collapsible)) {
             <footer class="bx-nav-footer">
                 @if (footerTemplate(); as template) {
-                    <div class="bx-nav-footer-content"><ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" /></div>
+                    <div #footerContent class="bx-nav-footer-content">
+                        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="slotContext()" />
+                    </div>
                 }
                 @if (!isMobile() && resolvedConfig().collapsible) {
                     <div class="bx-nav-collapse-bar">

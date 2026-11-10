@@ -402,7 +402,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: ['#de9e9e'],
     fallbacks: [],
     selectors: ['.blocks-catalog-theme'],
-    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/components/menu-item/menu-item.scss']
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss'
+    ]
   },
   {
     name: '--bx-bg-danger-disabled',
@@ -432,6 +437,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'global',
       'projects/blocks/effects/runtime/helpers/selection-motion.helpers.ts',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss'
     ]
   },
@@ -499,6 +505,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/autocomplete/autocomplete.scss',
       'projects/blocks/forms/components/button/button.scss',
       'projects/blocks/forms/components/input-field/input-field.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/skeleton/skeleton.scss',
@@ -530,6 +537,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
@@ -900,17 +908,16 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
-      'projects/blocks/primitives/components/page-container/page-container.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
       'projects/blocks/primitives/components/tag/tag.scss',
@@ -1164,6 +1171,91 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/primitives/components/tooltip/tooltip.scss',
       'projects/blocks/toastr/components/toast-core/toast-core.scss'
     ]
+  },
+  {
+    name: '--bx-breadcrumb-action-padding',
+    reference: 'var(--bx-breadcrumb-action-padding)',
+    category: 'components',
+    group: 'Component \u00B7 breadcrumb',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['var(--bx-space-1, 0.25rem) 0'],
+    selectors: ['.bx-nav-result-path'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss'
+    ]
+  },
+  {
+    name: '--bx-breadcrumb-gap',
+    reference: 'var(--bx-breadcrumb-gap)',
+    category: 'components',
+    group: 'Component \u00B7 breadcrumb',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['var(--bx-space-1, 0.25rem)'],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: ['.bx-nav-path', '.bx-nav-result-path'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss'
+    ]
+  },
+  {
+    name: '--bx-breadcrumb-overflow-font-size',
+    reference: 'var(--bx-breadcrumb-overflow-font-size)',
+    category: 'components',
+    group: 'Component \u00B7 breadcrumb',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.875rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss']
+  },
+  {
+    name: '--bx-breadcrumb-overflow-max-height',
+    reference: 'var(--bx-breadcrumb-overflow-max-height)',
+    category: 'components',
+    group: 'Component \u00B7 breadcrumb',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['20rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss']
+  },
+  {
+    name: '--bx-breadcrumb-overflow-max-width',
+    reference: 'var(--bx-breadcrumb-overflow-max-width)',
+    category: 'components',
+    group: 'Component \u00B7 breadcrumb',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['24rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss']
+  },
+  {
+    name: '--bx-breadcrumb-overflow-min-width',
+    reference: 'var(--bx-breadcrumb-overflow-min-width)',
+    category: 'components',
+    group: 'Component \u00B7 breadcrumb',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['12rem'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss']
   },
   {
     name: '--bx-button-press-shadow',
@@ -5615,6 +5707,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['1'],
     selectors: [
       '.bx-alert',
+      '.bx-breadcrumb-menu-item',
       '.bx-collapsible-trigger',
       '.bx-menu-item-btn',
       '.bx-tab-selection',
@@ -5634,6 +5727,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/button/button.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
@@ -6449,6 +6543,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
@@ -6553,6 +6648,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['1'],
     selectors: [
       '.bx-alert',
+      '.bx-breadcrumb-menu-item',
       '.bx-collapsible-trigger',
       '.bx-menu-item-btn',
       '.bx-slide-toggle-track[data-bx-surface]:not(.is-invalid)',
@@ -6574,6 +6670,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
@@ -7157,10 +7254,10 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: [],
+    defaults: ['min(var(--bx-breadcrumb-overflow-min-width, 12rem), calc(100dvw - var(--bx-space-4, 1rem)))'],
     fallbacks: ['12rem'],
-    selectors: [],
-    sources: ['projects/blocks/primitives/components/menu/menu.scss']
+    selectors: ['.bx-breadcrumb-overflow-menu'],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss', 'projects/blocks/primitives/components/menu/menu.scss']
   },
   {
     name: '--bx-modal-backdrop-background',
@@ -7358,8 +7455,28 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [
       'max(\n      0px,\n      calc(var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 4 - var(--bx-space-2, 0.5rem) * 2 - var(--bx-side-nav-scrollbar-gutter, 0px))\n  )'
     ],
-    fallbacks: ['auto'],
-    selectors: ['.bx-side-nav-scroll'],
+    fallbacks: ['0px', '20px', 'auto'],
+    selectors: [':host'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
+  },
+  {
+    name: '--bx-nav-iconless-padding-inline',
+    reference: 'var(--bx-nav-iconless-padding-inline)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0', 'calc(var(--bx-nav-icon-column-size) + var(--bx-space-2, 0.5rem))'],
+    fallbacks: ['0'],
+    selectors: [
+      '.bx-side-nav-scroll:not(:has(.bx-nav-items:not([hidden]) .bx-nav-presentation > bx-icon:first-child))',
+      '.is-search-result .bx-nav-item-body:not(:has(.bx-nav-presentation > bx-icon:first-child))',
+      ':host'
+    ],
     sources: [
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss'
@@ -7421,6 +7538,22 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
   },
   {
+    name: '--bx-nav-item-icon-size',
+    reference: 'var(--bx-nav-item-icon-size)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['20px'],
+    selectors: [],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
+      'projects/blocks/navigation/components/shared/navigation-item/navigation-item.ts'
+    ]
+  },
+  {
     name: '--bx-nav-item-padding-inline',
     reference: 'var(--bx-nav-item-padding-inline)',
     category: 'components',
@@ -7428,13 +7561,33 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['0'],
+    defaults: ['0px', 'var(--bx-space-3, 0.75rem)'],
     fallbacks: ['var(--bx-space-3, 0.75rem)'],
-    selectors: [':host'],
+    selectors: [
+      '.bx-side-nav-scroll:not(:has(.bx-nav-items:not([hidden]) .bx-nav-presentation > bx-icon:first-child))',
+      '.is-search-result .bx-nav-item-body:not(:has(.bx-nav-presentation > bx-icon:first-child))',
+      ':host'
+    ],
     sources: [
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss'
     ]
+  },
+  {
+    name: '--bx-nav-item-padding-inline-end',
+    reference: 'var(--bx-nav-item-padding-inline-end)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [
+      'max(var(--bx-nav-item-padding-inline, var(--bx-space-3, 0.75rem)), (var(--bx-nav-icon-column-size, 0px) - var(--bx-nav-item-icon-size, 20px)) / 2)',
+      'max(var(--bx-nav-item-padding-inline, var(--bx-space-3, 0.75rem)), var(--bx-space-3, 0.75rem))'
+    ],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss']
   },
   {
     name: '--bx-nav-item-radius',
@@ -7448,6 +7601,61 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-side-nav-item-radius, var(--bx-rounded-md, 0.5rem))'],
     selectors: [':host'],
     sources: ['projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss', 'projects/blocks/navigation/components/top-nav/top-nav.scss']
+  },
+  {
+    name: '--bx-nav-level-header-padding-block',
+    reference: 'var(--bx-nav-level-header-padding-block)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss']
+  },
+  {
+    name: '--bx-nav-level-header-padding-inline',
+    reference: 'var(--bx-nav-level-header-padding-inline)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['max(0px, calc(var(--bx-side-nav-icon-center) - var(--bx-space-5, 1.25rem)))'],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [':host'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
+  },
+  {
+    name: '--bx-nav-level-heading-gap',
+    reference: 'var(--bx-nav-level-heading-gap)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss']
+  },
+  {
+    name: '--bx-nav-level-line-size',
+    reference: 'var(--bx-nav-level-line-size)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-6, 1.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss']
   },
   {
     name: '--bx-nav-level-offset',
@@ -7466,6 +7674,22 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.bx-nav-level-items.is-animated:dir(rtl).is-backward'
     ],
     sources: ['projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss']
+  },
+  {
+    name: '--bx-nav-scrollbar-gutter',
+    reference: 'var(--bx-nav-scrollbar-gutter)',
+    category: 'components',
+    group: 'Component \u00B7 nav',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['stable both-edges'],
+    fallbacks: ['stable'],
+    selectors: [':host'],
+    sources: [
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
+      'projects/blocks/navigation/components/side-nav/side-nav.scss'
+    ]
   },
   {
     name: '--bx-on-accent',
@@ -8679,6 +8903,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/menu/menu.scss',
@@ -8786,9 +9011,8 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
-      'projects/blocks/primitives/components/page-container/page-container.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
       'projects/blocks/primitives/components/skeleton/skeleton.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
@@ -9147,6 +9371,32 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
   },
   {
+    name: '--bx-side-nav-footer-padding-inline-start',
+    reference: 'var(--bx-side-nav-footer-padding-inline-start)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-side-nav-slot-padding-inline-start, var(--bx-space-3, 0.75rem))'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
+  },
+  {
+    name: '--bx-side-nav-header-padding-inline-start',
+    reference: 'var(--bx-side-nav-header-padding-inline-start)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-side-nav-slot-padding-inline-start, var(--bx-space-3, 0.75rem))'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
+  },
+  {
     name: '--bx-side-nav-height',
     reference: 'var(--bx-side-nav-height)',
     category: 'components',
@@ -9170,7 +9420,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: ['calc((var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 2) / 2)'],
     fallbacks: [],
     selectors: [':host'],
-    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss']
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss', 'projects/blocks/navigation/components/side-nav/side-nav.ts']
   },
   {
     name: '--bx-side-nav-item-active-background',
@@ -9311,6 +9561,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['0px'],
+    selectors: [],
+    sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss', 'projects/blocks/navigation/components/side-nav/side-nav.ts']
+  },
+  {
+    name: '--bx-side-nav-slot-padding-inline-start',
+    reference: 'var(--bx-side-nav-slot-padding-inline-start)',
+    category: 'components',
+    group: 'Component \u00B7 side',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
     selectors: [],
     sources: ['projects/blocks/navigation/components/side-nav/side-nav.scss', 'projects/blocks/navigation/components/side-nav/side-nav.ts']
   },
@@ -9808,19 +10071,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/search-input/search-input.scss',
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/icons/components/icon/icon.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/grid/grid.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/menu/menu.scss',
-      'projects/blocks/primitives/components/page-container/page-container.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
       'projects/blocks/primitives/components/stack/stack.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
@@ -9845,6 +10107,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/autocomplete/autocomplete.scss',
       'projects/blocks/forms/components/range-slider/range-slider.scss',
       'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
@@ -9906,7 +10169,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
@@ -9914,12 +10176,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/accordion/accordion.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/grid/grid.scss',
       'projects/blocks/primitives/components/loading-indicator/loading-indicator.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
-      'projects/blocks/primitives/components/page-container/page-container.scss',
       'projects/blocks/primitives/components/page-header/page-header.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
       'projects/blocks/primitives/components/skeleton/skeleton.scss',
@@ -9955,6 +10217,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/divider/divider.scss',
@@ -9993,6 +10256,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/container/container.scss',
@@ -10050,6 +10314,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
+      'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/primitives/components/divider/divider.scss',
       'projects/blocks/primitives/components/grid/grid.scss',
@@ -10077,6 +10342,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/grid/grid.scss',
       'projects/blocks/primitives/components/page-container/page-container.scss',
@@ -10681,6 +10947,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/constants/tag.constants.ts'
     ]
   },
@@ -10699,9 +10966,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'global',
       'projects/blocks/forms/components/button/button.scss',
       'projects/blocks/forms/components/form-field/form-field.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
-      'projects/blocks/primitives/components/page-container/page-container.scss',
       'projects/blocks/primitives/components/page-header/page-header.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
       'projects/blocks/primitives/constants/tag.constants.ts'
@@ -10735,6 +11000,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/shared/load-more/load-more-footer.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
@@ -10823,12 +11089,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
@@ -10863,18 +11129,17 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/search-input/search-input.scss',
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
-      'projects/blocks/navigation/components/breadcrumbs/breadcrumbs.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/divider/divider.scss',
       'projects/blocks/primitives/components/loading-indicator/loading-indicator.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
-      'projects/blocks/primitives/components/page-container/page-container.scss',
       'projects/blocks/primitives/components/page-header/page-header.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss'

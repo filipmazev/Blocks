@@ -69,6 +69,11 @@ The default header resolves `sectionTitle` from the navigation section and `page
 Componentless routes and metadata-free child outlets retain the nearest route's heading. `pageDescription` is always manually supplied. Explicit empty title
 strings suppress their automatic values. A projected `PageHeader` owns its own inputs; container heading inputs configure only the generated header.
 
+Long trails show the first and last two entries, with a horizontal ellipsis icon for the hidden ancestors. The final current-page label remains visible.
+Configure this with `[breadcrumbConfig]="{ maxVisibleItems: 4, openOnHover: true }"`; `maxVisibleItems: null` shows the complete trail. Hover or activate the
+ellipsis to open hidden route links in the existing Blocks menu surface. `overflowLabel`, optional custom `overflowText`, and `placement` are configurable.
+`BX_BREADCRUMB_DEFAULTS` from primitives supplies shared defaults. See the [shared trail guide](../breadcrumb-trail/README.md).
+
 ## API
 
 | Input                                      | Default            | Behavior                                                                              |
@@ -81,6 +86,7 @@ strings suppress their automatic values. A projected `PageHeader` owns its own i
 | `breadcrumbs?: readonly IPageBreadcrumb[]` | Adapter trail      | Explicit labels and absolute router URLs; an empty array suppresses automatic entries |
 | `breadcrumbsAfter: number`                 | `1`                | Minimum nesting before showing breadcrumbs; negative values clamp to zero             |
 | `showBreadcrumbs: boolean`                 | `true`             | Enables the trail when its threshold is met                                           |
+| `breadcrumbConfig: IBreadcrumbTrailConfig` | `{}`               | Overflow count, translated labels, hover opening, and menu placement                  |
 | `breadcrumbLabel: ResolvableText`          | `Breadcrumbs`      | Accessible name for the navigation landmark                                           |
 
 `PageHeader` accepts the same title, description, and `autoResolveTitlesFromNavigation` inputs, plus `headingLevel` (1–6, default 1). It projects additional
@@ -117,6 +123,7 @@ containers, and zoom. Theme changes apply through semantic tokens; no motion is 
 
 ## Playground
 
-Open `/components/layout/page-container` to change the title, description, breadcrumb depth, root/child trail, automatic navigation, and footer. The footer
-action reports its result. `/components/layout` groups Page container, Content container, Stack layout, Grid layout, and Divider. Existing
-`/components/container`, `/components/stack`, `/components/grid`, and `/components/divider` URLs redirect to their layout destinations.
+Open `/components/layout/page-container` to change the title, description, breadcrumb depth, visible count, root/child trail, automatic navigation, and footer.
+Choose three nestings to inspect hidden ancestors. The footer action reports its result. `/components/layout` groups Page container, Content container, Stack
+layout, Grid layout, and Divider. Existing `/components/container`, `/components/stack`, `/components/grid`, and `/components/divider` URLs redirect to their
+layout destinations.

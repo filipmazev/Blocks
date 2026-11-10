@@ -22,43 +22,4 @@
 
 .breadcrumbs {
     font-size: 0.875rem;
-
-    ol,
-    li {
-        display: flex;
-        align-items: baseline;
-        flex-wrap: wrap;
-        gap: spacing(2);
-        min-inline-size: 0;
-    }
-
-    ol {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    a,
-    .breadcrumb-divider {
-        color: var(--bx-text-secondary);
-    }
-
-    a {
-        text-decoration: none;
-
-        &:hover {
-            color: var(--bx-text-brand);
-            text-decoration: underline;
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--bx-border-brand);
-            outline-offset: spacing(1);
-            border-radius: radius(sm);
-        }
-    }
-
-    [aria-current='page'] {
-        font-weight: 600;
-    }
 }

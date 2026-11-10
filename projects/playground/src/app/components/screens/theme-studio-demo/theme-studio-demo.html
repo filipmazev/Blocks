@@ -1,123 +1,217 @@
-<bx-page-container pageDescription="Explore how a Blocks theme connects colors, layout and materials across your application.">
-    <section class="studio-intro" aria-labelledby="studio-intro-title">
-        <div class="intro-copy">
-            <h2 id="studio-intro-title">Make Blocks<br />your own.</h2>
-            <p>Start with a palette, adjust the shared tokens and see the result across the playground. Export your theme when it is ready.</p>
-            <div class="action-row">
-                <button type="button" bx-button variant="filled" (click)="themeStudioService.open.set(true)">
-                    <bx-icon name="sliders-horizontal" size="18" />Customize theme
-                </button>
-                <button type="button" bx-button variant="tonal" (click)="themeStudioService.randomize()">
-                    <bx-icon name="dices" size="18" />Randomize theme
-                </button>
-                <a bx-button variant="text" routerLink="/tokens">Explore tokens<bx-icon name="arrow-up-right" size="16" /></a>
-            </div>
-            <p class="palette-summary">
-                Current palette <strong>{{ paletteLabel() }}</strong>
-            </p>
-        </div>
-        <app-theme-palette-preview />
-    </section>
-    <bx-divider />
-    <section class="showcase-section" aria-labelledby="color-heading">
-        <div class="section-heading">
-            <div>
-                <span class="eyebrow">01 / Colors</span>
-                <h2 id="color-heading">Give colors a role.</h2>
-            </div>
-            <p>Components read semantic tokens rather than individual palette shades. A surface edit carries through cards, menus and dialogs.</p>
-        </div>
-        <div class="color-roles">
-            @for (color of colors; track color.token) {
-                <div class="color-role">
-                    <span class="color-swatch" aria-hidden="true" [style.background-color]="'var(' + color.token + ')'"></span>
-                    <h3>{{ color.label }}</h3>
-                    <code>{{ color.token }}</code>
-                    <p>{{ color.description }}</p>
+<bx-page-container [showBreadcrumbs]="false" [autoResolveTitlesFromNavigation]="false">
+    <bx-page-content>
+        <header class="hero">
+            <div class="hero-content">
+                <h1>Theme Studio</h1>
+                <p class="hero-subtitle">Customize palettes and shared tokens, preview changes, and export your theme.</p>
+                <div class="hero-actions">
+                    <button type="button" bx-button variant="filled" color="primary" (click)="themeStudioService.open.set(true)">
+                        <bx-icon name="sliders-horizontal" size="18" />
+                        Customize theme
+                    </button>
+                    <button type="button" bx-button variant="tonal" color="accent" (click)="themeStudioService.randomize()">
+                        <bx-icon name="dices" size="18" />
+                        Randomize theme
+                    </button>
                 </div>
-            }
-        </div>
-        <a bx-button variant="text" routerLink="/tokens">Browse the token catalog<bx-icon name="arrow-right" size="16" /></a>
-    </section>
-    <bx-divider />
-    <section class="showcase-section split-section" aria-labelledby="layout-heading">
-        <div class="section-copy">
-            <span class="eyebrow">02 / Layout</span>
-            <h2 id="layout-heading">Set the shape and spacing.</h2>
-            <p>
-                Corner radii, borders, spacing and shadows form a shared scale. Adjust them in the editor’s Layout and Shadows tabs to change the feel of the
-                interface.
-            </p>
-            <p class="section-note">This sample uses the same tokens as the components around it. Light and dark modes share these measurements.</p>
-        </div>
-        <bx-card class="geometry-sample" [surfaceEffects]="false">
-            <div class="geometry-content">
-                <div class="sample-heading"><bx-icon name="ruler" size="22" /><strong>Shared measurements</strong></div>
-                <div class="spacing-scale" aria-label="Spacing scale: 4, 8 and 12">
-                    <div><span class="space-four"></span><code>--bx-space-4</code></div>
-                    <div><span class="space-eight"></span><code>--bx-space-8</code></div>
-                    <div><span class="space-twelve"></span><code>--bx-space-12</code></div>
-                </div>
-                <bx-input-field label="Sample field" value="Focus to inspect the outline" subscriptSizing="dynamic" [readOnly]="true" />
-                <button bx-button type="button" variant="tonal" (click)="showDialog()"><bx-icon name="layers" size="18" />Inspect a themed dialog</button>
-                <bx-divider />
-                <dl class="geometry-labels">
-                    <div>
-                        <dt>Corner</dt>
-                        <dd><code>--bx-rounded-lg</code></dd>
-                    </div>
-                    <div>
-                        <dt>Contour</dt>
-                        <dd><code>--bx-border-width</code></dd>
-                    </div>
-                    <div>
-                        <dt>Depth</dt>
-                        <dd><code>--bx-shadow-md</code></dd>
-                    </div>
-                </dl>
             </div>
-        </bx-card>
-    </section>
-    <bx-divider />
-    <section class="showcase-section split-section" aria-labelledby="mode-heading">
-        <div class="section-copy">
-            <span class="eyebrow">03 / Preview</span>
-            <h2 id="mode-heading">Check both sides of your theme.</h2>
-            <p>Light and dark colors can be edited independently. Check the foreground as well as the fill: readable text is part of the theme.</p>
-            <p class="section-note">
-                The field and dialog above use these same roles. Open the dialog to inspect its material and focus states; it inherits your live theme too.
-            </p>
-        </div>
-        <div class="mode-example">
-            <bx-tabs ariaLabel="Preview theme mode" [selectedValue]="themeStudioService.themingService.activeTheme()" (selectedValueChange)="setMode($event)">
-                <bx-tab label="Light" icon="sun" value="light" /><bx-tab label="Dark" icon="moon" value="dark" />
-            </bx-tabs>
-            <div class="foreground-pairs">
-                <div class="primary-pair"><strong>Aa</strong><span>Primary / on-primary</span></div>
-                <div class="accent-pair"><strong>Aa</strong><span>Accent / on-accent</span></div>
+            <app-theme-palette-preview />
+        </header>
+
+        <div class="studio-content">
+            <div class="studio-sections">
+                <section class="showcase-section split-section" aria-labelledby="color-heading">
+                    <div class="section-copy">
+                        <span class="eyebrow">01 / Color Foundation</span>
+                        <h2 id="color-heading">Build your theme from the colors up.</h2>
+                        <p>
+                            Start with a palette and make it your own. Blocks uses semantic tokens to give each color a role, so changing a single value carries
+                            through buttons, cards, menus, and more.
+                        </p>
+                        <bx-select
+                            label="Theme"
+                            subscriptSizing="dynamic"
+                            [options]="palettes"
+                            [value]="themeStudioService.themingService.palette()"
+                            [clearable]="false"
+                            [optionTemplate]="paletteOption"
+                            [triggerTemplate]="paletteTrigger"
+                            (valueChange)="paletteChanged($event)" />
+                        <ng-template #paletteOption let-option
+                            ><span class="palette-choice"
+                                ><span class="palette-swatches" aria-hidden="true">
+                                    @for (color of paletteColors(option.value); track $index) {
+                                        <span [style.background-color]="color"></span>
+                                    }</span
+                                >{{ option.label }}</span
+                            ></ng-template
+                        >
+                        <ng-template #paletteTrigger let-value let-labels="labels"
+                            ><span class="palette-choice"
+                                ><span class="palette-swatches" aria-hidden="true">
+                                    @for (color of paletteColors(value); track $index) {
+                                        <span [style.background-color]="color"></span>
+                                    }</span
+                                >{{ labels.join(', ') }}</span
+                            ></ng-template
+                        >
+                    </div>
+                    <div class="color-section-container">
+                        <div class="color-roles">
+                            @for (color of colors; track color.token) {
+                                <div class="color-role">
+                                    <div class="color-swatch-container">
+                                        <span class="color-swatch" aria-hidden="true" [style.background-color]="'var(' + color.token + ')'"></span>
+                                        <h3 class="color-label" [style.color]="'var(' + color.textColorToken + ')'">{{ color.label }}</h3>
+                                    </div>
+                                    <code>{{ color.token }}</code>
+                                    <p>{{ color.description }}</p>
+                                </div>
+                            }
+                        </div>
+                        <a bx-button variant="text" routerLink="/tokens">Browse the token catalog<bx-icon name="arrow-right" size="16" /></a>
+                    </div>
+                </section>
+
+                <section class="showcase-section split-section" aria-labelledby="mode-heading">
+                    @let currentMode = themeStudioService.themingService.activeTheme();
+                    @let oppositeMode = themeStudioService.oppositeMode();
+
+                    <div class="section-copy">
+                        <span class="eyebrow">02 / Color Harmony</span>
+                        <h2 id="mode-heading">Bring your colors together in perfect harmony.</h2>
+
+                        <p class="mode-description">
+                            @if (currentMode === 'dark') {
+                                Working on the dark side? We'll bring it to light.
+                            } @else {
+                                Playing on the light side? We'll bring in the dark!
+                            }
+
+                            Theme Studio
+                            <span class="mode-description__highlight">
+                                <bx-icon name="sparkles" size="16" color="accent" />
+                                automatically
+                            </span>
+                            resolves the {{ oppositeMode }} counterpart, but you're free to fine-tune both independently.
+                        </p>
+
+                        <bx-tabs
+                            ariaLabel="Preview theme mode"
+                            [selectedValue]="themeStudioService.themingService.activeTheme()"
+                            (selectedValueChange)="setMode($event)">
+                            <bx-tab label="Light" icon="sun" value="light" />
+                            <bx-tab label="Dark" icon="moon" value="dark" />
+                        </bx-tabs>
+                    </div>
+
+                    <div class="mode-example">
+                        <div class="foreground-pairs">
+                            @for (pair of colorPairs; track pair.background) {
+                                <div class="color-pair">
+                                    <div
+                                        class="color-pair-current"
+                                        [style.background-color]="themeStudioService.effective(pair.background, currentMode)"
+                                        [style.color]="themeStudioService.effective(pair.foreground, currentMode)">
+                                        <strong>Aa</strong>
+                                        <span>{{ pair.label }} / {{ pair.foregroundLabel }}</span>
+                                        <small>{{ currentMode === 'light' ? 'Light' : 'Dark' }} mode</small>
+                                    </div>
+
+                                    <div
+                                        class="color-pair-opposite"
+                                        [style.background-color]="themeStudioService.effective(pair.background, oppositeMode)"
+                                        [style.color]="themeStudioService.effective(pair.foreground, oppositeMode)">
+                                        <span>{{ oppositeMode === 'light' ? 'Light' : 'Dark' }} mode</span>
+                                        <strong>Aa</strong>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </section>
+
+                <section class="showcase-section split-section" aria-labelledby="layout-heading">
+                    <div class="section-copy">
+                        <span class="eyebrow">03 / Shape & Space</span>
+                        <h2 id="layout-heading">Give every detail its own character.</h2>
+
+                        <p>
+                            Colors are only part of the story. Fine-tune corner radii, borders, spacing, and shadows through shared design tokens that keep your
+                            components beautifully consistent. From subtle adjustments to bold changes, every detail helps shape the look and feel of your
+                            interface.
+                        </p>
+                    </div>
+
+                    <bx-card class="geometry-sample" [surfaceEffects]="false">
+                        <div class="geometry-content">
+                            <div class="sample-heading">
+                                <bx-icon name="ruler" size="22" />
+                                <strong>Shared measurements</strong>
+                            </div>
+
+                            <div class="spacing-scale" aria-label="Spacing scale: 4, 8 and 12">
+                                <div><span class="space-four"></span><code>--bx-space-4</code></div>
+                                <div><span class="space-eight"></span><code>--bx-space-8</code></div>
+                                <div><span class="space-twelve"></span><code>--bx-space-12</code></div>
+                            </div>
+
+                            <dl class="geometry-labels">
+                                <div>
+                                    <dt>Corner</dt>
+                                    <dd><code>--bx-rounded-lg</code></dd>
+                                </div>
+                                <div>
+                                    <dt>Contour</dt>
+                                    <dd><code>--bx-border-width</code></dd>
+                                </div>
+                                <div>
+                                    <dt>Depth</dt>
+                                    <dd><code>--bx-shadow-md</code></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </bx-card>
+                </section>
+
+                <section class="showcase-section export-section" aria-labelledby="export-heading">
+                    <div class="section-copy">
+                        <span class="eyebrow">03 / Use your theme</span>
+                        <h2 id="export-heading">From preview to application.</h2>
+                        <p>
+                            Export SCSS for your application's <code>styles.scss</code>. Save Studio JSON from the editor to keep an editable copy you can
+                            import later.
+                        </p>
+                    </div>
+
+                    <div class="action-row">
+                        <button type="button" bx-button variant="tonal" (click)="openSetup()">
+                            <bx-icon name="copy" size="18" />
+                            Copy / setup
+                        </button>
+                        <a bx-button variant="tonal" routerLink="/studio/new-project">
+                            <bx-icon name="plus" size="18" />
+                            Start a new project
+                        </a>
+                        <a bx-button variant="text" routerLink="/installation">
+                            Package setup
+                            <bx-icon name="arrow-up-right" size="16" />
+                        </a>
+                    </div>
+
+                    <bx-collapsible title="Inspect generated SCSS" [contentTemplate]="exportCode">
+                        <ng-template #exportCode>
+                            <app-code maxHeight="20rem" [files]="exportFiles()" />
+                        </ng-template>
+                    </bx-collapsible>
+
+                    <bx-collapsible title="Theme Studio guide" [contentTemplate]="guide">
+                        <ng-template #guide>
+                            <app-readme path="projects/playground/src/app/components/shared/theme-studio/README.md" />
+                        </ng-template>
+                    </bx-collapsible>
+                </section>
             </div>
-            <p class="section-note">These are the active fill and foreground pairs. Custom colors still need a contrast check.</p>
         </div>
-    </section>
-    <bx-divider />
-    <section class="showcase-section export-section" aria-labelledby="export-heading">
-        <div class="section-heading">
-            <div>
-                <span class="eyebrow">04 / Use your theme</span>
-                <h2 id="export-heading">From preview to application.</h2>
-            </div>
-            <p>Export SCSS for your application’s <code>styles.scss</code>. Save Studio JSON from the editor to keep an editable copy you can import later.</p>
-        </div>
-        <div class="action-row">
-            <button type="button" bx-button variant="tonal" (click)="openSetup()"><bx-icon name="copy" size="18" />Copy / setup</button>
-            <a bx-button variant="tonal" routerLink="/studio/new-project"><bx-icon name="plus" size="18" />Start a new project</a>
-            <a bx-button variant="text" routerLink="/installation">Package setup<bx-icon name="arrow-up-right" size="16" /></a>
-        </div>
-        <bx-collapsible title="Inspect generated SCSS" [contentTemplate]="exportCode"
-            ><ng-template #exportCode><app-code maxHeight="20rem" [files]="exportFiles()" /></ng-template
-        ></bx-collapsible>
-        <bx-collapsible title="Theme Studio guide" [contentTemplate]="guide"
-            ><ng-template #guide><app-readme path="projects/playground/src/app/components/shared/theme-studio/README.md" /></ng-template
-        ></bx-collapsible>
-    </section>
+    </bx-page-content>
 </bx-page-container>

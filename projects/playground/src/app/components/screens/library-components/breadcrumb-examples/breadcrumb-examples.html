@@ -1,0 +1,19 @@
+<bx-stack [gap]="4">
+    <bx-stack direction="responsive" align="center" [gap]="4">
+        <bx-input-field
+            type="number"
+            label="Visible breadcrumb entries"
+            subscriptSizing="dynamic"
+            [min]="2"
+            [max]="10"
+            [disabled]="unlimited()"
+            [(value)]="maxVisible" />
+        <bx-checkbox label="Show the complete trail" subscriptSizing="dynamic" [(checked)]="unlimited" />
+        <bx-checkbox label="Open hidden ancestors on hover" subscriptSizing="dynamic" [(checked)]="hover" />
+    </bx-stack>
+    <bx-breadcrumbs [items]="items" [minimumBreadcrumbs]="1" [breadcrumbConfig]="config()" />
+    <p>Hover over or activate the ellipsis to open hidden ancestors. Every ancestor link navigates to a real playground page.</p>
+    <p>Use Tab to reach the ellipsis, Enter or Down to open it, arrow keys to choose an ancestor, and Escape to return to the trigger.</p>
+    <bx-breadcrumbs [minimumBreadcrumbs]="1" [breadcrumbConfig]="config()" />
+    <p>The second trail follows the current route metadata.</p>
+</bx-stack>

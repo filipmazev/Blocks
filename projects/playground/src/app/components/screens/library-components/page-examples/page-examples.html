@@ -6,12 +6,18 @@
     <bx-stack direction="responsive" [gap]="4">
         <bx-select label="Preview nesting" subscriptSizing="dynamic" [clearable]="false" [options]="nestingOptions" [(ngModel)]="nesting" />
         <bx-input-field label="Show breadcrumbs after nesting" type="number" subscriptSizing="dynamic" [min]="0" [formControl]="breadcrumbsAfterControl" />
+        <bx-input-field label="Visible breadcrumb entries" type="number" subscriptSizing="dynamic" [min]="2" [(ngModel)]="breadcrumbLimit" />
     </bx-stack>
     <bx-stack direction="responsive" [gap]="4">
         <bx-slide-toggle label="Use current route breadcrumbs" subscriptSizing="dynamic" [(ngModel)]="automatic" />
         <bx-slide-toggle label="Show footer" subscriptSizing="dynamic" [(ngModel)]="showFooter" />
     </bx-stack>
-    <bx-page-container class="page-preview" size="full" [breadcrumbs]="automatic() ? undefined : previewBreadcrumbs()" [breadcrumbsAfter]="breadcrumbsAfter()">
+    <bx-page-container
+        class="page-preview"
+        size="full"
+        [breadcrumbs]="automatic() ? undefined : previewBreadcrumbs()"
+        [breadcrumbsAfter]="breadcrumbsAfter()"
+        [breadcrumbConfig]="{ maxVisibleItems: breadcrumbLimit() }">
         <bx-page-header
             sectionTitle="Primitives"
             [pageTitle]="title()"

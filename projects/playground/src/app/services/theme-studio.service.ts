@@ -384,9 +384,7 @@ export class ThemeStudioService implements OnDestroy {
     this.status.set('Theme change redone.');
   }
 
-  //#region Helpers
-
-  private resolveAutomaticColor(name: ThemeCssVariable, mode: StudioMode): string | undefined {
+  public resolveAutomaticColor(name: ThemeCssVariable, mode: StudioMode): string | undefined {
     if (!isPlatformBrowser(this.platformId)) return undefined;
 
     this.colorContext ??= this.document.createElement('canvas').getContext('2d', { willReadFrequently: true });
@@ -405,6 +403,8 @@ export class ThemeStudioService implements OnDestroy {
       this.colorContext
     );
   }
+
+  //#region Helpers
 
   private colorMatchesAuto(name: ThemeCssVariable, mode: StudioMode): boolean {
     const automatic = this.resolveAutomaticColor(name, mode);

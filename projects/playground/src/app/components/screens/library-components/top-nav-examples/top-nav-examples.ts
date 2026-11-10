@@ -105,7 +105,8 @@ export class TopNavExamples {
     submenuLabel: { key: 'nav.submenu' },
     resultLabel: { key: 'nav.result' },
     backLabel: { key: 'nav.back' },
-    pathLabel: { key: 'nav.path' }
+    pathLabel: { key: 'nav.path' },
+    breadcrumbConfig: { overflowLabel: { key: 'nav.hiddenPath' } }
   }));
 
   protected select(item: INavigationItem): void {

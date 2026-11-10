@@ -433,11 +433,7 @@
                         </div>
                     }
                     @case ('breadcrumbs') {
-                        <div class="demo-stack">
-                            <bx-breadcrumbs [minimumBreadcrumbs]="1" />
-                            <p>This trail comes from the current route metadata. Select Components to navigate back.</p>
-                            <a routerLink="/components/button">Navigate to Button</a>
-                        </div>
+                        <app-breadcrumb-examples />
                     }
                     @case ('icon') {
                         <div class="demo-stack">

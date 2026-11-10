@@ -63,11 +63,15 @@ export function studioOppositeColor(
             : foreground || border
               ? surfaces
               : [];
+
   const canvas = formatCatalogColor(colors['--bx-bg-canvas'] ?? '', context)?.hex ?? '#ffffff';
+
   const resolved = references
     .map((reference) => formatCatalogColor(colors[reference as StudioColorToken] ?? '', context)?.hex)
     .filter((color): color is string => color !== undefined);
+
   const minimum = border ? 3 : 4.5;
+
   const score = (candidate: string): number =>
     Math.min(
       ...resolved.map((reference) =>
@@ -76,6 +80,7 @@ export function studioOppositeColor(
           : studioHexContrast(candidate, studioCompositeColor(reference, canvas))
       )
     );
+
   const initial = studioWriteHsl([hue, saturation, desired, alpha]);
 
   if (score(initial) >= minimum || (!foreground && !border && !neutralSurface && !brandFill && !semanticFill)) return initial;
@@ -84,7 +89,6 @@ export function studioOppositeColor(
   let bestScore = score(initial);
   let distance = Infinity;
 
-  // Search lightness only: hue, saturation and the user's transparency remain authoritative.
   for (let step = 0; step <= 100; step++) {
     const candidateLightness = step / 100;
     const candidate = studioWriteHsl([hue, saturation, candidateLightness, alpha]);

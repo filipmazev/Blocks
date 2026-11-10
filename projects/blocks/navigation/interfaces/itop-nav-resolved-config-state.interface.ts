@@ -1,9 +1,12 @@
 import type { ResolvableText } from '@filip.mazev/blocks/core';
+import type { IBreadcrumbTrailConfig } from '@filip.mazev/blocks/primitives';
 
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
 
 /** Resolved resolvedConfig state used by TopNav. */
 export interface ITopNavResolvedConfigState {
+  /** Nested-level and search-path overflow overrides after merging application and instance settings. Optional; shared breadcrumb defaults fill omitted values. */
+  breadcrumbConfig?: IBreadcrumbTrailConfig;
   /** Whether show Item Icons is enabled in the resolved state. */
   showItemIcons: boolean;
   /** Whether show Section Icons is enabled in the resolved state. */

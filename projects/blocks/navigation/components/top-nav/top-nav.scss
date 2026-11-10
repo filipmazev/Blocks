@@ -134,6 +134,10 @@
     padding-block-end: spacing(1);
 }
 
+.bx-top-nav-search:has(+ bx-navigation-level) {
+    padding-block-end: 0;
+}
+
 .bx-top-nav-scroll {
     flex: 1;
     min-width: 0;

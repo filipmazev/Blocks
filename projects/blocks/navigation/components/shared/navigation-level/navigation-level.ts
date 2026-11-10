@@ -1,12 +1,14 @@
-import type { OutputEmitterRef, Signal } from '@angular/core';
+import type { InputSignal, OutputEmitterRef, Signal } from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
+import type { IBreadcrumbTrailItem, MenuTriggerDirective } from '@filip.mazev/blocks/primitives';
 
 import { BxA11yService } from '@filip.mazev/blocks/core';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { navigateMenuKey } from '@filip.mazev/blocks/primitives';
+import { BreadcrumbTrail, navigateMenuKey, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
 
 import { NavigationItem } from '@navigation/components/shared/navigation-item/navigation-item';
 import { INavigationLevelBreadcrumb } from '@navigation/interfaces/inavigation-level-breadcrumb.interface';
@@ -16,7 +18,7 @@ import { NavigationStateService } from '@navigation/services/navigation-state.se
 /** One reusable browsing level. Its owner decides whether it appears inline or in the shared overlay. */
 @Component({
   selector: 'bx-navigation-level',
-  imports: [RouterLink, Button, Icon, NavigationItem],
+  imports: [RouterLink, Button, Icon, NavigationItem, BreadcrumbTrail, TooltipDirective, TruncateDirective, TruncatedTextPipe],
   templateUrl: './navigation-level.html',
   styleUrl: './navigation-level.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,11 +30,20 @@ export class NavigationLevel {
 
   protected readonly frames: Signal<string[]> = computed(() => [this.navigationStateService.levelKey()]);
   protected readonly animated: Signal<boolean> = computed(() => !this.bxA11yService.isReducedMotion());
+  protected readonly breadcrumbItems: Signal<readonly IBreadcrumbTrailItem[]> = computed(() =>
+    this.navigationStateService.breadcrumbs().map((crumb) => ({ label: crumb.label, action: true }))
+  );
+
+  /** Optional coordinated owner menu, allowing hidden ancestors to open without dismissing the navigation panel. */
+  public readonly menuParent: InputSignal<MenuTriggerDirective | undefined> = input<MenuTriggerDirective | undefined>(undefined);
 
   /** Emits an interaction requesting the preceding navigation level. */
   public readonly back: OutputEmitterRef<MouseEvent | KeyboardEvent> = output<MouseEvent | KeyboardEvent>();
   /** Emits the breadcrumb and keyboard context of a requested ancestor navigation level. */
   public readonly navigate: OutputEmitterRef<INavigationLevelRequest> = output<INavigationLevelRequest>();
+
+  /** Rendered list scroller, available after rendering so the navigation owner can observe its scrollbar gutters. */
+  public readonly scrollElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('scroll', { read: ElementRef<HTMLElement> });
 
   protected requestBack(event: MouseEvent | KeyboardEvent): void {
     this.back.emit(event);

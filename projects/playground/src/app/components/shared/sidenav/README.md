@@ -28,6 +28,8 @@ entry. Nested leaf pages use text-only rows; nested parents retain their icons.
 The header shows the Blocks logo alone when compact and includes the title and release label when expanded. Shared SideNav controls all panel surfaces,
 dimensions, icons, tooltips, search, and theme behavior.
 
+SideNav automatically aligns the wrapped logo with navigation icons and controls. The shell supplies the logo size without a separate alignment margin.
+
 ## Behavior and accessibility
 
 The navigation retains the shared keyboard browsing, Back and ancestor actions, focus restoration, reduced-motion support, and mobile focus trap. Opening a

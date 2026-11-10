@@ -32,6 +32,9 @@ export class PageExamples {
   protected readonly nesting: WritableSignal<number> = signal(1);
 
   protected readonly automatic: WritableSignal<boolean> = signal(false);
+
+  protected readonly breadcrumbLimit: WritableSignal<number> = signal(3);
+
   protected readonly showFooter: WritableSignal<boolean> = signal(true);
 
   protected readonly result: WritableSignal<string> = signal('No action yet.');
@@ -39,10 +42,12 @@ export class PageExamples {
   protected readonly nestingOptions: readonly IBxSelectOption<number>[] = [
     { label: 'Root page', value: 0 },
     { label: 'One nesting', value: 1 },
-    { label: 'Two nestings', value: 2 }
+    { label: 'Two nestings', value: 2 },
+    { label: 'Three nestings', value: 3 }
   ];
 
   protected readonly previewBreadcrumbs: Signal<readonly IPageBreadcrumb[]> = computed(() => [
+    ...(this.nesting() >= 3 ? [{ label: 'Home', route: '/home' }] : []),
     { label: 'Components', route: '/components' },
     ...(this.nesting() >= 1 ? [{ label: 'Layout', route: '/components/layout' }] : []),
     ...(this.nesting() >= 2 ? [{ label: 'Page container', route: '/components/layout/page-container' }] : [])

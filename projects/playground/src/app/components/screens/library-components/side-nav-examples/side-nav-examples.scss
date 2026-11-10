@@ -1,19 +1,25 @@
+@use 'sass:map';
 @use 'core/styles/helpers' as *;
 
 :host {
     display: block;
     min-width: 0;
     width: 100%;
+    container-type: inline-size;
 }
 
-.demo-language-row {
-    display: flex;
-    justify-content: flex-end;
+.nav-demo-top-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: spacing(3);
     inline-size: 100%;
     min-inline-size: 0;
     margin-block-end: spacing(4);
 
     bx-select {
+        grid-row: 1;
+        justify-self: end;
         inline-size: 12rem;
         max-inline-size: 100%;
     }
@@ -21,15 +27,51 @@
 
 .nav-demo-controls {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
     gap: spacing(3);
     margin-block-end: spacing(4);
 }
 
-.nav-demo-controls bx-input-field {
-    inline-size: 12rem;
-    max-inline-size: 100%;
+.nav-demo-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+}
+
+.nav-demo-fields {
+    display: grid;
+    grid-row: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: spacing(3);
+    min-inline-size: 0;
+}
+
+.nav-demo-fields bx-input-field {
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+@container (min-width: #{map.get($breakpoints, sm)}) {
+    .nav-demo-top-row {
+        grid-template-columns: minmax(0, 1fr) 12rem;
+
+        bx-select {
+            grid-column: 2;
+        }
+    }
+
+    .nav-demo-fields {
+        grid-row: 1;
+        grid-column: 1;
+        max-inline-size: calc(24rem + #{spacing(3)});
+    }
+}
+
+@container (max-width: #{map.get($breakpoints, xs)}) {
+    .nav-demo-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 .nav-demo-frame {
@@ -38,7 +80,7 @@
     display: flex;
     min-width: 0;
     width: 100%;
-    min-height: var(--bx-side-nav-height, 420px);
+    min-height: var(--bx-side-nav-height, 860px);
     overflow: hidden;
     border: 1px solid var(--bx-border-default);
     border-radius: radius(lg);

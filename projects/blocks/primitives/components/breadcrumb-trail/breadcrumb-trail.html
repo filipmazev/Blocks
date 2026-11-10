@@ -1,0 +1,152 @@
+<nav [attr.aria-label]="resolvedLabel()">
+    <ol class="bx-breadcrumb-trail">
+        @for (entry of leading(); track entry.index; let last = $last) {
+            <li>
+                <ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{ $implicit: entry }" />
+                @if (!last || truncated()) {
+                    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+                }
+            </li>
+        }
+        @if (truncated()) {
+            <li class="bx-breadcrumb-overflow-entry">
+                @if (interactive()) {
+                    <button
+                        type="button"
+                        class="bx-breadcrumb-action bx-breadcrumb-overflow-trigger"
+                        [bxMenuTrigger]="overflowMenu"
+                        [menuHover]="hover()"
+                        [menuParent]="menuParent()"
+                        [menuPlacement]="placement()"
+                        [menuLabel]="overflowLabel()"
+                        [attr.aria-label]="overflowLabel()">
+                        <ng-container [ngTemplateOutlet]="overflowSymbol" />
+                    </button>
+                } @else {
+                    <span class="bx-breadcrumb-overflow-description" [bxTooltip]="hiddenDescription()" [bxTooltipHover]="hover()" [placement]="placement()">
+                        <ng-container [ngTemplateOutlet]="overflowSymbol" />
+                    </span>
+                }
+                <ng-container [ngTemplateOutlet]="separatorTemplate" />
+            </li>
+        }
+        @for (entry of trailing(); track entry.index; let last = $last) {
+            <li>
+                <ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{ $implicit: entry }" />
+                @if (!last) {
+                    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+                }
+            </li>
+        }
+    </ol>
+</nav>
+<ng-template #separatorTemplate>
+    @if (divider(); as icon) {
+        <bx-icon class="bx-breadcrumb-divider" size="16" aria-hidden="true" [name]="icon" />
+    } @else {
+        <span class="bx-breadcrumb-divider" aria-hidden="true">{{ separatorText() }}</span>
+    }
+</ng-template>
+<ng-template #item let-entry>
+    <ng-container [ngTemplateOutlet]="compact() ? compactItem : regularItem" [ngTemplateOutletContext]="{ $implicit: entry }" />
+</ng-template>
+<ng-template #regularItem let-entry>
+    @if (currentLast() && entry.index === items().length - 1) {
+        <span class="bx-breadcrumb-current" aria-current="page">{{ entry.label }}</span>
+    } @else if (!interactive()) {
+        <span>{{ entry.label }}</span>
+    } @else if (entry.item.action) {
+        <button type="button" class="bx-breadcrumb-action" [disabled]="entry.item.disabled" (click)="activate(entry, $event)">
+            {{ entry.label }}
+        </button>
+    } @else if (entry.item.route !== undefined) {
+        <a
+            class="bx-breadcrumb-action"
+            [routerLink]="entry.item.disabled ? null : entry.item.route"
+            [attr.aria-disabled]="entry.item.disabled || null"
+            [attr.tabindex]="entry.item.disabled ? -1 : null"
+            (click)="activate(entry, $event)">
+            {{ entry.label }}
+        </a>
+    } @else {
+        <span>{{ entry.label }}</span>
+    }
+</ng-template>
+<ng-template #compactItem let-entry>
+    @if (currentLast() && entry.index === items().length - 1) {
+        <span
+            #currentText="bxTruncate"
+            class="bx-breadcrumb-current"
+            aria-current="page"
+            bxTooltipTouch="longpress"
+            [bxTruncate]="compact()"
+            [bxTooltip]="entry.label | bxTruncatedText: currentText.truncated() : compact()"
+            >{{ entry.label }}</span
+        >
+    } @else if (!interactive()) {
+        <span
+            #descriptionText="bxTruncate"
+            bxTooltipTouch="longpress"
+            [bxTruncate]="compact()"
+            [bxTooltip]="entry.label | bxTruncatedText: descriptionText.truncated() : compact()"
+            >{{ entry.label }}</span
+        >
+    } @else if (entry.item.action) {
+        <button
+            type="button"
+            class="bx-breadcrumb-action"
+            bxTooltipTouch="longpress"
+            [bxTooltip]="entry.label | bxTruncatedText: actionText.truncated() : compact()"
+            [disabled]="entry.item.disabled"
+            (click)="activate(entry, $event)">
+            <span #actionText="bxTruncate" [bxTruncate]="compact()">{{ entry.label }}</span>
+        </button>
+    } @else if (entry.item.route !== undefined) {
+        <a
+            class="bx-breadcrumb-action"
+            bxTooltipTouch="longpress"
+            [bxTooltip]="entry.label | bxTruncatedText: linkText.truncated() : compact()"
+            [routerLink]="entry.item.disabled ? null : entry.item.route"
+            [attr.aria-disabled]="entry.item.disabled || null"
+            [attr.tabindex]="entry.item.disabled ? -1 : null"
+            (click)="activate(entry, $event)">
+            <span #linkText="bxTruncate" [bxTruncate]="compact()">{{ entry.label }}</span>
+        </a>
+    } @else {
+        <span
+            #staticText="bxTruncate"
+            bxTooltipTouch="longpress"
+            [bxTruncate]="compact()"
+            [bxTooltip]="entry.label | bxTruncatedText: staticText.truncated() : compact()"
+            >{{ entry.label }}</span
+        >
+    }
+</ng-template>
+<ng-template #overflowSymbol>
+    @if (customOverflowText()) {
+        {{ overflowText() }}
+    } @else {
+        <bx-icon name="ellipsis" size="16" aria-hidden="true" />
+    }
+</ng-template>
+<ng-template #overflowMenu>
+    <bx-menu class="bx-breadcrumb-overflow-menu">
+        @for (entry of hidden(); track entry.index) {
+            @if (entry.item.action) {
+                <bx-menu-item [label]="entry.label" [wrapLabel]="true" [disabled]="entry.item.disabled ?? false" (action)="activate(entry, $event)" />
+            } @else if (entry.item.route !== undefined) {
+                <a
+                    class="bx-breadcrumb-menu-item"
+                    role="menuitem"
+                    [routerLink]="entry.item.disabled ? null : entry.item.route"
+                    [attr.aria-disabled]="entry.item.disabled || null"
+                    [attr.tabindex]="entry.item.disabled ? -1 : null"
+                    (click)="activate(entry, $event)">
+                    {{ entry.label }}
+                </a>
+            } @else {
+                <span class="bx-breadcrumb-menu-description">{{ entry.label }}</span>
+            }
+        }
+    </bx-menu>
+</ng-template>

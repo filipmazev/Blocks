@@ -4,6 +4,10 @@
     display: block;
 }
 
+.home-container {
+    position: relative;
+}
+
 .hero {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));

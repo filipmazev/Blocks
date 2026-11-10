@@ -1,8 +1,0 @@
-@use 'core/styles/helpers' as *;
-
-:host {
-    display: flex;
-    flex-direction: column;
-    min-inline-size: 0;
-    gap: spacing(4);
-}

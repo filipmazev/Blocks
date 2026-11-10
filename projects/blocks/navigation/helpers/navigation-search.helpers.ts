@@ -84,6 +84,10 @@ export function searchNavigation(groups: readonly INavigationTreeGroup[], query:
           item,
           path: [...ancestors.map((ancestor) => ancestor.id), item.id],
           context: [sectionTitle, ...ancestors.map((ancestor) => ancestor.label)].filter(Boolean).join(' › '),
+          breadcrumbs: [
+            ...(sectionTitle ? [{ label: sectionTitle }] : []),
+            ...ancestors.map((ancestor) => ({ label: ancestor.label, route: ancestor.route, disabled: ancestor.data?.disabled }))
+          ],
           score
         });
       }

@@ -4,6 +4,11 @@
 
 export * from '@primitives/components/menu-item/menu-item';
 export * from '@primitives/components/menu/menu';
+export * from '@primitives/components/breadcrumb-trail/breadcrumb-trail';
+export * from '@primitives/interfaces/ibreadcrumb-trail-config.interface';
+export * from '@primitives/interfaces/ibreadcrumb-trail-item.interface';
+export * from '@primitives/interfaces/ibreadcrumb-trail-selection.interface';
+export * from '@primitives/tokens/breadcrumb-defaults.token';
 export * from '@primitives/components/tab/tab';
 export * from '@primitives/components/tabs/tabs';
 export * from '@primitives/components/tooltip/tooltip';

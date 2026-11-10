@@ -1,19 +1,20 @@
 import type { InputSignal, Signal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, contentChild, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 
+import { BreadcrumbTrail } from '@primitives/components/breadcrumb-trail/breadcrumb-trail';
 import { Container } from '@primitives/components/container/container';
 import { PageHeader } from '@primitives/components/page-header/page-header';
+import { IBreadcrumbTrailConfig } from '@primitives/interfaces/ibreadcrumb-trail-config.interface';
 import { IPageBreadcrumb } from '@primitives/interfaces/ipage-breadcrumb.interface';
 import { BX_PAGE_NAVIGATION } from '@primitives/tokens/page-navigation.token';
 import { ContainerSize } from '@primitives/types/layout.types';
 
 @Component({
   selector: 'bx-page-container',
-  imports: [Container, PageHeader, RouterLink],
+  imports: [Container, PageHeader, BreadcrumbTrail],
   templateUrl: './page-container.html',
   styleUrl: './page-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -50,4 +51,6 @@ export class PageContainer {
   public readonly breadcrumbsAfter: InputSignal<number> = input(1);
   /** Translatable accessible name of the breadcrumb navigation. Defaults to Breadcrumbs. */
   public readonly breadcrumbLabel: InputSignal<ResolvableText> = input<ResolvableText>('Breadcrumbs');
+  /** Breadcrumb overflow limit, translated action labels, hover behavior, and placement. Defaults to shared settings, then three visible entries. */
+  public readonly breadcrumbConfig: InputSignal<IBreadcrumbTrailConfig> = input<IBreadcrumbTrailConfig>({});
 }

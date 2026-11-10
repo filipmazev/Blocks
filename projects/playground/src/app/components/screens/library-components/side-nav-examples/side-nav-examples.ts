@@ -27,13 +27,24 @@ import { Highlight } from 'ngx-highlightjs';
 export class SideNavExamples {
   protected readonly navigationDemoI18nService = inject(SideNavDemoI18nService);
 
-  protected readonly groups: Signal<INavigationTreeGroup[]> = computed(() => navigationDemoGroups('/components/side-nav', this.navigationDemoI18nService));
+  protected readonly groups: Signal<INavigationTreeGroup[]> = computed(() => {
+    const groups = navigationDemoGroups('/components/side-nav', this.navigationDemoI18nService);
+
+    if (!this.longLabels()) return groups;
+
+    const suffix = this.navigationDemoI18nService.translate('demo.longSuffix');
+
+    return groups.map((group) => ({ ...group, title: `${group.title} ${suffix}`, items: this.extendLabels(group.items, suffix) }));
+  });
   protected readonly text: Signal<ISideNavExamplesTextState> = computed(() => ({
     right: this.navigationDemoI18nService.translate('demo.right'),
     rail: this.navigationDemoI18nService.translate('demo.rail'),
     mobile: this.navigationDemoI18nService.translate('demo.mobile'),
     inlineMode: this.navigationDemoI18nService.translate('demo.inlineMode'),
     search: this.navigationDemoI18nService.translate('demo.search'),
+    icons: this.navigationDemoI18nService.translate('demo.icons'),
+    breadcrumbLimit: this.navigationDemoI18nService.translate('demo.breadcrumbLimit'),
+    longLabels: this.navigationDemoI18nService.translate('demo.longLabels'),
     rtl: this.navigationDemoI18nService.translate('demo.rtl'),
     custom: this.navigationDemoI18nService.translate('demo.custom'),
     height: this.navigationDemoI18nService.translate('demo.height'),
@@ -55,10 +66,13 @@ export class SideNavExamples {
   protected readonly collapsed: WritableSignal<boolean> = signal(false);
   protected readonly mobile: WritableSignal<boolean> = signal(false);
   protected readonly searchable: WritableSignal<boolean> = signal(true);
+  protected readonly icons: WritableSignal<boolean> = signal(true);
+  protected readonly longLabels: WritableSignal<boolean> = signal(false);
   protected readonly rtl: WritableSignal<boolean> = signal(false);
   protected readonly custom: WritableSignal<boolean> = signal(false);
 
-  protected readonly height: WritableSignal<string | number | null> = signal<string | number | null>(420);
+  protected readonly height: WritableSignal<string | number | null> = signal<string | number | null>(860);
+  protected readonly breadcrumbLimit: WritableSignal<string | number | null> = signal<string | number | null>(3);
 
   protected readonly selected: WritableSignal<INavigationItem | undefined> = signal<INavigationItem | undefined>(undefined);
 
@@ -73,6 +87,11 @@ export class SideNavExamples {
     side: this.right() ? 'right' : 'left',
     mobile: this.mobile(),
     searchable: this.searchable(),
+    showItemIcons: this.icons(),
+    breadcrumbConfig: {
+      maxVisibleItems: Number(this.breadcrumbLimit()) || 3,
+      overflowLabel: { key: 'nav.hiddenPath' }
+    },
     persistenceKey: 'blocks.side-nav.demo.v1',
     ariaLabel: { key: 'nav.name' },
     searchLabel: { key: 'nav.search' },
@@ -92,4 +111,16 @@ export class SideNavExamples {
   protected select(item: INavigationItem): void {
     this.selected.set(item);
   }
+
+  //#region Helpers
+
+  private extendLabels(items: INavigationItem[], suffix: string): INavigationItem[] {
+    return items.map((item) => {
+      const label = `${item.label} ${suffix}`;
+
+      return { ...item, label, data: { ...item.data, label }, children: this.extendLabels(item.children ?? [], suffix) };
+    });
+  }
+
+  //#endregion
 }

@@ -1,19 +1,11 @@
 <bx-container class="page-layout" [size]="size()">
     @if (resolvedBreadcrumbs().length) {
-        <nav class="breadcrumbs" [attr.aria-label]="resolvedBreadcrumbLabel()">
-            <ol>
-                @for (crumb of resolvedBreadcrumbs(); track $index; let last = $last) {
-                    <li>
-                        @if (last) {
-                            <span aria-current="page">{{ crumb.label }}</span>
-                        } @else {
-                            <a [routerLink]="crumb.route">{{ crumb.label }}</a>
-                            <span class="breadcrumb-divider" aria-hidden="true">/</span>
-                        }
-                    </li>
-                }
-            </ol>
-        </nav>
+        <bx-breadcrumb-trail
+            class="breadcrumbs"
+            separator="/"
+            [items]="resolvedBreadcrumbs()"
+            [config]="breadcrumbConfig()"
+            [ariaLabel]="resolvedBreadcrumbLabel()" />
     }
     @if (!projectedHeader()) {
         <bx-page-header

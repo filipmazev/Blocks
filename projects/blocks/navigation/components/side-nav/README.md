@@ -175,6 +175,8 @@ Use application-wide `sideNav` defaults in `defineNavigation`, then instance ove
 | `--bx-side-nav-width`                                                         | Resolved `width` configuration                                              |
 | `--bx-side-nav-collapsed-width`                                               | Resolved `collapsedWidth` configuration                                     |
 | `--bx-side-nav-icon-center`                                                   | Half the rail's inner width; shared centerline for brand and controls       |
+| `--bx-side-nav-header-padding-inline-start`                                   | Automatic leading-visual alignment; ordinary padding for text-only content  |
+| `--bx-side-nav-footer-padding-inline-start`                                   | Automatic leading-visual alignment; ordinary padding for text-only content  |
 | `--bx-nav-icon-column-size`                                                   | Item icon column computed from rail width, padding and scrollbar gutters    |
 | `--bx-side-nav-height`                                                        | `38rem` for inline panels                                                   |
 | `--bx-side-nav-item-radius`                                                   | Shared medium radius                                                        |
@@ -197,10 +199,47 @@ target. Both direct links and submenu icons show their labels in tooltips when c
 without scrolling the page. The root and nested lists reserve their scrollbar gutters when content fits, preventing width shifts. Horizontal overflow is
 constrained, and labels wrap within the available width.
 
-Navigation icons remain centered in their compact highlights and share the logo/search/collapse centerline in both states. Custom item templates can give their
-leading icon `inline-size: var(--bx-nav-icon-column-size, auto)` and `justify-content: center`. Custom brand slots can use `--bx-side-nav-icon-center` to align
-a differently sized logo to that same axis. Existing collapsed sections stay collapsed when switching to the rail; their section actions remain available to
-enter the section.
+Navigation icons remain centered in their compact highlights and share the logo/search/collapse centerline in both states. Header and footer slots automatically
+align their first leading visual to that same axis, including icons, images, inline SVG logos, canvas, and visuals wrapped in brand links. The slot owns the
+inset and reacts to rendered size and content changes; consumers do not need icon-width calculations or logo margins. Text-only slots retain ordinary padding.
+For an opaque custom visual host, mark it with `data-bx-side-nav-leading` so the library can measure its outer box. The optional header/footer padding variables
+above override automatic alignment when an application deliberately needs another layout.
+
+Custom item templates can give their leading icon `inline-size: var(--bx-nav-icon-column-size, auto)` and `justify-content: center`. Existing collapsed sections
+stay collapsed when switching to the rail; their section actions remain available to enter the section.
+
+Expanded item links mirror the leading icon's column inset at their trailing edge, keeping tags and end icons clear of the selected border. The calculation uses
+the item's configured icon size; iconless entries retain ordinary text padding. `--bx-nav-item-padding-inline-end` optionally overrides this trailing inset, and
+compact icons keep their existing centered layout.
+
+Root and nested lists share their horizontal insets and icon column. The nested Back action uses the logo/search/collapse centerline, and text-only rows retain
+the label inset of rows with icons, including custom item templates. When every visible root row is iconless, the root uses ordinary item padding without
+reserving an icon column. Nested text-only levels retain the column to preserve their alignment with the parent level. Custom templates with a wrapped leading
+icon can set `--bx-nav-iconless-padding-inline: 0` on their `bx-side-nav` and reserve the leading column themselves. Scrollbar gutters are measured on the
+currently rendered list, including direct entry into a nested route and transitions between short and scrollable levels.
+
+The nested header reserves the same height with or without an ancestor trail, so entering deeper levels does not push the item list down. Equal container
+padding surrounds the heading and Back control; the search row does not add another gap above this header. Ancestors stay on one line, with additional entries
+moving into the overflow menu as width becomes constrained. Long section/current-parent names and individual ancestors truncate with full-name tooltips on
+hover, keyboard focus, or touch-and-hold; ordinary taps keep their existing browsing/navigation actions. Overflow-menu labels wrap to show their full names.
+
+Customize header sizing through `--bx-nav-level-header-padding-block` (spacing 2), `--bx-nav-level-line-size` (spacing 6), and `--bx-nav-level-heading-gap`
+(spacing 1). The reserved heading height is two line sizes plus the gap, independent of breadcrumb count and label length.
+
+Search results do not reserve an icon column for iconless entries, even when other results have icons. Each result's parent path aligns with its label. The path
+remains descriptive inside the result's native page link, so clicking its labels or ellipsis still selects the result. Hidden search ancestors are
+noninteractive tooltip text; they never navigate or steal the result's activation.
+
+Nested ancestor paths and search-result paths share `config.breadcrumbConfig`. The default retains the first and last two entries and places the middle entries
+in an interactive ellipsis menu. Configure `maxVisibleItems`, `overflowLabel`, `overflowText`, `openOnHover`, and `placement`; use `maxVisibleItems: null` to
+remove the configured count limit. Compact nested headers still condense the trail to fit their width. Hidden nested ancestors browse their original levels
+through Blocks menu items. Search paths use descriptive overflow tooltips. Interactive browsing paths support hover, click/tap, and keyboard activation. Global
+`BX_BREADCRUMB_DEFAULTS` from primitives supplies shared defaults; instance values override application `sideNav` settings property by property. See the
+[shared trail guide](../../../primitives/components/breadcrumb-trail/README.md).
+
+```html
+<bx-side-nav [config]="{ breadcrumbConfig: { maxVisibleItems: 3, overflowLabel: { key: 'nav.hiddenAncestors' }, openOnHover: true } }" />
+```
 
 Desktop expansion lays out content at its final width behind the panel's clipping edge, preventing labels from repeatedly wrapping as the rail opens. Labels and
 disclosure arrows fade in with search during the final 60ms of the width transition, using its remaining running time. Initial expanded rendering and mobile
@@ -241,6 +280,12 @@ level restores its scroll position and focus.
 
 Opening a new level focuses its active route when present, otherwise its first enabled item. Changing the available width preserves the browsing path. A compact
 rail temporarily expands while browsing children without changing its saved collapse preference, and returns to the rail when browsing returns to the root.
+
+Explicitly collapsing a nested level shows the root rail while preserving its browsing path and scroll position. The originating root item or section is
+highlighted; expanding restores the same nested list. This branch highlight does not mark the ancestor as the current page. Selecting a different root page from
+the compact rail clears the suspended branch, while opening another parent replaces it with that parent's children. The browsing path is retained only for the
+mounted instance; persistent storage continues to save only desktop and section-collapse preferences.
+
 Levels slide briefly on explicit browsing changes; reduced motion disables the slide. Opening a submenu requires a disclosure click, touch, or keyboard action.
 
 Search normalizes accents and case, ranks exact/subsequence/keyword matches, and tolerates a single edit in words of at least four characters. It renders a flat
@@ -290,10 +335,15 @@ Visit `/components/side-nav`. The application shell also uses `SideNav` with rea
 brand, and the built-in footer collapse control. Components groups the five component categories, with Layout nested under Primitives; Tools groups the
 configurators behind its own overview. Tokens, Icons, and Utilities remain separate root entries. Existing component and configurator URLs remain valid. The
 dedicated demo supplies a four-level fixture tree so selections remain on the demo page, and exposes side, collapsed/mobile presentation, RTL, custom item
-content, panel height, optional search, and a live language dropdown with English, Spanish, French, and German translations covering every menu item, section,
-action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of the application
-shell’s responsive navigation. Desktop and mobile browse the same nested lists. Try `dsgn tkns`, `palette`, `tokens`, or `Palette` for flat contextual results,
-clear the search, and use the disclosures and Back control through all four levels.
+content, item-icon visibility, panel height, optional search, and a live language dropdown with English, Spanish, French, and German translations covering every
+menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of
+the application shell’s responsive navigation. Desktop and mobile browse the same nested lists. Try `dsgn tkns`, `palette`, `tokens`, or `Palette` for flat
+contextual results, clear the search, and use the disclosures and Back control through all four levels. Turn item icons off to compare root text padding with
+nested label alignment. Collapse a deep level using the footer or the icon-rail checkbox, then expand it to restore that list and its scroll position; the
+compact rail highlights its originating branch.
+
+Enable Long labels to exercise oversized section and item names at every level, including full-name tooltips, compact ancestor overflow, narrow presentation,
+and unchanged header/list geometry while browsing deeper.
 
 The fixed drawer acquires its own `ScrollLockService` lock only while its mobile overlay presentation is open. Closing, route navigation, changing to desktop or
 inline presentation, and destruction release that lock; a concurrently open modal keeps its own lock. `--bx-side-nav-backdrop` remains available for an explicit

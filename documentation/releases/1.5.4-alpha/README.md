@@ -11,6 +11,43 @@ Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has 
   avoiding an additional wait after rendering. Initial expanded rendering and mobile drawers have no additional reveal delay.
 - Added `--bx-side-nav-label-duration`, defaulting to `90ms`, to customize the fade duration. Existing `--bx-side-nav-duration` and `--bx-side-nav-easing`
   continue to configure the width transition.
+- Unified root and nested icon columns, item insets, and reserved scrollbar gutters. Scrollbar measurements now follow the rendered list, including direct entry
+  into a nested level and changes between short and scrollable lists.
+- Fixed iconless spacing: entirely iconless root lists use ordinary text padding, nested lists retain their parent alignment, and each iconless search result
+  uses text padding even in mixed results. Result paths align with their labels. Trailing padding mirrors the leading icon inset so tags, end icons, and long
+  ancestor text stay clear of the selected border.
+- Header and footer slots automatically align their first leading visual with navigation icons, search, and collapse controls. Wrapped logos and differently
+  sized icons no longer require consumer margin calculations. Text-only slots keep ordinary padding; optional header/footer inset variables and
+  `data-bx-side-nav-leading` support deliberate custom layouts.
+- Collapsing a nested level now preserves its browsing path and scroll position while showing the root rail. The originating root item or section remains
+  highlighted; expanding restores the nested list. Selecting another root page clears the retained branch, while opening another parent replaces it. Ancestor
+  highlights do not claim `aria-current="page"` or expose a hidden submenu as expanded.
+- Nested side- and top-navigation headers reserve a consistent two-line heading area with equal container padding, keeping the list's starting position stable
+  as ancestors appear. Long section, parent, and ancestor names truncate with full-name hover, keyboard-focus, and touch-and-hold feedback. Compact trails
+  condense further on narrow panels; hidden ancestor labels wrap in the existing menu.
+- Search-result paths remain descriptive inside their result's native page link. Neither visible ancestor labels nor the horizontal ellipsis intercept result
+  activation; hidden search ancestors appear as noninteractive tooltip text. Long and unbroken path labels wrap within the padded content area.
+
+## Breadcrumb trails and overflow
+
+- Added reusable `BreadcrumbTrail` (`bx-breadcrumb-trail`) to `@filip.mazev/blocks/primitives`, with typed `IBreadcrumbTrailItem`, `IBreadcrumbTrailConfig`, and
+  `IBreadcrumbTrailSelection` contracts. It supports native route links, browsing actions, descriptive entries, disabled state, translated text, and original
+  item/index activation events.
+- Long trails keep the first entry and the last two entries by default, using the horizontal `ellipsis` icon for the hidden middle ancestors. The existing
+  Blocks menu surface and shared menu-item styling provide hover, click/tap, keyboard navigation, Escape dismissal, focus restoration, and viewport constraints.
+  Top-navigation overflow retains its enclosing menu panel.
+- Added configurable `maxVisibleItems`, `overflowLabel`, `overflowText`, `openOnHover`, and `placement`, plus optional application-wide
+  `BX_BREADCRUMB_DEFAULTS`. The count excludes the ellipsis, clamps to at least two entries, and accepts null to remove the configured limit. Compact mode can
+  still reduce the visible count to fit the container and exposes full labels through truncation tooltips.
+- `Breadcrumbs` now accepts an explicit `items` trail, a translatable accessible `label`, and `breadcrumbConfig`, while retaining route-derived defaults and its
+  existing minimum-count/divider inputs. `PageContainer` adds `breadcrumbConfig`; side- and top-navigation expose the same settings through
+  `config.breadcrumbConfig`, merging application and instance settings property by property.
+- The final page breadcrumb stays visible and retains `aria-current="page"`. Shared styles preserve RTL separation, constrained-container wrapping, live
+  translations, and theme inheritance. Resize observers and tooltip/menu resources are cleaned up, and changed content or configuration closes stale overflow.
+
+See the [Breadcrumbs guide](../../../projects/blocks/navigation/components/breadcrumbs/README.md),
+[shared trail guide](../../../projects/blocks/primitives/components/breadcrumb-trail/README.md), and
+[SideNav guide](../../../projects/blocks/navigation/components/side-nav/README.md) for configuration and integration examples.
 
 ## Accessibility and lifecycle
 
@@ -29,7 +66,14 @@ Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has 
 
 ## Compatibility and customization
 
-Existing navigation inputs, outputs, routes, and persistence contracts remain unchanged. Applications using the default templates receive the fixes directly.
+Existing navigation inputs, outputs, routes, and persistence contracts remain available. Explicit desktop collapse now retains the mounted browsing branch;
+persistent storage continues to save only desktop and section-collapse preferences. Applications using the default templates receive the spacing and alignment
+fixes directly. Remove manual header/footer leading-icon margins when adopting automatic slot alignment; documented padding variables provide explicit
+overrides.
+
+Breadcrumb overflow now defaults to three visible entries. Set `breadcrumbConfig.maxVisibleItems` to null, or provide that value through
+`BX_BREADCRUMB_DEFAULTS`, to remove the configured count limit. Compact nested headers still condense to fit their available width. Search-result paths remain
+noninteractive, while ordinary breadcrumb ancestors and nested browsing actions retain their navigation behavior.
 
 Custom item, header, and footer templates can apply the shared reveal to their text using `opacity: var(--bx-side-nav-label-opacity, 1)` and an opacity
 transition with `var(--bx-side-nav-label-transition-duration, 0ms)`. Keep icons and focus indicators outside the faded text. The inherited values follow the

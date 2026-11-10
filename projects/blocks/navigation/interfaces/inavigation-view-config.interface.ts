@@ -1,9 +1,13 @@
+import type { IBreadcrumbTrailConfig } from '@filip.mazev/blocks/primitives';
+
 import { ResolvableText } from '@filip.mazev/blocks/core';
 
 import { NavigationSide } from '@navigation/types/navigation-view.types';
 
 /** Text, icons, and item presentation shared by Blocks navigation views. All properties are optional. */
 export interface INavigationViewConfig {
+  /** Optional nested-level and search-path overflow settings. Defaults to three visible entries; null maxVisibleItems displays the complete trail. */
+  breadcrumbConfig?: IBreadcrumbTrailConfig;
   /** Physical side for a vertical navigation surface. Defaults to left; horizontal navigation resolves its own content direction. */
   side?: NavigationSide;
   /** Optional search field. Defaults to true; searches all visible loaded descendants. */

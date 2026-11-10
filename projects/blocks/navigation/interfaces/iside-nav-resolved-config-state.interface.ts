@@ -1,10 +1,13 @@
 import type { ResolvableText } from '@filip.mazev/blocks/core';
+import type { IBreadcrumbTrailConfig } from '@filip.mazev/blocks/primitives';
 import type { NavigationSide } from '@navigation/types/navigation-view.types';
 
 import { WindowDimensionsService } from '@filip.mazev/blocks/core';
 
 /** Resolved resolvedConfig state used by SideNav. */
 export interface ISideNavResolvedConfigState {
+  /** Nested-level and search-path overflow overrides after merging application and instance settings. Optional; shared breadcrumb defaults fill omitted values. */
+  breadcrumbConfig?: IBreadcrumbTrailConfig;
   /** Resolved position value. */
   position: 'fixed' | 'inline';
   /** Resolved width value. */

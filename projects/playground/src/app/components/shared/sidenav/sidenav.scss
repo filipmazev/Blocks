@@ -20,7 +20,6 @@ app-blocks-logo {
     flex: none;
     width: spacing(8);
     height: spacing(8);
-    margin-inline-start: max(0px, calc(var(--bx-side-nav-icon-center) - #{spacing(3)} - #{spacing(4)}));
 }
 
 .brand span {

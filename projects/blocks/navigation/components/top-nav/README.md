@@ -80,6 +80,17 @@ URL should render its own page. Parameterized menu destinations still require co
 
 ## API
 
+Nested headers keep a two-line heading area with symmetric container padding. Their ancestor trail remains on one line and reduces the visible count further
+when needed to fit the panel; long names expose full-label hover/focus/long-press tooltips instead of increasing header height. Menu labels continue to wrap.
+`--bx-nav-level-header-padding-block`, `--bx-nav-level-line-size`, and `--bx-nav-level-heading-gap` customize this shared presentation.
+
+`config.breadcrumbConfig` controls nested and search-result ancestor overflow. It accepts the shared `IBreadcrumbTrailConfig`: `maxVisibleItems` defaults to 3
+visible entries, `null` displays all, `overflowLabel`/`overflowText` accept `ResolvableText`, `openOnHover` defaults to true, and `placement` defaults to
+bottom. Application `topNav` settings and instance overrides merge property by property, then use `BX_BREADCRUMB_DEFAULTS` and library defaults. Hidden
+ancestors open in the existing menu cascade, retaining the top-navigation panel. Search ancestors remain descriptive text inside the result link, including
+noninteractive hidden-path tooltips; nested ancestors browse levels without navigating. See the
+[shared trail guide](../../../primitives/components/breadcrumb-trail/README.md).
+
 | Input/model/output/method     | Contract                                                                                                                   |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `config`                      | Optional `ITopNavConfig`; instance settings override `provideNavigation().topNav`, then library defaults                   |

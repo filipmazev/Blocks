@@ -107,7 +107,7 @@
                 (ngModelChange)="search($event)" />
         }
         @if (!query().trim() && navigationStateService.hasLevel()) {
-            <bx-navigation-level (back)="back($event)" (navigate)="navigateLevel($event)" />
+            <bx-navigation-level [menuParent]="panelTrigger" (back)="back($event)" (navigate)="navigateLevel($event)" />
         } @else {
             <div class="bx-top-nav-scroll" data-bx-nav-scroll [id]="navigationFocusService.rootScrollId">
                 @if (query().trim()) {
@@ -118,7 +118,7 @@
                         [attr.aria-label]="navigationStateService.text().resultLabel"
                         (keydown)="menuKey($event)">
                         @for (entry of navigationStateService.searchResult().entries; track entry.item.id) {
-                            <bx-navigation-item [item]="entry.item" [context]="entry.context" />
+                            <bx-navigation-item [item]="entry.item" [context]="entry.context" [contextItems]="entry.breadcrumbs ?? []" [searchResult]="true" />
                         } @empty {
                             <p class="bx-top-nav-empty" role="status">{{ navigationStateService.text().emptyText }}</p>
                         }

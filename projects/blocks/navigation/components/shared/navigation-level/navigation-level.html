@@ -12,41 +12,41 @@
         </button>
         <div class="bx-nav-level-heading">
             @if (navigationStateService.breadcrumbs().length) {
-                <nav class="bx-nav-path" [attr.aria-label]="navigationStateService.text().pathLabel">
-                    <ol>
-                        @for (crumb of navigationStateService.breadcrumbs(); track $index; let last = $last) {
-                            <li>
-                                <button
-                                    bx-button
-                                    variant="text"
-                                    color="grayscale"
-                                    class="bx-nav-path-action"
-                                    type="button"
-                                    (click)="requestLevel(crumb, $event)">
-                                    {{ crumb.label }}
-                                </button>
-                                @if (!last) {
-                                    <bx-icon class="bx-nav-path-divider" name="chevron-right" size="16" aria-hidden="true" />
-                                }
-                            </li>
-                        }
-                    </ol>
-                </nav>
+                <bx-breadcrumb-trail
+                    class="bx-nav-path"
+                    [items]="breadcrumbItems()"
+                    [config]="navigationStateService.config().breadcrumbConfig ?? {}"
+                    [currentLast]="false"
+                    [compact]="true"
+                    [menuParent]="menuParent()"
+                    [ariaLabel]="navigationStateService.text().pathLabel"
+                    (selected)="requestLevel(navigationStateService.breadcrumbs()[$event.index], $event.event)" />
             }
             @if (navigationStateService.parent(); as parent) {
                 <a
+                    #parentText="bxTruncate"
+                    bxTruncate
+                    bxTooltipTouch="longpress"
                     class="bx-nav-parent-link"
+                    [bxTooltip]="parent.label | bxTruncatedText: parentText.truncated()"
                     [routerLink]="parent.route"
                     [attr.aria-current]="navigationStateService.isCurrent(parent) ? 'page' : null"
                     (click)="navigationStateService.select(parent)"
                     >{{ parent.label }}</a
                 >
             } @else {
-                <strong>{{ navigationStateService.currentGroup()?.title }}</strong>
+                <strong
+                    #sectionText="bxTruncate"
+                    bxTruncate
+                    bxTooltipTouch="longpress"
+                    class="bx-nav-parent-link"
+                    [bxTooltip]="navigationStateService.currentGroup()?.title | bxTruncatedText: sectionText.truncated()"
+                    >{{ navigationStateService.currentGroup()?.title }}</strong
+                >
             }
         </div>
     </div>
-    <div class="bx-nav-scroll" data-bx-nav-scroll [id]="navigationStateService.levelId + '-scroll'">
+    <div #scroll class="bx-nav-scroll" data-bx-nav-scroll [id]="navigationStateService.levelId + '-scroll'">
         @for (key of frames(); track key) {
             <div
                 class="bx-nav-items bx-nav-level-items"

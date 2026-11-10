@@ -10,7 +10,6 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Button, BxError, Checkbox, CheckboxIndicator, FormField, InputField, Radio, SliderDirective, SlideToggle } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { ModalBanner, ModalService } from '@filip.mazev/blocks/modal';
-import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
 import {
   ContextMenuDirective,
   DropdownDirective,
@@ -27,6 +26,7 @@ import {
 } from '@filip.mazev/blocks/primitives';
 import { ToastrService } from '@filip.mazev/blocks/toastr';
 
+import { BreadcrumbExamples } from '@playground/components/screens/library-components/breadcrumb-examples/breadcrumb-examples';
 import { IComponentDialogData } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-dialog-data.interface';
 import { EssentialsExamples } from '@playground/components/screens/library-components/essentials-examples/essentials-examples';
 import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
@@ -91,7 +91,7 @@ import { ComponentDialog } from './component-dialog';
     Tabs,
     Tab,
     TabContentDirective,
-    Breadcrumbs,
+    BreadcrumbExamples,
     Icon,
     BxSurfaceDirective,
     ModalBanner,

@@ -15,6 +15,7 @@ import {
   inject,
   Injector,
   input,
+  linkedSignal,
   model,
   NgZone,
   output,
@@ -73,7 +74,7 @@ import { NAVIGATION_CONFIG } from '@navigation/tokens/navigation-config.token';
     '[class.is-drawer-animated]': 'drawerAnimated() && !reducedMotion()',
     '[style.--bx-side-nav-width]': 'resolvedConfig().width',
     '[style.--bx-side-nav-collapsed-width]': 'resolvedConfig().collapsedWidth',
-    '[style.--bx-side-nav-scrollbar-gutter.px]': 'rootScrollbarGutter()'
+    '[style.--bx-side-nav-scrollbar-gutter.px]': 'scrollbarGutter()'
   }
 })
 export class SideNav {
@@ -94,22 +95,33 @@ export class SideNav {
   protected readonly navigationFocusService = inject(NavigationFocusService);
 
   private readonly saved: WritableSignal<ISideNavSavedState> = signal<ISideNavSavedState>({ sections: {} });
+
+  private readonly temporarilyExpanded: WritableSignal<boolean> = linkedSignal(() => {
+    this.collapsedPreference();
+
+    return false;
+  });
+
   private readonly loadedKey: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
   private readonly lockId: string = uuidv4();
 
   private readonly presentation: Signal<string> = computed(() => `${this.isMobile()}:${this.resolvedConfig().position}:${this.resolvedConfig().side}`);
+  private readonly collapsedPreference: Signal<boolean> = computed(() => this.collapsed() ?? this.saved().collapsed ?? this.resolvedConfig().collapsed);
 
   private readonly toggleElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('mobileToggle', { read: ElementRef<HTMLButtonElement> });
   private readonly panelElement: Signal<ElementRef<HTMLElement> | undefined> = viewChild('panel', { read: ElementRef<HTMLElement> });
+  private readonly headerContent: Signal<ElementRef<HTMLElement> | undefined> = viewChild('headerContent', { read: ElementRef<HTMLElement> });
+  private readonly footerContent: Signal<ElementRef<HTMLElement> | undefined> = viewChild('footerContent', { read: ElementRef<HTMLElement> });
   private readonly searchInput: Signal<SearchInput | undefined> = viewChild(SearchInput);
   private readonly rootScroll: Signal<ElementRef<HTMLElement> | undefined> = viewChild('rootScroll', { read: ElementRef<HTMLElement> });
+  private readonly navigationLevel: Signal<NavigationLevel | undefined> = viewChild(NavigationLevel);
   private readonly focusTrap: Signal<CdkTrapFocus | undefined> = viewChild(CdkTrapFocus);
 
   protected readonly drawerAnimated: WritableSignal<boolean> = signal(false);
   protected readonly expanding: WritableSignal<boolean> = signal(false);
 
-  protected readonly rootScrollbarGutter: WritableSignal<number> = signal(0);
+  protected readonly scrollbarGutter: WritableSignal<number> = signal(0);
 
   protected readonly id: string = `bx-side-nav-${this.lockId}`;
 
@@ -132,7 +144,11 @@ export class SideNav {
   public readonly resolvedConfig: Signal<ISideNavResolvedConfigState> = computed(() => ({
     ...SIDE_NAV_DEFAULTS,
     ...definedNavigationConfig(this.defaults?.sideNav),
-    ...definedNavigationConfig(this.config())
+    ...definedNavigationConfig(this.config()),
+    breadcrumbConfig: {
+      ...definedNavigationConfig(this.defaults?.sideNav?.breadcrumbConfig),
+      ...definedNavigationConfig(this.config().breadcrumbConfig)
+    }
   }));
   /** Whether configuration or the shared mobile breakpoint selects drawer presentation. */
   public readonly isMobile: Signal<boolean> = computed(
@@ -145,8 +161,8 @@ export class SideNav {
     () =>
       !this.isMobile() &&
       !this.navigationStateService.query().trim() &&
-      !this.navigationStateService.hasLevel() &&
-      (this.collapsed() ?? this.saved().collapsed ?? this.resolvedConfig().collapsed)
+      !(this.navigationStateService.hasLevel() && this.temporarilyExpanded()) &&
+      this.collapsedPreference()
   );
 
   /** Current navigation search text. */
@@ -187,9 +203,19 @@ export class SideNav {
 
   constructor() {
     afterRenderEffect((onCleanup) => {
-      const element = this.rootScroll()?.nativeElement;
+      const element = this.rootScroll()?.nativeElement ?? this.navigationLevel()?.scrollElement()?.nativeElement;
 
-      if (element) onCleanup(this.observeRootScrollbar(element));
+      if (element) onCleanup(this.observeScrollbar(element));
+    });
+    afterRenderEffect((onCleanup) => {
+      this.slotContext();
+
+      const header = this.headerContent()?.nativeElement;
+      const footer = this.footerContent()?.nativeElement;
+
+      if (header?.parentElement) onCleanup(this.observeSlotAlignment(header, header.parentElement));
+
+      if (footer) onCleanup(this.observeSlotAlignment(footer, footer));
     });
 
     let previouslyCollapsed: boolean | undefined;
@@ -331,6 +357,13 @@ export class SideNav {
     this.navigationStateService.expansionRequested.pipe(takeUntilDestroyed()).subscribe((request) => this.openChildren(request));
     this.navigationStateService.activated.pipe(takeUntilDestroyed()).subscribe((item) => {
       ++this.renderRevision;
+
+      if (this.isCollapsed()) {
+        this.navigationStateService.path.set([]);
+        this.navigationStateService.section.set(undefined);
+        this.temporarilyExpanded.set(false);
+      }
+
       this.itemSelected.emit(item);
       this.menuCascadeService.closeAll();
 
@@ -429,19 +462,19 @@ export class SideNav {
     );
   }
 
-  /** Toggle the desktop rail's collapsed preference and emit the requested collapsed state. */
+  /** Toggle the desktop rail, preserving the current browsing level and scroll position, and emit the requested collapsed preference. */
   public toggleCollapsed(): void {
     const next = !this.isCollapsed();
 
-    if (next) {
-      ++this.renderRevision;
-      this.navigationStateService.search('');
-      this.navigationStateService.path.set([]);
-      this.navigationStateService.section.set(undefined);
-    }
+    this.navigationFocusService.remember();
+    this.navigationStateService.search('');
+    this.temporarilyExpanded.set(false);
+
+    if (next) this.navigationStateService.revealItemId.set(this.navigationStateService.trail()[0]?.id);
 
     this.saved.update((saved) => ({ ...saved, collapsed: next }));
     this.collapsedChange.emit(next);
+    this.renderLevel(true, false, false);
   }
 
   /**
@@ -455,6 +488,9 @@ export class SideNav {
     if (!wasSearching) this.navigationFocusService.remember();
 
     this.navigationStateService.search(query);
+
+    if (wasSearching && !query.trim() && this.navigationStateService.hasLevel()) this.temporarilyExpanded.set(true);
+
     this.expandRequestedItemSection();
     this.renderLevel(wasSearching && !query.trim(), false, false);
   }
@@ -480,6 +516,9 @@ export class SideNav {
     event.stopPropagation();
     this.navigationFocusService.remember();
     this.navigationStateService.back();
+
+    if (!this.navigationStateService.hasLevel()) this.temporarilyExpanded.set(false);
+
     this.renderLevel(true, event instanceof KeyboardEvent || event.detail === 0, true);
   }
 
@@ -487,7 +526,10 @@ export class SideNav {
     this.navigationFocusService.remember();
     this.navigationStateService.navigateLevel(request.breadcrumb);
 
-    if (!this.navigationStateService.hasLevel()) this.expandRequestedItemSection();
+    if (!this.navigationStateService.hasLevel()) {
+      this.temporarilyExpanded.set(false);
+      this.expandRequestedItemSection();
+    }
 
     this.renderLevel(true, request.keyboard, true);
   }
@@ -496,6 +538,9 @@ export class SideNav {
     const origin = event.currentTarget as HTMLElement;
 
     this.navigationFocusService.remember(origin);
+
+    if (this.isCollapsed()) this.temporarilyExpanded.set(true);
+
     this.navigationStateService.enterSection(group);
     this.renderLevel(false, event.detail === 0, true);
   }
@@ -506,6 +551,8 @@ export class SideNav {
   }
 
   protected sectionActive(group: INavigationTreeGroup): boolean {
+    if (this.isCollapsed() && this.navigationStateService.hasLevel()) return this.navigationStateService.currentGroup()?.id === group.id;
+
     return group.items.some((item) => this.navigationStateService.activeIds().has(item.id));
   }
 
@@ -530,7 +577,7 @@ export class SideNav {
   protected panelKey(event: KeyboardEvent): void {
     if (event.defaultPrevented || event.key !== 'Escape' || this.menuCascadeService.hasOpenMenus()) return;
 
-    if (!this.query().trim() && this.navigationStateService.hasLevel()) {
+    if (!this.isCollapsed() && !this.query().trim() && this.navigationStateService.hasLevel()) {
       this.back(event);
 
       return;
@@ -546,7 +593,81 @@ export class SideNav {
 
   //#region Helpers
 
-  private observeRootScrollbar(element: HTMLElement): () => void {
+  private observeSlotAlignment(content: HTMLElement, container: HTMLElement): () => void {
+    const view = this.document.defaultView;
+
+    if (!view) return () => {};
+
+    return this.ngZone.runOutsideAngular(() => {
+      let leading: Element | undefined;
+
+      const measure = (): void => {
+        if (this.destroyRef.destroyed || !content.isConnected) return;
+
+        const target = this.resolveSlotLeadingElement(content);
+
+        if (target !== leading) {
+          if (leading) resize?.unobserve(leading);
+
+          leading = target;
+
+          if (leading) resize?.observe(leading);
+        }
+
+        if (!leading) {
+          container.style.removeProperty('--bx-side-nav-slot-padding-inline-start');
+
+          return;
+        }
+
+        const bounds = leading.getBoundingClientRect();
+
+        if (bounds.width === 0 || bounds.height === 0) return;
+
+        const style = view.getComputedStyle(container);
+        const containerBounds = container.getBoundingClientRect();
+        const center = (bounds.left + bounds.right) / 2;
+        const inset = style.direction === 'rtl' ? containerBounds.right - center : center - containerBounds.left;
+        const leadingInset = inset - (parseFloat(style.paddingInlineStart) || 0) - (parseFloat(style.borderInlineStartWidth) || 0);
+        const padding = `max(0px, calc(var(--bx-side-nav-icon-center) - ${Math.round(leadingInset * 100) / 100}px))`;
+
+        if (container.style.getPropertyValue('--bx-side-nav-slot-padding-inline-start') !== padding) {
+          container.style.setProperty('--bx-side-nav-slot-padding-inline-start', padding);
+        }
+      };
+
+      const resize = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
+      const mutations = typeof MutationObserver === 'undefined' ? undefined : new MutationObserver(measure);
+
+      resize?.observe(container);
+      mutations?.observe(content, { childList: true, characterData: true, subtree: true });
+      view.addEventListener('resize', measure);
+      measure();
+
+      return () => {
+        resize?.disconnect();
+        mutations?.disconnect();
+        view.removeEventListener('resize', measure);
+        container.style.removeProperty('--bx-side-nav-slot-padding-inline-start');
+      };
+    });
+  }
+
+  private resolveSlotLeadingElement(content: Element): Element | undefined {
+    let leading = content;
+
+    while (!leading.matches('bx-icon, img, picture, svg, canvas, [role="img"], [data-bx-side-nav-leading]')) {
+      const child = Array.from(leading.childNodes).find((node) => node.nodeType === 1 || (node.nodeType === 3 && !!node.textContent?.trim()));
+
+      if (!child || child.nodeType !== 1) return undefined;
+
+      leading = child as Element;
+    }
+
+    return leading;
+  }
+
+  private observeScrollbar(element: HTMLElement): () => void {
     const view = this.document.defaultView;
 
     if (!view) return () => {};
@@ -559,7 +680,7 @@ export class SideNav {
         const borders = (parseFloat(style.borderLeftWidth) || 0) + (parseFloat(style.borderRightWidth) || 0);
         const gutter = Math.max(0, element.offsetWidth - element.clientWidth - borders);
 
-        if (gutter !== untracked(this.rootScrollbarGutter)) this.ngZone.run(() => this.rootScrollbarGutter.set(gutter));
+        if (gutter !== untracked(this.scrollbarGutter)) this.ngZone.run(() => this.scrollbarGutter.set(gutter));
       };
 
       const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(measure);
@@ -590,6 +711,9 @@ export class SideNav {
 
   private openChildren(request: INavigationExpandRequest): void {
     this.navigationFocusService.remember(request.origin);
+
+    if (this.isCollapsed()) this.temporarilyExpanded.set(true);
+
     this.navigationStateService.enter(request.item);
     this.renderLevel(false, request.keyboard, true);
   }

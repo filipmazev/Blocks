@@ -4,8 +4,18 @@
     --bx-side-nav-label-opacity: 1;
     --bx-side-nav-label-transition-duration: 0ms;
     --bx-side-nav-icon-center: calc((var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 2) / 2);
-    --bx-nav-item-padding-inline: 0;
+    --bx-nav-icon-column-size: max(
+        0px,
+        calc(var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 4 - #{spacing(2)} * 2 - var(--bx-side-nav-scrollbar-gutter, 0px))
+    );
+
+    /* IMPORTANT: Preserve the length unit because this value participates in trailing-padding math. */
+    /* stylelint-disable-next-line length-zero-no-unit */
+    --bx-nav-item-padding-inline: 0px;
+    --bx-nav-iconless-padding-inline: calc(var(--bx-nav-icon-column-size) + #{spacing(2)});
     --bx-nav-compact-justify: flex-start;
+    --bx-nav-scrollbar-gutter: stable both-edges;
+    --bx-nav-level-header-padding-inline: max(0px, calc(var(--bx-side-nav-icon-center) - #{spacing(5)}));
 
     display: block;
     order: 0;
@@ -80,6 +90,23 @@ bx-navigation-level {
     min-width: 0;
 }
 
+.bx-nav-header {
+    padding-inline-start: var(--bx-side-nav-header-padding-inline-start, var(--bx-side-nav-slot-padding-inline-start, #{spacing(3)}));
+}
+
+.bx-nav-header-content {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+    min-inline-size: 0;
+}
+
+.bx-nav-footer-content {
+    padding-inline-start: var(--bx-side-nav-footer-padding-inline-start, var(--bx-side-nav-slot-padding-inline-start, #{spacing(3)}));
+}
+
 .bx-nav-header > strong {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -125,6 +152,10 @@ bx-navigation-level {
     padding-block-end: spacing(1);
 }
 
+.bx-nav-search-row:has(+ bx-navigation-level) {
+    padding-block-end: 0;
+}
+
 .bx-nav-search,
 .bx-nav-search-toggle {
     grid-area: 1 / 1;
@@ -136,19 +167,19 @@ bx-navigation-level {
 }
 
 .bx-side-nav-scroll {
-    --bx-nav-icon-column-size: max(
-        0px,
-        calc(var(--bx-side-nav-collapsed-width, 4.5rem) - var(--bx-border-width, 1px) * 4 - #{spacing(2)} * 2 - var(--bx-side-nav-scrollbar-gutter, 0px))
-    );
-
     flex: 1;
     min-height: 0;
     min-width: 0;
     overflow: hidden auto;
-    scrollbar-gutter: stable both-edges;
+    scrollbar-gutter: var(--bx-nav-scrollbar-gutter);
     overscroll-behavior: contain;
     padding: spacing(2);
     scroll-behavior: auto;
+
+    &:not(:has(.bx-nav-items:not([hidden]) .bx-nav-presentation > bx-icon:first-child)) {
+        --bx-nav-iconless-padding-inline: 0;
+        --bx-nav-item-padding-inline: #{spacing(3)};
+    }
 }
 
 .bx-nav-items {

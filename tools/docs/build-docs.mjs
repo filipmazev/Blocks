@@ -62,6 +62,7 @@ await collect('projects/playground/src/app/components/screens/theme-studio-demo'
 await collect('projects/playground/src/app/components/screens/installation');
 await collect('projects/playground/src/app/components/screens/theme-studio-new-project');
 await collect('projects/playground/src/app/components/screens/library-components/page-examples');
+await collect('projects/playground/src/app/components/screens/library-components/breadcrumb-examples');
 files.sort();
 const documents = {};
 const catalogSource = await readFile(
@@ -125,6 +126,8 @@ for (const slot of ['header', 'footer', 'banner']) {
   routes.set(`projects/blocks/primitives/directives/side-panel-${slot}/README.md`, 'components/side-panel');
 }
 routes.set('projects/playground/src/app/components/screens/library-components/page-examples/README.md', 'components/layout/page-container');
+routes.set('projects/playground/src/app/components/screens/library-components/breadcrumb-examples/README.md', 'components/breadcrumbs');
+routes.set('projects/blocks/primitives/components/breadcrumb-trail/README.md', 'components/breadcrumbs');
 for (const section of ['page-header', 'page-content', 'page-footer']) {
   routes.set(`projects/blocks/primitives/components/${section}/README.md`, 'components/layout/page-container');
 }

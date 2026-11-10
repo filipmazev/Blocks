@@ -1,4 +1,4 @@
-<div class="demo-language-row">
+<div class="nav-demo-top-row">
     <bx-select
         subscriptSizing="dynamic"
         [label]="text().language"
@@ -6,15 +6,22 @@
         [options]="navigationDemoI18nService.languages"
         [value]="navigationDemoI18nService.language()"
         (selectionChange)="navigationDemoI18nService.setLanguage($event.value)" />
+    <div class="nav-demo-fields">
+        <bx-input-field type="number" subscriptSizing="dynamic" [label]="text().height" [min]="200" [max]="700" [(value)]="height" />
+        <bx-input-field type="number" subscriptSizing="dynamic" [label]="text().breadcrumbLimit" [min]="2" [max]="10" [(value)]="breadcrumbLimit" />
+    </div>
 </div>
 <div class="nav-demo-controls">
-    <bx-checkbox [label]="text().right" [(checked)]="right" />
-    <bx-checkbox [label]="text().rail" [checked]="collapsed()" (checkedChange)="collapsed.set($event)" />
-    <bx-checkbox [label]="text().mobile" [(checked)]="mobile" />
-    <bx-checkbox [label]="text().search" [(checked)]="searchable" />
-    <bx-checkbox [label]="text().rtl" [(checked)]="rtl" />
-    <bx-checkbox [label]="text().custom" [(checked)]="custom" />
-    <bx-input-field type="number" [label]="text().height" [min]="200" [max]="700" [(value)]="height" />
+    <div class="nav-demo-checkboxes">
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().right" [(checked)]="right" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().rail" [checked]="nav.isCollapsed()" (checkedChange)="nav.toggleCollapsed()" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().mobile" [(checked)]="mobile" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().search" [(checked)]="searchable" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().icons" [(checked)]="icons" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().longLabels" [(checked)]="longLabels" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().rtl" [(checked)]="rtl" />
+        <bx-checkbox subscriptSizing="dynamic" [label]="text().custom" [(checked)]="custom" />
+    </div>
 </div>
 <p>{{ text().instructions }}</p>
 <div class="nav-demo-frame" [class.right]="right()" [attr.dir]="rtl() ? 'rtl' : 'ltr'" [style.--bx-side-nav-height]="height() + 'px'">
@@ -49,8 +56,10 @@
         <p>{{ text().inlineMode }}</p>
     </div>
 </div>
-<ng-template #customItem let-item let-compact="collapsed"
-    ><bx-icon size="20" [name]="item.icon?.name ?? 'circle'" />
+<ng-template #customItem let-item let-compact="collapsed">
+    @if (compact || icons()) {
+        <bx-icon size="20" [name]="item.icon?.name ?? 'circle'" />
+    }
     @if (!compact) {
         <span>{{ item.label }}</span
         ><small aria-hidden="true">↗</small>

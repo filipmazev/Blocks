@@ -105,7 +105,10 @@
         --btn-theme-border: var(--bx-border-strong);
     }
 
-    &.bx-btn-text,
+    &.bx-btn-text {
+        width: fit-content;
+    }
+
     &.bx-btn-filled,
     &.bx-btn-tonal {
         padding: spacing(2) spacing(4);
@@ -302,7 +305,6 @@
     }
 }
 
-/* IMPORTANT: Text actions are link-like in every material and interaction state. Hide the decorative layers too, so incoming lighting cannot paint a border or backing. */
 :host(.bx-btn-text) {
     background: transparent !important;
     border: 0;

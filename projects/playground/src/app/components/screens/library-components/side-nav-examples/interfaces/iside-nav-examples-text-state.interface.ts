@@ -10,6 +10,12 @@ export interface ISideNavExamplesTextState {
   inlineMode: string;
   /** Resolved search value. */
   search: string;
+  /** Resolved item-icon visibility control label. */
+  icons: string;
+  /** Resolved control label for the maximum visible breadcrumb entries. */
+  breadcrumbLimit: string;
+  /** Resolved control label for deliberately long section and item names. */
+  longLabels: string;
   /** Resolved rtl value. */
   rtl: string;
   /** Resolved custom value. */
