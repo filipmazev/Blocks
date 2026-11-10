@@ -13,9 +13,9 @@ Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has 
   continue to configure the width transition.
 - Unified root and nested icon columns, item insets, and reserved scrollbar gutters. Scrollbar measurements now follow the rendered list, including direct entry
   into a nested level and changes between short and scrollable lists.
-- Fixed iconless spacing: entirely iconless root lists use ordinary text padding, nested lists retain their parent alignment, and each iconless search result
-  uses text padding even in mixed results. Result paths align with their labels. Trailing padding mirrors the leading icon inset so tags, end icons, and long
-  ancestor text stay clear of the selected border.
+- Fixed iconless spacing: a row without a leading icon never reserves the icon column, so root, nested, and search lists all use ordinary text padding,
+  including mixed lists. Result paths align with their labels. Trailing padding mirrors the leading icon inset so tags, end icons, and long ancestor text stay
+  clear of the selected border.
 - Header and footer slots automatically align their first leading visual with navigation icons, search, and collapse controls. Wrapped logos and differently
   sized icons no longer require consumer margin calculations. Text-only slots keep ordinary padding; optional header/footer inset variables and
   `data-bx-side-nav-leading` support deliberate custom layouts.
@@ -149,6 +149,10 @@ accessibility.
 - Stepper markers and connectors now receive the existing engine's directional and ambient light independently of their emission. Current filled indicators emit
   more strongly than tonal completed or neutral inactive indicators; errors receive restrained additional emphasis. Card surfaces retain their backing.
 - Rounded stepper highlights use semantic color mixed with the theme surface instead of an enlarged dark hover shadow; the traveling accent has no drop shadow.
+- Stepper selection halos resolve their translucency locally, so a stepper inside a modal or panel keeps the same soft accent tint instead of inheriting that
+  surface's near-opaque material.
+- The traveling stepper accent now measures layout geometry and snaps on container, orientation, and presentation changes: it stays centered on its marker
+  inside a scaled dialog and no longer trails behind while the viewport resizes. Committed step changes keep their spring.
 - Segment tracks retain a continuous, brighter fill without extra inner geometry. Descendant emission origins paint their registered rim as well as illuminating
   neighbors. Error contours take precedence over cached ambient tint; semantic changes request urgent marker-lighting refresh.
 - Circular step indicators use the shared pressure spring for squash and recovery. A persistent selection accent travels between committed markers in both axes
