@@ -57,7 +57,6 @@ await collect('projects/playground/src/app/components/shared/theme-material-prev
 await collect('projects/playground/src/app/components/shared/theme-palette-preview');
 await collect('projects/playground/src/app/components/shared/theme-studio-setup');
 await collect('projects/playground/src/app/components/shared/theme-studio-import');
-await collect('projects/playground/src/app/components/shared/theme-studio-preview-dialog');
 await collect('projects/playground/src/app/components/screens/theme-studio-demo');
 await collect('projects/playground/src/app/components/screens/installation');
 await collect('projects/playground/src/app/components/screens/theme-studio-new-project');
@@ -110,7 +109,6 @@ routes.set('projects/playground/src/app/components/shared/theme-palette-preview/
 routes.set('projects/playground/src/app/components/shared/theme-studio/README.md', 'studio');
 routes.set('projects/playground/src/app/components/shared/theme-studio-setup/README.md', 'studio');
 routes.set('projects/playground/src/app/components/shared/theme-studio-import/README.md', 'studio');
-routes.set('projects/playground/src/app/components/shared/theme-studio-preview-dialog/README.md', 'studio');
 routes.set('projects/playground/src/app/components/screens/theme-studio-demo/README.md', 'studio');
 routes.set('projects/playground/src/app/components/screens/theme-studio-new-project/README.md', 'studio/new-project');
 routes.set('projects/playground/src/app/components/screens/utilities/README.md', 'utilities');
