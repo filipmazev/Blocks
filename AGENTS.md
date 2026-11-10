@@ -296,6 +296,11 @@ reorganizing unrelated code.
 - Keep supporting playground interfaces, constants, services, and helpers separated by the same rules as library code.
 - Generate documentation through `npm run tools:build-docs`; do not hand-edit generated documentation. Update the generator when changing the source structure
   it reads.
+- Generated artifacts are rebuilt from source, so never edit them by hand: `npm run tools:generate-tokens` rewrites
+  `projects/blocks/core/constants/tokens.constants.ts`, `token-catalog.constants.ts`, and `theme-palettes.constants.ts` from the Sass maps and CSS variable
+  scan, `npm run tools:build-docs` rewrites `projects/playground/src/app/generated/documentation.ts`, and `npm run tools:build-effects` rewrites the effects
+  styles. `prebuild`, `prestart`, `prewatch`, and `build:playground` run them, so a rebuild already picks up token, catalog, and documentation changes; change
+  the source (SCSS, README, generator) and rerun the owning script instead of editing its output.
 
 ## Verification and delivery
 

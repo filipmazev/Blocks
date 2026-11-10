@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use 'core/styles/helpers' as *;
+@use '../../../shared/styles/hero';
 
 :host {
     --bx-divider-margin: 0;
@@ -12,40 +13,6 @@
     position: relative;
     isolation: isolate;
     container-type: inline-size;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
-    gap: spacing(12);
-    align-items: center;
-    padding-block: spacing(12);
-}
-
-.hero-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: spacing(6);
-}
-
-.hero h1 {
-    max-inline-size: 12ch;
-    margin: 0;
-    font-size: clamp(2.5rem, 4.3vw, 4.5rem);
-    line-height: 1.08;
-}
-
-.hero-subtitle {
-    color: var(--bx-text-secondary);
-    font-size: 1.125rem;
-    max-inline-size: 30ch;
-    margin: 0;
-    line-height: 1.6;
-}
-
-.hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: spacing(3);
-    margin-block-start: spacing(2);
 }
 
 .studio-content {
@@ -299,9 +266,6 @@ code {
     padding: spacing(5);
     border-radius: radius(md);
     text-align: center;
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
 }
 
 .color-pair-current {
@@ -417,29 +381,6 @@ code {
     app-code {
         display: block;
         padding-inline-end: spacing(3);
-    }
-}
-
-.palette-choice {
-    display: flex;
-    align-items: center;
-    gap: spacing(2);
-    min-inline-size: 0;
-}
-
-.palette-swatches {
-    display: inline-flex;
-    flex: none;
-
-    > span {
-        inline-size: 0.875rem;
-        block-size: 0.875rem;
-        border: 1px solid var(--bx-border-default);
-        border-radius: 50%;
-
-        + span {
-            margin-inline-start: -0.25rem;
-        }
     }
 }
 

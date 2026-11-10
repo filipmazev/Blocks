@@ -74,6 +74,9 @@
     --bx-glass-opaque-surface: color-mix(in srgb, var(--step-selection-color, var(--step-color)) 22%, var(--bx-bg-surface));
     --bx-glass-edge: color-mix(in srgb, var(--step-selection-color, var(--step-color)) 65%, transparent);
     --bx-glass-opacity: 0.22;
+
+    /* IMPORTANT: Resolve the halo's translucency locally; an ancestor panel's material opacity must not make it opaque. */
+    --bx-glass-min-opacity: 0;
     --bx-glass-radius: #{radius(pill)};
     --bx-glass-decoration-opacity: 1;
     --bx-glass-rim-opacity: 1;

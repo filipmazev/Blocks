@@ -390,7 +390,9 @@ A persistent selection accent travels between the committed positions, interpola
 to progress headers, including vertical and responsive layouts. Cards instead animate their own border and rim lighting in place; no accent travels across the
 unconnected space between cards. Velocity adds a small deformation along the travel axis. Connector completion fills independently of active position, so
 visiting a step never implies completing it. Circular indicators compress on press and recover on the shared spring. Rapid navigation retargets existing motion
-rather than restarting it. Rejected guards and unconfirmed controlled requests leave the selection accent at the committed step.
+rather than restarting it. Container resizes, orientation and presentation changes reposition the accent without animating, so it never trails its marker;
+measurements use layout geometry, keeping the accent centered while an ancestor scales during an entrance transition. Rejected guards and unconfirmed controlled
+requests leave the selection accent at the committed step.
 
 Live reduced motion snaps the accent and completion fill and removes indicator deformation. Reduced transparency retains the shared opaque material fallback
 independently: the traveling accent uses a soft opaque tint, preserving the contrast of the solid current marker and its label. Forced colors retain the

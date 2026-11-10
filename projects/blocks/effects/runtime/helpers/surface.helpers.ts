@@ -194,12 +194,14 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
     const edgeColor = `color-mix(in srgb, ${value.color} ${(value.edgeStrength * 100).toFixed(2)}%, transparent)`;
 
     const edgeShape = value.spread ? `circle ${value.spread}px` : 'ellipse farthest-side';
-    const glowShape = value.spread ? `circle ${value.spread}px` : 'ellipse';
+
+    const bodySize = Math.max(48, value.spread ?? (value.radius ?? 160) * 0.45);
+    const bodyColor = `color-mix(in srgb, ${value.color} ${(value.strength * 100).toFixed(2)}%, transparent)`;
 
     layer.edge.style.backgroundImage = source
       ? `linear-gradient(${edgeColor}, ${edgeColor})`
       : `radial-gradient(${edgeShape} at ${at}, ${edgeColor}, transparent 75%)`;
-    layer.glow.style.backgroundImage = `radial-gradient(${glowShape} at ${at}, color-mix(in srgb, ${value.color} ${(value.strength * 100).toFixed(2)}%, transparent), transparent 68%)`;
+    layer.glow.style.backgroundImage = `radial-gradient(circle ${bodySize.toFixed(0)}px at ${at}, ${bodyColor}, transparent)`;
 
     if (fresh || layer.leaving) fadeLayer(value.key, layer, true);
 

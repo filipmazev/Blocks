@@ -309,6 +309,8 @@ export class Stepper {
   private previousId: string | null = null;
   private selectionMotion: ISpringMotion | undefined;
   private selectionLayout: string | null = null;
+  private selectionSize: string | null = null;
+  private selectionTarget: string | null = null;
 
   constructor() {
     afterRenderEffect(() => {
@@ -563,6 +565,17 @@ export class Stepper {
 
   //#region Helpers
 
+  private layoutScale(track: HTMLElement): number {
+    const view = track.ownerDocument.defaultView;
+
+    if (!view) return 1;
+
+    const rendered = track.getBoundingClientRect().width;
+    const layout = Number.parseFloat(view.getComputedStyle(track).width);
+
+    return rendered > 0 && layout > 0 ? rendered / layout : 1;
+  }
+
   private positionSelection(list: HTMLElement, markers: readonly HTMLElement[]): void {
     const surface = this.selection()?.nativeElement;
     const index = this.rows().findIndex((row) => row.step.id === this.selectedStep()?.id);
@@ -577,15 +590,25 @@ export class Stepper {
       this.selectionMotion?.destroy();
       this.selectionMotion = undefined;
       this.selectionLayout = null;
+      this.selectionTarget = null;
 
       return;
     }
 
+    const scale = this.layoutScale(track);
     const bounds = target.getBoundingClientRect();
     const origin = track.getBoundingClientRect();
+    const style = view.getComputedStyle(track);
     const layout = `${this.variant()}:${view.getComputedStyle(list).flexDirection}`;
+    const size = `${style.width}:${style.height}`;
+    const selection = this.selectedStep()?.id ?? null;
     const padding = this.variant() === 'progress' ? 0 : 3;
-    const geometry = [bounds.left - origin.left - padding, bounds.top - origin.top - padding, bounds.width + padding * 2, bounds.height + padding * 2];
+    const geometry = [
+      (bounds.left - origin.left) / scale - padding,
+      (bounds.top - origin.top) / scale - padding,
+      bounds.width / scale + padding * 2,
+      bounds.height / scale + padding * 2
+    ];
 
     this.selectionMotion ??= createSpringMotion(
       geometry,
@@ -605,8 +628,14 @@ export class Stepper {
       },
       MOTION_PRESETS.fluid
     );
-    this.selectionMotion.retarget(geometry, this.bxA11yService.isReducedMotion() || this.selectionLayout !== layout);
+    // A changed step animates; a resize or presentation change snaps so the accent never trails its marker.
+    this.selectionMotion.retarget(
+      geometry,
+      this.bxA11yService.isReducedMotion() || this.selectionLayout !== layout || (this.selectionTarget === selection && this.selectionSize !== size)
+    );
     this.selectionLayout = layout;
+    this.selectionSize = size;
+    this.selectionTarget = selection;
     surface.style.visibility = 'visible';
   }
 
@@ -616,10 +645,24 @@ export class Stepper {
     if (!view || !list.isConnected) return;
 
     const style = view.getComputedStyle(list);
+    const scale = this.layoutScale(list.parentElement ?? list);
+    const normalize = (element: HTMLElement) => {
+      const rect = element.getBoundingClientRect();
+
+      return {
+        bottom: rect.bottom / scale,
+        height: rect.height / scale,
+        left: rect.left / scale,
+        right: rect.right / scale,
+        top: rect.top / scale,
+        width: rect.width / scale
+      };
+    };
+
     const vertical = style.flexDirection === 'column';
     const rtl = style.direction === 'rtl';
-    const bounds = markers.map((marker) => marker.getBoundingClientRect());
-    const owners = connectors.map((connector) => connector.parentElement?.getBoundingClientRect());
+    const bounds = markers.map((marker) => normalize(marker));
+    const owners = connectors.map((connector) => (connector.parentElement ? normalize(connector.parentElement) : undefined));
     const placements = owners.map((owner, index) => {
       const from = bounds[index];
       const to = bounds[index + 1];

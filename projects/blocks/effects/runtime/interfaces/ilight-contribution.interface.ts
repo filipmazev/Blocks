@@ -18,4 +18,6 @@ export interface ILightContribution {
   ambient?: boolean;
   /** Spread of the illumination beyond its origin. Optional. */
   spread?: number;
+  /** Falloff radius of the source in CSS pixels, used to size the soft body glow. Optional. */
+  radius?: number;
 }

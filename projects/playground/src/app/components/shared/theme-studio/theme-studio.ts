@@ -22,7 +22,7 @@ import type { IThemeStudioControl } from '@playground/interfaces/itheme-studio-c
 import type { IThemeStudioShadow } from '@playground/interfaces/itheme-studio-shadow.interface';
 import type { StudioColorToken, StudioMode, StudioValues } from '@playground/types/theme-studio.types';
 
-import { RADIUS_CSS_VARIABLES, SHADOW_CSS_VARIABLES, SPACING_CSS_VARIABLES, THEME_PALETTES } from '@filip.mazev/blocks/core';
+import { RADIUS_CSS_VARIABLES, SHADOW_CSS_VARIABLES, SPACING_CSS_VARIABLES } from '@filip.mazev/blocks/core';
 import { Button, InputField, Select, SliderDirective, SlideToggle } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { ModalService } from '@filip.mazev/blocks/modal';
@@ -31,8 +31,8 @@ import { Collapsible, Divider, Tab, TabContentDirective, Tabs, Tag, TooltipDirec
 import { formatCatalogColor } from '@playground/components/screens/token-catalog/helpers/token-color.helpers';
 import { Code } from '@playground/components/shared/code/code';
 import { Readme } from '@playground/components/shared/readme/readme';
+import { ThemePaletteSelect } from '@playground/components/shared/theme-palette-select/theme-palette-select';
 import { ThemeStudioImport } from '@playground/components/shared/theme-studio-import/theme-studio-import';
-import { ThemeStudioSetup } from '@playground/components/shared/theme-studio-setup/theme-studio-setup';
 import { ThemeStudioService } from '@playground/services/theme-studio.service';
 import { STUDIO_BORDER_STYLES, STUDIO_CONTROLS } from '@playground/shared/constants/theme-studio.constants';
 import {
@@ -45,7 +45,7 @@ import {
   STUDIO_SHADOW_TARGETS,
   STUDIO_STYLE_OPTIONS
 } from '@playground/shared/constants/theme-studio-presets.constants';
-import { STUDIO_SETUP_HEADERS } from '@playground/shared/constants/theme-studio-setup.constants';
+import { applyStudioMode, openThemeStudioSetup } from '@playground/shared/helpers/theme-studio.helpers';
 import { studioBaseColors, studioMenuColors } from '@playground/shared/helpers/theme-studio-colors.helpers';
 import { studioScale } from '@playground/shared/helpers/theme-studio-presets.helpers';
 import { readStudioShadow, writeStudioShadow } from '@playground/shared/helpers/theme-studio-shadow.helpers';
@@ -69,7 +69,8 @@ import { readStudioShadow, writeStudioShadow } from '@playground/shared/helpers/
     Tag,
     TooltipDirective,
     Readme,
-    Code
+    Code,
+    ThemePaletteSelect
   ],
   templateUrl: './theme-studio.html',
   styleUrl: './theme-studio.scss',
@@ -92,7 +93,6 @@ export class ThemeStudio {
   protected readonly shadowTargets: typeof STUDIO_SHADOW_TARGETS = STUDIO_SHADOW_TARGETS;
   protected readonly shadowRanges: typeof STUDIO_SHADOW_RANGES = STUDIO_SHADOW_RANGES;
   protected readonly borderStyles: readonly IBxSelectOption<string>[] = STUDIO_BORDER_STYLES.map((value) => ({ label: value, value }));
-  protected readonly palettes: readonly IBxSelectOption<string>[] = THEME_PALETTES.map((palette) => ({ label: palette.label, value: palette.id }));
   protected readonly commonColors: readonly IThemeStudioControl[] = STUDIO_CONTROLS.filter((control) =>
     STUDIO_COMMON_COLORS.includes(control.name as StudioColorToken)
   );
@@ -126,15 +126,7 @@ export class ThemeStudio {
   private colorContext: CanvasRenderingContext2D | null = null;
 
   public copy(): void {
-    this.themeStudioService.finishEdit();
-    this.modalService.open<undefined, undefined>(ThemeStudioSetup, {
-      header: STUDIO_SETUP_HEADERS.configure,
-      style: {
-        layout: 'center',
-        breakpoints: { sm: 'bottom-sheet' },
-        wrapperStyles: 'inline-size: 48rem; max-inline-size: 100%; block-size: min(52rem, 88dvh);'
-      }
-    });
+    openThemeStudioSetup(this.modalService, this.themeStudioService);
   }
 
   public importTheme(): void {
@@ -180,18 +172,8 @@ export class ThemeStudio {
     this.themeStudioService.updateShared(studioScale(family, value), names);
   }
 
-  protected paletteChanged(value: unknown): void {
-    const palette = THEME_PALETTES.find((item) => item.id === value);
-
-    if (palette) this.themeStudioService.setPalette(palette.id);
-  }
-
   protected modeChanged(value: string | null): void {
-    if (value === 'light' || value === 'dark') this.themeStudioService.themingService.setApplicationTheme(value);
-  }
-
-  protected paletteColors(value: unknown): readonly string[] {
-    return THEME_PALETTES.find((palette) => palette.id === value)?.colors ?? [];
+    applyStudioMode(this.themeStudioService, value);
   }
 
   protected setBase(value: unknown): void {

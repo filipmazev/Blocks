@@ -22,6 +22,7 @@ import { isSurfaceActivationKey } from '@effects/runtime/helpers/surface-interac
 import { AmbientSampler } from './ambient-sampler';
 export class SceneRuntime {
   private readonly renderedStyles: WeakMap<HTMLElement, string | null> = SURFACE_RENDERED_STYLES;
+  private readonly projections: Map<string, ILightProjection> = new Map<string, ILightProjection>();
 
   private entries: Map<HTMLElement, IEntry> = new Map<HTMLElement, IEntry>();
   private scenes: Set<ISceneEntry> = new Set<ISceneEntry>();
@@ -172,7 +173,7 @@ export class SceneRuntime {
     }
 
     this.updateEmitter();
-    this.refresh();
+    this.refreshEntries([...this.entries.values()], true);
   };
   private refresh: () => void = () => {
     this.refreshEntries([...this.entries.values()]);
@@ -447,11 +448,15 @@ export class SceneRuntime {
 
   //#region Helpers
 
-  private refreshEntries(entries: IEntry[]): void {
+  private refreshEntries(entries: IEntry[], immediate = false): void {
+    if (immediate) this.ambient.reset(entries);
+
     this.ambient.invalidate(entries, true);
 
     for (const entry of entries) {
       entry.bounds = undefined;
+
+      if (immediate) entry.immediate = true;
 
       if (entry.visible) this.queue.add(entry);
     }
@@ -670,6 +675,8 @@ export class SceneRuntime {
     if (this.stopFrame || !this.queue.size) return;
 
     this.stopFrame = subscribeFrame(() => {
+      this.projections.clear();
+
       // Bound lighting work when hundreds of components become visible or a global setting changes.
       const batch = Array.from(this.queue).slice(0, 24);
       const visibility = lightingVisibility(this.doc, this.view);
@@ -753,8 +760,9 @@ export class SceneRuntime {
           });
           const lighting = this.project(entry, lights, reflections, visibility);
 
-          lighting.immediate = entry.resuming || !entry.painted;
+          lighting.immediate = entry.resuming || !entry.painted || !!entry.immediate;
           entry.resuming = false;
+          entry.immediate = false;
 
           return [entry, lighting] as const;
         });
@@ -875,25 +883,44 @@ export class SceneRuntime {
   }
 
   private visibleProjection(entry: IEntry, light: IPointLight, visibility: ReturnType<typeof lightingVisibility>): ILightProjection {
-    const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
-    const projection = projectLight(light, bounds);
+    const cacheKey = `${entry.id}:${light.key}`;
+    const cached = this.projections.get(cacheKey);
 
-    if (light.ambient) return projection;
+    if (cached) return cached;
+
+    const bounds = (entry.bounds ??= entry.element.getBoundingClientRect());
+    const projection = projectLight(entry.element, bounds, light, visibility.style);
+
+    if (light.ambient) return this.rememberProjection(cacheKey, projection);
 
     if (light.source) {
       const source = light.source.closest<HTMLElement>('[data-bx-surface]') ?? light.source;
 
-      if (!visibility.exposed(source, projection.x, projection.y, source.getBoundingClientRect())) return { ...projection, weight: 0, edgeWeight: 0 };
+      if (!visibility.exposed(source, projection.x, projection.y, source.getBoundingClientRect()))
+        return this.rememberProjection(cacheKey, { ...projection, weight: 0, edgeWeight: 0 });
     }
 
     const target = entry.hooks.hitTarget ?? entry.element;
+    // A source crossing the border covers the exact edge probe; retry just inside so a partly overlapping light still lights that edge.
+    const insideX = projection.edgeX + (bounds.left + bounds.width / 2 - projection.edgeX) * 0.06;
+    const insideY = projection.edgeY + (bounds.top + bounds.height / 2 - projection.edgeY) * 0.06;
 
     // Whole-element exposure keeps partly clipped sources active; each receiving location must still be uncovered.
-    return {
+    return this.rememberProjection(cacheKey, {
       ...projection,
       weight: projection.weight > 0.001 && visibility.pointExposed(target, projection.x, projection.y, bounds) ? projection.weight : 0,
-      edgeWeight: projection.edgeWeight > 0.01 && visibility.pointExposed(target, projection.edgeX, projection.edgeY, bounds) ? projection.edgeWeight : 0
-    };
+      edgeWeight:
+        projection.edgeWeight > 0.01 &&
+        (visibility.pointExposed(target, projection.edgeX, projection.edgeY, bounds) || visibility.pointExposed(target, insideX, insideY, bounds))
+          ? projection.edgeWeight
+          : 0
+    });
+  }
+
+  private rememberProjection(key: string, projection: ILightProjection): ILightProjection {
+    this.projections.set(key, projection);
+
+    return projection;
   }
 
   private selectSceneLights(entry: IEntry, lights: IPointLight[], visibility: ReturnType<typeof lightingVisibility>): IPointLight[] {
@@ -913,8 +940,10 @@ export class SceneRuntime {
 
     let x = 25,
       y = 0,
-      strength = 0.04,
       color = 'white';
+
+    const strength = 0.04;
+
     let strongest = 0,
       weightedX = 0,
       weightedY = 0,
@@ -926,11 +955,11 @@ export class SceneRuntime {
     for (const light of lights) {
       if ((light.excludeSource && light.source === entry.element) || light.excludeElement === entry.element) continue;
 
-      // Semantic borders emit from their closest edge, so large buttons still have a short reach.
-      const { x: lx, y: ly, weight, edgeWeight } = this.visibleProjection(entry, light, visibility);
-      // Project actual viewport coordinates into this surface, without a perspective speed-up.
-      const localX = Math.max(0, Math.min(100, ((lx - b.left) / Math.max(1, b.width)) * 100));
-      const localY = Math.max(0, Math.min(100, ((ly - b.top) / Math.max(1, b.height)) * 100));
+      const projection = this.visibleProjection(entry, light, visibility);
+      const { weight, edgeWeight } = projection;
+
+      const localX = projection.localX ?? 50;
+      const localY = projection.localY ?? 50;
 
       if (edgeWeight <= 0.01 && weight <= 0.001) continue;
 
@@ -945,10 +974,11 @@ export class SceneRuntime {
           x: localX,
           y: localY,
           color: light.color,
-          strength: light.ambient ? 0 : Math.min(0.25, weight * 0.4),
+          strength: light.ambient ? 0 : Math.min(0.08, light.intensity * 0.06),
           edgeStrength: edgeWeight,
           ambient: light.ambient,
-          spread: light.spread
+          spread: light.spread,
+          radius: light.radius
         });
 
       if (!light.ambient) {
@@ -966,7 +996,7 @@ export class SceneRuntime {
     if (totalWeight > 0.001) {
       x = weightedX / totalWeight;
       y = weightedY / totalWeight;
-      strength = Math.min(0.4, 0.04 + totalWeight * 0.4);
+      // Flat panes must not brighten as the source reaches their middle; the sheen keeps its resting strength and only follows the light.
     }
 
     let reflectionStrength = 0,

@@ -66,6 +66,13 @@ export class AmbientSampler {
     this.syncLive();
   }
 
+  /** Drop resolved colours after a theme or appearance change so no surface paints the previous palette while re-sampling. */
+  public reset(entries: readonly IAmbientReceiver[]): void {
+    for (const entry of entries) {
+      if (this.samples.has(entry)) this.samples.set(entry, { lights: [], media: new Set(), rects: new Map() });
+    }
+  }
+
   public lights(entry: IAmbientReceiver): IPointLight[] {
     const sample = this.samples.get(entry);
 

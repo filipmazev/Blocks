@@ -212,11 +212,11 @@ Expanded item links mirror the leading icon's column inset at their trailing edg
 the item's configured icon size; iconless entries retain ordinary text padding. `--bx-nav-item-padding-inline-end` optionally overrides this trailing inset, and
 compact icons keep their existing centered layout.
 
-Root and nested lists share their horizontal insets and icon column. The nested Back action uses the logo/search/collapse centerline, and text-only rows retain
-the label inset of rows with icons, including custom item templates. When every visible root row is iconless, the root uses ordinary item padding without
-reserving an icon column. Nested text-only levels retain the column to preserve their alignment with the parent level. Custom templates with a wrapped leading
-icon can set `--bx-nav-iconless-padding-inline: 0` on their `bx-side-nav` and reserve the leading column themselves. Scrollbar gutters are measured on the
-currently rendered list, including direct entry into a nested route and transitions between short and scrollable levels.
+Root and nested lists share their horizontal insets and icon column. The nested Back action uses the logo/search/collapse centerline. Only a row whose leading
+icon is present reserves that column: a text-only row, whether it sits in the root list, a nested level, or a mixed list, falls back to ordinary item padding
+(`--bx-nav-iconless-padding-inline`, spacing 3) instead of an empty icon slot. Custom templates whose leading icon is not a direct `bx-icon` child can set
+`--bx-nav-iconless-padding-inline: 0` on their `bx-side-nav` and reserve the leading column themselves. Scrollbar gutters are measured on the currently rendered
+list, including direct entry into a nested route and transitions between short and scrollable levels.
 
 The nested header reserves the same height with or without an ancestor trail, so entering deeper levels does not push the item list down. Equal container
 padding surrounds the heading and Back control; the search row does not add another gap above this header. Ancestors stay on one line, with additional entries
@@ -338,9 +338,9 @@ dedicated demo supplies a four-level fixture tree so selections remain on the de
 content, item-icon visibility, panel height, optional search, and a live language dropdown with English, Spanish, French, and German translations covering every
 menu item, section, action, demo control, instruction, and selection result. The mobile checkbox explicitly controls the embedded presentation, independent of
 the application shell’s responsive navigation. Desktop and mobile browse the same nested lists. Try `dsgn tkns`, `palette`, `tokens`, or `Palette` for flat
-contextual results, clear the search, and use the disclosures and Back control through all four levels. Turn item icons off to compare root text padding with
-nested label alignment. Collapse a deep level using the footer or the icon-rail checkbox, then expand it to restore that list and its scroll position; the
-compact rail highlights its originating branch.
+contextual results, clear the search, and use the disclosures and Back control through all four levels. Turn item icons off to exercise ordinary text padding at
+every level. Collapse a deep level using the footer or the icon-rail checkbox, then expand it to restore that list and its scroll position; the compact rail
+highlights its originating branch.
 
 Enable Long labels to exercise oversized section and item names at every level, including full-name tooltips, compact ancestor overflow, narrow presentation,
 and unchanged header/list geometry while browsing deeper.

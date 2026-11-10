@@ -12,7 +12,7 @@
     /* IMPORTANT: Preserve the length unit because this value participates in trailing-padding math. */
     /* stylelint-disable-next-line length-zero-no-unit */
     --bx-nav-item-padding-inline: 0px;
-    --bx-nav-iconless-padding-inline: calc(var(--bx-nav-icon-column-size) + #{spacing(2)});
+    --bx-nav-iconless-padding-inline: #{spacing(3)};
     --bx-nav-compact-justify: flex-start;
     --bx-nav-scrollbar-gutter: stable both-edges;
     --bx-nav-level-header-padding-inline: max(0px, calc(var(--bx-side-nav-icon-center) - #{spacing(5)}));
@@ -175,11 +175,6 @@ bx-navigation-level {
     overscroll-behavior: contain;
     padding: spacing(2);
     scroll-behavior: auto;
-
-    &:not(:has(.bx-nav-items:not([hidden]) .bx-nav-presentation > bx-icon:first-child)) {
-        --bx-nav-iconless-padding-inline: 0;
-        --bx-nav-item-padding-inline: #{spacing(3)};
-    }
 }
 
 .bx-nav-items {

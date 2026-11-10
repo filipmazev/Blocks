@@ -6322,6 +6322,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.is-current .marker',
       '.marker',
       '.panel-surface',
+      '.step-selection',
       '.toast-wrapper[data-bx-surface]',
       ':host(:is(.bx-btn-filled, .bx-btn-fab, .bx-btn-mini-fab, .bx-btn-extended-fab):not(.bx-btn-is-outlined))',
       ':host(:not(.bx-tabs-has-selection)) .bx-tab-trigger.is-selected',
@@ -7470,13 +7471,9 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['0', 'calc(var(--bx-nav-icon-column-size) + var(--bx-space-2, 0.5rem))'],
+    defaults: ['0', 'var(--bx-space-3, 0.75rem)'],
     fallbacks: ['0'],
-    selectors: [
-      '.bx-side-nav-scroll:not(:has(.bx-nav-items:not([hidden]) .bx-nav-presentation > bx-icon:first-child))',
-      '.is-search-result .bx-nav-item-body:not(:has(.bx-nav-presentation > bx-icon:first-child))',
-      ':host'
-    ],
+    selectors: ['.is-search-result .bx-nav-item-body:not(:has(.bx-nav-presentation > bx-icon:first-child))', ':host'],
     sources: [
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss'
@@ -7563,11 +7560,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: ['0px', 'var(--bx-space-3, 0.75rem)'],
     fallbacks: ['var(--bx-space-3, 0.75rem)'],
-    selectors: [
-      '.bx-side-nav-scroll:not(:has(.bx-nav-items:not([hidden]) .bx-nav-presentation > bx-icon:first-child))',
-      '.is-search-result .bx-nav-item-body:not(:has(.bx-nav-presentation > bx-icon:first-child))',
-      ':host'
-    ],
+    selectors: ['.is-search-result .bx-nav-item-body:not(:has(.bx-nav-presentation > bx-icon:first-child))', ':host'],
     sources: [
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss'

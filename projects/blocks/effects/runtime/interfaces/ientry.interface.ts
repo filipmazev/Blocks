@@ -20,4 +20,6 @@ export interface IEntry {
   resuming?: boolean;
   /** Whether this entry has received its first lighting update. Optional. */
   painted?: boolean;
+  /** Whether the next lighting update must snap instead of transitioning, e.g. after a theme or appearance change. Optional. */
+  immediate?: boolean;
 }

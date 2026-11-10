@@ -1,0 +1,30 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    width: 100%;
+}
+
+.palette-choice {
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    min-inline-size: 0;
+}
+
+.palette-swatches {
+    display: inline-flex;
+    flex: none;
+
+    > span {
+        inline-size: 0.875rem;
+        block-size: 0.875rem;
+        border: 1px solid var(--bx-border-default);
+        border-radius: 50%;
+
+        + span {
+            margin-inline-start: -0.25rem;
+        }
+    }
+}

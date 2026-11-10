@@ -12,4 +12,8 @@ export interface ILightProjection {
   weight: number;
   /** Contribution weight used for edge illumination. */
   edgeWeight: number;
+  /** Horizontal position inside the receiving surface as a `0–100` percentage, in its own rotated space. Optional. */
+  localX?: number;
+  /** Vertical position inside the receiving surface as a `0–100` percentage, in its own rotated space. Optional. */
+  localY?: number;
 }
