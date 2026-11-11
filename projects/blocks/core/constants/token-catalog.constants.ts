@@ -9916,6 +9916,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
   },
   {
+    name: '--bx-slider-overflow-clip-margin',
+    reference: 'var(--bx-slider-overflow-clip-margin)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.75rem'],
+    selectors: [],
+    sources: ['global']
+  },
+  {
     name: '--bx-slider-physical-position',
     reference: 'var(--bx-slider-physical-position)',
     category: 'components',
@@ -10616,6 +10629,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['var(--bx-text-primary)', 'var(--bx-text-secondary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
+  },
+  {
+    name: '--bx-tabs-edge-radius',
+    reference: 'var(--bx-tabs-edge-radius)',
+    category: 'components',
+    group: 'Component \u00B7 tabs',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['inherit'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },

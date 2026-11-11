@@ -24,6 +24,10 @@ The bordered glass thumb magnifies and blurs the rail beneath it. Set `--bx-slid
 `--bx-slider-lens-blur` to adjust the lens and backdrop blur from `1.5px`. It uses the current rail colors and value, including RTL, without reading screen
 pixels. Reduced transparency, increased contrast and unsupported backdrop filtering use an opaque thumb; forced colors retains the native thumb.
 
+The held thumb scales past its resting silhouette. That overflow is clipped on the slider's own shell, so a slider inside a scrolling panel never grows a scroll
+container; `--bx-slider-overflow-clip-margin` extends the painted region beyond the shell from its default `0.75rem`, which also keeps the focus ring and any
+enlarged decoration visible.
+
 ## Labels and ticks
 
 Native `[formField]` binding is supported alongside existing Angular form directives. `discrete` adds a formatted visible value; `displayWith(value)` controls

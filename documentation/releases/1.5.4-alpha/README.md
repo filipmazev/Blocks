@@ -200,6 +200,10 @@ accessibility.
 - Sliders and range sliders enlarge their existing magnifier while held, then spring back to a fully opaque resting thumb. Native values and centers remain
   direct. Range enlargement respects actual pixel clearance to the neighboring thumb, without measuring layout on each input event. Reduced motion and
   opaque-surface fallbacks remain independent.
+- The held thumb's enlargement is clipped on the slider's own shell, so sliders inside scrolling panels no longer grow a horizontal scroll container.
+  `--bx-slider-overflow-clip-margin` extends the painted region beyond the shell from its `0.75rem` default, keeping the focus ring and enlarged decoration
+  visible. The thumb's resting box is also clamped inside the shell, so a stale track measurement cannot push it past the control.
+- Side panels scroll in the block axis only. Content that paints past the panel's content box can no longer create a horizontal scrollbar inside the panel.
 
 ### Tab overflow and disclosure timing
 

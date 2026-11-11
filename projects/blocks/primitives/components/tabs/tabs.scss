@@ -15,8 +15,6 @@
     --bx-glass-surface: var(--bx-bg-surface-alt);
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: none;
-
-    /* IMPORTANT: Enclosing panels must not impose their opacity floor on the header and its transparent tab triggers. */
     --bx-glass-min-opacity: 0;
     --bx-glass-opacity: calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469));
     --bx-glass-radius: #{radius(md)};
@@ -88,7 +86,6 @@
 }
 
 .bx-tab-trigger {
-    // IMPORTANT: The header supplies opacity; painting another backing here would cover the traveling selection.
     --bx-glass-surface: var(--bx-bg-surface);
     --bx-glass-opaque-surface: transparent;
     --bx-glass-text: var(--bx-tab-text, var(--bx-text-secondary));
@@ -179,11 +176,13 @@
         padding: 0;
         border: 0;
         border-bottom: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
-        border-radius: 0;
+        border-radius: var(--bx-tabs-edge-radius, inherit);
+        overflow: clip;
     }
 
     .bx-tab-list {
         gap: 0;
+        border-radius: inherit;
     }
 
     .bx-tab-trigger {
@@ -191,6 +190,16 @@
         border-inline-end: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
         border-radius: 0;
         font-size: 0.8rem;
+
+        &:first-child {
+            border-start-start-radius: var(--bx-tabs-edge-radius, inherit);
+            border-end-start-radius: var(--bx-tabs-edge-radius, inherit);
+        }
+
+        &:last-child {
+            border-start-end-radius: var(--bx-tabs-edge-radius, inherit);
+            border-end-end-radius: var(--bx-tabs-edge-radius, inherit);
+        }
     }
 
     .bx-tab-selection {

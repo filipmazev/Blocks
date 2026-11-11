@@ -93,7 +93,10 @@
     flex: 1;
     min-block-size: 0;
     min-inline-size: 0;
-    overflow: auto;
+
+    /* IMPORTANT: A panel scrolls in the block axis only; decorations painting past the content box must not create a horizontal scrollbar. */
+    overflow-block: auto;
+    overflow-inline: clip;
     overscroll-behavior: contain;
 }
 

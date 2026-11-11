@@ -8,7 +8,7 @@
         [headerIcon]="{ name: 'sliders-horizontal', color: 'accent', bgColor: 'auto' }"
         [breakpoints]="filtersPanelBreakpoints"
         [resizable]="!isOnSmallerScreen()"
-        [width]="isOnSmallerScreen() ? 420 : 360"
+        [width]="isOnSmallerScreen() ? 440 : 380"
         [open]="activePanel() === 'filters'"
         (openChange)="panelChanged('filters', $event)">
         <h2 bxSidePanelHeader id="icon-filters-title" class="panel-title">Filters</h2>

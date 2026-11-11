@@ -36,6 +36,10 @@
     width: 100%;
     min-width: 0;
 
+    /* IMPORTANT: The held thumb scales past the shell; clipping it locally keeps scroll containers from growing, while the margin preserves the overflow paint and the focus ring. */
+    overflow: clip;
+    overflow-clip-margin: var(--bx-slider-overflow-clip-margin, 0.75rem);
+
     input.bx-slider {
         display: block;
     }
@@ -96,9 +100,15 @@
 
     position: absolute;
     top: var(--bx-slider-center-y, 50%);
-    left: calc(
-        var(--bx-slider-track-start, 0px) + var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) *
-            (var(--bx-slider-track-width, 100%) - var(--bx-slider-thumb-size, #{spacing(6)}))
+
+    /* IMPORTANT: Clamp the resting box inside the shell so a stale or oversized track measurement cannot push the thumb past the control and grow a scroll container. */
+    left: clamp(
+        0px,
+        calc(
+            var(--bx-slider-track-start, 0px) + var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) *
+                (var(--bx-slider-track-width, 100%) - var(--bx-slider-thumb-size, #{spacing(6)}))
+        ),
+        calc(100% - var(--bx-slider-thumb-size, #{spacing(6)}))
     );
     transform: translateY(-50%)
         scale(
