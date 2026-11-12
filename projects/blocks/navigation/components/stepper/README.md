@@ -319,7 +319,7 @@ continuous completion bar above its vertical step list.
 | `--bx-stepper-marker-size`          | Size preset: 1.75 / 2 / 2.5rem                              |
 | `--bx-stepper-dot-size`             | Size preset: 1.25 / 1.5 / 1.75rem                           |
 | `--bx-stepper-lens-gap`             | Half of shared spacing 3 (6px) outside the selected marker  |
-| `--bx-stepper-magnification`        | `1.3`; backdrop enlargement beneath the circular lens       |
+| `--bx-stepper-magnification`        | `1.3`; vector enlargement beneath the circular lens         |
 | `--bx-stepper-lens-border`          | Primary foreground mixed at 18% opacity                     |
 | `--bx-stepper-marker-radius`        | Shared pill radius                                          |
 | `--bx-stepper-thickness`            | Size preset: 0.125 / 0.25 / 0.5rem                          |
@@ -380,10 +380,12 @@ The step list scrolls inside a separate wrapper with space below its surfaces fo
 supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
 state during server rendering. Content wraps for long translations and constrained containers.
 
-The circular lens uses the shared optical renderer. `--bx-stepper-magnification` defaults to `1.3` and enlarges the actual backdrop beneath the lens, including
-icons and connectors during travel. Icons keep their ordinary size until covered; there is no separate active-icon scale. Hit targets and layout stay fixed. The
-lens extends 6px beyond the marker through `--bx-stepper-lens-gap`, retaining some icon refraction without crowding the optical rim. Its subtle neutral outline
-is configurable with `--bx-stepper-lens-border`.
+The circular lens magnifies live icon vectors and connectors with native SVG rendering, keeping the center sharp without raster enlargement or added blur.
+`--bx-stepper-magnification` defaults to `1.3`. The outer rim uses the shared optical renderer on a separate layer to bend covered content at rest and during
+travel; the central vector rendering stays sharp. Decorative vectors are hidden from assistive technology; the original controls retain focus, semantics and hit
+targets. Icons keep their ordinary size until covered; there is no separate active-icon scale. Layout stays fixed. The lens extends 6px beyond the marker
+through `--bx-stepper-lens-gap`, retaining some icon refraction without crowding the optical rim. Its subtle neutral outline is configurable with
+`--bx-stepper-lens-border`.
 
 While refraction is active, the backing markers omit decorative borders, rims and shadows so those details cannot be refracted into artifacts. Ordinary and
 accessibility fallback indicators retain their state contours. Refraction has no added accent wash and remains subject to `glassiness`, global baseline/Off,

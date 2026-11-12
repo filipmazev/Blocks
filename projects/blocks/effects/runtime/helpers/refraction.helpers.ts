@@ -97,3 +97,12 @@ export const readRefractionStrength = (style: CSSStyleDeclaration): number =>
  */
 export const readRefractionMagnification = (style: CSSStyleDeclaration): number =>
   finiteClamp(parseFloat(style.getPropertyValue('--bx-refraction-magnification')), 1, 2, 1);
+
+/**
+ * Resolve optical depth independently of the surface silhouette.
+ * @param style - Computed style with an optional unitless `--bx-refraction-depth-scale`, defaulting to one.
+ * @param radius - Physical corner radius in CSS pixels; the multiplier is clamped between 0.25 and four.
+ * @returns Optical radius in CSS pixels, subsequently fitted independently to half of each surface dimension.
+ */
+export const readRefractionDepth = (style: CSSStyleDeclaration, radius: number): number =>
+  radius * finiteClamp(parseFloat(style.getPropertyValue('--bx-refraction-depth-scale')), 0.25, 4, 1);

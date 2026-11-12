@@ -568,14 +568,6 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
     this.markAsTouched();
   }
 
-  protected onEditableClick(event: MouseEvent): void {
-    const target = event.currentTarget;
-
-    if (target instanceof HTMLElement) this.originElement.set(target.closest<HTMLElement>('.bx-date-field') ?? target);
-
-    if (!this.isOpen() && !this.isReadonly() && !this.effectiveDisabled()) this.open();
-  }
-
   protected onEscape(event: Event): void {
     if (!this.isOpen()) return;
 

@@ -87,6 +87,10 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement, opt
     }
 
     host.classList.remove('bx-overlay-anchored');
+
+    // Native anchor scroll compensation must also be suspended while CDK measures viewport coordinates.
+    if (!documentLayer) host.style.removeProperty('position-anchor');
+
     // CDK measures in viewport coordinates. Temporarily use its fixed containing
     // block without reparenting the pane (which would blur a focused search).
     documentLayer?.classList.remove('bx-overlay-document-layer');
@@ -128,6 +132,7 @@ export function trackOverlayOrigin(overlay: OverlayRef, origin: HTMLElement, opt
     const source = origin.getBoundingClientRect();
     const target = host.getBoundingClientRect();
 
+    host.style.setProperty('position-anchor', anchor);
     host.style.setProperty('--bx-overlay-anchor-top', `calc(anchor(top) + ${target.top - source.top}px)`);
     host.style.setProperty('--bx-overlay-anchor-left', `calc(anchor(left) + ${target.left - source.left}px)`);
     host.classList.add('bx-overlay-anchored');

@@ -25,6 +25,8 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   const skin = target.matches('[data-bx-surface]') ? target : (target.querySelector<HTMLElement>('[data-bx-surface]') ?? target);
   const restoreVisibility = rememberStyles(target, ['visibility']);
   const restoreSkin = rememberStyles(skin, ['opacity', 'scale', 'transform-origin']);
+  const restoreCompositing = rememberStyles(skin, ['will-change']);
+  const compositing = view.getComputedStyle(skin).willChange;
   const opacity = Number(view.getComputedStyle(skin).opacity);
   const scale = finiteClamp(options.scale, 0.9, 1, 0.985);
   const preference = view.matchMedia('(prefers-reduced-motion: reduce)');
@@ -34,7 +36,11 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   let disposed = false;
   let active = false;
   let destination = 0;
+  let renderedOpacity = 0;
   let resolvePending: ((result: MotionResult) => void) | undefined;
+
+  // Keep the backdrop root stable when the spring crosses full opacity or settles.
+  skin.style.willChange = compositing === 'auto' ? 'opacity' : `${compositing}, opacity`;
 
   const reduced = (): boolean => {
     const inherited = inheritedAttribute(origin, 'data-bx-reduced-motion');
@@ -45,8 +51,11 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
   const motion = createSpringMotion(
     [0],
     ([position], [velocity]) => {
+      const progress = Math.max(0, Math.min(1, position));
+
+      renderedOpacity = destination === 1 ? Math.max(renderedOpacity, progress) : Math.min(renderedOpacity, progress);
       paintMotionStyles(skin, {
-        opacity: String(Math.max(0, Math.min(1, position)) * opacity),
+        opacity: String(renderedOpacity * opacity),
         scale: String(scale + (1 - scale) * position),
         'transform-origin': above ? 'center bottom' : 'center top'
       });
@@ -111,6 +120,7 @@ export function createGlassTransition(origin: HTMLElement, target: HTMLElement, 
       preference.removeEventListener('change', onPreference);
       doc.removeEventListener(configurationEvent, onPreference);
       restoreSkin();
+      restoreCompositing();
       restoreVisibility();
     }
   };

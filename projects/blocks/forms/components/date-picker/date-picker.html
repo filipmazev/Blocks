@@ -73,7 +73,7 @@
                             class="bx-date-trigger-icon-button"
                             [attr.aria-label]="resolvedOpenPickerLabel()"
                             [disabled]="effectiveDisabled() || isReadonly()"
-                            (click)="onEditableClick($event)">
+                            (click)="onTriggerClick($event)">
                             <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
                         </button>
                     </div>
@@ -153,7 +153,7 @@
                         class="bx-date-trigger-icon-button"
                         [attr.aria-label]="resolvedOpenPickerLabel()"
                         [disabled]="effectiveDisabled() || isReadonly()"
-                        (click)="onEditableClick($event)">
+                        (click)="onTriggerClick($event)">
                         <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
                     </button>
                 }
@@ -210,7 +210,7 @@
                         class="bx-date-trigger-icon-button"
                         [attr.aria-label]="resolvedOpenPickerLabel()"
                         [disabled]="effectiveDisabled() || isReadonly()"
-                        (click)="onEditableClick($event)">
+                        (click)="onTriggerClick($event)">
                         <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
                     </button>
                 }

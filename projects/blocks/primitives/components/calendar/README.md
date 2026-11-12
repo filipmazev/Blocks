@@ -48,9 +48,11 @@ date.
 `short` (Nov, Sep, Dec). Both accept `long`, `short` or `narrow` and update with the locale; use `long` to restore full names.
 
 The calendar uses Blocks semantic tokens for confirmed selection fill, preview tint, today outline and weekend text. Adjacent selected dates and period cells
-join into continuous bands, with rounded ends at range boundaries and grid-row edges. Hover or keyboard focus previews the complete week, month, quarter or year
-in period-range modes, including before the first anchor is selected. Preview cells remain distinct from committed `aria-selected` state. CSS variables:
-`--bx-calendar-cell-size`, `--bx-calendar-text`. Custom templates receive the full cell context and must keep a focusable element and `aria-selected` state.
+join into one continuous range block. Shared edges stay square; exposed outer corners round wherever the neighboring cell is unselected. Inward joins at shorter
+rows use a matching curved fillet. Ordinary single-cell hover and preview retain rounded corners. Hover or keyboard focus previews the complete week, month,
+quarter or year in period-range modes, including before the first anchor is selected. Preview cells remain distinct from committed `aria-selected` state. CSS
+variables: `--bx-calendar-cell-size`, `--bx-calendar-text`. Custom templates receive the full cell context and must keep a focusable element and `aria-selected`
+state.
 
 ## Behavior and accessibility
 

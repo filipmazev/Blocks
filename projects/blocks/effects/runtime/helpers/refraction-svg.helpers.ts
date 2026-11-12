@@ -162,12 +162,13 @@ export function setFieldImages(field: RefractionField, map: { slice: Tiles & { i
  * @param h - Target surface height in CSS pixels.
  * @param ox - Horizontal offset of the field in CSS pixels. Defaults to `0`.
  * @param oy - Vertical offset of the field in CSS pixels. Defaults to `0`.
+ * @param independentAxes - Fit optical depth independently on each axis; defaults to false for physical corner geometry.
  */
-export function layField(field: RefractionField, tiles: Tiles, w: number, h: number, ox = 0, oy = 0) {
-  for (const slot of EDGES) setRect(field.edges[slot], sliceRect(slot, w, h, tiles.r, tiles.reach, ox, oy));
+export function layField(field: RefractionField, tiles: Tiles, w: number, h: number, ox = 0, oy = 0, independentAxes = false) {
+  for (const slot of EDGES) setRect(field.edges[slot], sliceRect(slot, w, h, tiles.r, tiles.reach, ox, oy, independentAxes));
 
   for (const c of CORNERS) {
-    const rect = sliceRect(c, w, h, tiles.r, tiles.reach, ox, oy);
+    const rect = sliceRect(c, w, h, tiles.r, tiles.reach, ox, oy, independentAxes);
 
     setRect(field.corners[`x${c}`], rect);
     setRect(field.corners[`y${c}`], rect);

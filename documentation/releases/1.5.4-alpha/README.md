@@ -8,12 +8,15 @@ Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has 
   the shared field labels, errors, disabled/readonly contracts, translations, theme inheritance and responsive popover/drawer presentation.
 - DatePicker supports single/multiple dates, ranges, and whole weeks, months, quarters and years, including period ranges. Values are canonical civil dates;
   month/year selection does not require choosing a day. Whole-week selection handles month/year boundaries, while hover and keyboard previews show complete
-  periods. Confirmed ranges use continuous joined bands.
+  periods. Confirmed and preview ranges join into one block across rows, with square shared edges, rounded exposed corners and curved inward joins where
+  neighboring rows have different lengths. Single-cell hover retains its rounded shape.
 - Editable date fields reveal format placeholders as their labels float. Trigger-only controls keep empty labels centered. Range fields expose start/end
   placeholders and optional separate fields. Multiple selections commit immediately and appear as removable Tags with truncation and a `+N` tooltip.
 - Added configurable opening icons, optional translated Today/Now actions that select through normal guards, and independent control of today's calendar marker.
-  Both shortcuts are off by default in the library and demos. Omitted shortcut labels render no action or empty space. Calendar weekday headings default to
-  narrow initials and month names to short names, with full accessible names and configurable localized formats.
+  Date opening icons toggle the active panel closed. Popovers share native scroll anchoring with selects; their tracker also handles selection and navigation
+  measurements without double-applying scroll offsets. Both shortcuts are off by default in the library and demos. Omitted shortcut labels render no action or
+  empty space. Calendar weekday headings default to narrow initials and month names to short names, with full accessible names and configurable localized
+  formats.
 - Date presets work in every selection mode, support disabled items and translated descriptions/groups, and scroll independently. Restrictions include bounds,
   blocked dates/weekdays/intervals, filters, selection counts, inclusive range lengths and crossing policies. Reversed manually typed range endpoints produce
   specific field errors with formatted bounds.
@@ -195,10 +198,11 @@ accessibility.
 - Stepper markers and connectors now receive the existing engine's directional and ambient light independently of their emission. Current filled indicators emit
   more strongly than tonal completed or neutral inactive indicators; errors receive restrained additional emphasis. Card surfaces retain their backing.
 - Rounded stepper highlights use semantic color mixed with the theme surface instead of an enlarged dark hover shadow; the traveling accent has no drop shadow.
-- Steps and dots use one persistent clear glass lens for both resting selection and travel. It magnifies the actual icon/connector backdrop as it passes, rather
-  than enlarging the active icon before arrival. Local lens material stays clear inside panels; ordinary opaque fallbacks retain semantic indicators.
-  `--bx-stepper-lens-gap` defaults to 6px, `--bx-stepper-magnification` to 1.3, and `--bx-stepper-lens-border` controls its subtle neutral contour. Backing
-  markers omit borders, rims and shadows while the lens is active, preventing their outlines from becoming refraction artifacts.
+- Steps and dots use one persistent clear glass lens for both resting selection and travel. It magnifies live icon vectors and connectors as it passes, with a
+  sharp native vector center and refractive rim. Icons retain their ordinary size before the lens arrives. Local lens material stays clear inside panels;
+  ordinary opaque fallbacks retain semantic indicators. `--bx-stepper-lens-gap` defaults to 6px, `--bx-stepper-magnification` to 1.3, and
+  `--bx-stepper-lens-border` controls its subtle neutral contour. Backing markers omit borders, rims and shadows while the lens is active, preventing their
+  outlines from becoming refraction artifacts.
 - The traveling stepper accent now measures layout geometry and snaps on container, orientation, and presentation changes: it stays centered on its marker
   inside a scaled dialog and no longer trails behind while the viewport resizes. Committed step changes keep their spring.
 - Segment tracks retain a continuous, brighter fill without extra inner geometry. Descendant emission origins paint their registered rim as well as illuminating
@@ -230,6 +234,8 @@ accessibility.
   inside stationary hit areas.
 - Added reusable runtime `mountSelectionMotion`, `ISelectionMotion`, and `ISelectionMotionOptions` for one lit surface behind enabled menu/option rows. Menus,
   selects, multi-selects and autocomplete share pointer/keyboard movement while preserving disabled states, selected values, checkmarks and focus outlines.
+- Shared overlay opacity now progresses monotonically and retains a stable compositing layer while open, preventing nested picker lenses from flashing when the
+  spring crosses full opacity or settles. Original compositing styles are restored on teardown.
 - Shared overlay motion now combines retargetable opacity with a restrained 0.985–1 scale, preserving collision-aware positioning transforms. Dropdowns, context
   menus, tooltips, select panels, autocomplete and popovers reuse the same controller. `IGlassTransitionOptions.scale: 1` retains opacity-only motion.
   Autocomplete/popover exit makes old panels inert immediately and cancels stale completion on reopening or destruction.
@@ -255,8 +261,12 @@ accessibility.
 - Slider and RangeSlider reserve permanent vertical clearance based on the configured thumb diameter, with `--bx-slider-vertical-padding` defaulting to shared
   spacing 2 per side. The native input and visible rail share their center. Removing border width during the held phase prevents Chrome from flattening the
   glass at its upper/lower edges; pressing adds no layout shift.
+- Picker surfaces fade without scaling, keeping adjoining calendar range fills continuous throughout opening and closing.
+- TimeWheel optical depth reaches farther inward with `--bx-wheel-refraction-depth-scale` (default `4`) while preserving the band radius and distortion
+  strength.
 - TimeWheel selection bands use clear local lenses with 1.3 magnification and a subtle neutral contour. `--bx-wheel-magnification` and `--bx-wheel-band-border`
-  customize the treatment; a decorative, accessibility-hidden rendering magnifies only the numbers beneath the band.
+  customize the treatment; a decorative, accessibility-hidden rendering magnifies only the numbers beneath the band. A neutral rim and restrained distortion
+  keep larger AM/PM labels readable.
 - The shared optical renderer adds bounded `--bx-refraction-strength` and `--bx-refraction-magnification` customization. Local lenses use the existing surface
   renderer and appearance policy; global Off/baseline and accessibility preferences remain authoritative, without adding refraction to ordinary panels.
 - The held thumb's enlargement is clipped on the slider's own shell, so sliders inside scrolling panels no longer grow a horizontal scroll container.

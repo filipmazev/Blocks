@@ -30,6 +30,7 @@ import type {
   IDateTimeConfig,
   PeriodKind
 } from '@filip.mazev/blocks/core';
+import type { ICalendarRangeCorners } from '@primitives/interfaces/icalendar-range-corners.interface';
 import type { ICalendarRetryContext } from '@primitives/interfaces/icalendar-retry-context.interface';
 import type {
   CalendarViewMode,
@@ -74,6 +75,7 @@ import {
   selectionPeriodBounds,
   stepView
 } from '@primitives/helpers/calendar-grid.helpers';
+import { calendarRangeCorners } from '@primitives/helpers/calendar-range.helpers';
 
 /**
  * Inline, reusable Blocks calendar.
@@ -259,6 +261,9 @@ export class Calendar {
     );
   });
   protected readonly dayCells: Signal<readonly ICalendarDayCell[]> = computed<readonly ICalendarDayCell[]>(() => this.dayCellGroups().flat());
+  protected readonly dayRangeCorners: Signal<readonly (readonly ICalendarRangeCorners[])[]> = computed(() =>
+    this.dayCellGroups().map((cells) => calendarRangeCorners(cells, 7))
+  );
   protected readonly weekRows: Signal<readonly (readonly (readonly ICalendarDayCell[])[])[]> = computed(() =>
     this.dayCellGroups().map((cells) => {
       const rows: ICalendarDayCell[][] = [];
@@ -311,6 +316,9 @@ export class Calendar {
       })
     };
   });
+  protected readonly periodRangeCorners: Signal<readonly ICalendarRangeCorners[]> = computed(() =>
+    calendarRangeCorners(this.periodGrid().cells, this.viewMode() === 'months' ? 3 : 4)
+  );
   protected readonly headerLabel: Signal<string> = computed(() => {
     const view = this.viewMode();
 

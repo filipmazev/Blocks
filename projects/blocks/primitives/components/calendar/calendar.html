@@ -48,7 +48,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @for (row of rows; track row[0]?.date) {
+                                    @for (row of rows; track row[0]?.date; let rowIndex = $index) {
                                         <tr>
                                             @if (showWeekNumbers()) {
                                                 <th scope="row" class="bx-calendar-week-number">
@@ -59,7 +59,7 @@
                                                     }
                                                 </th>
                                             }
-                                            @for (cell of row; track cell.date) {
+                                            @for (cell of row; track cell.date; let columnIndex = $index) {
                                                 <td
                                                     role="gridcell"
                                                     class="bx-calendar-cell"
@@ -69,6 +69,28 @@
                                                     [class.is-preview]="cell.isPreview"
                                                     [class.is-range-start]="cell.isRangeStart"
                                                     [class.is-range-end]="cell.isRangeEnd"
+                                                    [class.has-start-start-corner]="dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].startStart"
+                                                    [class.has-start-end-corner]="dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].startEnd"
+                                                    [class.has-end-start-corner]="dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].endStart"
+                                                    [class.has-end-end-corner]="dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].endEnd"
+                                                    [class.has-concave-start-start]="
+                                                        !!dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveStartStart
+                                                    "
+                                                    [class.is-concave-start-start-preview]="
+                                                        dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveStartStart === 'preview'
+                                                    "
+                                                    [class.has-concave-start-end]="!!dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveStartEnd"
+                                                    [class.is-concave-start-end-preview]="
+                                                        dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveStartEnd === 'preview'
+                                                    "
+                                                    [class.has-concave-end-start]="!!dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveEndStart"
+                                                    [class.is-concave-end-start-preview]="
+                                                        dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveEndStart === 'preview'
+                                                    "
+                                                    [class.has-concave-end-end]="!!dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveEndEnd"
+                                                    [class.is-concave-end-end-preview]="
+                                                        dayRangeCorners()[monthIndex][rowIndex * 7 + columnIndex].concaveEndEnd === 'preview'
+                                                    "
                                                     [attr.aria-selected]="cell.isSelected"
                                                     [attr.aria-disabled]="cell.disabled">
                                                     <button
@@ -118,7 +140,7 @@
                 </div>
             } @else {
                 <div class="bx-calendar-periods" role="grid" [class.is-four-columns]="viewMode() !== 'months'" [attr.aria-label]="headerLabel()">
-                    @for (cell of periodGrid().cells; track cell.date) {
+                    @for (cell of periodGrid().cells; track cell.date; let index = $index) {
                         <button
                             type="button"
                             role="gridcell"
@@ -128,6 +150,18 @@
                             [class.is-preview]="cell.isPreview"
                             [class.is-range-start]="cell.isRangeStart"
                             [class.is-range-end]="cell.isRangeEnd"
+                            [class.has-start-start-corner]="periodRangeCorners()[index].startStart"
+                            [class.has-start-end-corner]="periodRangeCorners()[index].startEnd"
+                            [class.has-end-start-corner]="periodRangeCorners()[index].endStart"
+                            [class.has-end-end-corner]="periodRangeCorners()[index].endEnd"
+                            [class.has-concave-start-start]="!!periodRangeCorners()[index].concaveStartStart"
+                            [class.is-concave-start-start-preview]="periodRangeCorners()[index].concaveStartStart === 'preview'"
+                            [class.has-concave-start-end]="!!periodRangeCorners()[index].concaveStartEnd"
+                            [class.is-concave-start-end-preview]="periodRangeCorners()[index].concaveStartEnd === 'preview'"
+                            [class.has-concave-end-start]="!!periodRangeCorners()[index].concaveEndStart"
+                            [class.is-concave-end-start-preview]="periodRangeCorners()[index].concaveEndStart === 'preview'"
+                            [class.has-concave-end-end]="!!periodRangeCorners()[index].concaveEndEnd"
+                            [class.is-concave-end-end-preview]="periodRangeCorners()[index].concaveEndEnd === 'preview'"
                             [class.is-current]="cell.isSelected && !modeInfo().isPeriod"
                             [class.is-disabled]="cell.disabled"
                             [class.is-outside]="!cell.inPeriod"

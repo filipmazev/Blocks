@@ -124,7 +124,9 @@ standard CSS for other engines.
 Local optical surfaces can tune `--bx-refraction-strength` from `0` to `1` (default `1`) and `--bx-refraction-magnification` from `1` to `2` (default `1`).
 Strength adjusts edge displacement; magnification enlarges the actual backdrop around the surface center, affecting only content covered by the lens. The
 Stepper uses this to magnify icons and connecting lines during travel without scaling the source content. The default magnification bypasses the additional
-sampling stages. These settings do not opt a surface into refraction or override global appearance/accessibility policy.
+sampling stages. These settings do not opt a surface into refraction or override global appearance/accessibility policy. `--bx-refraction-depth-scale`
+independently multiplies the optical region's depth relative to the corner radius (default `1`, clamped to `0.25`–`4`). The region cannot exceed half the
+shorter surface dimension. This changes refraction coverage without changing the silhouette or reflection geometry.
 
 The distributed `effects/effects.css` path is unchanged. Its source is `effects/effects.scss`; `npm run tools:build-effects` regenerates it, and normal build
 scripts run this automatically. Explore the selected controls and slider at `/appearance`.

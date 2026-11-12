@@ -25,6 +25,7 @@ import type { GlassinessMode } from '@filip.mazev/blocks/effects/runtime';
 import type { IStepDefinition } from '@navigation/interfaces/istep-definition.interface';
 import type { IStepperCompletion } from '@navigation/interfaces/istepper-completion.interface';
 import type { IStepperLabels } from '@navigation/interfaces/istepper-labels.interface';
+import type { IStepperMagnifier } from '@navigation/interfaces/istepper-magnifier.interface';
 import type { IStepperRequest } from '@navigation/interfaces/istepper-request.interface';
 import type { IStepperSelection } from '@navigation/interfaces/istepper-selection.interface';
 import type { IStepperTransition } from '@navigation/interfaces/istepper-transition.interface';
@@ -55,6 +56,7 @@ import { Step } from '@navigation/components/step/step';
 import { STEPPER_LABELS } from '@navigation/constants/stepper.constants';
 import { STEPPER_EMISSION_STRENGTH, STEPPER_SELECTION_SPRING } from '@navigation/constants/stepper-motion.constants';
 import { isStepPending, isStepValid } from '@navigation/helpers/stepper.helpers';
+import { createStepperMagnifier } from '@navigation/helpers/stepper-magnifier.helpers';
 import { StepperWorkflowService } from '@navigation/services/stepper-workflow.service';
 import { BX_STEPPER_DEFAULTS } from '@navigation/tokens/stepper-defaults.token';
 
@@ -87,6 +89,7 @@ export class Stepper {
   protected readonly bxA11yService = inject(BxA11yService);
 
   private readonly instanceId: string = `bx-stepper-${uuidv4()}`;
+  private readonly localMagnifiers: Map<HTMLElement, IStepperMagnifier> = new Map();
   private readonly markerMotions: Map<HTMLElement, ISpringMotion> = new Map();
   private readonly markerStatuses: Map<HTMLElement, StepperStatus> = new Map();
 
@@ -309,6 +312,7 @@ export class Stepper {
 
   private previousId: string | null = null;
   private selectionMotion: ISpringMotion | undefined;
+  private selectionMagnifier: IStepperMagnifier | undefined;
   private selectionLayout: string | null = null;
   private selectionSize: string | null = null;
   private selectionTarget: string | null = null;
@@ -362,6 +366,11 @@ export class Stepper {
       this.markerMotions.clear();
       this.markerStatuses.clear();
       this.selectionMotion?.destroy();
+      this.selectionMagnifier?.destroy();
+
+      for (const magnifier of this.localMagnifiers.values()) magnifier.destroy();
+
+      this.localMagnifiers.clear();
     });
 
     effect((onCleanup) => {
@@ -420,6 +429,7 @@ export class Stepper {
       const measure = (): void => {
         this.positionConnectors(list, markers, connectors);
         this.positionSelection(list, markers);
+        this.positionLocalMagnifiers(markers);
       };
 
       measure();
@@ -578,6 +588,12 @@ export class Stepper {
   }
 
   private positionSelection(list: HTMLElement, markers: readonly HTMLElement[]): void {
+    if (this.hasTravelingLens()) {
+      for (const magnifier of this.localMagnifiers.values()) magnifier.destroy();
+
+      this.localMagnifiers.clear();
+    }
+
     const surface = this.selection()?.nativeElement;
     const index = this.rows().findIndex((row) => row.step.id === this.selectedStep()?.id);
     const marker = markers[index];
@@ -590,6 +606,8 @@ export class Stepper {
 
       this.selectionMotion?.destroy();
       this.selectionMotion = undefined;
+      this.selectionMagnifier?.destroy();
+      this.selectionMagnifier = undefined;
       this.selectionLayout = null;
       this.selectionTarget = null;
 
@@ -611,16 +629,25 @@ export class Stepper {
       bounds.height / scale + padding * 2
     ];
 
+    if (this.selectionMagnifier?.lens !== surface || this.selectionMagnifier?.source !== list || !this.hasTravelingLens()) {
+      this.selectionMagnifier?.destroy();
+      this.selectionMagnifier = this.hasTravelingLens() ? createStepperMagnifier(list, surface) : undefined;
+    }
+
+    this.selectionMagnifier?.refresh();
     this.selectionMotion ??= createSpringMotion(
       geometry,
       ([x, y, width, height], [velocityX, velocityY]) => {
         const stretch = this.bxA11yService.isReducedMotion() ? 0 : Math.min(0.06, Math.hypot(velocityX, velocityY) / 16000);
         const horizontal = Math.abs(velocityX) >= Math.abs(velocityY);
+        const scaleX = 1 + (horizontal ? stretch : -stretch / 3);
+        const scaleY = 1 + (horizontal ? -stretch / 3 : stretch);
 
+        this.selectionMagnifier?.update(x, y, width, height, scaleX, scaleY);
         paintMotionStyles(
           surface,
           {
-            transform: `translate3d(${x}px, ${y}px, 0) scale(${1 + (horizontal ? stretch : -stretch / 3)}, ${1 + (horizontal ? -stretch / 3 : stretch)})`,
+            transform: `translate3d(${x}px, ${y}px, 0) scale(${scaleX}, ${scaleY})`,
             width: `${Math.max(1, width)}px`,
             height: `${Math.max(1, height)}px`
           },
@@ -638,6 +665,43 @@ export class Stepper {
     this.selectionSize = size;
     this.selectionTarget = selection;
     surface.style.visibility = 'visible';
+  }
+
+  private positionLocalMagnifiers(markers: readonly HTMLElement[]): void {
+    const live = new Set<HTMLElement>();
+
+    if (!this.hasTravelingLens()) {
+      for (const marker of markers) {
+        const lens = marker.querySelector<HTMLElement>(':scope > .marker-lens');
+        const source = marker.querySelector<HTMLElement>('.marker-content');
+
+        if (!lens || !source || !lens.offsetWidth || !lens.offsetHeight) continue;
+
+        live.add(lens);
+
+        let magnifier = this.localMagnifiers.get(lens);
+
+        if (!magnifier || magnifier.source !== source) {
+          magnifier?.destroy();
+          magnifier = createStepperMagnifier(source, lens);
+          this.localMagnifiers.set(lens, magnifier);
+        }
+
+        const scale = this.layoutScale(marker);
+        const bounds = lens.getBoundingClientRect();
+        const origin = marker.getBoundingClientRect();
+
+        magnifier.refresh();
+        magnifier.update((bounds.x - origin.x) / scale, (bounds.y - origin.y) / scale, bounds.width / scale, bounds.height / scale, 1, 1);
+      }
+    }
+
+    for (const [lens, magnifier] of this.localMagnifiers) {
+      if (live.has(lens)) continue;
+
+      magnifier.destroy();
+      this.localMagnifiers.delete(lens);
+    }
   }
 
   private positionConnectors(list: HTMLElement, markers: readonly HTMLElement[], connectors: readonly HTMLElement[]): void {

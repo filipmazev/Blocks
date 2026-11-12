@@ -126,8 +126,10 @@ default appearance. `--bx-dropdown-opacity` overrides that backing and `--bx-dro
 remain authoritative.
 
 Wheels use clear magnifying lenses over the moving numbers. Magnification defaults to `1.3` through `--bx-wheel-magnification`; a subtle neutral contour makes
-the selected band visible without an accent wash. `--bx-wheel-band-border`, `--bx-wheel-band-background` and `--bx-wheel-band-opacity` customize the band;
-background and opacity default to transparent/zero. The [TimeWheel guide](../time-wheel/README.md) describes standalone wheel customization.
+the selected band visible without an accent wash. Restrained edge refraction and a neutral rim keep larger AM/PM text readable. The opening transition retains a
+stable backdrop layer and monotonic opacity so the lens does not flash as its spring settles. `--bx-wheel-band-border`, `--bx-wheel-band-background` and
+`--bx-wheel-band-opacity` customize the band; background and opacity default to transparent/zero. The [TimeWheel guide](../time-wheel/README.md) describes
+standalone wheel customization.
 
 List rows share Select/MultiSelect typography, padding, radius, selected/disabled styling, checkmarks, immediate hover feedback and `--bx-select-option-gap`
 (default shared spacing 1). There is no quick-select sidebar, repeated time title or reserved footer space.

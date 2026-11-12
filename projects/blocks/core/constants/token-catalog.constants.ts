@@ -1104,7 +1104,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
-      'projects/blocks/forms/components/time-wheel/time-wheel.scss',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
@@ -1205,7 +1204,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
-      'projects/blocks/forms/components/time-wheel/time-wheel.scss',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
@@ -1339,6 +1337,112 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: [],
     fallbacks: ['2.375rem', '2.75rem'],
     selectors: [],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-concave-end-end',
+    reference: 'var(--bx-calendar-concave-end-end)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    fallbacks: [],
+    selectors: [
+      '.bx-calendar-cell',
+      '.bx-calendar-cell.has-concave-end-end',
+      '.bx-calendar-cell.is-concave-end-end-preview',
+      '.bx-calendar-period',
+      '.bx-calendar-period.has-concave-end-end',
+      '.bx-calendar-period.is-concave-end-end-preview'
+    ],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-concave-end-start',
+    reference: 'var(--bx-calendar-concave-end-start)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    fallbacks: [],
+    selectors: [
+      '.bx-calendar-cell',
+      '.bx-calendar-cell.has-concave-end-start',
+      '.bx-calendar-cell.is-concave-end-start-preview',
+      '.bx-calendar-period',
+      '.bx-calendar-period.has-concave-end-start',
+      '.bx-calendar-period.is-concave-end-start-preview'
+    ],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-concave-start-end',
+    reference: 'var(--bx-calendar-concave-start-end)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    fallbacks: [],
+    selectors: [
+      '.bx-calendar-cell',
+      '.bx-calendar-cell.has-concave-start-end',
+      '.bx-calendar-cell.is-concave-start-end-preview',
+      '.bx-calendar-period',
+      '.bx-calendar-period.has-concave-start-end',
+      '.bx-calendar-period.is-concave-start-end-preview'
+    ],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-concave-start-start',
+    reference: 'var(--bx-calendar-concave-start-start)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    fallbacks: [],
+    selectors: [
+      '.bx-calendar-cell',
+      '.bx-calendar-cell.has-concave-start-start',
+      '.bx-calendar-cell.is-concave-start-start-preview',
+      '.bx-calendar-period',
+      '.bx-calendar-period.has-concave-start-start',
+      '.bx-calendar-period.is-concave-start-start-preview'
+    ],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-inline-end',
+    reference: 'var(--bx-calendar-inline-end)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0%', '100%'],
+    fallbacks: [],
+    selectors: ['.bx-calendar-cell', '.bx-calendar-cell:dir(rtl)', '.bx-calendar-period', '.bx-calendar-period:dir(rtl)'],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-inline-start',
+    reference: 'var(--bx-calendar-inline-start)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0%', '100%'],
+    fallbacks: [],
+    selectors: ['.bx-calendar-cell', '.bx-calendar-cell:dir(rtl)', '.bx-calendar-period', '.bx-calendar-period:dir(rtl)'],
     sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
   },
   {
@@ -8945,6 +9049,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/effects/effects.scss']
   },
   {
+    name: '--bx-refraction-depth-scale',
+    reference: 'var(--bx-refraction-depth-scale)',
+    category: 'effects',
+    group: 'Refraction',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['var(--bx-wheel-refraction-depth-scale, 2.5)'],
+    fallbacks: [],
+    selectors: ['.bx-wheel-band'],
+    sources: ['projects/blocks/effects/runtime/helpers/refraction.helpers.ts', 'projects/blocks/forms/components/time-wheel/time-wheel.scss']
+  },
+  {
     name: '--bx-refraction-edge-depth',
     reference: 'var(--bx-refraction-edge-depth)',
     category: 'effects',
@@ -9056,7 +9173,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['var(--bx-stepper-magnification, 1.3)'],
+    defaults: ['1'],
     fallbacks: [],
     selectors: ['.marker-lens', '.step-selection.is-lens'],
     sources: ['projects/blocks/effects/runtime/helpers/refraction.helpers.ts', 'projects/blocks/navigation/components/stepper/stepper.scss']
@@ -9082,7 +9199,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['0px'],
+    defaults: ['0.25px', '0px'],
     fallbacks: ['0.5px'],
     selectors: ['.bx-slider-optic', '.bx-wheel-band', '.marker-lens', '.step-selection.is-lens'],
     sources: [
@@ -9256,10 +9373,15 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['0.2', '0.35'],
+    defaults: ['0.16', '0.28', '0.35'],
     fallbacks: [],
-    selectors: ['.bx-slider-optic', '.marker-lens', '.step-selection.is-lens'],
-    sources: ['global', 'projects/blocks/effects/runtime/helpers/refraction.helpers.ts', 'projects/blocks/navigation/components/stepper/stepper.scss']
+    selectors: ['.bx-slider-optic', '.bx-wheel-band', '.marker-lens', '.step-selection.is-lens'],
+    sources: [
+      'global',
+      'projects/blocks/effects/runtime/helpers/refraction.helpers.ts',
+      'projects/blocks/forms/components/time-wheel/time-wheel.scss',
+      'projects/blocks/navigation/components/stepper/stepper.scss'
+    ]
   },
   {
     name: '--bx-refraction-tint',
@@ -11113,12 +11235,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     category: 'components',
     group: 'Component \u00B7 stepper',
     kind: 'value',
-    scope: 'local',
+    scope: 'runtime',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['1.3'],
+    fallbacks: [],
     selectors: [],
-    sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
+    sources: ['projects/blocks/navigation/helpers/stepper-magnifier.helpers.ts']
   },
   {
     name: '--bx-stepper-marker-radius',
@@ -11158,6 +11280,58 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-on-accent)'],
     selectors: [],
     sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
+  },
+  {
+    name: '--bx-stepper-optic-rx',
+    reference: 'var(--bx-stepper-optic-rx)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/navigation/helpers/stepper-magnifier.helpers.ts']
+  },
+  {
+    name: '--bx-stepper-optic-ry',
+    reference: 'var(--bx-stepper-optic-ry)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/navigation/helpers/stepper-magnifier.helpers.ts']
+  },
+  {
+    name: '--bx-stepper-optic-x',
+    reference: 'var(--bx-stepper-optic-x)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/navigation/helpers/stepper-magnifier.helpers.ts']
+  },
+  {
+    name: '--bx-stepper-optic-y',
+    reference: 'var(--bx-stepper-optic-y)',
+    category: 'components',
+    group: 'Component \u00B7 stepper',
+    kind: 'value',
+    scope: 'runtime',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/navigation/helpers/stepper-magnifier.helpers.ts']
   },
   {
     name: '--bx-stepper-padding',
@@ -12338,7 +12512,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['color-mix(in srgb, var(--bx-text-primary) 18%, transparent)'],
+    fallbacks: ['color-mix(in srgb, var(--bx-text-primary) 14%, transparent)'],
     selectors: [],
     sources: ['projects/blocks/forms/components/time-wheel/time-wheel.scss']
   },
@@ -12391,6 +12565,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['1.3'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/time-wheel/time-wheel.scss']
+  },
+  {
+    name: '--bx-wheel-refraction-depth-scale',
+    reference: 'var(--bx-wheel-refraction-depth-scale)',
+    category: 'components',
+    group: 'Component \u00B7 wheel',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2.5'],
     selectors: [],
     sources: ['projects/blocks/forms/components/time-wheel/time-wheel.scss']
   },

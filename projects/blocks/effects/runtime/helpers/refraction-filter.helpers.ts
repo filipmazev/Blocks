@@ -116,9 +116,9 @@ export const layoutRefractionFilter = (
   setAttr(filter.refrDisp, 'in', magnification > 1 ? 'magnified' : 'SourceGraphic');
   setAttr(filter.magnifyX, 'scale', width * zoom);
   setAttr(filter.magnifyY, 'scale', height * zoom);
-  layField(filter.refrField, map.slice, width, height);
+  layField(filter.refrField, map.slice, width, height, 0, 0, true);
 
-  for (const slot of SLOTS) setRect(filter.tiltTiles[slot], sliceRect(slot, width, height, map.tilt.r, map.tilt.reach));
+  for (const slot of SLOTS) setRect(filter.tiltTiles[slot], sliceRect(slot, width, height, map.tilt.r, map.tilt.reach, 0, 0, true));
 
   const radius = Math.max(0.01, Math.min(map.slice.r, width / 2, height / 2));
 

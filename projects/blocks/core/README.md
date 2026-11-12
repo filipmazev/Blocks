@@ -156,7 +156,8 @@ and lifecycle behavior instead of positioning or recoloring its private DOM.
 
 `trackOverlayOrigin()` uses native CSS anchors where supported for ordinary overlays. Top-layer popovers use synchronous measured CDK positioning so nested
 scrolling keeps the panel attached to its trigger. The same returned cleanup callback removes listeners and observers for either path; call its `reposition()`
-method after application-owned layout changes.
+method after application-owned layout changes. The tracker suspends native anchor scroll compensation during CDK measurement, then restores it before paint.
+Keep subsequent positioning calls on the tracker so scrolling and layout updates share the same coordinates.
 
 ### Scroll boundaries
 

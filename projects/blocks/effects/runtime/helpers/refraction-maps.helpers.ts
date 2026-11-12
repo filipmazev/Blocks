@@ -264,13 +264,16 @@ export const perCorner = (tile: (key: Corner) => string) => ({ tl: tile('tl'), t
  * @param reach - Desired inward reach of edge tiles in CSS pixels.
  * @param ox - Horizontal CSS-pixel offset of the tile set. Defaults to `0`.
  * @param oy - Vertical CSS-pixel offset of the tile set. Defaults to `0`.
+ * @param independentAxes - Fit optical depth independently on each axis; defaults to false for physical corner geometry.
  */
-export function sliceRect(slot: Slot, w: number, h: number, r: number, reach: number, ox = 0, oy = 0): SliceRect {
-  r = Math.max(0.01, Math.min(r, w / 2, h / 2));
+export function sliceRect(slot: Slot, w: number, h: number, r: number, reach: number, ox = 0, oy = 0, independentAxes = false): SliceRect {
+  const rx = Math.max(0.01, Math.min(r, w / 2, independentAxes ? Infinity : h / 2));
+  const ry = Math.max(0.01, Math.min(r, h / 2, independentAxes ? Infinity : w / 2));
 
-  const mid = Math.max(0.01, w - 2 * r);
-  const col = Math.max(0.01, h - 2 * r);
-  const d = Math.max(0.01, Math.min(reach, Math.min(w, h) / 2));
+  const mid = Math.max(0.01, w - 2 * rx);
+  const col = Math.max(0.01, h - 2 * ry);
+  const dx = Math.max(0.01, Math.min(reach, w / 2, independentAxes ? Infinity : h / 2));
+  const dy = Math.max(0.01, Math.min(reach, h / 2, independentAxes ? Infinity : w / 2));
   const rect = (x: number, y: number, sw: number, sh: number) => ({
     x: x + ox,
     y: y + oy,
@@ -280,21 +283,21 @@ export function sliceRect(slot: Slot, w: number, h: number, r: number, reach: nu
 
   switch (slot) {
     case 'tl':
-      return rect(0, 0, r, r);
+      return rect(0, 0, rx, ry);
     case 'tr':
-      return rect(w - r, 0, r, r);
+      return rect(w - rx, 0, rx, ry);
     case 'br':
-      return rect(w - r, h - r, r, r);
+      return rect(w - rx, h - ry, rx, ry);
     case 'bl':
-      return rect(0, h - r, r, r);
+      return rect(0, h - ry, rx, ry);
     case 'top':
-      return rect(r, 0, mid, d);
+      return rect(rx, 0, mid, dy);
     case 'bottom':
-      return rect(r, h - d, mid, d);
+      return rect(rx, h - dy, mid, dy);
     case 'left':
-      return rect(0, r, d, col);
+      return rect(0, ry, dx, col);
     case 'right':
-      return rect(w - d, r, d, col);
+      return rect(w - dx, ry, dx, col);
   }
 }
 

@@ -26,9 +26,11 @@ Uses the shared soft spring and recent-velocity projection, edge fading and sema
 numbers. A clipped, accessibility-hidden rendering follows the same wheel position and enlarges only the content under the lens; the original listbox remains
 the sole interaction and accessibility target. The shared renderer supplies clear refraction without an added color wash or emitted focus light. Customize
 magnification through `--bx-wheel-magnification` (default `1.3`), tint through `--bx-wheel-band-background` (default transparent), and opacity through
-`--bx-wheel-band-opacity` (default `0`). A subtle neutral outline makes the lens visible even over empty space; `--bx-wheel-band-border` overrides its default
-primary foreground mixed at 18% opacity. Application glassiness, quality and accessibility preferences govern refraction. Reduced motion removes decorative
-travel; reduced transparency retains an opaque band with readable enlarged numbers.
+`--bx-wheel-band-opacity` (default `0`). `--bx-wheel-refraction-depth-scale` defaults to `4`, extending the optical region inward independently of the band
+border radius. The renderer bounds this region to half of each band dimension independently. A subtle neutral outline makes the lens visible even over empty
+space; `--bx-wheel-band-border` overrides its default primary foreground mixed at 14% opacity. The existing neutral glass rim gives the band depth without an
+accent wash. Edge displacement is restrained and lightly smoothed to keep large AM/PM labels legible. Application glassiness, quality and accessibility
+preferences govern refraction. Reduced motion removes decorative travel; reduced transparency retains an opaque band with readable enlarged numbers.
 
 ## Behavior and accessibility
 

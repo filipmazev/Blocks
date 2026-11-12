@@ -140,7 +140,8 @@ Range inputs reveal separate `startLabel`/`endLabel` placeholders; `separateFiel
 shared Tags with truncation, removable visible items and a `+N` overflow tooltip, matching MultiSelect's presentation.
 
 The panel stays compact independently of its field's width. The field fills its assigned form column; set `max-inline-size` on the host when a narrower field is
-needed. `pickerIcon="chevron-down"` can replace the default calendar icon.
+needed. `pickerIcon="chevron-down"` can replace the default calendar icon. Clicking the opening icon again closes the active panel. Popover positioning tracks
+the field through scrolling and calendar interactions.
 
 The panel uses classic blur and tint, without SVG refraction. Its default backing adds 18 percentage points to shared material opacity, about 63.6% at the
 default appearance. `--bx-dropdown-opacity` overrides it and `--bx-dropdown-min-opacity` sets an optional floor. Opaque and accessibility preferences take

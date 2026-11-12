@@ -1,6 +1,12 @@
 import { SLOTS } from '@effects/runtime/constants/refraction-maps.constants';
 import { rememberStyles } from '@effects/runtime/helpers/dom.helpers';
-import { cachedRefraction, readRadius, readRefractionMagnification, readRefractionStrength } from '@effects/runtime/helpers/refraction.helpers';
+import {
+  cachedRefraction,
+  readRadius,
+  readRefractionDepth,
+  readRefractionMagnification,
+  readRefractionStrength
+} from '@effects/runtime/helpers/refraction.helpers';
 import { createRefractionFilter, layoutRefractionFilter } from '@effects/runtime/helpers/refraction-filter.helpers';
 import { el, layer, setAttr, setBackdrop, setFieldImages, setStyle } from '@effects/runtime/helpers/refraction-svg.helpers';
 
@@ -19,6 +25,7 @@ export class RefractiveSurface {
   private width: number = 0;
   private height: number = 0;
   private radius: number = -1;
+  private depth: number = -1;
   private strength: number = -1;
   private magnification: number = -1;
 
@@ -66,6 +73,7 @@ export class RefractiveSurface {
     const radius = readRadius(this.host);
     const style = this.view.getComputedStyle(this.host);
     const strength = readRefractionStrength(style);
+    const depth = readRefractionDepth(style, Math.min(radius, width / 2, height / 2));
     const magnification = readRefractionMagnification(style);
 
     for (const side of ['top', 'right', 'bottom', 'left']) {
@@ -75,17 +83,23 @@ export class RefractiveSurface {
     if (
       width < 8 ||
       height < 8 ||
-      (width === this.width && height === this.height && radius === this.radius && strength === this.strength && magnification === this.magnification)
+      (width === this.width &&
+        height === this.height &&
+        radius === this.radius &&
+        depth === this.depth &&
+        strength === this.strength &&
+        magnification === this.magnification)
     )
       return;
 
     this.width = width;
     this.height = height;
     this.radius = radius;
+    this.depth = depth;
     this.strength = strength;
     this.magnification = magnification;
 
-    const map = cachedRefraction(Math.min(width, height), radius);
+    const map = cachedRefraction(Math.max(width, height), depth);
 
     setFieldImages(this.filter.refrField, map);
 

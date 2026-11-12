@@ -3,7 +3,13 @@ import type { ReflectAvail, ReflectionMap, RefractionMap } from '@effects/runtim
 import { AVAIL_STEP, BAKE_SETTLE_MS, BAKE_SLACK_DOWN, BAKE_SLACK_UP, REGION } from '@effects/runtime/constants/refraction.constants';
 import { REFR_FOLD_DEPTH, SLOTS } from '@effects/runtime/constants/refraction-maps.constants';
 import { rememberStyles } from '@effects/runtime/helpers/dom.helpers';
-import { cachedRefraction, readRadius, readRefractionMagnification, readRefractionStrength } from '@effects/runtime/helpers/refraction.helpers';
+import {
+  cachedRefraction,
+  readRadius,
+  readRefractionDepth,
+  readRefractionMagnification,
+  readRefractionStrength
+} from '@effects/runtime/helpers/refraction.helpers';
 import { createRefractionFilter, layoutRefractionFilter } from '@effects/runtime/helpers/refraction-filter.helpers';
 import { buildBevelArcs, buildReflection, reflectionPad, reflectionScale, sliceRect } from '@effects/runtime/helpers/refraction-maps.helpers';
 import { buildField, el, layer, layField, packField, setAttr, setBackdrop, setFieldImages, setStyle } from '@effects/runtime/helpers/refraction-svg.helpers';
@@ -26,6 +32,7 @@ export class DetailedRefractiveSurface {
     const restore = rememberStyles(host, ['--bx-refraction-r']);
 
     let radius = readRadius(host);
+    let depth = readRefractionDepth(view.getComputedStyle(host), Math.min(radius, host.offsetWidth / 2, host.offsetHeight / 2));
     let borderWidths = '';
 
     const rim = 1.3,
@@ -249,7 +256,7 @@ export class DetailedRefractiveSurface {
 
     const bake = (short: number) => {
       baked = short;
-      refr = cachedRefraction(short, radius);
+      refr = cachedRefraction(Math.max(w, h), depth);
       setFieldImages(refrField, refr);
 
       for (const slot of SLOTS) setAttr(tiltTiles[slot], 'href', refr.tilt.img[slot]);
@@ -269,13 +276,15 @@ export class DetailedRefractiveSurface {
       const nh = Math.round(host.offsetHeight);
       const nextRadius = readRadius(host);
       const style = view.getComputedStyle(host);
+      const nextDepth = readRefractionDepth(style, Math.min(nextRadius, nw / 2, nh / 2));
       const nextBorders = ['top', 'right', 'bottom', 'left'].map((side) => style.getPropertyValue(`border-${side}-width`)).join(' ');
       const bordersChanged = nextBorders !== borderWidths;
 
       borderWidths = nextBorders;
 
-      if (nextRadius !== radius) {
+      if (nextRadius !== radius || nextDepth !== depth) {
         radius = nextRadius;
+        depth = nextDepth;
         refr = null;
       }
 

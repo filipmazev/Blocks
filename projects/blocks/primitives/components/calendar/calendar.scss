@@ -394,23 +394,18 @@
         background: var(--bx-accent-subtle);
         color: var(--bx-text-accent);
     }
-
-    &.is-range-start,
-    &:first-of-type {
-        border-start-start-radius: radius(md);
-        border-end-start-radius: radius(md);
-    }
-
-    &.is-range-end,
-    &:last-of-type {
-        border-start-end-radius: radius(md);
-        border-end-end-radius: radius(md);
-    }
 }
 
 .bx-calendar-day.is-in-range:hover:not(.is-disabled) {
     background: transparent;
     color: var(--bx-on-accent);
+}
+
+.bx-calendar-day.is-selected.is-in-range {
+    border-radius: inherit;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
 }
 
 .bx-calendar-day.is-preview:hover:not(.is-disabled) {
@@ -427,21 +422,92 @@
     background: var(--bx-accent-subtle);
     color: var(--bx-text-accent);
     border-color: transparent;
+}
+
+.bx-calendar-cell.is-in-range,
+.bx-calendar-period.is-in-range {
     border-radius: 0;
+
+    &.has-start-start-corner {
+        border-start-start-radius: radius(md);
+    }
+
+    &.has-start-end-corner {
+        border-start-end-radius: radius(md);
+    }
+
+    &.has-end-start-corner {
+        border-end-start-radius: radius(md);
+    }
+
+    &.has-end-end-corner {
+        border-end-end-radius: radius(md);
+    }
 }
 
-.bx-calendar-periods:not(.is-four-columns) > .bx-calendar-period.is-in-range:nth-child(3n + 1),
-.bx-calendar-periods.is-four-columns > .bx-calendar-period.is-in-range:nth-child(4n + 1),
-.bx-calendar-period.is-range-start {
-    border-start-start-radius: radius(md);
-    border-end-start-radius: radius(md);
+.bx-calendar-cell,
+.bx-calendar-period {
+    --bx-calendar-inline-start: 0%;
+    --bx-calendar-inline-end: 100%;
+
+    position: relative;
+
+    @each $corner in start-start, start-end, end-start, end-end {
+        --bx-calendar-concave-#{$corner}: transparent;
+
+        &.has-concave-#{$corner} {
+            --bx-calendar-concave-#{$corner}: var(--bx-accent);
+        }
+
+        &.is-concave-#{$corner}-preview {
+            --bx-calendar-concave-#{$corner}: var(--bx-accent-subtle);
+        }
+    }
+
+    &:dir(rtl) {
+        --bx-calendar-inline-start: 100%;
+        --bx-calendar-inline-end: 0%;
+    }
+
+    &:is(.has-concave-start-start, .has-concave-start-end, .has-concave-end-start, .has-concave-end-end)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        background-image:
+            radial-gradient(
+                circle at var(--bx-calendar-inline-end) 100%,
+                transparent calc(#{radius(md)} - 0.5px),
+                var(--bx-calendar-concave-start-start) #{radius(md)}
+            ),
+            radial-gradient(
+                circle at var(--bx-calendar-inline-start) 100%,
+                transparent calc(#{radius(md)} - 0.5px),
+                var(--bx-calendar-concave-start-end) #{radius(md)}
+            ),
+            radial-gradient(
+                circle at var(--bx-calendar-inline-end) 0%,
+                transparent calc(#{radius(md)} - 0.5px),
+                var(--bx-calendar-concave-end-start) #{radius(md)}
+            ),
+            radial-gradient(
+                circle at var(--bx-calendar-inline-start) 0%,
+                transparent calc(#{radius(md)} - 0.5px),
+                var(--bx-calendar-concave-end-end) #{radius(md)}
+            );
+        background-size: #{radius(md)} #{radius(md)};
+        background-position:
+            var(--bx-calendar-inline-start) 0%,
+            var(--bx-calendar-inline-end) 0%,
+            var(--bx-calendar-inline-start) 100%,
+            var(--bx-calendar-inline-end) 100%;
+        background-repeat: no-repeat;
+    }
 }
 
-.bx-calendar-periods:not(.is-four-columns) > .bx-calendar-period.is-in-range:nth-child(3n),
-.bx-calendar-periods.is-four-columns > .bx-calendar-period.is-in-range:nth-child(4n),
-.bx-calendar-period.is-range-end {
-    border-start-end-radius: radius(md);
-    border-end-end-radius: radius(md);
+.bx-calendar-period:is(.has-concave-start-start, .has-concave-start-end, .has-concave-end-start, .has-concave-end-end)::before {
+    inset: calc(-1 * var(--bx-border-width, 1px));
 }
 
 @media (forced-colors: active) {

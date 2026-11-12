@@ -22,6 +22,7 @@ import {
 
 import type { Subscription } from 'rxjs';
 
+import type { OverlayOriginTracker } from '@filip.mazev/blocks/core';
 import type { PickerSurfacePresentation } from '@forms/types/date-picker.types';
 
 import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
@@ -93,7 +94,7 @@ export class PickerSurface {
   private focusTimer: ReturnType<typeof setTimeout> | undefined;
   private disconnectTheme: (() => void) | undefined;
   private disconnectLighting: (() => void) | undefined;
-  private disconnectOrigin: (() => void) | undefined;
+  private disconnectOrigin: OverlayOriginTracker | undefined;
   private overlayRef: OverlayRef | undefined;
   private transition: ReturnType<typeof createGlassTransition> | undefined;
   private presentationRevision: number = 0;
@@ -117,7 +118,7 @@ export class PickerSurface {
             pane.id = this.panelId();
             pane.style.inlineSize = this.panelWidth();
             pane.style.maxInlineSize = this.panelWidth();
-            this.overlayRef?.updatePosition();
+            this.disconnectOrigin?.reposition();
           }
         } else this.detachPopover();
       } else if (this.overlayRef) {
@@ -172,15 +173,16 @@ export class PickerSurface {
 
     this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(origin, pane));
     this.disconnectLighting = inheritGlassLighting(pane, origin);
-    this.disconnectOrigin = this.ngZone.runOutsideAngular(() => trackOverlayOrigin(overlayRef, origin));
 
     const view = overlayRef.attach(new TemplatePortal(content, this.viewContainerRef));
 
     view.detectChanges();
-    overlayRef.updatePosition();
+    // The tracker owns both CDK measurements and native anchoring; bypassing it invalidates the anchor offsets.
+    this.disconnectOrigin = this.ngZone.runOutsideAngular(() => trackOverlayOrigin(overlayRef, origin));
     this.openedChange.emit(true);
 
-    this.transition = this.ngZone.runOutsideAngular(() => createGlassTransition(origin, pane));
+    // Keep adjoining calendar fills and nested lenses on a stable pixel grid throughout the fade.
+    this.transition = this.ngZone.runOutsideAngular(() => createGlassTransition(origin, pane, { scale: 1 }));
     void this.ngZone.runOutsideAngular(() => this.transition?.enter());
 
     const outside = overlayRef.outsidePointerEvents().subscribe((event) => {

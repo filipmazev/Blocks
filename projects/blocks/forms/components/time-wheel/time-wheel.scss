@@ -91,17 +91,19 @@
 }
 
 .bx-wheel-band {
+    --bx-refraction-strength: 0.16;
+    --bx-refraction-depth-scale: var(--bx-wheel-refraction-depth-scale, 4);
     --bx-glass-surface: var(--bx-wheel-band-background, transparent);
     --bx-glass-opaque-surface: var(--bx-bg-element);
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: transparent;
     --bx-glass-opacity: var(--bx-wheel-band-opacity, 0);
-    --bx-refraction-min-blur: 0px;
+    --bx-refraction-min-blur: 0.25px;
     --bx-glass-blur: 0px;
     --bx-refraction-min-opacity: 0;
     --bx-glass-min-opacity: 0;
     --bx-glass-radius: #{radius(md)};
-    --bx-glass-decoration-opacity: 0;
+    --bx-glass-decoration-opacity: 1;
     --bx-glass-rim-visibility: 0;
     --bx-glass-rim-opacity: 1;
     --bx-glass-shadow: none;
@@ -112,9 +114,9 @@
     block-size: 2.5rem;
     translate: 0 -50%;
     border-radius: var(--bx-glass-radius);
-    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
+    border: 0;
     background: var(--bx-glass-opaque-surface);
-    outline: 1px solid var(--bx-wheel-band-border, color-mix(in srgb, var(--bx-text-primary) 18%, transparent));
+    outline: 1px solid var(--bx-wheel-band-border, color-mix(in srgb, var(--bx-text-primary) 14%, transparent));
     outline-offset: -1px;
     pointer-events: none;
     overflow: hidden;

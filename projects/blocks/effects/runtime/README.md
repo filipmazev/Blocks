@@ -94,9 +94,11 @@ continues to supply decorative ambient edge lighting. See [appearance effects](.
 browser/accessibility fallbacks.
 
 Local optical surfaces can tune `--bx-refraction-strength` from `0` to `1` (default `1`) and `--bx-refraction-magnification` from `1` to `2` (default `1`).
-Strength adjusts edge displacement; magnification enlarges the actual backdrop around the surface center, affecting only content covered by the lens. The
-Stepper uses this to magnify icons and connecting lines during travel without scaling the source content. The default magnification bypasses the additional
-sampling stages. These settings do not opt a surface into refraction or override global appearance/accessibility policy.
+Strength adjusts edge displacement; magnification enlarges the actual backdrop around the surface center using cached coordinate fields, affecting only content
+covered by the lens. The default magnification bypasses the additional sampling stages. The Stepper uses a native vector magnifier for its sharp center and the
+shared optical renderer around the rim. These settings do not opt a surface into refraction or override global appearance/accessibility policy.
+`--bx-refraction-depth-scale` independently multiplies the optical region's depth relative to the corner radius (default `1`, clamped to `0.25`–`4`). The region
+cannot exceed half of each surface dimension independently. This changes refraction coverage without changing the silhouette or reflection geometry.
 
 Local color aliases preserve component intent:
 
@@ -330,10 +332,12 @@ Set `--bx-selection-surface` to customize the backing; defaults use existing sem
 remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this at their existing Playground routes.
 
 `createGlassTransition` now uses the shared retargetable spring for opacity and restrained scale. `IGlassTransitionOptions.scale` is the closed scale, clamped
-from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. The controller preserves the overlay's positioning transform, follows the opening side,
-restores owned styles, cancels superseded promises, and snaps on live reduced motion. `refresh()` updates its scale origin after a positioning flip. Existing
-enter/exit/destroy contracts remain available. Native CSS `motion-easing()` presets from `core/styles/helpers` supply restrained curves where continuous physics
-is unnecessary, including large modal surfaces and toast stack collapse. These Sass curves add no CSS token scale or generator-owned token changes.
+from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. Opacity progresses monotonically even when the scale spring overshoots. A retained opacity
+compositing hint keeps nested backdrop filters stable through full opacity and settling; destruction restores the original hint. The controller preserves the
+overlay's positioning transform, follows the opening side, restores owned styles, cancels superseded promises, and snaps on live reduced motion. `refresh()`
+updates its scale origin after a positioning flip. Existing enter/exit/destroy contracts remain available. Native CSS `motion-easing()` presets from
+`core/styles/helpers` supply restrained curves where continuous physics is unnecessary, including large modal surfaces and toast stack collapse. These Sass
+curves add no CSS token scale or generator-owned token changes.
 
 ## Fluid interaction across Blocks
 
