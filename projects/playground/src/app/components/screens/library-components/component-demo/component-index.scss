@@ -125,6 +125,7 @@
     padding: spacing(4);
     overflow: hidden;
     border-block-end: 1px solid var(--bx-border-default);
+    border-radius: radius(lg) radius(lg) 0 0;
     pointer-events: none;
     user-select: none;
 }
