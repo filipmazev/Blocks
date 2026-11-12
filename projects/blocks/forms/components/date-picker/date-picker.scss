@@ -174,7 +174,8 @@
 }
 
 .bx-date-input {
-    flex: 1;
+    flex: 1 1 0;
+    inline-size: 0;
     min-inline-size: 0;
     box-sizing: border-box;
     padding: spacing(6) 0 spacing(2) spacing(3);

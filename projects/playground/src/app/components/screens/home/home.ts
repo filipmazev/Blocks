@@ -12,6 +12,7 @@ import { BxA11yService } from '@core/services/bx-a11y.service';
 import { Button } from '@forms/components/button/button';
 import { Icon } from '@icons/components/icon/icon';
 import { LightOrb } from '@playground/components/screens/home/light-orb/light-orb';
+import { COMPONENT_EXAMPLES } from '@playground/components/screens/library-components/component-demo/constants/component-catalog.constants';
 import { ThemeMaterialPreview } from '@playground/components/shared/theme-material-preview/theme-material-preview';
 import { PLAYGROUND_VERSION } from '@playground/generated/release';
 import { PackageReleaseService } from '@playground/services/package-release.service';
@@ -45,10 +46,10 @@ export class Home {
       route: '/studio'
     },
     {
-      title: 'Accessibility',
-      description: 'Keyboard, touch and accessibility preferences.',
-      icon: 'accessibility',
-      route: '/components/side-nav'
+      title: 'Components',
+      description: COMPONENT_EXAMPLES.length + ' components and directives.',
+      icon: 'blocks',
+      route: '/components'
     }
   ];
 

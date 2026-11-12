@@ -152,8 +152,9 @@ text uses `ResolvableText` and optional `BX_I18N`, including labels, endpoint pl
 
 ## Behavior and accessibility
 
-Single dates and completed ranges commit immediately. Multiple-date additions/removals commit individually. Escape or outside dismissal closes the panel without
-reverting values already committed. No Apply, Cancel or separate Clear footer actions are rendered; the field's X is the clear action.
+Single dates and completed ranges commit immediately, and the panel closes after a brief pause so the chosen day reads as a settled selection. Multiple-date
+additions/removals commit individually. Escape or outside dismissal closes the panel without reverting values already committed. No Apply, Cancel or separate
+Clear footer actions are rendered; the field's X is the clear action.
 
 Typed parsing is strict. Without `parseFormats`, the display pattern and canonical ISO dates are accepted. Natural-language parsing is opt-in through
 `allowNaturalLanguage`. Invalid manual input, reversed range endpoints and invalid restrictions are reported in the field while retaining the committed value.

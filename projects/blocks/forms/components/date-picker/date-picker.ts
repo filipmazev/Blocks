@@ -67,6 +67,7 @@ import { Button } from '@forms/components/button/button';
 import { DatePresetList } from '@forms/components/date-preset-list/date-preset-list';
 import { FormField } from '@forms/components/form-field/form-field';
 import { PickerSurface } from '@forms/components/picker-surface/picker-surface';
+import { DATE_PICKER_CLOSE_DELAY_MS } from '@forms/constants/date-picker.constants';
 import { DATE_VALIDATION_KINDS, DATE_VALIDATION_MESSAGES } from '@forms/constants/date-validation.constants';
 import { mergeDateMetadata } from '@forms/helpers/date-availability.helpers';
 import { dateInputBound } from '@forms/helpers/date-input.helpers';
@@ -77,7 +78,8 @@ import { resolveValidationMessage } from '@forms/helpers/validation.helpers';
  * Single, multiple, range and whole-period date picker.
  *
  * The field, validation, label and hint behavior come from the shared Forms form-field foundation; the selection UI is the Primitive calendar.
- * Single dates and completed ranges commit immediately. Multiple dates commit individually and remain visible as tags.
+ * Single dates and completed ranges commit immediately and close the panel after a brief settle so the selection reads as committed. Multiple dates commit
+ * individually and remain visible as tags.
  */
 @Component({
   selector: 'bx-date-picker',
@@ -398,6 +400,7 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
   private resolverContext: string = '';
   private resolverToken: number = 0;
   private lastRequest: IDateAvailabilityRequest | undefined;
+  private closeTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     super();
@@ -440,13 +443,17 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
       this.typedEnd.set(this.displayEnd());
     });
 
-    this.destroyRef.onDestroy(() => ++this.resolverToken);
+    this.destroyRef.onDestroy(() => {
+      ++this.resolverToken;
+      this.clearScheduledClose();
+    });
   }
 
   /** Clear pending text and validation feedback and close the panel during a form reset; the owning form retains control of the value. */
   public override reset(): void {
     const wasOpen = this.isOpen();
 
+    this.clearScheduledClose();
     this.isOpen.set(false);
     super.reset();
     this.clearPendingEdit();
@@ -463,6 +470,7 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
   public open(): void {
     if (this.isOpen() || this.effectiveDisabled() || this.isReadonly()) return;
 
+    this.clearScheduledClose();
     this.draftValue.set(this.internalValue());
     this.viewDate.set(this.startAt());
 
@@ -479,6 +487,7 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
   public close(): void {
     if (!this.isOpen()) return;
 
+    this.clearScheduledClose();
     this.isOpen.set(false);
     this.markAsTouched();
 
@@ -587,6 +596,7 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
   }
 
   protected onCalendarRangeStart(date: IsoDate): void {
+    this.clearScheduledClose();
     this.draftValue.set({ start: date, end: null });
     this.typedStart.set(this.formatEndpoint(date));
     this.typedEnd.set('');
@@ -809,7 +819,23 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
 
     if (!this.commitDraft(value)) return;
 
-    if (this.mode() !== 'multiple' && this.closeOnSelect()) this.close();
+    if (this.mode() !== 'multiple' && this.closeOnSelect()) this.scheduleClose();
+  }
+
+  private scheduleClose(): void {
+    this.clearScheduledClose();
+
+    this.closeTimer = setTimeout(() => {
+      this.closeTimer = undefined;
+      this.close();
+    }, DATE_PICKER_CLOSE_DELAY_MS);
+  }
+
+  private clearScheduledClose(): void {
+    if (this.closeTimer === undefined) return;
+
+    clearTimeout(this.closeTimer);
+    this.closeTimer = undefined;
   }
 
   private commitDraft(value: DatePickerValue): boolean {
