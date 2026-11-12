@@ -2,6 +2,52 @@
 
 Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has not been published; these notes may change before release.
 
+## Date and time controls
+
+- Added `DatePicker` and `TimePicker` to `@filip.mazev/blocks/forms`, with standalone values, Reactive Forms, `ngModel` and Signal Forms integration. Both use
+  the shared field labels, errors, disabled/readonly contracts, translations, theme inheritance and responsive popover/drawer presentation.
+- DatePicker supports single/multiple dates, ranges, and whole weeks, months, quarters and years, including period ranges. Values are canonical civil dates;
+  month/year selection does not require choosing a day. Whole-week selection handles month/year boundaries, while hover and keyboard previews show complete
+  periods. Confirmed ranges use continuous joined bands.
+- Editable date fields reveal format placeholders as their labels float. Trigger-only controls keep empty labels centered. Range fields expose start/end
+  placeholders and optional separate fields. Multiple selections commit immediately and appear as removable Tags with truncation and a `+N` tooltip.
+- Added configurable opening icons, optional translated Today/Now actions that select through normal guards, and independent control of today's calendar marker.
+  Both shortcuts are off by default in the library and demos. Omitted shortcut labels render no action or empty space. Calendar weekday headings default to
+  narrow initials and month names to short names, with full accessible names and configurable localized formats.
+- Date presets work in every selection mode, support disabled items and translated descriptions/groups, and scroll independently. Restrictions include bounds,
+  blocked dates/weekdays/intervals, filters, selection counts, inclusive range lengths and crossing policies. Reversed manually typed range endpoints produce
+  specific field errors with formatted bounds.
+- TimePicker supports one time using inertial wheels or a single-select list, with hour/minute/second/millisecond precision, locale-aware hour cycles, strict
+  parsing, steps, bounds, disabled intervals and optional zone selection. Labeled `ITimePickerOption` entries provide semantic choices such as “Afternoon”. List
+  rows reuse Select/MultiSelect spacing, padding, radius, checkmarks and immediate hover feedback.
+- Time wheels track actual pointer and wheel/trackpad input, accelerate from recent input velocity and decelerate into an enabled choice using the shared
+  spring. Pauses remove momentum, reversals change intent, and cancellation restores the committed selection. Looping remains continuous through interruption;
+  Ctrl-wheel retains browser zoom. Disabled time combinations cannot be selected.
+- Both pickers support application-owned availability state or Promise-based resolvers, stale-result protection, retained data on failure and explicit retry.
+  Loading/failure feedback stays in the existing calendar/editor area, with centered tonal/accent Blocks retry buttons and stable dimensions. Field errors
+  distinguish malformed input, bounds, blocked choices, unavailable data and step/range violations; invalid time text stays visible.
+- Selections commit without footer actions: single dates immediately, date ranges on their second endpoint, multiple dates individually, and valid times on
+  selection. The field's X clears with configurable tooltip text. Panels keep compact dimensions independently of field width and remain stable on selection.
+- Picker drawers keep a neutral contour independent of the focused trigger and omit the nested material rim beneath the handle. The time drawer shows its
+  wheel/list editor without duplicating the selected-time input. Desktop time dropdowns anchor to the visible input rather than the hint/error area, removing
+  the former validation gap.
+- Added reusable `Calendar`, `BottomDrawer`, `DatePresetList`, `PickerSurface` and `TimeWheel` building blocks, together with typed Core civil-date/time
+  helpers, parsing/formatting, calendar adapters, clocks, restrictions, presets and explicit zone/serialization utilities.
+- Select and MultiSelect retain the shared Forms field height before and after opening. Dropdowns use the established blur-and-tint surface with a stronger
+  default backing; `--bx-dropdown-opacity` and `--bx-dropdown-min-opacity` customize it. Selects, menus, picker panels, modals and side panels do not gain SVG
+  refraction from this change.
+
+See the [DatePicker guide](../../../projects/blocks/forms/components/date-picker/README.md),
+[TimePicker guide](../../../projects/blocks/forms/components/time-picker/README.md),
+[Calendar guide](../../../projects/blocks/primitives/components/calendar/README.md) and [Core guide](../../../projects/blocks/core/README.md) for library APIs.
+
+### Picker migration from the branch draft
+
+The combined `DateTimePicker`, time-range mode, segmented time presentation, time preset sidebar and date comparison feature have been removed. Use separate
+DatePicker/TimePicker controls with application validation for combined or endpoint workflows; use labeled time list options for semantic choices. Core
+range/date-time helpers remain available. Compatibility `commitPolicy`, `applyLabel` and `cancelLabel` inputs do not restore rendered footers; programmatic
+draft methods remain available. No Apply, Cancel or separate Clear actions are rendered, including for multiple dates.
+
 ## Side navigation
 
 - Fixed missing label tooltips on compact submenu buttons. Parent icons now use the same shared hover, keyboard-focus, positioning, and theme behavior as
@@ -149,15 +195,18 @@ accessibility.
 - Stepper markers and connectors now receive the existing engine's directional and ambient light independently of their emission. Current filled indicators emit
   more strongly than tonal completed or neutral inactive indicators; errors receive restrained additional emphasis. Card surfaces retain their backing.
 - Rounded stepper highlights use semantic color mixed with the theme surface instead of an enlarged dark hover shadow; the traveling accent has no drop shadow.
-- Stepper selection halos resolve their translucency locally, so a stepper inside a modal or panel keeps the same soft accent tint instead of inheriting that
-  surface's near-opaque material.
+- Steps and dots use one persistent clear glass lens for both resting selection and travel. It magnifies the actual icon/connector backdrop as it passes, rather
+  than enlarging the active icon before arrival. Local lens material stays clear inside panels; ordinary opaque fallbacks retain semantic indicators.
+  `--bx-stepper-lens-gap` defaults to 6px, `--bx-stepper-magnification` to 1.3, and `--bx-stepper-lens-border` controls its subtle neutral contour. Backing
+  markers omit borders, rims and shadows while the lens is active, preventing their outlines from becoming refraction artifacts.
 - The traveling stepper accent now measures layout geometry and snaps on container, orientation, and presentation changes: it stays centered on its marker
   inside a scaled dialog and no longer trails behind while the viewport resizes. Committed step changes keep their spring.
 - Segment tracks retain a continuous, brighter fill without extra inner geometry. Descendant emission origins paint their registered rim as well as illuminating
   neighbors. Error contours take precedence over cached ambient tint; semantic changes request urgent marker-lighting refresh.
-- Circular step indicators use the shared pressure spring for squash and recovery. A persistent selection accent travels between committed markers in both axes
-  and stretches modestly along its velocity. Cards use an in-place border/rim response without travel across unconnected cards. Completion fills remain separate
-  from active navigation. Rejected guards and unconfirmed controlled requests never advance the animated selection.
+- Circular step indicators use the shared pressure spring for squash and recovery. A persistent selection surface travels between committed markers in both axes
+  and stretches modestly along its velocity. Its fluid spring runs about 12% more slowly while retaining the original damping ratio, easing and bounded
+  squash/stretch; rapid changes preserve velocity and retarget the same surface. Cards use an in-place border/rim response without travel across unconnected
+  cards. Completion fills remain separate from active navigation. Rejected guards and unconfirmed controlled requests never advance the animated selection.
 - Tabs use one persistent lit selection surface with spring position/size interpolation and bounded velocity stretch. Pointer/touch dragging previews the
   surface continuously and selects the nearest enabled tab on release. Escape, cancellation, outside release and stale gestures restore committed selection. New
   `dragSelection` defaults to true; false disables selection dragging; native touch swipe scrolling remains available with either setting. Click and keyboard
@@ -174,7 +223,8 @@ accessibility.
 
 - Recorded the reviewed material and interaction principles in `AGENTS.md`. Segment steppers retain continuous, brighter fills; cards keep local feedback.
 - Sliders and range sliders now use bounded velocity stretch and pressure recovery while preserving immediate native values and pointer precision. Range
-  deformation decreases as thumbs approach. Thumb and fill use the same received-light context; no new lens or palette was introduced.
+  deformation decreases as thumbs approach. Thumb and fill use the same received-light context. Held thumbs add clear local refraction over the magnified rail,
+  without an accent wash; resting thumbs retain their opaque material.
 - Slide toggles retarget the shared checked-position spring, with bounded stretch, existing engine pressure response, stronger checked-state emission and RTL
   travel. Initial state and live reduced motion snap without entrance movement. Buttons keep labels/icons undistorted and refine material pressure feedback
   inside stationary hit areas.
@@ -193,13 +243,22 @@ accessibility.
 
 ### Interaction review refinements
 
+- List selection highlights now stay aligned while scrolling, including TimePicker, Select and MultiSelect. The clipped material tracks the viewport and
+  refreshes the row beneath a stationary pointer as virtual rows change; scroll movement does not start a traveling animation or grow the scroll area.
 - Pointer hover on menu/option rows is immediate, with a clearly visible semantic danger backing. Keyboard focus can retain spatial settling; pointer hover
   never waits for a traveling spring.
 - Removed button-label squeezing and offsets. The former `--bx-button-press-compression` and `--bx-button-press-offset` effects no longer apply; migrate their
   overrides to supported material settings. Text and icons remain undistorted while the backing/rim responds to pressure.
 - Sliders and range sliders enlarge their existing magnifier while held, then spring back to a fully opaque resting thumb. Native values and centers remain
   direct. Range enlargement respects actual pixel clearance to the neighboring thumb, without measuring layout on each input event. Reduced motion and
-  opaque-surface fallbacks remain independent.
+  opaque-surface fallbacks remain independent. Active refraction removes the thumb border and shadow; the resting contour returns after release.
+- Slider and RangeSlider reserve permanent vertical clearance based on the configured thumb diameter, with `--bx-slider-vertical-padding` defaulting to shared
+  spacing 2 per side. The native input and visible rail share their center. Removing border width during the held phase prevents Chrome from flattening the
+  glass at its upper/lower edges; pressing adds no layout shift.
+- TimeWheel selection bands use clear local lenses with 1.3 magnification and a subtle neutral contour. `--bx-wheel-magnification` and `--bx-wheel-band-border`
+  customize the treatment; a decorative, accessibility-hidden rendering magnifies only the numbers beneath the band.
+- The shared optical renderer adds bounded `--bx-refraction-strength` and `--bx-refraction-magnification` customization. Local lenses use the existing surface
+  renderer and appearance policy; global Off/baseline and accessibility preferences remain authoritative, without adding refraction to ordinary panels.
 - The held thumb's enlargement is clipped on the slider's own shell, so sliders inside scrolling panels no longer grow a horizontal scroll container.
   `--bx-slider-overflow-clip-margin` extends the painted region beyond the shell from its `0.75rem` default, keeping the focus ring and enlarged decoration
   visible. The thumb's resting box is also clamped inside the shell, so a stale track measurement cannot push it past the control.
