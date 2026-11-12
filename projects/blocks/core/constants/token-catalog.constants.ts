@@ -9056,7 +9056,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['var(--bx-wheel-refraction-depth-scale, 2.5)'],
+    defaults: ['var(--bx-wheel-refraction-depth-scale, 4)'],
     fallbacks: [],
     selectors: ['.bx-wheel-band'],
     sources: ['projects/blocks/effects/runtime/helpers/refraction.helpers.ts', 'projects/blocks/forms/components/time-wheel/time-wheel.scss']
@@ -12577,7 +12577,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['2.5'],
+    fallbacks: ['4'],
     selectors: [],
     sources: ['projects/blocks/forms/components/time-wheel/time-wheel.scss']
   },
