@@ -1,5 +1,9 @@
 @use 'mixins' as *;
 
+@function slider-control-height() {
+    @return calc(max(#{spacing(10)}, var(--bx-slider-thumb-size, #{spacing(6)}) * 1.25) + var(--bx-slider-vertical-padding, #{spacing(2)}) * 2);
+}
+
 @mixin slider-rail {
     box-sizing: border-box;
     height: spacing(2);

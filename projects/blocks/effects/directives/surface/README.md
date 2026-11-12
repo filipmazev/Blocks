@@ -21,15 +21,16 @@ Add the directive to the consuming standalone component's imports.
 
 ## API
 
-| Input                    | Purpose                                                                                         |
-| ------------------------ | ----------------------------------------------------------------------------------------------- |
-| `bxSurfaceTranslucency`  | Optional local translucency on the shared 0–1 scale.                                            |
-| `bxSurfaceGlassiness`    | Optional `auto`, `off`, or `on` refraction policy.                                              |
-| `bxSurfaceQuality`       | Optional `auto`, `baseline`, or `enhanced` detail policy.                                       |
-| `bxSurfaceInteractive`   | Optional override of automatic interaction feedback.                                            |
-| `bxSurfaceEmission`      | Optional CSS color emitted toward nearby surfaces during interaction.                           |
-| `bxSurfaceFocusEmission` | Optional CSS color emitted while a contained control has focus.                                 |
-| `bxReducedTransparency`  | Optional opaque-material request; false cannot override application or OS reduced transparency. |
+| Input                      | Purpose                                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `bxSurfaceTranslucency`    | Optional local translucency on the shared 0–1 scale.                                                      |
+| `bxSurfaceLocalRefraction` | Boolean, default false. Allow an explicitly glassy lens to sample local content inside a parent material. |
+| `bxSurfaceGlassiness`      | Optional `auto`, `off`, or `on` refraction policy.                                                        |
+| `bxSurfaceQuality`         | Optional `auto`, `baseline`, or `enhanced` detail policy.                                                 |
+| `bxSurfaceInteractive`     | Optional override of automatic interaction feedback.                                                      |
+| `bxSurfaceEmission`        | Optional CSS color emitted toward nearby surfaces during interaction.                                     |
+| `bxSurfaceFocusEmission`   | Optional CSS color emitted while a contained control has focus.                                           |
+| `bxReducedTransparency`    | Optional opaque-material request; false cannot override application or OS reduced transparency.           |
 
 Omitted inputs inherit application/runtime policy. Export the directive as `bxSurface` when a template reference is needed.
 
@@ -37,6 +38,10 @@ Omitted inputs inherit application/runtime policy. Export the directive as `bxSu
 
 Use shared semantic tokens and layout helpers for spacing, border, and radius. The [effects guide](../../README.md) describes material variables, global
 configuration, browser policy, and refraction limits.
+
+Small optical overlays such as TimeWheel lenses opt into local refraction with `bxSurfaceLocalRefraction` alongside `bxSurfaceGlassiness="auto"`. Ordinary
+nested surfaces continue to share their parent material without adding refraction passes. Global Off, baseline rendering and accessibility preferences still
+disable the lens pass.
 
 ## Behavior and accessibility
 

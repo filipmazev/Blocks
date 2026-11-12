@@ -10,6 +10,11 @@ export interface ISurfaceOptions {
   translucency?: number;
   /** Explicitly opt this surface into refraction. Omitted surfaces keep their existing material. 'auto' follows browser policy; 'on' allows other engines. */
   glassiness?: GlassinessMode;
+  /**
+   * Allow an explicitly glassy lens to sample content inside a parent material. Defaults to false, which suppresses nested refraction passes. Use only for
+   * small optical overlays over local content; global quality, browser support and accessibility preferences remain authoritative.
+   */
+  localRefraction?: boolean;
   /** Override automatic action/control detection for interaction lighting and press deformation. */
   interactive?: boolean;
   /**

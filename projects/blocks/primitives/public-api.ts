@@ -90,3 +90,13 @@ export * from '@primitives/types/virtual-collection.types';
 export * from '@primitives/directives/resize-handle/resize-handle.directive';
 export * from '@primitives/interfaces/iresize-handle-event.interface';
 export * from '@primitives/types/resize-handle.types';
+
+export * from '@primitives/components/bottom-drawer/bottom-drawer';
+export * from '@primitives/types/bottom-drawer.types';
+export * from '@primitives/constants/bottom-drawer.constants';
+
+export * from '@primitives/components/calendar/calendar';
+export * from '@primitives/types/calendar.types';
+export * from '@primitives/helpers/calendar-grid.helpers';
+
+export type { ICalendarRetryContext } from '@primitives/interfaces/icalendar-retry-context.interface';

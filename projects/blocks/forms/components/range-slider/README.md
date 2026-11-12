@@ -23,10 +23,12 @@ Ticks mark actual step values and are centered on the thumbs' travel, including 
 the same thumb centers in LTR and RTL. Set `--bx-slider-thumb-size` to customize both native and decorative thumbs together; it defaults to the shared
 `spacing(6)` token, and the fill and tick insets follow that size.
 
-Each bordered glass thumb magnifies and blurs the rail below it, including both selection boundaries when the thumbs are close. `--bx-slider-magnification`
-controls the enlargement and defaults to `1.5`; `--bx-slider-lens-blur` sets the lens and backdrop blur and defaults to `1.5px`. The lens follows values,
-resizing, theme changes and RTL without per-frame pixel sampling. Reduced transparency and increased contrast use the opaque fallback; forced colors keeps the
-native thumbs.
+Each held glass thumb magnifies and blurs the rail below it, including both selection boundaries when the thumbs are close. `--bx-slider-magnification` controls
+the enlargement and defaults to `1.5`; `--bx-slider-lens-blur` sets the lens and backdrop blur and defaults to `1.5px`. The lens follows values, resizing, theme
+changes and RTL without per-frame pixel sampling. Reduced transparency and increased contrast use the opaque fallback; forced colors keeps the native thumbs.
+Active refraction removes the thumb's border and shadow; the ordinary resting treatment returns after release. The shared Slider reserves vertical clearance for
+enlarged thumbs without changing layout on press. `--bx-slider-vertical-padding` defaults to shared spacing 2 per side and follows custom thumb sizes; the
+native inputs and visible range rail retain the same vertical center.
 
 Thumbs cannot cross. Each thumb retains native keyboard input and an accessible name. Initialize form values with a pair of numbers. Shared hints, errors,
 readonly and disabled state are supported.

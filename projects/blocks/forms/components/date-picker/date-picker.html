@@ -1,0 +1,400 @@
+<bx-form-field
+    [control]="fieldControl"
+    [inline]="true"
+    [tooltip]="tooltip()"
+    [showLoadingIndicator]="false"
+    [hint]="hint()"
+    [hintEnd]="hintEnd()"
+    [error]="parseError() ? resolvedInvalidLabel() : error()"
+    [subscriptSizing]="resolvedSubscriptSizing()"
+    [forId]="controlId()">
+    <div class="bx-date-field" [class.has-clear]="showClear()" (focusin)="onFieldFocus()" (focusout)="onFieldBlur($event)">
+        @if (rangeFieldLayout() === 'separate') {
+            <div class="bx-date-range-fields" role="group" [attr.aria-label]="resolvedLabel() || resolvedDatePlaceholder()">
+                @for (endpoint of ['start', 'end']; track endpoint) {
+                    <div
+                        bxSurface
+                        class="bx-date-trigger is-range-endpoint has-label"
+                        [class.is-open]="isOpen()"
+                        [class.is-floating]="editable() ? isFloating() : endpoint === 'start' ? !!displayStart() : !!displayEnd()"
+                        [class.is-invalid]="showError() || !!parseError()"
+                        [class.is-outline]="resolvedAppearance() === 'outline'"
+                        [class.is-readonly]="isReadonly()"
+                        [class.is-disabled]="effectiveDisabled()"
+                        [class.is-keyboard-focused]="keyboardFocused()">
+                        <label class="bx-floating-label" [attr.for]="endpoint === 'start' ? controlId() : controlId() + '-end'">
+                            {{ endpoint === 'start' ? resolvedStartLabel() : resolvedEndLabel() }}
+                            @if (effectiveRequired() && !resolvedHideRequiredMarker()) {
+                                <span class="bx-field-required" aria-hidden="true">*</span>
+                            }
+                        </label>
+                        @if (editable()) {
+                            <input
+                                class="bx-date-input"
+                                role="combobox"
+                                aria-autocomplete="none"
+                                aria-haspopup="dialog"
+                                type="text"
+                                autocomplete="off"
+                                [attr.aria-expanded]="isOpen()"
+                                [attr.aria-controls]="isOpen() ? controlId() + '-panel' : null"
+                                [id]="endpoint === 'start' ? controlId() : controlId() + '-end'"
+                                [value]="endpoint === 'start' ? typedStart() : typedEnd()"
+                                [attr.placeholder]="isFloating() ? resolvedDatePlaceholder() : ''"
+                                [attr.aria-label]="endpoint === 'start' ? resolvedStartLabel() : resolvedEndLabel()"
+                                [attr.aria-describedby]="describedBy()"
+                                [attr.aria-invalid]="showError() || !!parseError()"
+                                [attr.aria-required]="effectiveRequired()"
+                                [disabled]="effectiveDisabled()"
+                                [readOnly]="isReadonly()"
+                                (input)="endpoint === 'start' ? onRangeStartInput($event) : onRangeEndInput($event)"
+                                (blur)="endpoint === 'start' ? onRangeStartBlur() : onRangeEndBlur()"
+                                (keydown)="onRangeKeydown($event)"
+                                (keydown.escape)="onEscape($event)" />
+                        } @else {
+                            <button
+                                type="button"
+                                class="bx-date-endpoint-value bx-date-value"
+                                aria-haspopup="dialog"
+                                [id]="endpoint === 'start' ? controlId() : controlId() + '-end'"
+                                [attr.aria-label]="endpoint === 'start' ? resolvedStartLabel() : resolvedEndLabel()"
+                                [attr.aria-expanded]="isOpen()"
+                                [attr.aria-describedby]="describedBy()"
+                                [attr.aria-invalid]="showError() || !!parseError()"
+                                [attr.aria-readonly]="isReadonly()"
+                                [disabled]="effectiveDisabled()"
+                                (click)="onTriggerClick($event)"
+                                (keydown.escape)="onEscape($event)">
+                                {{ endpoint === 'start' ? displayStart() : displayEnd() }}
+                            </button>
+                        }
+                        <button
+                            type="button"
+                            class="bx-date-trigger-icon-button"
+                            [attr.aria-label]="resolvedOpenPickerLabel()"
+                            [disabled]="effectiveDisabled() || isReadonly()"
+                            (click)="onEditableClick($event)">
+                            <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                        </button>
+                    </div>
+                }
+            </div>
+        } @else if (editable() && isRangeMode() && !modeInfo().isPeriod) {
+            <div
+                bxSurface
+                class="bx-date-trigger is-editable is-range"
+                [class.has-label]="!!label()"
+                [class.is-open]="isOpen()"
+                [class.is-floating]="isFloating()"
+                [class.is-invalid]="showError() || !!parseError()"
+                [class.is-outline]="resolvedAppearance() === 'outline'"
+                [class.is-readonly]="isReadonly()"
+                [class.is-disabled]="effectiveDisabled()"
+                [class.is-keyboard-focused]="keyboardFocused()">
+                @if (label()) {
+                    <span class="bx-floating-label"
+                        >{{ resolvedLabel() }}
+                        @if (effectiveRequired() && !resolvedHideRequiredMarker()) {
+                            <span class="bx-field-required" aria-hidden="true">*</span>
+                        }
+                    </span>
+                }
+                <input
+                    class="bx-date-input"
+                    role="combobox"
+                    aria-autocomplete="none"
+                    type="text"
+                    autocomplete="off"
+                    [attr.aria-controls]="isOpen() ? controlId() + '-panel' : null"
+                    [value]="typedStart()"
+                    [attr.placeholder]="isFloating() || !label() ? resolvedStartLabel() : ''"
+                    [id]="controlId()"
+                    [attr.aria-describedby]="describedBy()"
+                    [attr.aria-required]="effectiveRequired()"
+                    [attr.aria-label]="(label() ? resolvedLabel() + ', ' : '') + resolvedStartLabel()"
+                    [attr.aria-expanded]="isOpen()"
+                    [attr.aria-haspopup]="'dialog'"
+                    [attr.aria-invalid]="showError() || !!parseError()"
+                    [attr.aria-readonly]="isReadonly()"
+                    [disabled]="effectiveDisabled()"
+                    [readOnly]="isReadonly()"
+                    (input)="onRangeStartInput($event)"
+                    (blur)="onRangeStartBlur()"
+                    (keydown)="onRangeKeydown($event)"
+                    (keydown.escape)="onEscape($event)" />
+                <span class="bx-date-range-separator" aria-hidden="true" [class.is-concealed]="label() && !isFloating()">{{ settings().rangeSeparator }}</span>
+                <input
+                    class="bx-date-input"
+                    role="combobox"
+                    aria-autocomplete="none"
+                    type="text"
+                    autocomplete="off"
+                    [attr.aria-controls]="isOpen() ? controlId() + '-panel' : null"
+                    [value]="typedEnd()"
+                    [attr.placeholder]="isFloating() || !label() ? resolvedEndLabel() : ''"
+                    [attr.aria-describedby]="describedBy()"
+                    [attr.aria-required]="effectiveRequired()"
+                    [attr.aria-label]="(label() ? resolvedLabel() + ', ' : '') + resolvedEndLabel()"
+                    [attr.aria-expanded]="isOpen()"
+                    [attr.aria-haspopup]="'dialog'"
+                    [attr.aria-invalid]="showError() || !!parseError()"
+                    [attr.aria-readonly]="isReadonly()"
+                    [disabled]="effectiveDisabled()"
+                    [readOnly]="isReadonly()"
+                    (input)="onRangeEndInput($event)"
+                    (blur)="onRangeEndBlur()"
+                    (keydown)="onRangeKeydown($event)"
+                    (keydown.escape)="onEscape($event)" />
+                @if (isLoading()) {
+                    <bx-loading-spinner class="bx-date-trigger-icon" [size]="16" [decorative]="true" />
+                } @else {
+                    <button
+                        type="button"
+                        class="bx-date-trigger-icon-button"
+                        [attr.aria-label]="resolvedOpenPickerLabel()"
+                        [disabled]="effectiveDisabled() || isReadonly()"
+                        (click)="onEditableClick($event)">
+                        <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                    </button>
+                }
+            </div>
+        } @else if (editable() && !isRangeMode() && mode() !== 'multiple') {
+            <div
+                bxSurface
+                class="bx-date-trigger is-editable"
+                [class.has-label]="!!label()"
+                [class.is-open]="isOpen()"
+                [class.is-floating]="isFloating()"
+                [class.is-invalid]="showError() || !!parseError()"
+                [class.is-outline]="resolvedAppearance() === 'outline'"
+                [class.is-readonly]="isReadonly()"
+                [class.is-disabled]="effectiveDisabled()"
+                [class.is-keyboard-focused]="keyboardFocused()">
+                @if (label()) {
+                    <span class="bx-floating-label"
+                        >{{ resolvedLabel() }}
+                        @if (effectiveRequired() && !resolvedHideRequiredMarker()) {
+                            <span class="bx-field-required" aria-hidden="true">*</span>
+                        }
+                    </span>
+                }
+                <input
+                    class="bx-date-input"
+                    role="combobox"
+                    aria-autocomplete="none"
+                    type="text"
+                    autocomplete="off"
+                    [attr.aria-controls]="isOpen() ? controlId() + '-panel' : null"
+                    [id]="controlId()"
+                    [value]="typedText()"
+                    [attr.placeholder]="isFloating() || !label() ? resolvedDatePlaceholder() : ''"
+                    [attr.aria-label]="ariaLabel() || resolvedLabel() || resolvedDatePlaceholder()"
+                    [attr.aria-describedby]="describedBy()"
+                    [attr.aria-expanded]="isOpen()"
+                    [attr.aria-haspopup]="'dialog'"
+                    [attr.aria-invalid]="showError() || !!parseError()"
+                    [attr.aria-required]="effectiveRequired()"
+                    [attr.aria-readonly]="isReadonly()"
+                    [attr.data-testid]="dataTestId()"
+                    [disabled]="effectiveDisabled()"
+                    [readOnly]="isReadonly()"
+                    (input)="onTypedInput($event)"
+                    (blur)="onTypedBlur()"
+                    (keydown)="onTypedKeydown($event)"
+                    (keydown.escape)="onEscape($event)" />
+                @if (isLoading()) {
+                    <bx-loading-spinner class="bx-date-trigger-icon" [size]="16" [decorative]="true" />
+                } @else {
+                    <button
+                        type="button"
+                        class="bx-date-trigger-icon-button"
+                        [attr.aria-label]="resolvedOpenPickerLabel()"
+                        [disabled]="effectiveDisabled() || isReadonly()"
+                        (click)="onEditableClick($event)">
+                        <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                    </button>
+                }
+            </div>
+        } @else {
+            <button
+                #trigger
+                type="button"
+                bxSurface
+                class="bx-date-trigger"
+                [class.has-label]="!!label()"
+                [class.is-open]="isOpen()"
+                [class.is-floating]="isFloating()"
+                [class.is-invalid]="showError() || !!parseError()"
+                [class.is-outline]="resolvedAppearance() === 'outline'"
+                [class.is-readonly]="isReadonly()"
+                [class.is-disabled]="effectiveDisabled()"
+                [class.is-keyboard-focused]="keyboardFocused()"
+                [id]="controlId()"
+                [attr.aria-label]="ariaLabel() || resolvedLabel() || resolvedDatePlaceholder()"
+                [attr.aria-labelledby]="ariaLabelledBy()"
+                [attr.aria-describedby]="describedBy()"
+                [attr.aria-haspopup]="'dialog'"
+                [attr.aria-expanded]="isOpen()"
+                [attr.aria-invalid]="showError() || !!parseError()"
+                [attr.aria-required]="effectiveRequired()"
+                [attr.aria-readonly]="isReadonly()"
+                [attr.aria-busy]="isLoading()"
+                [attr.data-testid]="dataTestId()"
+                [disabled]="effectiveDisabled()"
+                (click)="onTriggerClick($event)"
+                (keydown.arrowdown)="$event.preventDefault(); onTriggerClick($event)"
+                (keydown.escape)="onEscape($event)"
+                (blur)="markAsTouched()">
+                @if (label()) {
+                    <span class="bx-floating-label">
+                        {{ resolvedLabel() }}
+                        @if (effectiveRequired() && !resolvedHideRequiredMarker()) {
+                            <span class="bx-field-required" aria-hidden="true">*</span>
+                        }
+                    </span>
+                }
+                <span class="bx-date-value" [class.is-placeholder]="!displayValue()">
+                    @if (mode() === 'multiple' && multipleDates().length) {
+                        <span class="bx-selected-tags" [attr.aria-label]="resolvedSelectedDatesLabel()">
+                            @for (date of visibleDates(); track date) {
+                                <bx-tag
+                                    [text]="formatChipLabel(date)"
+                                    [config]="tagConfig()"
+                                    [focusable]="false"
+                                    [tooltipOnTruncate]="resolvedTooltipOnTruncate() ? undefined : false" />
+                            }
+                            @if (multipleDates().length > visibleTagCount()) {
+                                <bx-tag
+                                    class="bx-overflow-tag"
+                                    [text]="overflowDatesLabel()"
+                                    [config]="overflowTagConfig()"
+                                    [tooltip]="overflowDatesTooltip()"
+                                    [focusable]="false"
+                                    [tooltipOnTruncate]="resolvedTooltipOnTruncate() ? undefined : false" />
+                            }
+                        </span>
+                    } @else {
+                        <span bxTruncate [bxTooltip]="resolvedTooltipOnTruncate() ? displayValue() : ''">{{
+                            displayValue() || (!label() ? resolvedTriggerText() : '')
+                        }}</span>
+                    }
+                </span>
+                @if (isLoading()) {
+                    <bx-loading-spinner class="bx-date-trigger-icon" [size]="16" [decorative]="true" />
+                } @else {
+                    <bx-icon class="bx-date-trigger-icon" size="16" [name]="pickerIcon()" [decorative]="true" />
+                }
+            </button>
+        }
+
+        @if (showClear()) {
+            <button
+                bx-button
+                type="button"
+                variant="text"
+                class="bx-date-clear"
+                [surfaceEffects]="false"
+                [disabled]="effectiveDisabled()"
+                [attr.aria-label]="resolvedClearLabel()"
+                [bxTooltip]="resolvedClearTooltip()"
+                (click)="clear()">
+                <bx-icon name="x" size="16" [decorative]="true" />
+            </button>
+        }
+    </div>
+
+    <bx-picker-surface
+        [panelId]="controlId() + '-panel'"
+        [panelWidth]="panelWidth()"
+        [open]="isOpen()"
+        [presentation]="surfacePresentation()"
+        [origin]="panelOrigin()"
+        [content]="panelTemplate"
+        [ariaLabel]="resolvedLabel() || resolvedDatePlaceholder()"
+        [panelClass]="panelClass()"
+        (dismiss)="cancel()" />
+
+    <ng-template #retryAction let-retry="retry" let-label="label">
+        <button bx-button type="button" variant="tonal" color="accent" (click)="retry()">
+            <bx-icon name="rotate-cw" size="16" [decorative]="true" />{{ label }}
+        </button>
+    </ng-template>
+
+    <ng-template #panelTemplate>
+        <div bxSurface data-bx-surface="glass" class="bx-date-panel-content" [bxSurfaceInteractive]="false" [class.is-drawer]="isDrawer()">
+            <div class="bx-date-panel-body">
+                @if (showPresets() && presetsPlacement() === 'start') {
+                    <aside class="bx-date-presets">
+                        <bx-date-preset-list
+                            [presets]="effectivePresets()"
+                            [context]="presetContext()"
+                            [activeValue]="draftValue()"
+                            [horizontal]="presetsHorizontal()"
+                            [ariaLabel]="resolvedPresetsLabel()"
+                            (presetSelect)="onPeriodPresetSelect($event)" />
+                    </aside>
+                }
+
+                <div class="bx-date-calendar-column">
+                    <bx-calendar
+                        [startView]="startView()"
+                        [mode]="mode()"
+                        [value]="draftValue()"
+                        [viewDate]="viewDate()"
+                        [months]="calendarMonths()"
+                        [retryTemplate]="retryAction"
+                        [weekdayNameFormat]="weekdayNameFormat()"
+                        [monthNameFormat]="monthNameFormat()"
+                        [locale]="settings().locale"
+                        [calendarId]="settings().calendar"
+                        [timeZone]="settings().timeZone"
+                        [weekStartsOn]="settings().weekStartsOn"
+                        [minimalDaysInFirstWeek]="settings().minimalDaysInFirstWeek"
+                        [min]="min()"
+                        [max]="max()"
+                        [disabledDates]="disabledDates()"
+                        [disabledIntervals]="disabledIntervals()"
+                        [disabledWeekdays]="disabledWeekdays()"
+                        [dateFilter]="dateFilter()"
+                        [crossingPolicy]="crossingPolicy()"
+                        [minRangeLength]="minRangeLength()"
+                        [maxRangeLength]="maxRangeLength()"
+                        [allowSameDay]="allowSameDay()"
+                        [selectionLimit]="selectionLimit()"
+                        [readOnly]="isReadonly() || effectiveDisabled()"
+                        [availability]="availabilityForCalendar()"
+                        [dayTemplate]="dayTemplate()"
+                        [showToday]="showToday()"
+                        [showTodayButton]="showTodayButton()"
+                        [todayLabel]="todayLabel()"
+                        [loadingLabel]="loadingLabel()"
+                        [retryLabel]="retryLabel()"
+                        (visibleRangeChange)="onVisibleRange($event)"
+                        (viewChange)="viewChange.emit($event)"
+                        (monthSelected)="monthSelected.emit($event)"
+                        (yearSelected)="yearSelected.emit($event)"
+                        (rangeStart)="onCalendarRangeStart($event)"
+                        (valueChange)="onCalendarValueChange($event)"
+                        (selectionRejected)="onSelectionRejected($event)"
+                        (requestAvailability)="onAvailabilityRequest($event)"
+                        (retryAvailability)="onAvailabilityRequest($event)" />
+                </div>
+
+                @if (showPresets() && presetsPlacement() === 'end') {
+                    <aside class="bx-date-presets">
+                        <bx-date-preset-list
+                            [presets]="effectivePresets()"
+                            [context]="presetContext()"
+                            [activeValue]="draftValue()"
+                            [horizontal]="presetsHorizontal()"
+                            [ariaLabel]="resolvedPresetsLabel()"
+                            (presetSelect)="onPeriodPresetSelect($event)" />
+                    </aside>
+                }
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-content select="bx-error" ngProjectAs="bx-error" />
+    <ng-content select="bx-hint" ngProjectAs="bx-hint" />
+</bx-form-field>

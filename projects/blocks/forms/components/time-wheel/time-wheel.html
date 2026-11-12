@@ -1,0 +1,68 @@
+<div
+    class="bx-wheel"
+    [style.--bx-wheel-item-height.px]="itemHeight()"
+    [style.--bx-wheel-center-offset.px]="centerOffset()"
+    [class.is-dragging]="dragging()"
+    [class.is-disabled]="disabled()">
+    <div
+        #viewport
+        class="bx-wheel-viewport"
+        role="listbox"
+        tabindex="0"
+        [attr.aria-label]="resolvedLabel()"
+        [attr.aria-activedescendant]="options().length ? wheelId + '-' + (loopOffset() + logicalIndex()) : null"
+        [attr.aria-disabled]="disabled()"
+        [style.height.px]="viewportHeight()"
+        (keydown)="onKeydown($event)"
+        (wheel)="onWheel($event)"
+        (pointerdown)="onPointerDown($event)">
+        <div class="bx-wheel-base">
+            <div class="bx-wheel-track" [style.transform]="trackTransform()">
+                @for (option of displayOptions(); track option.value + '-' + $index; let index = $index) {
+                    <button
+                        type="button"
+                        class="bx-wheel-option"
+                        role="option"
+                        tabindex="-1"
+                        [id]="wheelId + '-' + index"
+                        [attr.aria-hidden]="loopOffset() > 0 && (index < loopOffset() || index >= loopOffset() * 2) ? true : null"
+                        [class.is-selected]="isSelectedAt(index)"
+                        [class.is-disabled]="option.disabled"
+                        [style.height.px]="itemHeight()"
+                        [attr.aria-selected]="isSelectedAt(index)"
+                        [attr.aria-disabled]="option.disabled"
+                        (mousedown)="$event.preventDefault()"
+                        (click)="onOptionClick(index, $event)">
+                        {{ option.label }}
+                    </button>
+                }
+            </div>
+        </div>
+        <div class="bx-wheel-magnifier" aria-hidden="true" inert [style.height.px]="itemHeight()">
+            <div class="bx-wheel-lens-content">
+                <div class="bx-wheel-lens-track" [style.transform]="lensTransform()">
+                    @for (option of displayOptions(); track option.value + '-' + $index; let index = $index) {
+                        <span
+                            class="bx-wheel-lens-option"
+                            [class.is-selected]="isSelectedAt(index)"
+                            [class.is-disabled]="option.disabled"
+                            [style.height.px]="itemHeight()"
+                            >{{ option.label }}</span
+                        >
+                    }
+                </div>
+            </div>
+        </div>
+        <div
+            bxSurface
+            data-bx-surface="glass"
+            bxSurfaceGlassiness="auto"
+            bxSurfaceQuality="auto"
+            bxSurfaceLocalRefraction
+            class="bx-wheel-band"
+            aria-hidden="true"
+            [bxSurfaceInteractive]="false"
+            [bxSurfaceEmission]="false"
+            [style.height.px]="itemHeight()"></div>
+    </div>
+</div>

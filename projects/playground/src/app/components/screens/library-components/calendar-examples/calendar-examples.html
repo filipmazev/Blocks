@@ -1,0 +1,93 @@
+<section class="calendar-demo" aria-labelledby="calendar-demo-title">
+    <h3 id="calendar-demo-title">Inline calendar primitive</h3>
+    <p>
+        Selection, availability and period arithmetic are adapter-owned, so the non-Gregorian examples render real calendar grids rather than translated labels.
+    </p>
+
+    <div class="demo-group" role="group" aria-label="Selection mode">
+        @for (item of modes; track item.value) {
+            <button bx-button type="button" [variant]="mode() === item.value ? 'filled' : 'tonal'" (click)="setMode(item.value)">
+                {{ item.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Calendar system">
+        @for (calendar of calendars; track calendar.value) {
+            <button bx-button type="button" [variant]="calendarId() === calendar.value ? 'filled' : 'tonal'" (click)="calendarId.set(calendar.value)">
+                {{ calendar.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Language">
+        @for (item of locales; track item.value) {
+            <button bx-button type="button" [variant]="locale() === item.value ? 'filled' : 'tonal'" (click)="locale.set(item.value)">
+                {{ item.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Month count">
+        @for (count of monthCounts; track count) {
+            <button bx-button type="button" [variant]="months() === count ? 'filled' : 'tonal'" (click)="months.set(count)">
+                {{ count }} month{{ count > 1 ? 's' : '' }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-toggles">
+        <bx-slide-toggle label="Full weekday and month names" [(checked)]="longNames" />
+        <bx-slide-toggle label="Highlight today" [(checked)]="highlightToday" />
+        <bx-slide-toggle label="Today shortcut" [(checked)]="showToday" />
+        <bx-slide-toggle label="Week numbers" [(checked)]="showWeekNumbers" />
+        <bx-slide-toggle label="Disjoint disabled intervals" [(checked)]="restrict" />
+        <bx-slide-toggle label="Custom day metadata and template" [(checked)]="customCells" />
+        <bx-slide-toggle label="Async availability" [checked]="asyncMode()" (checkedChange)="toggleAsync()" />
+        <bx-slide-toggle label="Fail the next request" [(checked)]="failNext" />
+    </div>
+
+    <div class="calendar-panel">
+        <bx-calendar
+            [todayLabel]="showToday() ? 'Select today' : undefined"
+            [weekdayNameFormat]="longNames() ? 'long' : 'narrow'"
+            [monthNameFormat]="longNames() ? 'long' : 'short'"
+            [retryTemplate]="retryAction"
+            [mode]="mode()"
+            [months]="months()"
+            [locale]="locale()"
+            [calendarId]="calendarId()"
+            [showToday]="highlightToday()"
+            [showWeekNumbers]="showWeekNumbers()"
+            [disabledIntervals]="restrict() ? disabledIntervals : []"
+            [metadata]="metadata()"
+            [dayTemplate]="customCells() ? dayTemplate() : undefined"
+            [availability]="availability()"
+            [blockUnverifiedAvailability]="asyncMode()"
+            [(value)]="value"
+            (visibleRangeChange)="onVisible($event)"
+            (retryAvailability)="onRetry($event)"
+            (selectionRejected)="outcome.set('Rejected: ' + $event)" />
+    </div>
+
+    <p class="demo-status" role="status" aria-live="polite">{{ visible() }}</p>
+    <p class="demo-status" role="status" aria-live="polite">Committed value: {{ describeValue() }}. {{ outcome() }}</p>
+
+    <ng-template #retryAction let-retry="retry" let-label="label">
+        <button bx-button type="button" variant="tonal" color="accent" (click)="retry()">
+            <bx-icon name="rotate-cw" size="16" [decorative]="true" />{{ label }}
+        </button>
+    </ng-template>
+
+    <ng-template #dayCell let-cell>
+        <span class="custom-day">
+            <span class="custom-day-number">{{ cell.cell.day }}</span>
+            @if (cell.cell.metadata.badge) {
+                <span class="custom-day-badge">{{ cell.cell.metadata.badge }}</span>
+            }
+            @if (cell.cell.metadata.price) {
+                <span class="custom-day-price">{{ cell.cell.metadata.price }} €</span>
+            }
+        </span>
+    </ng-template>
+</section>

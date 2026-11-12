@@ -27,7 +27,7 @@ import { navigateMenuKey } from '@primitives/helpers/menu-keyboard.helpers';
 import { MenuCascadeService } from '@primitives/services/menu-cascade.service';
 import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
 
-/** Hover, click, touch and keyboard trigger for nested, opaque bx-menu surfaces. */
+/** Hover, click, touch and keyboard trigger for nested bx-menu surfaces with shared glass and opaque fallbacks. */
 @Directive({
   selector: '[bxMenuTrigger]',
   exportAs: 'bxMenuTrigger',

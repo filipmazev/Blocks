@@ -1,0 +1,26 @@
+@if (isInline()) {
+    @if (content(); as inlineContent) {
+        <div class="bx-picker-inline" role="dialog" tabindex="-1" [id]="panelId()" [attr.aria-label]="resolvedAriaLabel()">
+            <ng-container [ngTemplateOutlet]="inlineContent" />
+        </div>
+    }
+}
+
+@if (isDrawer()) {
+    <bx-bottom-drawer
+        panelStyle="--bx-drawer-body-padding: 0; --bx-drawer-width: 100%;"
+        size="lg"
+        maxHeight="92dvh"
+        [surfaceId]="panelId()"
+        [ariaLabel]="resolvedAriaLabel()"
+        [showHandle]="true"
+        [showCloseButton]="false"
+        [headerVisible]="false"
+        [panelClass]="drawerClasses()"
+        [(open)]="open"
+        (closed)="onDrawerClosed()">
+        @if (content(); as drawerContent) {
+            <ng-container [ngTemplateOutlet]="drawerContent" />
+        }
+    </bx-bottom-drawer>
+}

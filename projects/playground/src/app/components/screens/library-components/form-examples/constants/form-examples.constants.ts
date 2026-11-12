@@ -10,6 +10,8 @@ export const INITIAL_REGISTRATION: IRegistrationData = {
   teamSize: null,
   destination: '',
   categories: [],
+  dateRange: null,
+  meetingTime: null,
   plan: '',
   terms: false,
   notifications: false,

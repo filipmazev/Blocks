@@ -39,7 +39,7 @@ replace a query.
 filtering leaves request cancellation and results ownership with the application. `loadingLabel` names loading feedback.
 
 `optionTemplate` receives `$implicit` (option), `selected`, and `index`. `triggerTemplate` receives `$implicit` (form value) and resolved `labels`. `panelClass`
-customizes the panel. `--bx-select-panel-background`, `--bx-select-panel-border`, and `--bx-select-panel-shadow` customize the opaque surface, contrast and
+customizes the panel. `--bx-select-panel-background`, `--bx-select-panel-border`, and `--bx-select-panel-shadow` customize the translucent surface, contrast and
 elevation independently from the form container. `--bx-select-panel-height` changes the maximum panel height, which is also constrained to the viewport.
 
 `selectionChange` emits `{ value, source: 'user' }`. `openedChange` reports panel state. `open()`, `close()`, and `toggleOpen()` control the panel. Readonly
@@ -69,6 +69,9 @@ Completed closes release the panel's overlay and tracking resources. Reopening r
 out of a native popover. Selection and the application-owned search term remain on the control.
 
 ## Appearance and accessibility
+
+Dropdown backing uses the classic blur and tint with 18 percentage points of extra opacity (about 63.6% at the default appearance). It does not use SVG
+refraction. `--bx-dropdown-opacity` overrides the backing; shared opaque and accessibility preferences remain authoritative.
 
 Uses Blocks semantic tokens and the active `ThemingService` configuration. Customize through documented inputs, templates and CSS variables. Existing components
 update when the application theme changes. Keyboard focus, forced colors, reduced transparency and `BxA11yService` reduced-motion preferences remain supported.

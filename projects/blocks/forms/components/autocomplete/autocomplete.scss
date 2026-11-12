@@ -1,6 +1,5 @@
 @use '../input-field/input-field';
 @use '../../../core/styles/helpers' as *;
-@use '../shared/styles/option-panel' as *;
 
 :host {
     display: block;
@@ -66,6 +65,8 @@
 }
 
 .bx-autocomplete-panel {
+    @include dropdown-material;
+
     --bx-glass-surface: var(--bx-autocomplete-background, var(--bx-bg-surface));
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
@@ -80,10 +81,6 @@
     color: var(--bx-glass-text);
     box-shadow: var(--bx-glass-shadow);
     overflow: hidden;
-}
-
-.bx-autocomplete-panel[data-bx-surface] {
-    @include opaque-option-panel;
 }
 
 .bx-autocomplete-scroll {

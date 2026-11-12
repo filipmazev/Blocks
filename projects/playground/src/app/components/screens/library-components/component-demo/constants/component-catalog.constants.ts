@@ -411,6 +411,28 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-input-field label="Project name" [formControl]="name" />'
   },
   {
+    id: 'date-picker',
+    title: 'Date picker',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/date-picker/README.md',
+    symbol: 'DatePicker',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-date-picker',
+    description: 'Form date selection with presets, typed ranges, strict parsing, async availability and a mobile bottom drawer.',
+    example: '<bx-date-picker mode="range" [(value)]="range" />'
+  },
+  {
+    id: 'time-picker',
+    title: 'Time picker',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/time-picker/README.md',
+    symbol: 'TimePicker',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-time-picker',
+    description: 'Single-time selection with wheels, semantic option lists, precision, steps and optional time zones.',
+    example: '<bx-time-picker timePresentation="wheel" [minuteStep]="15" [(value)]="time" />'
+  },
+  {
     id: 'search-input',
     title: 'Search input',
     group: 'Forms',
@@ -712,14 +734,14 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
   },
   {
     id: 'modal-bottom-sheet',
-    title: 'Bottom sheet',
+    title: 'Bottom drawer',
     group: 'Modals',
     readme: 'projects/blocks/modal/components/views/bottom-sheet/README.md',
     symbol: 'ModalBottomSheet',
     package: '@filip.mazev/blocks/modal',
     selector: 'service-owned view',
     description: 'A bottom-aligned modal surface suitable for compact actions and mobile layouts.',
-    example: '<!-- Open from an action in your template -->\n<button bx-button (click)="openModal()">Open bottom sheet</button>'
+    example: '<!-- Open from an action in your template -->\n<button bx-button (click)="openModal()">Open bottom drawer</button>'
   },
   {
     id: 'toast-core',
@@ -742,5 +764,27 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     selector: 'service-owned view',
     description: 'A notification with a semantic icon, optional title and message.',
     example: '<button bx-button (click)="notify()">Show success</button>'
+  },
+  {
+    id: 'bottom-drawer',
+    title: 'Bottom drawer',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/bottom-drawer/README.md',
+    symbol: 'BottomDrawer',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-bottom-drawer',
+    description: 'Reusable sheet surface with drag-to-dismiss, sticky actions, focus trapping, safe-area padding and spring settling.',
+    example: '<bx-bottom-drawer [(open)]="open" title="Filters"><div bxDrawerFooter>Actions</div></bx-bottom-drawer>'
+  },
+  {
+    id: 'calendar',
+    title: 'Calendar',
+    group: 'Primitives',
+    readme: 'projects/blocks/primitives/components/calendar/README.md',
+    symbol: 'Calendar',
+    package: '@filip.mazev/blocks/primitives',
+    selector: 'bx-calendar',
+    description: 'Inline calendar with date, range, multiple, week, month, quarter and year modes, restrictions, metadata and async availability.',
+    example: '<bx-calendar mode="range" [months]="2" [(value)]="range" />'
   }
 ];

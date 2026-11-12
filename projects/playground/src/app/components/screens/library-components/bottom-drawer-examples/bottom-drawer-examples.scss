@@ -1,0 +1,43 @@
+@use 'core/styles/helpers' as *;
+
+.drawer-demo {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(3);
+
+    h3 {
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
+        color: var(--bx-text-secondary);
+        max-inline-size: 60ch;
+    }
+}
+
+.drawer-actions,
+.drawer-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(2);
+    align-items: center;
+}
+
+.drawer-content {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(2);
+}
+
+.drawer-row {
+    padding: spacing(3);
+    border-radius: radius(md);
+    background: var(--bx-bg-element);
+    color: var(--bx-text-secondary);
+}
+
+.drawer-status {
+    font-size: 0.875rem;
+    color: var(--bx-text-accent);
+}

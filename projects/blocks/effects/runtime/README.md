@@ -83,11 +83,20 @@ Opt in per element with `mountSurface(element, { glassiness: 'auto' })`. Omitted
 supported browsers; unsupported engines keep the previous look. `on` permits testing another engine, while `off` disables selected enhancements. Local
 `quality: 'enhanced'` adds the full reflection/bevel treatment, subject to application baseline and device policy.
 
+Nested surfaces suppress additional refraction passes by default. Small optical overlays may explicitly use `localRefraction: true` together with
+`glassiness: 'auto'` to sample content within their parent material. This is intended for local lenses such as TimeWheel selection bands, and preserves global
+quality, browser and accessibility guards. The lens owns no additional lighting system.
+
 Foreground colors stay theme-owned. Refraction retains at least 72% tint for readable theme foregrounds. Blur ranges from 0.5px at the clearest setting to about
 5.4px at the midpoint and 9.2px at maximum; low settings preserve sharper refraction while the tint supplies the backing. Component opacity constraints can
 request more backing. No text-contrast sampling, foreground switching, grouping or per-control contrast subscriptions are mounted. The existing shared sampler
 continues to supply decorative ambient edge lighting. See [appearance effects](../README.md#glassiness-and-translucency) for material variables and
 browser/accessibility fallbacks.
+
+Local optical surfaces can tune `--bx-refraction-strength` from `0` to `1` (default `1`) and `--bx-refraction-magnification` from `1` to `2` (default `1`).
+Strength adjusts edge displacement; magnification enlarges the actual backdrop around the surface center, affecting only content covered by the lens. The
+Stepper uses this to magnify icons and connecting lines during travel without scaling the source content. The default magnification bypasses the additional
+sampling stages. These settings do not opt a surface into refraction or override global appearance/accessibility policy.
 
 Local color aliases preserve component intent:
 
@@ -313,10 +322,12 @@ toggles, menus and overlays.
 default selector is `[role="menuitem"], [role="option"]`. Disabled rows and nested lists are excluded. Pointer hover and exit restore the backing immediately;
 pointer exit hides it when there is no selected or keyboard-focused row. Mouse-only focus does not keep a hover highlight after exit. Pointer
 selection/deselection retains the hovered row without traveling to another selected option. Actual keyboard focus and `aria-selected` changes may spring without
-changing selection. The controller remeasures dynamic/scrolling content, bounds stretch, and releases its observers and surface renderer on `destroy()`. Omitted
-motion policy follows live inherited/system preferences; call `update({ reducedMotion })` to change an explicit application override. Use a div container with
-unrestricted children. Set `--bx-selection-surface` to customize the backing; defaults use existing semantic hover/error surfaces. Focus rings and persistent
-selection/checkmarks remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this at their existing Playground routes.
+changing selection. The controller keeps its clipped layer aligned with the scroll viewport, refreshes the row beneath a stationary pointer during scrolling or
+virtual-row replacement, and snaps geometry during native scrolling. It follows ancestor scroll containers as well as the list itself without increasing
+scrollable content. It bounds stretch and releases its scroll/pointer listeners, observers and surface renderer on `destroy()`. Omitted motion policy follows
+live inherited/system preferences; call `update({ reducedMotion })` to change an explicit application override. Use a div container with unrestricted children.
+Set `--bx-selection-surface` to customize the backing; defaults use existing semantic hover/error surfaces. Focus rings and persistent selection/checkmarks
+remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this at their existing Playground routes.
 
 `createGlassTransition` now uses the shared retargetable spring for opacity and restrained scale. `IGlassTransitionOptions.scale` is the closed scale, clamped
 from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. The controller preserves the overlay's positioning transform, follows the opening side,

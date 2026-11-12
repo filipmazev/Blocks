@@ -1,0 +1,78 @@
+<ng-template #surfaceTemplate>
+    <div
+        #surface
+        bxSurface
+        data-bx-light-scope
+        class="bx-drawer"
+        [ngClass]="[sizeClass(), panelClass()]"
+        [id]="surfaceId()"
+        [style.--bx-drawer-max-height]="maxHeight()"
+        [style.--bx-drawer-duration.ms]="animationDuration()"
+        [style]="panelStyle()"
+        [style.--bx-drawer-offset]="surfaceOffset()"
+        [class.is-dragging]="isDragging()"
+        [class.is-entering]="isEntering()"
+        [class.is-closing]="isClosing()"
+        [class.is-embedded]="embedded()"
+        [class.is-busy]="busy()"
+        [class.is-disabled]="disabled()"
+        [attr.role]="modal() && !embedded() ? 'dialog' : null"
+        [attr.aria-modal]="modal() && !embedded() ? 'true' : null"
+        [attr.aria-label]="!title() ? resolvedAriaLabel() || null : null"
+        [attr.aria-labelledby]="title() ? titleId : null"
+        [attr.aria-busy]="busy()"
+        [attr.tabindex]="-1"
+        [cdkTrapFocus]="modal() && !embedded()"
+        [cdkTrapFocusAutoCapture]="false">
+        @if (showHandle()) {
+            <div #handleZone class="bx-drawer-handle-zone">
+                <button type="button" class="bx-drawer-handle" [disabled]="!isDismissible()" [attr.aria-label]="resolvedCloseLabel()" (click)="onHandleClick()">
+                    <span class="bx-drawer-handle-bar" aria-hidden="true"></span>
+                </button>
+            </div>
+        }
+
+        @if (showHeader()) {
+            <header class="bx-drawer-header">
+                @if (icon(); as iconName) {
+                    <bx-icon class="bx-drawer-icon" size="20" [name]="iconName" [decorative]="true" />
+                }
+                <div class="bx-drawer-heading">
+                    @if (title()) {
+                        <h2 class="bx-drawer-title" [id]="titleId">{{ resolvedTitle() }}</h2>
+                    }
+                    @if (subtitle()) {
+                        <p class="bx-drawer-subtitle">{{ resolvedSubtitle() }}</p>
+                    }
+                </div>
+                <ng-content select="[bxDrawerHeader]" />
+                @if (busy()) {
+                    <bx-loading-spinner class="bx-drawer-busy" [size]="18" [decorative]="true" />
+                }
+                @if (showCloseButton()) {
+                    <button
+                        type="button"
+                        class="bx-drawer-close"
+                        [disabled]="!isDismissible()"
+                        [attr.aria-label]="resolvedCloseLabel()"
+                        (click)="onCloseClick()">
+                        <bx-icon name="x" size="18" [decorative]="true" />
+                    </button>
+                }
+            </header>
+        }
+
+        <div class="bx-drawer-scroll" [class.is-sticky-footer]="stickyFooter()">
+            <div class="bx-drawer-body">
+                <ng-content />
+            </div>
+            <div class="bx-drawer-footer">
+                <ng-content select="[bxDrawerFooter]" />
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+@if (embedded()) {
+    <ng-container [ngTemplateOutlet]="surfaceTemplate" />
+}

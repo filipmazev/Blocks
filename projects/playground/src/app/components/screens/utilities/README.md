@@ -63,6 +63,7 @@ content viewports.
 | `DeviceTypeService`, device/OS contracts         | Device identity, platform flags, orientation events, explicit refresh                                                 |
 | `ScrollLockService`, `IScrollLockConfig`         | Independent owners, remaining-owner behavior, release actions, navigation cleanup                                     |
 | Scroll-boundary directive and helpers            | Local batch/height controls, overflow status, asynchronous fallback/retry example; linked virtual collection coverage |
+| `BxDateTimeConfigService`, date/time helpers     | Conversion round-trips, strict and natural-language parsing, time display cycle/precision, DST duration               |
 | `uuidv4()`                                       | Regenerated UUID and stable instance ID comparison                                                                    |
 | Color-token helpers, `resolveThemeId()`          | Semantic/palette selection, CSS reference, complementary/inverted tokens, saved palette validation                    |
 | `BxOverlayPositionService`, origin/theme helpers | Preferred placement, viewport fallback, tracked origin, inherited theme, teardown                                     |
@@ -87,6 +88,22 @@ The effects runtime's shared motion helpers (`createSpringMotion`, `GestureVeloc
 `/components/slider`, `/components/slide-toggle`, `/components/menu`, and the select/overlay pages.
 
 Internal coordination services, implementation classes, and type-only contracts do not receive separate playground pages.
+
+### Date and time utilities
+
+Civil dates, time zones, parsing, formatting, presets and serialization live in `@filip.mazev/blocks/core` and work without the picker components. Use
+`dateTimeToInstant` and `dateTimeFromInstant` for explicit zone conversion, `toDotNetOffsetIso`/`parseDotNetDateValue` for .NET round-trips, and
+`parseNaturalDateTime` for opted-in, deterministic natural-language input. Date-only values remain canonical `yyyy-MM-dd` strings and must never be converted to
+UTC midnight. Calendar adapter `getMonthLabel` accepts an optional `CalendarNameForm` (`long` by default); calendar controls use short month labels and narrow
+weekday initials. The date/time utility demo displays these lengths and the full seven-day bounds of a week selection. See the interactive
+`/utilities/date-time` demo and its colocated README for API details and sample conversions.
+
+#### Date-time display conventions
+
+`BxDateTimeConfigService.resolve()` keeps a picker's default time display aligned with its resolved 12/24-hour cycle and precision. For example,
+`resolve({ hourCycle: 24, precision: 'second' })` uses `HH:mm:ss`, while a 12-hour millisecond display uses `hh:mm:ss.SSS a`. An explicitly configured
+`timeFormat` or `dateTimeFormat` takes precedence. Locale changes preserve these explicit application formats. The Time Picker and Utilities demos show these
+changes while controls are mounted. `parseTimeInput` also accepts an hour-only pattern such as `HH` when precision is `hour`.
 
 ## Appearance and customization
 

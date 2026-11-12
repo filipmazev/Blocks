@@ -1,28 +1,21 @@
-<div
-    #elementRef
-    bxSurface
-    data-bx-light-scope
-    class="bottom-sheet-modal-style"
-    [id]="id() ?? ''"
-    [class]="config()?.style?.wrapperClasses ?? ''"
-    [style]="config()?.style?.wrapperStyles ?? ''"
-    [style.max-height]="config()?.style?.mobileConfig?.customHeight ?? ''"
-    [style.transform]="modalTransform()"
-    [style.--anim-duration.ms]="isAnimated() ? animationDuration() : 0"
-    [class.is-motion-enabled]="isAnimated() && isSwipingVerticallyFinished()"
-    [ngClass]="{
-        'opened-bottom-sheet-modal': isAnimated() && !hasInteracted()
-    }">
-    <button
-        #verticalSwipeTarget
-        type="button"
-        aria-label="Close dialog"
-        class="touch-hitbox bottom-sheet-modal-top-bar"
-        [disabled]="config()?.disableClose === true"
-        (click)="onDismissClick($event)">
-        <div class="swipe-line"></div>
-    </button>
-
+<bx-bottom-drawer
+    [embedded]="true"
+    [modal]="false"
+    [autoClose]="false"
+    [open]="isSheetOpen()"
+    [dismissible]="isDismissible()"
+    [showBackdrop]="false"
+    [showCloseButton]="false"
+    [showHandle]="true"
+    [headerVisible]="false"
+    [stickyFooter]="true"
+    [maxHeight]="resolvedMaxHeight()"
+    [animationDuration]="isAnimated() ? animationDuration() : 0"
+    [surfaceId]="id() ?? ''"
+    [panelClass]="config()?.style?.wrapperClasses ?? ''"
+    [panelStyle]="sheetStyles()"
+    [(offset)]="currentTranslateY"
+    (closeRequest)="onCloseRequest()">
     <div class="bottom-sheet-modal-inner-content-container">
         <div class="bottom-sheet-modal-top-group">
             @if (hasBanner()) {
@@ -35,15 +28,19 @@
                 </div>
             }
 
-            <div class="bottom-sheet-modal-main-content-container" [style.animationDuration]="isAnimated() ? animationDuration() + 'ms' : '0ms'">
-                <ng-content></ng-content>
+            <div class="bottom-sheet-modal-main-content-container">
+                <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
             </div>
         </div>
-
-        @if (footerTemplate()) {
-            <div class="bottom-sheet-modal-footer">
-                <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
-            </div>
-        }
     </div>
-</div>
+
+    @if (footerTemplate()) {
+        <div bxDrawerFooter class="bottom-sheet-modal-footer">
+            <ng-container *ngTemplateOutlet="footerTemplate()"></ng-container>
+        </div>
+    }
+</bx-bottom-drawer>
+
+<ng-template #contentTemplate>
+    <ng-content></ng-content>
+</ng-template>

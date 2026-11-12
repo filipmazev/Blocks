@@ -105,7 +105,7 @@
     <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />
 </bx-form-field>
 <ng-template #panelTemplate>
-    <div class="bx-autocomplete-panel" data-bx-surface="solid">
+    <div bxSurface class="bx-autocomplete-panel" data-bx-surface="glass" [bxSurfaceInteractive]="false">
         <div
             #pagination="bxLoadMore"
             class="bx-autocomplete-scroll"

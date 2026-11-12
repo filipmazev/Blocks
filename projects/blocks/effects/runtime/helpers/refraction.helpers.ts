@@ -3,6 +3,7 @@ import type { RefractionMap } from '@effects/runtime/types/refraction-maps.types
 
 import { REFRACTION_CACHE } from '@effects/runtime/constants/refraction.constants';
 
+import { finiteClamp } from './dom.helpers';
 import { buildRefraction } from './refraction-maps.helpers';
 
 /**
@@ -80,3 +81,19 @@ export const cachedRefraction = (short: number, radius: number): RefractionMap =
 
   return map;
 };
+
+/**
+ * Resolve a surface's optional optical displacement multiplier without changing its cached geometry.
+ * @param style - Computed surface style containing the optional `--bx-refraction-strength` value.
+ * @returns A multiplier from zero to one; omitted or malformed values preserve the default strength of one.
+ */
+export const readRefractionStrength = (style: CSSStyleDeclaration): number =>
+  finiteClamp(parseFloat(style.getPropertyValue('--bx-refraction-strength')), 0, 1, 1);
+
+/**
+ * Resolve an optional backdrop magnification around the center of a glass lens.
+ * @param style - Computed surface style containing `--bx-refraction-magnification`.
+ * @returns A magnification from one to two; omitted or malformed values retain the original size.
+ */
+export const readRefractionMagnification = (style: CSSStyleDeclaration): number =>
+  finiteClamp(parseFloat(style.getPropertyValue('--bx-refraction-magnification')), 1, 2, 1);

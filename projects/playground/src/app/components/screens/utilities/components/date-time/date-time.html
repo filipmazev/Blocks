@@ -1,0 +1,57 @@
+<bx-stack [gap]="4">
+    <h2>Date and time conversion helpers</h2>
+    <p>
+        These helpers are independent of the pickers. Date-only values stay canonical civil dates; offset and zoned values resolve through the active zone, and
+        legacy values are parsed explicitly rather than guessed.
+    </p>
+
+    <div class="utility-form">
+        <bx-input-field label="Date-only value" hint="Canonical yyyy-MM-dd; never converted to UTC midnight." [(value)]="date" />
+        <bx-input-field label="Wall-clock time" hint="HH:mm or HH:mm:ss.SSS." [(value)]="time" />
+        <bx-input-field label="IANA time zone" hint="Example: Europe/Berlin, America/New_York." [(value)]="zone" />
+    </div>
+
+    <ul class="utility-results">
+        @for (line of conversions(); track line) {
+            <li>{{ line }}</li>
+        }
+    </ul>
+
+    <h3>Resolved time display</h3>
+    <div class="utility-form">
+        <button bx-button type="button" [variant]="displayCycle() === 12 ? 'filled' : 'tonal'" (click)="displayCycle.set(12)">12-hour</button>
+        <button bx-button type="button" [variant]="displayCycle() === 24 ? 'filled' : 'tonal'" (click)="displayCycle.set(24)">24-hour</button>
+        <button bx-button type="button" [variant]="displayPrecision() === 'second' ? 'filled' : 'tonal'" (click)="displayPrecision.set('second')">
+            Seconds
+        </button>
+        <button bx-button type="button" [variant]="displayPrecision() === 'millisecond' ? 'filled' : 'tonal'" (click)="displayPrecision.set('millisecond')">
+            Milliseconds
+        </button>
+    </div>
+    <p class="utility-result" role="status">{{ displayConvention() }}</p>
+
+    <h3>Localized calendar name lengths</h3>
+    <div class="utility-form">
+        <button bx-button type="button" [variant]="nameForm() === 'narrow' ? 'filled' : 'tonal'" (click)="nameForm.set('narrow')">Narrow initials</button>
+        <button bx-button type="button" [variant]="nameForm() === 'short' ? 'filled' : 'tonal'" (click)="nameForm.set('short')">Short names</button>
+        <button bx-button type="button" [variant]="nameForm() === 'long' ? 'filled' : 'tonal'" (click)="nameForm.set('long')">Full names</button>
+    </div>
+    <p class="utility-result" role="status">{{ calendarNames() }}</p>
+
+    <h3>Parse .NET, ISO and Microsoft JSON values</h3>
+    <bx-input-field label=".NET / ISO value" [(value)]="dotNetInput" />
+    <p class="utility-result">{{ dotNetResult() }}</p>
+
+    <h3>Parse Unix seconds</h3>
+    <bx-input-field label="Unix seconds" [(value)]="unixInput" />
+    <p class="utility-result">{{ unixResult() }}</p>
+
+    <h3>Natural-language parsing</h3>
+    <bx-input-field label="Expression" hint="Uses the injected clock, locale and time zone; ambiguity returns an explicit error." [(value)]="natural" />
+    <p class="utility-result">{{ naturalResult() }}</p>
+
+    <h3>Wall-clock versus elapsed duration</h3>
+    <p class="utility-result">{{ duration() }}</p>
+
+    <button bx-button type="button" variant="tonal" (click)="date.set('2026-11-23'); time.set('14:30')">Reset sample</button>
+</bx-stack>

@@ -20,6 +20,18 @@
         } @else {
             <div class="demo-stage" bxSurface>
                 @switch (entry().id) {
+                    @case ('bottom-drawer') {
+                        <app-bottom-drawer-examples />
+                    }
+                    @case ('calendar') {
+                        <app-calendar-examples />
+                    }
+                    @case ('date-picker') {
+                        <app-date-picker-examples />
+                    }
+                    @case ('time-picker') {
+                        <app-time-picker-examples />
+                    }
                     @case ('virtual-collection') {
                         <app-virtual-collection-examples />
                     }

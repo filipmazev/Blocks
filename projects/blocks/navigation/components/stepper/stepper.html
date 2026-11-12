@@ -49,7 +49,11 @@
                     bxSurface
                     data-bx-surface="glass"
                     class="step-selection"
+                    bxSurfaceQuality="auto"
                     aria-hidden="true"
+                    [class.is-lens]="hasTravelingLens()"
+                    [bxSurfaceGlassiness]="hasTravelingLens() ? (glassiness() ?? 'auto') : 'off'"
+                    [bxSurfaceLocalRefraction]="hasTravelingLens()"
                     [bxSurfaceInteractive]="false"
                     [bxSurfaceEmission]="false"
                     [style.--step-selection-color]="selectionColor()"></span>
@@ -118,20 +122,33 @@
         [bxSurfaceInteractive]="false"
         [bxSurfaceEmission]="false"
         [bxSurfaceGlassiness]="glassiness()">
-        @if (row.status === 'loading') {
-            <bx-loading-spinner [size]="markerIconSize()" [decorative]="true" />
-        } @else if (row.status === 'error') {
-            <span class="marker-symbol">!</span>
-        } @else if (row.status === 'skipped') {
-            <span class="marker-symbol">−</span>
-        } @else if (row.awaitingConfirmation) {
-            <bx-icon class="marker-symbol" name="clock" [size]="markerIconSize()" />
-        } @else if (row.complete) {
-            <span class="marker-symbol">✓</span>
-        } @else if (row.step.icon) {
-            <bx-icon class="marker-symbol" [size]="markerIconSize()" [name]="row.step.icon" />
-        } @else {
-            <span class="marker-symbol">{{ index + 1 }}</span>
+        <span class="marker-content">
+            @if (row.status === 'loading') {
+                <bx-loading-spinner [size]="markerIconSize()" [decorative]="true" />
+            } @else if (row.status === 'error') {
+                <span class="marker-symbol">!</span>
+            } @else if (row.status === 'skipped') {
+                <span class="marker-symbol">−</span>
+            } @else if (row.awaitingConfirmation) {
+                <bx-icon class="marker-symbol" name="clock" [size]="markerIconSize()" />
+            } @else if (row.complete) {
+                <span class="marker-symbol">✓</span>
+            } @else if (row.step.icon) {
+                <bx-icon class="marker-symbol" [size]="markerIconSize()" [name]="row.step.icon" />
+            } @else {
+                <span class="marker-symbol">{{ index + 1 }}</span>
+            }
+        </span>
+        @if (row.step.id === selectedStep()?.id && (variant() === 'cards' || variant() === 'progress')) {
+            <span
+                bxSurface
+                class="marker-lens"
+                aria-hidden="true"
+                bxSurfaceLocalRefraction
+                bxSurfaceQuality="auto"
+                [bxSurfaceGlassiness]="glassiness() ?? 'auto'"
+                [bxSurfaceInteractive]="false"
+                [bxSurfaceEmission]="false"></span>
         }
     </span>
     <span class="step-copy" aria-hidden="true">

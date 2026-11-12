@@ -1,0 +1,51 @@
+@use 'core/styles/helpers' as *;
+
+.calendar-demo {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(3);
+
+    h3,
+    p {
+        margin: 0;
+    }
+
+    p {
+        color: var(--bx-text-secondary);
+        max-inline-size: 68ch;
+    }
+}
+
+.demo-group,
+.demo-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(2);
+}
+
+.calendar-panel {
+    inline-size: fit-content;
+    padding: spacing(3);
+    border-radius: radius(lg);
+    background: var(--bx-bg-surface);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-subtle, var(--bx-border-default));
+    box-shadow: var(--bx-shadow-sm);
+}
+
+.custom-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.custom-day-badge,
+.custom-day-price {
+    font-size: 0.625rem;
+    color: var(--bx-text-secondary);
+}
+
+.demo-status {
+    font-size: 0.875rem;
+    color: var(--bx-text-accent);
+}

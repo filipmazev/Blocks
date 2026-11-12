@@ -1,0 +1,140 @@
+<section class="picker-demo" aria-labelledby="date-picker-demo-title">
+    <h3 id="date-picker-demo-title">Date picker with typed ranges and presets</h3>
+    <p>
+        Single and multiple dates update the field on selection; ranges commit on their second date. Resize below the Blocks mobile breakpoint to see the same
+        state move into the reusable bottom drawer without losing the draft.
+    </p>
+
+    <div class="demo-group" role="group" aria-label="Language">
+        @for (item of locales; track item.value) {
+            <button bx-button type="button" [variant]="locale() === item.value ? 'filled' : 'tonal'" (click)="locale.set(item.value)">
+                {{ item.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Selection mode">
+        @for (item of modes; track item.value) {
+            <button bx-button type="button" [variant]="mode() === item.value ? 'filled' : 'tonal'" (click)="mode.set(item.value); value.set(null)">
+                {{ item.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-toggles">
+        <bx-slide-toggle label="Separate start/end fields" [(checked)]="separateFields" />
+        <bx-slide-toggle label="Typed input" [(checked)]="editable" />
+        <bx-slide-toggle label="Natural language" [(checked)]="naturalLanguage" />
+        <bx-slide-toggle label="Highlight today" [(checked)]="highlightToday" />
+        <bx-slide-toggle label="Disable Sundays" [(checked)]="disableSundays" />
+        <bx-slide-toggle label="Today shortcut" [(checked)]="showToday" />
+        <bx-slide-toggle label="Long quick-select list" [(checked)]="longPresets" />
+        <bx-slide-toggle label="Dropdown icon" [(checked)]="dropdownIcon" />
+        <bx-slide-toggle label="Quick select" [(checked)]="showPresets" />
+        @if (longPresets()) {
+            <bx-slide-toggle label="Disable every third extra preset" [(checked)]="disableLongPresets" />
+        }
+        <bx-slide-toggle label="Async availability" [checked]="asyncEnabled()" (checkedChange)="asyncEnabled.set($event)" />
+        <bx-slide-toggle label="Read only" [(checked)]="readonlyState" />
+        <bx-slide-toggle label="Disabled" [(checked)]="disabledState" />
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Range length">
+        <button bx-button type="button" [variant]="minLength() === 1 ? 'filled' : 'tonal'" (click)="minLength.set(1)">Any length</button>
+        <button bx-button type="button" [variant]="minLength() === 3 ? 'filled' : 'tonal'" (click)="minLength.set(3)">Minimum 3 days</button>
+        <button bx-button type="button" [variant]="months() === 1 ? 'filled' : 'tonal'" (click)="months.set(1)">One month</button>
+        <button bx-button type="button" [variant]="months() === 2 ? 'filled' : 'tonal'" (click)="months.set(2)">Two months</button>
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Initial calendar view">
+        <button bx-button type="button" [variant]="initialView() === undefined ? 'filled' : 'tonal'" (click)="initialView.set(undefined)">Default view</button>
+        <button bx-button type="button" [variant]="initialView() === 'months' ? 'filled' : 'tonal'" (click)="initialView.set('months')">
+            Start with months
+        </button>
+        <button bx-button type="button" [variant]="initialView() === 'years' ? 'filled' : 'tonal'" (click)="initialView.set('years')">Start with years</button>
+    </div>
+
+    <div class="demo-settings">
+        <bx-date-picker
+            label="Earliest date"
+            mode="single"
+            dateFormat="dd/MM/yyyy"
+            subscriptSizing="dynamic"
+            hint="Cannot be later than the latest date."
+            presetsPlacement="hidden"
+            [locale]="locale()"
+            [showToday]="highlightToday()"
+            [max]="maxDate()"
+            [(value)]="minDate" />
+        <bx-date-picker
+            label="Latest date"
+            mode="single"
+            dateFormat="dd/MM/yyyy"
+            subscriptSizing="dynamic"
+            hint="Cannot be earlier than the earliest date."
+            presetsPlacement="hidden"
+            [locale]="locale()"
+            [showToday]="highlightToday()"
+            [min]="minDate()"
+            [(value)]="maxDate" />
+        <bx-input-field label="Visible tags" type="number" subscriptSizing="dynamic" [min]="1" [value]="visibleTags()" (valueChange)="setVisibleTags($event)" />
+        <bx-input-field
+            label="Selection limit"
+            type="number"
+            subscriptSizing="dynamic"
+            [min]="1"
+            [value]="selectionLimit()"
+            (valueChange)="setSelectionLimit($event)" />
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Availability requests">
+        <button bx-button type="button" variant="tonal" color="danger" [disabled]="!asyncEnabled() || availabilityLoading()" (click)="failRequest(picker)">
+            Fail next request now
+        </button>
+        <button bx-button type="button" [disabled]="!asyncEnabled() || availabilityLoading()" (click)="picker.reloadAvailability()">Reload dates</button>
+    </div>
+
+    <bx-date-picker
+        #picker
+        loadErrorMessage="The mock request failed. Retry to load these dates."
+        dateFormat="dd/MM/yyyy"
+        [startView]="initialView()"
+        [showToday]="highlightToday()"
+        [disabledWeekdays]="disableSundays() ? [0] : []"
+        [min]="minDate()"
+        [max]="maxDate()"
+        [visibleTagCount]="visibleTags()"
+        [selectionLimit]="selectionLimit()"
+        [hint]="labels().hint"
+        [pickerIcon]="dropdownIcon() ? 'chevron-down' : 'calendar'"
+        [mode]="mode()"
+        [separateFields]="separateFields()"
+        [editable]="editable()"
+        [allowNaturalLanguage]="naturalLanguage()"
+        [months]="months()"
+        [locale]="locale()"
+        [minRangeLength]="minLength()"
+        [presets]="presets()"
+        [presetsPlacement]="showPresets() ? 'start' : 'hidden'"
+        [resolver]="asyncEnabled() ? resolver : undefined"
+        [readOnly]="readonlyState()"
+        [disabled]="disabledState()"
+        [label]="mode() === 'range' ? labels().field : labels().placeholder"
+        [applyLabel]="labels().apply"
+        [startLabel]="labels().start"
+        [endLabel]="labels().end"
+        [todayLabel]="showToday() ? labels().today : undefined"
+        [errorMessages]="validationMessages()"
+        [clearLabel]="labels().clear"
+        [selectedDatesLabel]="labels().selected"
+        [presetsLabel]="labels().presets"
+        [(value)]="value"
+        (viewChange)="viewResult.set('Calendar view: ' + $event)"
+        (monthSelected)="viewResult.set('Month selected: ' + $event)"
+        (yearSelected)="viewResult.set('Year selected: ' + $event)"
+        (valueCommit)="onCommit($event)"
+        (parseFailed)="onParseFailed($event)" />
+
+    <p class="demo-status" role="status" aria-live="polite">{{ committed() }}</p>
+    <p class="demo-status" role="status">{{ viewResult() }}</p>
+</section>

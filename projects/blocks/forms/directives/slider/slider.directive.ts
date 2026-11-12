@@ -5,8 +5,10 @@ import { afterEveryRender, afterNextRender, DestroyRef, Directive, effect, Eleme
 import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
 import {
   createSpringMotion,
+  GlassinessMode,
   ISpringMotion,
   MOTION_PRESETS,
+  mountSurface,
   observeGlassLighting,
   paintMotionStyles,
   refreshGlassLighting
@@ -18,6 +20,8 @@ export class SliderDirective {
   private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   private readonly bxA11yService = inject(BxA11yService);
 
+  /** Glass lens refraction override; omission defaults to auto. Application baseline, Off and accessibility preferences take precedence. */
+  public readonly glassiness: InputSignal<GlassinessMode | undefined> = input<GlassinessMode>();
   /** Whether the slider snaps to its configured step values. Defaults to `false`. */
   public readonly discrete: InputSignal<boolean> = input(false);
   /** Formatter for the user-visible slider value; omission uses the default numeric presentation. */
@@ -30,6 +34,7 @@ export class SliderDirective {
   private tickList?: HTMLDataListElement;
   private thumb?: HTMLSpanElement;
   private motion?: ISpringMotion;
+  private opticSurface: ReturnType<typeof mountSurface> | undefined;
   private releaseGesture?: () => void;
   private pressed: boolean = false;
   private lastPosition: number = 0;
@@ -41,7 +46,19 @@ export class SliderDirective {
   constructor() {
     inject(ThemingService);
     effect(() => {
-      if (this.bxA11yService.isReducedMotion()) this.motion?.retarget([0, 0], true);
+      const reducedMotion = this.bxA11yService.isReducedMotion();
+      const glassiness = this.glassiness() ?? 'auto';
+
+      this.opticSurface?.update({
+        glassiness,
+        quality: 'auto',
+        localRefraction: true,
+        interactive: false,
+        emission: false,
+        reducedMotion
+      });
+
+      if (reducedMotion) this.motion?.retarget([0, 0], true);
     });
 
     afterEveryRender(() => this.sync());
@@ -64,6 +81,12 @@ export class SliderDirective {
 
       lens.className = 'bx-slider-lens';
       thumb.append(lens);
+
+      const optic = input.ownerDocument.createElement('span');
+
+      optic.className = 'bx-slider-optic';
+      optic.hidden = true;
+      thumb.append(optic);
       input.before(shell);
       shell.append(input, thumb);
       this.shell = shell;
@@ -73,6 +96,7 @@ export class SliderDirective {
         ([pressure, stretch]) => {
           const reduced = this.bxA11yService.isReducedMotion();
 
+          optic.hidden = pressure < 0.01;
           paintMotionStyles(thumb, {
             '--bx-slider-pressure': String(reduced ? 0 : pressure),
             '--bx-slider-stretch': String(reduced ? 0 : Math.max(0, stretch))
@@ -100,6 +124,17 @@ export class SliderDirective {
         if (!event.isPrimary || event.button !== 0) return;
 
         if (input.disabled || input.hasAttribute('readonly') || input.getAttribute('aria-readonly') === 'true') return;
+
+        this.opticSurface ??= ngZone.runOutsideAngular(() =>
+          mountSurface(optic, {
+            glassiness: this.glassiness() ?? 'auto',
+            quality: 'auto',
+            localRefraction: true,
+            interactive: false,
+            emission: false,
+            reducedMotion: this.bxA11yService.isReducedMotion()
+          })
+        );
 
         this.pressed = true;
         this.pointerId = event.pointerId;
@@ -181,6 +216,8 @@ export class SliderDirective {
         input.removeEventListener('pointerdown', press);
         input.removeEventListener('blur', release);
         this.motion?.destroy();
+        this.opticSurface?.destroy();
+        this.opticSurface = undefined;
 
         // Embedded views can detach their root input before destruction; never reinsert that removed control.
         if (input.parentNode === shell) shell.replaceWith(input);

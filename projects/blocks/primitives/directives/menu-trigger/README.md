@@ -1,6 +1,6 @@
 # Nested menu trigger
 
-`MenuTriggerDirective` opens a `bx-menu` template using Blocks' overlay positioning and theme inheritance. Use it for arbitrary-depth opaque submenus; each
+`MenuTriggerDirective` opens a `bx-menu` template using Blocks' overlay positioning and theme inheritance. Use it for arbitrary-depth translucent submenus; each
 descendant receives the containing trigger through `menuParent`.
 
 ```ts
@@ -31,7 +31,7 @@ close has a short pointer-crossing delay and retains focused descendants. Cascad
 descendants on geometry changes and using measured positions only as a fallback. Clipped or offscreen origins close their branch. Overlays, traps, listeners,
 subscriptions, and timers are cleaned up on destruction. The trigger honors `bxOverlayContext` for top-layer positioning, as dropdowns and context menus do;
 origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes siblings, and nested menus inherit live theme state.
-Surfaces use the ordinary opaque `bx-menu` appearance, without added motion or glass effects.
+Surfaces use the shared `bx-menu` translucent material and overlay motion, including its opaque and accessibility fallbacks.
 
 The [top-navigation demo](../../../navigation/components/top-nav/README.md) at `/components/top-nav` demonstrates owner-coordinated navigation panels. Menu
 width and scroll constraints belong to the owner. Side navigation browses nested lists inside its own panel.

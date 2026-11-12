@@ -1,0 +1,42 @@
+<section class="drawer-demo" aria-labelledby="drawer-demo-title">
+    <h3 id="drawer-demo-title">Standalone reusable drawer</h3>
+    <p>
+        Drag the handle down, tap it, press Escape, or use the backdrop. The body keeps native scrolling while the sticky footer stays reachable. Enable the
+        busy state to see dismissal guards and pending feedback.
+    </p>
+
+    <div class="drawer-actions">
+        <button bx-button type="button" variant="filled" (click)="openDrawer('sm')">Small</button>
+        <button bx-button type="button" variant="tonal" (click)="openDrawer('md')">Medium</button>
+        <button bx-button type="button" variant="tonal" (click)="openDrawer('lg')">Large</button>
+        <button bx-button type="button" variant="tonal" (click)="openDrawer('full')">Full height</button>
+    </div>
+
+    <p class="drawer-status" role="status" aria-live="polite">{{ status() }}</p>
+    <a routerLink="/components/modal">Review the Modal bottom-drawer regression demo</a>
+
+    <bx-bottom-drawer
+        title="Filter results"
+        subtitle="The reusable surface used by Modal and by mobile date pickers."
+        icon="sliders-horizontal"
+        maxHeight="88dvh"
+        [size]="size()"
+        [busy]="busy()"
+        [dismissible]="dismissible()"
+        [(open)]="open"
+        (closed)="onClosed($event)"
+        (closeCancelled)="onCancelled($event)">
+        <div class="drawer-content">
+            <p>Content scrolls independently of the handle and footer.</p>
+            @for (item of items; track item) {
+                <div class="drawer-row">Row {{ item }} — semantic surface material, focusable content and safe-area padding.</div>
+            }
+        </div>
+
+        <div bxDrawerFooter class="drawer-footer">
+            <button bx-button type="button" variant="text" (click)="simulateBusy()">Simulate busy</button>
+            <button bx-button type="button" variant="text" (click)="toggleDismissible()">{{ dismissible() ? 'Disable' : 'Enable' }} dismissal</button>
+            <button bx-button type="button" variant="filled" (click)="open.set(false)">Apply</button>
+        </div>
+    </bx-bottom-drawer>
+</section>

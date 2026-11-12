@@ -42,10 +42,13 @@ export class Modal {
 
   protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
   protected readonly layoutSelectOptions: IBxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
-    label: layout
-      .split('-')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' '),
+    label:
+      layout === 'bottom-sheet'
+        ? 'Bottom drawer'
+        : layout
+            .split('-')
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' '),
     value: layout
   }));
   protected readonly breakpointSelectOptions: IBxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];

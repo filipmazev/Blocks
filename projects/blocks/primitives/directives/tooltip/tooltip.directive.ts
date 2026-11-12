@@ -1,9 +1,9 @@
-import type { InputSignal } from '@angular/core';
+import type { InputSignal, InputSignalWithTransform } from '@angular/core';
 
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
+import { booleanAttribute, ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
 
 import {
   BX_I18N,
@@ -45,6 +45,8 @@ export class TooltipDirective {
   public readonly bxTooltipTouch: InputSignal<'none' | 'longpress' | 'tap'> = input<'none' | 'longpress' | 'tap'>('none');
   /** Whether pointer hover may show the tooltip. Defaults to `true`. */
   public readonly bxTooltipHover: InputSignal<boolean> = input(true);
+  /** Whether the tooltip only appears when the host's own text is visually truncated. Defaults to `false`. */
+  public readonly bxTooltipTruncatedOnly: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 
   private overlayRef: OverlayRef | null = null;
   private tooltipComponent?: ComponentRef<Tooltip>;
@@ -112,6 +114,8 @@ export class TooltipDirective {
   /** Show nonempty tooltip content using shared positioning, theming, and accessibility behavior. */
   public show(): void {
     if (!this.bxTooltip()) return;
+
+    if (this.bxTooltipTruncatedOnly() && !this.isTruncated()) return;
 
     const revision = ++this.revision;
 
@@ -256,6 +260,12 @@ export class TooltipDirective {
   }
 
   //#region Helpers
+
+  private isTruncated(): boolean {
+    const source = this.elementRef.nativeElement;
+
+    return source.scrollWidth > source.clientWidth || source.scrollHeight > source.clientHeight;
+  }
 
   private canUseTouch(event: Event): boolean {
     if (this.contextMenuDirective && this.bxTooltipTouch() === 'longpress') return false;

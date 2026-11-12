@@ -1,5 +1,5 @@
 @use '../../../core/styles/helpers' as *;
-@use '../shared/styles/option-panel' as *;
+@use '../../styles/option-row' as *;
 
 :host {
     display: block;
@@ -11,6 +11,7 @@
     display: flex;
     align-items: center;
     width: 100%;
+    min-block-size: 3.85rem;
     box-sizing: border-box;
     background-color: var(--bx-bg-neutral);
     border-radius: radius(sm) radius(sm) 0 0;
@@ -80,8 +81,9 @@
     width: 100%;
     box-sizing: border-box;
     padding: spacing(6) 0 spacing(2) spacing(3);
-    min-height: spacing(12);
-    display: block;
+    min-block-size: 3.85rem;
+    display: flex;
+    align-items: center;
     font-size: 1rem;
     color: var(--bx-text-heading);
     line-height: 1.4;
@@ -97,6 +99,8 @@
     align-items: baseline;
     position: absolute;
     left: spacing(3);
+    right: 0;
+    min-inline-size: 0;
     top: 50%;
     transform: translateY(-50%);
     font-size: 1rem;
@@ -189,42 +193,7 @@
 }
 
 .bx-select-option {
-    display: flex;
-    width: 100%;
-    padding: spacing(2) spacing(3);
-    border: 0;
-    border-radius: radius(sm);
-    background: transparent;
-    color: var(--bx-text-primary);
-    font: inherit;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    text-align: start;
-    cursor: pointer;
-
-    &[aria-selected='true'] {
-        background: var(--bx-accent-subtle);
-        color: var(--bx-text-accent);
-    }
-
-    &:hover:not(:disabled),
-    &:active:not(:disabled) {
-        background: var(--bx-bg-element-hover);
-    }
-
-    &[aria-selected='true']:hover:not(:disabled) {
-        background: var(--bx-accent-subtle);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--bx-border-accent);
-        outline-offset: -2px;
-    }
-
-    &:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
+    @include option-row;
 }
 
 .bx-select-item-inner {
@@ -262,13 +231,13 @@
 }
 
 .bx-select-panel[data-bx-surface] {
+    @include dropdown-material;
+
     --bx-glass-radius: #{radius(lg)};
-    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-surface: var(--bx-select-panel-background, var(--bx-bg-surface));
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);
     --bx-glass-shadow: #{shadow(sm)};
-
-    @include opaque-option-panel;
 }
 
 .bx-select-trigger[data-bx-surface] {
@@ -277,18 +246,6 @@
 
 .bx-select-trigger[data-bx-surface].is-invalid {
     @include invalid-glass-field;
-}
-
-.bx-select-trigger.is-floating .bx-floating-label {
-    position: static;
-    transform: none;
-    padding: spacing(2) 0 0 spacing(3);
-    overflow-wrap: anywhere;
-}
-
-.bx-select-trigger.is-floating .bx-select-value {
-    padding-top: spacing(1);
-    min-height: spacing(8);
 }
 
 .bx-select-trigger:not(.is-floating) .bx-floating-label {
@@ -332,7 +289,7 @@
 }
 
 .bx-select-panel {
-    background: var(--bx-select-panel-background, var(--bx-bg-surface-alt));
+    background: var(--bx-select-panel-background, var(--bx-bg-surface));
     border-color: var(--bx-select-panel-border, var(--bx-border-strong));
     box-shadow: var(--bx-select-panel-shadow, #{shadow(lg)});
     isolation: isolate;
@@ -424,4 +381,8 @@
     inset-inline-end: calc(1px + #{spacing(3)} + #{spacing(4)} + #{spacing(2)});
     transform: translateY(-50%);
     z-index: 3;
+}
+
+.bx-select-trigger:not(.has-label) .bx-select-value {
+    padding-block: spacing(3);
 }

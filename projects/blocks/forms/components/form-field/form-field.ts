@@ -40,7 +40,7 @@ export class FormField {
   protected readonly resolvedHintEnd: Signal<string> = computed(() => resolveText(this.hintEnd(), this.i18n));
   protected readonly resolvedTooltipLabel: Signal<string> = computed(() => resolveText(this.tooltipLabel(), this.i18n));
   protected readonly showErrors: Signal<boolean> = computed(
-    () => this.activeControl()?.showError() ?? (!!this.error() || !!this.projectedError() || this.errors().length > 0)
+    () => !!this.error() || !!this.projectedError() || this.errors().length > 0 || (this.activeControl()?.showError() ?? false)
   );
   protected readonly messages: Signal<readonly string[]> = computed(() =>
     this.resolvedError() ? [this.resolvedError()] : (this.activeControl()?.errorTexts() ?? this.errors())

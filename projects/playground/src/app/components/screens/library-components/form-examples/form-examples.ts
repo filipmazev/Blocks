@@ -22,12 +22,13 @@ import {
 
 import type { IBxSelectOption, ValidationMessage } from '@filip.mazev/blocks/forms';
 
-import { BX_I18N, ResolvableText } from '@filip.mazev/blocks/core';
+import { BX_I18N, isDateRangeValue, ResolvableText } from '@filip.mazev/blocks/core';
 import {
   Button,
   BxError,
   BxHint,
   Checkbox,
+  DatePicker,
   ErrorDisplayPolicy,
   FormField,
   InputField,
@@ -43,7 +44,8 @@ import {
   Select,
   SliderDirective,
   SlideToggle,
-  SuffixDirective
+  SuffixDirective,
+  TimePicker
 } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingIndicator, LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
@@ -77,6 +79,8 @@ import { Highlight } from 'ngx-highlightjs';
     Checkbox,
     FormField,
     InputField,
+    DatePicker,
+    TimePicker,
     LoadMoreDirective,
     MultiSelect,
     NativeControlDirective,
@@ -186,6 +190,19 @@ export class FormExamples {
       max(p.teamSize, 20);
       required(p.destination);
       required(p.categories);
+      required(p.dateRange, { message: 'Choose a project date range.' });
+      validate(p.dateRange, ({ value }) => {
+        const range = value();
+
+        if (!range) return null;
+
+        if (!isDateRangeValue(range) || !range.start || !range.end) return { kind: 'dateIncomplete', message: 'Choose both project dates.' };
+
+        return range.start > range.end ? { kind: 'dateOrder', message: 'The project end date cannot precede its start date.' } : null;
+      });
+      required(p.meetingTime, { message: 'Choose a meeting time.' });
+      readonlyRule(p.dateRange, () => this.readOnly());
+      readonlyRule(p.meetingTime, () => this.readOnly());
       required(p.plan);
       required(p.terms, { message: 'Accept the terms to continue.' });
       required(p.note, { when: ({ valueOf }) => valueOf(p.notifications), message: 'Add a notification note.' });
@@ -244,6 +261,8 @@ export class FormExamples {
       teamSize: 3,
       destination: 'skopje',
       categories: ['ohrid'],
+      dateRange: { start: '2026-11-12', end: '2026-11-16' },
+      meetingTime: '09:30',
       plan: 'team',
       terms: true,
       notifications: false,

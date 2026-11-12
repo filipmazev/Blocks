@@ -3,10 +3,12 @@ import type { Signal } from '@angular/core';
 import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject } from '@angular/core';
 
 import { BxA11yService } from '@filip.mazev/blocks/core';
+import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { ISelectionMotion, mountSelectionMotion } from '@filip.mazev/blocks/effects/runtime';
 
 @Component({
   selector: 'bx-menu',
+  imports: [BxSurfaceDirective],
   templateUrl: './menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './menu.scss'

@@ -19,6 +19,7 @@
             [bxTooltip]="resolvedTooltipOnTruncate() ? (selectionDisplay() === 'tags' ? selectedOptionLabel() : truncatedSelectionTooltip()) : ''"
             [bxTooltipHover]="selectionDisplay() !== 'tags'"
             [bxTooltipTouch]="selectionDisplay() === 'tags' ? 'none' : 'longpress'"
+            [class.has-label]="!!label()"
             [class.is-invalid]="showError()"
             [class.is-outline]="resolvedAppearance() === 'outline'"
             [class.is-open]="isOpen()"
@@ -43,7 +44,7 @@
             <div class="bx-select-container">
                 @if (label()) {
                     <span class="bx-floating-label"
-                        ><span #labelOverflow="bxTruncate" [bxTruncate]="!isFloating()">{{ resolvedLabel() }}</span>
+                        ><span #labelOverflow="bxTruncate" [bxTruncate]="true">{{ resolvedLabel() }}</span>
                         @if (required() && !resolvedHideRequiredMarker()) {
                             <span class="bx-field-required" aria-hidden="true">*</span>
                         }
@@ -113,6 +114,8 @@
             [cdkConnectedOverlayOpen]="true"
             [cdkConnectedOverlayPositions]="overlayPositions"
             [cdkConnectedOverlayHasBackdrop]="false"
+            [cdkConnectedOverlayPush]="true"
+            [cdkConnectedOverlayViewportMargin]="8"
             [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy"
             [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
             [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
@@ -120,7 +123,14 @@
             (attach)="onPanelAttach(panelOverlay)"
             (detach)="onPanelDetach()"
             (positionChange)="refreshPanel()">
-            <div class="bx-select-panel" data-bx-surface="solid" tabindex="-1" [class]="panelClass()" (keydown)="onPanelKey($event)">
+            <div
+                bxSurface
+                class="bx-select-panel"
+                data-bx-surface="glass"
+                tabindex="-1"
+                [bxSurfaceInteractive]="false"
+                [class]="panelClass()"
+                (keydown)="onPanelKey($event)">
                 @if (isSearchable()) {
                     <div class="bx-select-search-container">
                         <bx-search-input

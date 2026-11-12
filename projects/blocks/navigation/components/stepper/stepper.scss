@@ -708,3 +708,87 @@ button.step-body {
         color: GrayText;
     }
 }
+
+.marker-content {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marker-lens,
+.step-selection.is-lens {
+    --bx-refraction-strength: 0.2;
+    --bx-refraction-magnification: var(--bx-stepper-magnification, 1.3);
+    --bx-glass-surface: transparent;
+    --bx-glass-opaque-surface: var(--step-state-background, var(--bx-bg-surface));
+    --bx-glass-text: var(--step-state-text, var(--bx-text-primary));
+    --bx-glass-edge: transparent;
+    --bx-glass-min-opacity: 0;
+    --bx-glass-opacity: 0;
+    --bx-refraction-min-opacity: 0;
+    --bx-refraction-min-blur: 0px;
+    --bx-glass-blur: 0px;
+    --bx-glass-shadow: none;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-decoration-opacity: 0;
+
+    border: 0;
+    outline: 1px solid var(--bx-stepper-lens-border, color-mix(in srgb, var(--bx-text-primary) 18%, transparent));
+    outline-offset: -1px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.marker-lens {
+    position: absolute;
+    inset: calc(-1 * (var(--bx-stepper-lens-gap, calc(#{spacing(3)} / 2)) + var(--bx-border-width, 1px)));
+    border-radius: inherit;
+
+    &:not([data-bx-refraction='true']) {
+        display: none;
+    }
+}
+
+.step-selection.is-lens {
+    padding: var(--bx-stepper-lens-gap, calc(#{spacing(3)} / 2));
+
+    &:not([data-bx-refraction='true']) {
+        z-index: 1;
+    }
+}
+
+@media (forced-colors: none) {
+    .marker:has(> .marker-lens[data-bx-refraction='true']),
+    .step-track:has(> .step-selection.is-lens[data-bx-refraction='true']) .marker {
+        --bx-glass-surface: transparent;
+        --bx-glass-min-opacity: 0;
+        --bx-glass-opacity: 0;
+        --bx-glass-edge: transparent;
+        --bx-glass-shadow: none;
+        --bx-glass-rim-visibility: 0;
+        --bx-glass-decoration-opacity: 0;
+
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    .marker:has(> .marker-lens[data-bx-refraction='true']),
+    .step-track:has(> .step-selection.is-lens[data-bx-refraction='true']) .is-current .marker {
+        --bx-glass-text: var(--step-state-text);
+    }
+
+    .step-track:has(.marker-lens[data-bx-refraction='true']) > .step-selection {
+        --bx-glass-surface: transparent;
+        --bx-glass-edge: transparent;
+        --bx-glass-opacity: 0;
+        --bx-glass-shadow: none;
+        --bx-glass-rim-visibility: 0;
+        --bx-glass-decoration-opacity: 0;
+
+        border-color: transparent;
+        box-shadow: none;
+    }
+}

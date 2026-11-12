@@ -1,0 +1,179 @@
+<div
+    #grid
+    class="bx-calendar"
+    tabindex="-1"
+    [attr.aria-label]="resolvedAriaLabel()"
+    [attr.aria-busy]="availabilityLoading()"
+    (keydown)="onGridKeydown($event)"
+    (mouseleave)="onGridLeave()"
+    (focusout)="onGridBlur($event)">
+    <div class="bx-calendar-header">
+        <button type="button" class="bx-calendar-nav" [disabled]="previousDisabled()" [attr.aria-label]="resolvedPreviousLabel()" (click)="onPrevious()">
+            <bx-icon name="chevron-left" size="18" [decorative]="true" />
+        </button>
+        <button type="button" class="bx-calendar-title" [attr.aria-label]="headerLabel()" (click)="onHeaderClick()" (keydown)="onHeaderKey($event)">
+            <span aria-live="polite">{{ headerLabel() }}</span>
+            @if (viewMode() !== 'decades') {
+                <bx-icon class="bx-calendar-title-icon" name="chevron-down" size="14" [decorative]="true" />
+            }
+        </button>
+        <button type="button" class="bx-calendar-nav" [disabled]="nextDisabled()" [attr.aria-label]="resolvedNextLabel()" (click)="onNext()">
+            <bx-icon name="chevron-right" size="18" [decorative]="true" />
+        </button>
+    </div>
+
+    <div class="bx-calendar-body">
+        <div
+            class="bx-calendar-content"
+            [attr.inert]="availabilityLoading() || availabilityError() || availabilityEmpty() ? '' : null"
+            [attr.aria-hidden]="availabilityLoading() || availabilityError() || availabilityEmpty() ? true : null">
+            @if (viewMode() === 'days') {
+                <div class="bx-calendar-months">
+                    @for (rows of weekRows(); track $index; let monthIndex = $index) {
+                        <div class="bx-calendar-month">
+                            @if (hasMultipleMonths()) {
+                                <div class="bx-calendar-month-caption">{{ monthGrids()[monthIndex].label }}</div>
+                            }
+                            <table class="bx-calendar-grid" role="grid" [attr.aria-label]="monthGrids()[monthIndex].label">
+                                <thead>
+                                    <tr>
+                                        @if (showWeekNumbers()) {
+                                            <th scope="col" class="bx-calendar-week-column">
+                                                <span class="bx-visually-hidden">Week</span>
+                                            </th>
+                                        }
+                                        @for (name of weekdayNames(); track $index) {
+                                            <th scope="col" class="bx-calendar-weekday" [attr.aria-label]="weekdayFullNames()[$index]">{{ name }}</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (row of rows; track row[0]?.date) {
+                                        <tr>
+                                            @if (showWeekNumbers()) {
+                                                <th scope="row" class="bx-calendar-week-number">
+                                                    @if (weekNumberTemplate(); as weekTemplate) {
+                                                        <ng-container [ngTemplateOutlet]="weekTemplate" [ngTemplateOutletContext]="weekContext(row)" />
+                                                    } @else {
+                                                        <span>{{ row[0]?.weekNumber }}</span>
+                                                    }
+                                                </th>
+                                            }
+                                            @for (cell of row; track cell.date) {
+                                                <td
+                                                    role="gridcell"
+                                                    class="bx-calendar-cell"
+                                                    [class.is-outside]="!cell.inMonth"
+                                                    [class.is-weekend]="cell.isWeekend"
+                                                    [class.is-in-range]="cell.inRange"
+                                                    [class.is-preview]="cell.isPreview"
+                                                    [class.is-range-start]="cell.isRangeStart"
+                                                    [class.is-range-end]="cell.isRangeEnd"
+                                                    [attr.aria-selected]="cell.isSelected"
+                                                    [attr.aria-disabled]="cell.disabled">
+                                                    <button
+                                                        type="button"
+                                                        class="bx-calendar-day"
+                                                        [class.is-selected]="cell.isSelected && !cell.inRange"
+                                                        [class.is-range-start]="cell.isRangeStart"
+                                                        [class.is-range-end]="cell.isRangeEnd"
+                                                        [class.is-in-range]="cell.inRange"
+                                                        [class.is-preview]="cell.isPreview"
+                                                        [class.is-today]="showToday() && cell.isToday"
+                                                        [class.is-disabled]="cell.disabled"
+                                                        [class.is-outside]="!cell.inMonth"
+                                                        [class.has-metadata]="!!cell.metadata"
+                                                        [attr.data-focus-date]="cell.date"
+                                                        [attr.data-date]="cell.date"
+                                                        [attr.tabindex]="cell.tabIndex"
+                                                        [attr.aria-label]="cell.label"
+                                                        [attr.aria-current]="showToday() && cell.isToday ? 'date' : null"
+                                                        [attr.aria-disabled]="cell.disabled"
+                                                        (click)="onDayClick(cell, $event)"
+                                                        (mouseenter)="onDayHover(cell)"
+                                                        (focus)="onDayFocus(cell)">
+                                                        @if (dayTemplate(); as cellTemplate) {
+                                                            <ng-container [ngTemplateOutlet]="cellTemplate" [ngTemplateOutletContext]="dayContext(cell)" />
+                                                        } @else {
+                                                            <span class="bx-calendar-day-number">{{ cell.day }}</span>
+                                                            @if (cell.metadata?.badge) {
+                                                                <span class="bx-calendar-day-badge">{{ cell.metadata.badge }}</span>
+                                                            }
+                                                            @if (cell.metadata) {
+                                                                <span
+                                                                    class="bx-calendar-day-marker"
+                                                                    aria-hidden="true"
+                                                                    [attr.data-tone]="cell.metadata.tone ?? 'neutral'"></span>
+                                                            }
+                                                        }
+                                                    </button>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <div class="bx-calendar-periods" role="grid" [class.is-four-columns]="viewMode() !== 'months'" [attr.aria-label]="headerLabel()">
+                    @for (cell of periodGrid().cells; track cell.date) {
+                        <button
+                            type="button"
+                            role="gridcell"
+                            class="bx-calendar-period"
+                            [class.is-selected]="cell.isSelected"
+                            [class.is-in-range]="cell.inRange"
+                            [class.is-preview]="cell.isPreview"
+                            [class.is-range-start]="cell.isRangeStart"
+                            [class.is-range-end]="cell.isRangeEnd"
+                            [class.is-current]="cell.isSelected && !modeInfo().isPeriod"
+                            [class.is-disabled]="cell.disabled"
+                            [class.is-outside]="!cell.inPeriod"
+                            [class.is-today]="showToday() && cell.isToday"
+                            [attr.tabindex]="cell.tabIndex"
+                            [attr.data-focus-date]="cell.date"
+                            [attr.aria-selected]="cell.isSelected"
+                            [attr.aria-disabled]="cell.disabled"
+                            [attr.aria-label]="cell.label"
+                            (click)="onPeriodClick(cell, $event)"
+                            (mouseenter)="onPeriodHover(cell)"
+                            (focus)="onPeriodFocus(cell)">
+                            @if (periodTemplate(); as periodCellTemplate) {
+                                <ng-container [ngTemplateOutlet]="periodCellTemplate" [ngTemplateOutletContext]="periodContext(cell)" />
+                            } @else {
+                                {{ cell.label }}
+                            }
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+        @if (availabilityLoading() || availabilityError() || availabilityEmpty()) {
+            <div class="bx-calendar-feedback">
+                @if (availabilityLoading()) {
+                    <bx-loading-indicator [size]="20" [label]="resolvedLoadingLabel()" />
+                } @else if (availabilityError()) {
+                    <span class="bx-calendar-status-text" role="alert">{{ availabilityError() }}</span>
+                    @if (availability()?.retryable !== false) {
+                        @if (retryTemplate(); as retryAction) {
+                            <ng-container [ngTemplateOutlet]="retryAction" [ngTemplateOutletContext]="retryContext()" />
+                        } @else {
+                            <button type="button" class="bx-calendar-retry" (click)="retry()">
+                                <bx-icon name="rotate-cw" size="16" [decorative]="true" />{{ resolvedRetryLabel() }}
+                            </button>
+                        }
+                    }
+                } @else {
+                    <span role="status">{{ resolvedEmptyLabel() }}</span>
+                }
+            </div>
+        }
+    </div>
+    @if (showTodayButton() && resolvedTodayLabel()) {
+        <div class="bx-calendar-footer">
+            <button type="button" class="bx-calendar-today" [disabled]="todayDisabled()" (click)="selectToday()">{{ resolvedTodayLabel() }}</button>
+        </div>
+    }
+</div>

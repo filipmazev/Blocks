@@ -1,0 +1,99 @@
+@use 'mixins' as *;
+@use 'variables' as *;
+@use 'motion' as *;
+
+@mixin picker-field-label($trigger) {
+    .bx-floating-label {
+        position: absolute;
+        inset-inline: spacing(3) spacing(10);
+        inset-block-start: 50%;
+        display: flex;
+        align-items: baseline;
+        min-inline-size: 0;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        color: var(--bx-text-secondary);
+        pointer-events: none;
+        z-index: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition:
+            inset-block-start 0.2s #{motion-easing(smooth)},
+            transform 0.2s #{motion-easing(smooth)},
+            font-size 0.2s #{motion-easing(smooth)},
+            color 0.15s ease;
+    }
+
+    #{$trigger}.is-floating .bx-floating-label {
+        inset-block-start: spacing(2);
+        transform: translateY(0);
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    #{$trigger}:focus-within:not(.is-readonly, .is-disabled) .bx-floating-label,
+    #{$trigger}.is-open .bx-floating-label {
+        color: var(--bx-primary);
+    }
+
+    #{$trigger}.is-invalid .bx-floating-label {
+        color: var(--bx-text-danger);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .bx-floating-label {
+            transition: none;
+        }
+    }
+}
+
+@mixin picker-shortcut {
+    padding: spacing(1) spacing(2);
+    border: 0;
+    border-radius: radius(md);
+    background: transparent;
+    color: var(--bx-text-accent);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        background: var(--bx-accent-subtle);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-accent);
+        outline-offset: 2px;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+@mixin picker-feedback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: spacing(2);
+    padding: spacing(3);
+    text-align: center;
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+    overflow-y: auto;
+}
+
+@mixin picker-drawer-content {
+    // IMPORTANT: The drawer owns the material; a second backing and rim would create a divider below its handle.
+    --bx-glass-surface: transparent;
+    --bx-glass-opaque-surface: transparent;
+    --bx-glass-shadow: none;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-decoration-opacity: 0;
+}

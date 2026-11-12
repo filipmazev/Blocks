@@ -45,6 +45,20 @@
                 [options]="options"
                 [formField]="registration.categories"
                 [errorPolicy]="policy()" />
+            <bx-date-picker
+                label="Project dates"
+                mode="range"
+                hint="Required start and end dates."
+                presetsPlacement="hidden"
+                [months]="1"
+                [formField]="registration.dateRange"
+                [errorPolicy]="policy()" />
+            <bx-time-picker
+                label="Meeting time"
+                hint="Required time, with 15-minute steps."
+                [minuteStep]="15"
+                [formField]="registration.meetingTime"
+                [errorPolicy]="policy()" />
             <bx-radio-group label="Plan" [formField]="registration.plan" [errorPolicy]="policy()">
                 <bx-radio label="Personal" value="personal" /><bx-radio label="Team" value="team" />
             </bx-radio-group>
@@ -200,13 +214,18 @@
             <div class="pagination-options">
                 @if (example() === 'multi-select') {
                     <bx-select
+                        class="select-all-tooltip-control"
                         label="Select-all tooltip"
                         subscriptSizing="dynamic"
                         [clearable]="false"
                         [options]="allSelectedTooltipOptions"
                         [(value)]="allSelectedTooltipMode" />
                     @if (allSelectedTooltipMode() === 'custom') {
-                        <bx-input-field label="Select-all tooltip text" subscriptSizing="dynamic" [(value)]="allSelectedTooltipText" />
+                        <bx-input-field
+                            class="select-all-tooltip-text-control"
+                            label="Select-all tooltip text"
+                            subscriptSizing="dynamic"
+                            [(value)]="allSelectedTooltipText" />
                     }
                     <bx-input-field
                         class="visible-tag-control"

@@ -39,15 +39,21 @@ example. Both menu playground routes demonstrate a combination and a timed seque
 
 ## Appearance
 
-Menus use an opaque themed backing with no container blur, reflections, or live lighting. Colors, spacing, radius, elevation and row interactions still follow
-Blocks tokens. Rows provide local hover/pressed fills and visible keyboard focus without emitting light onto neighboring rows or the page. Press feedback and
-trigger effects retain their application appearance settings.
+Dropdown backing uses the classic blur and tint with 18 percentage points of extra opacity (about 63.6% at the default appearance). It does not use SVG
+refraction. `--bx-dropdown-opacity` overrides the backing; shared opaque and accessibility preferences remain authoritative.
+
+Menus share the translucent Blocks surface used by date/time pickers, Select, MultiSelect, Autocomplete and Popover. Theme changes update mounted overlays. Rows
+retain their immediate semantic hover/pressed fills and visible keyboard focus. Reduced transparency, opaque appearance and forced colors retain their shared
+accessible fallbacks.
+
+`--bx-dropdown-opacity` overrides the shared material opacity; `--bx-dropdown-min-opacity` sets its minimum (default `0`). Omit both to follow the active Blocks
+material. These variables apply consistently to the dropdown family.
 
 `BxA11yService` controls reduced motion. Forced colors preserve native contrast and focus states.
 
 ## Behavior and accessibility
 
-Keep menu labels action-oriented. The container provides one opaque backing for its items. Avoid nested interactive controls inside one item.
+Keep menu labels action-oriented. The container provides one shared surface for its items. Avoid nested interactive controls inside one item.
 
 ### Motion and material response
 

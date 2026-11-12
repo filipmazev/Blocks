@@ -32,6 +32,10 @@ frame component as `FormField`.
 </form>
 ```
 
+The `/components/signal-forms` registration demo includes a required date range (`DatePickerValue`) and meeting time (`IsoTime | null`) bound directly through
+`[formField]`. They participate in touched/dirty state, required errors, readonly/disabled rules, form submission, Fill valid data and Reset form alongside the
+other controls. Date range constraints normalize composite Signal Forms metadata to calendar date boundaries.
+
 ## Validation and state
 
 Schema validation supplies `required`, numeric and length limits, pattern metadata, errors, pending, disabled and readonly state to compatible controls.
@@ -79,6 +83,16 @@ should bind a `RadioGroup` once around its options.
 
 Native `input`, `textarea` and `select` elements can use `bxInput` inside `bx-form-field`. Consumer components can provide `BX_FORM_FIELD_CONTROL` with
 `IFormFieldControl` to integrate their own state and focus behavior.
+
+## Date and time controls
+
+Use [Date Picker](components/date-picker/README.md) and [Time Picker](components/time-picker/README.md) as separate controls, so applications own their layout,
+cross-field validation, and date/time composition. The combined `DateTimePicker` and its `DateTimePickerValue` alias have been removed. Replace that branch API
+with separately bound date and time values; the independent Core date/time conversion helpers remain available for API integration.
+
+```html
+<bx-date-picker label="Date" [(value)]="date" /> <bx-time-picker label="Time" [(value)]="time" />
+```
 
 ## Asynchronous options
 

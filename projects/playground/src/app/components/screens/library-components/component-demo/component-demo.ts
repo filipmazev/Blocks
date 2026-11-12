@@ -26,8 +26,11 @@ import {
 } from '@filip.mazev/blocks/primitives';
 import { ToastrService } from '@filip.mazev/blocks/toastr';
 
+import { BottomDrawerExamples } from '@playground/components/screens/library-components/bottom-drawer-examples/bottom-drawer-examples';
 import { BreadcrumbExamples } from '@playground/components/screens/library-components/breadcrumb-examples/breadcrumb-examples';
+import { CalendarExamples } from '@playground/components/screens/library-components/calendar-examples/calendar-examples';
 import { IComponentDialogData } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-dialog-data.interface';
+import { DatePickerExamples } from '@playground/components/screens/library-components/date-picker-examples/date-picker-examples';
 import { EssentialsExamples } from '@playground/components/screens/library-components/essentials-examples/essentials-examples';
 import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
 import { InfiniteScrollExamples } from '@playground/components/screens/library-components/infinite-scroll-examples/infinite-scroll-examples';
@@ -39,6 +42,7 @@ import { SideNavExamples } from '@playground/components/screens/library-componen
 import { SidePanelExamples } from '@playground/components/screens/library-components/side-panel-examples/side-panel-examples';
 import { StepperExamples } from '@playground/components/screens/library-components/stepper-examples/stepper-examples';
 import { TagExamples } from '@playground/components/screens/library-components/tag-examples/tag-examples';
+import { TimePickerExamples } from '@playground/components/screens/library-components/time-picker-examples/time-picker-examples';
 import { TopNavExamples } from '@playground/components/screens/library-components/top-nav-examples/top-nav-examples';
 import { TruncationExamples } from '@playground/components/screens/library-components/truncation-examples/truncation-examples';
 import { VirtualCollectionExamples } from '@playground/components/screens/library-components/virtual-collection-examples/virtual-collection-examples';
@@ -55,6 +59,10 @@ import { ComponentDialog } from './component-dialog';
   selector: 'app-component-demo',
   imports: [
     PageExamples,
+    BottomDrawerExamples,
+    CalendarExamples,
+    DatePickerExamples,
+    TimePickerExamples,
     SidePanelExamples,
     ResizeHandleExamples,
     VirtualCollectionExamples,

@@ -112,3 +112,9 @@
         outline-offset: 2px;
     }
 }
+
+@mixin dropdown-material {
+    // IMPORTANT: A floating panel must not inherit its trigger's material opacity floor; shared opaque and accessibility fallbacks remain authoritative.
+    --bx-glass-min-opacity: var(--bx-dropdown-min-opacity, 0);
+    --bx-glass-opacity: var(--bx-dropdown-opacity, min(1, var(--bx-glass-material-opacity, 0.5) + 0.18));
+}

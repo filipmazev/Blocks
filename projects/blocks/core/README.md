@@ -165,7 +165,16 @@ Core also exports `findScrollContainer()`, `measureScrollBoundary()`, `observeSc
 disposable observation. Detection owns no fetching, pagination, buttons, or retry state. Forms' [LoadMoreDirective](../forms/directives/load-more/README.md)
 shares these helpers and retains remote request orchestration, loading feedback, fallback actions, and explicit retry.
 
+### Calendar selection bounds
+
+`valueHighlightRange(mode, value, weekStartsOn)` expands single week/month/quarter/year anchors to their complete period. Week bounds always include seven civil
+dates and honor the configured first weekday, including month/year boundaries. See the
+[date/time utilities demo](../../playground/src/app/components/screens/utilities/components/date-time/README.md).
+
 ## Appearance and customization
+
+Calendar adapters accept an optional `CalendarNameForm` in `getMonthLabel(anchor, locale, form)`. Omission preserves long month labels; calendar controls pass
+`short` by default. `getWeekdayNames(locale, form)` supports narrow initials while controls retain full accessible column names.
 
 Load global styles once through the established package entry point. Import reusable Sass definitions through the public helpers entry point:
 

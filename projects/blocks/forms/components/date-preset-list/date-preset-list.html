@@ -1,0 +1,26 @@
+<nav class="bx-preset-list" [class.is-horizontal]="horizontal()" [attr.aria-label]="resolvedAriaLabel()">
+    @for (group of groups(); track group.label) {
+        <div class="bx-preset-group">
+            @if (group.label) {
+                <div class="bx-preset-group-label">{{ group.label }}</div>
+            }
+            <div class="bx-preset-items">
+                @for (item of group.items; track item.preset.id) {
+                    <button
+                        type="button"
+                        class="bx-preset-item"
+                        [class.is-active]="item.active"
+                        [disabled]="item.disabled"
+                        [attr.aria-pressed]="item.active"
+                        [attr.aria-label]="item.description ? item.label + '. ' + item.description : item.label"
+                        (click)="onSelect(item.preset, item.disabled)">
+                        @if (item.icon && iconName(item.icon); as icon) {
+                            <bx-icon class="bx-preset-icon" size="16" [name]="icon" [decorative]="true" />
+                        }
+                        <span class="bx-preset-label">{{ item.label }}</span>
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</nav>

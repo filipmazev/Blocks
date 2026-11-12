@@ -432,7 +432,7 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
       !reducedTransparency &&
       !view.matchMedia('(prefers-contrast: more), (forced-colors: active)').matches &&
       !element.closest('.high-contrast, .bx-high-contrast-scope') &&
-      !element.parentElement?.closest('[data-bx-surface]') &&
+      (options.localRefraction === true || !element.parentElement?.closest('[data-bx-surface]')) &&
       !element.matches('.bx-btn-text') &&
       parseFloat(style.getPropertyValue('--bx-glass-min-opacity')) !== 1 &&
       hasRefractionGeometry(element, style);

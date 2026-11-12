@@ -1,0 +1,90 @@
+<section class="time-demo" aria-labelledby="time-picker-demo-title">
+    <h3 id="time-picker-demo-title">Time picker: wheel and list</h3>
+    <p>
+        Type into the field while its dropdown is open, or use the wheel or list below. The wheel tracks real pointer velocity and settles with the shared
+        spring. Every wheel action has keyboard equivalents, and disabled options are skipped instead of being committed.
+    </p>
+
+    <div class="demo-group" role="group" aria-label="Presentation">
+        @for (item of presentations; track item.value) {
+            <button bx-button type="button" [variant]="presentation() === item.value ? 'filled' : 'tonal'" (click)="presentation.set(item.value)">
+                {{ item.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Selection mode">
+        <button bx-button type="button" [variant]="hourCycle() === 12 ? 'filled' : 'tonal'" (click)="hourCycle.set(12)">12-hour</button>
+        <button bx-button type="button" [variant]="hourCycle() === 24 ? 'filled' : 'tonal'" (click)="hourCycle.set(24)">24-hour</button>
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Precision">
+        @for (item of precisions; track item.value) {
+            <button bx-button type="button" [variant]="precision() === item.value ? 'filled' : 'tonal'" (click)="precision.set(item.value)">
+                {{ item.label }}
+            </button>
+        }
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Minute step">
+        @for (step of steps; track step) {
+            <button bx-button type="button" [variant]="minuteStep() === step ? 'filled' : 'tonal'" (click)="minuteStep.set(step)">{{ step }} min</button>
+        }
+    </div>
+
+    <div class="demo-toggles">
+        <bx-slide-toggle label="Now shortcut" [(checked)]="showNow" />
+        <bx-slide-toggle label="Looping columns" [(checked)]="loop" />
+        <bx-slide-toggle label="Limit to 09:00–17:00" [(checked)]="businessHours" />
+        <bx-slide-toggle label="Block 12:00–13:00" [(checked)]="blockLunch" />
+        <bx-slide-toggle label="Time-zone selector" [(checked)]="showTimeZone" />
+        <bx-slide-toggle label="Semantic time choices" [checked]="customChoices()" (checkedChange)="setSemanticChoices($event)" />
+        <bx-slide-toggle label="Dropdown icon" [(checked)]="dropdownIcon" />
+        <bx-slide-toggle label="Async slot availability" [(checked)]="asyncEnabled" />
+    </div>
+
+    <div class="demo-group" role="group" aria-label="List interval">
+        <button bx-button type="button" [variant]="interval() === undefined ? 'filled' : 'tonal'" (click)="interval.set(undefined)">Use minute step</button>
+        <button bx-button type="button" [variant]="interval() === '30m' ? 'filled' : 'tonal'" (click)="interval.set('30m'); presentation.set('list')">
+            30-minute list
+        </button>
+        <button
+            bx-button
+            type="button"
+            [variant]="interval() === '1.5 hours' ? 'filled' : 'tonal'"
+            (click)="interval.set('1.5 hours'); presentation.set('list')">
+            90-minute list
+        </button>
+    </div>
+
+    <div class="demo-group" role="group" aria-label="Availability requests">
+        <button bx-button type="button" [disabled]="!asyncEnabled() || availabilityLoading()" (click)="picker.reloadSlots()">Reload times</button>
+        <button bx-button type="button" variant="tonal" color="danger" [disabled]="!asyncEnabled() || availabilityLoading()" (click)="failRequest(picker)">
+            Fail next request now
+        </button>
+    </div>
+
+    <bx-time-picker
+        #picker
+        label="Meeting time"
+        loadErrorMessage="The mock request failed. Retry to load these times."
+        hint="Type a time, use the wheel, or choose an option in the list. Enable async availability to exercise loading and retry."
+        [pickerIcon]="dropdownIcon() ? 'chevron-down' : 'clock'"
+        [options]="customChoices() ? timeOptions : undefined"
+        [interval]="interval()"
+        [min]="businessHours() ? '09:00' : null"
+        [max]="businessHours() ? '17:00' : null"
+        [timePresentation]="presentation()"
+        [hourCycle]="hourCycle()"
+        [precision]="precision()"
+        [minuteStep]="minuteStep()"
+        [loopColumns]="loop()"
+        [disabledIntervals]="blockLunch() ? disabledIntervals : []"
+        [showTimeZone]="showTimeZone()"
+        [nowLabel]="showNow() ? 'Select now' : undefined"
+        [resolver]="asyncEnabled() ? resolver : undefined"
+        [(value)]="value"
+        (valueCommit)="onCommit($event)" />
+
+    <p class="demo-status" role="status" aria-live="polite">{{ committed() }}</p>
+</section>

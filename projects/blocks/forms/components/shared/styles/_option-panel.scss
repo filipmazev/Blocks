@@ -1,6 +1,0 @@
-@mixin opaque-option-panel {
-    background: var(--bx-glass-surface, var(--bx-bg-surface)) !important;
-    // stylelint-disable-next-line property-no-vendor-prefix
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-}

@@ -45,6 +45,8 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
   let motion: ISpringMotion | undefined;
   let destroyed = false;
   let pointerActive = false;
+  let pointerX: number | undefined;
+  let pointerY: number | undefined;
 
   const preference = view.matchMedia('(prefers-reduced-motion: reduce)');
   const reduced = (): boolean => {
@@ -65,8 +67,11 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     return eligible(found) ? found : null;
   };
 
-  const measure = (): void => {
+  const measure = (snap = false): void => {
     if (destroyed) return;
+
+    // A virtual viewport can restore its own positioning after replacing rows.
+    if (view.getComputedStyle(root).position === 'static') root.style.position = 'relative';
 
     if (!eligible(active) || !active.offsetWidth || !active.offsetHeight) {
       surface.style.visibility = 'hidden';
@@ -78,14 +83,15 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
 
     const bounds = active.getBoundingClientRect();
     const origin = root.getBoundingClientRect();
-    const target = [
-      bounds.left - origin.left + root.scrollLeft - root.clientLeft,
-      bounds.top - origin.top + root.scrollTop - root.clientTop,
-      bounds.width,
-      bounds.height
-    ];
+    const target = [bounds.left - origin.left - root.clientLeft, bounds.top - origin.top - root.clientTop, bounds.width, bounds.height];
     const first = !motion;
 
+    // Keep the clipped layer over the viewport without contributing to its scrollable extent.
+    paintMotionStyles(layer, {
+      transform: `translate3d(${root.scrollLeft}px, ${root.scrollTop}px, 0)`,
+      width: `${root.clientWidth}px`,
+      height: `${root.clientHeight}px`
+    });
     surface.style.setProperty('--bx-selection-row-surface', active.matches('.is-danger') ? 'var(--bx-bg-danger-hover)' : 'var(--bx-bg-element-hover)');
     motion ??= createSpringMotion(
       target,
@@ -104,7 +110,7 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
       },
       MOTION_PRESETS.smooth
     );
-    motion.retarget(target, first || reduced() || pointerActive);
+    motion.retarget(target, snap || first || reduced() || pointerActive);
     surface.style.visibility = 'visible';
   };
 
@@ -113,6 +119,9 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
 
     return focused?.matches(':focus-visible') ? focused : row(root.querySelector('[aria-selected="true"]'));
   };
+
+  const underPointer = (): HTMLElement | null =>
+    pointerX === undefined || pointerY === undefined ? null : row(root.ownerDocument.elementFromPoint(pointerX, pointerY));
 
   const focus = (event: FocusEvent): void => {
     const focused = row(event.target);
@@ -130,6 +139,8 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
 
     const next = row(event.target);
 
+    pointerX = event.clientX;
+    pointerY = event.clientY;
     hovered = next;
 
     if (next === active && pointerActive) return;
@@ -143,7 +154,10 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     // Leaving a hovered list restores its selected/focused row without sweeping across other options.
     pointerActive = event.type === 'pointerleave' || !row(event.target)?.matches(':focus-visible');
 
-    if (event.type === 'pointerleave') hovered = null;
+    if (event.type === 'pointerleave') {
+      hovered = null;
+      pointerX = pointerY = undefined;
+    }
 
     active = fallback();
     measure();
@@ -154,11 +168,27 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     measure();
   };
 
-  const observer = view.ResizeObserver ? new view.ResizeObserver(measure) : undefined;
+  const scroll = (event: Event): void => {
+    const target = event.target;
+
+    if (target !== root.ownerDocument && target !== root && !(target instanceof view.Element && target.contains(root))) return;
+
+    if (pointerActive) {
+      hovered = underPointer();
+      active = hovered ?? fallback();
+    }
+
+    measure(true);
+  };
+
+  const observer = view.ResizeObserver ? new view.ResizeObserver(() => measure()) : undefined;
   const mutation = new view.MutationObserver((records) => {
     if (!records.some((record) => !layer.contains(record.target))) return;
 
-    if (!eligible(active) || records.some((record) => record.attributeName === 'aria-selected')) {
+    if (pointerActive && pointerX !== undefined) {
+      hovered = underPointer();
+      active = hovered ?? fallback();
+    } else if (!eligible(active) || records.some((record) => record.attributeName === 'aria-selected')) {
       active = pointerActive && eligible(hovered) ? hovered : fallback();
     }
 
@@ -166,9 +196,11 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
   });
 
   root.addEventListener('pointerover', over, { passive: true });
+  root.addEventListener('pointermove', over, { passive: true });
   root.addEventListener('pointerleave', leave, { passive: true });
   root.addEventListener('focusin', focus);
   root.addEventListener('focusout', leave);
+  root.ownerDocument.addEventListener('scroll', scroll, { capture: true, passive: true });
   preference.addEventListener('change', onPreference);
   root.ownerDocument.addEventListener(configurationEvent, onPreference);
   observer?.observe(root);
@@ -191,9 +223,11 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
       observer?.disconnect();
       mutation.disconnect();
       root.removeEventListener('pointerover', over);
+      root.removeEventListener('pointermove', over);
       root.removeEventListener('pointerleave', leave);
       root.removeEventListener('focusin', focus);
       root.removeEventListener('focusout', leave);
+      root.ownerDocument.removeEventListener('scroll', scroll, true);
       preference.removeEventListener('change', onPreference);
       root.ownerDocument.removeEventListener(configurationEvent, onPreference);
       layer.remove();

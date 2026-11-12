@@ -1,3 +1,5 @@
+import type { DatePickerValue, IsoTime } from '@filip.mazev/blocks/core';
+
 export interface IRegistrationData {
   project: string;
   email: string;
@@ -6,6 +8,8 @@ export interface IRegistrationData {
   teamSize: number | null;
   destination: string;
   categories: string[];
+  dateRange: DatePickerValue;
+  meetingTime: IsoTime | null;
   plan: string;
   terms: boolean;
   notifications: boolean;

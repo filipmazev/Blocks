@@ -165,8 +165,9 @@
     position: absolute;
     top: 50%;
     left: calc(
-        var(--bx-slider-thumb-size, #{spacing(6)}) / 2 -
-            1px - var(--bx-slider-lens-inset) - var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) * var(--bx-slider-lens-travel)
+        var(--bx-slider-thumb-size, #{spacing(6)}) /
+            2 - var(--bx-slider-thumb-border-width, 1px) - var(--bx-slider-lens-inset) - var(--bx-slider-physical-position, var(--bx-slider-position, 0.5)) *
+            var(--bx-slider-lens-travel)
     );
     width: var(--bx-slider-lens-width);
     height: calc(#{spacing(2)} * var(--bx-slider-magnification, 1.5));
@@ -189,7 +190,7 @@
 input.bx-slider {
     appearance: none;
     width: 100%;
-    height: spacing(10);
+    height: slider-control-height();
     margin: 0;
     padding: 0;
     border: 0;
@@ -318,4 +319,53 @@ input.bx-slider {
 
 .bx-slider-value-label[hidden] {
     display: none;
+}
+
+.bx-slider-optic {
+    --bx-refraction-strength: 0.35;
+    --bx-glass-surface: transparent;
+    --bx-glass-opaque-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-edge: transparent;
+    --bx-glass-min-opacity: 0;
+    --bx-glass-opacity: 0;
+    --bx-refraction-min-opacity: 0;
+    --bx-refraction-min-blur: 0px;
+    --bx-glass-blur: 0px;
+    --bx-glass-shadow: none;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-decoration-opacity: 0;
+
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 0;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 2;
+
+    &:not([data-bx-refraction='true']),
+    &[hidden] {
+        display: none;
+    }
+}
+
+@media (forced-colors: none) {
+    /* IMPORTANT: Blink clips transformed rounded overflow at the padding edge when a border is present, flattening the held lens at its poles. */
+    .bx-slider-thumb:has(> .bx-slider-optic:not([hidden])) {
+        --bx-slider-thumb-border-width: 0px;
+
+        border-width: 0;
+    }
+
+    .bx-slider-thumb:has(> .bx-slider-optic[data-bx-refraction='true']:not([hidden])) {
+        border-color: transparent;
+        box-shadow: none;
+        transition: none;
+
+        &::after {
+            opacity: 0;
+            transition: none;
+        }
+    }
 }

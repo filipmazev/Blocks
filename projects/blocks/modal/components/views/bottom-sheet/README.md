@@ -1,6 +1,6 @@
-# Bottom sheet
+# Bottom drawer
 
-A bottom-aligned modal surface suitable for compact actions and mobile layouts.
+A bottom-aligned drawer surface suitable for compact actions and mobile layouts.
 
 ## Import
 
@@ -14,7 +14,7 @@ Add the standalone component or directive to your component's `imports`.
 
 ```html
 <!-- Open from an action in your template -->
-<button bx-button (click)="openModal()">Open bottom sheet</button>
+<button bx-button (click)="openModal()">Open bottom drawer</button>
 ```
 
 ## API
@@ -24,7 +24,7 @@ bottom-sheet; `animate`, `hasBackdrop`, and `showCloseButton` customize presenta
 
 ```ts
 this.modalService.open(DialogContent, {
-    header: { text: 'Bottom sheet' },
+    header: { text: 'Bottom drawer' },
     style: { layout: 'bottom-sheet', hasBackdrop: true }
 });
 ```

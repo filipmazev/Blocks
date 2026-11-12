@@ -1,0 +1,397 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    inline-size: 100%;
+}
+
+.bx-date-field {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.bx-date-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 3.85rem;
+    box-sizing: border-box;
+    padding: 0;
+    padding-inline-end: spacing(3);
+    border: 0;
+    border-bottom: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-strong);
+    border-radius: radius(sm) radius(sm) 0 0;
+    background-color: var(--bx-bg-neutral);
+    color: var(--bx-text-heading);
+    font: inherit;
+    font-size: 1rem;
+    text-align: start;
+    cursor: pointer;
+    outline: none;
+
+    &:hover:not(:disabled, .is-readonly) {
+        background-color: var(--bx-bg-neutral-hover);
+    }
+
+    &:disabled {
+        background-color: var(--bx-bg-element);
+        opacity: 0.7;
+        border-bottom-style: dotted;
+        cursor: not-allowed;
+    }
+
+    &.is-readonly {
+        cursor: default;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 2px;
+        background-color: var(--bx-primary);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.2s #{motion-easing(smooth)};
+        z-index: 2;
+    }
+
+    &:focus-within:not(.is-disabled, .is-readonly)::after,
+    &.is-open::after,
+    &:focus-visible:not(:disabled)::after {
+        transform: scaleX(1);
+    }
+
+    &.is-invalid {
+        border-bottom-color: var(--bx-border-danger);
+    }
+
+    &.is-invalid::after {
+        background-color: var(--bx-border-danger);
+        transform: scaleX(1);
+    }
+
+    &.is-outline {
+        border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
+        border-radius: radius(md);
+        background-color: transparent;
+    }
+
+    &.is-range-endpoint {
+        min-inline-size: 0;
+        flex: 1 1 0;
+    }
+}
+
+.bx-date-trigger[data-bx-surface] {
+    @include glass-field;
+
+    &.is-open:not(:disabled) {
+        outline: none;
+    }
+
+    &.is-readonly {
+        border-bottom-style: dashed;
+        color: var(--bx-text-secondary);
+    }
+
+    &.is-disabled {
+        background-color: var(--bx-bg-element);
+        opacity: 0.7;
+        border-bottom-style: dotted;
+        cursor: not-allowed;
+    }
+}
+
+.bx-date-trigger[data-bx-surface].is-invalid {
+    @include invalid-glass-field;
+}
+
+.bx-date-value {
+    block-size: 3.85rem;
+    flex: 1;
+    min-inline-size: 0;
+    box-sizing: border-box;
+    padding: spacing(6) 0 spacing(2) spacing(3);
+    min-block-size: 3.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+
+    &.is-placeholder {
+        color: var(--bx-text-secondary);
+    }
+}
+
+.bx-date-trigger-icon {
+    flex-shrink: 0;
+    color: var(--bx-text-secondary);
+}
+
+.bx-date-trigger-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: spacing(6);
+    block-size: spacing(6);
+    padding: 0;
+    border: 0;
+    border-radius: radius(sm);
+    background: transparent;
+    color: var(--bx-text-secondary);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        color: var(--bx-text-primary);
+        background: var(--bx-bg-element-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 0;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}
+
+@include picker-field-label('.bx-date-trigger');
+
+.bx-field-required {
+    margin-inline-start: 0.125rem;
+    color: var(--bx-text-secondary);
+}
+
+.bx-date-input {
+    flex: 1;
+    min-inline-size: 0;
+    box-sizing: border-box;
+    padding: spacing(6) 0 spacing(2) spacing(3);
+    min-block-size: 3.85rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    outline: none;
+
+    &::placeholder {
+        color: var(--bx-text-secondary);
+    }
+}
+
+.bx-date-field.has-clear .bx-date-input,
+.bx-date-field.has-clear .bx-date-value {
+    padding-inline-end: spacing(8);
+}
+
+.bx-date-clear.bx-btn {
+    @include field-clear-action;
+
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(1px + #{spacing(3)} + #{spacing(4)} + #{spacing(2)});
+    transform: translateY(-50%);
+    z-index: 3;
+}
+
+.bx-date-range-fields {
+    display: flex;
+    align-items: center;
+    gap: spacing(1);
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.bx-date-range-separator {
+    flex-shrink: 0;
+    color: var(--bx-text-secondary);
+}
+
+.bx-date-trigger.is-editable.is-range {
+    .bx-date-input {
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
+    .bx-date-range-separator {
+        padding-inline: spacing(1);
+    }
+
+    .bx-date-input:nth-of-type(2) {
+        padding-inline-start: spacing(1);
+    }
+}
+
+.bx-date-panel {
+    display: block;
+    inline-size: min(94vw, 44rem);
+    max-inline-size: 100%;
+    box-sizing: border-box;
+    border-radius: radius(lg);
+
+    &.is-drawer {
+        inline-size: 100%;
+    }
+}
+
+.bx-date-panel-content[data-bx-surface] {
+    @include dropdown-material;
+
+    --bx-glass-radius: #{radius(lg)};
+    --bx-glass-surface: var(--bx-bg-surface);
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-edge: var(--bx-border-default);
+    --bx-glass-shadow: #{shadow(md)};
+}
+
+.bx-date-panel-content {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    box-sizing: border-box;
+    background: var(--bx-glass-surface, var(--bx-bg-surface));
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge, var(--bx-border-default));
+    border-radius: radius(lg);
+    box-shadow: shadow(sm);
+    overflow: hidden;
+    max-block-size: min(86dvh, 48rem);
+
+    &.is-drawer {
+        @include picker-drawer-content;
+
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        max-block-size: min(82dvh, 44rem);
+    }
+}
+
+.bx-date-panel-body {
+    display: flex;
+    align-items: stretch;
+    gap: spacing(2);
+    padding: spacing(3);
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: hidden;
+}
+
+.bx-date-presets {
+    // IMPORTANT: Preset contents must not determine the panel height; their list scrolls within the adjacent picker height.
+    contain: size;
+    display: flex;
+    flex-direction: column;
+    gap: spacing(1);
+    inline-size: 11.5rem;
+    flex-shrink: 0;
+    border-inline-end: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-subtle);
+    padding-inline-end: spacing(2);
+    min-block-size: 0;
+    max-block-size: 100%;
+    overflow: hidden;
+}
+
+.bx-date-calendar-column {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(2);
+    flex: 1;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+@include respond-down(md) {
+    .bx-date-panel-body {
+        flex-direction: column;
+        padding: spacing(2);
+        overflow-y: auto;
+    }
+
+    .bx-date-presets {
+        contain: none;
+        inline-size: 100%;
+        max-block-size: none;
+        overflow: visible;
+        border-inline-end: 0;
+        border-block-end: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-subtle);
+        padding-inline-end: 0;
+        padding-block-end: spacing(2);
+    }
+
+    .bx-date-calendar-column {
+        overflow: visible;
+    }
+}
+
+.bx-date-trigger:not(.has-label) .bx-date-value {
+    display: flex;
+    align-items: center;
+    padding-block: spacing(3);
+}
+
+.bx-date-trigger:disabled,
+.bx-date-trigger.is-disabled {
+    pointer-events: none;
+}
+
+.bx-date-trigger:not(.has-label) .bx-date-input {
+    padding-block: spacing(3);
+}
+
+.bx-date-range-separator.is-concealed {
+    visibility: hidden;
+}
+
+.bx-selected-tags {
+    display: inline-flex;
+    align-items: center;
+    gap: spacing(1);
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    overflow: hidden;
+
+    bx-tag {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .bx-overflow-tag {
+        flex: 0 0 auto;
+    }
+}
+
+.bx-date-panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: spacing(2) spacing(3);
+    border-block-start: 1px solid var(--bx-border-subtle);
+    flex-shrink: 0;
+}
+
+.bx-date-endpoint-value {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: inherit;
+}
+
+.bx-date-range-fields .bx-date-trigger-icon-button {
+    margin-inline-end: spacing(1);
+}

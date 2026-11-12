@@ -12,7 +12,7 @@
     --bx-slider-stretch-limit: clamp(0, (var(--bx-range-end) - var(--bx-range-start)) * 0.5, 0.065);
 
     position: relative;
-    block-size: spacing(10);
+    block-size: slider-control-height();
     inline-size: 100%;
 }
 

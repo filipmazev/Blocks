@@ -1,0 +1,42 @@
+@use 'core/styles/helpers' as *;
+
+.picker-demo {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(3);
+    max-inline-size: 60rem;
+
+    > bx-date-picker {
+        max-inline-size: 32rem;
+    }
+
+    h3,
+    h4,
+    p {
+        margin: 0;
+    }
+
+    p {
+        color: var(--bx-text-secondary);
+        max-inline-size: 68ch;
+    }
+}
+
+.demo-group,
+.demo-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing(2);
+    align-items: center;
+}
+
+.demo-status {
+    font-size: 0.875rem;
+    color: var(--bx-text-accent);
+}
+
+.demo-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: spacing(3);
+}

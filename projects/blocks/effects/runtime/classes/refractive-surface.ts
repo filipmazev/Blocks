@@ -1,6 +1,6 @@
 import { SLOTS } from '@effects/runtime/constants/refraction-maps.constants';
 import { rememberStyles } from '@effects/runtime/helpers/dom.helpers';
-import { cachedRefraction, readRadius } from '@effects/runtime/helpers/refraction.helpers';
+import { cachedRefraction, readRadius, readRefractionMagnification, readRefractionStrength } from '@effects/runtime/helpers/refraction.helpers';
 import { createRefractionFilter, layoutRefractionFilter } from '@effects/runtime/helpers/refraction-filter.helpers';
 import { el, layer, setAttr, setBackdrop, setFieldImages, setStyle } from '@effects/runtime/helpers/refraction-svg.helpers';
 
@@ -19,6 +19,8 @@ export class RefractiveSurface {
   private width: number = 0;
   private height: number = 0;
   private radius: number = -1;
+  private strength: number = -1;
+  private magnification: number = -1;
 
   constructor(private readonly host: HTMLElement) {
     const doc = host.ownerDocument;
@@ -63,16 +65,25 @@ export class RefractiveSurface {
     const height = this.host.offsetHeight;
     const radius = readRadius(this.host);
     const style = this.view.getComputedStyle(this.host);
+    const strength = readRefractionStrength(style);
+    const magnification = readRefractionMagnification(style);
 
     for (const side of ['top', 'right', 'bottom', 'left']) {
       setStyle(this.pane, side, `${-(parseFloat(style.getPropertyValue(`border-${side}-width`)) || 0)}px`);
     }
 
-    if (width < 8 || height < 8 || (width === this.width && height === this.height && radius === this.radius)) return;
+    if (
+      width < 8 ||
+      height < 8 ||
+      (width === this.width && height === this.height && radius === this.radius && strength === this.strength && magnification === this.magnification)
+    )
+      return;
 
     this.width = width;
     this.height = height;
     this.radius = radius;
+    this.strength = strength;
+    this.magnification = magnification;
 
     const map = cachedRefraction(Math.min(width, height), radius);
 
@@ -81,7 +92,7 @@ export class RefractiveSurface {
     for (const slot of SLOTS) setAttr(this.filter.tiltTiles[slot], 'href', map.tilt.img[slot]);
 
     setAttr(this.filter.tiltRamp, 'href', map.tiltRamp);
-    layoutRefractionFilter(this.filter, map, width, height);
+    layoutRefractionFilter(this.filter, map, width, height, strength, magnification);
     this.host.style.setProperty('--bx-refraction-r', `${Math.max(0.01, Math.min(radius, width / 2, height / 2))}px`);
   }
 

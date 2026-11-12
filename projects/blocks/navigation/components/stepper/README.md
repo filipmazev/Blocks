@@ -236,32 +236,32 @@ with `showPercentage="false"`.
 
 ### Stepper inputs and models
 
-| Member                 | Type                         | Default / behavior                                   |
-| ---------------------- | ---------------------------- | ---------------------------------------------------- |
-| `mode`                 | `StepperMode`                | `indicator`, `navigation`, `wizard`                  |
-| `steps`                | `readonly IStepDefinition[]` | Omitted for projected definitions                    |
-| `activeStep`           | `model<string \| null>`      | `null`; stable ID with two-way binding               |
-| `variant`              | `StepperVariant`             | `steps`, `segments`, `dots`, `progress`, `cards`     |
-| `size`                 | `StepperSize`                | `md`; also `sm`, `lg`                                |
-| `orientation`          | `StepperOrientation`         | `horizontal`; also `vertical`                        |
-| `responsive`           | `StepperResponsive`          | `scroll`; also `vertical`, `compact`                 |
-| `showLabels`           | `boolean`                    | `true`                                               |
-| `showDescriptions`     | `boolean`                    | `true`                                               |
-| `indicatorInteractive` | `boolean`                    | `false`                                              |
-| `readOnly`, `readonly` | `boolean`                    | `false`; either blocks user/API edits                |
-| `linear`               | `boolean`                    | `true`; requires completed predecessors              |
-| `selectionMode`        | `StepperSelectionMode`       | `internal`; also `controlled`                        |
-| `beforeTransition`     | `StepperGuard`               | Optional application guard                           |
-| `controls`             | `boolean`                    | `true` in wizard mode only                           |
-| `contentPolicy`        | `StepperContentPolicy`       | `retained`; also `eager`, `active`                   |
-| `focusOnChange`        | `boolean`                    | `true` for wizard panels only                        |
-| `completionContent`    | `TemplateRef<unknown>`       | Optional application completion view                 |
-| `progressValue`        | `number`                     | Optional explicit 0–100 completion percentage        |
-| `showPercentage`       | `boolean`                    | `false`; shows the progress counter in either format |
-| `progressFormat`       | `StepperProgressFormat`      | `percentage` (default) or `fraction` (`X/N`)         |
-| `labels`               | `Partial<IStepperLabels>`    | Shared defaults, then English                        |
-| `glassiness`           | Shared `GlassinessMode`      | Inherits global appearance for cards                 |
-| `surfaceEffects`       | `boolean`                    | `true`; interactive step lighting                    |
+| Member                 | Type                         | Default / behavior                                                    |
+| ---------------------- | ---------------------------- | --------------------------------------------------------------------- |
+| `mode`                 | `StepperMode`                | `indicator`, `navigation`, `wizard`                                   |
+| `steps`                | `readonly IStepDefinition[]` | Omitted for projected definitions                                     |
+| `activeStep`           | `model<string \| null>`      | `null`; stable ID with two-way binding                                |
+| `variant`              | `StepperVariant`             | `steps`, `segments`, `dots`, `progress`, `cards`                      |
+| `size`                 | `StepperSize`                | `md`; also `sm`, `lg`                                                 |
+| `orientation`          | `StepperOrientation`         | `horizontal`; also `vertical`                                         |
+| `responsive`           | `StepperResponsive`          | `scroll`; also `vertical`, `compact`                                  |
+| `showLabels`           | `boolean`                    | `true`                                                                |
+| `showDescriptions`     | `boolean`                    | `true`                                                                |
+| `indicatorInteractive` | `boolean`                    | `false`                                                               |
+| `readOnly`, `readonly` | `boolean`                    | `false`; either blocks user/API edits                                 |
+| `linear`               | `boolean`                    | `true`; requires completed predecessors                               |
+| `selectionMode`        | `StepperSelectionMode`       | `internal`; also `controlled`                                         |
+| `beforeTransition`     | `StepperGuard`               | Optional application guard                                            |
+| `controls`             | `boolean`                    | `true` in wizard mode only                                            |
+| `contentPolicy`        | `StepperContentPolicy`       | `retained`; also `eager`, `active`                                    |
+| `focusOnChange`        | `boolean`                    | `true` for wizard panels only                                         |
+| `completionContent`    | `TemplateRef<unknown>`       | Optional application completion view                                  |
+| `progressValue`        | `number`                     | Optional explicit 0–100 completion percentage                         |
+| `showPercentage`       | `boolean`                    | `false`; shows the progress counter in either format                  |
+| `progressFormat`       | `StepperProgressFormat`      | `percentage` (default) or `fraction` (`X/N`)                          |
+| `labels`               | `Partial<IStepperLabels>`    | Shared defaults, then English                                         |
+| `glassiness`           | Shared `GlassinessMode`      | Optional material override; circular selection lenses default to auto |
+| `surfaceEffects`       | `boolean`                    | `true`; interactive step lighting                                     |
 
 ### Step metadata
 
@@ -318,6 +318,9 @@ continuous completion bar above its vertical step list.
 | ----------------------------------- | ----------------------------------------------------------- |
 | `--bx-stepper-marker-size`          | Size preset: 1.75 / 2 / 2.5rem                              |
 | `--bx-stepper-dot-size`             | Size preset: 1.25 / 1.5 / 1.75rem                           |
+| `--bx-stepper-lens-gap`             | Half of shared spacing 3 (6px) outside the selected marker  |
+| `--bx-stepper-magnification`        | `1.3`; backdrop enlargement beneath the circular lens       |
+| `--bx-stepper-lens-border`          | Primary foreground mixed at 18% opacity                     |
 | `--bx-stepper-marker-radius`        | Shared pill radius                                          |
 | `--bx-stepper-thickness`            | Size preset: 0.125 / 0.25 / 0.5rem                          |
 | `--bx-stepper-gap`                  | Size preset: shared spacing 2 / 3 / 4                       |
@@ -334,12 +337,13 @@ continuous completion bar above its vertical step list.
 Step bodies use `BxSurfaceDirective`, global materials and transparency fallbacks. Cards have a persistent neutral surface. Other variants keep transparent
 backgrounds, including selected and hovered steps. Hover feedback emphasizes the marker and underlines its label without moving content. Shared lighting
 attaches to the interactive button, with emitted light positioned at the visible marker for non-card variants and the card surface for cards. Labels and empty
-button space do not extend a marker's light source. Markers and segments do not receive independent glass surfaces. Global Off and accessibility policies take
-precedence over component overrides. Theme and palette changes use semantic CSS variables on mounted instances. Active markers pair the accent fill with its
-on-accent foreground; completed markers use the matching subtle surface. Errors consistently use danger tokens for the marker, feedback and emitted light.
-Decorative outlines and dashed connectors are avoided; keyboard focus retains a visible outline. Horizontal labels are centered below markers, and vertical
-labels align with the marker center. Cards align their text stack to the top with a small marker offset, using the same icon-and-text arrangement as alerts and
-banners. No independent animation or lighting implementation is introduced.
+button space do not extend a marker's light source. Steps and dots share one circular glass lens that travels between committed markers and remains over the
+current marker at rest. Cards retain local marker lenses and in-place feedback. Global Off and accessibility policies take precedence over component overrides.
+When refraction is active, the backing markers are transparent and their icons use semantic foreground colors; solid fallbacks pair accent fills with their
+on-accent foreground. Theme and palette changes update mounted instances. Errors consistently use danger tokens for markers, feedback and emitted light. The
+lens has a subtle neutral contour; keyboard focus retains its separate visible outline. Horizontal labels are centered below markers, and vertical labels align
+with the marker center. Cards align their text stack to the top with a small marker offset, using the same icon-and-text arrangement as alerts and banners. No
+independent animation or lighting implementation is introduced.
 
 Custom labels use `<ng-template bxStepLabel let-step let-index="index" let-status="status">…</ng-template>` inside `bx-step`. Keep content non-interactive and
 preserve a meaningful plain `label`, which remains the button's accessible name. The custom label is decorative to avoid duplicated accessible names.
@@ -376,6 +380,15 @@ The step list scrolls inside a separate wrapper with space below its surfaces fo
 supporting text and keeps the active label. Hidden visual text remains in accessible naming/descriptions. CSS performs responsive layout without browser-only
 state during server rendering. Content wraps for long translations and constrained containers.
 
+The circular lens uses the shared optical renderer. `--bx-stepper-magnification` defaults to `1.3` and enlarges the actual backdrop beneath the lens, including
+icons and connectors during travel. Icons keep their ordinary size until covered; there is no separate active-icon scale. Hit targets and layout stay fixed. The
+lens extends 6px beyond the marker through `--bx-stepper-lens-gap`, retaining some icon refraction without crowding the optical rim. Its subtle neutral outline
+is configurable with `--bx-stepper-lens-border`.
+
+While refraction is active, the backing markers omit decorative borders, rims and shadows so those details cannot be refracted into artifacts. Ordinary and
+accessibility fallback indicators retain their state contours. Refraction has no added accent wash and remains subject to `glassiness`, global baseline/Off,
+browser support and accessibility preferences. Segment indicators preserve their solid continuous fills.
+
 ### Material and motion pilot
 
 Markers and connectors receive environmental lighting through the existing surface engine. Circular indicators reuse its rim, material and pressure response;
@@ -386,13 +399,14 @@ keeping its light-mode rim distinct from the marker's resting depth. Segment tra
 their existing material remains bright. Emission follows the visible segment surface. Error contours take precedence over cached environmental rim tint, and
 committed status changes urgently refresh marker lighting.
 
-A persistent selection accent travels between the committed positions, interpolating both axes and dimensions. It surrounds circular/segment markers and adapts
-to progress headers, including vertical and responsive layouts. Cards instead animate their own border and rim lighting in place; no accent travels across the
-unconnected space between cards. Velocity adds a small deformation along the travel axis. Connector completion fills independently of active position, so
-visiting a step never implies completing it. Circular indicators compress on press and recover on the shared spring. Rapid navigation retargets existing motion
-rather than restarting it. Container resizes, orientation and presentation changes reposition the accent without animating, so it never trails its marker;
-measurements use layout geometry, keeping the accent centered while an ancestor scales during an entrance transition. Rejected guards and unconfirmed controlled
-requests leave the selection accent at the committed step.
+A persistent selection surface travels between committed positions, interpolating both axes and dimensions. For steps and dots it is the same refracting lens at
+rest and in motion; segment and progress variants retain their own selection treatment. The shared fluid spring runs about 12% more slowly while preserving its
+damping ratio, ease-in/ease-out, bounded squash/stretch and interruption behavior. Vertical and responsive layouts use the same controller. Cards instead
+animate their own border and rim lighting in place; no accent travels across the unconnected space between cards. Velocity adds a small deformation along the
+travel axis. Connector completion fills independently of active position, so visiting a step never implies completing it. Circular indicators compress on press
+and recover on the shared spring. Rapid navigation retargets existing motion rather than restarting it. Container resizes, orientation and presentation changes
+reposition the accent without animating, so it never trails its marker; measurements use layout geometry, keeping the accent centered while an ancestor scales
+during an entrance transition. Rejected guards and unconfirmed controlled requests leave the selection accent at the committed step.
 
 Live reduced motion snaps the accent and completion fill and removes indicator deformation. Reduced transparency retains the shared opaque material fallback
 independently: the traveling accent uses a soft opaque tint, preserving the contrast of the solid current marker and its label. Forced colors retain the

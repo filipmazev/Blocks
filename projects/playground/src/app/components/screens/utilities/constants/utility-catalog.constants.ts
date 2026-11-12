@@ -54,5 +54,14 @@ export const UTILITY_EXAMPLES: readonly IUtilityExample[] = [
     icon: 'layers',
     readme: 'projects/playground/src/app/components/screens/utilities/components/overlay-positioning/README.md',
     loadComponent: () => import('@playground/components/screens/utilities/components/overlay-positioning/overlay-positioning').then((m) => m.OverlayPositioning)
+  },
+  {
+    id: 'date-time',
+    title: 'Date and time conversions',
+    description: 'Convert civil dates, zoned date-times, .NET/ISO values and Unix timestamps, and parse natural-language input deterministically.',
+    symbol: 'dateTimeToInstant(), parseDotNetDateValue()',
+    icon: 'calendar-clock',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/date-time/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/date-time/date-time').then((m) => m.DateTimeUtility)
   }
 ];

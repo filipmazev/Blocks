@@ -1,0 +1,174 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+    flex: 1 1 0;
+}
+
+.bx-wheel {
+    position: relative;
+    display: block;
+    min-inline-size: 0;
+    user-select: none;
+    border: 0;
+}
+
+.bx-wheel-viewport {
+    position: relative;
+    overflow: hidden;
+    border-radius: radius(md);
+    outline: none;
+    cursor: grab;
+    touch-action: pan-x;
+    perspective: 48rem;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-accent);
+        outline-offset: 2px;
+    }
+
+    .bx-wheel.is-dragging & {
+        cursor: grabbing;
+    }
+
+    .bx-wheel.is-disabled & {
+        cursor: default;
+        opacity: 0.6;
+    }
+}
+
+.bx-wheel-base {
+    position: absolute;
+    inset: 0;
+    mask-image: linear-gradient(
+        to bottom,
+        black var(--bx-wheel-center-offset),
+        transparent var(--bx-wheel-center-offset),
+        transparent calc(var(--bx-wheel-center-offset) + var(--bx-wheel-item-height)),
+        black calc(var(--bx-wheel-center-offset) + var(--bx-wheel-item-height))
+    );
+}
+
+.bx-wheel-track {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    transition: none;
+    will-change: transform;
+    transform-style: preserve-3d;
+}
+
+.bx-wheel-option,
+.bx-wheel-lens-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--bx-text-secondary);
+    font: inherit;
+    font-size: 1.125rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    opacity: 0.55;
+
+    &.is-selected {
+        color: var(--bx-text-primary);
+        font-weight: 600;
+        opacity: 1;
+    }
+
+    &.is-disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+        text-decoration: line-through;
+    }
+}
+
+.bx-wheel-band {
+    --bx-glass-surface: var(--bx-wheel-band-background, transparent);
+    --bx-glass-opaque-surface: var(--bx-bg-element);
+    --bx-glass-text: var(--bx-text-primary);
+    --bx-glass-edge: transparent;
+    --bx-glass-opacity: var(--bx-wheel-band-opacity, 0);
+    --bx-refraction-min-blur: 0px;
+    --bx-glass-blur: 0px;
+    --bx-refraction-min-opacity: 0;
+    --bx-glass-min-opacity: 0;
+    --bx-glass-radius: #{radius(md)};
+    --bx-glass-decoration-opacity: 0;
+    --bx-glass-rim-visibility: 0;
+    --bx-glass-rim-opacity: 1;
+    --bx-glass-shadow: none;
+
+    position: absolute;
+    inset-inline: spacing(1);
+    inset-block-start: 50%;
+    block-size: 2.5rem;
+    translate: 0 -50%;
+    border-radius: var(--bx-glass-radius);
+    border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge);
+    background: var(--bx-glass-opaque-surface);
+    outline: 1px solid var(--bx-wheel-band-border, color-mix(in srgb, var(--bx-text-primary) 18%, transparent));
+    outline-offset: -1px;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+
+    &[data-bx-refraction='true'] {
+        z-index: 3;
+    }
+}
+
+.bx-wheel.is-disabled .bx-wheel-band {
+    --bx-glass-surface: var(--bx-bg-element);
+    --bx-glass-edge: var(--bx-border-subtle);
+
+    background: var(--bx-bg-element);
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+    .bx-wheel-band {
+        background: var(--bx-bg-element);
+        border-color: var(--bx-border-strong);
+    }
+}
+
+.bx-wheel-magnifier {
+    position: absolute;
+    inset-inline: spacing(1);
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    overflow: hidden;
+    border-radius: radius(md);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bx-wheel-lens-content {
+    block-size: 100%;
+    transform: scale(var(--bx-wheel-magnification, 1.3));
+    transform-origin: center;
+}
+
+.bx-wheel-lens-track {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+}
+
+.bx-wheel-lens-option {
+    flex: 0 0 auto;
+    opacity: 1;
+}
+
+@media (forced-colors: active) {
+    .bx-wheel-band {
+        z-index: 0;
+    }
+}

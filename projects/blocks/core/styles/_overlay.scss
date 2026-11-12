@@ -31,3 +31,52 @@
         }
     }
 }
+
+.bx-drawer-overlay-pane {
+    display: block;
+    inline-size: min(100%, 34rem);
+    max-inline-size: 100vw;
+    pointer-events: none;
+
+    bx-bottom-drawer {
+        display: block;
+        pointer-events: none;
+    }
+
+    .bx-drawer {
+        pointer-events: auto;
+    }
+}
+
+@include respond-down(md) {
+    .bx-drawer-overlay-pane {
+        inline-size: 100%;
+    }
+}
+
+.bx-drawer-backdrop {
+    background: var(--bx-modal-backdrop-fill, var(--bx-modal-backdrop-background, rgb(0 0 0 / 32%)));
+    backdrop-filter: blur(var(--bx-modal-backdrop-blur, 8px));
+    animation: bx-drawer-backdrop-in 200ms ease-out;
+}
+
+@keyframes bx-drawer-backdrop-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+    .bx-drawer-backdrop {
+        backdrop-filter: none;
+        background: var(--bx-modal-backdrop-fill, rgb(0 0 0 / 60%));
+    }
+}
+
+.bx-picker-overlay-pane {
+    max-inline-size: min(96vw, 44rem);
+}

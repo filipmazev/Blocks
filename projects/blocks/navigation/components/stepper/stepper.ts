@@ -53,7 +53,7 @@ import { LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
 
 import { Step } from '@navigation/components/step/step';
 import { STEPPER_LABELS } from '@navigation/constants/stepper.constants';
-import { STEPPER_EMISSION_STRENGTH } from '@navigation/constants/stepper-motion.constants';
+import { STEPPER_EMISSION_STRENGTH, STEPPER_SELECTION_SPRING } from '@navigation/constants/stepper-motion.constants';
 import { isStepPending, isStepValid } from '@navigation/helpers/stepper.helpers';
 import { StepperWorkflowService } from '@navigation/services/stepper-workflow.service';
 import { BX_STEPPER_DEFAULTS } from '@navigation/tokens/stepper-defaults.token';
@@ -148,6 +148,7 @@ export class Stepper {
     ) as Record<keyof IStepperLabels, string>;
   });
   protected readonly interactive: Signal<boolean> = computed(() => this.mode() !== 'indicator' || this.indicatorInteractive());
+  protected readonly hasTravelingLens: Signal<boolean> = computed(() => this.variant() === 'steps' || this.variant() === 'dots');
 
   protected readonly emissionStrength: typeof STEPPER_EMISSION_STRENGTH = STEPPER_EMISSION_STRENGTH;
 
@@ -289,7 +290,7 @@ export class Stepper {
   public readonly showPercentage: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /** Translatable labels; individual instance values override BX_STEPPER_DEFAULTS and English defaults. */
   public readonly labels: InputSignal<Partial<IStepperLabels>> = input<Partial<IStepperLabels>>({});
-  /** Card surface glass override; omission inherits application appearance. Global accessibility and appearance policies take precedence. */
+  /** Glass refraction override; selected-marker lenses default to auto, while card surfaces retain their existing default. Global baseline, Off and accessibility policies take precedence. */
   public readonly glassiness: InputSignal<GlassinessMode | undefined> = input<GlassinessMode>();
   /** Enables shared surface interaction lighting for interactive steps. Defaults to true. */
   public readonly surfaceEffects: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
@@ -602,7 +603,7 @@ export class Stepper {
     const layout = `${this.variant()}:${view.getComputedStyle(list).flexDirection}`;
     const size = `${style.width}:${style.height}`;
     const selection = this.selectedStep()?.id ?? null;
-    const padding = this.variant() === 'progress' ? 0 : 3;
+    const padding = this.hasTravelingLens() ? Math.max(0, parseFloat(view.getComputedStyle(surface).paddingTop) || 0) : this.variant() === 'progress' ? 0 : 3;
     const geometry = [
       (bounds.left - origin.left) / scale - padding,
       (bounds.top - origin.top) / scale - padding,
@@ -626,7 +627,7 @@ export class Stepper {
           true
         );
       },
-      MOTION_PRESETS.fluid
+      STEPPER_SELECTION_SPRING
     );
     // A changed step animates; a resize or presentation change snaps so the accent never trails its marker.
     this.selectionMotion.retarget(

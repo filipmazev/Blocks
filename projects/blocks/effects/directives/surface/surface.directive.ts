@@ -1,7 +1,7 @@
 import type { InputSignal, InputSignalWithTransform } from '@angular/core';
 
 import { isPlatformBrowser } from '@angular/common';
-import { AfterViewInit, DestroyRef, Directive, effect, ElementRef, inject, input, NgZone, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, booleanAttribute, DestroyRef, Directive, effect, ElementRef, inject, input, NgZone, PLATFORM_ID } from '@angular/core';
 
 import { BxA11yService } from '@filip.mazev/blocks/core';
 import { GlassinessMode, GlassQuality, mountSurface, SurfaceOptions } from '@filip.mazev/blocks/effects/runtime';
@@ -34,6 +34,11 @@ export class BxSurfaceDirective implements AfterViewInit {
   });
   /** Opt this surface into SVG refraction; omitted surfaces retain the existing material. Global Off and accessibility settings still win. */
   public readonly bxSurfaceGlassiness: InputSignal<GlassinessMode | undefined> = input<GlassinessMode | undefined>();
+  /**
+   * Allow this explicitly glassy surface to refract local content inside a parent material. Defaults to false. Intended for small lenses; application
+   * quality and accessibility preferences still take precedence.
+   */
+  public readonly bxSurfaceLocalRefraction: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
   /**
    * Override material detail for this surface; omission inherits application quality and accessibility limits. Optional; omission leaves the value
    * undefined.
@@ -90,6 +95,7 @@ export class BxSurfaceDirective implements AfterViewInit {
     return {
       translucency: this.bxSurfaceTranslucency(),
       glassiness: this.bxSurfaceGlassiness(),
+      localRefraction: this.bxSurfaceLocalRefraction(),
       quality: this.bxSurfaceQuality(),
       interactive: this.bxSurfaceInteractive(),
       reducedMotion: this.bxA11yService.isReducedMotion(),

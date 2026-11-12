@@ -1,0 +1,229 @@
+<bx-form-field
+    [control]="fieldControl"
+    [inline]="true"
+    [tooltip]="tooltip()"
+    [showLoadingIndicator]="false"
+    [hint]="hint()"
+    [hintEnd]="hintEnd()"
+    [error]="errorText() || error()"
+    [subscriptSizing]="resolvedSubscriptSizing()"
+    [forId]="controlId()">
+    <div class="bx-time-field" [class.has-clear]="showClear()" (focusin)="onFieldFocus()" (focusout)="onFieldBlur($event)">
+        <div
+            bxSurface
+            class="bx-time-trigger is-editable"
+            [class.has-label]="!!label()"
+            [class.is-open]="isOpen()"
+            [class.is-floating]="isFloating()"
+            [class.is-invalid]="showError() || !!errorText()"
+            [class.is-outline]="resolvedAppearance() === 'outline'"
+            [class.is-readonly]="isReadonly()"
+            [class.is-disabled]="effectiveDisabled()"
+            [class.is-keyboard-focused]="keyboardFocused()">
+            @if (label()) {
+                <label class="bx-floating-label" [attr.for]="controlId()"
+                    >{{ resolvedLabel() }}
+                    @if (effectiveRequired() && !resolvedHideRequiredMarker()) {
+                        <span class="bx-field-required" aria-hidden="true">*</span>
+                    }
+                </label>
+            }
+            <input
+                class="bx-time-input"
+                role="combobox"
+                aria-autocomplete="none"
+                type="text"
+                autocomplete="off"
+                aria-haspopup="dialog"
+                [attr.aria-controls]="isOpen() ? controlId() + '-panel' : null"
+                [id]="controlId()"
+                [value]="typedText()"
+                [attr.placeholder]="isFloating() || !label() ? resolvedTimePlaceholder() : ''"
+                [attr.aria-label]="ariaLabel() || resolvedLabel() || resolvedTimePlaceholder()"
+                [attr.aria-describedby]="describedBy()"
+                [attr.aria-expanded]="isOpen()"
+                [attr.aria-invalid]="showError() || !!errorText()"
+                [attr.aria-required]="effectiveRequired()"
+                [attr.aria-busy]="availabilityLoading()"
+                [attr.data-testid]="dataTestId()"
+                [disabled]="effectiveDisabled()"
+                [readOnly]="isReadonly()"
+                (click)="onEditableClick($event)"
+                (input)="onTypedInput($event)"
+                (blur)="onTypedBlur($event)"
+                (keydown)="onTypedKeydown($event)" />
+            @if (availabilityLoading()) {
+                <bx-loading-spinner class="bx-time-trigger-icon" [size]="16" [decorative]="true" />
+            } @else {
+                <button
+                    type="button"
+                    class="bx-time-icon-button"
+                    [disabled]="effectiveDisabled() || isReadonly()"
+                    [attr.aria-label]="resolvedOpenPickerLabel()"
+                    (click)="onTriggerClick($event)">
+                    <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                </button>
+            }
+        </div>
+        @if (showClear()) {
+            <button
+                bx-button
+                type="button"
+                variant="text"
+                class="bx-time-clear"
+                [surfaceEffects]="false"
+                [disabled]="effectiveDisabled()"
+                [attr.aria-label]="resolvedClearLabel()"
+                [bxTooltip]="resolvedClearTooltip()"
+                (click)="clear()">
+                <bx-icon name="x" size="16" [decorative]="true" />
+            </button>
+        }
+    </div>
+
+    <bx-picker-surface
+        panelClass="bx-time-panel"
+        [panelId]="controlId() + '-panel'"
+        [panelWidth]="showMilliseconds() ? 'min(94vw, 30rem)' : 'min(94vw, 22rem)'"
+        [open]="isOpen()"
+        [autoFocus]="false"
+        [presentation]="surfacePresentation()"
+        [origin]="panelOrigin()"
+        [content]="panelTemplate"
+        [ariaLabel]="resolvedLabel() || resolvedTimePlaceholder()"
+        (dismiss)="cancel()" />
+
+    <ng-template #panelTemplate>
+        <div bxSurface data-bx-surface="glass" class="bx-time-panel-content" [bxSurfaceInteractive]="false" [class.is-drawer]="isDrawer()">
+            <div class="bx-time-panel-body">
+                <div class="bx-time-editor" [attr.aria-busy]="availabilityLoading()">
+                    <div class="bx-time-editor-content" [attr.inert]="panelFeedback() ? '' : null" [attr.aria-hidden]="panelFeedback() ? true : null">
+                        @if (timePresentation() === 'wheel') {
+                            <div class="bx-time-wheels">
+                                <bx-time-wheel
+                                    type="hour"
+                                    [options]="wheelColumns().hours"
+                                    [value]="wheelValue('hour')"
+                                    [label]="resolvedHourLabel()"
+                                    [loop]="loopColumns()"
+                                    (valueChange)="onWheelChange('hour', $event)" />
+                                <span class="bx-time-wheel-separator" aria-hidden="true">:</span>
+                                <bx-time-wheel
+                                    type="minute"
+                                    [options]="wheelColumns().minutes"
+                                    [value]="wheelValue('minute')"
+                                    [label]="resolvedMinuteLabel()"
+                                    [loop]="loopColumns()"
+                                    (valueChange)="onWheelChange('minute', $event)" />
+                                @if (showSeconds()) {
+                                    <span class="bx-time-wheel-separator" aria-hidden="true">:</span>
+                                    <bx-time-wheel
+                                        type="second"
+                                        [options]="wheelColumns().seconds"
+                                        [value]="wheelValue('second')"
+                                        [label]="resolvedSecondLabel()"
+                                        [loop]="loopColumns()"
+                                        (valueChange)="onWheelChange('second', $event)" />
+                                }
+                                @if (showMilliseconds()) {
+                                    <span class="bx-time-wheel-separator" aria-hidden="true">.</span>
+                                    <bx-time-wheel
+                                        type="millisecond"
+                                        [options]="wheelColumns().milliseconds"
+                                        [value]="wheelValue('millisecond')"
+                                        [label]="resolvedMillisecondLabel()"
+                                        [loop]="loopColumns()"
+                                        (valueChange)="onWheelChange('millisecond', $event)" />
+                                }
+                                @if (showPeriod()) {
+                                    <bx-time-wheel
+                                        class="bx-time-period-wheel"
+                                        type="period"
+                                        [options]="wheelColumns().periods"
+                                        [value]="wheelValue('period')"
+                                        [label]="resolvedPeriodLabel()"
+                                        [loop]="false"
+                                        (valueChange)="onWheelChange('period', $event)" />
+                                }
+                            </div>
+                        } @else {
+                            <div
+                                #listViewport
+                                class="bx-time-list"
+                                role="listbox"
+                                tabindex="0"
+                                [attr.aria-activedescendant]="listActiveId()"
+                                [attr.aria-label]="resolvedLabel() || resolvedOpenPickerLabel()"
+                                (keydown)="onListKeydown($event, collection)">
+                                <bx-virtual-collection
+                                    #collection
+                                    itemRole="presentation"
+                                    [attr.role]="'presentation'"
+                                    [items]="listOptions()"
+                                    [trackBy]="listTrackBy"
+                                    [config]="listConfig"
+                                    [scrollContainer]="listViewport">
+                                    <ng-template let-time let-index="index" let-count="count" [bxVirtualItem]="collection">
+                                        <button
+                                            type="button"
+                                            role="option"
+                                            tabindex="-1"
+                                            class="bx-time-list-option"
+                                            [id]="controlId() + '-' + time.value"
+                                            [disabled]="time.disabled"
+                                            [attr.aria-posinset]="index + 1"
+                                            [attr.aria-setsize]="count"
+                                            [class.is-selected]="internalValue() === time.value"
+                                            [class.is-active]="listFocusValue() === time.value"
+                                            [attr.aria-selected]="internalValue() === time.value"
+                                            [attr.aria-disabled]="time.disabled"
+                                            [attr.data-time-value]="time.value"
+                                            (click)="onListSelect(time.value)">
+                                            <span>{{ time.label }}</span>
+                                            @if (internalValue() === time.value) {
+                                                <bx-icon name="check" size="16" [decorative]="true" />
+                                            }
+                                        </button>
+                                    </ng-template>
+                                </bx-virtual-collection>
+                            </div>
+                        }
+                    </div>
+                    @if (panelFeedback()) {
+                        <div class="bx-time-feedback">
+                            @if (availabilityLoading()) {
+                                <bx-loading-indicator [size]="20" [label]="resolvedLoadingLabel()" />
+                            } @else if (availabilityError()) {
+                                <div class="bx-time-feedback-message" role="alert">{{ availabilityError() }}</div>
+                                @if (availabilityForPanel()?.retryable !== false) {
+                                    <button bx-button type="button" variant="tonal" color="accent" (click)="retrySlots()">
+                                        <bx-icon name="rotate-cw" size="16" [decorative]="true" />{{ resolvedRetryLabel() }}
+                                    </button>
+                                }
+                            } @else {
+                                <span role="status">{{ resolvedEmptyLabel() }}</span>
+                            }
+                        </div>
+                    }
+                </div>
+                @if (resolvedNowLabel()) {
+                    <div class="bx-picker-shortcuts">
+                        <button type="button" class="bx-picker-shortcut" [disabled]="!canSelectNow()" (click)="selectNow()">{{ resolvedNowLabel() }}</button>
+                    </div>
+                }
+                @if (showTimeZone()) {
+                    <bx-select
+                        appearance="outline"
+                        [label]="resolvedTimeZoneLabel()"
+                        [options]="timeZoneOptions()"
+                        [value]="selectedTimeZone() ?? settings().timeZone"
+                        [isSearchable]="true"
+                        (valueChange)="onTimeZoneSelect($event)" />
+                }
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-content select="bx-error" ngProjectAs="bx-error" />
+    <ng-content select="bx-hint" ngProjectAs="bx-hint" />
+</bx-form-field>

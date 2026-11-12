@@ -42,6 +42,9 @@ library defaults.
 
 ## Appearance and customization
 
+Dropdown backing uses the classic blur and tint with 18 percentage points of extra opacity (about 63.6% at the default appearance). It does not use SVG
+refraction. `--bx-dropdown-opacity` overrides the backing; shared opaque and accessibility preferences remain authoritative.
+
 `--bx-popover-width`, `--bx-popover-max-width`, `--bx-popover-padding`, `--bx-popover-background`, `--bx-popover-color`, `--bx-popover-border`,
 `--bx-popover-radius` and `--bx-popover-shadow`. Use Blocks buttons and fields for controls inside the content. The material wrapper clips decorative layers; a
 separate content region scrolls vertically only when its content exceeds the available viewport.

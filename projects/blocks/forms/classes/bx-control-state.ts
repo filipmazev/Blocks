@@ -26,11 +26,11 @@ import { ErrorDisplayMode, ErrorDisplayPolicy, FloatLabel, FormFieldAppearance, 
 })
 export abstract class BxControlState implements IFormFieldControl, OnInit {
   private readonly textAdapter = inject(BX_I18N, { optional: true });
-  private readonly formSettingsService = inject(FormSettingsService);
   private readonly formGroupDirective = inject(FormGroupDirective, { optional: true, skipSelf: true });
   private readonly ngForm = inject(NgForm, { optional: true, skipSelf: true });
   private readonly focusMonitor = inject(FocusMonitor);
 
+  protected readonly formSettingsService = inject(FormSettingsService);
   protected readonly destroyRef = inject(DestroyRef);
   protected readonly nativeElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 

@@ -3,7 +3,7 @@ import type { ReflectAvail, ReflectionMap, RefractionMap } from '@effects/runtim
 import { AVAIL_STEP, BAKE_SETTLE_MS, BAKE_SLACK_DOWN, BAKE_SLACK_UP, REGION } from '@effects/runtime/constants/refraction.constants';
 import { REFR_FOLD_DEPTH, SLOTS } from '@effects/runtime/constants/refraction-maps.constants';
 import { rememberStyles } from '@effects/runtime/helpers/dom.helpers';
-import { cachedRefraction, readRadius } from '@effects/runtime/helpers/refraction.helpers';
+import { cachedRefraction, readRadius, readRefractionMagnification, readRefractionStrength } from '@effects/runtime/helpers/refraction.helpers';
 import { createRefractionFilter, layoutRefractionFilter } from '@effects/runtime/helpers/refraction-filter.helpers';
 import { buildBevelArcs, buildReflection, reflectionPad, reflectionScale, sliceRect } from '@effects/runtime/helpers/refraction-maps.helpers';
 import { buildField, el, layer, layField, packField, setAttr, setBackdrop, setFieldImages, setStyle } from '@effects/runtime/helpers/refraction-svg.helpers';
@@ -178,7 +178,7 @@ export class DetailedRefractiveSurface {
         for (const node of [causticWrap, pane, fold, glint, rimLayer, cover, tick]) setStyle(node, side, inset);
       }
 
-      if (refr) layoutRefractionFilter(refraction, refr, w, h);
+      if (refr) layoutRefractionFilter(refraction, refr, w, h, readRefractionStrength(style), readRefractionMagnification(style));
 
       if (refl) {
         const reflection = refl;

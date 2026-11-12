@@ -1,6 +1,6 @@
 import type { RefractionMap, Slot } from '@effects/runtime/types/refraction-maps.types';
 
-import { REGION } from '@effects/runtime/constants/refraction.constants';
+import { REFRACTION_MAGNIFICATION_MAPS, REGION } from '@effects/runtime/constants/refraction.constants';
 import { SLOTS, TILT_MULTIPLY } from '@effects/runtime/constants/refraction-maps.constants';
 
 import { refractionScale, sliceRect, tiltGain } from './refraction-maps.helpers';
@@ -19,6 +19,40 @@ export const createRefractionFilter = (defs: SVGSVGElement, id: string) => {
     'color-interpolation-filters': 'sRGB',
     x: -REGION,
     y: -REGION
+  });
+  const magnifyFieldX = el(refrFilter, 'feImage', {
+    x: 0,
+    y: 0,
+    preserveAspectRatio: 'none',
+    href: REFRACTION_MAGNIFICATION_MAPS.x,
+    result: 'magnify-x-field'
+  });
+
+  el(refrFilter, 'feColorMatrix', { in: 'magnify-x-field', type: 'matrix', values: '1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 1', result: 'magnify-x-map' });
+
+  const magnifyX = el(refrFilter, 'feDisplacementMap', {
+    in: 'SourceGraphic',
+    in2: 'magnify-x-map',
+    xChannelSelector: 'R',
+    yChannelSelector: 'G',
+    result: 'magnified-x'
+  });
+  const magnifyFieldY = el(refrFilter, 'feImage', {
+    x: 0,
+    y: 0,
+    preserveAspectRatio: 'none',
+    href: REFRACTION_MAGNIFICATION_MAPS.y,
+    result: 'magnify-y-field'
+  });
+
+  el(refrFilter, 'feColorMatrix', { in: 'magnify-y-field', type: 'matrix', values: '0 0 0 0 0.5  1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 1', result: 'magnify-y-map' });
+
+  const magnifyY = el(refrFilter, 'feDisplacementMap', {
+    in: 'magnified-x',
+    in2: 'magnify-y-map',
+    xChannelSelector: 'R',
+    yChannelSelector: 'G',
+    result: 'magnified'
   });
   const refrField = buildField(refrFilter, 'r');
 
@@ -49,7 +83,9 @@ export const createRefractionFilter = (defs: SVGSVGElement, id: string) => {
   const tiltAdd = el(refrFilter, 'feComposite', { in: 'rx', in2: 'tvec', operator: 'arithmetic', k1: 0, k2: 1, result: 'rxt' });
   const refrDisp = packField(refrFilter, 'rxt', 'ry', 'rmap');
 
-  return { refrFilter, refrField, tiltTiles, tiltRamp, tiltAdd, refrDisp };
+  setAttr(refrDisp, 'in', 'magnified');
+
+  return { refrFilter, refrField, tiltTiles, tiltRamp, tiltAdd, refrDisp, magnifyFieldX, magnifyFieldY, magnifyX, magnifyY };
 };
 
 /**
@@ -59,8 +95,27 @@ export const createRefractionFilter = (defs: SVGSVGElement, id: string) => {
  * @param map - Cached refraction tiles and scaling metadata to render.
  * @param width - Rendered surface width in CSS pixels.
  * @param height - Rendered surface height in CSS pixels.
+ * @param strength - Optical displacement multiplier from zero to one; defaults to one.
+ * @param magnification - Backdrop magnification around the surface center; defaults to one (unchanged size).
  */
-export const layoutRefractionFilter = (filter: ReturnType<typeof createRefractionFilter>, map: RefractionMap, width: number, height: number): void => {
+export const layoutRefractionFilter = (
+  filter: ReturnType<typeof createRefractionFilter>,
+  map: RefractionMap,
+  width: number,
+  height: number,
+  strength = 1,
+  magnification = 1
+): void => {
+  for (const field of [filter.magnifyFieldX, filter.magnifyFieldY]) {
+    setAttr(field, 'width', width);
+    setAttr(field, 'height', height);
+  }
+
+  const zoom = 1 - 1 / magnification;
+
+  setAttr(filter.refrDisp, 'in', magnification > 1 ? 'magnified' : 'SourceGraphic');
+  setAttr(filter.magnifyX, 'scale', width * zoom);
+  setAttr(filter.magnifyY, 'scale', height * zoom);
   layField(filter.refrField, map.slice, width, height);
 
   for (const slot of SLOTS) setRect(filter.tiltTiles[slot], sliceRect(slot, width, height, map.tilt.r, map.tilt.reach));
@@ -75,7 +130,7 @@ export const layoutRefractionFilter = (filter: ReturnType<typeof createRefractio
 
   setAttr(filter.tiltAdd, 'k3', gain);
   setAttr(filter.tiltAdd, 'k4', -gain / 2);
-  setAttr(filter.refrDisp, 'scale', refractionScale(map, width, height));
+  setAttr(filter.refrDisp, 'scale', refractionScale(map, width, height) * strength);
   setAttr(filter.refrFilter, 'width', width + REGION * 2);
   setAttr(filter.refrFilter, 'height', height + REGION * 2);
 };

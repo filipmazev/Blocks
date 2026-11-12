@@ -60,11 +60,17 @@ Import `IAutocompleteOption` from the forms public entry point.
 
 ## Appearance and customization
 
+Dropdown backing uses the classic blur and tint with 18 percentage points of extra opacity (about 63.6% at the default appearance). It does not use SVG
+refraction. `--bx-dropdown-opacity` overrides the backing; shared opaque and accessibility preferences remain authoritative.
+
+Dropdowns share the Blocks glass material. `--bx-dropdown-opacity` overrides the active material opacity; `--bx-dropdown-min-opacity` sets its minimum (default
+`0`). Omit both to follow the theme. Shared opaque appearance, reduced transparency and forced-color fallbacks remain authoritative.
+
 `--bx-autocomplete-panel-height`, `--bx-autocomplete-panel-padding`, `--bx-autocomplete-background`, `--bx-autocomplete-radius` and
 `--bx-autocomplete-completion-color`. The editable control reuses InputField's styling, including its height, typography, spacing, floating label, required
-marker, focus state and filled/outlined appearance. Its inline completion shares the native input's metrics. Results use the same opaque backing and
-backdrop-free option-panel styling as Select/MultiSelect. Options wrap, panel width follows the control, and height is constrained to the viewport. Custom
-option templates receive the option, resolved label, active state and index.
+marker, focus state and filled/outlined appearance. Its inline completion shares the native input's metrics. Results use the same translucent Blocks material as
+Select/MultiSelect and date/time pickers, with shared opaque and reduced-transparency fallbacks. Options wrap, panel width follows the control, and height is
+constrained to the viewport. Custom option templates receive the option, resolved label, active state and index.
 
 ## Behavior and accessibility
 

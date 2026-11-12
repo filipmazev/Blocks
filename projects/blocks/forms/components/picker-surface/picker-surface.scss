@@ -1,0 +1,16 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: contents;
+}
+
+.bx-picker-inline {
+    display: block;
+    min-inline-size: 0;
+    outline: none;
+}
+
+.bx-picker-drawer {
+    display: block;
+    min-inline-size: 0;
+}

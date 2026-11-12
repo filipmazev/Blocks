@@ -20,13 +20,23 @@ WebKit/Blink and Firefox have separate native thumb and track rules. Provide an 
 `--bx-slider-thumb-size` sets the native and decorative thumb diameter together, defaulting to `spacing(6)` from the shared tokens. The decorative thumb's
 position follows the same travel distance as the native thumb.
 
-The bordered glass thumb magnifies and blurs the rail beneath it. Set `--bx-slider-magnification` to adjust the enlargement from its default `1.5`, and
-`--bx-slider-lens-blur` to adjust the lens and backdrop blur from `1.5px`. It uses the current rail colors and value, including RTL, without reading screen
-pixels. Reduced transparency, increased contrast and unsupported backdrop filtering use an opaque thumb; forced colors retains the native thumb.
+The held thumb uses the same clear local refraction as TimeWheel over its magnified rail, without an added tinted backing. The native thumb remains the only hit
+target; the lens adds no input listeners or value prediction. `glassiness` optionally overrides its default `auto` policy. Global Off, baseline and
+accessibility preferences still win. The resting thumb stays opaque.
+
+The held glass thumb magnifies and blurs the rail beneath it. Its native border and shadow are removed while refraction is active and restored at rest. Set
+`--bx-slider-magnification` to adjust the enlargement from its default `1.5`, and `--bx-slider-lens-blur` to adjust the lens and backdrop blur from `1.5px`. It
+uses the current rail colors and value, including RTL, without reading screen pixels. Reduced transparency, increased contrast and unsupported backdrop
+filtering use an opaque thumb; forced colors retains the native thumb.
 
 The held thumb scales past its resting silhouette. That overflow is clipped on the slider's own shell, so a slider inside a scrolling panel never grows a scroll
 container; `--bx-slider-overflow-clip-margin` extends the painted region beyond the shell from its default `0.75rem`, which also keeps the focus ring and any
 enlarged decoration visible.
+
+The control permanently reserves vertical room for its enlarged thumb, including custom `--bx-slider-thumb-size` values, so pressing does not change layout.
+`--bx-slider-vertical-padding` defaults to shared spacing 2 on each side, in addition to the larger of spacing 10 or 1.25 times the thumb diameter. RangeSlider
+uses the same height and rail center. The held thumb has no border width, avoiding an inner rounded-overflow clip that flattened its upper and lower edges in
+Chrome at enlarged zoom. The resting border returns after the pressure spring settles.
 
 ## Labels and ticks
 

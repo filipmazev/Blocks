@@ -81,6 +81,13 @@ Navigation, SidePanel and modal surfaces follow the global material with 45 perc
 default backing is about 90.6% opaque, retaining visible translucency. `--bx-side-nav-material-opacity`, `--bx-top-nav-material-opacity` and
 `--bx-panel-material-opacity` override those component floors. Modal nesting can require an even stronger backing.
 
+Dropdowns keep the classic blur-and-tint material. Their backing adds 18 percentage points to the shared material opacity, reaching about 63.6% at the default
+translucency. `--bx-dropdown-opacity` overrides that default and `--bx-dropdown-min-opacity` optionally sets a floor. Dropdowns, dialogs, drawers and side
+panels do not opt into SVG refraction; their existing disclosure animations are unchanged.
+
+TimeWheel, held slider thumbs and the traveling circular Stepper selection use bounded local glass lenses. They reuse the shared renderer and honor global
+baseline, Off and accessibility preferences.
+
 Glassiness is an opt-in enhancement. Ordinary components keep the existing material. Select individual buttons or custom surfaces:
 
 ```html
@@ -113,6 +120,11 @@ Additional surface variables are `--bx-refraction-blur`, `--bx-refraction-satura
 edge exposure variables. Existing `--bx-glass-blur`, `--bx-glass-surface`, `--bx-glass-opacity` and radius tokens still apply. CSS supplies the live backdrop;
 TypeScript assembles cached grayscale PNG displacement maps in SVG. The Nordify MIT notice is retained. Standard and WebKit declarations are supplied, with
 standard CSS for other engines.
+
+Local optical surfaces can tune `--bx-refraction-strength` from `0` to `1` (default `1`) and `--bx-refraction-magnification` from `1` to `2` (default `1`).
+Strength adjusts edge displacement; magnification enlarges the actual backdrop around the surface center, affecting only content covered by the lens. The
+Stepper uses this to magnify icons and connecting lines during travel without scaling the source content. The default magnification bypasses the additional
+sampling stages. These settings do not opt a surface into refraction or override global appearance/accessibility policy.
 
 The distributed `effects/effects.css` path is unchanged. Its source is `effects/effects.scss`; `npm run tools:build-effects` regenerates it, and normal build
 scripts run this automatically. Explore the selected controls and slider at `/appearance`.
