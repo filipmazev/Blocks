@@ -227,8 +227,8 @@
     min-inline-size: 0;
     flex: 1;
 
-    .mock-stack {
-        flex: 1;
+    &.no-flex {
+        flex: none;
     }
 }
 

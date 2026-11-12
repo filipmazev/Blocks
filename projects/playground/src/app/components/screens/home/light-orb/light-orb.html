@@ -1,8 +1,10 @@
 <div class="orb-controls" [attr.data-bx-reduced-motion]="isReducedMotion()">
-    <p id="orb-instructions" class="orb-message" role="status"><span class="mood-dot" aria-hidden="true" [attr.data-mood]="mood()"></span>{{ message() }}</p>
     <span
         class="orb-home-action"
         placement="top"
+        [class.is-visible]="!isOrbHome()"
+        [attr.inert]="isOrbHome() ? '' : null"
+        [attr.aria-hidden]="isOrbHome()"
         [bxTooltip]="
             mood() === 'danger'
                 ? 'The orb needs a moment to cool down before returning to its pod in the theme card.'
@@ -14,14 +16,15 @@
             color="grayscale"
             class="orb-home"
             type="button"
-            aria-label="Bring the light home"
-            [disabled]="mood() === 'danger'"
+            aria-label="Bring the orb home"
+            [disabled]="isOrbHome() || mood() === 'danger'"
             (click)="bringHome()">
             <bx-icon name="house" size="16" />
-            <span>Bring home</span>
+            <span>Bring Orby home</span>
         </button>
     </span>
 </div>
+
 <div #plane class="orb-plane" [class.orb-ready]="ready()">
     <span #impact class="orb-impact-layer" aria-hidden="true"
         ><span class="orb-impact orb-impact-left"></span><span class="orb-impact orb-impact-right"></span><span class="orb-impact orb-impact-top"></span

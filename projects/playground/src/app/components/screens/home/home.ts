@@ -59,7 +59,7 @@ export class Home {
 
   constructor() {
     effect(() => {
-      if (!this.lightOrb()?.showWakeHint()) this.wakeHint()?.hide();
+      if (!this.lightOrb()?.isOrbHome()) this.wakeHint()?.hide();
     });
   }
 }

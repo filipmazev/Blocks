@@ -4,13 +4,10 @@ export type OrbState = 'asleep' | 'waking' | 'flying' | 'coasting' | 'dragging' 
 export type OrbMood = 'primary' | 'success' | 'warn' | 'danger' | 'info';
 export type OrbWall = 'left' | 'right' | 'top' | 'bottom';
 export type { IOrbBounds } from '@playground/components/screens/home/light-orb/interfaces/iorb-bounds.interface';
-/** @deprecated Use IOrbBounds; the historical type name remains available for compatibility. */
-export type { IOrbBounds as OrbBounds } from '@playground/components/screens/home/light-orb/interfaces/iorb-bounds.interface';
 export type { IOrbPointerSample } from '@playground/components/screens/home/light-orb/interfaces/iorb-pointer-sample.interface';
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
-/** The visible garden's inner edges are the collision planes; coordinates are orb centers. */
 export class LightOrbPhysics {
   public x: number = 0;
   public y: number = 0;

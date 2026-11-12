@@ -55,7 +55,6 @@
                 @for (group of groups(); track group.title) {
                     <div class="catalog-category-heading">
                         <h2>{{ group.title }}</h2>
-                        <span class="catalog-heading-count">{{ group.total }}</span>
                         <bx-divider [decorative]="true" />
                     </div>
                     <div class="catalog-grid" [attr.aria-label]="group.title">
@@ -122,7 +121,6 @@
                                         @case ('card') {
                                             <bx-card class="mock-card" title="Project" subtitle="Updated today" [surfaceEffects]="false">
                                                 <div bxCardMedia class="mock-card-media"></div>
-                                                <span class="mock-line w-80"></span>
                                                 <span class="mock-line w-50"></span>
                                                 <div bxCardFooter class="mock-row mock-row-end">
                                                     <span class="mock-pill">Open</span>
@@ -431,7 +429,7 @@
                                                 <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
                                                 <span class="mock-scrim"></span>
                                                 <div class="mock-side-panel">
-                                                    <span class="mock-row mock-row-between">
+                                                    <span class="mock-row mock-row-between no-flex">
                                                         <span class="mock-sheet-title">Edit project</span>
                                                         <bx-icon name="x" size="20" />
                                                     </span>
@@ -548,11 +546,6 @@
                                             <div class="mock-skeleton-preview">
                                                 <div class="mock-row">
                                                     <bx-skeleton shape="circle" width="40px" height="40px" [animated]="false" />
-                                                    <span class="mock-stack"><bx-skeleton [lines]="2" [animated]="false" /></span>
-                                                </div>
-                                                <div class="mock-row">
-                                                    <bx-skeleton shape="circle" width="32px" height="32px" [animated]="false" />
-                                                    <span class="mock-stack"><bx-skeleton [lines]="1" [animated]="false" /></span>
                                                 </div>
                                                 <bx-skeleton [lines]="3" [animated]="false" />
                                             </div>

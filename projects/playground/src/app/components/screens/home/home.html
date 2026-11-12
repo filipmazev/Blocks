@@ -16,17 +16,27 @@
                 <div class="features-heading">
                     <div class="features-title" [attr.data-bx-reduced-motion]="isReducedMotion()">
                         <h2 id="features-title">Explore Blocks</h2>
-                        <span
-                            class="orb-hint"
-                            bxTooltip="Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces."
+
+                        <p
+                            id="orb-instructions"
+                            class="orb-message"
+                            role="status"
                             placement="top"
-                            [class.is-visible]="orb.showWakeHint()"
-                            [inert]="!orb.showWakeHint()"
-                            [attr.aria-hidden]="!orb.showWakeHint()"
-                            [attr.tabindex]="orb.showWakeHint() ? 0 : -1"
-                            >Hover on the orb to wake it up</span
-                        >
+                            [bxTooltip]="
+                                orb.isOrbHome()
+                                    ? 'Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces.'
+                                    : ''
+                            "
+                            [class.is-home]="orb.isOrbHome()"
+                            [attr.tabindex]="orb.isOrbHome() ? 0 : null">
+                            <span class="mood-dot" aria-hidden="true" [class.is-disabled]="orb.isOrbHome()" [attr.data-mood]="orb.mood()"> </span>
+
+                            @for (message of [orb.message()]; track message) {
+                                <span class="orb-message-text">{{ message }}</span>
+                            }
+                        </p>
                     </div>
+
                     <app-light-orb #orb [stage]="lightGardenElement().nativeElement" [cards]="featureGrid" />
                 </div>
                 <div #featureGrid class="feature-grid">

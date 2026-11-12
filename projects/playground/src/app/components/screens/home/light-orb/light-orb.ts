@@ -62,11 +62,14 @@ export class LightOrb {
 
   protected readonly ready: WritableSignal<boolean> = signal(false);
 
-  protected readonly state: WritableSignal<OrbState> = signal<OrbState>('asleep');
-  protected readonly mood: WritableSignal<OrbMood> = signal<OrbMood>('primary');
+  public readonly message: Signal<string> = computed(() => {
+    if (this.isOrbHome()) {
+      return 'Hover on the orb to wake it up';
+    }
 
-  protected readonly message: Signal<string> = computed(() => {
-    if (this.state() === 'asleep') return `A little light lives in your ${this.themingService.paletteLabel().toLowerCase()} theme.`;
+    if (this.state() === 'asleep') {
+      return `A little light lives in your ${this.themingService.paletteLabel().toLowerCase()} theme.`;
+    }
 
     if (this.mood() === 'danger') return 'Too many throws. Someone is cross.';
 
@@ -82,8 +85,10 @@ export class LightOrb {
 
     return 'Curious? Catch it. Be kind.';
   });
+  public readonly isOrbHome: Signal<boolean> = computed(() => this.ready() && this.state() === 'asleep' && !this.isReducedMotion());
 
-  public readonly showWakeHint: Signal<boolean> = computed(() => this.ready() && this.state() === 'asleep' && !this.isReducedMotion());
+  public readonly state: WritableSignal<OrbState> = signal<OrbState>('asleep');
+  public readonly mood: WritableSignal<OrbMood> = signal<OrbMood>('primary');
 
   public readonly stage: InputSignal<HTMLElement> = input.required<HTMLElement>();
   public readonly cards: InputSignal<HTMLElement> = input.required<HTMLElement>();
