@@ -8,7 +8,7 @@ This is playground tooling using the public Blocks entry points. Open Theme Stud
 
 ## Usage
 
-Open `/studio/new-project`. The Studio toolbar and its Copy / setup and Import actions expose the complete workflow.
+Open `/new-project`. The Studio toolbar and its Copy / setup and Import actions expose the complete workflow.
 
 ## API
 
@@ -24,4 +24,4 @@ Controls have accessible labels and keyboard operation. Existing focus, modal di
 
 ## Playground
 
-Open `/studio/new-project`. The authoritative Studio guide is available from the editor's Export tab.
+Open `/new-project`. The authoritative Studio guide is available from the editor's Export tab.

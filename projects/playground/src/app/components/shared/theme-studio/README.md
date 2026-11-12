@@ -162,9 +162,9 @@ icon settings keep their existing behavior.
 
 `/studio` presents integrated sections for semantic color roles, layout tokens, light/dark foreground pairs and export. A card, readonly field, mode tabs and
 responsive dialog demonstrate the relevant tokens in context, without a separate component-preview route. The sidebar links here as **Explore Theme Studio**.
-`/studio/new-project` provides Angular workspace initialization and Blocks setup commands for npm, pnpm, yarn and bun. Both are reachable from the Studio
-workflow. Theme Studio appears directly below Appearance in the main navigation with its Palette icon. `/installation` renders the authoritative package setup
-guide; documentation links no longer redirect installation requests to Home.
+`/new-project` provides Angular workspace initialization and Blocks setup commands for npm, pnpm, yarn and bun. Both are reachable from the Studio workflow.
+Theme Studio appears directly below Appearance in the main navigation with its Palette icon. `/installation` renders the authoritative package setup guide;
+documentation links no longer redirect installation requests to Home.
 
 Commands and SCSS use the shared code-preview container with syntax highlighting and keyboard scrolling. The SCSS viewer has an inline gutter separating its
 scrollbar from the modal scrollbar. The Studio editor fields and border slider retain explicit spacing around their controls.

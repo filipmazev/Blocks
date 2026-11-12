@@ -34,10 +34,10 @@ export class Home {
   protected readonly version: string = `v${PLAYGROUND_VERSION}`;
   protected readonly features: IHomeFeaturesState[] = [
     {
-      title: 'Appearance',
-      description: 'Glass, light and motion, configured once.',
-      icon: 'layers',
-      route: '/appearance'
+      title: 'Components',
+      description: COMPONENT_EXAMPLES.length + ' components and directives.',
+      icon: 'blocks',
+      route: '/components'
     },
     {
       title: 'Theming',
@@ -46,10 +46,10 @@ export class Home {
       route: '/studio'
     },
     {
-      title: 'Components',
-      description: COMPONENT_EXAMPLES.length + ' components and directives.',
-      icon: 'blocks',
-      route: '/components'
+      title: 'Appearance',
+      description: 'Glass, light and motion, configured once.',
+      icon: 'layers',
+      route: '/appearance'
     }
   ];
 

@@ -48,7 +48,7 @@ export const ROUTES: Routes = [
       loadComponent: () => import('@playground/components/screens/theme-studio-demo/theme-studio-demo').then((m) => m.ThemeStudioDemo),
       title: 'Theme Studio · Blocks'
     },
-    { label: 'Theme Studio', breadcrumb: 'Theme Studio', icon: { name: 'palette' }, section: 'Start', menu: true, order: 2 }
+    { label: 'Theme Studio', breadcrumb: 'Theme Studio', icon: { name: 'palette' }, section: 'Start', menu: true, order: 3 }
   ),
   withInAppNavigation(
     {
@@ -56,7 +56,7 @@ export const ROUTES: Routes = [
       loadComponent: () => import('@playground/components/screens/appearance/appearance').then((m) => m.Appearance),
       title: 'Appearance · Blocks'
     },
-    { label: 'Appearance', breadcrumb: 'Appearance', icon: { name: 'sliders-horizontal' }, section: 'Start', menu: true, order: 2.5 }
+    { label: 'Appearance', breadcrumb: 'Appearance', icon: { name: 'sliders-horizontal' }, section: 'Start', menu: true, order: 3.5 }
   ),
   withInAppNavigation(
     {
@@ -167,7 +167,7 @@ export const ROUTES: Routes = [
   ),
   withInAppNavigation(
     {
-      path: 'studio/new-project',
+      path: 'new-project',
       loadComponent: () => import('@playground/components/screens/theme-studio-new-project/theme-studio-new-project').then((m) => m.ThemeStudioNewProject),
       title: 'New Blocks project · Blocks'
     },

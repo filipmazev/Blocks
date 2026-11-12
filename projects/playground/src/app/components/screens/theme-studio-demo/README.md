@@ -48,5 +48,5 @@ Export and setup reuse the existing workflow without changing draft persistence,
 
 ## Playground
 
-`/studio` is the showcase and the sidebar’s **Explore Theme Studio** destination. `/tokens` remains the full token catalog; `/studio/new-project` and
-`/installation` provide project setup. The authoritative editor guide is available in the page and the sidebar’s Export tab.
+`/studio` is the showcase and the sidebar’s **Explore Theme Studio** destination. `/tokens` remains the full token catalog; `/new-project` and `/installation`
+provide project setup. The authoritative editor guide is available in the page and the sidebar’s Export tab.

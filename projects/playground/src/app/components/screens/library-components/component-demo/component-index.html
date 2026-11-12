@@ -1,0 +1,733 @@
+<div #catalogRegion class="catalog-region" tabindex="-1">
+    <div #catalogScroll class="catalog-scroll" tabindex="-1">
+        <bx-page-container>
+            <bx-page-header
+                [sectionTitle]="layoutOnly() ? 'Primitives' : category() ? 'Components' : 'Blocks reference'"
+                [pageTitle]="layoutOnly() ? 'Layout' : (category() ?? 'Components')"
+                [pageDescription]="
+                    layoutOnly()
+                        ? 'Compose consistent pages with containers, sections, responsive stacks, grids, and dividers.'
+                        : 'Explore the controls, surfaces and interactions that make up Blocks. Every example follows your active theme and global appearance configuration.'
+                ">
+                <p>
+                    For viewport signals, device detection, scroll locking and shared helpers, explore the <a routerLink="/utilities">Utilities playground</a>.
+                </p>
+            </bx-page-header>
+
+            <div class="catalog-filters">
+                <bx-search-input
+                    ariaLabel="Search components"
+                    placeholder="Search names, purposes, or selectors…"
+                    subscriptSizing="dynamic"
+                    [ngModel]="query()"
+                    (ngModelChange)="updateSearch($event ?? '')" />
+                @if (categories().length > 1) {
+                    <bx-multi-select
+                        label="Categories"
+                        placeholder="All categories"
+                        floatLabel="always"
+                        subscriptSizing="dynamic"
+                        clearLabel="Show all categories"
+                        [clearable]="true"
+                        [showSelectAll]="false"
+                        [options]="categories()"
+                        [ngModel]="selectedCategories()"
+                        (ngModelChange)="updateCategories($event)" />
+                }
+            </div>
+
+            <div class="catalog-summary">
+                <p role="status">Showing {{ visibleEntries().length }} of {{ filtered().length }} components and directives</p>
+                <p>{{ groups().length }} {{ groups().length === 1 ? 'category' : 'categories' }}</p>
+            </div>
+
+            <div
+                #results
+                class="catalog-results"
+                tabindex="-1"
+                bxInfiniteScroll
+                [infiniteScrollContainer]="catalogScroll"
+                [infiniteScrollDisabled]="!hasMore()"
+                [infiniteScrollRevision]="visibleEntries()"
+                [infiniteScrollCheckOnRender]="true"
+                [infiniteScrollThreshold]="600"
+                (scrollEnd)="renderMore()">
+                @for (group of groups(); track group.title) {
+                    <div class="catalog-category-heading">
+                        <h2>{{ group.title }}</h2>
+                        <span class="catalog-heading-count">{{ group.total }}</span>
+                        <bx-divider [decorative]="true" />
+                    </div>
+                    <div class="catalog-grid" [attr.aria-label]="group.title">
+                        @for (entry of group.entries; track entry.id) {
+                            <a bxSurface class="component-card" [routerLink]="componentRoute(entry)">
+                                <div class="component-preview" bxSurface aria-hidden="true" inert>
+                                    @switch (previewKind(entry)) {
+                                        @case ('accordion') {
+                                            <bx-accordion [multiple]="true">
+                                                <bx-accordion-item title="Details" [expanded]="true">
+                                                    <span class="mock-line w-80"></span>
+                                                </bx-accordion-item>
+                                                <bx-accordion-item title="Permissions" />
+                                                <bx-accordion-item title="Billing" />
+                                            </bx-accordion>
+                                        }
+                                        @case ('alert') {
+                                            <bx-alert tone="success" title="Saved" message="Your changes are ready." [emissive]="true" />
+                                        }
+                                        @case ('autocomplete') {
+                                            <div class="mock-field">
+                                                <span class="mock-field-box">
+                                                    <span class="mock-field-value">Ber</span>
+                                                    <span class="mock-caret"></span>
+                                                </span>
+                                                <div class="mock-options" bxSurface [bxSurfaceInteractive]="false">
+                                                    <span class="mock-option is-selected">Berlin<bx-icon name="arrow-up-right" size="16" /></span>
+                                                    <span class="mock-option">Bern</span>
+                                                    <span class="mock-option">Bergen</span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('breadcrumbs') {
+                                            <div class="mock-crumbs">
+                                                <span>Home</span>
+                                                <bx-icon name="chevron-right" size="16" />
+                                                <span>Components</span>
+                                                <bx-icon name="chevron-right" size="16" />
+                                                <span class="is-current">Button</span>
+                                            </div>
+                                        }
+                                        @case ('button') {
+                                            <div class="mock-row mock-row-center">
+                                                <button bx-button type="button" variant="filled">Save</button>
+                                                <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
+                                                <button bx-button type="button" variant="mini-fab" aria-label="Add">
+                                                    <bx-icon name="plus" size="20" />
+                                                </button>
+                                            </div>
+                                        }
+                                        @case ('calendar') {
+                                            <div class="mock-calendar">
+                                                <span class="mock-calendar-head">February 2026</span>
+                                                <span class="mock-calendar-grid">
+                                                    @for (day of weekdays; track $index) {
+                                                        <span class="mock-weekday">{{ day }}</span>
+                                                    }
+                                                    @for (day of days; track day) {
+                                                        <span class="mock-day" [class.is-selected]="day === 21">{{ day }}</span>
+                                                    }
+                                                </span>
+                                            </div>
+                                        }
+                                        @case ('card') {
+                                            <bx-card class="mock-card" title="Project" subtitle="Updated today" [surfaceEffects]="false">
+                                                <div bxCardMedia class="mock-card-media"></div>
+                                                <span class="mock-line w-80"></span>
+                                                <span class="mock-line w-50"></span>
+                                                <div bxCardFooter class="mock-row mock-row-end">
+                                                    <span class="mock-pill">Open</span>
+                                                </div>
+                                            </bx-card>
+                                        }
+                                        @case ('checkbox') {
+                                            <div class="mock-stack">
+                                                <bx-checkbox label="Draft" [checked]="true" />
+                                                <bx-checkbox label="In review" [checked]="true" />
+                                                <bx-checkbox label="Published" [indeterminate]="true" />
+                                            </div>
+                                        }
+                                        @case ('checkbox-indicator') {
+                                            <div class="mock-row mock-row-center mock-indicator-row">
+                                                <span class="mock-indicator"><bx-checkbox-indicator [checked]="true" /><span>On</span></span>
+                                                <span class="mock-indicator"><bx-checkbox-indicator [indeterminate]="true" /><span>Some</span></span>
+                                                <span class="mock-indicator"><bx-checkbox-indicator [checked]="false" /><span>Off</span></span>
+                                            </div>
+                                        }
+                                        @case ('chips') {
+                                            <div class="mock-chip-row">
+                                                <bx-chip label="Design" [selected]="true" />
+                                                <bx-chip label="Engineering" [removable]="true" />
+                                                <bx-chip label="Research" />
+                                                <bx-chip label="Marketing" />
+                                            </div>
+                                        }
+                                        @case ('container') {
+                                            <div class="mock-frame mock-gutter-frame">
+                                                <div class="mock-centered">
+                                                    <span class="mock-line w-55"></span>
+                                                    <span class="mock-line w-40"></span>
+                                                    <span class="mock-block"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('context-menu') {
+                                            <div class="mock-context-stage">
+                                                <bx-menu class="mock-context-menu">
+                                                    <bx-menu-item label="Copy" icon="copy" />
+                                                    <bx-menu-item label="Paste" icon="clipboard" />
+                                                    <bx-menu-item label="Quote" icon="quote" />
+                                                </bx-menu>
+                                                <span class="mock-cursor"><bx-icon name="mouse-pointer-2" size="20" /></span>
+                                            </div>
+                                        }
+                                        @case ('date-picker') {
+                                            <div class="mock-field">
+                                                <span class="mock-field-box">
+                                                    <bx-icon name="calendar" size="20" />
+                                                    <span class="mock-field-value">Apr 21, 2026</span>
+                                                    <bx-icon name="chevron-down" size="20" />
+                                                </span>
+                                                <div class="mock-options mock-mini-days" bxSurface [bxSurfaceInteractive]="false">
+                                                    @for (day of days; track day) {
+                                                        @if (day > 12 && day < 20) {
+                                                            <span class="mock-day" [class.is-selected]="day === 17">{{ day }}</span>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('disclosure') {
+                                            <bx-collapsible title="Project details" [expanded]="true" [headingLevel]="3">
+                                                <span class="mock-line w-80"></span>
+                                                <span class="mock-line w-55"></span>
+                                            </bx-collapsible>
+                                        }
+                                        @case ('divider') {
+                                            <div class="mock-list-surface">
+                                                <span class="mock-item">Contact 1</span>
+                                                <bx-divider [decorative]="true" />
+                                                <span class="mock-item">Contact 2</span>
+                                                <bx-divider [decorative]="true" />
+                                                <span class="mock-item">Contact 3</span>
+                                            </div>
+                                        }
+                                        @case ('drawer') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-sheet">
+                                                    <span class="mock-grab"></span>
+                                                    <span class="mock-sheet-title">Filters</span>
+                                                    <span class="mock-line w-70"></span>
+                                                    <span class="mock-row mock-row-between mock-sheet-footer">
+                                                        <span class="mock-pill">Reset</span>
+                                                        <span class="mock-pill is-primary">Apply</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('dropdown') {
+                                            <div class="mock-dropdown-stage">
+                                                <button bx-button type="button" variant="tonal" color="grayscale">
+                                                    Actions<bx-icon name="chevron-down" size="16" />
+                                                </button>
+                                                <bx-menu class="mock-dropdown-panel">
+                                                    <bx-menu-item label="Duplicate" icon="copy" />
+                                                    <bx-menu-item label="Archive" icon="archive" [danger]="true" />
+                                                </bx-menu>
+                                            </div>
+                                        }
+                                        @case ('error') {
+                                            <bx-form-field label="Reference" forId="preview-error" error="Enter at least three characters.">
+                                                <input id="preview-error" bxInput value="AB" aria-invalid="true" />
+                                            </bx-form-field>
+                                        }
+                                        @case ('field') {
+                                            <bx-input-field label="Project name" value="Blocks library" hint="Shown in the workspace switcher" />
+                                        }
+                                        @case ('field-hint') {
+                                            <bx-input-field label="Reference" value="PR-1042" hint="Your public reference" hintEnd="Optional" />
+                                        }
+                                        @case ('form') {
+                                            <div class="mock-form-preview">
+                                                <strong class="mock-form-title">Create workspace</strong>
+                                                <bx-input-field label="Workspace" value="Blocks library" subscriptSizing="dynamic" />
+                                                <bx-input-field label="Owner email" placeholder="name@company.com" subscriptSizing="dynamic" />
+                                                <div class="mock-row mock-row-end">
+                                                    <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
+                                                    <button bx-button type="button" variant="filled">Create</button>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('grid') {
+                                            <div class="mock-grid-preview">
+                                                @for (cell of [1, 2, 3, 4, 5, 6]; track cell) {
+                                                    <span class="mock-block"></span>
+                                                }
+                                            </div>
+                                        }
+                                        @case ('icon') {
+                                            <div class="mock-icon-halo"><bx-icon name="sparkles" size="40" color="accent" bgColor="auto" /></div>
+                                        }
+                                        @case ('input-field') {
+                                            <bx-input-field
+                                                label="Project name"
+                                                floatLabel="always"
+                                                value="Blocks library"
+                                                hint="Shown in the workspace switcher" />
+                                        }
+                                        @case ('layout') {
+                                            <div class="mock-frame">
+                                                <span class="mock-bar"><span class="mock-dot"></span><span class="mock-line w-30"></span></span>
+                                                <div class="mock-frame-body">
+                                                    <span class="mock-rail"><bx-icon name="house" size="20" /><bx-icon name="folder" size="20" /></span>
+                                                    <div class="mock-frame-content">
+                                                        <span class="mock-line w-60"></span>
+                                                        <span class="mock-grid-cells"><span></span><span></span><span></span><span></span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('list') {
+                                            <div class="mock-stack mock-list-preview">
+                                                @for (row of [1, 2, 3]; track row) {
+                                                    <span class="mock-list-row">
+                                                        <span class="mock-avatar"></span>
+                                                        <span class="mock-line w-60"></span>
+                                                    </span>
+                                                }
+                                                <span class="mock-row mock-row-center mock-more"><span class="mock-spinner is-small"></span>Loading more</span>
+                                            </div>
+                                        }
+                                        @case ('load-more') {
+                                            <div class="mock-stack mock-list-preview">
+                                                <span class="mock-list-row"><span class="mock-avatar"></span><span class="mock-line w-60"></span></span>
+                                                <span class="mock-list-row"><span class="mock-avatar"></span><span class="mock-line w-45"></span></span>
+                                                <button bx-button type="button" variant="tonal" class="mock-load-button">Load more</button>
+                                            </div>
+                                        }
+                                        @case ('loading') {
+                                            <div class="mock-row mock-row-center">
+                                                <span class="mock-spinner is-large"></span>
+                                                <span class="mock-stack">
+                                                    <span class="mock-line w-70"></span>
+                                                    <span class="mock-line w-45"></span>
+                                                </span>
+                                            </div>
+                                        }
+                                        @case ('loading-button') {
+                                            <div class="mock-row mock-row-center">
+                                                <span class="mock-loading-button"><span class="mock-spinner is-small"></span>Saving…</span>
+                                            </div>
+                                        }
+                                        @case ('loading-indicator') {
+                                            <div class="mock-row mock-row-center mock-loading-indicator">
+                                                <span class="mock-spinner is-small"></span>
+                                                <span>Fetching results…</span>
+                                                <span class="mock-kbd">1 / 3</span>
+                                            </div>
+                                        }
+                                        @case ('menu') {
+                                            <bx-menu>
+                                                <bx-menu-item label="Duplicate" icon="copy" endIcon="chevron-right" />
+                                                <bx-menu-item label="Share" icon="share-2" endIcon="chevron-right" />
+                                                <bx-menu-item label="Archive" icon="archive" />
+                                            </bx-menu>
+                                        }
+                                        @case ('menu-item') {
+                                            <bx-menu>
+                                                <bx-menu-item label="Open view" icon="external-link" [shortcut]="['mod', 'shift', 'v']" />
+                                            </bx-menu>
+                                        }
+                                        @case ('modal') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-modal-panel">
+                                                    <div class="mock-modal-banner">
+                                                        <span class="mock-modal-heading"
+                                                            ><span class="mock-toast-icon"><bx-icon name="info" size="20" /></span>Project settings</span
+                                                        >
+                                                        <span class="mock-modal-close"><bx-icon name="x" size="20" /></span>
+                                                    </div>
+                                                    <span class="mock-line w-80"></span>
+                                                    <span class="mock-line w-55"></span>
+                                                    <div class="mock-modal-footer">
+                                                        <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
+                                                        <button bx-button type="button" variant="filled">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('modal-backdrop') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind">
+                                                    <span class="mock-line w-50"></span>
+                                                    <span class="mock-line w-30"></span>
+                                                    <span class="mock-block"></span>
+                                                </span>
+                                                <span class="mock-scrim"></span>
+                                            </div>
+                                        }
+                                        @case ('modal-banner') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-modal-panel">
+                                                    <div class="mock-modal-banner">
+                                                        <span class="mock-modal-heading"
+                                                            ><span class="mock-toast-icon"><bx-icon name="info" size="20" /></span>Project settings</span
+                                                        >
+                                                        <span class="mock-modal-close"><bx-icon name="x" size="20" /></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('modal-centered') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-modal-panel is-dialog">
+                                                    <span class="mock-dialog-icon"><bx-icon name="triangle-alert" size="20" /></span>
+                                                    <strong class="mock-modal-title">Discard draft?</strong>
+                                                    <span class="mock-line w-70"></span>
+                                                    <div class="mock-modal-footer">
+                                                        <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
+                                                        <button bx-button type="button" variant="filled" color="danger">Discard</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('modal-footer') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-modal-panel">
+                                                    <span class="mock-line w-80"></span>
+                                                    <span class="mock-line w-55"></span>
+                                                    <div class="mock-modal-footer mock-modal-footer-outline">
+                                                        <span class="mock-pill">Cancel</span>
+                                                        <span class="mock-pill is-primary">Save</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('modal-header') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-modal-panel">
+                                                    <span class="mock-slot">Custom header</span>
+                                                    <span class="mock-line w-80"></span>
+                                                    <span class="mock-line w-55"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('modal-sheet') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-sheet mock-sheet-modal">
+                                                    <span class="mock-row mock-row-between">
+                                                        <span class="mock-sheet-title">Filters</span>
+                                                        <bx-icon name="x" size="20" />
+                                                    </span>
+                                                    <span class="mock-line w-60"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('modal-side') {
+                                            <div class="mock-page">
+                                                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
+                                                <span class="mock-scrim"></span>
+                                                <div class="mock-side-panel">
+                                                    <span class="mock-row mock-row-between">
+                                                        <span class="mock-sheet-title">Edit project</span>
+                                                        <bx-icon name="x" size="20" />
+                                                    </span>
+                                                    <span class="mock-line w-70"></span>
+                                                    <span class="mock-line w-45"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('multiselect') {
+                                            <div class="mock-field">
+                                                <span class="mock-field-box is-multi">
+                                                    <bx-chip label="Design" [selected]="true" [deselectable]="true" />
+                                                    <bx-chip label="Forms" [selected]="true" [deselectable]="true" />
+                                                </span>
+                                                <div class="mock-options" bxSurface [bxSurfaceInteractive]="false">
+                                                    <span class="mock-option is-selected"><bx-checkbox-indicator [checked]="true" />Design</span>
+                                                    <span class="mock-option is-selected"><bx-checkbox-indicator [checked]="true" />Forms</span>
+                                                    <span class="mock-option"><bx-checkbox-indicator [checked]="false" />Icons</span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('panel') {
+                                            <div class="mock-frame">
+                                                <div class="mock-frame-body">
+                                                    <div class="mock-frame-content">
+                                                        <span class="mock-line w-60"></span><span class="mock-line w-40"></span>
+                                                    </div>
+                                                    <span class="mock-panel"></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('popover') {
+                                            <bx-popover class="mock-popover-panel">
+                                                <strong>Project information</strong>
+                                                <span class="mock-line w-55"></span>
+                                                <span class="mock-row mock-row-end"><span class="mock-pill is-primary">Open</span></span>
+                                            </bx-popover>
+                                        }
+                                        @case ('prefix') {
+                                            <bx-input-field label="Amount" value="1,250.00">
+                                                <span bxPrefix>$</span>
+                                            </bx-input-field>
+                                        }
+                                        @case ('progress') {
+                                            <div class="mock-stack mock-progress-preview">
+                                                <bx-progress-bar label="Upload progress" [value]="64" />
+                                                <bx-progress-bar label="Import progress" [value]="32" />
+                                            </div>
+                                        }
+                                        @case ('radio') {
+                                            <div class="mock-center-row">
+                                                <bx-radio-group label="Frequency" name="preview-radio" value="daily">
+                                                    <bx-radio label="Daily" name="preview-radio" value="daily" />
+                                                </bx-radio-group>
+                                            </div>
+                                        }
+                                        @case ('radio-group') {
+                                            <div class="mock-center-row">
+                                                <bx-radio-group label="Frequency" name="preview-radio-group" value="daily">
+                                                    <bx-radio label="Daily" name="preview-radio-group" value="daily" />
+                                                    <bx-radio label="Weekly" name="preview-radio-group" value="weekly" />
+                                                    <bx-radio label="Monthly" name="preview-radio-group" value="monthly" />
+                                                </bx-radio-group>
+                                            </div>
+                                        }
+                                        @case ('range-slider') {
+                                            <bx-range-slider class="mock-range-slider" [value]="[20, 80]" [min]="0" [max]="100" [discrete]="true" />
+                                        }
+                                        @case ('resize') {
+                                            <div class="mock-split">
+                                                <span class="mock-split-pane"></span>
+                                                <span class="mock-split-handle"></span>
+                                                <span class="mock-split-pane is-wide"></span>
+                                            </div>
+                                        }
+                                        @case ('search') {
+                                            <bx-search-input ariaLabel="Search components" placeholder="Search components" subscriptSizing="dynamic" />
+                                        }
+                                        @case ('select') {
+                                            <div class="mock-field">
+                                                <span class="mock-field-box">
+                                                    <span class="mock-field-value">Accent</span>
+                                                    <bx-icon name="chevron-down" size="20" />
+                                                </span>
+                                                <div class="mock-options" bxSurface [bxSurfaceInteractive]="false">
+                                                    <span class="mock-option is-selected">Accent<bx-icon name="check" size="16" /></span>
+                                                    <span class="mock-option">Primary</span>
+                                                    <span class="mock-option">Success</span>
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('side-nav') {
+                                            <div class="mock-nav-preview">
+                                                <div class="mock-nav-rail">
+                                                    <span class="mock-nav-item is-active"><bx-icon name="house" size="20" />Home</span>
+                                                    <span class="mock-nav-item"><bx-icon name="layers" size="20" />Library</span>
+                                                    <span class="mock-nav-item"><bx-icon name="blocks" size="20" /> Buttons</span>
+                                                    <span class="mock-nav-item"><bx-icon name="settings-2" size="20" />Settings</span>
+                                                </div>
+                                                <div class="mock-nav-content"><span class="mock-line w-60"></span><span class="mock-line w-40"></span></div>
+                                            </div>
+                                        }
+                                        @case ('simple-toast') {
+                                            <div class="mock-toast" bxSurface [bxSurfaceInteractive]="false">
+                                                <bx-icon name="circle-check" size="24" color="accent" bgColor="auto" />
+                                                <span class="mock-toast-content">
+                                                    <strong>Saved</strong>
+                                                    <span class="mock-toast-message">Your changes are ready.</span>
+                                                </span>
+                                                <bx-icon name="x" size="20" />
+                                            </div>
+                                        }
+                                        @case ('skeleton') {
+                                            <div class="mock-skeleton-preview">
+                                                <div class="mock-row">
+                                                    <bx-skeleton shape="circle" width="40px" height="40px" [animated]="false" />
+                                                    <span class="mock-stack"><bx-skeleton [lines]="2" [animated]="false" /></span>
+                                                </div>
+                                                <div class="mock-row">
+                                                    <bx-skeleton shape="circle" width="32px" height="32px" [animated]="false" />
+                                                    <span class="mock-stack"><bx-skeleton [lines]="1" [animated]="false" /></span>
+                                                </div>
+                                                <bx-skeleton [lines]="3" [animated]="false" />
+                                            </div>
+                                        }
+                                        @case ('slider') {
+                                            <div class="mock-stack mock-slider-preview">
+                                                <input
+                                                    bxSlider
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    aria-label="Volume"
+                                                    style="--bx-slider-progress: 64%"
+                                                    [value]="64" />
+                                                <span class="mock-row mock-row-between mock-caption"><span>Volume</span><span>64%</span></span>
+                                            </div>
+                                        }
+                                        @case ('stack') {
+                                            <div class="mock-stack mock-stack-preview">
+                                                <span class="mock-block"></span>
+                                                <span class="mock-block"></span>
+                                                <span class="mock-block is-short"></span>
+                                            </div>
+                                        }
+                                        @case ('stepper') {
+                                            <bx-stepper
+                                                #controlled
+                                                mode="wizard"
+                                                selectionMode="internal"
+                                                readOnly="true"
+                                                [steps]="gallerySteps"
+                                                [linear]="false" />
+                                        }
+                                        @case ('suffix') {
+                                            <bx-input-field label="Weight" value="12">
+                                                <span bxSuffix>kg</span>
+                                            </bx-input-field>
+                                        }
+                                        @case ('surface') {
+                                            <div class="mock-surface" bxSurface [bxSurfaceInteractive]="false">
+                                                <span class="mock-line w-70"></span>
+                                                <span class="mock-line w-45"></span>
+                                            </div>
+                                        }
+                                        @case ('tabs') {
+                                            <div class="mock-tabs">
+                                                <span class="mock-tab-row">
+                                                    <span class="mock-tab is-active">Overview</span>
+                                                    <span class="mock-tab">Activity</span>
+                                                    <span class="mock-tab">Settings</span>
+                                                </span>
+                                                <span class="mock-line w-70"></span>
+                                                <span class="mock-line w-45"></span>
+                                            </div>
+                                        }
+                                        @case ('tags') {
+                                            <div class="mock-chip-row">
+                                                <bx-tag
+                                                    text="Skopje"
+                                                    leadingIcon="map-pin"
+                                                    trailingNumber="2"
+                                                    size="small"
+                                                    [focusable]="false"
+                                                    [opaque]="true" />
+                                                <bx-tag text="Design" color="accent" size="small" [focusable]="false" [opaque]="true" />
+                                                <bx-tag text="Archived" size="small" [focusable]="false" [opaque]="true" />
+                                            </div>
+                                        }
+                                        @case ('textarea') {
+                                            <bx-form-field label="Notes" forId="preview-notes" hint="Visible to teammates">
+                                                <textarea id="preview-notes" bxInput rows="2">Ship the catalog refinements.</textarea>
+                                            </bx-form-field>
+                                        }
+                                        @case ('time') {
+                                            <div class="mock-time-panel" bxSurface [bxSurfaceInteractive]="false">
+                                                <span class="mock-time-fade"></span>
+                                                <div class="mock-time-wheel">
+                                                    <span class="mock-time-option">08</span>
+                                                    <span class="mock-time-option">09</span>
+                                                    <span class="mock-time-option is-selected">10</span>
+                                                    <span class="mock-time-option">11</span>
+                                                    <span class="mock-time-option">12</span>
+                                                </div>
+                                                <span class="mock-time-colon">:</span>
+                                                <div class="mock-time-wheel is-scrolling">
+                                                    <span class="mock-time-option">15</span>
+                                                    <span class="mock-time-option">30</span>
+                                                    <span class="mock-time-option is-selected">45</span>
+                                                    <span class="mock-time-option">00</span>
+                                                    <span class="mock-time-option">15</span>
+                                                </div>
+                                                <span class="mock-time-band"></span>
+                                            </div>
+                                        }
+                                        @case ('toast-core') {
+                                            <div class="mock-toast-stack">
+                                                <div class="mock-toast" bxSurface [bxSurfaceInteractive]="false">
+                                                    <bx-icon name="circle-check" size="24" color="accent" bgColor="auto" />
+                                                    <span class="mock-toast-content">
+                                                        <strong>Saved</strong>
+                                                        <span class="mock-toast-message">Project updated.</span>
+                                                    </span>
+                                                    <bx-icon name="x" size="20" />
+                                                    <span class="mock-toast-progress"><span></span></span>
+                                                </div>
+                                                <div class="mock-toast is-secondary" bxSurface [bxSurfaceInteractive]="false">
+                                                    <bx-icon name="bell" size="24" color="accent" bgColor="auto" />
+                                                    <span class="mock-toast-content"><span class="mock-toast-message">Sync completed.</span></span>
+                                                    <bx-icon name="x" size="20" />
+                                                </div>
+                                            </div>
+                                        }
+                                        @case ('toggle') {
+                                            <div class="mock-stack">
+                                                <bx-slide-toggle label="Notifications" [checked]="true" />
+                                                <bx-slide-toggle label="Weekly digest" [checked]="false" />
+                                            </div>
+                                        }
+                                        @case ('tooltip') {
+                                            <span class="mock-tooltip">Saves this project</span>
+                                        }
+                                        @case ('tooltip-trigger') {
+                                            <div class="mock-tooltip-stage">
+                                                <span class="mock-tooltip">Saves this project</span>
+                                                <button bx-button type="button" variant="tonal" color="grayscale">Save</button>
+                                            </div>
+                                        }
+                                        @case ('top-nav') {
+                                            <div class="mock-top-nav">
+                                                <span class="mock-top-nav-brand"><bx-icon name="blocks" size="20" color="accent" bgColor="auto" /></span>
+                                                <span class="mock-nav-links"><span class="is-active">Material</span></span>
+                                                <span class="mock-top-nav-actions"
+                                                    ><bx-icon name="search" size="16" /><bx-icon name="circle-user" size="20"
+                                                /></span>
+                                            </div>
+                                        }
+                                        @case ('truncate') {
+                                            <div class="mock-stack">
+                                                <span class="mock-line w-90"></span>
+                                                <span class="mock-line w-75"></span>
+                                                <span class="mock-line is-truncated">Quarterly planning notes for the des…</span>
+                                            </div>
+                                        }
+                                        @case ('virtual-list') {
+                                            <div class="mock-virtual">
+                                                @for (row of [1, 2, 3, 4]; track row) {
+                                                    <span class="mock-list-row"><span class="mock-line w-60"></span><span class="mock-line w-20"></span></span>
+                                                }
+                                                <span class="mock-scrollbar"><span></span></span>
+                                            </div>
+                                        }
+                                        @default {
+                                            <div class="mock-icon-halo"><bx-icon name="blocks" size="32" color="accent" bgColor="auto" /></div>
+                                        }
+                                    }
+                                </div>
+                                <div class="component-body">
+                                    <h3>{{ entry.title }}</h3>
+                                    <p>{{ entry.description }}</p>
+                                    <code class="component-selector">{{ entry.selector }}</code>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                } @empty {
+                    <bx-card class="empty-results" [surfaceEffects]="false">
+                        <h2>No components found</h2>
+                        <p>Try fewer words or clear the category filter to show the whole catalog.</p>
+                    </bx-card>
+                }
+                @if (hasMore()) {
+                    <div class="catalog-more"><button bx-button type="button" variant="tonal" (click)="renderMore()">Load more components</button></div>
+                }
+            </div>
+        </bx-page-container>
+    </div>
+    <app-scroll-to-top [container]="catalogScroll" [boundary]="results" />
+</div>

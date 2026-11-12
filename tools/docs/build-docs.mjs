@@ -110,7 +110,7 @@ routes.set('projects/playground/src/app/components/shared/theme-studio/README.md
 routes.set('projects/playground/src/app/components/shared/theme-studio-setup/README.md', 'studio');
 routes.set('projects/playground/src/app/components/shared/theme-studio-import/README.md', 'studio');
 routes.set('projects/playground/src/app/components/screens/theme-studio-demo/README.md', 'studio');
-routes.set('projects/playground/src/app/components/screens/theme-studio-new-project/README.md', 'studio/new-project');
+routes.set('projects/playground/src/app/components/screens/theme-studio-new-project/README.md', 'new-project');
 routes.set('projects/playground/src/app/components/screens/utilities/README.md', 'utilities');
 for (const file of files) {
   const utility = /^projects\/playground\/src\/app\/components\/screens\/utilities\/components\/([^/]+)\/README\.md$/.exec(file);

@@ -1,6 +1,5 @@
 <bx-page-container pageDescription="Initialize an Angular application, install Blocks, and apply your Studio theme.">
     <div class="new-project-content">
-        <a bx-button variant="text" routerLink="/studio">Back to component preview</a>
         <bx-tabs ariaLabel="Package manager" [(selectedValue)]="manager">
             @for (item of managers; track item) {
                 <bx-tab [label]="item" [value]="item" />
