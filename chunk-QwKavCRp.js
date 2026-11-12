@@ -2574,8 +2574,9 @@ precedence. The <a href="components/calendar">Calendar guide</a> documents cell 
 <p>Weekday headings default to narrow initials, with full accessible names; months default to short names. These formats respond to locale changes. Configurable
 text uses <code>ResolvableText</code> and optional <code>BX_I18N</code>, including labels, endpoint placeholders, shortcuts, errors, presets and accessible names.</p>
 <h2>Behavior and accessibility</h2>
-<p>Single dates and completed ranges commit immediately. Multiple-date additions/removals commit individually. Escape or outside dismissal closes the panel without
-reverting values already committed. No Apply, Cancel or separate Clear footer actions are rendered; the field&#39;s X is the clear action.</p>
+<p>Single dates and completed ranges commit immediately, and the panel closes after a brief pause so the chosen day reads as a settled selection. Multiple-date
+additions/removals commit individually. Escape or outside dismissal closes the panel without reverting values already committed. No Apply, Cancel or separate
+Clear footer actions are rendered; the field&#39;s X is the clear action.</p>
 <p>Typed parsing is strict. Without <code>parseFormats</code>, the display pattern and canonical ISO dates are accepted. Natural-language parsing is opt-in through
 <code>allowNaturalLanguage</code>. Invalid manual input, reversed range endpoints and invalid restrictions are reported in the field while retaining the committed value.</p>
 <p>Whole-week selection follows <code>weekStartsOn</code>, displays all seven days, and includes weeks crossing month/year boundaries. Typing a date in week mode selects its
