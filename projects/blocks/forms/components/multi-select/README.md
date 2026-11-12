@@ -57,7 +57,9 @@ non-interactive indicators inside listbox options, avoiding nested checkbox focu
 responses.
 
 After the closing transition completes, the shared selection base releases the panel overlay and its tracking resources. Reopening resolves the current
-ordinary/top-layer context while retaining the selected values and search term. Top-layer panels use measured positioning to follow nested scrolling.
+ordinary/top-layer context while retaining the selected values and search term. Top-layer panels use measured positioning to follow nested scrolling. While the
+panel is presented the control holds its own `ScrollLockService` lock, which freezes page scrolling without releasing a surrounding dialog, drawer or navigation
+lock.
 
 Pagination and failure/retry use the shared [load-more directive](../../directives/load-more/README.md). Existing items stay visible during incremental requests
 and after failed pages. The application owns request cancellation and page/cursor state.

@@ -127,23 +127,35 @@ The [menu item documentation](../primitives/components/menu-item/README.md) cont
 ### Scroll locking
 
 `ScrollLockService.disableScroll(usageId, config)` acquires a lock and `enableScroll(usageId)` releases only that owner's lock. Generate a stable ID with
-`uuidv4()` for each owner and release it on close, presentation changes, and destruction. The service compensates for scrollbar removal and supports
-touch/overflow options through `IScrollLockConfig`. Concurrent modal and navigation locks do not release one another. Repeated acquisition with the same ID
-updates that owner without adding another lock. Touch/overflow requirements follow the remaining owners; the original inline body styles and priorities are
-restored only after the final owner releases its lock.
+`uuidv4()` for each owner and release it on close, presentation changes, and destruction. Concurrent modal, navigation, panel, and dropdown locks never release
+one another. Repeated acquisition with the same ID updates that owner without adding another lock, and touch requirements follow the remaining owners.
+
+The lock blocks scroll input — wheel, touch, and offset changes caused by scrollbar drags or keyboard scrolling — instead of hiding page overflow, so the page
+keeps its native scrollbar, width, and layout while locked. Wheel and touch stay usable inside nested scroll containers such as an open option panel, a dialog
+body, or a drawer list. WebKit on iOS ignores overflow-based locking, so the service applies its fixed-body presentation there for the duration of the lock.
 
 ```ts
 const scrollLockService = inject(ScrollLockService);
 const destroyRef = inject(DestroyRef);
 const lockId = uuidv4();
 
-scrollLockService.disableScroll(lockId, { handleTouchInput: false });
+scrollLockService.disableScroll(lockId, { handleTouchInput: true });
 destroyRef.onDestroy(() => scrollLockService.enableScroll(lockId));
 // Also call scrollLockService.enableScroll(lockId) when the owning overlay closes.
 ```
 
-Import `DestroyRef` and `inject` from `@angular/core`, and `ScrollLockService`/`uuidv4` from the public core entry point. For a scrollable drawer, leave touch
-input available inside its panel and contain overscroll at the scroll wrapper.
+Import `DestroyRef` and `inject` from `@angular/core`, and `ScrollLockService`/`uuidv4` from the public core entry point.
+
+An application whose page scrolls inside an app-shell element rather than the document registers that element once. It is frozen and restored with every lock,
+and keeps its own scrollbar:
+
+```ts
+const unregister = scrollLockService.registerScrollContainer(contentElement);
+// Call the returned callback when the shell content element is destroyed.
+```
+
+Modal dialogs, bottom drawers, mobile side navigation, dropdown and menu surfaces, popovers, context menus, selects, multi-selects, autocompletes, and picker
+popovers each acquire their own lock while presented, so a panel opening inside a dialog neither releases nor duplicates the dialog's lock.
 
 ### Translation and overlays
 

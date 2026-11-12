@@ -53,7 +53,9 @@ separate content region scrolls vertically only when its content exceeds the ava
 
 Use a native button trigger. The directive owns nonmodal dialog semantics and its translated accessible name. Focus moves to the first tabbable control or the
 panel; Escape restores trigger focus. Tab exits at the panel boundary. Inside clicks stay open. Surface motion follows BxA11yService. Panels scroll within the
-viewport and inherit live theme changes, including modal/top-layer contexts. For a modal interaction use the modal package.
+viewport and inherit live theme changes, including modal/top-layer contexts. While presented, the popover holds its own `ScrollLockService` lock, so page
+scrolling is frozen while it is presented and released as soon as it closes, without releasing a surrounding overlay's lock. For a modal interaction use the
+modal package.
 
 ## Playground
 

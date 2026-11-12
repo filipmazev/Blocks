@@ -172,6 +172,7 @@
 .bx-select-menu-container {
     min-height: 0;
     overflow: hidden auto;
+    overscroll-behavior: contain;
     padding: spacing(1);
 
     &::-webkit-scrollbar {

@@ -34,7 +34,7 @@ export class ScrollLockExample {
     }
 
     protected lock(): void {
-        this.scrollLockService.disableScroll(this.lockId, { handleTouchInput: false });
+        this.scrollLockService.disableScroll(this.lockId, { handleTouchInput: true });
     }
 
     protected unlock(): void {
@@ -50,22 +50,23 @@ updates that owner's lock. Releasing an unknown ID does nothing, and releasing y
 
 `isScrollDisabled()` is a readonly signal indicating that any owner holds a lock. Observe it instead of writing to the backing signal.
 `disableScroll(id, config)` requires an owner ID and configuration; `enableScroll(id)` releases that owner. The legacy optional second argument to
-`enableScroll` is accepted but does not change final cleanup.
+`enableScroll` is accepted but does not change final cleanup. `registerScrollContainer(element)` freezes an application-owned scroll container, such as an
+app-shell content area, for the duration of every lock and returns an unregister callback.
 
-| `IScrollLockConfig` member  | Purpose                                                                                                                                                           |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `handleTouchInput`          | `false` preserves touch gestures; `true` enables touchmove prevention. Omission still applies `touch-action: none`, without adding a touchmove listener by itself |
-| `allowTouchInputOn`         | Elements whose descendants may receive touch input; absent/empty lists permit targets through the touchmove handler                                               |
-| `mobileOnlyTouchPrevention` | Limits the touchmove handler to detected mobile devices; tablets use their separate category                                                                      |
-| `handleExtremeOverflow`     | Adds global wheel/scroll prevention listeners; leave unset for ordinary pages and panels                                                                          |
-| `animationDuration`         | Milliseconds before installing prevention listeners, plus the service's 10 ms coordination delay; omitted means zero before that delay                            |
+| `IScrollLockConfig` member  | Purpose                                                                                                                                        |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `handleTouchInput`          | `false` opts this owner out of touch prevention; `true` or omission prevents touch gestures outside allowed and nested scrollers               |
+| `allowTouchInputOn`         | Elements whose descendants may keep scrolling while locked; absent lists rely on nested-scroller detection                                     |
+| `mobileOnlyTouchPrevention` | Limits touch prevention to narrow touch viewports instead of every device                                                                      |
+| `handleExtremeOverflow`     | Also blocks input inside nested scroll containers, leaving only `allowTouchInputOn` elements usable; leave unset for ordinary pages and panels |
+| `animationDuration`         | Presentation duration of the owning overlay; retained for existing callers, prevention starts together with the lock                           |
 
-Any active owner requesting touch/extreme prevention keeps it enabled. Touch allow-list details follow the most recently inserted owner whose `handleTouchInput`
-is not false; reacquiring an existing ID updates its options without changing its insertion order. The maximum active animation duration controls listener
-installation. Original inline body overflow, right padding, touch action and priorities are restored after the final lock releases.
+Touch rules follow the most recently inserted owner whose `handleTouchInput` is not false; reacquiring an existing ID updates its options without changing its
+insertion order. Wheel, touch, and offset changes are blocked without rewriting page styles, so the page keeps its native scrollbar and width. WebKit on iOS
+additionally receives the service's fixed-body presentation, and original inline body styles and priorities are restored after the final lock releases.
 
-The demo uses `{ handleTouchInput: false }` for both owners so touch users can reach every action. It does not enable extreme overflow handling. Lock
-acquisition and release are no-ops during SSR.
+The demo uses `{ handleTouchInput: true }` for both owners and keeps both toggle groups reachable, so the whole page — including its scrollbar — stays visible
+while input is blocked. It does not enable extreme overflow handling. Lock acquisition and release are no-ops during SSR.
 
 ## Appearance and customization
 
@@ -77,9 +78,11 @@ appearance. Open the source tab for the component and template.
 The compact Blocks control panel exposes pressed-state buttons for both owner cards. Acquire both locks and release one to inspect remaining-owner behavior. The
 shared status is announced politely.
 
-Before acquiring the first lock, the demo brings its controls into view without animation or moving focus. The panel is constrained to the viewport and can
-scroll internally when text is enlarged. Touch gestures remain enabled and release actions stay reachable. Navigating to another utility releases both demo
-locks. Locks held by navigation or other overlays remain active.
+Before acquiring the first lock, the demo brings its controls into view without animation or moving focus. The page scrolls as a single surface: the control
+panel is not a nested scroll region, so a lock freezes the whole content area rather than only the card. The playground scrolls inside its app-shell content
+element instead of the document, so the shell registers that element with `registerScrollContainer()` — the same wiring a consumer application needs when its
+page does not scroll on the document. The page keeps its scrollbar and width while locked, touch scrolling is prevented, and navigating to another utility
+releases both demo locks. Locks held by navigation or other overlays remain active.
 
 ## Playground
 

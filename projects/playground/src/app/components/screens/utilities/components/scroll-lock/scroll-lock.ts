@@ -37,7 +37,7 @@ export class ScrollLock {
     } else {
       if (!this.locks().length) this.lockControls()?.nativeElement.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
 
-      this.scrollLockService.disableScroll(this.lockIds[owner], { handleTouchInput: false });
+      this.scrollLockService.disableScroll(this.lockIds[owner], { handleTouchInput: true });
       this.locks.update((owners) => [...owners, owner]);
     }
   }

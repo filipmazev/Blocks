@@ -27,11 +27,13 @@ explicit controls. Selection owners call `MenuCascadeService.closeAll()` after a
 
 Native trigger semantics supply Enter/Space. Arrow towards the menu and Up/Down open it with focus. Up/Down/Home/End navigate within an open menu;
 Escape/opposite arrow dismiss one layer, and Tab is trapped inside its surface. Click outside dismisses the entire path, including search-pinned menus. Hover
-close has a short pointer-crossing delay and retains focused descendants. Cascades reuse the shared origin tracker's native CSS anchoring, refreshing dependent
-descendants on geometry changes and using measured positions only as a fallback. Clipped or offscreen origins close their branch. Overlays, traps, listeners,
-subscriptions, and timers are cleaned up on destruction. The trigger honors `bxOverlayContext` for top-layer positioning, as dropdowns and context menus do;
-origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes siblings, and nested menus inherit live theme state.
-Surfaces use the shared `bx-menu` translucent material and overlay motion, including its opaque and accessibility fallbacks.
+close has a short pointer-crossing delay and retains focused descendants. Each open branch holds its own `ScrollLockService` lock while presented, so page
+scrolling is frozen until the cascade closes without releasing a surrounding dialog, drawer or navigation lock. Cascades reuse the shared origin tracker's
+native CSS anchoring, refreshing dependent descendants on geometry changes and using measured positions only as a fallback. Clipped or offscreen origins close
+their branch. Overlays, traps, listeners, subscriptions, and timers are cleaned up on destruction. The trigger honors `bxOverlayContext` for top-layer
+positioning, as dropdowns and context menus do; origins inside dialogs and existing top-layer overlays retain that context. Opening another branch closes
+siblings, and nested menus inherit live theme state. Surfaces use the shared `bx-menu` translucent material and overlay motion, including its opaque and
+accessibility fallbacks.
 
 The [top-navigation demo](../../../navigation/components/top-nav/README.md) at `/components/top-nav` demonstrates owner-coordinated navigation panels. Menu
 width and scroll constraints belong to the owner. Side navigation browses nested lists inside its own panel.

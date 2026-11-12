@@ -61,7 +61,7 @@ content viewports.
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
 | `WindowDimensionsService`, `BREAKPOINTS`         | Live CSS-pixel dimensions, shared breakpoint tags, range queries, responsive columns                                  |
 | `DeviceTypeService`, device/OS contracts         | Device identity, platform flags, orientation events, explicit refresh                                                 |
-| `ScrollLockService`, `IScrollLockConfig`         | Independent owners, remaining-owner behavior, release actions, navigation cleanup                                     |
+| `ScrollLockService`, `IScrollLockConfig`         | Independent owners, remaining-owner behavior, page-wide freezing with the scrollbar intact, app-shell registration    |
 | Scroll-boundary directive and helpers            | Local batch/height controls, overflow status, asynchronous fallback/retry example; linked virtual collection coverage |
 | `BxDateTimeConfigService`, date/time helpers     | Conversion round-trips, strict and natural-language parsing, time display cycle/precision, DST duration               |
 | `uuidv4()`                                       | Regenerated UUID and stable instance ID comparison                                                                    |

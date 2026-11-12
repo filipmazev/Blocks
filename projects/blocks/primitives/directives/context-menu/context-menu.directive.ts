@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 import type { ITouchPress } from '@primitives/interfaces/itouch-press.interface';
 
-import { BxA11yService, BxOverlayPositionService, inheritOverlayTheme } from '@filip.mazev/blocks/core';
+import { BxA11yService, BxOverlayPositionService, inheritOverlayTheme, ScrollLockService, uuidv4 } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
 import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
@@ -22,7 +22,9 @@ export class ContextMenuDirective {
   private readonly bxA11yService = inject(BxA11yService);
   private readonly ngZone = inject(NgZone);
   private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly scrollLockService = inject(ScrollLockService);
 
+  private readonly scrollLockId: string = uuidv4();
   private readonly onPointerDown: (event: PointerEvent) => void = (event: PointerEvent): void => {
     this.lastPointerType = event.pointerType;
     this.cancelTouchPress();
@@ -153,6 +155,8 @@ export class ContextMenuDirective {
     if (!this.overlayRef) return;
 
     const revision = ++this.revision;
+
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     if (restoreFocus || this.overlayRef.overlayElement.contains(this.elementRef.nativeElement.ownerDocument.activeElement)) {
       this.elementRef.nativeElement.focus({ preventScroll: true });
@@ -318,6 +322,7 @@ export class ContextMenuDirective {
       backdropClass: 'cdk-overlay-transparent-backdrop'
     });
     this.subscriptions = new Subscription();
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
 
     const win = source.ownerDocument.defaultView;
 
@@ -423,6 +428,7 @@ export class ContextMenuDirective {
 
     this.overlayRef = null;
     overlay?.dispose();
+    this.scrollLockService.enableScroll(this.scrollLockId);
     this.disconnectLighting?.();
     this.disconnectLighting = undefined;
   }

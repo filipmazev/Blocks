@@ -22,7 +22,15 @@ import { Subscription } from 'rxjs';
 
 import type { DropdownState, DropdownTransition } from '@primitives/types/dropdown.types';
 
-import { BxA11yService, BxOverlayPositionService, BxPlacement, inheritOverlayTheme, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+import {
+  BxA11yService,
+  BxOverlayPositionService,
+  BxPlacement,
+  inheritOverlayTheme,
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4
+} from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
 import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
@@ -42,11 +50,14 @@ export class DropdownDirective {
   private readonly overlay = inject(Overlay);
   private readonly bxOverlayPositionService = inject(BxOverlayPositionService);
   private readonly overlayContext = inject(BX_OVERLAY_CONTEXT, { optional: true });
+  private readonly scrollLockService = inject(ScrollLockService);
   private readonly bxA11yService = inject(BxA11yService);
   private readonly ngZone = inject(NgZone);
   private readonly viewContainerRef = inject(ViewContainerRef);
 
   private readonly isBrowser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
+
+  private readonly scrollLockId: string = uuidv4();
 
   private readonly _isOpen: WritableSignal<boolean> = signal(false);
 
@@ -180,6 +191,7 @@ export class DropdownDirective {
 
     this._isOpen.set(false);
     this._state.set('closing');
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     const source = this.elementRef.nativeElement;
 
@@ -243,6 +255,7 @@ export class DropdownDirective {
     });
 
     this.overlayRef = overlay;
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
     this.overlayId.set(overlay.overlayElement.id || null);
     this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(this.elementRef.nativeElement, overlay.overlayElement));
     this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, this.elementRef.nativeElement);
@@ -336,6 +349,7 @@ export class DropdownDirective {
     this.subscriptions.unsubscribe();
     this.overlayRef?.dispose();
     this.overlayRef = null;
+    this.scrollLockService.enableScroll(this.scrollLockId);
     this.disconnectLighting?.();
     this.disconnectLighting = undefined;
     this.overlayId.set(null);

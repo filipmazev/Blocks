@@ -35,7 +35,9 @@ import {
   inheritOverlayTheme,
   ResolvableText,
   resolveText,
-  trackOverlayOrigin
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4
 } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { createGlassTransition, inheritGlassLighting, ISelectionMotion, mountSelectionMotion } from '@filip.mazev/blocks/effects/runtime';
@@ -80,8 +82,11 @@ export class Autocomplete extends BxValueControl<string> {
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly ngZone = inject(NgZone);
   private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
+  private readonly scrollLockService = inject(ScrollLockService);
 
   private readonly browser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
+
+  private readonly scrollLockId: string = uuidv4();
 
   private readonly opened: WritableSignal<boolean> = signal(false);
   private readonly inputFocused: WritableSignal<boolean> = signal(false);
@@ -259,6 +264,7 @@ export class Autocomplete extends BxValueControl<string> {
 
     this.overlayRef = overlay;
     this.opened.set(true);
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
     this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(origin, overlay.overlayElement));
     this.disconnectLighting = inheritGlassLighting(overlay.overlayElement, origin);
     this.subscriptions.add(
@@ -305,6 +311,7 @@ export class Autocomplete extends BxValueControl<string> {
     const revision = ++this.presentationRevision;
 
     this.opened.set(false);
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     if (pane) pane.inert = true;
 
@@ -509,6 +516,7 @@ export class Autocomplete extends BxValueControl<string> {
     this.disconnectLighting = undefined;
     this.overlayRef?.dispose();
     this.overlayRef = undefined;
+    this.scrollLockService.enableScroll(this.scrollLockId);
   }
 
   //#endregion

@@ -21,7 +21,15 @@ import {
 
 import { Subscription } from 'rxjs';
 
-import { BxOverlayPositionService, BxPlacement, inheritOverlayTheme, OverlayOriginTracker, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+import {
+  BxOverlayPositionService,
+  BxPlacement,
+  inheritOverlayTheme,
+  OverlayOriginTracker,
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4
+} from '@filip.mazev/blocks/core';
 
 import { navigateMenuKey } from '@primitives/helpers/menu-keyboard.helpers';
 import { MenuCascadeService } from '@primitives/services/menu-cascade.service';
@@ -46,6 +54,9 @@ export class MenuTriggerDirective {
   private readonly menuCascadeService = inject(MenuCascadeService);
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly focusTrapFactory = inject(FocusTrapFactory);
+  private readonly scrollLockService = inject(ScrollLockService);
+
+  private readonly scrollLockId: string = uuidv4();
 
   private readonly opened: WritableSignal<boolean> = signal(false);
 
@@ -184,6 +195,7 @@ export class MenuTriggerDirective {
 
     if (this.overlayRef !== overlay) return;
 
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
     this.subscriptions.add(overlay.keydownEvents().subscribe((event) => this.onMenuKey(event)));
     this.subscriptions.add(
       overlay.outsidePointerEvents().subscribe((event) => {
@@ -233,6 +245,7 @@ export class MenuTriggerDirective {
     this.disconnectTheme?.();
     this.disconnectTheme = undefined;
     overlay.dispose();
+    this.scrollLockService.enableScroll(this.scrollLockId);
     this.menuCascadeService.remove(this);
     this.overlayId.set(null);
     this.opened.set(false);

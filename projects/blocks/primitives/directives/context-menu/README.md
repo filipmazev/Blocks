@@ -63,7 +63,8 @@ selections keep their native touch behavior. Text selection is not disabled by t
 `user-select: none` and `-webkit-touch-callout: none` in their own styles.
 
 Always offer the same actions through a visible button or menu; a hold gesture is not easily discoverable. A focusable trigger also supports Shift + F10 and the
-Context Menu key. The playground includes a visible Open actions button and keyboard equivalent.
+Context Menu key. The playground includes a visible Open actions button and keyboard equivalent. While presented, the menu holds its own `ScrollLockService`
+lock, which freezes page scrolling without releasing a surrounding dialog, drawer or navigation lock.
 
 ## Playground
 

@@ -163,6 +163,9 @@ Whole-week selection follows `weekStartsOn`, displays all seven days, and includ
 canonical week start. A week containing unavailable or out-of-bounds dates cannot be selected. Week and period-range hover/focus previews show complete periods;
 confirmed ranges use continuous joined selection bands rather than separate highlighted cells.
 
+An open popover holds its own `ScrollLockService` lock, so page scrolling is frozen while the panel is presented without affecting the surrounding overlay's
+lock. Drawer presentation delegates locking to `BottomDrawer`.
+
 `todayLabel` is optional: omission or empty text renders no action or reserved space. When present, Today selects through the same mode and restriction guards.
 `showToday` independently controls the current-day marker and `aria-current`; it does not enable the shortcut.
 

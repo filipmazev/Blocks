@@ -51,7 +51,8 @@ hover/pressed fills and focus outlines without casting light onto the page. Pres
 ## Behavior and accessibility
 
 Use a real button trigger. The fade interaction supports trigger arrow keys, menu arrows, Home, End and Escape; focus returns on dismissal. Reduced motion skips
-the fade. Content keeps its full dimensions and the overlay retains a solid backing throughout its lifetime.
+the fade. Content keeps its full dimensions and the overlay retains a solid backing throughout its lifetime. While presented, the dropdown holds its own
+`ScrollLockService` lock, so page scrolling is frozen while it is presented and released as soon as it closes, without releasing another overlay's lock.
 
 ## Playground
 

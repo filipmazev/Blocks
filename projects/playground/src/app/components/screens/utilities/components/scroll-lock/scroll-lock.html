@@ -2,8 +2,8 @@
     <bx-alert
         title="Try two independent owners"
         message="Acquire both locks, then release one. Page scrolling stays locked until the final owner releases it. Release controls remain available below." />
-    <bx-card #lockControls class="lock-controls" title="Control the demo locks">
-        <bx-stack class="lock-controls-content" [gap]="4">
+    <bx-card #lockControls title="Control the demo locks">
+        <bx-stack [gap]="4">
             <p role="status">Demo owners: {{ locks().length }}. Page scrolling: {{ scrollLockService.isScrollDisabled() ? 'locked' : 'available' }}.</p>
             <bx-stack direction="horizontal" role="group" aria-label="Demo scroll lock owners" [wrap]="true" [gap]="3">
                 @for (owner of owners; track owner) {
@@ -31,5 +31,8 @@
             </bx-card>
         }
     </bx-grid>
-    <p>Touch input stays enabled. Leaving this example releases its two locks; other overlays keep their own locks.</p>
+    <p>
+        Wheel and touch scrolling are blocked while a lock is held, and the page keeps its native scrollbar. Leaving this example releases its two locks; other
+        overlays keep their own locks.
+    </p>
 </bx-stack>

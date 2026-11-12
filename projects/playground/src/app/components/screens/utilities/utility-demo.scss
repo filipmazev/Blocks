@@ -104,13 +104,6 @@ dd {
     }
 }
 
-.lock-controls-content {
-    max-block-size: calc(100dvh - #{spacing(8)} - #{spacing(12)} - #{spacing(12)});
-    padding: spacing(1);
-    overflow: auto;
-    overscroll-behavior: contain;
-}
-
 .utility-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));

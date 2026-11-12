@@ -1,11 +1,12 @@
 import type { Signal, WritableSignal } from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DOCUMENT, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { filter, fromEvent, map } from 'rxjs';
 
+import { ScrollLockService } from '@filip.mazev/blocks/core';
 import { SlideToggle } from '@filip.mazev/blocks/forms';
 import { ModalService } from '@filip.mazev/blocks/modal';
 import { INavigationTreeGroup, ITopNavConfig, TopNav, TopNavActionsDirective, TopNavBrandDirective } from '@filip.mazev/blocks/navigation';
@@ -49,6 +50,7 @@ export class App {
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
   private readonly highlightLoader = inject(HighlightLoader);
+  private readonly scrollLockService = inject(ScrollLockService);
 
   protected readonly themingService = inject(ThemingService);
   protected readonly modalService = inject(ModalService);
@@ -63,6 +65,7 @@ export class App {
   );
 
   private readonly studioPanel: Signal<SidePanel | undefined> = viewChild(SidePanel);
+  private readonly contentContainer: Signal<ElementRef<HTMLElement> | undefined> = viewChild('contentContainer', { read: ElementRef<HTMLElement> });
 
   protected readonly catalogRoute: Signal<boolean> = computed(() => /^\/(icons|tokens)(?:[/?#]|$)/.test(this.currentUrl()));
   protected readonly studioResizable: Signal<boolean> = computed(() => this.studioPanel()?.currentLayoutMode() === 'push');
@@ -93,6 +96,14 @@ export class App {
 
     effect(() => {
       if (!this.studioResizable() && this.studioWidth() !== this.studioMinWidth) this.studioWidth.set(this.studioMinWidth);
+    });
+
+    effect((onCleanup) => {
+      const container = this.contentContainer()?.nativeElement;
+
+      if (!container) return;
+
+      onCleanup(this.scrollLockService.registerScrollContainer(container));
     });
   }
 

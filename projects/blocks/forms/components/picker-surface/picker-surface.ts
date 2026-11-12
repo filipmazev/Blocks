@@ -25,7 +25,16 @@ import type { Subscription } from 'rxjs';
 import type { OverlayOriginTracker } from '@filip.mazev/blocks/core';
 import type { PickerSurfacePresentation } from '@forms/types/date-picker.types';
 
-import { BX_I18N, BxOverlayPositionService, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+import {
+  BX_I18N,
+  BxOverlayPositionService,
+  inheritOverlayTheme,
+  ResolvableText,
+  resolveText,
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4
+} from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 import { BottomDrawer } from '@filip.mazev/blocks/primitives';
 
@@ -49,12 +58,15 @@ export class PickerSurface {
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly ngZone = inject(NgZone);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly scrollLockService = inject(ScrollLockService);
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly platformId = inject(PLATFORM_ID);
 
   private readonly overlaySubscriptions: Subscription[] = [];
 
   private readonly browser: boolean = isPlatformBrowser(this.platformId);
+
+  private readonly scrollLockId: string = uuidv4();
 
   protected readonly resolvedAriaLabel: Signal<string> = computed(() => resolveText(this.ariaLabel(), this.i18n));
   protected readonly isDrawer: Signal<boolean> = computed(() => this.presentation() === 'drawer');
@@ -155,6 +167,7 @@ export class PickerSurface {
     });
 
     this.overlayRef = overlayRef;
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
 
     const pane = overlayRef.overlayElement;
 
@@ -222,6 +235,7 @@ export class PickerSurface {
 
     clearTimeout(this.focusTimer);
     pane.inert = true;
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     const finish = (): void => {
       if (revision === this.presentationRevision) this.disposePopover();
@@ -249,6 +263,7 @@ export class PickerSurface {
     this.disconnectOrigin = undefined;
     this.overlayRef?.dispose();
     this.overlayRef = undefined;
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     if (restoreFocus && this.restoreTarget?.isConnected) this.restoreTarget.focus({ preventScroll: true });
 

@@ -155,6 +155,9 @@ Malformed text, invalid clock components, bounds, blocked slots and step violati
 last committed form value; committing it closes the popover so field feedback is not covered. Reopening preserves the pending text and error. Disabled and
 readonly controls cannot commit edits; readonly remains distinct from disabled.
 
+An open popover holds its own `ScrollLockService` lock, so page scrolling is frozen while the panel is presented without affecting the surrounding overlay's
+lock. Drawer presentation delegates locking to `BottomDrawer`.
+
 ### Validation messages
 
 Inherited `errorMessages` accepts plain text, callbacks or translation keys. Supported keys are `timeFormat`, `timeRange`, `timeMin`, `timeMax`, `timeDisabled`,

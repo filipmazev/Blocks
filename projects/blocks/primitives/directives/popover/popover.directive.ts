@@ -25,7 +25,16 @@ import { Subscription } from 'rxjs';
 
 import type { IPopoverDirectiveSettingsState } from '@primitives/interfaces/ipopover-directive-settings-state.interface';
 
-import { BX_I18N, BxA11yService, BxOverlayPositionService, inheritOverlayTheme, resolveText, trackOverlayOrigin, uuidv4 } from '@filip.mazev/blocks/core';
+import {
+  BX_I18N,
+  BxA11yService,
+  BxOverlayPositionService,
+  inheritOverlayTheme,
+  resolveText,
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4
+} from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
 import { IPopoverConfig } from '@primitives/interfaces/ipopover-config.interface';
@@ -51,11 +60,14 @@ export class PopoverDirective {
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly ngZone = inject(NgZone);
   private readonly interactivityChecker = inject(InteractivityChecker);
+  private readonly scrollLockService = inject(ScrollLockService);
   private readonly context = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly i18n = inject(BX_I18N, { optional: true });
   private readonly defaults = inject(BX_POPOVER_DEFAULTS, { optional: true });
 
   private readonly browser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
+
+  private readonly scrollLockId: string = uuidv4();
 
   private readonly opened: WritableSignal<boolean> = signal(false);
 
@@ -136,6 +148,7 @@ export class PopoverDirective {
     });
 
     this.overlayRef = overlay;
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
     this.opened.set(true);
 
     const pane = overlay.overlayElement;
@@ -184,6 +197,7 @@ export class PopoverDirective {
 
     this.opened.set(false);
     pane.inert = true;
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     const finish = (): void => {
       if (revision === this.presentationRevision) this.dispose();
@@ -255,6 +269,7 @@ export class PopoverDirective {
     this.disconnectOrigin = undefined;
     this.overlayRef?.dispose();
     this.overlayRef = undefined;
+    this.scrollLockService.enableScroll(this.scrollLockId);
   }
 
   //#endregion

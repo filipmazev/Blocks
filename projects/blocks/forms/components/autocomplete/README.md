@@ -95,6 +95,9 @@ results and pagination without implying exhaustion.
 The shared LoadMoreDirective deduplicates requests, exposes an action when no scrollbar exists and preserves its button spinner during loading. Customize
 normal/loading/retry text through `ILoadMoreConfig`; custom footer templates must use the guarded callback and preserve keyboard access.
 
+The open suggestion panel holds its own `ScrollLockService` lock, so page scrolling is frozen while suggestions are presented without releasing a surrounding
+dialog, drawer or navigation lock.
+
 The playground includes a runnable mock service with delayed initial/search/incremental requests, failure followed by explicit successful retry, empty results
 and a compact page-size control for exercising overflow transitions. Its load-more/error/retry footer shares the select/multi-select styling, with tonal accent
 actions. Source: `projects/playground/src/app/components/screens/library-components/essentials-examples/services/autocomplete-demo.service.ts`.

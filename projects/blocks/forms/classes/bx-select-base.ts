@@ -20,7 +20,17 @@ import {
   viewChild
 } from '@angular/core';
 
-import { BX_I18N, BxA11yService, DEFAULT_DEBOUNCE_TIME, inheritOverlayTheme, ResolvableText, resolveText, trackOverlayOrigin } from '@filip.mazev/blocks/core';
+import {
+  BX_I18N,
+  BxA11yService,
+  DEFAULT_DEBOUNCE_TIME,
+  inheritOverlayTheme,
+  ResolvableText,
+  resolveText,
+  ScrollLockService,
+  trackOverlayOrigin,
+  uuidv4
+} from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting, ISelectionMotion, mountSelectionMotion } from '@filip.mazev/blocks/effects/runtime';
 import { BX_OVERLAY_CONTEXT, ITagConfig, TruncateDirective, truncatedText } from '@filip.mazev/blocks/primitives';
 
@@ -44,6 +54,9 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   private readonly overlay = inject(Overlay);
   private readonly overlayContext = inject(BX_OVERLAY_CONTEXT, { optional: true });
   private readonly i18n = inject(BX_I18N, { optional: true });
+  private readonly scrollLockService = inject(ScrollLockService);
+
+  private readonly scrollLockId: string = uuidv4();
 
   private readonly debouncing: WritableSignal<boolean> = signal(false);
   private readonly searchRequest: WritableSignal<boolean> = signal(false);
@@ -247,6 +260,7 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   public ngOnDestroy(): void {
     ++this.transitionRevision;
     this.onPanelDetach();
+    this.scrollLockService.enableScroll(this.scrollLockId);
   }
 
   /**
@@ -272,6 +286,7 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
     this.isOpen.set(true);
     this.openedChange.emit(true);
     this.isPanelAttached.set(true);
+    this.scrollLockService.disableScroll(this.scrollLockId, { handleTouchInput: true });
 
     const pane = this.connectedOverlay()?.overlayRef?.overlayElement;
 
@@ -289,6 +304,7 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
     const wasOpen = this.isOpen();
 
     this.isOpen.set(false);
+    this.scrollLockService.enableScroll(this.scrollLockId);
 
     if (wasOpen) {
       this.openedChange.emit(false);
@@ -519,6 +535,7 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
     this.onPanelDetach();
     this.isPanelAttached.set(false);
     this.connectedOverlay()?.detachOverlay();
+    this.scrollLockService.enableScroll(this.scrollLockId);
   }
 
   private typeahead(character: string): void {

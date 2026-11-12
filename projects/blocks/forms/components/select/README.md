@@ -68,6 +68,9 @@ preserve their gap, focus and placement without a frame of anchor drift.
 Completed closes release the panel's overlay and tracking resources. Reopening resolves the current overlay context, including after moving the control into or
 out of a native popover. Selection and the application-owned search term remain on the control.
 
+While the panel is presented the control holds its own `ScrollLockService` lock, which freezes page scrolling without releasing a dialog, drawer or navigation
+lock owned by a surrounding overlay.
+
 ## Appearance and accessibility
 
 Dropdown backing uses the classic blur and tint with 18 percentage points of extra opacity (about 63.6% at the default appearance). It does not use SVG
