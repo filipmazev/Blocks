@@ -3529,12 +3529,6 @@ lock. Drawer presentation delegates locking to <code>BottomDrawer</code>.</p>
 <p>Inherited <code>errorMessages</code> accepts plain text, callbacks or translation keys. Supported keys are <code>timeFormat</code>, <code>timeRange</code>, <code>timeMin</code>, <code>timeMax</code>, <code>timeDisabled</code>,
 <code>timeAvailability</code>, <code>timeLoading</code> and <code>timeStep</code>. Callback parameters include <code>format</code>, <code>hourCycle</code>, formatted bounds and configured steps. Omit
 <code>invalidSelectionLabel</code> to retain contextual errors.</p>
-<h3>Compatibility with the branch draft</h3>
-<p>Time-range mode, segmented presentation and the preset sidebar are removed. Use separate TimePicker controls for time endpoints with application validation
-between them; use labeled <code>ITimePickerOption</code> entries in list mode for semantic choices. <code>TimePresetList</code> and the combined DateTimePicker component are removed.
-Core time-range/preset and date-time utilities remain available for application logic.</p>
-<p><code>commitPolicy</code>, <code>applyLabel</code>, <code>cancelLabel</code> and <code>errorWrap</code> remain compatibility inputs without rendered footer actions. Programmatic <code>apply()</code> and <code>cancel()</code>
-remain available for draft integration; they do not delay automatic commits or undo values already committed.</p>
 <h2>Playground</h2>
 <p>The component is available at <code>/components/time-picker</code>; this guide describes the library contract and defaults.</p>
 `,"projects/blocks/forms/components/time-wheel/README.md":`<h1>Time wheel</h1>
@@ -9560,6 +9554,8 @@ color-scheme changes, including after a reload. Clickable Blocks cards choose th
 selected card uses the shared emissive highlight, and Auto joins its light/dark preview halves without inner corner rounding.</p>
 <pre class="playground-code-block" tabindex="0" aria-label="ts code example"><code class="hljs language-ts">themingService.<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-string">&#x27;dark&#x27;</span>);
 themingService.<span class="hljs-title function_">setApplicationTheme</span>(<span class="hljs-literal">null</span>); <span class="hljs-comment">// Follow the system appearance.</span></code></pre>
+<p>The journal also appears on Home as a decorative glass showcase, with a repeating scroll and a pause/play action. Both pages use the shared
+<code>PreviewScrollDirective</code>; the interactive journal retains its one-time hint and stops it as soon as the user takes over.</p>
 <p>The Surfaces section places its Surface Appearance title beside the scrolling journal on wide layouts and above it on smaller screens. The padded pill slider
 sits below the demo, followed by its description; Reset restores surface preferences. Its Blocks Advanced settings disclosure contains rendering and glassiness
 options. Automatic and Baseline are the available rendering choices. Rendering, glassiness, translucency and reduced transparency are saved together in
@@ -9589,32 +9585,38 @@ performs no animated demonstration.</p>
 <h2>Playground</h2>
 <p><code>/appearance</code>, in the Light, Dark and Auto choices.</p>
 `,"projects/playground/src/app/components/screens/home/README.md":`<h1>Playground home</h1>
-<p>Introduces Blocks with a short headline, two primary actions, a portfolio homage and the interactive light garden.</p>
+<p>Introduces Blocks and links to component examples, Theme Studio, Appearance, and the Figma UI kit.</p>
 <h2>Import</h2>
-<p>Home uses Blocks buttons, icons, tooltips and surfaces, plus the private <a href="home">theme material preview</a>. There is no
-external background renderer.</p>
+<p>Home uses Blocks buttons, icons, tags, progress, and surfaces, plus the private <a href="home">theme material preview</a>,
+<a href="home">theme samples</a>, <a href="home">Figma cover</a>, and Appearance journal.</p>
 <h2>Usage</h2>
-<p>Open <code>/</code>. A gently floating glass composition complements the introduction without requiring interaction. The hero has a brief description and generous spacing;
-three compact feature links lead to Appearance, Theme Studio and the interaction demo. Theme Studio changes its colors and corners; Appearance changes its
-translucency and glassiness. Updates flow through semantic CSS variables.</p>
+<p>Open <code>/</code>. Four alternating sections pair short descriptions with component, color, material, and Figma previews. Links open the corresponding playground pages.
+Theme selectors and settings remain in Theme Studio and Appearance.</p>
+<p>The Figma links use the shared library URL, preferring the published Community listing when registered. The supplied SVG is rendered directly as vector artwork.</p>
 <h2>API</h2>
-<p>Theme and appearance preferences remain owned by the existing shared services. Orby retains its existing wake, drag and keyboard interactions. Its lighting
-scene and physics use the full Home content region, including the page gutters; no visible enclosure or nested padding is needed. The footer is separated with a
-Blocks <code>Divider</code> rather than a CSS border.</p>
+<p>Theme and appearance preferences remain owned by the shared services. The examples inherit their semantic tokens without changing those preferences. The theme
+loupe reveals the opposite mode locally; its search-icon button supports keyboard and touch exploration.</p>
+<p>Orby retains its wake, drag, fling, mood, recall, and keyboard interactions. Its stage is a separate layer above the hero and section previews, including their
+floating tools. Its pod sits in the hero\u2019s foreground glass card, before the sections. Its automatic tour visits nearby visible sections, following the
+alternating layout without scrolling the page or moving focus. After the reader scrolls and pauses, Orby catches up at a bounded speed and resumes its slower
+tour. Scrolling inside the glass preview does not trigger following.</p>
+<p>Direct interaction interrupts the tour. A later pause in page scrolling can resume following once manipulation and mood recovery finish. Explicit recall keeps
+Orby at home; keyboard focus, active gestures, and reduced motion remain authoritative.</p>
 <h2>Appearance and customization</h2>
-<p>Two miniature pages recall the author\u2019s first portfolio through its wave silhouette. A compact title and introduction sit behind the front glass; the second
-page contains abstract shapes, gradients and short text. A readable Blocks glass card overlaps them with static text and theme color samples. It uses the same
-shared glass defaults as Appearance\u2019s search bar. All artwork is HTML, CSS and SVG, without imported image assets. The front samples use primary, accent and a
-blend of both; the headline uses the readable accent color. Rendering quality follows global preferences. Only the front pane receives Orby\u2019s light; the
-background cards have surface effects disabled.</p>
+<p>Home and Theme Studio share typography, section spacing, copy layout, alternating columns, and breakpoints through <code>shared/styles/_showcase.scss</code>. Narrow
+layouts stack descriptions above previews. Component buttons link to examples; tags and determinate progress illustrate their current appearance.</p>
+<p>The hero retains its miniature portfolio composition. The glass section reuses the Appearance journal with a repeating, visibility-aware scroll and pause
+action. The Figma cover&#39;s decorative panels rotate and shrink on hover or keyboard focus while its text stays fixed.</p>
 <h2>Behavior and accessibility</h2>
-<p>The decorative illustration is hidden from assistive technology and adds no controls or keyboard stops. Reduced transparency, forced colors and material quality
-use the shared Blocks behavior. The rear pages float independently using sideways and vertical CSS translation with gentle rocking, pausing when offscreen or
-the document is hidden. Reduced motion stops decorative movement; observers and listeners are cleaned up on navigation. Home no longer resolves theme colors
-through a canvas or runs a background rendering loop. The existing light orb remains a separate, user-activated demonstration. It bounces against the unframed
-page bounds, which update on resize and content changes.</p>
+<p>Every section has a named heading. The orb&#39;s instructions remain available to assistive technology without a visible message block. Its button supports Enter,
+arrow keys, and Escape; pointer and touch users can drag and fling it. Recall respects its existing mood guard.</p>
+<p>Animation uses the shared frame scheduler and exact springs where appropriate. Reduced motion stops decorative travel and scrolling while preserving direct
+positioning and the local theme peek. Hidden and offscreen previews stop animation work. Theme, transparency, and accessibility changes update mounted surfaces.
+Listeners, observers, timers, animation effects, and scene controllers are released on navigation.</p>
 <h2>Playground</h2>
-<p>Open <code>/</code>. See the <a href="studio">Theme Studio guide</a> for editing, import and export behavior.</p>
+<p>Open <code>/</code>. See the <a href="studio">Theme Studio guide</a> for editing, import, and export, the
+<a href="appearance">scroll preview guide</a> for its presentation behavior, and the
+<a href="../../../../../../../tools/figma/README.md">Figma publishing guide</a> for Community releases.</p>
 `,"projects/playground/src/app/components/screens/icon-catalog/README.md":`<h1>Lucide icon catalog</h1>
 <p>Browse generated Lucide icons with search, official category filters, progressive rendering, and a nonmodal customization inspector. Filters and per-icon
 inspector customizations remain local to the current visit.</p>
@@ -9734,6 +9736,7 @@ differing opposite-mode manual override.</p>
 <p>Draft state belongs to <code>ThemeStudioService</code>; palette, mode and appearance remain owned by <code>ThemingService</code>. The screen introduces no parallel theme state.
 Color-role metadata is defined in <code>theme-studio-showcase.constants.ts</code>. The exported SCSS is derived from the same draft as the sidebar and setup dialog.</p>
 <h2>Appearance and customization</h2>
+<p>The section typography, spacing, and alternating layout are shared with Home through <code>shared/styles/_showcase.scss</code>.</p>
 <p>The introduction retains the <a href="studio">glass aperture</a> and current palette label. Four sections demonstrate the theme:</p>
 <ul>
 <li><strong>Colors:</strong> six live swatches explain primary, accent, surface, text, border and hover roles, with their semantic CSS variable names.</li>
@@ -10561,6 +10564,26 @@ grids, and tags.</p>
 <h2>Playground</h2>
 <p>Open <code>/utilities/viewport</code> from <strong>Core \u2192 Utilities \u2192 Viewport and breakpoints</strong>. The demo appears first, followed by separate documentation and code tabs.</p>
 <p>Return to the <a href="utilities">utilities overview</a> for the coverage audit and related feature guides.</p>
+`,"projects/playground/src/app/components/shared/figma-library-preview/README.md":`<h1>Figma library cover preview</h1>
+<p>Renders the supplied Blocks Figma cover as vector artwork with motion on its decorative glass panels.</p>
+<h2>Import</h2>
+<p>Private playground component <code>FigmaLibraryPreview</code>.</p>
+<h2>Usage</h2>
+<p>Place the preview inside the Figma link, which provides its accessible name and destination.</p>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> [<span class="hljs-attr">href</span>]=<span class="hljs-string">&quot;figmaLibraryUrl&quot;</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">&quot;Preview the Blocks Angular UI kit in Figma&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">app-figma-library-preview</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></code></pre>
+<h2>API</h2>
+<p>There are no public inputs. The colocated SVG is the component template, keeping one source for the original vector artwork.</p>
+<h2>Appearance and customization</h2>
+<p>The cover preserves its intrinsic 16:9 ratio. The panel ring rotates and shrinks on hover or link focus, while individual panels turn slightly within it. Text
+and the Blocks mark remain fixed.</p>
+<h2>Behavior and accessibility</h2>
+<p>The shared exact spring retargets interrupted motion. Settled panels schedule no work. Live reduced motion removes the transforms; hidden or offscreen artwork
+resets without animation. The artwork is decorative, and the parent link provides keyboard access. Observers, listeners, and animation controllers are released
+on navigation.</p>
+<h2>Playground</h2>
+<p>Open <code>/</code> and hover or focus the cover in <strong>Design in Figma</strong>.</p>
 `,"projects/playground/src/app/components/shared/sidenav/README.md":`<h1>Playground navigation</h1>
 <p>The playground shell uses Blocks SideNav for an expandable desktop sidebar, a compact icon rail, and a mobile drawer.</p>
 <h2>Import</h2>
@@ -10608,6 +10631,8 @@ Glassiness Off, Baseline quality, unsupported browsers and accessibility prefere
 <p>The 6:5 composition is capped at 32rem. The \u201CDesign &amp; code.\u201D title and short introductions keep the previews recognizable as pages. The pages fan outward by six
 degrees while overlapping, and a taller landscape Blocks pane (about 1.76:1) covers their shared center with extra internal spacing. The front samples use
 accent, primary and a blend of both, so all three respond to palette changes and Theme Studio overrides instead of retaining status colors across palettes.</p>
+<p>The foreground card also contains Orby\u2019s pod, aligned with its heading. The interactive orb is rendered in Home\u2019s separate foreground layer; the decorative
+preview stays inert and hidden from assistive technology.</p>
 <h2>Behavior and accessibility</h2>
 <p>The illustration is decorative, hidden from assistive technology and contains no buttons or focus stops. Only the stationary foreground pane participates in the
 shared lighting engine, with pressure feedback explicitly disabled. The two rear pages follow small, repeating diagonal bobs over independent 8- and 9.5-second
@@ -10821,6 +10846,71 @@ the overrides fades the light out; resuming preview fades it back in. Both layer
 Blocks lighting scene; colors, brightness and the border move together on the shared lazy frame clock. Frame work stops after fading out and while the document
 or button is hidden. Reduced motion changes brightness immediately and leaves static colors; forced colors and high contrast remove the decoration and its light
 sources while preserving the ordinary Blocks button and focus outline.</p>
+`,"projects/playground/src/app/components/shared/theme-swatch-preview/README.md":`<h1>Home theme preview</h1>
+<p>Shows Surface, Accent, and Primary samples. A local loupe reveals the opposite theme without changing application settings.</p>
+<h2>Import</h2>
+<p>Private playground component <code>ThemeSwatchPreview</code>.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">app-theme-swatch-preview</span> /&gt;</span></code></pre>
+<h2>API</h2>
+<p>There are no inputs. The preview reads the existing theme and Studio draft. The footer provides the loupe action.</p>
+<h2>Appearance and customization</h2>
+<p>The sample order reverses the shared Studio color roles. Current samples receive light through <code>BxSurfaceDirective</code>; the clipped counterpart reads the same
+Studio service&#39;s opposite-mode values. The SVG cover and other page sections remain separate previews.</p>
+<h2>Behavior and accessibility</h2>
+<p>A precise pointer moves the loupe directly. The search-icon action pins it for keyboard and touch use; arrow keys move the pinned window and Escape closes it.
+Touch users can pin the window, then tap a sample to move it while retaining native page scrolling. The action has an accessible name identifying the previewed
+mode and exposes its pressed state. The duplicated visual layer is inert and hidden from assistive technology. Orby\u2019s pod is in the separate hero illustration,
+so the loupe cannot cover its wake target.</p>
+<h2>Playground</h2>
+<p>Open <code>/</code> and find <strong>Customize a shared theme</strong>. Use <code>/studio</code> to edit the application theme.</p>
+`,"projects/playground/src/app/directives/preview-scroll/README.md":`<h1>Preview scrolling</h1>
+<p>Moves demonstration content behind glass while preserving application scrolling and accessibility preferences.</p>
+<h2>Import</h2>
+<p>Private playground <code>PreviewScrollDirective</code>, applied to the preview&#39;s actual scroll element.</p>
+<h2>Usage</h2>
+<pre class="playground-code-block" tabindex="0" aria-label="html code example"><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">appPreviewScroll</span> [<span class="hljs-attr">previewScrollRepeat</span>]=<span class="hljs-string">&quot;true&quot;</span> [<span class="hljs-attr">previewScrollDistance</span>]=<span class="hljs-string">&quot;520&quot;</span> [<span class="hljs-attr">previewScrollPaused</span>]=<span class="hljs-string">&quot;paused()&quot;</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Preview content --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<h2>API</h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>previewScrollRepeat</code></td>
+<td><code>false</code></td>
+<td>Repeat after a quiet interval; otherwise show one initial hint.</td>
+</tr>
+<tr>
+<td><code>previewScrollDistance</code></td>
+<td><code>280</code></td>
+<td>Maximum excursion in pixels, bounded by the available scroll range.</td>
+</tr>
+<tr>
+<td><code>previewScrollPaused</code></td>
+<td><code>false</code></td>
+<td>Pause decorative scrolling at its current position.</td>
+</tr>
+<tr>
+<td><code>stop()</code></td>
+<td>\u2014</td>
+<td>Permanently stop after the user takes over an interactive preview.</td>
+</tr>
+</tbody></table>
+<h2>Appearance and customization</h2>
+<p>The existing appearance journal uses this behavior for its initial hint. Home enables repetition, uses a larger excursion to pass text beneath the glass search
+bar, and provides a pause/play action.</p>
+<h2>Behavior and accessibility</h2>
+<p>Motion starts after the element becomes substantially visible, moves out and back, then waits before repeating. Reduced motion, hidden documents, offscreen
+previews, and the pause input stop frame and timer work. The directive uses the shared lazy frame scheduler and cleans up listeners and observers on teardown.
+It never scrolls the application or changes focus. Repeating presentations must provide a reachable pause action.</p>
+<h2>Playground</h2>
+<p>Open <code>/</code> for the repeating glass presentation or <code>/appearance</code> for the interactive journal and its one-time hint.</p>
 `};var s={"projects/blocks/forms/components/button/directives/README.md":`projects/blocks/forms/directives/button-icon/README.md`,"projects/blocks/forms/directives/error/README.md":`projects/blocks/forms/components/error/README.md`,"projects/blocks/forms/directives/hint/README.md":`projects/blocks/forms/components/hint/README.md`,"projects/blocks/icons/components/README.md":`projects/blocks/icons/components/icon/README.md`,"projects/blocks/modal/components/README.md":`projects/blocks/modal/components/modal-core/README.md`,"projects/blocks/toastr/components/README.md":`projects/blocks/toastr/components/toast-core/README.md`,"documentation/core/README.md":`projects/blocks/core/README.md`,"documentation/modal/README.md":`projects/blocks/modal/README.md`,"documentation/toastr/README.md":`projects/blocks/toastr/README.md`,"documentation/appearance/README.md":`projects/playground/src/app/components/screens/appearance/README.md`,"assets/modal-readme/README.md":`projects/blocks/modal/README.md`,"assets/toastr-readme/README.md":`projects/blocks/toastr/README.md`,"assets/blocks-core-readme/README.md":`projects/blocks/core/README.md`,"assets/core-readme/README.md":`projects/blocks/core/README.md`};var n={"assets/code-snippets/modal/confirm-close-modal.html.txt":`<div>
     {{ data }}
 </div>
