@@ -1,0 +1,15 @@
+<div
+    bxInfiniteScroll
+    tabindex="0"
+    aria-label="Scrollable example"
+    style="max-block-size: 12rem; overflow: auto"
+    [infiniteScrollThreshold]="args().infiniteScrollThreshold"
+    [infiniteScrollDisabled]="args().infiniteScrollDisabled"
+    [infiniteScrollLoading]="args().infiniteScrollLoading"
+    [infiniteScrollCheckOnRender]="args().infiniteScrollCheckOnRender"
+    [infiniteScrollEndOffset]="args().infiniteScrollEndOffset"
+    (scrollEnd)="onAction('scrollEnd', $event)">
+    <p>Scroll through this local content.</p>
+    <div style="block-size: 20rem"></div>
+    <p>End of content</p>
+</div>

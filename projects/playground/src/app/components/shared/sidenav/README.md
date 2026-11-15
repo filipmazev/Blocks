@@ -18,10 +18,10 @@ Use the desktop header control to collapse or expand the navigation. The prefere
 
 `title` is required. `mobile()`, `open()`, `panelId()`, and `toggle(event)` connect the application's mobile trigger to the shared drawer.
 
-The route-driven tree presents Home, Appearance, Components, Tokens, Icons, Utilities, Tools, and Release notes as separate entries with icons. Components
-contains Primitives, Forms, Navigation, Modals, and Notifications; each category contains its component pages. Layout adds a third level under Primitives.
-Category links open a filtered component index. Tools contains the modal and toast configurators and links to its own overview page. Release notes is the last
-entry. Nested leaf pages use text-only rows; nested parents retain their icons.
+The route-driven tree presents Home, Appearance, Components, Tokens, Icons, Utilities, and Release notes as separate entries with icons. Components contains
+Primitives, Forms, Navigation, Modals, and Notifications; each category contains its component pages. Layout adds a third level under Primitives. Category links
+open a filtered component index. Modal and notification workbenches live under Components. Release notes is the last entry. Nested leaf pages use text-only
+rows; nested parents retain their icons.
 
 ## Appearance and customization
 
@@ -39,5 +39,4 @@ focus reveals labels immediately, and accessible names remain available during t
 
 ## Playground
 
-The navigation is available on every playground page. Visit `/components`, `/components/category/forms`, `/components/layout`, and `/tools` to explore the
-hierarchy.
+The navigation is available on every playground page. Visit `/components`, `/components/category/forms`, and `/components/layout` to explore the hierarchy.

@@ -1,0 +1,15 @@
+<button
+    type="button"
+    bx-button
+    [variant]="args().variant"
+    [color]="args().color"
+    [outlined]="args().outlined"
+    [elevated]="args().elevated"
+    [disabled]="args().disabled"
+    [loading]="args().loading"
+    [interactive]="args().interactive"
+    [surfaceEffects]="args().surfaceEffects"
+    [glassiness]="args().glassiness"
+    (click)="onAction('click', $event)">
+    {{ args().content }}
+</button>

@@ -1,0 +1,29 @@
+<bx-side-panel-layout style="block-size: 18rem"
+    ><bx-side-panel
+        [open]="args().open"
+        [placement]="args().placement"
+        [width]="args().width"
+        [resizable]="args().resizable"
+        [resizeMinWidth]="args().resizeMinWidth"
+        [resizeMaxWidth]="args().resizeMaxWidth"
+        [resizeDisableShrink]="args().resizeDisableShrink"
+        [resizeLabel]="args().resizeLabel"
+        [resizeIdleDelay]="args().resizeIdleDelay"
+        [container]="args().container"
+        [layoutMode]="args().layoutMode"
+        [backdrop]="args().backdrop"
+        [closeOnBackdrop]="args().closeOnBackdrop"
+        [closeOnEscape]="args().closeOnEscape"
+        [showCloseButton]="args().showCloseButton"
+        [ariaLabel]="args().ariaLabel"
+        [closeLabel]="args().closeLabel"
+        [labelledBy]="args().labelledBy"
+        [autoFocus]="args().autoFocus"
+        [restoreFocus]="args().restoreFocus"
+        [animationDuration]="args().animationDuration"
+        (openChange)="onAction('openChange', $event)"
+        (widthChange)="onAction('widthChange', $event)"
+        >{{ args().content }}</bx-side-panel
+    >
+    <p>Project content remains available beside the panel.</p></bx-side-panel-layout
+>

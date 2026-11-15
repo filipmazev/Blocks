@@ -1,134 +1,45 @@
-<bx-page-container pageDescription="Configure notification placement, content, timing, and queue behavior using your shared appearance.">
-    <div class="demo-container">
-        <app-component-info [matchHeight]="configPanel" [codeFiles]="codeFiles" [readmePath]="toastrReadmePath()"></app-component-info>
+<div class="story-actions">
+    <button type="button" bx-button variant="filled" (click)="openLiveToast()"><bx-icon name="bell" size="16" />Show notification</button>
+    <button type="button" bx-button variant="tonal" (click)="openLiveToast(args().type, true)">
+        <bx-icon name="timer-off" size="16" />Persistent notification
+    </button>
+</div>
+<p role="status">Selected notification: {{ liveToast()?.state() ?? 'none' }}. {{ liveToast()?.paused() ? 'Paused' : '' }}</p>
+<div class="story-actions">
+    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="patchLiveToast()">
+        <bx-icon name="check" size="16" />Apply changes
+    </button>
+    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="patchLiveToast(true)">
+        <bx-icon name="timer-reset" size="16" />Restart timer
+    </button>
+    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="pauseToast()"><bx-icon name="pause" size="16" />Pause</button>
+    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="resumeToast()"><bx-icon name="play" size="16" />Resume</button>
+    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="dismissToast()"><bx-icon name="x" size="16" />Dismiss</button>
+</div>
 
-        <div #configPanel class="config-container" bxSurface>
-            <div class="config-header">Configurator</div>
-            <p class="hint">
-                Show several notifications, close a middle item, and patch loading to success or error. Compare settling and stack collapse with reduced motion
-                enabled.
-            </p>
-            <p class="hint">Uses your shared appearance. <a routerLink="/appearance">Adjust appearance settings</a></p>
-            <p class="hint" role="status">{{ resultMessage() }}</p>
-
-            <form class="config-form" [formGroup]="form">
-                <div class="form-section">
-                    <h3>Initial placement and editable content</h3>
-
-                    <bx-select
-                        label="Position"
-                        formControlName="position"
-                        subscriptSizing="dynamic"
-                        [clearable]="false"
-                        [errorMessages]="{ required: 'Choose a position.' }"
-                        [options]="positionSelectOptions">
-                    </bx-select>
-
-                    <bx-input-field label="Title for demo toast" formControlName="title" subscriptSizing="dynamic"> </bx-input-field>
-
-                    <bx-input-field label="Message for demo toast" formControlName="message" subscriptSizing="dynamic"> </bx-input-field>
-                </div>
-
-                <div class="form-section">
-                    <h3>Behavior & Toggles</h3>
-
-                    <bx-input-field
-                        label="Duration (ms)"
-                        formControlName="durationInMs"
-                        type="number"
-                        tooltip="Set to 0 to disable auto-close"
-                        subscriptSizing="dynamic"
-                        [errorMessages]="{ min: 'Duration must be zero or greater.' }">
-                    </bx-input-field>
-
-                    <bx-input-field
-                        label="Max Opened (Queue Limit)"
-                        formControlName="maxOpened"
-                        type="number"
-                        subscriptSizing="dynamic"
-                        [errorMessages]="{ min: 'Show at least one notification.', max: 'Show at most ten notifications.' }">
-                    </bx-input-field>
-
-                    <div class="form-checkboxes">
-                        <bx-checkbox label="Animate" formControlName="animate" subscriptSizing="dynamic"> </bx-checkbox>
-
-                        <bx-checkbox label="Swipe to Dismiss" formControlName="swipeToDismiss" subscriptSizing="dynamic"> </bx-checkbox>
-                    </div>
-                </div>
-            </form>
-
-            <div class="actions">
-                <button type="button" bx-button variant="filled" color="grayscale" [disabled]="form.invalid" (click)="queueToast()">Demo Toast</button>
-                <button type="button" bx-button variant="tonal" [disabled]="!customToast()" (click)="patchCustomToast()">
-                    Apply message to last custom toast
-                </button>
-            </div>
-
-            <section class="live-patch-demo" aria-label="Live toast configuration">
-                <h3>Live updates</h3>
-                <bx-select
-                    label="Close action language"
-                    [options]="overlayDemoI18nService.languages"
-                    [clearable]="false"
-                    [value]="overlayDemoI18nService.language()"
-                    (valueChange)="setCloseLanguage($event)" />
-                <p class="hint">Title and message above can be applied to the selected notification. Position and animation remain opening-time settings.</p>
-                <p class="hint" role="status">Selected notification: {{ liveToast()?.state() ?? 'none' }}. {{ liveToast()?.paused() ? 'Paused' : '' }}</p>
-                <form class="config-form live-patch-form" [formGroup]="liveForm">
-                    <bx-select label="Live type" formControlName="type" subscriptSizing="dynamic" [options]="liveTypeOptions" [clearable]="false" />
-                    <bx-select label="Live icon (clear to remove)" formControlName="icon" subscriptSizing="dynamic" [options]="liveIconOptions" />
-                    <bx-checkbox label="Icon loading" formControlName="loading" subscriptSizing="dynamic" />
-                    <bx-checkbox label="Show close button" formControlName="showCloseButton" subscriptSizing="dynamic" />
-                    <bx-checkbox label="Show progress bar" formControlName="showProgressBar" subscriptSizing="dynamic" />
-                    <bx-checkbox label="Default surface backing" formControlName="hasDefaultBackground" subscriptSizing="dynamic" />
-                    <bx-input-field label="New lifetime (ms; 0 keeps open)" type="number" formControlName="durationInMs" subscriptSizing="dynamic" />
-                </form>
-                <div class="actions">
-                    <button type="button" bx-button variant="filled" [disabled]="form.invalid" (click)="openLiveToast()">Open live toast (no timeout)</button>
-                    <button type="button" bx-button variant="tonal" [disabled]="!liveToast()" (click)="patchLiveToast()">Apply content and appearance</button>
-                    <button type="button" bx-button variant="tonal" [disabled]="!liveToast() || liveForm.invalid" (click)="patchLiveToast(true)">
-                        Apply and reset lifetime
-                    </button>
-                    <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.pause()">Pause</button>
-                    <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.resume()">Resume</button>
-                    <button type="button" bx-button [disabled]="!liveToast()" (click)="liveToast()?.close()">Dismiss selected</button>
-                    <button type="button" bx-button variant="tonal" (click)="loadingToSuccess()">Loading to success</button>
-                    <button type="button" bx-button (click)="releaseQueueDemo()">Release queue placeholders</button>
-                </div>
-                <p class="hint">
-                    Content patches keep the remaining time. Reset lifetime also works while paused. Hover, keyboard focus, and touch gestures pause timed
-                    notifications independently. Explicit Pause remains in effect until Resume. Canceling a swipe returns it to rest.
-                </p>
-            </section>
-
-            <div class="buttons-container">
-                <button type="button" bx-button variant="filled" color="info" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('info')">
-                    Info
-                </button>
-                <button
-                    type="button"
-                    bx-button
-                    variant="filled"
-                    color="success"
-                    [outlined]="true"
-                    [disabled]="form.invalid"
-                    (click)="queueSimpleToast('success')">
-                    Success
-                </button>
-                <button type="button" bx-button variant="filled" color="warn" [outlined]="true" [disabled]="form.invalid" (click)="queueSimpleToast('warn')">
-                    Warn
-                </button>
-                <button
-                    type="button"
-                    bx-button
-                    variant="filled"
-                    color="danger"
-                    [outlined]="true"
-                    [disabled]="form.invalid"
-                    (click)="queueSimpleToast('danger')">
-                    Error
-                </button>
-            </div>
+<p>Changes apply to new notifications. Use Apply changes to update the selected notification.</p>
+<bx-collapsible title="More examples" [headingLevel]="3">
+    <div class="additional-examples">
+        <div class="story-actions">
+            <button type="button" bx-button variant="tonal" (click)="queueToast()"><bx-icon name="panels-top-left" size="16" />Custom notification</button>
+            <button type="button" bx-button variant="tonal" [disabled]="!customToast()" (click)="patchCustomToast()">
+                <bx-icon name="pencil" size="16" />Update custom notification
+            </button>
+            <button type="button" bx-button variant="tonal" (click)="loadingToSuccess()"><bx-icon name="upload" size="16" />Upload example</button>
+            <button type="button" bx-button variant="tonal" (click)="releaseQueueDemo()"><bx-icon name="list-x" size="16" />Dismiss all</button>
         </div>
+        <div class="story-actions">
+            <button type="button" bx-button variant="tonal" color="info" (click)="openLiveToast('info')"><bx-icon name="info" size="16" />Info</button>
+            <button type="button" bx-button variant="tonal" color="success" (click)="openLiveToast('success')">
+                <bx-icon name="circle-check" size="16" />Success
+            </button>
+            <button type="button" bx-button variant="tonal" color="warn" (click)="openLiveToast('warn')">
+                <bx-icon name="triangle-alert" size="16" />Warning
+            </button>
+            <button type="button" bx-button variant="tonal" color="danger" (click)="openLiveToast('danger')">
+                <bx-icon name="circle-alert" size="16" />Error
+            </button>
+        </div>
+        <p>Open more notifications than maxOpened to inspect queueing. Hover, keyboard focus and Pause independently pause timed notifications.</p>
     </div>
-</bx-page-container>
+</bx-collapsible>

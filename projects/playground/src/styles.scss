@@ -1,6 +1,7 @@
 @use 'core/styles/index' as *;
 @use './styles/common' as *;
 @use './styles/code';
+@use './styles/component-workbench';
 
 :root {
     @include bx-theme($carbon-cobalt-light-theme);

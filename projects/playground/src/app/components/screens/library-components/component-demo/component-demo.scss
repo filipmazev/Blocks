@@ -1,7 +1,20 @@
 @use 'core/styles/helpers' as *;
 
 :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    min-inline-size: 0;
+
+    --bx-page-gap: #{spacing(4)};
+    --bx-page-padding-block: #{spacing(4)};
+    --bx-page-title-size: 1.5rem;
+}
+
+.component-sections {
+    flex: 1 0 auto;
+
+    --bx-tabs-panel-gap: #{spacing(3)};
 }
 
 h2 {
@@ -13,17 +26,12 @@ h3 {
     margin: 0;
 }
 
-.component-meta,
 .demo-row,
 .section-heading {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: spacing(4);
-}
-
-.component-meta {
-    font-size: 0.875rem;
 }
 
 code {
@@ -175,11 +183,6 @@ a {
     .demo-stage {
         padding: spacing(4);
     }
-
-    .component-meta {
-        align-items: flex-start;
-        flex-direction: column;
-    }
 }
 
 .native-control-surface {
@@ -195,4 +198,24 @@ a {
 .native-control-surface > .native-control {
     border: 0;
     outline: none;
+}
+
+.component-workspace {
+    --workbench-action-size: #{spacing(10)};
+    --workbench-actions-width: calc(2 * var(--workbench-action-size) + #{spacing(2)});
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    min-inline-size: 0;
+}
+
+.navigation-actions {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: spacing(1);
+    display: flex;
+    justify-content: flex-end;
+    inline-size: var(--workbench-actions-width);
 }

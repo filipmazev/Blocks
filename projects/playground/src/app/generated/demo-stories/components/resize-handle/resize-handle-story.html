@@ -1,0 +1,23 @@
+<div #container style="position: relative; inline-size: 100%; min-block-size: 12rem">
+    <div #surface style="max-inline-size: 100%" [style.inline-size.px]="args().resizeValue">
+        {{ args().content }}
+        <div
+            bxResizeHandle
+            [resizeContainer]="container"
+            [resizeTarget]="surface"
+            [resizeValue]="args().resizeValue"
+            [resizeEdge]="args().resizeEdge"
+            [resizeMinSize]="args().resizeMinSize"
+            [resizeMaxSize]="args().resizeMaxSize"
+            [resizeInitialSize]="args().resizeInitialSize"
+            [resizeDisableShrink]="args().resizeDisableShrink"
+            [resizeDisabled]="args().resizeDisabled"
+            [resizeLabel]="args().resizeLabel"
+            [resizeControls]="args().resizeControls"
+            [resizeStep]="args().resizeStep"
+            [resizeIdleDelay]="args().resizeIdleDelay"
+            (resizeStart)="onAction('resizeStart', $event)"
+            (resizeEnd)="onAction('resizeEnd', $event)"
+            (resizeValueChange)="onAction('resizeValueChange', $event)"></div>
+    </div>
+</div>

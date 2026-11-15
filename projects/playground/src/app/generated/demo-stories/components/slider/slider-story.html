@@ -1,0 +1,12 @@
+<input
+    type="range"
+    bxSlider
+    aria-label="Volume"
+    [glassiness]="args().glassiness"
+    [discrete]="args().discrete"
+    [showTickMarks]="args().showTickMarks"
+    [min]="args().min"
+    [max]="args().max"
+    [step]="args().step"
+    [value]="args().value"
+    (input)="onNativeValue($event)" />

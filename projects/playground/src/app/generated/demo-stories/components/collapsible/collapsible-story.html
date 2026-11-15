@@ -1,0 +1,12 @@
+<bx-collapsible
+    [id]="args().id"
+    [title]="args().title"
+    [expanded]="args().expanded"
+    [disabled]="args().disabled"
+    [readonly]="args().readonly"
+    [readOnly]="args().readOnly"
+    [headingLevel]="args().headingLevel"
+    [region]="args().region"
+    (expandedChange)="onAction('expandedChange', $event)"
+    >{{ args().content }}</bx-collapsible
+>

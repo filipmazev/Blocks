@@ -79,4 +79,4 @@ viewport. The Tokens catalog uses the same action; Utilities no longer renders i
 
 ## Playground
 
-Open `/icons` from Tools. Related interactive infrastructure demos are `/components/side-panel`, `/components/infinite-scroll`, and `/utilities`.
+Open `/icons` from the main navigation. Related interactive infrastructure demos are `/components/side-panel`, `/components/infinite-scroll`, and `/utilities`.

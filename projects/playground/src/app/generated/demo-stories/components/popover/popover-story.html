@@ -1,0 +1,5 @@
+<button type="button" bx-button [bxPopover]="details" [popoverDisabled]="args().popoverDisabled" (openedChange)="onAction('openedChange', $event)">
+    Project details</button
+><ng-template #details
+    ><bx-popover>{{ args().content }}</bx-popover></ng-template
+>

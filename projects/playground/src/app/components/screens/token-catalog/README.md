@@ -180,5 +180,6 @@ styles.
 
 ## Playground
 
-Open `/tokens` from Tools. Search for `warning`, `danger`, `background`, `shadow`, `rounded`, `glass`, a component name, a source path, or a full CSS variable.
-Choose **Color pairs** for the complete companion mapping, **Sass breakpoints** for responsive thresholds, or **Utility classes** for copyable class names.
+Open `/tokens` from the main navigation. Search for `warning`, `danger`, `background`, `shadow`, `rounded`, `glass`, a component name, a source path, or a full
+CSS variable. Choose **Color pairs** for the complete companion mapping, **Sass breakpoints** for responsive thresholds, or **Utility classes** for copyable
+class names.

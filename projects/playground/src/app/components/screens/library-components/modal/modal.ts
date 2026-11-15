@@ -1,217 +1,113 @@
-import type { WritableSignal } from '@angular/core';
+import type { InputSignal, OutputEmitterRef, WritableSignal } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import type { ModalRef } from '@filip.mazev/blocks/modal';
+import type { IDemoAction } from '@playground/interfaces/idemo-action.interface';
+import type { IModalStoryArgs } from '@playground/interfaces/imodal-story-args.interface';
+import type { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
+import type { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
 
-import { BreakpointKey, BREAKPOINTS } from '@filip.mazev/blocks/core';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import { PageContainer } from '@filip.mazev/blocks/primitives';
+import { Button } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { ModalConfirmCloseGuard, ModalService } from '@filip.mazev/blocks/modal';
 
-import { Button } from '@forms/components/button/button';
-import { Checkbox } from '@forms/components/checkbox/checkbox';
-import { InputField } from '@forms/components/input-field/input-field';
-import { Select } from '@forms/components/select/select';
-import { IBxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
-import { ModalConfirmCloseGuard } from '@modal/classes/guards/modal-confirm-close-guard';
-import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
-import { ModalService } from '@modal/services/modal.service';
-import { ModalLayout } from '@modal/types/modal.types';
-import { ModalConfigRequest } from '@playground/classes/requests/ModalConfigRequest';
 import { ConfirmClose } from '@playground/components/screens/library-components/modal/components/confirm-close/confirm-close';
 import { DemoModal } from '@playground/components/screens/library-components/modal/components/demo-modal/demo-modal';
-import { ComponentInfo } from '@playground/components/shared/component-info/component-info';
-import { ICodeFile } from '@playground/interfaces/icode-file.interface';
-import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
-import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
-import { ModalConfigFormControls } from '@playground/types/form.types';
+import { MODAL_STORY_DEFAULTS } from '@playground/shared/constants/modal-story.constants';
 
 @Component({
   selector: 'app-modal',
-  standalone: true,
-  imports: [PageContainer, BxSurfaceDirective, RouterLink, CommonModule, ReactiveFormsModule, ComponentInfo, Button, InputField, Checkbox, Select],
+  imports: [Button, Icon],
   templateUrl: './modal.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './modal.scss'
+  styleUrl: './modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Modal {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly modalService = inject(ModalService);
 
-  protected readonly layoutOptions: ModalLayout[] = ['center', 'right', 'left', 'bottom-sheet'];
-  protected readonly layoutSelectOptions: IBxSelectOption<ModalLayout>[] = this.layoutOptions.map((layout) => ({
-    label:
-      layout === 'bottom-sheet'
-        ? 'Bottom drawer'
-        : layout
-            .split('-')
-            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-            .join(' '),
-    value: layout
-  }));
-  protected readonly breakpointSelectOptions: IBxSelectOption<string>[] = [{ label: 'None', value: 'none' }, ...this.layoutSelectOptions];
-  protected readonly breakpointKeys: BreakpointKey[] = Object.keys(BREAKPOINTS) as (keyof typeof BREAKPOINTS)[];
-  protected readonly form: FormGroup<ModalConfigFormControls>;
+  private readonly modals: Set<ModalRef<IDemoModalData, IDemoModalResult>> = new Set();
 
   protected readonly activeModal: WritableSignal<ModalRef<IDemoModalData, IDemoModalResult> | null> = signal(null);
 
-  protected readonly resultMessage: WritableSignal<string> = signal('Open a modal to preview its layout and close behavior.');
-  protected readonly modalReadmePath: WritableSignal<string> = signal<string>('projects/blocks/modal/README.md');
+  public readonly args: InputSignal<IModalStoryArgs> = input<IModalStoryArgs>(MODAL_STORY_DEFAULTS);
 
-  protected codeFiles: ICodeFile[] = [
-    {
-      title: 'modal-usage.ts',
-      path: 'assets/code-snippets/modal/modal-usage.ts.txt',
-      language: 'typescript'
-    },
-    { title: 'modal.ts', path: 'assets/code-snippets/modal/modal.ts.txt', language: 'typescript' },
-    { title: 'modal.html', path: 'assets/code-snippets/modal/modal.html.txt', language: 'html' },
-    { title: 'modal.scss', path: 'assets/code-snippets/modal/modal.scss.txt', language: 'scss' },
-    {
-      title: 'confirm-close.ts',
-      path: 'assets/code-snippets/modal/confirm-close-modal.ts.txt',
-      language: 'typescript'
-    },
-    {
-      title: 'confirm-close.html',
-      path: 'assets/code-snippets/modal/confirm-close-modal.html.txt',
-      language: 'html'
-    },
-    {
-      title: 'confirm-close.scss',
-      path: 'assets/code-snippets/modal/confirm-close-modal.scss.txt',
-      language: 'scss'
-    },
-    { title: 'styles.scss', path: 'assets/code-snippets/modal/styles.scss.txt', language: 'scss' }
-  ];
+  public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();
 
   private openedCount: number = 0;
 
   constructor() {
-    const controls = {
-      layout: new FormControl<ModalLayout>('right'),
-      animate: new FormControl<boolean>(true),
-      hasBackdrop: new FormControl<boolean>(true),
-      showCloseButton: new FormControl<boolean>(true),
-      title: new FormControl<string>('Review your changes'),
-      headerText: new FormControl<string | null>('Workspace settings'),
-      disableClose: new FormControl<boolean>(false),
-      disableCloseOnBackdropClick: new FormControl<boolean>(false),
-      hasConfirmCloseGuard: new FormControl<boolean>(true)
-    } as ModalConfigFormControls;
-
-    this.breakpointKeys.forEach((bp) => {
-      let defaultVal = 'none';
-
-      if (bp === 'sm') defaultVal = 'bottom-sheet';
-
-      if (bp === 'xl') defaultVal = 'center';
-
-      controls[bp] = new FormControl(defaultVal);
+    this.destroyRef.onDestroy(() => {
+      for (const modal of this.modals) modal.close('cancel', undefined, true);
     });
-
-    this.form = new FormGroup<ModalConfigFormControls>(controls);
   }
 
   protected openModal(): void {
-    const request = this.createRequest();
-
-    if (!request) return;
-
-    const headerText = request.headerText === '' ? null : request.headerText;
-
+    const values = this.args();
     const modal = this.modalService.open<IDemoModalData, IDemoModalResult>(DemoModal, {
-      ariaLabel: headerText ? undefined : request.title,
-      header:
-        headerText === undefined
-          ? undefined
-          : {
-              text: headerText ?? '',
-              icon: {
-                name: 'info',
-                color: 'text-info',
-                bgColor: 'auto'
-              }
-            },
+      ariaLabel: values.headerText ? undefined : values.title,
+      header: { text: values.headerText, icon: { name: 'info', color: 'text-info', bgColor: 'auto' } },
       data: {
-        title: request.title,
-        body: 'This dialog shares the application theme and appearance settings. Confirm to apply the example, or cancel to return to the playground.',
+        title: values.title,
+        body: 'Confirm to apply the example, or cancel to return to the playground. The nested menus, live heading controls and wizard remain interactive.',
         openedCount: this.openedCount
       },
       style: {
-        layout: request.layout,
-        animate: request.animate,
-        hasBackdrop: request.hasBackdrop,
-        showCloseButton: request.showCloseButton,
-        breakpoints: this.getBreakpointsFromRequest(request)
+        layout: values.layout,
+        animate: values.animate,
+        hasBackdrop: values.hasBackdrop,
+        showCloseButton: values.showCloseButton,
+        breakpoints: values.breakpoints
       },
-      disableClose: request.disableClose,
-      disableCloseOnBackdropClick: request.disableCloseOnBackdropClick,
-      closeGuard: request.hasConfirmCloseGuard
+      disableClose: values.disableClose,
+      disableCloseOnBackdropClick: values.disableCloseOnBackdropClick,
+      closeGuard: values.hasConfirmCloseGuard
         ? new ModalConfirmCloseGuard<string, undefined>(ConfirmClose, {
             data: 'Are you sure you want to close the modal?',
-            header: {
-              text: 'Unsaved Changes'
-            },
-            style: {
-              showCloseButton: false
-            }
+            header: { text: 'Unsaved changes' },
+            style: { showCloseButton: false }
           })
         : undefined
     });
 
+    this.modals.add(modal);
     this.activeModal.set(modal);
+    this.action.emit({ name: 'open', payload: values });
+    modal
+      .modalState$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => this.action.emit({ name: 'modalState', payload: state }));
+    modal
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        this.modals.delete(modal);
 
-    modal.afterClosed().subscribe((result: IModalCloseResult<IDemoModalResult | undefined>) => {
-      if (this.activeModal() === modal) this.activeModal.set(null);
+        if (this.activeModal() === modal) this.activeModal.set(null);
 
-      if (result.state === 'confirm' && result.data) {
-        this.openedCount = result.data.openedCount;
-        this.resultMessage.set(`Changes confirmed. This modal has been confirmed ${this.openedCount} time${this.openedCount === 1 ? '' : 's'}.`);
-      } else {
-        this.resultMessage.set('Modal closed. No changes were applied.');
-      }
-    });
+        if (result.state === 'confirm' && result.data) this.openedCount = result.data.openedCount;
+
+        this.action.emit({ name: 'afterClosed', payload: result });
+      });
   }
 
   protected patchOpenModal(): void {
-    const values = this.form.getRawValue();
+    const values = this.args();
+    const patch = {
+      header: { text: values.headerText, icon: { name: 'pencil' as const } },
+      disableClose: values.disableClose,
+      disableCloseOnBackdropClick: values.disableCloseOnBackdropClick,
+      style: { showCloseButton: values.showCloseButton }
+    };
 
-    this.activeModal()?.patch({
-      header: { text: values.headerText ?? '', icon: { name: 'pencil' } },
-      disableClose: values.disableClose ?? false,
-      disableCloseOnBackdropClick: values.disableCloseOnBackdropClick ?? false,
-      style: { showCloseButton: values.showCloseButton ?? true }
-    });
+    this.activeModal()?.patch(patch);
+    this.action.emit({ name: 'patch', payload: patch });
   }
 
-  //#region Helpers
-
-  private createRequest(): ModalConfigRequest | undefined {
-    if (this.form.invalid) return undefined;
-
-    const rawValue = this.form.getRawValue();
-
-    const cleanValues = Object.fromEntries(Object.entries(rawValue).map(([key, value]) => [key, value === null ? undefined : value]));
-
-    return new ModalConfigRequest(cleanValues);
+  protected closeModal(): void {
+    this.activeModal()?.close();
+    this.action.emit({ name: 'closeRequested', payload: undefined });
   }
-
-  private getBreakpointsFromRequest(request: ModalConfigRequest): Record<string, ModalLayout> {
-    const breakpoints: Record<string, ModalLayout> = {};
-
-    this.breakpointKeys.forEach((key) => {
-      const val = request[key];
-
-      if (val && val !== 'none') {
-        breakpoints[key] = val as ModalLayout;
-      }
-    });
-
-    return breakpoints;
-  }
-
-  //#endregion
 }

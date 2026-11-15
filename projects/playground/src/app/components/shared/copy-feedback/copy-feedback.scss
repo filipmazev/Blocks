@@ -1,0 +1,16 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: flex;
+    align-items: center;
+    gap: spacing(3);
+    padding: spacing(4);
+    color: var(--bx-text-primary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+span {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}

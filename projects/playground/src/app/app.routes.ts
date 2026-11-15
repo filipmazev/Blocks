@@ -171,32 +171,10 @@ export const ROUTES: Routes = [
       loadComponent: () => import('@playground/components/screens/theme-studio-new-project/theme-studio-new-project').then((m) => m.ThemeStudioNewProject),
       title: 'New Blocks project · Blocks'
     },
-    { label: 'New Blocks project', breadcrumb: 'New project', section: 'Tools', menu: false }
+    { label: 'New Blocks project', breadcrumb: 'New project', section: 'Start', menu: false }
   ),
-  withInAppNavigation(
-    {
-      path: 'tools',
-      loadComponent: () => import('@playground/components/screens/tools/tools').then((m) => m.Tools),
-      title: 'Tools · Blocks'
-    },
-    { label: 'Tools', breadcrumb: 'Tools', icon: { name: 'wrench' }, section: 'Tools', menu: true, order: 0 }
-  ),
-  withInAppNavigation(
-    {
-      path: 'modal',
-      loadComponent: () => import('@playground/components/screens/library-components/modal/modal').then((m) => m.Modal),
-      title: 'Modal configurator · Blocks'
-    },
-    { label: 'Modal configurator', breadcrumb: 'Modal configurator', icon: { name: 'panels-top-left' }, section: 'Tools', menu: true }
-  ),
-  withInAppNavigation(
-    {
-      path: 'toastr',
-      loadComponent: () => import('@playground/components/screens/library-components/toastr/toastr').then((m) => m.Toastr),
-      title: 'Toast configurator · Blocks'
-    },
-    { label: 'Toast configurator', breadcrumb: 'Toast configurator', icon: { name: 'bell' }, section: 'Tools', menu: true }
-  ),
+  { path: 'modal', pathMatch: 'full', redirectTo: 'components/modal-centered' },
+  { path: 'toastr', pathMatch: 'full', redirectTo: 'components/simple-toast' },
   { path: 'glass', pathMatch: 'full', redirectTo: 'appearance' },
   { path: '**', redirectTo: 'components' }
 ];

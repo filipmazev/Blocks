@@ -1,0 +1,55 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: spacing(4);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+:host > * {
+    min-inline-size: 0;
+}
+
+/* IMPORTANT: Container owns its maximum width through size presets; its preview parent already bounds the available width. */
+:host > :not(bx-container) {
+    max-inline-size: 100%;
+}
+
+:host > bx-form-field,
+:host > input[type='range'],
+:host > bx-range-slider,
+:host > bx-input-field,
+:host > bx-select,
+:host > bx-multi-select,
+:host > bx-autocomplete,
+:host > bx-date-picker,
+:host > bx-time-picker,
+:host > bx-search-input {
+    inline-size: min(100%, 26rem);
+}
+
+:host > button {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+:host > bx-alert,
+:host > bx-modal-banner,
+:host > bx-card,
+:host > bx-collapsible,
+:host > bx-accordion,
+:host > bx-side-panel-layout,
+:host > bx-virtual-collection,
+:host > bx-page-container,
+:host > bx-container,
+:host > bx-stack,
+:host > bx-grid,
+:host > bx-stepper,
+:host > bx-top-nav {
+    inline-size: 100%;
+}

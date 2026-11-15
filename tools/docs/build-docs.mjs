@@ -50,8 +50,9 @@ await collect('projects/playground/src/app/components/screens/home');
 await collect('projects/playground/src/app/components/screens/utilities');
 await collect('projects/playground/src/app/components/screens/token-catalog');
 await collect('projects/playground/src/app/components/screens/icon-catalog');
-await collect('projects/playground/src/app/components/screens/tools');
 await collect('projects/playground/src/app/components/shared/sidenav');
+await collect('projects/playground/src/app/components/shared/demo-workbench');
+await collect('projects/playground/src/app/components/shared/copy-feedback');
 await collect('projects/playground/src/app/components/shared/theme-studio');
 await collect('projects/playground/src/app/components/shared/theme-material-preview');
 await collect('projects/playground/src/app/components/shared/theme-swatch-preview');
@@ -126,7 +127,6 @@ for (const file of files) {
 }
 routes.set('projects/playground/src/app/components/screens/token-catalog/README.md', 'tokens');
 routes.set('projects/playground/src/app/components/screens/icon-catalog/README.md', 'icons');
-routes.set('projects/playground/src/app/components/screens/tools/README.md', 'tools');
 routes.set('projects/playground/src/app/components/shared/sidenav/README.md', 'components/side-nav');
 for (const slot of ['header', 'footer', 'banner']) {
   routes.set(`projects/blocks/primitives/directives/side-panel-${slot}/README.md`, 'components/side-panel');
@@ -142,8 +142,8 @@ routes.set('projects/blocks/primitives/directives/virtual-item/README.md', 'comp
 for (const guide of ['components/step', 'directives/step-content', 'directives/step-label']) {
   routes.set(`projects/blocks/navigation/${guide}/README.md`, 'components/stepper');
 }
-routes.set('projects/blocks/modal/README.md', 'modal');
-routes.set('projects/blocks/toastr/README.md', 'toastr');
+routes.set('projects/blocks/modal/README.md', 'components/modal-centered');
+routes.set('projects/blocks/toastr/README.md', 'components/simple-toast');
 routes.set('projects/blocks/core/README.md', 'components');
 routes.set('projects/blocks/README.md', 'installation');
 routes.set('projects/playground/src/app/components/screens/installation/README.md', 'installation');

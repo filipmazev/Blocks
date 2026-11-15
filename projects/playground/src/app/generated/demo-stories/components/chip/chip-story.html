@@ -1,0 +1,14 @@
+<bx-chip
+    [label]="args().label"
+    [selected]="args().selected"
+    [selectable]="args().selectable"
+    [deselectable]="args().deselectable"
+    [removable]="args().removable"
+    [disabled]="args().disabled"
+    [readonly]="args().readonly"
+    [readOnly]="args().readOnly"
+    (activated)="onAction('activated', $event)"
+    (removed)="onAction('removed', $event)"
+    (selectedChange)="onAction('selectedChange', $event)"
+    >{{ args().content }}</bx-chip
+>

@@ -1,0 +1,12 @@
+<bx-menu-item
+    [icon]="args().icon"
+    [endIcon]="args().endIcon"
+    [label]="args().label"
+    [wrapLabel]="args().wrapLabel"
+    [tooltipOnTruncate]="args().tooltipOnTruncate"
+    [disabled]="args().disabled"
+    [danger]="args().danger"
+    [shortcut]="args().shortcut"
+    (action)="onAction('action', $event)"
+    >{{ args().content }}</bx-menu-item
+>

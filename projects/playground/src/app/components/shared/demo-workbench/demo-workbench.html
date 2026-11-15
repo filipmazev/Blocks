@@ -1,0 +1,197 @@
+@if (story(); as current) {
+    <section class="workbench" aria-label="Interactive component workbench">
+        <bx-side-panel-layout class="inspector-layout">
+            @if (!compact()) {
+                <bx-side-panel
+                    panelId="demo-properties"
+                    ariaLabel="Component properties"
+                    closeLabel="Close properties"
+                    placement="right"
+                    resizeLabel="Resize properties panel"
+                    [breakpoints]="panelBreakpoints"
+                    [resizable]="!compact()"
+                    [resizeDisableShrink]="false"
+                    [resizeMinWidth]="320"
+                    [resizeMaxWidth]="720"
+                    [autoFocus]="false"
+                    [(open)]="propertiesOpen"
+                    [(width)]="panelWidth">
+                    <h2 bxSidePanelHeader>Properties</h2>
+                    <ng-container [ngTemplateOutlet]="inspector" />
+                </bx-side-panel>
+            }
+            <div #stage class="stage-column">
+                <div id="demo-preview" class="preview" bxSurface aria-label="Live preview" [attr.aria-busy]="loading()">
+                    <div class="preview-scroll">
+                        <div class="preview-content"><ng-container #preview /></div>
+                        @if (showLoading()) {
+                            <bx-skeleton shape="rectangle" height="8rem" label="Loading component example" [decorative]="false" />
+                        }
+                        @if (loadError()) {
+                            <div class="preview-error">
+                                <bx-icon name="circle-alert" size="24" />
+                                <p role="alert">{{ loadError() }}</p>
+                                <button type="button" bx-button variant="tonal" (click)="retry()"><bx-icon name="rotate-cw" size="16" />Retry</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div
+                    bxResizeHandle
+                    class="results-resize"
+                    resizeEdge="top"
+                    resizeLabel="Resize preview and code panels"
+                    resizeControls="demo-results demo-preview"
+                    [resizeTarget]="results"
+                    [resizeContainer]="stage"
+                    [resizeMinSize]="160"
+                    [resizeMaxSize]="stage.clientHeight - 216"
+                    [resizeDisableShrink]="false"
+                    [resizeValue]="resultsHeight()"
+                    (resizeValueChange)="resultsHeight.set($event)"></div>
+                <div #results id="demo-results" class="results" [style.block-size.px]="resultsHeight()">
+                    @if (current.hasActions) {
+                        <bx-tabs class="results-tabs" ariaLabel="Code and events">
+                            <bx-tab label="Code" value="code" icon="code-xml" color="success" textColor="text-success"
+                                ><ng-template bxTabContent><ng-container [ngTemplateOutlet]="codeView" /></ng-template
+                            ></bx-tab>
+                            <bx-tab
+                                value="actions"
+                                icon="activity"
+                                color="info"
+                                textColor="text-info"
+                                [label]="'Actions (' + (events().length > 99 ? '99+' : events().length) + ')'"
+                                ><ng-template bxTabContent>
+                                    <div class="event-content">
+                                        <div class="actions-heading">
+                                            <span>Latest events</span
+                                            ><button type="button" bx-button variant="tonal" [disabled]="!events().length" (click)="events.set([])">
+                                                <bx-icon name="trash-2" size="16" />Clear actions
+                                            </button>
+                                        </div>
+                                        <div class="event-log">
+                                            @for (event of events(); track event.id) {
+                                                <bx-collapsible [title]="event.name" [headingLevel]="3">
+                                                    <pre>{{ event.payload }}</pre>
+                                                </bx-collapsible>
+                                            } @empty {
+                                                <p class="empty-state">Interact with the preview to inspect events.</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </ng-template></bx-tab
+                            >
+                        </bx-tabs>
+                    } @else {
+                        <ng-container [ngTemplateOutlet]="codeView" />
+                    }
+                    <ng-template #codeView
+                        ><app-code class="result-code" maxHeight="none" [fillHeight]="true" [formatSource]="true" [files]="files()"
+                    /></ng-template>
+                </div>
+            </div>
+        </bx-side-panel-layout>
+        @if (compact()) {
+            <bx-bottom-drawer
+                title="Properties"
+                icon="sliders-horizontal"
+                closeLabel="Close properties"
+                surfaceId="demo-properties-drawer"
+                maxHeight="92dvh"
+                [(open)]="propertiesOpen">
+                <div class="drawer-inspector"><ng-container [ngTemplateOutlet]="inspector" /></div>
+            </bx-bottom-drawer>
+        }
+        <ng-template #inspector>
+            <div class="inspector-content">
+                <bx-input-field label="Find a property" subscriptSizing="dynamic" [value]="search()" (valueChange)="setSearch($event)" />
+                <bx-tabs class="inspector-tabs" ariaLabel="Property inspection">
+                    <bx-tab label="Controls" value="controls" icon="sliders-horizontal"
+                        ><ng-template bxTabContent>
+                            <div class="controls">
+                                @for (property of controls(); track property.name) {
+                                    <div class="control-row" [class.control-wide]="property.editor === 'json'">
+                                        @switch (property.editor) {
+                                            @case ('boolean') {
+                                                <bx-checkbox
+                                                    subscriptSizing="dynamic"
+                                                    [label]="property.binding"
+                                                    [tooltip]="propertyHelp(property)"
+                                                    [checked]="booleanValue(property)"
+                                                    (checkedChange)="setValue(property, $event)" />
+                                            }
+                                            @case ('select') {
+                                                <bx-select
+                                                    subscriptSizing="dynamic"
+                                                    [label]="property.binding"
+                                                    [tooltip]="propertyHelp(property)"
+                                                    [options]="options(property)"
+                                                    [value]="args()[property.name]"
+                                                    [isSearchable]="true"
+                                                    [clearable]="property.optional || property.nullable"
+                                                    (valueChange)="setValue(property, $event)" />
+                                            }
+                                            @default {
+                                                <bx-input-field
+                                                    subscriptSizing="dynamic"
+                                                    errorPolicy="always"
+                                                    [label]="property.binding"
+                                                    [tooltip]="propertyHelp(property)"
+                                                    [type]="property.editor === 'number' ? 'number' : 'text'"
+                                                    [multiline]="property.editor === 'json'"
+                                                    [value]="textValue(property)"
+                                                    [error]="errors()[property.name] || undefined"
+                                                    (valueChange)="setValue(property, $event)" />
+                                            }
+                                        }
+                                    </div>
+                                } @empty {
+                                    <p class="empty-state">No editable properties match. Browse API for templates and callbacks.</p>
+                                }
+                            </div>
+                        </ng-template></bx-tab
+                    >
+                    <bx-tab label="API" value="api" icon="braces" color="info"
+                        ><ng-template bxTabContent>
+                            <div class="api-list">
+                                @for (property of filteredProperties(); track property.name) {
+                                    <bx-collapsible [title]="property.binding" [headingLevel]="3">
+                                        <div class="api-description">
+                                            <small>{{ property.kind }}</small
+                                            ><code>{{ property.type }}</code>
+                                            <p>{{ property.description }}</p>
+                                            <p>
+                                                Default: <code>{{ property.defaultExpression }}</code>
+                                            </p>
+                                            @if (property.editor === 'documentation') {
+                                                <p>Use Angular code or the contextual examples for this extension point.</p>
+                                            }
+                                        </div>
+                                    </bx-collapsible>
+                                }
+                            </div>
+                        </ng-template></bx-tab
+                    >
+                </bx-tabs>
+            </div>
+        </ng-template>
+        <ng-template #workbenchActions>
+            <div class="toolbar-actions">
+                <button type="button" bx-button variant="icon" aria-label="Reset story" bxTooltip="Reset story" (click)="reset()">
+                    <bx-icon name="rotate-ccw" size="18" />
+                </button>
+                <button
+                    type="button"
+                    bx-button
+                    variant="icon"
+                    aria-label="Properties"
+                    bxTooltip="Properties"
+                    [attr.aria-controls]="compact() ? 'demo-properties-drawer' : 'demo-properties'"
+                    [attr.aria-expanded]="propertiesOpen()"
+                    (click)="propertiesOpen.set(!propertiesOpen())">
+                    <bx-icon name="sliders-horizontal" size="18" />
+                </button>
+            </div>
+        </ng-template>
+    </section>
+}

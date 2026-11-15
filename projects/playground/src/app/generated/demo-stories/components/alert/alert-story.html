@@ -1,0 +1,17 @@
+<bx-alert
+    [tone]="args().tone"
+    [title]="args().title"
+    [message]="args().message"
+    [dismissible]="args().dismissible"
+    [dismissLabel]="args().dismissLabel"
+    [emissive]="args().emissive"
+    [emissionColor]="args().emissionColor"
+    [emissionIntensity]="args().emissionIntensity"
+    [emissionRadius]="args().emissionRadius"
+    [visible]="args().visible"
+    [announcement]="args().announcement"
+    [dismissFocusTarget]="args().dismissFocusTarget"
+    (dismissed)="onAction('dismissed', $event)"
+    (visibleChange)="onAction('visibleChange', $event)"
+    >{{ args().content }}</bx-alert
+>

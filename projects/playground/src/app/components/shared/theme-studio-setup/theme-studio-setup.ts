@@ -1,6 +1,5 @@
 import type { ElementRef, Signal, WritableSignal } from '@angular/core';
 
-import { Clipboard } from '@angular/cdk/clipboard';
 import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -14,6 +13,7 @@ import { Stepper } from '@filip.mazev/blocks/navigation';
 import { Tab, Tabs } from '@filip.mazev/blocks/primitives';
 
 import { Code } from '@playground/components/shared/code/code';
+import { ClipboardFeedbackService } from '@playground/services/clipboard-feedback.service';
 import { ThemeStudioService } from '@playground/services/theme-studio.service';
 import {
   STUDIO_CLI_COMMANDS,
@@ -34,7 +34,7 @@ import { studioCreateCommand } from '@playground/shared/helpers/theme-studio-set
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeStudioSetup extends Modal<undefined, undefined> {
-  private readonly clipboard = inject(Clipboard);
+  private readonly clipboardFeedbackService = inject(ClipboardFeedbackService);
 
   protected readonly themeStudioService = inject(ThemeStudioService);
 
@@ -111,6 +111,6 @@ export class ThemeStudioSetup extends Modal<undefined, undefined> {
   }
 
   protected copy(text: string, label: string): void {
-    this.status.set(this.clipboard.copy(text) ? `${label} copied.` : `Copy failed. Select the ${label.toLowerCase()} code block and copy it manually.`);
+    this.status.set(this.clipboardFeedbackService.copy(text) ? '' : `Copy failed. Select the ${label.toLowerCase()} code block and copy it manually.`);
   }
 }

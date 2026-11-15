@@ -1,0 +1,33 @@
+@use 'core/styles/helpers' as *;
+
+app-component-demo > .component-page {
+    --bx-container-max-width: 120rem;
+    --bx-page-padding-inline: #{spacing(4)};
+}
+
+/* IMPORTANT: Page width overrides must not replace the size presets or gutters of nested component previews. */
+app-component-demo > .component-page > .page-layout > .page-content {
+    --bx-container-max-width: initial;
+    --bx-page-padding-inline: initial;
+}
+
+/* IMPORTANT: Carry the app viewport's available height through the shared page and tab wrappers without changing library defaults. */
+app-component-demo > .component-page,
+app-component-demo > .component-page > .page-layout,
+app-component-demo > .component-page > .page-layout > .page-content,
+app-component-demo .component-sections > .bx-tab-panels,
+app-component-demo .component-sections > .bx-tab-panels > .bx-tab-panel:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+}
+
+/* IMPORTANT: The page owns these actions outside Tabs. Reserve only tablist space, keeping the content panels at full width. */
+app-component-demo .component-workspace.has-workbench-actions > .component-sections > [role='tablist'] {
+    max-inline-size: calc(100% - var(--workbench-actions-width) - #{spacing(3)});
+}
+
+/* IMPORTANT: Reserve the entire results area for either tab; scrolling belongs to the snippet or event log, leaving the code toolbar visible. */
+app-demo-workbench .results-tabs > .bx-tab-panels > .bx-tab-panel:not([hidden]) {
+    block-size: 100%;
+}

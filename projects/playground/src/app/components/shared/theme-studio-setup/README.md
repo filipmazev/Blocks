@@ -1,8 +1,8 @@
 # Theme Studio setup dialog
 
 Copy an exported theme through a Blocks stepper: Configure the project/method, Install with the selected package manager, then Apply theme. The stepper stays in
-the fixed modal header; Back/Next/Done and copy feedback stay in the footer. Each code preview and its copy action have explicit spacing. The modal uses a
-stable viewport-bounded size across steps and opens as a bottom sheet at the shared small-screen breakpoint.
+the fixed modal header; Back/Next/Done and copy errors stay in the footer. Successful copies show a neutral bottom-right Blocks toast. Each code preview and its
+copy action have explicit spacing. The modal uses a stable viewport-bounded size across steps and opens as a bottom sheet at the shared small-screen breakpoint.
 
 ## Import
 

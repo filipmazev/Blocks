@@ -1,0 +1,219 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    min-inline-size: 0;
+}
+
+.workbench {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    gap: spacing(4);
+    min-inline-size: 0;
+}
+
+.toolbar-actions,
+.actions-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: spacing(2);
+}
+
+.actions-heading {
+    justify-content: space-between;
+}
+
+.toolbar-actions {
+    margin-inline-start: auto;
+    flex-wrap: nowrap;
+}
+
+.inspector-layout {
+    flex: 1 0 24rem;
+    block-size: auto;
+    min-block-size: 24rem;
+    min-inline-size: 0;
+}
+
+.stage-column {
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+}
+
+.preview {
+    display: flex;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    min-block-size: 12rem;
+    box-sizing: border-box;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    background: linear-gradient(135deg, var(--bx-bg-surface), var(--bx-bg-surface-alt));
+    overflow: clip;
+    position: relative;
+}
+
+.preview-scroll {
+    display: flex;
+    align-items: safe center;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    min-block-size: 0;
+    padding: spacing(6);
+    box-sizing: border-box;
+    border-radius: nested-radius(radius(lg), 1px);
+    overflow: auto;
+}
+
+.preview-content {
+    inline-size: 100%;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.preview-content:empty {
+    display: none;
+}
+
+.preview-scroll > bx-skeleton {
+    inline-size: 100%;
+}
+
+.preview-error {
+    display: grid;
+    justify-items: start;
+    gap: spacing(3);
+}
+
+.inspector-content {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(3);
+    block-size: 100%;
+    min-block-size: 0;
+    min-inline-size: 0;
+}
+
+.inspector-content > bx-input-field {
+    flex: none;
+}
+
+.inspector-tabs {
+    flex: 1 1 0;
+    min-block-size: 0;
+    overflow: hidden;
+
+    --bx-tabs-panel-overflow: auto;
+    --bx-tabs-panel-gap: #{spacing(3)};
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    align-items: center;
+    gap: spacing(3);
+    padding: spacing(1);
+}
+
+.control-row {
+    min-inline-size: 0;
+}
+
+.control-row > * {
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.control-wide,
+.controls > .empty-state {
+    grid-column: 1 / -1;
+}
+
+h2[bxSidePanelHeader] {
+    margin: 0;
+    font: inherit;
+}
+
+.results-resize {
+    @include resize-grip;
+
+    position: relative;
+    flex: 0 0 spacing(6);
+    inline-size: 100%;
+}
+
+.results {
+    flex: 0 0 auto;
+    min-inline-size: 0;
+    min-block-size: 10rem;
+    max-block-size: calc(100% - 12rem - #{spacing(6)});
+}
+
+.results > bx-tabs {
+    block-size: 100%;
+    overflow: hidden;
+
+    --bx-tabs-panel-overflow: hidden;
+    --bx-tabs-panel-gap: #{spacing(3)};
+}
+
+p,
+.empty-state {
+    color: var(--bx-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.api-list,
+.api-description,
+.event-log,
+.event-content {
+    display: grid;
+    gap: spacing(3);
+    min-inline-size: 0;
+}
+
+.api-description code,
+.event-log pre {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+.event-content {
+    block-size: 100%;
+    box-sizing: border-box;
+    align-content: start;
+    overflow: auto;
+    padding: spacing(1);
+}
+
+@include respond-down(sm) {
+    .preview-scroll {
+        padding: spacing(4);
+    }
+}
+
+@media (forced-colors: active) {
+    .preview {
+        border-color: CanvasText;
+    }
+}
+
+.drawer-inspector {
+    block-size: min(70dvh, calc(92dvh - 8rem));
+    min-inline-size: 0;
+    min-block-size: 0;
+}
+
+.toolbar-actions > button {
+    inline-size: var(--workbench-action-size);
+    block-size: var(--workbench-action-size);
+}

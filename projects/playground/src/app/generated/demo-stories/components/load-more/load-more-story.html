@@ -1,0 +1,11 @@
+<div
+    bxLoadMore
+    style="padding: 1rem"
+    [loadMoreHasMore]="args().loadMoreHasMore"
+    [loadMoreLoading]="args().loadMoreLoading"
+    [loadMoreSuppressed]="args().loadMoreSuppressed"
+    [loadMoreDisabled]="args().loadMoreDisabled"
+    [loadMoreError]="args().loadMoreError"
+    (loadMore)="onAction('loadMore', $event)">
+    <p>Loaded content</p>
+</div>

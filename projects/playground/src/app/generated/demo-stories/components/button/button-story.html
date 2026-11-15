@@ -1,0 +1,21 @@
+<button
+    type="button"
+    bx-button
+    [variant]="args().variant"
+    [color]="args().color"
+    [outlined]="args().outlined"
+    [elevated]="args().elevated"
+    [disabled]="args().disabled"
+    [loading]="args().loading"
+    [interactive]="args().interactive"
+    [surfaceEffects]="args().surfaceEffects"
+    [glassiness]="args().glassiness"
+    [attr.aria-label]="args().content"
+    (click)="onAction('click', $event)">
+    @if (args().icon; as icon) {
+        <bx-icon [name]="icon" />
+    }
+    @if (args().variant !== 'icon') {
+        {{ args().content }}
+    }
+</button>

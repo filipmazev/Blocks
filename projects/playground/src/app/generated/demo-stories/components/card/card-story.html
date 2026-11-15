@@ -1,0 +1,20 @@
+<bx-card
+    [title]="args().title"
+    [subtitle]="args().subtitle"
+    [headingLevel]="args().headingLevel"
+    [variant]="args().variant"
+    [opaque]="args().opaque"
+    [surfaceEffects]="args().surfaceEffects"
+    [clickable]="args().clickable"
+    [selected]="args().selected"
+    [disabled]="args().disabled"
+    [readonly]="args().readonly"
+    [readOnly]="args().readOnly"
+    [highlightColor]="args().highlightColor"
+    [ariaLabel]="args().ariaLabel"
+    [ariaLabelledBy]="args().ariaLabelledBy"
+    [ariaDescribedBy]="args().ariaDescribedBy"
+    (activated)="onAction('activated', $event)"
+    (selectedChange)="onAction('selectedChange', $event)"
+    >{{ args().content }}</bx-card
+>

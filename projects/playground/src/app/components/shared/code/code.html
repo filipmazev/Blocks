@@ -1,12 +1,42 @@
-<bx-tabs class="code-viewer" variant="underline" ariaLabel="Code files" [style.--bx-tabs-max-panel-height]="maxHeight()">
-    @for (file of files(); track file.path) {
-        <bx-tab [label]="file.title" [value]="file.path">
-            <ng-template bxTabContent>
-                <pre
-                    class="playground-code-block"
-                    tabindex="0"
-                    [attr.aria-label]="file.title"><code [highlight]="codeContent(file)" [language]="file.language"></code></pre>
-            </ng-template>
-        </bx-tab>
+@if (selectedFile(); as file) {
+    <div class="code-toolbar">
+        @if (files().length > 1) {
+            <button type="button" bx-button variant="tonal" [attr.aria-label]="'Choose code file: ' + file.title" [bxDropdown]="fileMenu">
+                <bx-icon name="file-code" size="16" />{{ file.title }}<bx-icon name="chevron-down" size="16" />
+            </button>
+            <ng-template #fileMenu
+                ><bx-menu>
+                    @for (item of files(); track item.path) {
+                        <bx-menu-item [label]="item.title" (action)="select(item)" />
+                    }</bx-menu
+            ></ng-template>
+        } @else {
+            <span class="code-title"><bx-icon name="file-code" size="16" />{{ file.title }}</span>
+        }
+        <button
+            #copyButton
+            type="button"
+            bx-button
+            variant="tonal"
+            [disabled]="formatSource() && !formattedContent.hasValue()"
+            [attr.aria-label]="'Copy ' + file.title"
+            (click)="copy(file)">
+            <bx-icon name="copy" size="16" />Copy
+        </button>
+    </div>
+    @if (formatSource() && (formattedContent.error() || retryRequested())) {
+        <div class="code-error" role="status">
+            <span>{{ formattedContent.isLoading() ? 'Formatting code…' : 'Code formatting failed.' }}</span>
+            <button #retryButton type="button" bx-button variant="tonal" [attr.aria-disabled]="formattedContent.isLoading()" (click)="retryFormatting()">
+                <bx-icon name="rotate-cw" size="16" />Retry formatting
+            </button>
+        </div>
     }
-</bx-tabs>
+    <pre
+        class="playground-code-block"
+        tabindex="0"
+        [style.max-block-size]="maxHeight()"
+        [attr.aria-busy]="formatSource() && formattedContent.isLoading()"
+        [attr.aria-label]="file.title"><code [highlight]="codeContent(file)" [language]="file.language"></code></pre>
+}
+<span class="copy-status" role="status">{{ copyStatus() }}</span>

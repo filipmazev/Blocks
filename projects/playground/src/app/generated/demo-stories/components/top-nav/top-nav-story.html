@@ -1,0 +1,7 @@
+<bx-top-nav
+    [config]="args().config"
+    [opened]="args().opened"
+    (itemSelected)="onAction('itemSelected', $event)"
+    (openedChange)="onAction('openedChange', $event)"
+    >{{ args().content }}</bx-top-nav
+>

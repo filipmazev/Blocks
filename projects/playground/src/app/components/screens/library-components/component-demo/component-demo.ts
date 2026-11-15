@@ -1,6 +1,7 @@
 import type { Signal, WritableSignal } from '@angular/core';
 import type { Data } from '@angular/router';
 
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -48,9 +49,8 @@ import { TimePickerExamples } from '@playground/components/screens/library-compo
 import { TopNavExamples } from '@playground/components/screens/library-components/top-nav-examples/top-nav-examples';
 import { TruncationExamples } from '@playground/components/screens/library-components/truncation-examples/truncation-examples';
 import { VirtualCollectionExamples } from '@playground/components/screens/library-components/virtual-collection-examples/virtual-collection-examples';
+import { DemoWorkbench } from '@playground/components/shared/demo-workbench/demo-workbench';
 import { Readme } from '@playground/components/shared/readme/readme';
-
-import { Highlight } from 'ngx-highlightjs';
 
 import type { ComponentExample } from './component-catalog';
 
@@ -60,6 +60,7 @@ import { ComponentDialog } from './component-dialog';
 @Component({
   selector: 'app-component-demo',
   imports: [
+    NgTemplateOutlet,
     PageExamples,
     BottomDrawerExamples,
     CalendarExamples,
@@ -71,7 +72,7 @@ import { ComponentDialog } from './component-dialog';
     InfiniteScrollExamples,
     PageContainer,
     PageHeader,
-    Highlight,
+    DemoWorkbench,
     RouterLink,
     FormExamples,
     SearchExamples,
@@ -168,6 +169,8 @@ export class ComponentDemo {
     { label: 'Bitola', value: 'bitola' },
     { label: 'Unavailable destination', value: 'unavailable', disabled: true }
   ];
+
+  protected readonly workbench: Signal<DemoWorkbench | undefined> = viewChild(DemoWorkbench);
 
   protected activate(label: string): void {
     this.count.update((count) => count + 1);

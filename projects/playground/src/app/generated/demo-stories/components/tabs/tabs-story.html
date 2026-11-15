@@ -1,0 +1,9 @@
+<bx-tabs
+    [variant]="args().variant"
+    [ariaLabel]="args().ariaLabel"
+    [dragSelection]="args().dragSelection"
+    [selectedValue]="args().selectedValue"
+    (selectedValueChange)="onAction('selectedValueChange', $event)"
+    ><bx-tab label="Overview" value="overview"><ng-template bxTabContent>Project overview</ng-template></bx-tab
+    ><bx-tab label="Details" value="details"><ng-template bxTabContent>Workspace settings</ng-template></bx-tab></bx-tabs
+>
