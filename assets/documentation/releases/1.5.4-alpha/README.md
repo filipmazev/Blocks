@@ -10,6 +10,10 @@ Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has 
   month/year selection does not require choosing a day. Whole-week selection handles month/year boundaries, while hover and keyboard previews show complete
   periods. Confirmed and preview ranges join into one block across rows, with square shared edges, rounded exposed corners and curved inward joins where
   neighboring rows have different lengths. Single-cell hover retains its rounded shape.
+- Confirmed date and period ranges now distinguish their endpoints with a full-opacity accent fill; intervening cells use a 20% accent tint and primary text.
+  Range endpoints and today's outline have equal rounded corners on all four sides, with the lighter range band extending behind rounded endpoint fills to
+  prevent gaps. Hover preserves the distinction, previews retain their separate tint, and `--bx-calendar-range-background` customizes the intervening fill.
+  Forced colors retain the system selection treatment.
 - Editable date fields reveal format placeholders as their labels float. Trigger-only controls keep empty labels centered. Range fields expose start/end
   placeholders and optional separate fields. Multiple selections commit immediately and appear as removable Tags with truncation and a `+N` tooltip.
 - Added configurable opening icons, optional translated Today/Now actions that select through normal guards, and independent control of today's calendar marker.
@@ -85,6 +89,8 @@ draft methods remain available. No Apply, Cancel or separate Clear actions are r
 - Long trails keep the first entry and the last two entries by default, using the horizontal `ellipsis` icon for the hidden middle ancestors. The existing
   Blocks menu surface and shared menu-item styling provide hover, click/tap, keyboard navigation, Escape dismissal, focus restoration, and viewport constraints.
   Top-navigation overflow retains its enclosing menu panel.
+- Fixed hidden-ancestor route links to use the same shared hover/focus backing and disabled presentation as ordinary menu items, including matching corner
+  radii. Native links, keyboard navigation and focus restoration remain intact.
 - Added configurable `maxVisibleItems`, `overflowLabel`, `overflowText`, `openOnHover`, and `placement`, plus optional application-wide
   `BX_BREADCRUMB_DEFAULTS`. The count excludes the ellipsis, clamps to at least two entries, and accepts null to remove the configured limit. Compact mode can
   still reduce the visible count to fit the container and exposes full labels through truncation tooltips.
@@ -195,6 +201,12 @@ accessibility.
 
 ## Material and motion refinement
 
+- Related nested contours now follow `inner radius = max(0px, outer radius - inset)`, including padding, intervening gaps and the parent's border width. The
+  shared `nested-radius()` Sass helper applies this to menu and select options, autocomplete results, tab triggers/backings, card media, collapsible headings,
+  chip actions and numeric-field spinner groups. Independent controls and circular markers retain their own shapes. The rule is recorded in `AGENTS.md` for
+  future changes.
+- Menu and option hover/focus surfaces now copy all four computed corners from their target, including asymmetric overrides. Menu, select, autocomplete and
+  pill-tab surfaces expose documented radius overrides; their default inner corners track the containing surface's live radius and spacing tokens.
 - Stepper markers and connectors now receive the existing engine's directional and ambient light independently of their emission. Current filled indicators emit
   more strongly than tonal completed or neutral inactive indicators; errors receive restrained additional emphasis. Card surfaces retain their backing.
 - Rounded stepper highlights use semantic color mixed with the theme surface instead of an enlarged dark hover shadow; the traveling accent has no drop shadow.
@@ -222,6 +234,25 @@ accessibility.
   states, focus outlines, and committed selection remain authoritative. Motion controllers and observers stop on teardown.
 - Review `/components/stepper` and `/components/tabs`, including rapid selection, variable widths, overflow, dynamic tabs, guards, vertical layouts and the
   independent accessibility settings in `/appearance`. The reviewed pilot direction also informs the shared rollout below.
+
+## Shared visual transitions
+
+- Added reusable `VisualTransition` (`bx-visual-transition`) and `BxVisualPresenceDirective` (`bxVisualPresence`) to `@filip.mazev/blocks/effects`, plus
+  framework-independent `createVisualPresence`, `IVisualPresence` and `IVisualPresenceOptions` APIs in the effects runtime. They reuse the existing exact snappy
+  spring and lazy frame scheduler. Initial state is immediate, interrupted transitions retain velocity, live reduced motion snaps to committed state, and
+  teardown releases animation work and restores owned styles.
+- Mounted `bx-icon` instances retain their existing SVG while a replacement loads, then crossfade resolved changes. The new `animated` input defaults to true;
+  false disables the crossfade. Stale asynchronous loads remain ignored.
+- Buttons crossfade loading spinners with standard icons, custom `bxButtonIcon` visuals, or text without changing their outer dimensions, wrapping neighboring
+  actions, or removing their accessible names. Custom SVG icons use their measured center rather than unavailable HTML offsets, keeping the spinner over the
+  icon throughout loading and restoration. Resize observation maintains alignment when the content geometry changes.
+- Simple toasts and modal banners transition between icons and loading/completion visuals. Select, MultiSelect, SearchInput, DatePicker, TimePicker and stepper
+  markers share the same visual transition resource; chip check/icon changes use the mounted Icon transition. Picker action buttons remain mounted during
+  loading. Outgoing visual layers become inert and accessibility-hidden immediately, stay outside layout, and are removed after settling. Existing semantic
+  state, translated loading labels, action guards, focus and material/theme behavior remain authoritative.
+- Stepper marker transitions keep a fixed, centered visual region when switching between icons, spinners and narrow status symbols such as the error mark,
+  preventing the outgoing icon from shifting sideways or clipping during validation feedback. The magnifying lens tracks both layers’ live opacity and scale, so
+  the visible error transition starts immediately rather than holding the previous icon until the crossfade ends.
 
 ## Shared motion rollout
 

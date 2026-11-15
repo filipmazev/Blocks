@@ -1,0 +1,17 @@
+import{C as t,S as s,a as Oe,b as v,x as p,y as _}from"./main-AKVTKJWF.js";import"./chunk-DlJTjSOR.js";import{O as fe}from"./chunk-BHj6x81D.js";import{Ba as qP,Ct as Kd,E as D,En as SE,Ft as Lt,Ga as qt,It as M,Na as pT,Nn as T,Nr as _$1,Oi as g,P as EE,Zi as jt,Zn as Va,an as Q,br as Yf,ho as ve,jo as y,pt as J,t as $,wi as fe$1,xi as f,zt as MT}from"./chunk-2VndCPnC.js";function B(l,m){if(l&1&&ve(0,`bx-tab`,3),l&2){let i=m.$implicit;T(`label`,i)(`value`,i)}}var O=class l{clipboard=f(v);themeStudioService=f(Oe);managers=t;manager=M(`npm`);status=M(``);create=g(()=>s(this.manager()??`npm`));setup=g(()=>`cd my-blocks-app
+${p[this.manager()??`npm`]} --theme=${this.themeStudioService.themeDocument().palette}`);createFiles=g(()=>[{title:`Create project command`,path:`studio-create.sh`,language:`bash`,content:this.create()}]);setupFiles=g(()=>[{title:`Initialize Blocks command`,path:`studio-setup.sh`,language:`bash`,content:this.setup()}]);copy(m){this.status.set(this.clipboard.copy(m)?`Command copied.`:`Copy failed. Select the code block and copy manually.`)}static ɵfac=function(i){return new(i||l)};static ɵcmp=$({type:l,selectors:[[`app-theme-studio-new-project`]],decls:37,vars:4,consts:[[`pageDescription`,`Initialize an Angular application, install Blocks, and apply your Studio theme.`],[1,`new-project-content`],[`ariaLabel`,`Package manager`,3,`selectedValueChange`,`selectedValue`],[3,`label`,`value`],[`routerLink`,`/installation`],[`maxHeight`,`12rem`,3,`files`],[`type`,`button`,`bx-button`,``,`variant`,`tonal`,3,`click`],[`name`,`copy`,`size`,`16`],[`role`,`status`,1,`project-status`]],template:function(i,a){i&1&&(_$1(0,`bx-page-container`,0)(1,`div`,1)(2,`bx-tabs`,2),EE(`selectedValueChange`,function(p){return qP(a.manager,p)||(a.manager=p),p}),Lt(3,B,1,2,`bx-tab`,3,Va),D(),_$1(5,`h2`),Q(6,`1. Create an Angular workspace`),D(),_$1(7,`p`),Q(8,` These commands use Angular 22 and an SCSS global stylesheet. Use a compatible Node version from the `),_$1(9,`a`,4),Q(10,`Blocks installation guide`),D(),Q(11,`. `),D(),ve(12,`app-code`,5),_$1(13,`button`,6),J(`click`,function(){return a.copy(a.create())}),ve(14,`bx-icon`,7),Q(15,`Copy create command`),D(),_$1(16,`h2`),Q(17,`2. Install and configure Blocks`),D(),ve(18,`app-code`,5),_$1(19,`button`,6),J(`click`,function(){return a.copy(a.setup())}),ve(20,`bx-icon`,7),Q(21,`Copy setup command`),D(),_$1(22,`h2`),Q(23,`3. Apply your theme`),D(),_$1(24,`p`),Q(25,` Open Theme Studio and select Copy / setup. Copy the generated SCSS into `),_$1(26,`code`),Q(27,`styles.scss`),D(),Q(28,` after existing palette rules. Merge the Blocks import, retain the effects stylesheet and high-contrast theme, and set `),_$1(29,`code`),Q(30,`data-theme="light"`),D(),Q(31,` or `),_$1(32,`code`),Q(33,`data-theme="dark"`),D(),Q(34,` on the root. `),D(),_$1(35,`p`,8),Q(36),D()()()),i&2&&(y(2),SE(`selectedValue`,a.manager),y(),jt(a.managers),y(9),T(`files`,a.createFiles()),y(6),T(`files`,a.setupFiles()),y(18),fe$1(a.status()))},dependencies:[Yf,fe,qt,_,MT,Kd,pT],styles:[`
+.new-project-content[_ngcontent-%COMP%] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--%NS%bx-space-4, 1rem);
+  max-inline-size: 48rem;
+  min-inline-size: 0;
+}
+.new-project-content[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%], 
+.new-project-content[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {
+  margin: 0;
+}
+.project-status[_ngcontent-%COMP%] {
+  min-block-size: 3rem;
+}`]})};export{O as ThemeStudioNewProject};
