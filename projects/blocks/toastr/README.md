@@ -197,6 +197,35 @@ Toasts use shorter 12px entrance travel, a restrained scale, and the shared flui
 when an item closes. Lifetime, pause/resume, semantic patches and close results remain independent of decorative motion. Live reduced motion removes travel and
 settling. Existing progress-light and opaque material behavior remains in place. Inspect `/toastr` with loading-to-success/error patches and stacked closes.
 
+### Lifetime ownership, cancellation and translated close names
+
+Hover, focus within the notification, and an active touch gesture independently pause its remaining lifetime, progress and lighting. `ToastRef.pause()` adds an
+explicit pause; `resume()` clears only that explicit pause. Leaving hover cannot resume a focused notification. A duration patch resets the remaining lifetime
+while preserving all pause owners, including queued notifications. Notifications never take focus on arrival. Closing a focused notification returns focus to
+its still-available opening control, or another available toast action when the original control has disappeared.
+
+A dismissal swipe tracks one primary touch pointer. A deliberate release uses allowed direction and recent velocity; reversal immediately changes intent and a
+stationary pause removes flick momentum. Cancellation, lost capture, Escape, hidden documents and teardown roll back without dismissing. Gesture settling uses
+the shared spring; reduced motion removes decorative settling while retaining precise direct manipulation. Native touch scrolling and zoom remain available.
+
+`IToastConfig.closeLabel`, `IToastPatch.closeLabel`, and `ToastrGlobalSettingsService.closeLabel` accept `ResolvableText`. The optional property retains the
+English default `Close toast`; global `update({ closeLabel })` configures subsequent notifications. Open notifications track adapter `version` changes.
+
+```typescript
+const toast = this.toastrService.queueToast(UploadToast, {
+    closeLabel: { key: 'upload.close' },
+    durationInMs: 5000
+});
+toast.patch({ closeLabel: 'Dismiss upload notification' });
+```
+
+On `/toastr`, focus a close/custom action past its lifetime, combine explicit Pause with hover, cancel a touch swipe, and change the close-action language on a
+live notification. Content and duration controls retain the existing queue, patch and progress demonstrations.
+
+Small status copy uses the shared `text-<status>-readable` foreground, while expressive icons and lighting retain the original `text-<status>` color. Filled
+status surfaces use their paired `on-<status>` ink, with separate hover/active roles where applicable. These additive roles preserve the original fills and only
+adjust foregrounds that need contrast. See [Core's readable status roles](../core/README.md#readable-status-roles).
+
 ## Playground
 
 Open `/toastr` for initial configuration, live content/type/icon/surface/progress updates, paused lifetime resets, a loading-to-success transition, and a

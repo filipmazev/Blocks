@@ -11,6 +11,8 @@ export interface IModalStackEntry {
   readonly componentType: ComponentType<unknown>;
   /** Current navigation dismissal policy without exposing application-specific data or results. */
   readonly config: Signal<Pick<IModalConfig<unknown, unknown>, 'disableCloseOnNavigation'>>;
+  /** Mounted service-owned task boundary; absent after destruction. */
+  readonly modalContainerElement: HTMLElement | undefined;
   /**
    * Request closure without an application result.
    * @param state - Cancel or confirm mode.

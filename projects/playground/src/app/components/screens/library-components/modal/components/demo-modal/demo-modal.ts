@@ -6,6 +6,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
 import type { IconName } from '@filip.mazev/blocks/icons';
+import type { DemoLanguage } from '@playground/components/screens/library-components/shared/i18n/types/demo-language.types';
 import type { ModalLiveFormControls } from '@playground/types/overlay-patch-demo.types';
 
 import { Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
@@ -15,6 +16,7 @@ import { ContextMenuDirective, DropdownDirective, Menu, MenuItem } from '@filip.
 
 import { IDemoModalData } from '@playground/interfaces/modals/data/idemo-modal-data.interface';
 import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-modal-result.interface';
+import { OverlayDemoI18nService } from '@playground/services/overlay-demo-i18n.service';
 
 @Component({
   selector: 'app-demo-modal',
@@ -40,6 +42,8 @@ import { IDemoModalResult } from '@playground/interfaces/modals/result/idemo-mod
 export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
   private readonly modalService = inject(ModalService);
   private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly overlayDemoI18nService = inject(OverlayDemoI18nService);
 
   protected readonly liveForm: FormGroup<ModalLiveFormControls> = new FormGroup({
     text: new FormControl('Workspace settings', { nonNullable: true }),
@@ -87,6 +91,11 @@ export class DemoModal extends Modal<IDemoModalData, IDemoModalResult> {
     });
     this.isSideModal.set(layout === 'right' || layout === 'left');
     this.isCenteredModal.set(layout === 'center');
+  }
+
+  protected setCloseLanguage(language: DemoLanguage | null): void {
+    this.overlayDemoI18nService.setLanguage(language);
+    this.modal.patch({ closeLabel: { key: 'overlay.closeDialog' } });
   }
 
   protected applyLivePatch(): void {

@@ -306,6 +306,7 @@ export class ToastrService {
       durationInMs: config?.durationInMs ?? this.toastrGlobalSettingsService.durationInMs(),
       swipeToDismiss: config?.swipeToDismiss ?? this.toastrGlobalSettingsService.swipeToDismiss(),
       showCloseButton: config?.showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton(),
+      closeLabel: config?.closeLabel ?? this.toastrGlobalSettingsService.closeLabel(),
       closeButtonColor: config?.closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor(),
       showProgressBar: config?.showProgressBar ?? this.toastrGlobalSettingsService.showProgressBar(),
       progressBarColor: config?.progressBarColor ?? this.toastrGlobalSettingsService?.progressBarColor()

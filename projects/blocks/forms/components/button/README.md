@@ -106,6 +106,18 @@ motion retains static press feedback. Inspect `/components/button`.
 Filled/floating intent emits more strongly than outlined, tonal, icon, or grayscale intent. Danger and warning receive modest semantic emphasis. This local
 calibration uses the existing surface engine and leaves environmental reception independent; original fills, colors, and public appearance inputs remain intact.
 
+### Stable busy geometry
+
+Loading preserves the button's outer dimensions and accessible name. A projected Blocks icon or `[bxButtonIcon]` is replaced by a spinner with its measured
+size. A text-only action keeps its label in layout and the accessibility tree while a centered spinner temporarily covers its visual label. Native disabled and
+busy guards reject repeated activation. `/components/button-loading` demonstrates text-only, standard icon, custom icon and icon-only paths together.
+
+The `/components/button` status-action row compares filled and tonal info, success, warning and danger text on their actual shared materials.
+
+Small status copy uses the shared `text-<status>-readable` foreground, while expressive icons and lighting retain the original `text-<status>` color. Filled
+status surfaces use their paired `on-<status>` ink, with separate hover/active roles where applicable. These additive roles preserve the original fills and only
+adjust foregrounds that need contrast. See [Core's readable status roles](../../../core/README.md#readable-status-roles).
+
 ## Playground
 
 Open `/components/button` for filled, tonal, text, icon, outlined, floating, disabled, and runtime-effects-disabled examples with observable action results.

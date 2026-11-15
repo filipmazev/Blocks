@@ -138,9 +138,16 @@
         transform: translateY(0) scale(1);
     }
 
+    &.is-manipulating {
+        transition-property: opacity;
+    }
+
     &.no-animate {
         transition: none !important;
-        transform: none !important;
+
+        &:not(.is-manipulating) {
+            transform: none !important;
+        }
     }
 
     @include respond-down(md) {

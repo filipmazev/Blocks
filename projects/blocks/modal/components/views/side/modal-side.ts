@@ -17,6 +17,7 @@ import {
 
 import type { IModalSideModalClassesState } from '@modal/interfaces/imodal-side-modal-classes-state.interface';
 
+import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 
@@ -34,6 +35,10 @@ import { ModalCloseMode, ModalLayout } from '@modal/types/modal.types';
   styleUrl: './modal-side.scss'
 })
 export class ModalSide<D = unknown, R = unknown> implements IModalView<D, R> {
+  private readonly i18n = inject(BX_I18N, { optional: true });
+
+  protected readonly resolvedCloseLabel: Signal<string> = computed(() => resolveText(this.config()?.closeLabel ?? 'Close dialog', this.i18n));
+
   protected readonly renderOpenClass: WritableSignal<boolean> = signal(false);
 
   /** Resolved CSS classes for the modal layout, wrapper, and animation state. */

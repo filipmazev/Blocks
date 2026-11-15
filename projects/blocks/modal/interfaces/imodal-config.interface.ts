@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
 
+import type { ResolvableText } from '@filip.mazev/blocks/core';
+
 import { ModalCloseGuard } from '@modal/classes/modal-close-guard';
 
 import { IModalCloseResult } from './imodal-close-result.interface';
@@ -45,4 +47,13 @@ export interface IModalConfig<D, R> {
 
   /** (optional) The id of the modal (set at the top level of the modal), will default to a random string */
   id?: string;
+
+  /** Optional translatable close-action name; defaults to shared settings, then 'Close dialog'. */
+  closeLabel?: ResolvableText;
+  /** Optional translated task name for headerless content; defaults to the configured header, then 'Dialog'. */
+  ariaLabel?: ResolvableText;
+  /** Optional space-separated IDs of visible task headings; takes precedence over ariaLabel and the configured header. */
+  ariaLabelledBy?: string;
+  /** Optional space-separated IDs of task descriptions. No description is added by default. */
+  ariaDescribedBy?: string;
 }

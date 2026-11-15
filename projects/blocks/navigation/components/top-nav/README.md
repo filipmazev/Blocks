@@ -190,6 +190,11 @@ The bar's overlay context supports sticky headers and top-layer surfaces; theme,
 mounted controls and overlays. Resize/direction observers, subscriptions, focus traps, and overlays clean up with their owners. Browser measurements are
 deferred until rendering and guarded for SSR.
 
+### Action-only navigation
+
+An action/brand-only TopNav retains its named outer navigation landmark. Its empty primary container has neither a menubar role nor an accessible name.
+Populated desktop navigation retains its named menubar and keyboard item navigation; compact presentation continues to use its existing dialog and slots.
+
 ## Playground
 
 Visit `/components/top-nav` (redirects to `/components/top-nav/overview`). The demo uses the same four-level fixture, keywords, tags, disabled item, and

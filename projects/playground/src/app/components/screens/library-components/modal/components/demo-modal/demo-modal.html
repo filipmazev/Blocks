@@ -13,6 +13,12 @@
     </div>
     <section class="modal-patch-demo" aria-label="Live modal configuration">
         <h3>Patch this open modal</h3>
+        <bx-select
+            label="Close action language"
+            [options]="overlayDemoI18nService.languages"
+            [clearable]="false"
+            [value]="overlayDemoI18nService.language()"
+            (valueChange)="setCloseLanguage($event)" />
         <p>Apply changes without replacing this content. The draft note and wizard step stay intact.</p>
         <bx-input-field label="Draft note (retained across patches)" subscriptSizing="dynamic" [formControl]="draftNote" />
         <form class="live-patch-form" [formGroup]="liveForm">

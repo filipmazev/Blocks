@@ -46,3 +46,5 @@ export * from '@modal/interfaces/imodal-header-config.interface';
 export * from '@modal/interfaces/imodal-patch.interface';
 export * from '@modal/interfaces/imodal-header-patch.interface';
 export * from '@modal/interfaces/imodal-style-patch.interface';
+
+export type { IModalGlobalSettings } from '@modal/interfaces/imodal-global-settings.interface';

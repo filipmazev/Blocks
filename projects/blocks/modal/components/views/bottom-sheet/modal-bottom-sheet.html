@@ -1,4 +1,5 @@
 <bx-bottom-drawer
+    ariaLabel=""
     [embedded]="true"
     [modal]="false"
     [autoClose]="false"
@@ -6,6 +7,7 @@
     [dismissible]="isDismissible()"
     [showBackdrop]="false"
     [showCloseButton]="false"
+    [closeLabel]="config()?.closeLabel ?? 'Close dialog'"
     [showHandle]="true"
     [headerVisible]="false"
     [stickyFooter]="true"
@@ -19,7 +21,7 @@
     <div class="bottom-sheet-modal-inner-content-container">
         <div class="bottom-sheet-modal-top-group">
             @if (hasBanner()) {
-                <bx-modal-banner [header]="config()?.header" [showCloseButton]="false"></bx-modal-banner>
+                <bx-modal-banner [header]="config()?.header" [titleId]="(id() ?? '') + '-title'" [showCloseButton]="false"></bx-modal-banner>
             }
 
             @if (headerTemplate()) {

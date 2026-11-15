@@ -71,6 +71,10 @@ tooltip. `tagOverflowText` and `overflowTagConfig` customize that tag.
 The parent combobox exposes the complete selection for keyboard users; embedded tags do not introduce nested tab stops or actions. Multiselect's
 `allSelectedText` still takes precedence when select-all intent is active.
 
+Small status copy uses the shared `text-<status>-readable` foreground, while expressive icons and lighting retain the original `text-<status>` color. Filled
+status surfaces use their paired `on-<status>` ink, with separate hover/active roles where applicable. These additive roles preserve the original fills and only
+adjust foregrounds that need contrast. See [Core's readable status roles](../../../core/README.md#readable-status-roles).
+
 ## Playground
 
 Open `/components/tag` for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, an English/Spanish/French/German

@@ -17,10 +17,13 @@
                 [attr.aria-valuemax]="end()"
                 [step]="step()"
                 [value]="start()"
-                [disabled]="disabled() || isReadonly()"
+                [disabled]="effectiveDisabled()"
+                [attr.aria-readonly]="isReadonly()"
                 [attr.aria-label]="resolvedStartLabel()"
                 [attr.aria-valuetext]="displayWith()(start())"
                 [attr.aria-describedby]="describedBy()"
+                (pointerdown)="onReadonlyPointerDown($event)"
+                (keydown)="onReadonlyKeyDown($event)"
                 (input)="onRangeInput($event, 'start')"
                 (blur)="onBlur()" />
         </div>
@@ -33,10 +36,13 @@
                 [attr.aria-valuemin]="start()"
                 [step]="step()"
                 [value]="end()"
-                [disabled]="disabled() || isReadonly()"
+                [disabled]="effectiveDisabled()"
+                [attr.aria-readonly]="isReadonly()"
                 [attr.aria-label]="resolvedEndLabel()"
                 [attr.aria-valuetext]="displayWith()(end())"
                 [attr.aria-describedby]="describedBy()"
+                (pointerdown)="onReadonlyPointerDown($event)"
+                (keydown)="onReadonlyKeyDown($event)"
                 (input)="onRangeInput($event, 'end')"
                 (blur)="onBlur()" />
         </div>

@@ -3,6 +3,7 @@ import type { Signal, WritableSignal } from '@angular/core';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { DOCUMENT, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
+  afterRenderEffect,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -26,7 +27,16 @@ import { filter, finalize, from, fromEvent, Observable, of, Subject, take } from
 
 import type { IWindowDimensions } from '@filip.mazev/blocks/core';
 
-import { BreakpointKey, BxA11yService, isTextWithKey, ScrollLockService, uuidv4, WindowDimensionsService } from '@filip.mazev/blocks/core';
+import {
+  BreakpointKey,
+  BX_I18N,
+  BxA11yService,
+  isTextWithKey,
+  resolveText,
+  ScrollLockService,
+  uuidv4,
+  WindowDimensionsService
+} from '@filip.mazev/blocks/core';
 
 import { ModalConfig } from '@modal/classes/modal-config';
 import { ModalRef } from '@modal/classes/modal-ref';
@@ -48,6 +58,13 @@ import * as animConst from '@modal/constants/modal-animation.constants';
   hostDirectives: [CdkTrapFocus],
   imports: [NgClass, NgTemplateOutlet, ModalCentered, ModalSide, ModalBackdrop],
   host: {
+    role: 'dialog',
+    'aria-modal': 'true',
+    tabindex: '-1',
+    '[attr.data-bx-modal-task]': 'id()',
+    '[attr.aria-label]': 'dialogLabelledBy() ? null : dialogLabel()',
+    '[attr.aria-labelledby]': 'dialogLabelledBy()',
+    '[attr.aria-describedby]': 'config().ariaDescribedBy || null',
     '[class.has-backdrop]': 'config().style.hasBackdrop',
     '[class.is-nested]': 'nestingDepth() > 0',
     '[style.--bx-modal-material-opacity]': 'materialOpacity()'
@@ -57,6 +74,8 @@ import * as animConst from '@modal/constants/modal-animation.constants';
   styleUrl: './modal-core.scss'
 })
 export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements IModalComponent<D, R, C>, OnInit, AfterViewInit, OnDestroy {
+  private readonly i18n = inject(BX_I18N, { optional: true });
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly cdkTrapFocus = inject(CdkTrapFocus, { self: true });
   private readonly modalService = inject(ModalService);
   private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
@@ -78,6 +97,10 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   protected readonly windowDimensions: Signal<IWindowDimensions> = this.windowDimensionsService.dimensions;
 
   protected readonly id: Signal<string> = computed(() => this.config().id ?? this.scrollLockId);
+  protected readonly dialogLabel: Signal<string> = computed(() => resolveText(this.config().ariaLabel ?? this.config().header?.text ?? 'Dialog', this.i18n));
+  protected readonly dialogLabelledBy: Signal<string | null> = computed(
+    () => this.config().ariaLabelledBy || (!this.config().ariaLabel && this.config().header?.text ? `${this.id()}-title` : null)
+  );
   protected readonly hasBanner: Signal<boolean> = computed(() => {
     const config = this.config();
     const header = config.header;
@@ -136,6 +159,7 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   /** Observable of backdrop pointer activations, independent of whether a close guard allows dismissal. */
   public backdropClick: Observable<MouseEvent> = this.backdropClickSubject.asObservable();
 
+  private layoutFocus?: HTMLElement;
   private isCloseGuardPending: boolean = false;
   private scrollLockId: string = uuidv4();
   private _sortedBreakpoints: Array<{ width: number; layout: ModalLayout }> = [];
@@ -144,6 +168,23 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
   constructor() {
     this.cdkTrapFocus.autoCapture = true;
     this.initKeyboardSubscription();
+
+    afterRenderEffect(() => {
+      this.dynamicContainer();
+      this.effectiveLayout();
+
+      const target = this.layoutFocus;
+
+      if (!target?.isConnected) return;
+
+      this.layoutFocus = undefined;
+
+      if (!target.closest('[inert]')) target.focus({ preventScroll: true });
+    });
+
+    effect(() => {
+      this.cdkTrapFocus.enabled = this.modalService.isTopmost(this.modalRef);
+    });
 
     effect(() => {
       const width = this.windowDimensions().width;
@@ -343,9 +384,12 @@ export class ModalCore<D, R, C extends IModal<D, R> = IModal<D, R>> implements I
       }
     }
 
-    const prevIsSide = this.isSide();
     const nextIsSide = resolvedLayout === 'left' || resolvedLayout === 'right';
-    const layoutTypeChanged = prevIsSide !== nextIsSide;
+    const layoutTypeChanged = this.effectiveLayout() !== resolvedLayout;
+    const focused = this.document.activeElement;
+
+    if (layoutTypeChanged && this.document.defaultView && focused instanceof HTMLElement && this.elementRef.nativeElement.contains(focused))
+      this.layoutFocus = focused;
 
     if (layoutTypeChanged && this._currentVcr && this.componentRef) {
       const index = this._currentVcr.indexOf(this.componentRef.hostView);

@@ -79,9 +79,25 @@ $required-theme-keys: (
     'text-brand',
     'text-inverse',
     'text-info',
+    'text-info-readable',
+    'on-info',
+    'on-info-hover',
+    'on-info-active',
     'text-warn',
+    'text-warn-readable',
+    'on-warn',
+    'on-warn-hover',
+    'on-warn-active',
     'text-success',
+    'text-success-readable',
+    'on-success',
+    'on-success-hover',
+    'on-success-active',
     'text-danger',
+    'text-danger-readable',
+    'on-danger',
+    'on-danger-hover',
+    'on-danger-active',
     'border-subtle',
     'border-default',
     'border-strong',
@@ -159,6 +175,10 @@ $semantic-pairs: (
     'bg-info-subtle': 'border-info',
     'border-info': 'bg-info',
     'text-info': 'bg-info',
+    'text-info-readable': 'bg-info-subtle',
+    'on-info': 'bg-info',
+    'on-info-hover': 'bg-info-hover',
+    'on-info-active': 'bg-info-active',
 
     'bg-success': 'text-success',
     'bg-success-active': 'text-success',
@@ -167,6 +187,10 @@ $semantic-pairs: (
     'bg-success-subtle': 'border-success',
     'border-success': 'bg-success',
     'text-success': 'bg-success',
+    'text-success-readable': 'bg-success-subtle',
+    'on-success': 'bg-success',
+    'on-success-hover': 'bg-success-hover',
+    'on-success-active': 'bg-success-active',
 
     'bg-warn': 'text-warn',
     'bg-warn-active': 'text-warn',
@@ -175,6 +199,10 @@ $semantic-pairs: (
     'bg-warn-subtle': 'border-warn',
     'border-warn': 'bg-warn',
     'text-warn': 'bg-warn',
+    'text-warn-readable': 'bg-warn-subtle',
+    'on-warn': 'bg-warn',
+    'on-warn-hover': 'bg-warn-hover',
+    'on-warn-active': 'bg-warn-active',
 
     'bg-danger': 'text-danger',
     'bg-danger-active': 'text-danger',
@@ -183,6 +211,10 @@ $semantic-pairs: (
     'bg-danger-subtle': 'border-danger',
     'border-danger': 'bg-danger',
     'text-danger': 'bg-danger',
+    'text-danger-readable': 'bg-danger-subtle',
+    'on-danger': 'bg-danger',
+    'on-danger-hover': 'bg-danger-hover',
+    'on-danger-active': 'bg-danger-active',
 
     'scroll-bg': 'bg-surface',
     'scroll-thumb': 'scroll-bg',
@@ -289,6 +321,28 @@ $semantic-pairs: (
     @return $text;
 }
 
+@function _readable-status-ink($palette, $shade, $dark, $backgrounds) {
+    $text: get-color-from-palette($palette, $shade);
+    $endpoint: _mode($dark, #000000, #ffffff);
+    $weight: 0%;
+
+    /* IMPORTANT: Keep expressive status roles intact. Separate ink moves only as far as its actual backing requires, with headroom for rendered rounding. */
+    @if not _meets-contrast($endpoint, $backgrounds, 4.55) {
+        $endpoint: _mode($dark, #ffffff, #000000);
+    }
+
+    @while not _meets-contrast($text, $backgrounds, 4.55) {
+        @if $weight == 100% {
+            @error "Status '#{$palette}' has no readable ink across its requested backgrounds.";
+        }
+
+        $weight: $weight + 1%;
+        $text: color.mix($endpoint, get-color-from-palette($palette, $shade), $weight);
+    }
+
+    @return $text;
+}
+
 @function _color-roles($palette, $role, $dark, $backgrounds: ()) {
     $base-shade: _mode($dark, 500, 300);
 
@@ -369,10 +423,20 @@ $semantic-pairs: (
     $base: map.set($base, 'text-secondary', _readable-palette-color('neutral', _mode($dark, 600, 400), $dark, $surface-backgrounds));
 
     @each $status, $palette in ('info': 'information', 'success': 'success', 'warn': 'warn', 'danger': 'danger') {
+        $text-shade: _mode($dark, 700, 400);
+        $fill: get-color-from-palette($palette, _mode($dark, 100, 900));
+        $hover: get-color-from-palette($palette, _mode($dark, 200, 800));
+        $active: get-color-from-palette($palette, _mode($dark, 300, 700));
+        $subtle: get-color-from-palette($palette, _mode($dark, 50, 1000));
+        $copy-backgrounds: ($subtle, map.get($base, 'bg-canvas'), map.get($base, 'bg-surface'), map.get($base, 'bg-surface-alt'), map.get($base, 'bg-element'));
         $base: map.merge(
             $base,
             (
                 'text-#{$status}': get-color-from-palette($palette, _mode($dark, 700, 400)),
+                'text-#{$status}-readable': _readable-status-ink($palette, $text-shade, $dark, $copy-backgrounds),
+                'on-#{$status}': _readable-status-ink($palette, $text-shade, $dark, ($fill)),
+                'on-#{$status}-hover': _readable-status-ink($palette, $text-shade, $dark, ($hover)),
+                'on-#{$status}-active': _readable-status-ink($palette, $text-shade, $dark, ($active)),
                 'border-#{$status}': get-color-from-palette($palette, 400),
                 'bg-#{$status}': get-color-from-palette($palette, _mode($dark, 100, 900)),
                 'bg-#{$status}-hover': get-color-from-palette($palette, _mode($dark, 200, 800)),

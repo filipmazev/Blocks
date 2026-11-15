@@ -25,6 +25,7 @@ import type { IBxSelectOption, ValidationMessage } from '@filip.mazev/blocks/for
 import { BX_I18N, isDateRangeValue, ResolvableText } from '@filip.mazev/blocks/core';
 import {
   Button,
+  ButtonIconDirective,
   BxError,
   BxHint,
   Checkbox,
@@ -74,6 +75,7 @@ import { Highlight } from 'ngx-highlightjs';
     SignalFormField,
     FormRoot,
     Button,
+    ButtonIconDirective,
     BxError,
     BxHint,
     Checkbox,

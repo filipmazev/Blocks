@@ -48,6 +48,13 @@ range ordering. Horizontal expansion is capped by the actual pixel clearance bet
 the selected interval narrows, preserving clarity when thumbs approach. Release and cancellation settle independently. Live reduced motion removes deformation;
 reduced transparency keeps the existing opaque thumbs. Inspect `/components/range-slider` with close and overlapping endpoints.
 
+## Readonly interaction
+
+Both `[readonly]` (Angular form state) and `[readOnly]` prevent edits while leaving both native thumbs enabled, focusable and described. Each thumb exposes
+`aria-readonly` and its current value. Pointer/touch and value-changing keyboard defaults are guarded; input events also restore the authoritative DOM value.
+Programmatic value updates remain supported while readonly. `[disabled]` retains native disabled behavior. `/components/range-slider` includes live readonly and
+disabled controls, both readonly spellings, adjacent-thumb presets and a shared visible model result.
+
 ## Playground
 
 Open `/components/range-slider` for a live pair, labels and ticks.

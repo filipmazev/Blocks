@@ -52,6 +52,13 @@ focus states, or semantic control states.
 Use the same form control and name for mutually exclusive options, distinct values, and visible labels. A fieldset with a legend gives the group an accessible
 name.
 
+### Readonly semantics
+
+Native radio inputs never emit unsupported `aria-readonly`. A readonly `bx-radio-group` exposes that state on its `radiogroup` boundary. Every readonly radio
+also references `readonlyDescription` (default `Read only`), a translatable `ResolvableText` description that supports standalone radios. Readonly radios remain
+focusable; Arrow keys inspect peers without committing a choice, and Space/click cannot change selection. Disabled remains a distinct native state. Both
+`readonly` and `readOnly` are supported. `/components/radio` and `/components/radio-group` expose readonly interaction alongside the selected value.
+
 ## Playground
 
 Open `/components/radio` for a working example and its current value or action result.

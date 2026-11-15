@@ -3,6 +3,7 @@ import { THEME_CSS_VARIABLES } from '@core/constants/tokens.constants';
 /**
  * Copy the source's active theme/appearance context to an overlay pane and return cleanup.
  * Ancestor class/style changes and inline theme-token changes on the source update an already-open pane.
+ * Modal task ownership follows the source so stack isolation preserves its popup surfaces; cleanup restores the previous owner.
  *
  * @param source - Element whose inherited theme and appearance the overlay should follow.
  * @param pane - Overlay pane receiving synchronized theme classes, attributes, and CSS variables.
@@ -11,6 +12,14 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
   const win = source.ownerDocument.defaultView;
 
   if (!win) return () => {};
+
+  const task = source.closest<HTMLElement>('[data-bx-modal-task]');
+  const owner = task?.dataset['bxModalTask'] ?? source.closest<HTMLElement>('[data-bx-overlay-modal-owner]')?.dataset['bxOverlayModalOwner'];
+
+  const previousOwner = pane.getAttribute('data-bx-overlay-modal-owner');
+
+  if (owner) pane.dataset['bxOverlayModalOwner'] = owner;
+  else pane.removeAttribute('data-bx-overlay-modal-owner');
 
   const copied = new Set<string>();
   const refresh = () => {
@@ -65,5 +74,10 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
     observer.observe(scope, { attributes: true, attributeFilter: ['class', 'style', 'dir', 'data-theme'] });
   }
 
-  return () => observer.disconnect();
+  return () => {
+    observer.disconnect();
+
+    if (previousOwner === null) pane.removeAttribute('data-bx-overlay-modal-owner');
+    else pane.setAttribute('data-bx-overlay-modal-owner', previousOwner);
+  };
 }

@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import type { Color } from '@filip.mazev/blocks/core';
 import type { IconName } from '@filip.mazev/blocks/icons';
 import type { ISimpleToastData, ToastRef } from '@filip.mazev/blocks/toastr';
+import type { DemoLanguage } from '@playground/components/screens/library-components/shared/i18n/types/demo-language.types';
 import type { ToastLiveFormControls } from '@playground/types/overlay-patch-demo.types';
 
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
@@ -24,6 +25,7 @@ import { ComponentInfo } from '@playground/components/shared/component-info/comp
 import { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import { IDemoToastData } from '@playground/interfaces/toasts/data/idemo-toast-data.interface';
 import { IDemoToastResult } from '@playground/interfaces/toasts/result/idemo-toast-result.interface';
+import { OverlayDemoI18nService } from '@playground/services/overlay-demo-i18n.service';
 import { ToastrConfigFormControls } from '@playground/types/form.types';
 import { SimpleToastType, ToastPosition } from '@toastr/types/toastr.types';
 
@@ -38,6 +40,8 @@ export class Toastr {
   private readonly destroyRef = inject(DestroyRef);
   private readonly toastrService = inject(ToastrService);
   private readonly toastrGlobalSettingsService = inject(ToastrGlobalSettingsService);
+
+  protected readonly overlayDemoI18nService = inject(OverlayDemoI18nService);
 
   private readonly demoToasts: Set<ToastRef<ISimpleToastData, undefined>> = new Set();
   private readonly transitionTimeouts: Map<ToastRef<ISimpleToastData, undefined>, ReturnType<typeof setTimeout>> = new Map();
@@ -179,6 +183,11 @@ export class Toastr {
     this.trackToast(toast);
     this.liveToast.set(toast);
     this.resultMessage.set('Live notification queued with automatic dismissal off. Apply content or reset its lifetime below.');
+  }
+
+  protected setCloseLanguage(language: DemoLanguage | null): void {
+    this.overlayDemoI18nService.setLanguage(language);
+    this.liveToast()?.patch({ closeLabel: { key: 'overlay.closeToast' } });
   }
 
   protected patchLiveToast(resetLifetime: boolean = false): void {

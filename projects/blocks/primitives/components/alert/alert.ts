@@ -41,6 +41,7 @@ import { AlertAnnouncement, AlertTone } from '@primitives/types/alert.types';
     '[style.display]': 'visible() ? null : "none"',
     '[style.--bx-alert-role-background]': 'palette().fill',
     '[style.--bx-alert-role-color]': 'palette().text',
+    '[style.--bx-alert-readable-color]': 'palette().readableText ?? palette().text',
     '[style.--bx-alert-role-border]': 'palette().border',
     '[style.--bx-alert-emission]': 'emissionColor() ?? palette().text'
   }

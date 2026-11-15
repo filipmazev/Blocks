@@ -84,6 +84,7 @@ export class ModalRef<D = unknown, R = unknown, C extends IModal<D, R> = IModal<
       (current) =>
         new ModalConfig({
           ...current,
+          closeLabel: patch.closeLabel ?? current.closeLabel,
           header: patch.header === null ? undefined : patch.header === undefined ? current.header : this.patchHeader(current.header, patch.header),
           disableClose: patch.disableClose ?? current.disableClose,
           disableCloseOnBackdropClick: patch.disableCloseOnBackdropClick ?? current.disableCloseOnBackdropClick,
@@ -225,9 +226,11 @@ export class ModalRef<D = unknown, R = unknown, C extends IModal<D, R> = IModal<
     try {
       this.config().afterClose?.();
     } finally {
+      this.modalService.unregister(this);
+
       if (containerRef && !containerRef.hostView.destroyed) containerRef.destroy();
 
-      this.modalService.unregister(this);
+      this.modalService.restoreTaskFocus();
       this.afterCloseSubject.next(result);
       this.afterCloseSubject.complete();
       this.backdropClickSubject.complete();

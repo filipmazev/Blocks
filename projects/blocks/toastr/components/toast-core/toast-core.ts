@@ -8,6 +8,7 @@ import {
   Component,
   ComponentRef,
   computed,
+  effect,
   ElementRef,
   HostListener,
   inject,
@@ -25,8 +26,18 @@ import { Subscription } from 'rxjs';
 
 import type { ThemedColor } from '@filip.mazev/blocks/core';
 
-import { BxA11yService, Color, getComplementaryToken, isThemedColor, resolveTokenToCssVar, ThemingService } from '@filip.mazev/blocks/core';
+import {
+  BX_I18N,
+  BxA11yService,
+  Color,
+  getComplementaryToken,
+  isThemedColor,
+  resolveText,
+  resolveTokenToCssVar,
+  ThemingService
+} from '@filip.mazev/blocks/core';
 import { BxGlassLightingService, BxSurfaceDirective, IBxGlassLight } from '@filip.mazev/blocks/effects';
+import { createSpringMotion, GestureVelocity, projectMotion } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 
 import { ToastRef } from '@toastr/classes/toast-ref';
@@ -43,6 +54,8 @@ import { ToastrGlobalSettingsService } from '@toastr/services/toastr-global-sett
   styleUrl: './toast-core.scss'
 })
 export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements OnInit, AfterViewInit, OnDestroy {
+  private readonly i18n = inject(BX_I18N, { optional: true });
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly themingService = inject(ThemingService);
   private readonly ngZone = inject(NgZone);
   private readonly platformId = inject(PLATFORM_ID);
@@ -53,6 +66,11 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   /** Injected reference shared by the queue, caller, and mounted content. */
   public readonly toastRef: ToastRef<D, R> = inject<ToastRef<D, R>>(ToastRef);
 
+  private readonly swipeMotion: ReturnType<typeof createSpringMotion> = createSpringMotion([0], ([position]) => this.currentTranslateY.set(position));
+
+  protected readonly gestureActive: WritableSignal<boolean> = signal(false);
+
+  protected readonly resolvedCloseLabel: Signal<string> = computed(() => resolveText(this.config().closeLabel ?? 'Close toast', this.i18n));
   protected readonly showCloseButton: Signal<boolean> = computed(() => this.config().showCloseButton ?? this.toastrGlobalSettingsService.showCloseButton());
   protected readonly closeButtonColor: Signal<ThemedColor | undefined> = computed(
     () => this.config().closeButtonColor ?? this.toastrGlobalSettingsService.closeButtonColor()
@@ -100,8 +118,6 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     return `${animClass} ${wrapperClass}${backgroundClass}`;
   });
   protected readonly toastrTransform: Signal<string | null> = computed(() => {
-    if (!this.isAnimated()) return null;
-
     const isTop = (this.config().position ?? 'top-right').includes('top');
 
     if (this.isSwipingFinished()) {
@@ -139,6 +155,8 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   /** Dynamically created content component reference assigned by the owning overlay service. */
   public componentRef!: ComponentRef<C>;
 
+  private originElement?: HTMLElement;
+  private cancelSwipe?: () => void;
   private light?: IBxGlassLight;
   private lightFrame?: number;
   private lastLightProgress: number = -1;
@@ -164,6 +182,10 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   private globalResizeCleanup: (() => void) | null = null;
 
   constructor() {
+    effect(() => {
+      if (!this.isAnimated()) this.swipeMotion.retarget([this.currentTranslateY()], true);
+    });
+
     afterRenderEffect(() => {
       const progressElement = this.progressBar()?.nativeElement;
       const animated = this.isAnimated();
@@ -222,6 +244,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.dynamicContainer().insert(this.componentRef.hostView);
 
     this.viewReady = true;
+    this.originElement = this.elementRef.nativeElement.ownerDocument.activeElement as HTMLElement | undefined;
 
     if (!isPlatformBrowser(this.platformId)) return;
 
@@ -261,6 +284,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     clearTimeout(this.collapseTimeout);
 
     this.stopVerticalSwipeDetection();
+    this.swipeMotion.destroy();
     this.globalResizeCleanup?.();
 
     this.cleanupListeners.forEach((fn) => fn());
@@ -283,6 +307,8 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
   public closeToast(result?: R, fromSwipe = false): void {
     if (this.destroyed || this.closing) return;
 
+    this.restoreFocus();
+    this.cancelSwipe?.();
     this.closing = true;
     this.toastRef.beginClose();
     this.closeResult = result;
@@ -311,15 +337,34 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
   @HostListener('mouseenter')
   protected onMouseEnter(): void {
-    if (!this.isTouchActive && !this.closing) this.toastRef.pause();
+    if (!this.isTouchActive && !this.closing) this.toastRef.setPauseReason('hover', true);
   }
 
   @HostListener('mouseleave')
   protected onMouseLeave(): void {
-    if (!this.isTouchActive && !this.closing) this.toastRef.resume();
+    if (!this.closing) this.toastRef.setPauseReason('hover', false);
+  }
+
+  @HostListener('focusin')
+  protected onFocusIn(): void {
+    this.toastRef.setPauseReason('focus', true);
+  }
+
+  @HostListener('focusout', ['$event'])
+  protected onFocusOut(event: FocusEvent): void {
+    if (!(event.relatedTarget instanceof Node) || !this.elementRef.nativeElement.contains(event.relatedTarget)) this.toastRef.setPauseReason('focus', false);
   }
 
   //#region Helpers
+
+  private restoreFocus(): void {
+    const host = this.elementRef.nativeElement;
+
+    if (!host.contains(host.ownerDocument.activeElement)) return;
+
+    if (this.originElement?.isConnected && !this.originElement.closest('[inert], :disabled, [aria-disabled="true"]')) this.originElement.focus();
+    else host.ownerDocument.querySelector<HTMLElement>('bx-toast-core:not(:focus-within) button:not(:disabled)')?.focus();
+  }
 
   private paintLight(): void {
     if (!this.viewReady || this.destroyed || this.closing) return;
@@ -394,76 +439,115 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
     this.isTrackingSwipe = true;
 
     const target = this.toastSwipeTarget().nativeElement;
-    const isTop = (this.config().position ?? 'top-right').includes('top');
+    const doc = target.ownerDocument;
 
     let startY = 0;
-    let startTime = 0;
-    let isPointerDown = false;
+    let pointerId: number | undefined;
+    let velocity: GestureVelocity | undefined;
     let limit = 0;
 
-    const pointerDown = (event: PointerEvent) => {
-      if (this.closing) return;
+    const release = () => {
+      const ownedPointer = pointerId;
 
-      if (event.button !== 0 && event.pointerType === 'mouse') return;
+      pointerId = undefined;
+      this.gestureActive.set(false);
+
+      if (ownedPointer !== undefined && target.hasPointerCapture(ownedPointer)) target.releasePointerCapture(ownedPointer);
+
+      this.toastRef.setPauseReason('gesture', false);
+    };
+
+    const cancel = () => {
+      if (pointerId === undefined) return;
+
+      release();
+      this.swipeMotion.retarget([0], !this.isAnimated());
+    };
+
+    const pointerDown = (event: PointerEvent) => {
+      if (this.closing || pointerId !== undefined || !event.isPrimary || event.button !== 0 || event.pointerType !== 'touch') return;
 
       const origin = event.target;
 
       if (origin instanceof Element && origin.closest('button, a, input, select, textarea, [role="button"], [contenteditable="true"]')) return;
 
-      const toastHeight = target.offsetHeight || 0;
-
-      limit = toastHeight / 3;
-
-      isPointerDown = true;
-      startY = event.clientY;
-      startTime = event.timeStamp;
-
-      this.toastRef.pause();
-      target.setPointerCapture(event.pointerId);
+      limit = target.offsetHeight / 3;
+      pointerId = event.pointerId;
+      startY = event.clientY - this.currentTranslateY();
+      this.gestureActive.set(true);
+      velocity = new GestureVelocity(startY, event.timeStamp);
+      this.swipeMotion.track([this.currentTranslateY()]);
+      this.toastRef.setPauseReason('gesture', true);
+      target.setPointerCapture(pointerId);
     };
 
     const pointerMove = (event: PointerEvent) => {
-      if (!isPointerDown) return;
+      if (event.pointerId !== pointerId) return;
 
-      const currentY = event.clientY - startY;
+      velocity?.update(event.clientY, event.timeStamp);
 
-      if ((isTop && currentY < 0) || (!isTop && currentY > 0)) {
-        if (event.cancelable) event.preventDefault();
+      const delta = event.clientY - startY;
+      const direction = this.isBottom() ? 1 : -1;
+      const displacement = Math.max(0, delta * direction) * direction;
 
-        this.currentTranslateY.set(currentY);
-      }
+      if (displacement && event.cancelable) event.preventDefault();
+
+      this.swipeMotion.track([displacement], [velocity?.velocity(event.timeStamp) ?? 0]);
     };
 
     const pointerUp = (event: PointerEvent) => {
-      if (!isPointerDown) return;
+      if (event.pointerId !== pointerId) return;
 
-      isPointerDown = false;
-      target.releasePointerCapture(event.pointerId);
+      velocity?.update(event.clientY, event.timeStamp);
 
-      const deltaY = event.clientY - startY;
-      const duration = event.timeStamp - startTime || 1;
-      const velocityY = Math.abs(deltaY / duration);
+      const delta = event.clientY - startY;
+      const speed = velocity?.velocity(event.timeStamp) ?? 0;
+      const direction = this.isBottom() ? 1 : -1;
+      const projected = projectMotion(delta, speed, limit);
+      const dismiss = delta * direction > 0 && speed * direction >= 0 && projected * direction > limit;
 
-      const crossedLimit = isTop ? deltaY < -limit : deltaY > limit;
+      release();
 
-      if (crossedLimit || velocityY > 0.3) {
-        this.closeToast(undefined, true);
-      } else {
-        this.currentTranslateY.set(0);
-        this.toastRef.resume();
+      if (dismiss) this.closeToast(undefined, true);
+      else this.swipeMotion.retarget([0], !this.isAnimated());
+    };
+
+    const pointerCancel = (event: PointerEvent) => {
+      if (event.pointerId === pointerId) cancel();
+    };
+
+    const keyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && pointerId !== undefined) {
+        event.preventDefault();
+        cancel();
       }
     };
 
+    const visibility = () => {
+      if (doc.hidden) cancel();
+    };
+
+    this.cancelSwipe = cancel;
     target.addEventListener('pointerdown', pointerDown, { passive: false });
     target.addEventListener('pointermove', pointerMove, { passive: false });
     target.addEventListener('pointerup', pointerUp);
-    target.addEventListener('pointercancel', pointerUp);
+    target.addEventListener('pointercancel', pointerCancel);
+    target.addEventListener('lostpointercapture', pointerCancel);
+    doc.addEventListener('keydown', keyDown);
+    doc.addEventListener('visibilitychange', visibility);
+    doc.defaultView?.addEventListener('blur', cancel);
 
     this.swipeCleanupListeners = () => {
+      cancel();
+      this.cancelSwipe = undefined;
       target.removeEventListener('pointerdown', pointerDown);
       target.removeEventListener('pointermove', pointerMove);
       target.removeEventListener('pointerup', pointerUp);
-      target.removeEventListener('pointercancel', pointerUp);
+      target.removeEventListener('pointercancel', pointerCancel);
+      target.removeEventListener('lostpointercapture', pointerCancel);
+      doc.removeEventListener('keydown', keyDown);
+      doc.removeEventListener('visibilitychange', visibility);
+      doc.defaultView?.removeEventListener('blur', cancel);
     };
   }
 
@@ -486,6 +570,7 @@ export class ToastCore<D, R, C extends IToast<D, R> = IToast<D, R>> implements O
 
       if (isTouch && !this.isTouchActive) {
         this.isTouchActive = true;
+        this.toastRef.setPauseReason('hover', false);
         this.startVerticalSwipeDetection();
       } else if (!isTouch && this.isTouchActive) {
         this.isTouchActive = false;

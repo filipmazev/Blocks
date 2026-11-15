@@ -132,7 +132,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['var(--bx-alert-role-color)'],
+    fallbacks: ['var(--bx-alert-readable-color, var(--bx-alert-role-color))', 'var(--bx-alert-role-color)'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/alert/alert.scss']
   },
@@ -213,6 +213,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-rounded-lg, 0.75rem)'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/alert/alert.scss']
+  },
+  {
+    name: '--bx-alert-readable-color',
+    reference: 'var(--bx-alert-readable-color)',
+    category: 'components',
+    group: 'Component \u00B7 alert',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-alert-role-color)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/alert/alert.scss', 'projects/blocks/primitives/components/alert/alert.ts']
   },
   {
     name: '--bx-alert-rim-opacity',
@@ -7578,11 +7591,12 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-tag-color, var(--bx-tag-role-text))',
       'var(--bx-text-accent)',
       'var(--bx-text-danger)',
-      'var(--bx-text-info)',
+      'var(--bx-text-danger-readable, var(--bx-text-danger))',
+      'var(--bx-text-info-readable, var(--bx-text-info))',
       'var(--bx-text-primary)',
       'var(--bx-text-secondary)',
-      'var(--bx-text-success)',
-      'var(--bx-text-warn)',
+      'var(--bx-text-success-readable, var(--bx-text-success))',
+      'var(--bx-text-warn-readable, var(--bx-text-warn))',
       'var(--bx-toast-text, var(--bx-text-primary))',
       'var(--step-on-color)',
       'var(--step-state-text)',
@@ -8302,6 +8316,84 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
   {
+    name: '--bx-on-danger',
+    reference: 'var(--bx-on-danger)',
+    category: 'colors',
+    group: 'Danger',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ba2e2e'],
+    fallbacks: ['var(--bx-text-danger)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
+  },
+  {
+    name: '--bx-on-danger-active',
+    reference: 'var(--bx-on-danger-active)',
+    category: 'colors',
+    group: 'Danger',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(48.8705882353%, 12.0862745098%, 12.0862745098%)'],
+    fallbacks: ['var(--bx-text-danger)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-danger-hover',
+    reference: 'var(--bx-on-danger-hover)',
+    category: 'colors',
+    group: 'Danger',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(67.8352941176%, 16.7764705882%, 16.7764705882%)'],
+    fallbacks: ['var(--bx-text-danger)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-info',
+    reference: 'var(--bx-on-info)',
+    category: 'colors',
+    group: 'Information',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#1e69a7'],
+    fallbacks: ['var(--bx-text-info)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
+  },
+  {
+    name: '--bx-on-info-active',
+    reference: 'var(--bx-on-info-active)',
+    category: 'colors',
+    group: 'Information',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(9.0588235294%, 31.7058823529%, 50.4274509804%)'],
+    fallbacks: ['var(--bx-text-info)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-info-hover',
+    reference: 'var(--bx-on-info-hover)',
+    category: 'colors',
+    group: 'Information',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(11.0588235294%, 38.7058823529%, 61.5607843137%)'],
+    fallbacks: ['var(--bx-text-info)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
     name: '--bx-on-primary',
     reference: 'var(--bx-on-primary)',
     category: 'colors',
@@ -8337,6 +8429,84 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: true,
     defaults: ['#ffffff'],
     fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-success',
+    reference: 'var(--bx-on-success)',
+    category: 'colors',
+    group: 'Success',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(10.3529411765%, 49.3490196078%, 15.5294117647%)'],
+    fallbacks: ['var(--bx-text-success)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
+  },
+  {
+    name: '--bx-on-success-active',
+    reference: 'var(--bx-on-success-active)',
+    category: 'colors',
+    group: 'Success',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(7.8823529412%, 37.5725490196%, 11.8235294118%)'],
+    fallbacks: ['var(--bx-text-success)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-success-hover',
+    reference: 'var(--bx-on-success-hover)',
+    category: 'colors',
+    group: 'Success',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(9.5294117647%, 45.4235294118%, 14.2941176471%)'],
+    fallbacks: ['var(--bx-text-success)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-warn',
+    reference: 'var(--bx-on-warn)',
+    category: 'colors',
+    group: 'Warning',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(58.9843137255%, 38.0431372549%, 8.3764705882%)'],
+    fallbacks: ['var(--bx-text-warn)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss', 'projects/blocks/primitives/constants/tag.constants.ts']
+  },
+  {
+    name: '--bx-on-warn-active',
+    reference: 'var(--bx-on-warn-active)',
+    category: 'colors',
+    group: 'Warning',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(46.3921568627%, 29.9215686275%, 6.5882352941%)'],
+    fallbacks: ['var(--bx-text-warn)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-on-warn-hover',
+    reference: 'var(--bx-on-warn-hover)',
+    category: 'colors',
+    group: 'Warning',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(54.3450980392%, 35.0509803922%, 7.7176470588%)'],
+    fallbacks: ['var(--bx-text-warn)'],
     selectors: ['.blocks-catalog-theme'],
     sources: ['global', 'projects/blocks/forms/components/button/button.scss']
   },
@@ -11825,6 +11995,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     ]
   },
   {
+    name: '--bx-text-danger-readable',
+    reference: 'var(--bx-text-danger-readable)',
+    category: 'colors',
+    group: 'Danger',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#ba2e2e'],
+    fallbacks: ['var(--bx-text-danger)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
+  },
+  {
     name: '--bx-text-heading',
     reference: 'var(--bx-text-heading)',
     category: 'colors',
@@ -11858,6 +12046,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: true,
     defaults: ['#1e69a7'],
     fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
+  },
+  {
+    name: '--bx-text-info-readable',
+    reference: 'var(--bx-text-info-readable)',
+    category: 'colors',
+    group: 'Information',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['#1e69a7'],
+    fallbacks: ['var(--bx-text-info)'],
     selectors: ['.blocks-catalog-theme'],
     sources: [
       'global',
@@ -11994,6 +12200,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     ]
   },
   {
+    name: '--bx-text-success-readable',
+    reference: 'var(--bx-text-success-readable)',
+    category: 'colors',
+    group: 'Success',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(10.5882352941%, 50.4705882353%, 15.8823529412%)'],
+    fallbacks: ['var(--bx-text-success)'],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
+  },
+  {
     name: '--bx-text-tertiary',
     reference: 'var(--bx-text-tertiary)',
     category: 'components',
@@ -12016,6 +12240,24 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: true,
     defaults: ['#a96d18'],
     fallbacks: [],
+    selectors: ['.blocks-catalog-theme'],
+    sources: [
+      'global',
+      'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/primitives/constants/tag.constants.ts',
+      'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
+    ]
+  },
+  {
+    name: '--bx-text-warn-readable',
+    reference: 'var(--bx-text-warn-readable)',
+    category: 'colors',
+    group: 'Warning',
+    kind: 'color',
+    scope: 'theme',
+    themeEditable: true,
+    defaults: ['rgb(60.3098039216%, 38.8980392157%, 8.5647058824%)'],
+    fallbacks: ['var(--bx-text-warn)'],
     selectors: ['.blocks-catalog-theme'],
     sources: [
       'global',

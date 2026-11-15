@@ -16,6 +16,8 @@
                             @if (hasBanner()) {
                                 <bx-modal-banner
                                     [header]="config()?.header"
+                                    [closeLabel]="config()?.closeLabel ?? 'Close dialog'"
+                                    [titleId]="(id() ?? '') + '-title'"
                                     [showCloseButton]="config()?.disableClose !== true && config()?.style?.showCloseButton !== false"
                                     (close)="close.emit('cancel')"></bx-modal-banner>
                             }
@@ -23,7 +25,7 @@
                                 <div class="centered-modal-header">
                                     <ng-container *ngTemplateOutlet="headerTemplate()"></ng-container>
                                     @if (!hasBanner() && config()?.disableClose !== true && config()?.style?.showCloseButton !== false) {
-                                        <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')">
+                                        <button type="button" class="bx-modal-close" [attr.aria-label]="resolvedCloseLabel()" (click)="close.emit('cancel')">
                                             <bx-icon name="x" />
                                         </button>
                                     }

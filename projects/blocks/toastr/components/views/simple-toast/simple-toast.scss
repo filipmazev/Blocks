@@ -23,18 +23,34 @@
 
     &.info {
         color: var(--bx-text-info);
+
+        .simple-toast-content {
+            color: var(--bx-text-info-readable, var(--bx-text-info));
+        }
     }
 
     &.success {
         color: var(--bx-text-success);
+
+        .simple-toast-content {
+            color: var(--bx-text-success-readable, var(--bx-text-success));
+        }
     }
 
     &.warn {
         color: var(--bx-text-warn);
+
+        .simple-toast-content {
+            color: var(--bx-text-warn-readable, var(--bx-text-warn));
+        }
     }
 
     &.danger {
         color: var(--bx-text-danger);
+
+        .simple-toast-content {
+            color: var(--bx-text-danger-readable, var(--bx-text-danger));
+        }
     }
 }
 

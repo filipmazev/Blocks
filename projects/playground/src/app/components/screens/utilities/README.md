@@ -119,6 +119,10 @@ repeated live announcements.
 
 The overview and detail pages share `PageContainer` gutters and headings. Detail pages use automatic breadcrumbs to return to Utilities.
 
+The shared overlay theme helper also carries the originating modal task's ownership to popup surfaces, allowing the active task's menus to remain accessible
+while background tasks are isolated. Exercise nested tasks, popup actions and focus restoration in the [Modal guide](../../../../../../blocks/modal/README.md)
+and `/modal`; the overlay positioning demo continues to cover placement, inheritance and teardown.
+
 ## Playground
 
 Open `/utilities` from **Core → Utilities**. Expand its sidenav item for all six utility pages, or use the overview search and links. On each page, the

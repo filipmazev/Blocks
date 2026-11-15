@@ -205,6 +205,49 @@ reorganizing unrelated code.
 - Validate the actual interaction in the Playground, including hold-and-drag, interruption, variable geometry, light/dark themes, narrow layouts, and semantic
   state changes. Visual feedback from review takes precedence over adding increasingly elaborate effects.
 
+## Interaction and design regression contracts
+
+These requirements are self-contained and apply whether or not external design skills are installed. Advisory Apple/Unslop guidance must preserve Blocks'
+semantic palettes, Lucide icons, materials, environmental lighting, exact springs, contextual showcase scenes and Orby. Correct demonstrated failures without
+replacing the product's identity or introducing unrelated redesigns.
+
+- A service-created modal needs exactly one persistent, named `dialog`/`alertdialog` boundary with `aria-modal`, including responsive sheets. A focus trap alone
+  does not provide semantics. Associate the visible heading, and expose typed translated task-name/description options for custom and headerless content.
+  Isolate background accessibility and interaction through the existing stack; restore original attributes and parent focus before teardown. Verify nesting,
+  popup ownership, denied asynchronous closure, viewport changes and final trigger restoration. Embedded drawers must not duplicate the task boundary.
+- Compute semantic text contrast from actual foreground/background values. Normal text must meet 4.5:1 across every shipped palette, light/dark mode and
+  supported default/hover/active surface. Preserve expressive status roles and fills; add separate copy/on-fill foreground roles and minimally adjust ink only
+  against its actual backing. One difficult state must not wash out a whole palette. Retain explicit overrides; never patch per-component colors. Check real
+  alerts, tags, buttons and toasts in transparent and opaque materials. Synchronize changed semantic tokens in the connected Figma library when that design is
+  in scope; preserve variable identities, bindings and raw swatches.
+- Hover/focus content must remain readable when the pointer enters it. Coordinate trigger, gap and bubble ownership without stealing focus or creating an
+  interactive tooltip. Escape dismisses immediately; leave, touch scrolling, nested triggers and destruction must clean up the same owned surface.
+- Cancellation is rollback. Never route `pointercancel` or lost capture through a successful-release handler. Track the owning pointer, recent signed velocity,
+  reversal and stationary pauses; use bounded projection only for discrete destinations and settle through the existing spring. Cover Escape, hidden documents
+  and teardown. A canceled gesture must not commit selection or dismissal.
+- Timed feedback must pause for keyboard focus within it as well as hover. Keep explicit, focus, hover and gesture pause owners independent; resume remaining
+  time only when every owner releases. Duration patches and queued notifications retain pause ownership. Do not steal focus on arrival; define a predictable
+  return target when a focused notification is dismissed or replaced.
+- Readonly controls remain enabled and inspectable. Guard native pointer/touch/keyboard defaults and restore DOM values if input is rejected, keeping DOM and
+  Angular model values consistent through live state changes. Test both `readonly` and `readOnly`. Put ARIA states only on roles that support them: native
+  radios cannot expose `aria-readonly`; use supported group semantics and a translated description for standalone readonly radios.
+- Loading cannot change an action's outer width/height or wrap adjacent actions. Check text-only, standard icon, custom icon and icon-only paths before, during
+  and after loading. Preserve the accessible name while busy; visual label suppression must not remove its text from the accessibility tree.
+- Conditional roles and their naming/state attributes must change together. Empty action-only navigation must not leave a named generic container or invent an
+  empty menubar. Preserve the populated navigation and compact dialog behavior.
+- Accessible names must contain the exact visible identifying label, preferably through a visible-label relationship. Keep instructions in descriptions; do not
+  replace a visible command with different wording or name a card using its entire instructional paragraph. Verify computed names and keyboard actions.
+- Expose internal close/dismiss action text through existing typed `ResolvableText` configuration/defaults and supported live patches. Resolve it with optional
+  `BX_I18N` and reactive adapter version tracking, including already-open overlays and responsive presentation changes. Preserve plain strings, current
+  defaults, visibility flags and guards.
+- Compact showcase artwork belongs in a bounded region beside or after text and actions. It must not cross reading bounds at 320px, 390px or enlarged text.
+  Preserve the desktop composition, theme/material behavior, reachable actions and forced-color treatment using existing container thresholds and tokens.
+- Avoid hand-maintained volatile inventory totals in guides. Derive totals from the existing source catalog or refer to the live inventory; distinguish theme
+  controls from implementation/runtime variables. Regenerate bundled documentation from owner READMEs.
+- Reproduce the reported failure before editing and verify the actual interaction afterward in the Playground. Record browser/keyboard/touch, computed ARIA,
+  contrast and visual evidence appropriate to the change. Source review, scanners and synthetic events do not replace VoiceOver/NVDA, physical devices or native
+  zoom; report any unperformed acceptance checks explicitly instead of claiming conformance.
+
 ## Translations
 
 - Integrate user-facing text with `BX_I18N`. Accept the shared `ResolvableText` contract for configurable text rather than adding a separate translation format.

@@ -2,7 +2,7 @@ import type { InputSignal, OutputEmitterRef, Signal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
-import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
+import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
@@ -19,6 +19,7 @@ import { ModalCloseMode } from '@modal/types/modal.types';
 export class ModalBanner {
   private readonly i18n = inject(BX_I18N, { optional: true });
 
+  protected readonly resolvedCloseLabel: Signal<string> = computed(() => resolveText(this.closeLabel(), this.i18n));
   protected readonly resolvedText: Signal<string> = computed(() => resolveText(this.header()?.text, this.i18n));
   protected readonly iconSize: Signal<number> = computed(() => {
     const size = Number(this.header()?.icon?.size ?? 24);
@@ -28,6 +29,10 @@ export class ModalBanner {
 
   /** Modal heading text and optional semantic icon; undefined omits configured heading content. Required input. */
   public readonly header: InputSignal<IModalHeaderConfig | undefined> = input.required<IModalHeaderConfig | undefined>();
+  /** Accessible close-action name as plain text or a translation key. Defaults to 'Close dialog'. */
+  public readonly closeLabel: InputSignal<ResolvableText> = input<ResolvableText>('Close dialog');
+  /** ID of the visible task heading, shared by every responsive presentation. Defaults to an empty string. */
+  public readonly titleId: InputSignal<string> = input('');
   /** Whether the overlay includes its built-in close action. Required input. */
   public readonly showCloseButton: InputSignal<boolean> = input.required<boolean>();
 

@@ -6,6 +6,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import type { ButtonColor } from '@filip.mazev/blocks/forms';
+
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Button, BxError, Checkbox, CheckboxIndicator, FormField, InputField, Radio, SliderDirective, SlideToggle } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
@@ -141,6 +143,10 @@ export class ComponentDemo {
   protected readonly checked: FormControl<boolean> = new FormControl(true, { nonNullable: true });
   protected readonly secondChecked: FormControl<boolean> = new FormControl(false, { nonNullable: true });
   protected readonly disabledCheck: FormControl<boolean> = new FormControl({ value: false, disabled: true }, { nonNullable: true });
+  protected readonly statusColors: readonly ButtonColor[] = ['info', 'success', 'warn', 'danger'];
+
+  protected readonly radioReadonly: WritableSignal<boolean> = signal(false);
+
   protected readonly frequency: FormControl<string> = new FormControl('weekly', { nonNullable: true });
   protected readonly destination: FormControl<string> = new FormControl('skopje', { nonNullable: true });
   protected readonly enabled: FormControl<boolean> = new FormControl(true, { nonNullable: true });

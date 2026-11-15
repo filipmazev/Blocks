@@ -18,11 +18,11 @@
                     }
                 </span>
             }
-            <span aria-live="polite" aria-atomic="true">{{ resolvedText() }}</span>
+            <span aria-live="polite" aria-atomic="true" [id]="titleId()">{{ resolvedText() }}</span>
         </div>
     }
 
     @if (showCloseButton()) {
-        <button type="button" class="bx-modal-close" aria-label="Close dialog" (click)="close.emit('cancel')"><bx-icon name="x" /></button>
+        <button type="button" class="bx-modal-close" [attr.aria-label]="resolvedCloseLabel()" (click)="close.emit('cancel')"><bx-icon name="x" /></button>
     }
 </div>

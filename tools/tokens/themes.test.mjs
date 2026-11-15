@@ -118,6 +118,19 @@ test('every palette emits both roles, neutral canvases, solid scrollbars and pai
         }
       }
 
+      for (const status of ['info', 'success', 'warn', 'danger']) {
+        for (const suffix of ['', '-hover', '-active']) {
+          const ratio = contrast(tokens[`on-${status}${suffix}`], tokens[`bg-${status}${suffix}`]);
+
+          assert.ok(ratio >= 4.5, `${id}/${mode} on-${status}${suffix}: ${ratio}`);
+        }
+        for (const background of ['bg-canvas', 'bg-surface', 'bg-surface-alt', 'bg-element', `bg-${status}-subtle`]) {
+          const ratio = contrast(tokens[`text-${status}-readable`], tokens[background]);
+
+          assert.ok(ratio >= 4.5, `${id}/${mode} readable ${status} on ${background}: ${ratio}`);
+        }
+      }
+
       for (const border of ['border-brand', 'border-accent']) {
         for (const background of ['bg-canvas', 'bg-surface', 'bg-neutral']) {
           const ratio = contrast(tokens[border], tokens[background]);
@@ -148,6 +161,25 @@ test('palette swatches match immutable anchors and status colors remain independ
         for (const prefix of ['text-', 'bg-', 'border-']) assert.equal(tokens[`${prefix}${status}`], reference[`${prefix}${status}`]);
       }
     }
+  }
+});
+
+test('expressive status roles and original active fills retain their palette anchors', () => {
+  const expected = {
+    light: { info: '#1e69a7', success: '#1e8f2d', warn: '#a96d18', danger: '#ba2e2e' },
+    dark: { info: '#5fb7c3', success: '#5fc370', warn: '#e4ad55', danger: '#f76d6d' }
+  };
+
+  for (const palette of THEME_PALETTES) {
+    for (const mode of appearances) {
+      const tokens = fixtures.get(`${palette.id}-${mode}`);
+
+      for (const [status, value] of Object.entries(expected[mode])) assert.deepEqual(rgb(tokens[`text-${status}`]), rgb(value));
+    }
+    const dark = fixtures.get(`${palette.id}-dark`);
+
+    assert.deepEqual(rgb(dark['bg-success-active']), rgb('#1e8f2d'));
+    assert.deepEqual(rgb(dark['bg-warn-active']), rgb('#a96d18'));
   }
 });
 

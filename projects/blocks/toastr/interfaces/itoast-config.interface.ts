@@ -1,6 +1,6 @@
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
 
-import { ThemedColor } from '@filip.mazev/blocks/core';
+import { ResolvableText, ThemedColor } from '@filip.mazev/blocks/core';
 
 import { ToastPosition } from '@toastr/types/toastr.types';
 
@@ -25,6 +25,8 @@ export interface IToastConfig<D = unknown> {
   /** Optional animation preference; defaults to true and never overrides reduced motion. */
   animate?: boolean;
 
+  /** Optional translatable close-action name; defaults to 'Close toast'. */
+  closeLabel?: ResolvableText;
   /** Optional close action visibility; defaults to global settings (true). */
   showCloseButton?: boolean;
   /** Optional semantic close color; defaults to the global setting (text-primary). */

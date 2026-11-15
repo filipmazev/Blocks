@@ -14,7 +14,8 @@
         [attr.aria-labelledby]="ariaLabelledBy()"
         [attr.aria-describedby]="describedBy()"
         [attr.aria-invalid]="showError()"
-        [attr.aria-required]="effectiveRequired()">
+        [attr.aria-required]="effectiveRequired()"
+        [attr.aria-readonly]="isReadonly()">
         <ng-content />
     </div>
     <ng-content select="bx-error" ngProjectAs="bx-error" /><ng-content select="bx-hint" ngProjectAs="bx-hint" />

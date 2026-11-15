@@ -278,14 +278,8 @@
         scrollbar-width: none;
     }
 
-    .article-heading {
-        padding-inline: var(--preview-cover-start, #{spacing(6)}) 0;
-    }
-
     .article-heading h2 {
         inline-size: var(--preview-cover-width, auto);
-        font-size: clamp(1rem, 6cqi, 2rem);
-        text-align: center;
         white-space: nowrap;
     }
 }

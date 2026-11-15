@@ -19,6 +19,8 @@ export class ToastRef<D = undefined, R = unknown> {
 
   private readonly lifecycle: WritableSignal<ToastState> = signal('queued');
 
+  private readonly pauseReasons: Set<string> = new Set();
+
   private readonly isPaused: WritableSignal<boolean> = signal(false);
 
   private readonly afterClosedSubject: Subject<R | undefined> = new Subject<R | undefined>();
@@ -34,7 +36,7 @@ export class ToastRef<D = undefined, R = unknown> {
 
   /** Lifecycle state; queued toasts have no running timer. */
   public readonly state: Signal<ToastState> = this.lifecycle.asReadonly();
-  /** Whether pause() is currently in effect; duration patches preserve this state. */
+  /** Whether any explicit, hover, focus, or gesture pause is active; duration patches preserve all owners. */
   public readonly paused: Signal<boolean> = this.isPaused.asReadonly();
   /** Emits the optional application result once after dismissal, then completes. */
   public readonly afterClosed$: Observable<R | undefined> = this.afterClosedSubject.asObservable();
@@ -63,6 +65,7 @@ export class ToastRef<D = undefined, R = unknown> {
       ...current,
       data: patch.data === undefined ? current.data : this.patchData(current.data, patch.data),
       durationInMs: patch.durationInMs === undefined ? current.durationInMs : Math.max(0, Number.isFinite(patch.durationInMs) ? patch.durationInMs : 0),
+      closeLabel: patch.closeLabel ?? current.closeLabel,
       showCloseButton: patch.showCloseButton ?? current.showCloseButton,
       closeButtonColor: patch.closeButtonColor === undefined ? current.closeButtonColor : (patch.closeButtonColor ?? undefined),
       showProgressBar: patch.showProgressBar ?? current.showProgressBar,
@@ -89,20 +92,35 @@ export class ToastRef<D = undefined, R = unknown> {
     else this.completeClose(result);
   }
 
-  /** Pause automatic dismissal and progress. Idempotent; queued notifications retain this preference until display. */
+  /** Pause automatic dismissal and progress explicitly. Idempotent; queued notifications retain this preference until display. */
   public pause(): void {
-    if (this.paused() || this.state() === 'closing' || this.state() === 'closed') return;
-
-    this.isPaused.set(true);
-    this.pauseSubject.next();
+    this.setPauseReason('explicit', true);
   }
 
-  /** Resume a paused lifetime. Does not reset the remaining time or revive dismissed notifications. */
+  /** Resume an explicitly paused lifetime when no interaction still owns a pause. Preserves remaining time and does not revive dismissed notifications. */
   public resume(): void {
-    if (!this.paused() || this.state() === 'closing' || this.state() === 'closed') return;
+    this.setPauseReason('explicit', false);
+  }
 
-    this.isPaused.set(false);
-    this.resumeSubject.next();
+  /**
+   * Coordinate independent lifetime owners without resuming another owner's pause. @internal
+   * @param reason - Stable owner key; built-in interactions use hover, focus, and gesture; pause()/resume() own explicit.
+   * @param paused - Whether this owner currently prevents automatic dismissal.
+   */
+  public setPauseReason(reason: string, paused: boolean): void {
+    if (this.state() === 'closing' || this.state() === 'closed') return;
+
+    if (paused) this.pauseReasons.add(reason);
+    else this.pauseReasons.delete(reason);
+
+    const next = this.pauseReasons.size > 0;
+
+    if (next === this.paused()) return;
+
+    this.isPaused.set(next);
+
+    if (next) this.pauseSubject.next();
+    else this.resumeSubject.next();
   }
 
   /**

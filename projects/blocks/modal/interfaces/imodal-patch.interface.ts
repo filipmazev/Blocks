@@ -1,8 +1,12 @@
+import type { ResolvableText } from '@filip.mazev/blocks/core';
+
 import type { IModalHeaderPatch } from './imodal-header-patch.interface';
 import type { IModalStylePatch } from './imodal-style-patch.interface';
 
 /** Runtime changes supported by an existing modal. Omitted and undefined properties retain their current values. */
 export interface IModalPatch {
+  /** Replace the translatable close-action name without changing visibility, guards, or lifetime. Undefined retains the current label. */
+  closeLabel?: ResolvableText;
   /** Partial heading update; null removes the configured heading and icon. Custom header slots remain mounted. */
   header?: IModalHeaderPatch | null;
   /** Prevent user dismissal through Escape, the close button, backdrop, and swipe. Programmatic close remains available. */

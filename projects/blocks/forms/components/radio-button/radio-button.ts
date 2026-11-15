@@ -3,7 +3,7 @@ import type { InputSignal, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input } from '@angular/core';
 
-import { BX_I18N, BxBaseControl, isTextWithKey, uuidv4 } from '@filip.mazev/blocks/core';
+import { BX_I18N, BxBaseControl, isTextWithKey, ResolvableText, resolveText, uuidv4 } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 import { FormField } from '@forms/components/form-field/form-field';
@@ -40,6 +40,11 @@ export class Radio extends BxBaseControl<unknown> {
   });
   protected readonly effectiveDisabled: Signal<boolean> = computed(() => this.isDisabled() || !!this.group?.disabled());
   protected readonly effectiveName: Signal<string> = computed(() => this.group?.groupName() ?? this.name());
+  protected readonly resolvedReadonlyDescription: Signal<string> = computed(() => resolveText(this.readonlyDescription(), this.i18n));
+  protected readonly radioDescribedBy: Signal<string | null> = computed(
+    () =>
+      [this.group?.describedBy(), this.isReadonly() || this.group?.isReadonly() ? `${this.inputId()}-readonly` : undefined].filter(Boolean).join(' ') || null
+  );
   protected readonly selected: Signal<boolean> = computed(() => (this.group ? this.group.value() : this.internalValue()) === this.value());
 
   /** Resolved hint/error spacing policy after instance and shared form settings are combined. */
@@ -47,6 +52,8 @@ export class Radio extends BxBaseControl<unknown> {
     () => this.subscriptSizing() ?? this.formSettingsService.settings().subscriptSizing
   );
 
+  /** Translatable description exposed while readonly, including standalone radios. Defaults to 'Read only'. Does not disable keyboard focus. */
+  public readonly readonlyDescription: InputSignal<ResolvableText> = input<ResolvableText>('Read only');
   /** Position of the label relative to the checkbox or radio control. Defaults to `'after'`. */
   public readonly labelPosition: InputSignal<LabelPosition> = input<LabelPosition>('after');
   /** Space reserved for hints and validation feedback; omission uses shared form defaults. */
@@ -83,7 +90,17 @@ export class Radio extends BxBaseControl<unknown> {
   }
 
   protected onSelect(): void {
-    if (this.effectiveDisabled() || this.isReadonly() || this.group?.isReadonly()) return;
+    if (this.effectiveDisabled() || this.isReadonly() || this.group?.isReadonly()) {
+      for (const radio of this.radioRegistry.radios) {
+        if (radio !== this && (this.group ? radio.group !== this.group : !this.sharesGroup(radio))) continue;
+
+        const input = radio.nativeElement.querySelector<HTMLInputElement>('input[type="radio"]');
+
+        if (input) input.checked = radio.selected();
+      }
+
+      return;
+    }
 
     if (this.group) this.group.select(this.value());
     else {
@@ -98,6 +115,26 @@ export class Radio extends BxBaseControl<unknown> {
 
   protected override onControlPointerDown(): void {
     if (this.isReadonly() || this.group?.isReadonly()) this.keyboardFocused.set(false);
+  }
+
+  protected onReadonlyKeyDown(event: KeyboardEvent): void {
+    if (!(this.isReadonly() || this.group?.isReadonly()) || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].includes(event.key)) return;
+
+    event.preventDefault();
+
+    if (event.key === ' ') return;
+
+    const input = event.target as HTMLInputElement;
+    const peers = (input.name ? Array.from(input.ownerDocument.querySelectorAll<HTMLInputElement>('input[type="radio"]')) : [input]).filter(
+      (peer) =>
+        !peer.disabled &&
+        peer.name === input.name &&
+        peer.form === input.form &&
+        (!this.group || peer.closest('[role="radiogroup"]') === input.closest('[role="radiogroup"]'))
+    );
+    const offset = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1;
+
+    peers[(peers.indexOf(input) + offset + peers.length) % peers.length]?.focus();
   }
 
   protected onBlur(): void {

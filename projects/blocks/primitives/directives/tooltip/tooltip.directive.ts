@@ -58,6 +58,10 @@ export class TooltipDirective {
   private keyboardSubscription?: { unsubscribe(): void };
   private revision: number = 0;
   private hovered: boolean = false;
+  private bubbleHovered: boolean = false;
+  private hoverGap: boolean = false;
+  private hoverHideTimer?: ReturnType<typeof setTimeout>;
+  private hoverEvents?: AbortController;
   private focused: boolean = false;
   private lastPointerType: string = '';
   private touchEvents?: AbortController;
@@ -76,7 +80,7 @@ export class TooltipDirective {
             if (this.focused) {
               this.clearTouchInteraction();
               this.show();
-            } else if (!this.hovered && !this.touchEvents) this.hide();
+            } else if (!this.hovered && !this.bubbleHovered && !this.touchEvents) this.scheduleHoverHide();
           })
         )
       : undefined;
@@ -113,6 +117,9 @@ export class TooltipDirective {
 
   /** Show nonempty tooltip content using shared positioning, theming, and accessibility behavior. */
   public show(): void {
+    clearTimeout(this.hoverHideTimer);
+    this.hoverHideTimer = undefined;
+
     if (!this.bxTooltip()) return;
 
     if (this.bxTooltipTruncatedOnly() && !this.isTruncated()) return;
@@ -142,9 +149,34 @@ export class TooltipDirective {
       const component = this.overlayRef.attach(new ComponentPortal(Tooltip));
 
       this.tooltipComponent = component;
-      // CDK enables pane pointer events during attach. Reset afterwards so the
-      // emerging tooltip cannot steal hover from small or nested triggers.
-      pane.style.pointerEvents = 'none';
+      pane.style.pointerEvents = 'auto';
+      this.hoverEvents = new AbortController();
+      this.elementRef.nativeElement.ownerDocument.addEventListener('pointermove', (event) => this.onHoverMove(event), {
+        passive: true,
+        signal: this.hoverEvents.signal
+      });
+      pane.addEventListener(
+        'pointerenter',
+        (event) => {
+          if (event.pointerType !== 'mouse') return;
+
+          this.bubbleHovered = true;
+          clearTimeout(this.hoverHideTimer);
+          this.hoverHideTimer = undefined;
+        },
+        { signal: this.hoverEvents.signal }
+      );
+      pane.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (event.pointerType !== 'mouse') return;
+
+          this.bubbleHovered = false;
+          this.onHoverMove(event);
+          this.scheduleHoverHide();
+        },
+        { signal: this.hoverEvents.signal }
+      );
       this.keyboardSubscription = this.overlayRef.keydownEvents().subscribe((event) => this.onEscape(event));
       component.setInput('text', this.bxTooltip());
       component.changeDetectorRef.detectChanges();
@@ -181,7 +213,10 @@ export class TooltipDirective {
 
   /** Dismiss the owned tooltip and release its current overlay state. */
   public hide(): void {
+    clearTimeout(this.hoverHideTimer);
+    this.hoverHideTimer = undefined;
     this.clearTouchInteraction();
+    this.hoverGap = false;
 
     const revision = ++this.revision;
 
@@ -215,8 +250,8 @@ export class TooltipDirective {
     if (event.pointerType !== 'mouse') return;
 
     this.hovered = false;
-
-    if (!this.focused) this.hide();
+    this.onHoverMove(event);
+    this.scheduleHoverHide();
   }
 
   @HostListener('pointerdown', ['$event'])
@@ -260,6 +295,43 @@ export class TooltipDirective {
   }
 
   //#region Helpers
+
+  private onHoverMove(event: PointerEvent): void {
+    if (event.pointerType !== 'mouse' || !this.overlayRef) return;
+
+    const trigger = this.elementRef.nativeElement.getBoundingClientRect();
+    const bubble = this.overlayRef.overlayElement.getBoundingClientRect();
+    const x = event.clientX;
+    const y = event.clientY;
+    const verticalGap =
+      ((y >= bubble.bottom && y <= trigger.top) || (y >= trigger.bottom && y <= bubble.top)) &&
+      x >= Math.min(trigger.left, bubble.left) &&
+      x <= Math.max(trigger.right, bubble.right);
+    const horizontalGap =
+      ((x >= bubble.right && x <= trigger.left) || (x >= trigger.right && x <= bubble.left)) &&
+      y >= Math.min(trigger.top, bubble.top) &&
+      y <= Math.max(trigger.bottom, bubble.bottom);
+
+    this.hoverGap = verticalGap || horizontalGap;
+    this.scheduleHoverHide();
+  }
+
+  private scheduleHoverHide(): void {
+    if (this.hovered || this.bubbleHovered || this.hoverGap || this.focused || this.touchVisible) {
+      clearTimeout(this.hoverHideTimer);
+      this.hoverHideTimer = undefined;
+
+      return;
+    }
+
+    if (this.hoverHideTimer !== undefined) return;
+
+    this.hoverHideTimer = setTimeout(() => {
+      this.hoverHideTimer = undefined;
+
+      if (!this.hovered && !this.bubbleHovered && !this.hoverGap && !this.focused && !this.touchVisible) this.hide();
+    }, 180);
+  }
 
   private isTruncated(): boolean {
     const source = this.elementRef.nativeElement;
@@ -403,6 +475,12 @@ export class TooltipDirective {
   }
 
   private dispose(): void {
+    clearTimeout(this.hoverHideTimer);
+    this.hoverHideTimer = undefined;
+    this.hoverEvents?.abort();
+    this.hoverEvents = undefined;
+    this.bubbleHovered = false;
+    this.hoverGap = false;
     this.keyboardSubscription?.unsubscribe();
     this.keyboardSubscription = undefined;
     this.positionSubscription?.unsubscribe();

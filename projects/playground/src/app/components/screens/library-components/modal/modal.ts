@@ -123,6 +123,7 @@ export class Modal {
     const headerText = request.headerText === '' ? null : request.headerText;
 
     const modal = this.modalService.open<IDemoModalData, IDemoModalResult>(DemoModal, {
+      ariaLabel: headerText ? undefined : request.title,
       header:
         headerText === undefined
           ? undefined

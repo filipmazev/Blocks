@@ -16,7 +16,7 @@ import { SliderDirective } from '@forms/directives/slider/slider.directive';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RangeSlider extends BxValueControl<[number, number]> {
-  private readonly labelsAdapter = inject(BX_I18N, { optional: true });
+  private readonly i18n = inject(BX_I18N, { optional: true });
 
   protected readonly start: Signal<number> = computed(() => Math.max(this.min(), Math.min(this.max(), this.value()?.[0] ?? this.min())));
   protected readonly end: Signal<number> = computed(() => Math.max(this.start(), Math.min(this.max(), this.value()?.[1] ?? this.max())));
@@ -26,8 +26,8 @@ export class RangeSlider extends BxValueControl<[number, number]> {
   protected readonly endPercent: Signal<number> = computed(() =>
     this.max() > this.min() ? ((this.end() - this.min()) / (this.max() - this.min())) * 100 : 100
   );
-  protected readonly resolvedStartLabel: Signal<string> = computed(() => resolveText(this.startLabel(), this.labelsAdapter));
-  protected readonly resolvedEndLabel: Signal<string> = computed(() => resolveText(this.endLabel(), this.labelsAdapter));
+  protected readonly resolvedStartLabel: Signal<string> = computed(() => resolveText(this.startLabel(), this.i18n));
+  protected readonly resolvedEndLabel: Signal<string> = computed(() => resolveText(this.endLabel(), this.i18n));
   protected readonly ticks: Signal<number[]> = computed(() => {
     const span = this.max() - this.min();
     const step = this.step();
@@ -59,14 +59,31 @@ export class RangeSlider extends BxValueControl<[number, number]> {
   public readonly endLabel: InputSignal<ResolvableText> = input<ResolvableText>('Maximum value');
 
   protected onRangeInput(event: Event, thumb: 'start' | 'end'): void {
-    if (this.disabled() || this.isReadonly()) return;
-
     const input = event.target as HTMLInputElement;
+
+    if (this.effectiveDisabled() || this.isReadonly()) {
+      input.value = String(thumb === 'start' ? this.start() : this.end());
+
+      return;
+    }
+
     const value = input.valueAsNumber;
     const next: [number, number] = thumb === 'start' ? [Math.min(this.end(), value), this.end()] : [this.start(), Math.max(this.start(), value)];
 
     input.value = String(thumb === 'start' ? next[0] : next[1]);
     this.updateValue(next);
+  }
+
+  protected onReadonlyPointerDown(event: PointerEvent): void {
+    if (!this.isReadonly()) return;
+
+    event.preventDefault();
+    (event.target as HTMLInputElement).focus({ preventScroll: true });
+  }
+
+  protected onReadonlyKeyDown(event: KeyboardEvent): void {
+    if (this.isReadonly() && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key))
+      event.preventDefault();
   }
 
   protected onBlur(): void {

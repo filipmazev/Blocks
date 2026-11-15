@@ -27,7 +27,8 @@ provided. Legacy individually bound radio controls remain supported.
 
 ## Behavior
 
-Native radio semantics provide arrow navigation and one selected option. A disabled group disables its children; readonly blocks changes. Validation is
+Native radio semantics provide arrow navigation and one selected option. A disabled group disables its children; readonly blocks changes. The group exposes
+supported `aria-readonly` semantics; native radio children use their translatable `readonlyDescription` instead of an unsupported ARIA state. Validation is
 presented once at group level. Focus delegation targets an available native radio.
 
 ## Appearance and accessibility

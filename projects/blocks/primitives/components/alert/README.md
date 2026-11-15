@@ -54,6 +54,10 @@ Static content is silent by default. Use polite for changing status and assertiv
 text as well as a tone. Content and actions wrap at narrow widths. If dismissal removes the focused control, provide dismissFocusTarget or manage focus through
 dismissed. Focus restoration waits for rendering, so the destination may be created conditionally after dismissal.
 
+Small status copy uses the shared `text-<status>-readable` foreground, while expressive icons and lighting retain the original `text-<status>` color. Filled
+status surfaces use their paired `on-<status>` ink, with separate hover/active roles where applicable. These additive roles preserve the original fills and only
+adjust foregrounds that need contrast. See [Core's readable status roles](../../../core/README.md#readable-status-roles).
+
 ## Playground
 
 `/components/alert` includes live examples and shared appearance controls.

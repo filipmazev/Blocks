@@ -82,6 +82,14 @@ gestures to one target.
 Tap mode is intended for dedicated help buttons, including the built-in form-field information buttons. Tap again, tap elsewhere, scroll, or press Escape to
 dismiss the help. Use a separate popover or dialog for interactive or essential explanations rather than hiding them in a tooltip.
 
+### Hover persistence
+
+The trigger and noninteractive bubble share hover ownership. The geometric bridge between them keeps the positioning gap hoverable, with a 180ms leave grace
+period outside the region; entering the bubble keeps the same surface readable, and leaving both regions dismisses it. Keyboard focus is independent. Escape
+immediately dismisses without moving focus. The bubble never becomes a tab stop, and AriaDescriber's description remains available without duplicating
+announcements. Existing touch hold/tap, scrolling cancellation and teardown behavior remain separate. Follow the pointer from Save project into its bubble on
+`/components/tooltip-directive` to inspect the behavior.
+
 ## Playground
 
 Open `/components/tooltip-directive` for a working example and its current value or action result.

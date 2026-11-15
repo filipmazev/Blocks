@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
 
+import type { ResolvableText } from '@filip.mazev/blocks/core';
+
 import { IModalCloseResult } from '@modal/interfaces/imodal-close-result.interface';
 import { IModalConfig } from '@modal/interfaces/imodal-config.interface';
 import { IModalHeaderConfig } from '@modal/interfaces/imodal-header-config.interface';
@@ -21,6 +23,14 @@ export class ModalConfig<D, R> {
   public contentClasses: string;
   public contentStyles: string;
   public id?: string;
+  /** Optional translatable close-action name; defaults to shared settings, then 'Close dialog'. */
+  public closeLabel?: ResolvableText;
+  /** Optional translated task name for headerless content; defaults to the configured header, then 'Dialog'. */
+  public ariaLabel?: ResolvableText;
+  /** Optional space-separated IDs of visible task headings; takes precedence over ariaLabel and the configured header. */
+  public ariaLabelledBy?: string;
+  /** Optional space-separated IDs of task descriptions. No description is added by default. */
+  public ariaDescribedBy?: string;
 
   constructor(config?: IModalConfig<D, R>) {
     this.open = config?.open ?? true;
@@ -43,5 +53,9 @@ export class ModalConfig<D, R> {
     this.contentStyles = config?.contentStyles ?? '';
 
     this.id = config?.id;
+    this.closeLabel = config?.closeLabel ?? 'Close dialog';
+    this.ariaLabel = config?.ariaLabel;
+    this.ariaLabelledBy = config?.ariaLabelledBy;
+    this.ariaDescribedBy = config?.ariaDescribedBy;
   }
 }

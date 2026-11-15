@@ -52,3 +52,5 @@ Export and setup reuse the existing workflow without changing draft persistence,
 
 `/studio` is the showcase and the sidebar’s **Explore Theme Studio** destination. `/tokens` remains the full token catalog; `/new-project` and `/installation`
 provide project setup. The authoritative editor guide is available in the page and the sidebar’s Export tab.
+
+The compact hero keeps its palette preview in a bounded row after the copy and actions, preserving a clear reading area at narrow widths and enlarged text.

@@ -259,6 +259,29 @@ return using the shared spring; successful gestures still pass through the exist
 removes decorative movement. Close guards, focus/stacking and reactive patches retain their existing lifecycle. Inspect `/modal` in centered, side and mobile
 sheet layouts.
 
+### Dialog semantics and translated dismissal
+
+`ModalService` owns one persistent `dialog` with `aria-modal="true"` across centered, side and embedded sheet layouts. Its configured heading names the task.
+For a custom heading, provide `ariaLabelledBy` with the visible heading's ID. For headerless content, provide `ariaLabel` as plain text or `ResolvableText`.
+`ariaDescribedBy` optionally references concise task instructions. The fallback task name is `Dialog`; applications should supply a specific task name.
+
+```typescript
+this.modalService.open(EditorContent, {
+    ariaLabel: { key: 'editor.title' },
+    ariaDescribedBy: 'editor-instructions',
+    closeLabel: { key: 'editor.close' }
+});
+```
+
+The active task isolates background content with `inert` and `aria-hidden`. Nested dialogs restore the parent's accessibility state before returning focus;
+closing the final dialog restores the application's original attributes. Popup surfaces opened from the active task retain their shared overlay ownership.
+Denied close guards leave the task active. Embedded BottomDrawer presentation does not introduce another dialog role.
+
+`closeLabel` is optional and defaults to `ModalGlobalSettingsService.closeLabel()` (`Close dialog`). It names banner/custom-header close buttons and the sheet
+handle. `ModalRef.patch({ closeLabel })` updates an open task without changing guards or visibility. An optional `BX_I18N` adapter resolves keys reactively,
+including mounted overlays when `version` changes; plain strings work without an adapter. Task naming/description options are opening-time configuration. The
+`/modal` configurator demonstrates headerless naming, nested tasks, guarded closure, popup ownership and live close-label language changes.
+
 ## Playground
 
 The live dialog includes **Open nested dialog**, which can be used recursively to compare the root, 90% nested, and fully opaque deeper surfaces. Closing a

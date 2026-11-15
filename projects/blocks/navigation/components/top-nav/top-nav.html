@@ -41,7 +41,7 @@
             class="bx-top-nav-primary"
             tabindex="-1"
             [attr.role]="rootItems().length ? 'menubar' : null"
-            [attr.aria-label]="navigationStateService.text().ariaLabel"
+            [attr.aria-label]="rootItems().length ? navigationStateService.text().ariaLabel : null"
             [class.is-hidden]="isCompact()"
             [attr.aria-hidden]="isCompact() ? true : null"
             [attr.inert]="isCompact() ? '' : null"

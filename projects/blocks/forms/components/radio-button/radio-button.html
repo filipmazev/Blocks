@@ -18,12 +18,12 @@
             [attr.name]="effectiveName() || null"
             [attr.data-testid]="dataTestId()"
             [attr.aria-label]="ariaLabel()"
-            [attr.aria-readonly]="isReadonly() || !!group?.isReadonly()"
-            [attr.aria-describedby]="group?.describedBy()"
+            [attr.aria-describedby]="radioDescribedBy()"
             [required]="required() || !!group?.required()"
             [disabled]="effectiveDisabled()"
             [checked]="selected()"
             (click)="onReadonlyClick($event)"
+            (keydown)="onReadonlyKeyDown($event)"
             (change)="onSelect()"
             (blur)="onBlur()" />
 
@@ -45,4 +45,7 @@
             </span>
         }
     </label>
+    @if (isReadonly() || group?.isReadonly()) {
+        <span class="bx-visually-hidden" [id]="inputId() + '-readonly'">{{ resolvedReadonlyDescription() }}</span>
+    }
 </bx-form-field>

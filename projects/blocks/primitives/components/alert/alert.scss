@@ -104,3 +104,7 @@
         }
     }
 }
+
+.bx-alert-content {
+    color: var(--bx-alert-color, var(--bx-alert-readable-color, var(--bx-alert-role-color)));
+}

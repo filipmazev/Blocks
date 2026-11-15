@@ -2,12 +2,17 @@ import type { WritableSignal } from '@angular/core';
 
 import { Injectable, signal } from '@angular/core';
 
+import type { ResolvableText } from '@filip.mazev/blocks/core';
+import type { IModalGlobalSettings } from '@modal/interfaces/imodal-global-settings.interface';
+
 import { ModalLayout } from '@modal/types/modal.types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModalGlobalSettingsService {
+  /** Default translatable accessible close-action name for newly opened dialogs. Initially 'Close dialog'. */
+  public readonly closeLabel: WritableSignal<ResolvableText> = signal<ResolvableText>('Close dialog');
   /** Modal presentation layout used when an instance does not provide an override. Initially `'center'`. */
   public readonly layout: WritableSignal<ModalLayout> = signal<ModalLayout>('center');
 
@@ -50,19 +55,9 @@ export class ModalGlobalSettingsService {
    * In this example, the global settings for 'animate', 'hasBackdrop', and 'disableCloseOnBackdropClick' will be updated, while all other settings will
    * retain their current values.
    */
-  public update(
-    settings: Partial<{
-      layout: ModalLayout;
-      animate: boolean;
-      hasBackdrop: boolean;
-      showCloseButton: boolean;
-      contentWrapper: boolean;
-      overrideFullHeight: boolean;
-      disableCloseOnBackdropClick: boolean;
-      disableCloseOnNavigation: boolean;
-      closeGuardOnlyOnCancel: boolean;
-    }>
-  ) {
+  public update(settings: Partial<IModalGlobalSettings>): void {
+    if (settings.closeLabel !== undefined) this.closeLabel.set(settings.closeLabel);
+
     if (settings.animate !== undefined) this.animate.set(settings.animate);
 
     if (settings.hasBackdrop !== undefined) this.hasBackdrop.set(settings.hasBackdrop);

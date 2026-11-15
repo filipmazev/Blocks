@@ -211,9 +211,9 @@ application-wide rendering configuration.
 
 ### Theme-token audit and customization contract
 
-The token audit separates application theme controls from the full CSS implementation inventory. The generated catalog currently contains 743 properties; 90 are
-theme controls: 65 semantic colors, nine nonzero spacing steps, six ordinary radii, eight shadows, and two border properties. Component hooks remain available
-for targeted overrides; their presence in the inventory does not make them independent theme settings.
+The token audit separates application theme controls from the full CSS implementation inventory. The generated catalog reports the current implementation
+inventory. The curated theme controls cover semantic colors, nonzero spacing steps, ordinary radii, shadows, and border properties. Component hooks remain
+available for targeted overrides; their presence in the inventory does not make them independent theme settings.
 
 | Layer                             | Source of truth                                                 | Intended use                                                                       |
 | --------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -310,6 +310,27 @@ forced colors, native semantics, focus visibility, and accessible naming in cust
 
 Reduced-motion styling also clears animation and transition delays, so disabling motion never leaves content waiting invisibly. The
 [library motion contract](../effects/runtime/README.md#fluid-interaction-across-blocks) describes the shared interaction policy and review routes across Blocks.
+
+### Readable status roles
+
+The original `text-info`, `text-success`, `text-warn`, `text-danger` and status fills retain their expressive palette colors. Icons, semantic emission and
+existing applications keep those values. Readability uses additional, independently configurable foreground roles:
+
+| Role                     | Supported backing                          | Consumers                                               |
+| ------------------------ | ------------------------------------------ | ------------------------------------------------------- |
+| `text-<status>-readable` | Neutral/default and subtle status surfaces | Small alert/toast copy, tonal/outlined tags and actions |
+| `on-<status>`            | Matching `bg-<status>`                     | Filled status tags and buttons                          |
+| `on-<status>-hover`      | Matching hover fill                        | Filled status button hover                              |
+| `on-<status>-active`     | Matching active fill                       | Filled status button press                              |
+
+The shared Sass calculation retains the original ink when it meets contrast and otherwise mixes toward a readable endpoint in 1% steps, stopping at 4.55:1 for a
+little rendering headroom. It evaluates each backing separately; one difficult active fill cannot wash out status text across the rest of the system. Original
+status backgrounds, raw swatches, explicit overrides and high-contrast colors stay authoritative. Dark saturated active fills can require dark ink.
+
+Normal small copy uses the readable role; expressive `text-<status>` is appropriate for icons and light and has no universal normal-text contrast guarantee. The
+appearance remains saturated instead of jumping to a much darker or nearly white palette shade. Applications overriding colors should validate actual composited
+pairs over their own content. `npm run test:themes` checks every shipped role/backing and protects the original expressive colors and active fills. Figma
+carries both the restored originals and the new foreground roles, with copy/filled specimens bound to their corresponding ink.
 
 ## Playground
 

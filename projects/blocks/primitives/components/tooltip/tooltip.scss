@@ -2,7 +2,7 @@
 
 :host {
     display: block;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: z(tooltip);
 }
 

@@ -8,12 +8,14 @@
         [ngClass]="wrapperClasses()"
         [class.show]="isVisible()"
         [class.no-animate]="!isAnimated()"
+        [class.is-manipulating]="!isSwipingFinished() && (gestureActive() || currentTranslateY() !== 0)"
+        [style.touch-action]="config().swipeToDismiss !== false ? 'pan-x pinch-zoom' : null"
         [style.transform]="toastrTransform()"
         [style.--bx-toast-bg]="simpleToastSurface()"
         [style.--bx-toast-emission]="emissionColor()"
         [class.has-emission]="!!emissionColor()">
         @if (showCloseButton()) {
-            <button type="button" class="toast-close-button" aria-label="Close toast" (click)="closeToast()">
+            <button type="button" class="toast-close-button" [attr.aria-label]="resolvedCloseLabel()" (click)="closeToast()">
                 <bx-icon name="x" size="20" [color]="closeButtonColor()" />
             </button>
         }

@@ -66,6 +66,12 @@
 
             <section class="live-patch-demo" aria-label="Live toast configuration">
                 <h3>Live updates</h3>
+                <bx-select
+                    label="Close action language"
+                    [options]="overlayDemoI18nService.languages"
+                    [clearable]="false"
+                    [value]="overlayDemoI18nService.language()"
+                    (valueChange)="setCloseLanguage($event)" />
                 <p class="hint">Title and message above can be applied to the selected notification. Position and animation remain opening-time settings.</p>
                 <p class="hint" role="status">Selected notification: {{ liveToast()?.state() ?? 'none' }}. {{ liveToast()?.paused() ? 'Paused' : '' }}</p>
                 <form class="config-form live-patch-form" [formGroup]="liveForm">
@@ -89,7 +95,10 @@
                     <button type="button" bx-button variant="tonal" (click)="loadingToSuccess()">Loading to success</button>
                     <button type="button" bx-button (click)="releaseQueueDemo()">Release queue placeholders</button>
                 </div>
-                <p class="hint">Content patches keep the remaining time. Reset lifetime also works while paused. Hover pauses timed notifications.</p>
+                <p class="hint">
+                    Content patches keep the remaining time. Reset lifetime also works while paused. Hover, keyboard focus, and touch gestures pause timed
+                    notifications independently. Explicit Pause remains in effect until Resume. Canceling a swipe returns it to rest.
+                </p>
             </section>
 
             <div class="buttons-container">

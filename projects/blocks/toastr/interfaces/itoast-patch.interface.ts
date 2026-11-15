@@ -1,4 +1,4 @@
-import type { ThemedColor } from '@filip.mazev/blocks/core';
+import type { ResolvableText, ThemedColor } from '@filip.mazev/blocks/core';
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
 import type { ToastDataPatch } from '@toastr/types/toast-patch.types';
 
@@ -6,6 +6,8 @@ import type { ToastDataPatch } from '@toastr/types/toast-patch.types';
  * @typeParam D - Application-owned content data. Plain objects merge one level; arrays and other values replace the payload.
  */
 export interface IToastPatch<D> {
+  /** Replace the translatable close-action name without changing visibility, guards, or lifetime. Undefined retains the current label. */
+  closeLabel?: ResolvableText;
   /** Update content through the reference's reactive data signal. Null values follow the declared data contract; simple-toast title and icon accept null. */
   data?: ToastDataPatch<D>;
   /** Restart the lifetime in milliseconds; zero disables dismissal. Negative/nonfinite values become zero. Pause state is preserved. */

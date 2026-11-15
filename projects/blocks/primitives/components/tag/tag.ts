@@ -23,7 +23,7 @@ import { TagColor, TagSize, TagVariant } from '@primitives/types/tag.types';
   styleUrl: './tag.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[style.--bx-tag-role-text]': 'palette().text',
+    '[style.--bx-tag-role-text]': 'palette().readableText ?? palette().text',
     '[style.--bx-tag-role-fill]': 'palette().fill',
     '[style.--bx-tag-role-on-fill]': 'palette().onFill',
     '[style.--bx-tag-role-tonal]': 'palette().tonal',

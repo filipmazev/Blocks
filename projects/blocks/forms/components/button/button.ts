@@ -51,6 +51,8 @@ export class Button {
   private readonly iconElement: Signal<ElementRef<HTMLElement> | undefined> = contentChild(Icon, { read: ElementRef<HTMLElement> });
   private readonly customIcon: Signal<ButtonIconDirective | undefined> = contentChild(ButtonIconDirective);
 
+  protected readonly hasProjectedIcon: Signal<boolean> = computed(() => !!this.customIcon() || !!this.projectedIcon());
+
   protected readonly spinnerSize: WritableSignal<number> = signal(20);
 
   /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */
@@ -101,9 +103,9 @@ export class Button {
       const icon = this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
       const size = Number(this.projectedIcon()?.size());
       // Keep the spinner in CSS pixels; bounding rectangles include page zoom and surface transforms.
-      const measured = icon?.offsetWidth;
+      const measured = icon?.offsetWidth || icon?.clientWidth;
 
-      this.spinnerSize.set(measured || (Number.isFinite(size) && size > 0 ? size : 20));
+      if (measured || !icon) this.spinnerSize.set(measured || (Number.isFinite(size) && size > 0 ? size : 20));
 
       if (!icon || !this.loading()) return;
 

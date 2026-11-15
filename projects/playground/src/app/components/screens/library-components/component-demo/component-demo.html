@@ -152,6 +152,16 @@
                                     Without runtime effects
                                 </button>
                             </div>
+                            <div class="demo-row" role="group" aria-label="Status action contrast">
+                                @for (status of statusColors; track status) {
+                                    <button type="button" bx-button variant="filled" [color]="status" (click)="activate(status + ' action')">
+                                        {{ status }} filled
+                                    </button>
+                                    <button type="button" bx-button variant="tonal" [color]="status" (click)="activate(status + ' action')">
+                                        {{ status }} tonal
+                                    </button>
+                                }
+                            </div>
                         </div>
                     }
                     @case ('checkbox-indicator') {
@@ -212,14 +222,24 @@
                     @case ('radio') {
                         <fieldset class="demo-stack">
                             <legend>Notification frequency</legend>
-                            <bx-radio label="Daily summary" name="frequency-demo" value="daily" [formControl]="frequency" /><bx-radio
+                            <button bx-button type="button" [attr.aria-pressed]="radioReadonly()" (click)="radioReadonly.set(!radioReadonly())">
+                                Toggle readonly radios
+                            </button>
+                            <bx-radio
+                                label="Daily summary"
+                                name="frequency-demo"
+                                value="daily"
+                                [readOnly]="radioReadonly()"
+                                [formControl]="frequency" /><bx-radio
                                 label="Weekly summary"
                                 name="frequency-demo"
                                 value="weekly"
+                                [readOnly]="radioReadonly()"
                                 [formControl]="frequency" /><bx-radio
                                 label="Only important updates"
                                 name="frequency-demo"
                                 value="important"
+                                [readOnly]="radioReadonly()"
                                 [formControl]="frequency" /><output>Selected: {{ frequency.value }}</output
                             ><button type="button" bx-button (click)="frequency.reset()">Reset frequency</button>
                         </fieldset>

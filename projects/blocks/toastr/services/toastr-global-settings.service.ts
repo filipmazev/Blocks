@@ -5,7 +5,7 @@ import { Injectable, signal } from '@angular/core';
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
 import type { IToastrGlobalSettings } from '@toastr/interfaces/itoastr-global-settings.interface';
 
-import { ThemedColor } from '@filip.mazev/blocks/core';
+import { ResolvableText, ThemedColor } from '@filip.mazev/blocks/core';
 
 import { ToastPosition } from '@toastr/types/toastr.types';
 
@@ -35,6 +35,8 @@ export class ToastrGlobalSettingsService {
   public readonly glassiness: WritableSignal<GlassinessMode> = signal<GlassinessMode>('auto');
   /** Default toast material detail, constrained by shared rendering and device policies. */
   public readonly glassQuality: WritableSignal<GlassQuality> = signal<GlassQuality>('enhanced');
+  /** Default translatable accessible close-action name for newly queued notifications. Initially 'Close toast'. */
+  public readonly closeLabel: WritableSignal<ResolvableText> = signal<ResolvableText>('Close toast');
 
   /** Whether the overlay includes its built-in close action. Initially `true`. */
   public readonly showCloseButton: WritableSignal<boolean> = signal<boolean>(true);
@@ -69,6 +71,8 @@ export class ToastrGlobalSettingsService {
     if (settings.glassiness !== undefined) this.glassiness.set(settings.glassiness);
 
     if (settings.glassQuality !== undefined) this.glassQuality.set(settings.glassQuality);
+
+    if (settings.closeLabel !== undefined) this.closeLabel.set(settings.closeLabel);
 
     if (settings.showCloseButton !== undefined) this.showCloseButton.set(settings.showCloseButton);
 

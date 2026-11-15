@@ -13,6 +13,7 @@ describe('Radio', () => {
 
     fixture = TestBed.createComponent(Radio);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('value', 'example');
     await fixture.whenStable();
   });
 

@@ -1,10 +1,11 @@
 import type { InputSignal, OutputEmitterRef, Signal } from '@angular/core';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, output, TemplateRef, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, TemplateRef, viewChildren } from '@angular/core';
 
 import type { IModalCenteredModalClassesState } from '@modal/interfaces/imodal-centered-modal-classes-state.interface';
 
+import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 
@@ -23,6 +24,10 @@ import { ModalCloseMode } from '@modal/types/modal.types';
   styleUrl: './modal-centered.scss'
 })
 export class ModalCentered<D = unknown, R = unknown> implements IModalView<D, R> {
+  private readonly i18n = inject(BX_I18N, { optional: true });
+
+  protected readonly resolvedCloseLabel: Signal<string> = computed(() => resolveText(this.config()?.closeLabel ?? 'Close dialog', this.i18n));
+
   /** Resolved CSS classes for the modal layout, wrapper, and animation state. */
   public readonly modalClasses: Signal<IModalCenteredModalClassesState> = computed(() => {
     return {

@@ -2,12 +2,25 @@ import type { WritableSignal } from '@angular/core';
 
 import { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, createComponent, EnvironmentInjector, inject, Injectable, Injector, Renderer2, RendererFactory2, signal, Type } from '@angular/core';
+import {
+  ApplicationRef,
+  createComponent,
+  DestroyRef,
+  EnvironmentInjector,
+  inject,
+  Injectable,
+  Injector,
+  Renderer2,
+  RendererFactory2,
+  signal,
+  Type
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 
 import { filter, skip } from 'rxjs';
 
+import type { IModalIsolationState } from '@modal/interfaces/imodal-isolation-state.interface';
 import type { IModalStackEntry } from '@modal/interfaces/imodal-stack-entry.interface';
 
 import { ModalConfig } from '@modal/classes/modal-config';
@@ -24,6 +37,7 @@ import { ModalGlobalSettingsService } from './modal-global-settings.service';
   providedIn: 'root'
 })
 export class ModalService implements IModalService {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly injector = inject(Injector);
   private readonly applicationRef = inject(ApplicationRef);
@@ -33,12 +47,22 @@ export class ModalService implements IModalService {
   private readonly modalGlobalSettingsService = inject(ModalGlobalSettingsService);
 
   private readonly renderer: Renderer2;
+  private readonly isolatedElements: Map<HTMLElement, IModalIsolationState> = new Map();
 
   private readonly modals: WritableSignal<ReadonlySet<IModalStackEntry>> = signal(new Set<IModalStackEntry>());
+
+  private isolationObserver?: MutationObserver;
 
   constructor() {
     this.renderer = this.rendererFactory2.createRenderer(null, null);
     this.createSubscriptions();
+    this.destroyRef.onDestroy(() => {
+      this.isolationObserver?.disconnect();
+
+      for (const [element, state] of this.isolatedElements) this.restoreIsolatedElement(element, state);
+
+      this.isolatedElements.clear();
+    });
   }
 
   /**
@@ -196,10 +220,86 @@ export class ModalService implements IModalService {
     return [...this.modals()].at(-1) === modal;
   }
 
+  /** Restore focus inside the remaining task if a removed dialog's original focus target is no longer available. @internal */
+  public restoreTaskFocus(): void {
+    if (!this.document.defaultView) return;
+
+    const task = [...this.modals()].at(-1)?.modalContainerElement;
+    const focused = this.document.activeElement;
+
+    if (!task || (focused instanceof Node && task.contains(focused))) return;
+
+    const owner = focused instanceof HTMLElement ? focused.closest<HTMLElement>('[data-bx-overlay-modal-owner]')?.dataset['bxOverlayModalOwner'] : undefined;
+
+    if (owner && owner === task.dataset['bxModalTask']) return;
+
+    const target = task.querySelector<HTMLElement>(
+      'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]'
+    );
+
+    (target ?? task).focus({ preventScroll: true });
+  }
+
   //#region Helpers
 
   private syncNestingDepth(): void {
     for (const [depth, modal] of [...this.modals()].entries()) modal.setNestingDepth(depth);
+
+    this.syncAccessibilityIsolation();
+
+    const view = this.document.defaultView;
+
+    if (this.modals().size && view && !this.isolationObserver) {
+      this.isolationObserver = new view.MutationObserver(() => this.syncAccessibilityIsolation());
+      this.isolationObserver.observe(this.document.body, { childList: true, subtree: true });
+    } else if (!this.modals().size) {
+      this.isolationObserver?.disconnect();
+      this.isolationObserver = undefined;
+    }
+  }
+
+  private syncAccessibilityIsolation(): void {
+    if (!this.document.defaultView) return;
+
+    const active = [...this.modals()].at(-1)?.modalContainerElement;
+    const targets = new Set<HTMLElement>();
+    const visit = (parent: Element) => {
+      for (const child of Array.from(parent.children)) {
+        if (!(child instanceof HTMLElement) || child === active) continue;
+
+        const owner = active?.dataset['bxModalTask'];
+        const belongsToTask =
+          owner &&
+          (child.dataset['bxOverlayModalOwner'] === owner ||
+            Array.from(child.querySelectorAll<HTMLElement>('[data-bx-overlay-modal-owner]')).some((pane) => pane.dataset['bxOverlayModalOwner'] === owner));
+
+        if (child.classList.contains('cdk-overlay-container')) visit(child);
+        else if (!belongsToTask) targets.add(child);
+      }
+    };
+
+    if (active) visit(this.document.body);
+
+    for (const [element, state] of this.isolatedElements) {
+      if (targets.has(element)) continue;
+
+      this.restoreIsolatedElement(element, state);
+      this.isolatedElements.delete(element);
+    }
+
+    for (const element of targets) {
+      if (!this.isolatedElements.has(element)) this.isolatedElements.set(element, { inert: element.inert, ariaHidden: element.getAttribute('aria-hidden') });
+
+      element.inert = true;
+      element.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  private restoreIsolatedElement(element: HTMLElement, state: IModalIsolationState): void {
+    element.inert = state.inert;
+
+    if (state.ariaHidden === null) element.removeAttribute('aria-hidden');
+    else element.setAttribute('aria-hidden', state.ariaHidden);
   }
 
   private createSubscriptions(): void {
@@ -239,6 +339,7 @@ export class ModalService implements IModalService {
 
     return {
       ...config,
+      closeLabel: config?.closeLabel ?? this.modalGlobalSettingsService.closeLabel(),
       disableClose: config?.disableClose ?? this.modalGlobalSettingsService.disableClose(),
       disableCloseOnBackdropClick: config?.disableCloseOnBackdropClick ?? this.modalGlobalSettingsService.disableCloseOnBackdropClick(),
       disableCloseOnNavigation: config?.disableCloseOnNavigation ?? this.modalGlobalSettingsService.disableCloseOnNavigation(),

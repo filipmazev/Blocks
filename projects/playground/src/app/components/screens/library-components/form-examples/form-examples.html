@@ -59,7 +59,7 @@
                 [minuteStep]="15"
                 [formField]="registration.meetingTime"
                 [errorPolicy]="policy()" />
-            <bx-radio-group label="Plan" [formField]="registration.plan" [errorPolicy]="policy()">
+            <bx-radio-group label="Plan" [readOnly]="readOnly()" [formField]="registration.plan" [errorPolicy]="policy()">
                 <bx-radio label="Personal" value="personal" /><bx-radio label="Team" value="team" />
             </bx-radio-group>
             <bx-checkbox label="Accept the terms" [formField]="registration.terms" [errorPolicy]="policy()" />
@@ -299,6 +299,21 @@
             <button bx-button type="button" variant="filled" [loading]="loadingAction()" (click)="runAction()">
                 <bx-icon name="save" size="24" />Save with icon
             </button>
+            <button bx-button type="button" variant="tonal" [loading]="loadingAction()" (click)="runAction()">
+                <svg
+                    bxButtonIcon
+                    aria-hidden="true"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m20 6-11 11-5-5" /></svg
+                >Save with custom icon
+            </button>
             <button bx-button type="button" variant="tonal" [loading]="loadingAction()" (click)="runAction()">Save without icon</button>
             <button bx-button type="button" variant="icon" aria-label="Save project" [loading]="loadingAction()" (click)="runAction()">
                 <bx-icon name="save" size="20" />
@@ -309,7 +324,19 @@
 } @else if (example() === 'range-slider') {
     <div class="async-demo">
         <p>Move either thumb quickly, bring the endpoints together, then release. Values remain exact while decorative stretch settles.</p>
-        <bx-range-slider label="Budget range" [discrete]="true" [showTickMarks]="true" [step]="10" [(value)]="range" /><output>{{ range() | json }}</output>
+        <bx-range-slider
+            label="Budget range"
+            [readOnly]="readOnly()"
+            [disabled]="locked()"
+            [discrete]="true"
+            [showTickMarks]="true"
+            [step]="10"
+            [(value)]="range" /><output>{{ range() | json }}</output>
+        <bx-range-slider label="Lowercase readonly range" [readonly]="readOnly()" [disabled]="locked()" [(value)]="range" />
+        <div class="form-row">
+            <bx-checkbox label="Readonly ranges" [ngModel]="readOnly()" (ngModelChange)="readOnly.set($event)" />
+            <bx-checkbox label="Disable ranges" [ngModel]="locked()" (ngModelChange)="locked.set($event)" />
+        </div>
         <div class="form-row">
             <button bx-button type="button" (click)="range.set([40, 50])">Nearby thumbs</button
             ><button bx-button type="button" (click)="range.set([20, 80])">Reset range</button>

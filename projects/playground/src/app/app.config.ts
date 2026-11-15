@@ -1,8 +1,10 @@
 import { ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
-import { resolveThemeId, ThemingService } from '@filip.mazev/blocks/core';
+import { BX_I18N, resolveThemeId, ThemingService } from '@filip.mazev/blocks/core';
 import { provideNavigation } from '@filip.mazev/blocks/navigation';
+
+import { OverlayDemoI18nService } from '@playground/services/overlay-demo-i18n.service';
 
 import { provideHighlightOptions } from 'ngx-highlightjs';
 
@@ -35,6 +37,7 @@ export function provideNavigationI18n() {
 
 export const APP_CONFIG: ApplicationConfig = {
   providers: [
+    { provide: BX_I18N, useExisting: OverlayDemoI18nService },
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideAppInitializer(() => {
