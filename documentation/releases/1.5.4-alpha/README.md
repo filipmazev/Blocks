@@ -246,12 +246,13 @@ accessibility.
 - Buttons crossfade loading spinners with standard icons, custom `bxButtonIcon` visuals, or text without changing their outer dimensions, wrapping neighboring
   actions, or removing their accessible names. Custom SVG icons use their measured center rather than unavailable HTML offsets, keeping the spinner over the
   icon throughout loading and restoration. Resize observation maintains alignment when the content geometry changes.
-- Simple toasts and modal banners transition between icons and loading/completion visuals. Select, MultiSelect, SearchInput, DatePicker and TimePicker share the
-  same visual transition resource; chip check/icon changes use the mounted Icon transition. Picker action buttons remain mounted during loading. Outgoing visual
-  layers become inert and accessibility-hidden immediately, stay outside layout, and are removed after settling. Existing semantic state, translated loading
-  labels, action guards, focus and material/theme behavior remain authoritative.
-- Stepper marker icons, spinners and status symbols change immediately to preserve the existing lens rendering. Icon crossfades are disabled inside markers;
-  selection-surface motion and the shared visual transitions elsewhere in the library remain available.
+- Simple toasts and modal banners transition between icons and loading/completion visuals. Select, MultiSelect, SearchInput, DatePicker, TimePicker and stepper
+  markers share the same visual transition resource; chip check/icon changes use the mounted Icon transition. Picker action buttons remain mounted during
+  loading. Outgoing visual layers become inert and accessibility-hidden immediately, stay outside layout, and are removed after settling. Existing semantic
+  state, translated loading labels, action guards, focus and material/theme behavior remain authoritative.
+- Stepper marker transitions keep a fixed, centered visual region when switching between icons, spinners and narrow status symbols such as the error mark,
+  preventing the outgoing icon from shifting sideways or clipping during validation feedback. The magnifying lens tracks both layers’ live opacity and scale, so
+  the visible error transition starts immediately rather than holding the previous icon until the crossfade ends.
 
 ## Shared motion rollout
 

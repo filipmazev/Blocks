@@ -22,7 +22,7 @@ import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
 import { GlassScene, mountGlassScene, subscribeFrame } from '@filip.mazev/blocks/effects/runtime';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { TooltipDirective } from '@filip.mazev/blocks/primitives';
+import { Container, TooltipDirective } from '@filip.mazev/blocks/primitives';
 
 import { LightOrbGuide } from '@playground/classes/light-orb-guide';
 
@@ -40,7 +40,7 @@ const ribbonSamples = Array.from({ length: 25 }, (_, i) => {
 
 @Component({
   selector: 'app-light-orb',
-  imports: [TooltipDirective, Button, Icon],
+  imports: [Container, TooltipDirective, Button, Icon],
   templateUrl: './light-orb.html',
   styleUrl: './light-orb.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -63,6 +63,8 @@ export class LightOrb {
   private readonly ribbonGlow: Signal<ElementRef<SVGPathElement>> = viewChild.required<ElementRef<SVGPathElement>>('ribbonGlow');
   private readonly ribbonTail: Signal<ElementRef<SVGPathElement>> = viewChild.required<ElementRef<SVGPathElement>>('ribbonTail');
   private readonly probes: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('probes');
+
+  protected readonly controlsWidth: WritableSignal<number | null> = signal(null);
 
   protected readonly ready: WritableSignal<boolean> = signal(false);
 
@@ -493,6 +495,8 @@ export class LightOrb {
   }
 
   private measure(): void {
+    this.controlsWidth.set(this.stage().clientWidth);
+
     const plane = this.plane().nativeElement.getBoundingClientRect();
     const cards = this.cards().getBoundingClientRect();
     const home = this.home?.getBoundingClientRect() ?? cards;

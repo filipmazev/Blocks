@@ -1,7 +1,7 @@
 # Component catalog previews
 
-The `/components` catalog shows themed, inert stills. Real Blocks components supply their own appearance; stylized vignettes explain layouts, viewport surfaces,
-collections, and frozen loading states that do not fit naturally inside a small card.
+The `/components` catalog shows themed, inert stills rendered by the actual Blocks components and directives. Typed recipes supply sample inputs; Angular
+compositions supply slots and viewport context. Component fixes, theming changes and state styling therefore flow into the catalog automatically.
 
 ## Import
 
@@ -45,14 +45,15 @@ npm run tools:generate:component-previews
 node tools/playground/generate-component-previews.mjs --check
 ```
 
-The generator discovers recipe keys and template cases automatically. It rejects missing mappings, unknown kinds, duplicate registrations, and duplicate
-renderers. Startup, watch, and playground builds already run generation. Check mode detects stale generated output without writing files.
+The generator parses the Angular template and discovers recipe keys and template cases automatically. Every composition must contain a real Blocks view or
+directive (or the local adapter for actual toast views). It rejects placeholder-only cases, missing mappings, unknown kinds, duplicate registrations, and
+duplicate renderers. Startup, watch, and playground builds already run generation. Check mode detects stale generated output without writing files.
 
 ## API
 
 | API                                       | Purpose                                                                                                               |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `kind: ComponentPreviewKind`              | Required generated recipe or vignette key.                                                                            |
+| `kind: ComponentPreviewKind`              | Required generated recipe or composition key.                                                                         |
 | `defineComponentPreview(Component, data)` | Checks sample property names and values against signal inputs/models. Omitted data uses the component's own defaults. |
 | `IComponentPreviewRecipe`                 | Standalone component plus input values passed through `NgComponentOutlet`.                                            |
 
@@ -67,9 +68,19 @@ its full month without recreating day cells. Do not copy field borders, option r
 For projected content, native-host directives, or input aliases, add a typed Angular template case in `component-preview.html` and import its dependencies in
 `component-preview.ts`. Existing button groups, tabs, menus, disclosures, and form compositions follow this path. Template inputs are checked by Angular.
 
-Keep stylized vignettes when spatial context is the subject: page layouts, navigation shells, resizable regions, modal placement, drawers, and collection
-scrolling. Use shared tokens and Sass surface helpers. Reuse real Blocks elements inside those compositions when they fit. Frozen spinner arcs represent
-activity without instantiating continuously animated loading components.
+Layout previews use the real Container, PageContainer, Grid and Stack components. Navigation previews use inline SideNav and TopNav with local sample groups.
+Collection previews mount InfiniteScrollDirective, LoadMoreDirective and VirtualCollection with finite local items and no request handlers. Resize previews use
+ResizeHandleDirective between two file/preview panes, with the shared resize-grip Sass mixin. Loading previews render the real LoadingSpinner, LoadingIndicator
+and Button loading state.
+
+Modal previews use the public ModalCentered, ModalSide, ModalBottomSheet, ModalBanner and ModalBackdrop presentation views. A contained, scaled viewport keeps
+fixed-position children inside their own catalog card without invoking ModalService, focus traps or page scroll locking. Header and footer examples use the
+views' actual template slots. BottomDrawer uses its supported embedded, nonmodal mode. SidePanel uses a local push layout with autofocus and focus restoration
+disabled. The [toast adapter](../toast-preview/README.md) mounts real SimpleToast and ToastCore views using a scoped ToastRef without an application queue.
+
+Preview SCSS owns only composition, sample content layout, dimensions, containment and freezing motion. Do not reproduce a component's borders, materials, close
+actions, spinners, scrollbars, selected navigation rows or footer styling in preview CSS. For a service-created component, use its public presentation view or a
+small adapter to its public lifecycle contract.
 
 ## Behavior and accessibility
 
@@ -77,10 +88,16 @@ The preview host is `inert` and hidden from assistive technology. The card's sep
 interactive preview descendants are siblings of that link. Keyboard users get one catalog destination per card with a visible focus ring.
 
 A local `BxA11yService` preference forces reduced motion for preview descendants without changing document or application preferences. Scoped CSS also freezes
-nested animations and transitions. Use static skeletons, determinate progress values, and decorative frozen spinners. Do not start autoplay, timers, requests,
-or overlays from recipes. Full interactions belong on each component's linked example page.
+nested animations and transitions. Use static skeletons, determinate progress values, and the real loading components under the scoped reduced-motion
+preference. Do not start autoplay, timers, requests, or overlays from recipes. Full interactions belong on each component's linked example page.
 
 ## Playground
 
 Open `/components`, a category route, or `/components/layout`. Search and category filters share the same renderer. Review new recipes in light/dark themes,
 opaque materials, constrained cards, and narrow layouts before committing them.
+
+Each modal card demonstrates its own subject: the banner isolates heading/icon/close controls, the custom header uses its header template without footer
+controls, the footer emphasizes its action row, the modal shell composes a workspace-access form, and the centered modal asks for discard confirmation. Side and
+bottom presentations use member details and quick actions. Drawers use a transparent footer backing within their existing material so the actual footer reads as
+part of the same surface. ToastCore shows a paused progress/loading stack; SimpleToast shows a separate success message. Do not replace these live compositions
+with images or repeat the same scene for unrelated catalog titles.

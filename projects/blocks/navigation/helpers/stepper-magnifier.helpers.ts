@@ -143,32 +143,60 @@ export function createStepperMagnifier(source: HTMLElement, lens: HTMLElement): 
         continue;
       }
 
-      const icon = element.querySelector('svg');
+      const visuals = Array.from(element.querySelectorAll<SVGSVGElement | HTMLElement>('svg, .marker-symbol:not(bx-icon)'));
 
-      if (icon) {
-        if (!icon.id) {
-          const id = `${prefix}-icon-${ownedIds.size}`;
+      if (!visuals.length) visuals.push(element);
 
-          ownedIds.set(icon, id);
-          icon.id = id;
+      for (const visual of visuals) {
+        const visualBounds = visual.getBoundingClientRect();
+        const visualStyle = view.getComputedStyle(visual);
+
+        let opacity = 1;
+        let visualScale = 1;
+
+        for (let ancestor: Element | null = visual; ancestor; ancestor = ancestor.parentElement) {
+          const ancestorStyle = view.getComputedStyle(ancestor);
+          const localScale = Number.parseFloat(ancestorStyle.scale);
+
+          opacity *= Number(ancestorStyle.opacity);
+
+          if (Number.isFinite(localScale)) visualScale *= localScale;
+
+          if (ancestor === element) break;
         }
 
-        const iconBounds = icon.getBoundingClientRect();
-        const use = node(vectors, 'use', {
-          href: `#${icon.id}`,
-          x: String((iconBounds.x - origin.x) / scale),
-          y: String((iconBounds.y - origin.y) / scale),
-          width: String(iconBounds.width / scale),
-          height: String(iconBounds.height / scale)
-        });
+        if (visual instanceof view.SVGSVGElement) {
+          if (!visual.id) {
+            const id = `${prefix}-icon-${ownedIds.size}`;
 
-        use.style.color = view.getComputedStyle(icon).color;
-      } else {
-        const text = node(vectors, 'text', { x: String(x + width / 2), y: String(y + height / 2), 'text-anchor': 'middle', 'dominant-baseline': 'central' });
+            ownedIds.set(visual, id);
+            visual.id = id;
+          }
 
-        text.textContent = element.textContent?.trim() ?? '';
-        text.style.font = style.font;
-        text.style.fill = style.color;
+          const use = node(vectors, 'use', {
+            href: `#${visual.id}`,
+            x: String((visualBounds.x - origin.x) / scale),
+            y: String((visualBounds.y - origin.y) / scale),
+            width: String(visualBounds.width / scale),
+            height: String(visualBounds.height / scale),
+            opacity: String(opacity)
+          });
+
+          use.style.color = visualStyle.color;
+        } else {
+          const text = node(vectors, 'text', {
+            x: String((visualBounds.x + visualBounds.width / 2 - origin.x) / scale),
+            y: String((visualBounds.y + visualBounds.height / 2 - origin.y) / scale),
+            'text-anchor': 'middle',
+            'dominant-baseline': 'central',
+            opacity: String(opacity)
+          });
+
+          text.textContent = visual.textContent?.trim() ?? '';
+          text.style.font = visualStyle.font;
+          text.style.fontSize = `${Number.parseFloat(visualStyle.fontSize) * visualScale}px`;
+          text.style.fill = visualStyle.color;
+        }
       }
     }
 
@@ -176,10 +204,22 @@ export function createStepperMagnifier(source: HTMLElement, lens: HTMLElement): 
     paint();
   };
 
-  const content = new view.MutationObserver(refresh);
+  const content = new view.MutationObserver((records) => {
+    // Only presence styles carry the crossfade; ignore mask writes and unrelated material animation.
+    if (
+      records.some(
+        (record) =>
+          record.type !== 'attributes' ||
+          record.attributeName !== 'style' ||
+          (record.target instanceof view.Element && record.target.classList.contains('bx-visual-layer'))
+      )
+    ) {
+      refresh();
+    }
+  });
   const appearance = new view.MutationObserver(refresh);
 
-  content.observe(source, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['class', 'data-status'] });
+  content.observe(source, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['class', 'style', 'data-status'] });
   appearance.observe(lens, { attributes: true, attributeFilter: ['data-bx-refraction'] });
 
   for (let ancestor = source.parentElement; ancestor; ancestor = ancestor.parentElement) {

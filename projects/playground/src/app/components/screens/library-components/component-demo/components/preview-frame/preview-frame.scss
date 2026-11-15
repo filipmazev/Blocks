@@ -1,0 +1,21 @@
+:host {
+    --bx-modal-side-height: 100%;
+
+    display: block;
+    position: absolute;
+    inset: 0;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: clip;
+}
+
+.preview-frame-viewport {
+    position: absolute;
+    left: 50%;
+    inset-block-start: 50%;
+    transform-origin: center;
+    contain: layout paint;
+    isolation: isolate;
+    overflow: clip;
+    box-sizing: border-box;
+}

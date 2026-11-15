@@ -1,0 +1,34 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: grid;
+    position: absolute;
+    inset: 0;
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    isolation: isolate;
+}
+
+.surface-copy {
+    font-size: clamp(3.5rem, 6vw, 5rem);
+    font-weight: 700;
+    color: var(--bx-text-heading);
+    letter-spacing: -0.06em;
+}
+
+.surface-light {
+    position: absolute;
+    inset-block-start: spacing(2);
+    inset-inline-end: spacing(4);
+    color: var(--bx-accent);
+}
+
+.surface-pane {
+    position: absolute;
+    inline-size: min(80%, 15rem);
+    block-size: calc(#{spacing(8)} * 2);
+    border-radius: radius(lg);
+    transform: translateY(#{spacing(2)}) rotate(-8deg);
+}

@@ -1,24 +1,26 @@
-<div class="orb-controls" [attr.data-bx-reduced-motion]="isReducedMotion()">
-    <span
-        class="orb-home-action"
-        placement="top"
-        [class.is-visible]="!isOrbHome()"
-        [attr.inert]="isOrbHome() ? '' : null"
-        [attr.aria-hidden]="isOrbHome()"
-        [bxTooltip]="mood() === 'danger' ? 'The orb needs a moment to cool down before returning to its pod.' : 'Bring the orb back to its pod.'">
-        <button
-            bx-button
-            variant="tonal"
-            color="grayscale"
-            class="orb-home"
-            type="button"
-            aria-label="Bring Orby home"
-            [disabled]="isOrbHome() || mood() === 'danger'"
-            (click)="bringHome()">
-            <bx-icon name="house" size="16" />
-            <span>Bring Orby home</span>
-        </button>
-    </span>
+<div class="orb-controls" [style.inline-size.px]="controlsWidth()" [attr.data-bx-reduced-motion]="isReducedMotion()">
+    <bx-container class="orb-controls-content" size="xl">
+        <span
+            class="orb-home-action"
+            placement="top"
+            [class.is-visible]="!isOrbHome()"
+            [attr.inert]="isOrbHome() ? '' : null"
+            [attr.aria-hidden]="isOrbHome()"
+            [bxTooltip]="mood() === 'danger' ? 'The orb needs a moment to cool down before returning to its pod.' : 'Bring the orb back to its pod.'">
+            <button
+                bx-button
+                variant="tonal"
+                color="grayscale"
+                class="orb-home"
+                type="button"
+                aria-label="Bring Orby home"
+                [disabled]="isOrbHome() || mood() === 'danger'"
+                (click)="bringHome()">
+                <bx-icon name="house" size="16" />
+                <span>Bring Orby home</span>
+            </button>
+        </span>
+    </bx-container>
 </div>
 
 <div #plane class="orb-plane" [class.orb-ready]="ready()">

@@ -1,0 +1,7 @@
+<div
+    class="preview-frame-viewport"
+    [style.inline-size.px]="viewportWidth()"
+    [style.block-size.px]="viewportHeight()"
+    [style.transform]="'translate(-50%, -50%) scale(' + scale() + ')'">
+    <ng-content />
+</div>

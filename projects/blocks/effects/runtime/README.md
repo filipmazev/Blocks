@@ -409,3 +409,7 @@ Keep positioning/centering transforms on an outer wrapper. The controller preser
 Use Angular's [VisualTransition](../components/visual-transition/README.md) for bounded outgoing/current layers or
 [BxVisualPresenceDirective](../directives/visual-presence/README.md) for persistent layers. Neither adds a lighting renderer or changes committed application
 state.
+
+`mountSurface(element, { lightingTarget })` can check visibility against a containing hit area for an inert visual, such as a preview underneath a whole-card
+link. Omission checks the surface itself. Updating this option does not change the receiver's geometry or make it interactive; it reuses the scene's existing
+visibility path. Angular exposes the same option as `bxSurfaceLightingTarget`.

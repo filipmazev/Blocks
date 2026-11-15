@@ -1,7 +1,7 @@
 import type { ComponentPreviewKind } from '@playground/components/screens/library-components/component-demo/types/component-preview.types';
 
 /**
- * Explicit preview intent for each catalog entry: a real component recipe or a composed/stylized template vignette.
+ * Explicit preview intent for each catalog entry: a real component recipe or a composition of actual Blocks views.
  * Every entry needs one; generation discovers recipe keys and template cases, then validates this mapping.
  */
 export const COMPONENT_PREVIEW_OVERRIDES: Readonly<Partial<Record<string, ComponentPreviewKind>>> = {

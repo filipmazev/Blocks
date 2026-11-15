@@ -3,9 +3,12 @@
 .side-modal-content-wrapper {
     position: fixed;
     top: 0;
-    height: 100vh;
-    height: 100dvh;
+    height: var(--bx-modal-side-height, 100vh);
     z-index: z(modal);
+
+    @supports (height: 100dvh) {
+        height: var(--bx-modal-side-height, 100dvh);
+    }
 
     @include panel-frame;
     @include panel-square-corners;

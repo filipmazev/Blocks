@@ -192,3 +192,6 @@ overlay boundaries and occlusion; light does not pass through a modal into the p
 
 Use [VisualTransition](components/visual-transition/README.md) for keyed icon/spinner changes and
 [BxVisualPresenceDirective](directives/visual-presence/README.md) for persistent visual layers. Both reuse the shared spring and live reduced-motion policy.
+
+For passive or inert visuals covered by a containing hit area, `bxSurfaceLightingTarget` (runtime `lightingTarget`) optionally supplies that containing element
+for lighting visibility checks. Surface dimensions, lighting geometry and interaction ownership stay on the original visual; omission uses the surface itself.

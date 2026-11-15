@@ -4,6 +4,8 @@ import type { GlassQuality } from '@effects/runtime/types/runtime.types';
  * Describes the surface options contract.
  */
 export interface ISurfaceOptions {
+  /** Optional containing element used for lighting visibility checks when this visual is inert or covered by its owner's hit area. Defaults to the surface. Does not change lighting geometry or interaction ownership. */
+  lightingTarget?: HTMLElement;
   /** Optional local renderer quality. The application's baseline policy and accessibility settings still take precedence. */
   quality?: GlassQuality;
   /** 0–1 translucency; omitted values inherit the application's balanced default. */

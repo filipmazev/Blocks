@@ -499,6 +499,9 @@ export function mountSurface(element: HTMLElement, initial: ISurfaceOptions = {}
   sync();
 
   const unregister = registerSurface(element, {
+    get hitTarget() {
+      return options.lightingTarget ?? element;
+    },
     light: lighting,
     sync,
     visibility(value) {

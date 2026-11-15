@@ -31,6 +31,9 @@ this.modalService.open(DialogContent, {
 
 ## Appearance
 
+`--bx-modal-side-height` optionally sets the panel's block extent. It defaults to the full dynamic viewport height, with a legacy viewport fallback. Contained
+presentation hosts can set `100%` to fit their available height; ordinary service-created side modals retain their full-page presentation.
+
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 

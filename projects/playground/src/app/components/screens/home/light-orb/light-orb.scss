@@ -6,8 +6,8 @@
 
 .orb-controls {
     position: absolute;
-    inset-block-start: spacing(4);
-    inset-inline-end: 0;
+    inset-block-start: calc(var(--bx-page-padding-block, clamp(#{spacing(4)}, 3vw, #{spacing(10)})) + #{spacing(4)});
+    inset-inline: 0;
     z-index: 3;
     display: flex;
     flex-wrap: wrap;
@@ -19,6 +19,13 @@
     flex: 1 1 auto;
     color: var(--bx-text-secondary);
     font-size: 0.75rem;
+}
+
+.orb-controls-content {
+    --bx-container-padding: var(--bx-page-padding-inline, clamp(#{spacing(4)}, 3vw, #{spacing(10)}));
+
+    display: flex;
+    justify-content: flex-end;
 }
 
 .mood-dot {
@@ -274,6 +281,6 @@
     .orb-controls {
         position: fixed;
         inset-block: auto spacing(4);
-        inset-inline-end: spacing(4);
+        inset-inline: 0;
     }
 }

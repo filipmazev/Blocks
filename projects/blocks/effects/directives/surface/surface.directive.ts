@@ -21,6 +21,8 @@ export class BxSurfaceDirective implements AfterViewInit {
 
   private readonly isBrowser: boolean = isPlatformBrowser(inject(PLATFORM_ID));
 
+  /** Optional containing hit area used to check visibility of an inert visual's lighting. Omission uses this surface; geometry and interaction stay local. */
+  public readonly bxSurfaceLightingTarget: InputSignal<HTMLElement | undefined> = input<HTMLElement | undefined>();
   /**
    * Enable decorative pointer and keyboard pressure feedback for this surface; omission inherits runtime policy. Optional; omission leaves the value
    * undefined.
@@ -93,6 +95,7 @@ export class BxSurfaceDirective implements AfterViewInit {
 
   private options(): SurfaceOptions {
     return {
+      lightingTarget: this.bxSurfaceLightingTarget(),
       translucency: this.bxSurfaceTranslucency(),
       glassiness: this.bxSurfaceGlassiness(),
       localRefraction: this.bxSurfaceLocalRefraction(),

@@ -1,6 +1,7 @@
 @if (recipe(); as recipe) {
     <div
         class="preview-component"
+        [class.preview-centered]="kind() === 'loading'"
         [class.preview-calendar]="kind() === 'calendar'"
         [class.preview-tooltip]="kind() === 'tooltip'"
         [class.bx-overlay-pos-top]="kind() === 'tooltip'">
@@ -10,15 +11,13 @@
     @switch (kind()) {
         @case ('accordion') {
             <bx-accordion [multiple]="true">
-                <bx-accordion-item title="Details" [expanded]="true">
-                    <span class="mock-line w-80"></span>
-                </bx-accordion-item>
+                <bx-accordion-item title="Details" [expanded]="true"><p>Project settings and shared preferences.</p></bx-accordion-item>
                 <bx-accordion-item title="Permissions" />
                 <bx-accordion-item title="Billing" />
             </bx-accordion>
         }
         @case ('button') {
-            <div class="mock-row mock-row-center">
+            <div class="preview-row preview-row-center">
                 <button bx-button type="button" variant="filled">Save</button>
                 <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
                 <button bx-button type="button" variant="mini-fab" aria-label="Add">
@@ -27,30 +26,27 @@
             </div>
         }
         @case ('card') {
-            <bx-card class="mock-card" title="Project" subtitle="Updated today">
-                <div bxCardMedia class="mock-card-media"></div>
-                <span class="mock-line w-50"></span>
-                <div bxCardFooter class="mock-row mock-row-end">
-                    <span class="mock-pill">Open</span>
-                </div>
+            <bx-card class="preview-card" title="Project" subtitle="Updated today">
+                <p>Shared components for your next workspace.</p>
+                <div bxCardFooter class="preview-row preview-row-end"><button bx-button type="button" variant="tonal">Open</button></div>
             </bx-card>
         }
         @case ('checkbox') {
-            <div class="mock-stack">
+            <div class="preview-stack">
                 <bx-checkbox label="Draft" [checked]="true" />
                 <bx-checkbox label="In review" [checked]="true" />
                 <bx-checkbox label="Published" [indeterminate]="true" />
             </div>
         }
         @case ('checkbox-indicator') {
-            <div class="mock-row mock-row-center mock-indicator-row">
-                <span class="mock-indicator"><bx-checkbox-indicator [checked]="true" /><span>On</span></span>
-                <span class="mock-indicator"><bx-checkbox-indicator [indeterminate]="true" /><span>Some</span></span>
-                <span class="mock-indicator"><bx-checkbox-indicator [checked]="false" /><span>Off</span></span>
+            <div class="preview-row preview-row-center preview-indicator-row">
+                <span class="preview-indicator"><bx-checkbox-indicator [checked]="true" /><span>On</span></span>
+                <span class="preview-indicator"><bx-checkbox-indicator [indeterminate]="true" /><span>Some</span></span>
+                <span class="preview-indicator"><bx-checkbox-indicator [checked]="false" /><span>Off</span></span>
             </div>
         }
         @case ('chips') {
-            <div class="mock-chip-row">
+            <div class="preview-chip-row">
                 <bx-chip label="Design" [selected]="true" />
                 <bx-chip label="Engineering" [removable]="true" />
                 <bx-chip label="Research" />
@@ -58,138 +54,118 @@
             </div>
         }
         @case ('container') {
-            <div class="mock-frame mock-gutter-frame">
-                <div class="mock-centered">
-                    <span class="mock-line w-55"></span>
-                    <span class="mock-line w-40"></span>
-                    <span class="mock-block"></span>
-                </div>
-            </div>
+            <bx-container class="preview-container" size="full">
+                <bx-card title="Centered content"><p>Responsive page gutters.</p></bx-card>
+            </bx-container>
         }
         @case ('context-menu') {
-            <div class="mock-context-stage">
-                <bx-menu class="mock-context-menu">
-                    <bx-menu-item label="Copy" icon="copy" />
-                    <bx-menu-item label="Paste" icon="clipboard" />
-                    <bx-menu-item label="Quote" icon="quote" />
-                </bx-menu>
-                <span class="mock-cursor"><bx-icon name="mouse-pointer-2" size="20" /></span>
+            <div class="preview-context" [bxContextMenu]="contextMenu">
+                <bx-menu
+                    ><bx-menu-item label="Copy" icon="copy" /><bx-menu-item label="Paste" icon="clipboard" /><bx-menu-item label="Quote" icon="quote"
+                /></bx-menu>
+                <ng-template #contextMenu
+                    ><bx-menu><bx-menu-item label="Copy" icon="copy" /><bx-menu-item label="Paste" icon="clipboard" /></bx-menu
+                ></ng-template>
             </div>
         }
         @case ('disclosure') {
-            <bx-collapsible title="Project details" [expanded]="true" [headingLevel]="3">
-                <span class="mock-line w-55"></span>
-            </bx-collapsible>
+            <bx-collapsible title="Project details" [expanded]="true" [headingLevel]="3"><p>Shared components for your workspace.</p></bx-collapsible>
         }
         @case ('divider') {
-            <div class="mock-list-surface">
-                <span class="mock-item">Contact 1</span>
+            <div class="preview-list-surface">
+                <span class="preview-item">Contact 1</span>
                 <bx-divider [decorative]="true" />
-                <span class="mock-item">Contact 2</span>
+                <span class="preview-item">Contact 2</span>
                 <bx-divider [decorative]="true" />
-                <span class="mock-item">Contact 3</span>
+                <span class="preview-item">Contact 3</span>
             </div>
         }
         @case ('drawer') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-sheet">
-                    <span class="mock-grab"></span>
-                    <span class="mock-sheet-title">Filters</span>
-                    <span class="mock-line w-70"></span>
-                    <span class="mock-row mock-row-between mock-sheet-footer">
-                        <span class="mock-pill">Reset</span>
-                        <span class="mock-pill is-primary">Apply</span>
-                    </span>
+            <app-preview-frame [width]="480" [height]="320" [fill]="true">
+                <div class="preview-viewport preview-bottom">
+                    <bx-bottom-drawer
+                        title="Filters"
+                        maxHeight="100%"
+                        panelStyle="--bx-drawer-footer-background: transparent; --bx-glass-min-opacity: 0.72;"
+                        [embedded]="true"
+                        [open]="true"
+                        [modal]="false"
+                        [showBackdrop]="false"
+                        [animationDuration]="0">
+                        <bx-checkbox label="Active projects" [checked]="true" />
+                        <div bxDrawerFooter class="preview-row preview-row-end">
+                            <button bx-button type="button" variant="tonal">Reset</button><button bx-button type="button" variant="filled">Apply</button>
+                        </div>
+                    </bx-bottom-drawer>
                 </div>
-            </div>
+            </app-preview-frame>
         }
         @case ('dropdown') {
-            <div class="mock-dropdown-stage">
-                <button bx-button type="button" variant="tonal" color="grayscale">Actions<bx-icon name="chevron-down" size="16" /></button>
-                <bx-menu class="mock-dropdown-panel">
-                    <bx-menu-item label="Duplicate" icon="copy" />
-                    <bx-menu-item label="Archive" icon="archive" [danger]="true" />
-                </bx-menu>
+            <div class="preview-dropdown">
+                <button bx-button type="button" variant="tonal" [bxDropdown]="dropdownMenu">Actions<bx-icon name="chevron-down" size="16" /></button>
+                <bx-menu><bx-menu-item label="Duplicate" icon="copy" /><bx-menu-item label="Archive" icon="archive" [danger]="true" /></bx-menu>
+                <ng-template #dropdownMenu
+                    ><bx-menu><bx-menu-item label="Duplicate" icon="copy" /><bx-menu-item label="Archive" icon="archive" [danger]="true" /></bx-menu
+                ></ng-template>
             </div>
         }
         @case ('error') {
-            <bx-form-field label="Reference" forId="preview-error" error="Enter at least three characters.">
-                <input id="preview-error" bxInput value="AB" aria-invalid="true" />
+            <bx-form-field label="Reference" error="Enter at least three characters." [forId]="previewId + '-error'">
+                <input bxInput value="AB" aria-invalid="true" [id]="previewId + '-error'" />
             </bx-form-field>
         }
         @case ('form') {
-            <div class="mock-form-preview">
-                <strong class="mock-form-title">Create workspace</strong>
+            <div class="preview-form-preview">
+                <strong class="preview-form-title">Create workspace</strong>
                 <bx-input-field label="Workspace" value="Blocks library" subscriptSizing="dynamic" />
                 <bx-input-field label="Owner email" placeholder="name@company.com" subscriptSizing="dynamic" />
-                <div class="mock-row mock-row-end">
+                <div class="preview-row preview-row-end">
                     <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
                     <button bx-button type="button" variant="filled">Create</button>
                 </div>
             </div>
         }
         @case ('grid') {
-            <div class="mock-grid-preview">
+            <bx-grid class="preview-grid" [columns]="3" [gap]="2">
                 @for (cell of [1, 2, 3, 4, 5, 6]; track cell) {
-                    <span class="mock-block"></span>
+                    <bx-card class="preview-cell">{{ cell }}</bx-card>
                 }
-            </div>
+            </bx-grid>
         }
         @case ('icon') {
-            <div class="mock-icon-halo"><bx-icon name="sparkles" size="40" color="accent" bgColor="auto" /></div>
+            <div class="preview-icon-halo"><bx-icon name="sparkles" size="40" color="accent" bgColor="auto" /></div>
         }
         @case ('layout') {
-            <div class="mock-frame">
-                <span class="mock-bar"><span class="mock-dot"></span><span class="mock-line w-30"></span></span>
-                <div class="mock-frame-body">
-                    <span class="mock-rail"><bx-icon name="house" size="20" /><bx-icon name="folder" size="20" /></span>
-                    <div class="mock-frame-content">
-                        <span class="mock-line w-60"></span>
-                        <span class="mock-grid-cells"><span></span><span></span><span></span><span></span></span>
-                    </div>
-                </div>
-            </div>
+            <app-preview-frame [width]="520" [height]="320">
+                <bx-page-container class="preview-page-layout" size="full" [showBreadcrumbs]="false" [autoResolveTitlesFromNavigation]="false">
+                    <bx-page-header pageTitle="Workspace" [autoResolveTitlesFromNavigation]="false" />
+                    <bx-page-content
+                        ><bx-grid [columns]="2" [gap]="2"><bx-card>Design</bx-card><bx-card>Engineering</bx-card></bx-grid></bx-page-content
+                    >
+                    <bx-page-footer>Updated today</bx-page-footer>
+                </bx-page-container>
+            </app-preview-frame>
         }
         @case ('list') {
-            <div class="mock-stack mock-list-preview">
-                @for (row of [1, 2, 3]; track row) {
-                    <span class="mock-list-row">
-                        <span class="mock-avatar"></span>
-                        <span class="mock-line w-60"></span>
-                    </span>
+            <div class="preview-list" bxInfiniteScroll [infiniteScrollDisabled]="true">
+                @for (row of sampleRows; track row) {
+                    <div class="preview-list-row">
+                        <bx-icon name="file-text" size="18" /><span>{{ row }}</span>
+                    </div>
                 }
-                <span class="mock-row mock-row-center mock-more"><span class="mock-spinner is-small"></span>Loading more</span>
             </div>
         }
         @case ('load-more') {
-            <div class="mock-stack mock-list-preview">
-                <span class="mock-list-row"><span class="mock-avatar"></span><span class="mock-line w-60"></span></span>
-                <span class="mock-list-row"><span class="mock-avatar"></span><span class="mock-line w-45"></span></span>
-                <button bx-button type="button" variant="tonal" class="mock-load-button">Load more</button>
-            </div>
-        }
-        @case ('loading') {
-            <div class="mock-row mock-row-center">
-                <span class="mock-spinner is-large"></span>
-                <span class="mock-stack">
-                    <span class="mock-line w-70"></span>
-                    <span class="mock-line w-45"></span>
-                </span>
+            <div class="preview-list" bxLoadMore [loadMoreHasMore]="true" [loadMoreRevision]="sampleRows">
+                @for (row of sampleRows.slice(0, 2); track row) {
+                    <div class="preview-list-row">
+                        <bx-icon name="file-text" size="18" /><span>{{ row }}</span>
+                    </div>
+                }
             </div>
         }
         @case ('loading-button') {
-            <div class="mock-row mock-row-center">
-                <button bx-button type="button" variant="filled"><span class="mock-spinner is-small"></span>Saving…</button>
-            </div>
-        }
-        @case ('loading-indicator') {
-            <div class="mock-row mock-row-center mock-loading-indicator">
-                <span class="mock-spinner is-small"></span>
-                <span>Fetching results…</span>
-                <span class="mock-kbd">1 / 3</span>
-            </div>
+            <button bx-button type="button" variant="filled" [loading]="true"><bx-icon name="save" size="20" />Save changes</button>
         }
         @case ('menu') {
             <bx-menu>
@@ -204,129 +180,157 @@
             </bx-menu>
         }
         @case ('modal') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-modal-panel">
-                    <div class="mock-modal-banner">
-                        <span class="mock-modal-heading"
-                            ><span class="mock-toast-icon"><bx-icon name="info" size="20" /></span>Project settings</span
-                        >
-                        <span class="mock-modal-close"><bx-icon name="x" size="20" /></span>
-                    </div>
-                    <span class="mock-line w-80"></span>
-                    <span class="mock-line w-55"></span>
-                    <div class="mock-modal-footer">
-                        <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
-                        <button bx-button type="button" variant="filled">Save</button>
-                    </div>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="320">
+                <bx-modal-centered
+                    [config]="modalConfig"
+                    [id]="previewId"
+                    [isOpen]="true"
+                    [isAnimated]="false"
+                    [animationDuration]="0"
+                    [isBottomSheetModalActive]="false"
+                    [hasDefaultContentWrapperClass]="true"
+                    [headerTemplate]="null"
+                    [footerTemplate]="inviteFooter"
+                    [hasBanner]="true">
+                    <bx-input-field label="Email address" value="alex@workspace.dev" subscriptSizing="dynamic" />
+                </bx-modal-centered>
+            </app-preview-frame>
         }
         @case ('modal-backdrop') {
-            <div class="mock-page">
-                <span class="mock-page-behind">
-                    <span class="mock-line w-50"></span>
-                    <span class="mock-line w-30"></span>
-                    <span class="mock-block"></span>
-                </span>
-                <span class="mock-scrim"></span>
-            </div>
+            <app-preview-frame class="preview-backdrop-frame" [width]="480" [height]="320" [fill]="true">
+                <div class="preview-backdrop-content">
+                    <h3>Workspace</h3>
+                    <p>Project overview</p>
+                    <bx-grid [columns]="2" [gap]="3"><bx-card>Design</bx-card><bx-card>Engineering</bx-card></bx-grid>
+                </div>
+                <bx-modal-backdrop [isOpen]="true" [isAnimated]="false" />
+            </app-preview-frame>
         }
         @case ('modal-banner') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-modal-panel">
-                    <div class="mock-modal-banner">
-                        <span class="mock-modal-heading"
-                            ><span class="mock-toast-icon"><bx-icon name="info" size="20" /></span>Project settings</span
-                        >
-                        <span class="mock-modal-close"><bx-icon name="x" size="20" /></span>
-                    </div>
+            <app-preview-frame [width]="480" [height]="220">
+                <div class="preview-banner-stage">
+                    <bx-modal-banner [header]="{ text: 'Project information', icon: { name: 'info' } }" [showCloseButton]="true" />
                 </div>
-            </div>
+            </app-preview-frame>
         }
         @case ('modal-centered') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-modal-panel is-dialog">
-                    <span class="mock-dialog-icon"><bx-icon name="triangle-alert" size="20" /></span>
-                    <strong class="mock-modal-title">Discard draft?</strong>
-                    <span class="mock-line w-70"></span>
-                    <div class="mock-modal-footer">
-                        <button bx-button type="button" variant="tonal" color="grayscale">Cancel</button>
-                        <button bx-button type="button" variant="filled" color="danger">Discard</button>
-                    </div>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="320">
+                <bx-modal-centered
+                    [config]="confirmConfig"
+                    [id]="previewId"
+                    [isOpen]="true"
+                    [isAnimated]="false"
+                    [animationDuration]="0"
+                    [isBottomSheetModalActive]="false"
+                    [hasDefaultContentWrapperClass]="true"
+                    [headerTemplate]="null"
+                    [footerTemplate]="confirmFooter"
+                    [hasBanner]="true">
+                    <p>This draft has unsaved changes.</p>
+                </bx-modal-centered>
+            </app-preview-frame>
         }
         @case ('modal-footer') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-modal-panel">
-                    <span class="mock-line w-80"></span>
-                    <span class="mock-line w-55"></span>
-                    <div class="mock-modal-footer mock-modal-footer-outline">
-                        <span class="mock-pill">Cancel</span>
-                        <span class="mock-pill is-primary">Save</span>
-                    </div>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="240">
+                <bx-modal-centered
+                    [config]="modalConfig"
+                    [id]="previewId"
+                    [isOpen]="true"
+                    [isAnimated]="false"
+                    [animationDuration]="0"
+                    [isBottomSheetModalActive]="false"
+                    [hasDefaultContentWrapperClass]="true"
+                    [headerTemplate]="null"
+                    [footerTemplate]="reviewFooter"
+                    [hasBanner]="false">
+                    <h3>Review changes</h3>
+                    <p>Your workspace settings are ready.</p>
+                </bx-modal-centered>
+            </app-preview-frame>
         }
         @case ('modal-header') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-modal-panel">
-                    <span class="mock-slot">Custom header</span>
-                    <span class="mock-line w-80"></span>
-                    <span class="mock-line w-55"></span>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="260">
+                <bx-modal-centered
+                    [config]="modalConfig"
+                    [id]="previewId"
+                    [isOpen]="true"
+                    [isAnimated]="false"
+                    [animationDuration]="0"
+                    [isBottomSheetModalActive]="false"
+                    [hasDefaultContentWrapperClass]="true"
+                    [headerTemplate]="customHeader"
+                    [footerTemplate]="null"
+                    [hasBanner]="false">
+                    <p>Choose who can access this workspace.</p>
+                </bx-modal-centered>
+            </app-preview-frame>
         }
         @case ('modal-sheet') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-sheet mock-sheet-modal">
-                    <span class="mock-row mock-row-between">
-                        <span class="mock-sheet-title">Filters</span>
-                        <bx-icon name="x" size="20" />
-                    </span>
-                    <span class="mock-line w-60"></span>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="320" [fill]="true">
+                <bx-modal-bottom-sheet
+                    [config]="sheetConfig"
+                    [id]="previewId"
+                    [isOpen]="true"
+                    [isAnimated]="false"
+                    [animationDuration]="0"
+                    [headerTemplate]="null"
+                    [footerTemplate]="sheetFooter"
+                    [hasBanner]="true">
+                    <bx-stack direction="horizontal" [gap]="3"
+                        ><button bx-button type="button" variant="tonal"><bx-icon name="share-2" size="18" />Share</button
+                        ><button bx-button type="button" variant="tonal"><bx-icon name="copy" size="18" />Copy link</button></bx-stack
+                    >
+                </bx-modal-bottom-sheet>
+            </app-preview-frame>
         }
         @case ('modal-side') {
-            <div class="mock-page">
-                <span class="mock-page-behind"><span class="mock-line w-50"></span><span class="mock-line w-30"></span></span>
-                <span class="mock-scrim"></span>
-                <div class="mock-side-panel">
-                    <span class="mock-row mock-row-between no-flex">
-                        <span class="mock-sheet-title">Edit project</span>
-                        <bx-icon name="x" size="20" />
-                    </span>
-                    <span class="mock-line w-70"></span>
-                    <span class="mock-line w-45"></span>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="320" [fill]="true">
+                <bx-modal-side
+                    layout="right"
+                    [config]="sideConfig"
+                    [id]="previewId"
+                    [isOpen]="true"
+                    [isAnimated]="false"
+                    [animationDuration]="0"
+                    [isBottomSheetModalActive]="false"
+                    [hasDefaultContentWrapperClass]="true"
+                    [headerTemplate]="null"
+                    [footerTemplate]="doneFooter"
+                    [hasBanner]="true">
+                    <bx-stack [gap]="4"
+                        ><strong>Alex Morgan</strong><bx-tag text="Workspace admin" color="accent" />
+                        <p>Manage this member's access and permissions.</p></bx-stack
+                    >
+                </bx-modal-side>
+            </app-preview-frame>
         }
         @case ('panel') {
-            <div class="mock-frame">
-                <div class="mock-frame-body">
-                    <div class="mock-frame-content"><span class="mock-line w-60"></span><span class="mock-line w-40"></span></div>
-                    <span class="mock-panel"></span>
-                </div>
-            </div>
+            <app-preview-frame [width]="480" [height]="320" [fill]="true">
+                <bx-side-panel-layout class="preview-viewport">
+                    <bx-side-panel
+                        layoutMode="push"
+                        [open]="true"
+                        [width]="300"
+                        [autoFocus]="false"
+                        [restoreFocus]="false"
+                        [closeOnEscape]="false"
+                        [animationDuration]="0">
+                        <h3 bxSidePanelHeader>Inspector</h3>
+                        <bx-stack [gap]="4"
+                            ><p>Selected project</p>
+                            <bx-tag text="Design system" color="accent" />
+                            <p>Workspace settings and details.</p></bx-stack
+                        >
+                    </bx-side-panel>
+                    <div class="preview-backdrop-content">Workspace</div>
+                </bx-side-panel-layout>
+            </app-preview-frame>
         }
         @case ('popover') {
-            <bx-popover class="mock-popover-panel">
+            <bx-popover class="preview-popover-panel">
                 <strong>Project information</strong>
-                <span class="mock-line w-55"></span>
-                <span class="mock-row mock-row-end"><span class="mock-pill is-primary">Open</span></span>
+                <p>Project information and preferences.</p>
+                <div class="preview-row preview-row-end"><button bx-button type="button" variant="tonal">Open</button></div>
             </bx-popover>
         }
         @case ('prefix') {
@@ -335,20 +339,20 @@
             </bx-input-field>
         }
         @case ('progress') {
-            <div class="mock-stack mock-progress-preview">
+            <div class="preview-stack preview-progress-preview">
                 <bx-progress-bar label="Upload progress" [value]="64" />
                 <bx-progress-bar label="Import progress" [value]="32" />
             </div>
         }
         @case ('radio') {
-            <div class="mock-center-row">
+            <div class="preview-center-row">
                 <bx-radio-group label="Frequency" name="preview-radio" value="daily">
                     <bx-radio label="Daily" name="preview-radio" value="daily" />
                 </bx-radio-group>
             </div>
         }
         @case ('radio-group') {
-            <div class="mock-center-row">
+            <div class="preview-center-row">
                 <bx-radio-group label="Frequency" name="preview-radio-group" value="daily">
                     <bx-radio label="Daily" name="preview-radio-group" value="daily" />
                     <bx-radio label="Weekly" name="preview-radio-group" value="weekly" />
@@ -357,53 +361,58 @@
             </div>
         }
         @case ('resize') {
-            <div class="mock-split">
-                <span class="mock-split-pane"></span>
-                <span class="mock-split-handle"></span>
-                <span class="mock-split-pane is-wide"></span>
-            </div>
+            <app-preview-frame [width]="480" [height]="320" [fill]="true">
+                <div #split class="preview-split">
+                    <section #resizePane class="preview-resize-pane" [style.inline-size.px]="resizePreviewWidth">
+                        <h3>Files</h3>
+                        <p>Components</p>
+                        <p>Styles</p>
+                        <p>Assets</p>
+                    </section>
+                    <div
+                        class="preview-resize-handle"
+                        bxResizeHandle
+                        resizeLabel="Resize file browser"
+                        [style.inset-inline-start.px]="resizePreviewWidth"
+                        [resizeTarget]="resizePane"
+                        [resizeContainer]="split"
+                        [resizeValue]="resizePreviewWidth"
+                        [resizeMinSize]="120"
+                        [resizeMaxSize]="320"
+                        [resizeIdleDelay]="0"
+                        [resizeDisableShrink]="false"></div>
+                    <section class="preview-split-content">
+                        <h3>Preview</h3>
+                        <bx-icon name="file-code" size="40" />
+                        <p>Shared workspace</p>
+                    </section>
+                </div>
+            </app-preview-frame>
         }
         @case ('side-nav') {
-            <div class="mock-nav-preview">
-                <div class="mock-nav-rail">
-                    <span class="mock-nav-item is-active"><bx-icon name="house" size="20" />Home</span>
-                    <span class="mock-nav-item"><bx-icon name="layers" size="20" />Library</span>
-                    <span class="mock-nav-item"><bx-icon name="blocks" size="20" /> Buttons</span>
-                    <span class="mock-nav-item"><bx-icon name="settings-2" size="20" />Settings</span>
-                </div>
-                <div class="mock-nav-content"><span class="mock-line w-60"></span><span class="mock-line w-40"></span></div>
-            </div>
+            <div class="preview-viewport"><bx-side-nav [config]="sideNavConfig" [groups]="navigationGroups" /></div>
         }
         @case ('simple-toast') {
-            <div class="mock-toast" bxSurface [bxSurfaceInteractive]="false">
-                <bx-icon name="circle-check" size="24" color="accent" bgColor="auto" />
-                <span class="mock-toast-content">
-                    <strong>Saved</strong>
-                    <span class="mock-toast-message">Your changes are ready.</span>
-                </span>
-                <bx-icon name="x" size="20" />
-            </div>
+            <app-preview-frame [width]="440" [height]="220"
+                ><div class="preview-toast-stage"><app-toast-preview [core]="true" [data]="savedToast" /></div
+            ></app-preview-frame>
         }
         @case ('skeleton') {
-            <div class="mock-skeleton-preview">
-                <div class="mock-row">
+            <div class="preview-skeleton-preview">
+                <div class="preview-row">
                     <bx-skeleton shape="circle" width="40px" height="40px" [animated]="false" />
                 </div>
                 <bx-skeleton [lines]="3" [animated]="false" />
             </div>
         }
         @case ('slider') {
-            <div class="mock-stack mock-slider-preview">
-                <input bxSlider type="range" min="0" max="100" aria-label="Volume" style="--bx-slider-progress: 64%" [value]="64" />
-                <span class="mock-row mock-row-between mock-caption"><span>Volume</span><span>64%</span></span>
+            <div class="preview-stack preview-slider-preview">
+                <input bxSlider type="range" min="0" max="100" aria-label="Volume" [value]="64" />
+                <span class="preview-row preview-row-between preview-caption"><span>Volume</span><span>64%</span></span>
             </div>
         }
         @case ('stack') {
-            <div class="mock-stack mock-stack-preview">
-                <span class="mock-block"></span>
-                <span class="mock-block"></span>
-                <span class="mock-block is-short"></span>
-            </div>
+            <bx-stack class="preview-stack" [gap]="2"><bx-card>Design</bx-card><bx-card>Engineering</bx-card><bx-card>Research</bx-card></bx-stack>
         }
         @case ('stepper') {
             <bx-stepper mode="wizard" selectionMode="internal" readOnly="true" [steps]="gallerySteps" [linear]="false" />
@@ -414,10 +423,7 @@
             </bx-input-field>
         }
         @case ('surface') {
-            <div class="mock-surface" bxSurface [bxSurfaceInteractive]="false">
-                <span class="mock-line w-70"></span>
-                <span class="mock-line w-45"></span>
-            </div>
+            <app-surface-preview />
         }
         @case ('tabs') {
             <bx-tabs selectedValue="overview" [dragSelection]="false">
@@ -427,71 +433,96 @@
             </bx-tabs>
         }
         @case ('tags') {
-            <div class="mock-chip-row">
+            <div class="preview-chip-row">
                 <bx-tag text="Skopje" leadingIcon="map-pin" trailingNumber="2" size="small" [focusable]="false" />
                 <bx-tag text="Design" color="accent" size="small" [focusable]="false" />
                 <bx-tag text="Archived" size="small" [focusable]="false" />
             </div>
         }
         @case ('textarea') {
-            <bx-form-field label="Notes" forId="preview-notes" hint="Visible to teammates">
-                <textarea id="preview-notes" bxInput rows="2">Ship the catalog refinements.</textarea>
+            <bx-form-field label="Notes" hint="Visible to teammates" [forId]="previewId + '-notes'">
+                <textarea bxInput rows="2" [id]="previewId + '-notes'">Ship the catalog refinements.</textarea>
             </bx-form-field>
         }
         @case ('toast-core') {
-            <div class="mock-toast-stack">
-                <div class="mock-toast" bxSurface [bxSurfaceInteractive]="false">
-                    <bx-icon name="circle-check" size="24" color="accent" bgColor="auto" />
-                    <span class="mock-toast-content">
-                        <strong>Saved</strong>
-                        <span class="mock-toast-message">Project updated.</span>
-                    </span>
-                    <bx-icon name="x" size="20" />
-                    <span class="mock-toast-progress"><span></span></span>
-                </div>
-                <div class="mock-toast is-secondary" bxSurface [bxSurfaceInteractive]="false">
-                    <bx-icon name="bell" size="24" color="accent" bgColor="auto" />
-                    <span class="mock-toast-content"><span class="mock-toast-message">Sync completed.</span></span>
-                    <bx-icon name="x" size="20" />
-                </div>
-            </div>
+            <app-preview-frame [width]="440" [height]="280"
+                ><div class="preview-toast-stage">
+                    <bx-stack [gap]="3"
+                        ><app-toast-preview [core]="true" [data]="uploadToast" [duration]="6000" [progress]="true" /><app-toast-preview
+                            [core]="true"
+                            [data]="connectionToast"
+                    /></bx-stack></div
+            ></app-preview-frame>
         }
         @case ('toggle') {
-            <div class="mock-stack">
+            <div class="preview-stack">
                 <bx-slide-toggle label="Notifications" [checked]="true" />
                 <bx-slide-toggle label="Weekly digest" [checked]="false" />
             </div>
         }
         @case ('tooltip-trigger') {
-            <div class="mock-tooltip-stage">
+            <div class="preview-tooltip-stage">
                 <bx-tooltip class="bx-overlay-pos-top" text="Saves this project" />
-                <button bx-button type="button" variant="tonal" color="grayscale">Save</button>
+                <button bx-button type="button" variant="tonal" color="grayscale" bxTooltip="Saves this project">Save</button>
             </div>
         }
         @case ('top-nav') {
-            <div class="mock-top-nav">
-                <span class="mock-top-nav-brand"><bx-icon name="blocks" size="20" color="accent" bgColor="auto" /></span>
-                <span class="mock-nav-links"><span class="is-active">Material</span></span>
-                <span class="mock-top-nav-actions"><bx-icon name="search" size="16" /><bx-icon name="circle-user" size="20" /></span>
+            <div class="preview-navigation">
+                <bx-top-nav [config]="topNavConfig" [groups]="navigationGroups"
+                    ><ng-template bxTopNavBrand><bx-icon name="blocks" size="20" /></ng-template
+                ></bx-top-nav>
             </div>
         }
         @case ('truncate') {
-            <div class="mock-stack">
-                <span class="mock-line w-90"></span>
-                <span class="mock-line w-75"></span>
+            <div class="preview-stack">
+                <p>Project notes</p>
                 <span bxTruncate>Quarterly planning notes for the design team and engineering review</span>
             </div>
         }
         @case ('virtual-list') {
-            <div class="mock-virtual">
-                @for (row of [1, 2, 3, 4]; track row) {
-                    <span class="mock-list-row"><span class="mock-line w-60"></span><span class="mock-line w-20"></span></span>
-                }
-                <span class="mock-scrollbar"><span></span></span>
+            <div #virtualScroll class="preview-list">
+                <bx-virtual-collection
+                    #collection
+                    [items]="sampleRows"
+                    [trackBy]="trackRow"
+                    [scrollContainer]="virtualScroll"
+                    [config]="{ layout: 'list', estimatedRowHeight: 44, overscan: 100 }">
+                    <ng-template let-row [bxVirtualItem]="collection"
+                        ><div class="preview-list-row">
+                            <bx-icon name="file-text" size="18" /><span>{{ row }}</span>
+                        </div></ng-template
+                    >
+                </bx-virtual-collection>
             </div>
         }
         @default {
-            <div class="mock-icon-halo"><bx-icon name="blocks" size="32" color="accent" bgColor="auto" /></div>
+            <div class="preview-icon-halo"><bx-icon name="blocks" size="32" color="accent" bgColor="auto" /></div>
         }
     }
 }
+
+<ng-template #inviteFooter><button bx-button type="button" variant="filled">Send invite</button></ng-template>
+<ng-template #confirmFooter
+    ><div class="preview-row preview-row-end">
+        <button bx-button type="button" variant="tonal">Keep editing</button><button bx-button type="button" variant="filled" color="danger">Discard</button>
+    </div></ng-template
+>
+<ng-template #reviewFooter
+    ><div class="preview-row preview-row-between">
+        <button bx-button type="button">Back</button>
+        <div class="preview-row">
+            <button bx-button type="button" variant="tonal">Cancel</button><button bx-button type="button" variant="filled">Continue</button>
+        </div>
+    </div></ng-template
+>
+<ng-template #customHeader
+    ><div class="preview-custom-header">
+        <bx-icon name="folder-plus" size="24" />
+        <div>
+            <h3>New workspace</h3>
+            <p>Custom header content</p>
+        </div>
+    </div></ng-template
+>
+<ng-template #doneFooter><button bx-button type="button" variant="filled">Done</button></ng-template>
+<ng-template #sheetFooter><button bx-button type="button" variant="tonal">Close actions</button></ng-template>

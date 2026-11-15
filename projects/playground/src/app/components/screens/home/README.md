@@ -20,10 +20,13 @@ The Figma links use the shared library URL, preferring the published Community l
 Theme and appearance preferences remain owned by the shared services. The examples inherit their semantic tokens without changing those preferences. The theme
 loupe reveals the opposite mode locally; its search-icon button supports keyboard and touch exploration.
 
-Orby retains its wake, drag, fling, mood, recall, and keyboard interactions. Its stage is a separate layer above the hero and section previews, including their
-floating tools. Its pod sits in the hero’s foreground glass card, before the sections. Its automatic tour visits nearby visible sections, following the
-alternating layout without scrolling the page or moving focus. After the reader scrolls and pauses, Orby catches up at a bounded speed and resumes its slower
-tour. Scrolling inside the glass preview does not trigger following.
+The Bring Orby home action stays aligned to the same Container width and horizontal gutters as page content, including its fixed mobile presentation. The
+movement stage remains full-page.
+
+Orby retains its wake, drag, fling, mood, recall, and keyboard interactions. Its stage spans the full home page outside the centered PageContainer, including
+the page gutters and footer. The layer stays above the hero and section previews, including their floating tools. Its pod sits in the hero’s foreground glass
+card, before the sections. Its automatic tour visits nearby visible sections, following the alternating layout without scrolling the page or moving focus. After
+the reader scrolls and pauses, Orby catches up at a bounded speed and resumes its slower tour. Scrolling inside the glass preview does not trigger following.
 
 Direct interaction interrupts the tour. A later pause in page scrolling can resume following once manipulation and mood recovery finish. Explicit recall keeps
 Orby at home; keyboard focus, active gestures, and reduced motion remain authoritative.

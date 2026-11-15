@@ -2,7 +2,7 @@ import type { IComponentPreviewRecipe } from '@playground/components/screens/lib
 
 import { Autocomplete, DatePicker, InputField, MultiSelect, RangeSlider, SearchInput, Select, TimePicker } from '@filip.mazev/blocks/forms';
 import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
-import { Alert, Calendar, Tooltip } from '@filip.mazev/blocks/primitives';
+import { Alert, Calendar, LoadingIndicator, LoadingSpinner, Tooltip } from '@filip.mazev/blocks/primitives';
 
 import { defineComponentPreview } from '@playground/components/screens/library-components/component-demo/helpers/define-component-preview.helpers';
 
@@ -39,6 +39,8 @@ export const COMPONENT_PREVIEW_RECIPES: Readonly<Partial<Record<string, ICompone
     value: 'Blocks library',
     hint: 'Shown in the workspace switcher'
   }),
+  loading: defineComponentPreview(LoadingSpinner, { size: 40, decorative: true }),
+  'loading-indicator': defineComponentPreview(LoadingIndicator, { label: 'Fetching results…' }),
   multiselect: defineComponentPreview(MultiSelect, {
     label: 'Teams',
     subscriptSizing: 'dynamic',

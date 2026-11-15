@@ -712,9 +712,10 @@ button.step-body {
 .marker-content {
     position: relative;
     z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
 }
 
 .marker-lens,

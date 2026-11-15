@@ -130,6 +130,10 @@
     user-select: none;
 }
 
+.component-preview:has(app-component-preview.is-edge-preview) {
+    padding: 0;
+}
+
 .component-body {
     display: flex;
     flex: 1;

@@ -1,6 +1,6 @@
-<bx-page-container class="home-container" [showBreadcrumbs]="false" [autoResolveTitlesFromNavigation]="false">
-    <bx-page-content>
-        <div #lightGarden class="light-garden">
+<div #lightGarden class="light-garden">
+    <bx-page-container class="home-container" [showBreadcrumbs]="false" [autoResolveTitlesFromNavigation]="false">
+        <bx-page-content>
             <header class="hero">
                 <div class="hero-content">
                     <h1>Build with <span>Blocks.</span></h1>
@@ -14,7 +14,6 @@
                 </div>
                 <app-theme-material-preview />
             </header>
-            <app-light-orb [stage]="lightGardenElement().nativeElement" [cards]="lightGardenElement().nativeElement" />
 
             <span id="orb-instructions" class="cdk-visually-hidden">Drag Orby to play, use arrow keys to move, or Escape to return home.</span>
             <div class="home-sections showcase-sections">
@@ -112,25 +111,26 @@
                     </a>
                 </section>
             </div>
-        </div>
-    </bx-page-content>
+        </bx-page-content>
 
-    <bx-page-footer class="home-footer">
-        <span>Designed &amp; developed by Filip Mazev</span>
-        <span>Blocks {{ version }}</span>
-        <div class="footer-links">
-            <a bx-button variant="text" color="primary" target="_blank" rel="noopener noreferrer" [href]="packageReleaseService.npmPackageUrl()"
-                >npm package <bx-icon name="arrow-up-right" size="16"
-            /></a>
-            <a
-                bx-button
-                variant="text"
-                color="primary"
-                href="https://github.com/filipmazev/Blocks/tree/main/projects/blocks"
-                target="_blank"
-                rel="noopener noreferrer"
-                >GitHub <bx-icon name="arrow-up-right" size="16"
-            /></a>
-        </div>
-    </bx-page-footer>
-</bx-page-container>
+        <bx-page-footer class="home-footer">
+            <span>Designed &amp; developed by Filip Mazev</span>
+            <span>Blocks {{ version }}</span>
+            <div class="footer-links">
+                <a bx-button variant="text" color="primary" target="_blank" rel="noopener noreferrer" [href]="packageReleaseService.npmPackageUrl()"
+                    >npm package <bx-icon name="arrow-up-right" size="16"
+                /></a>
+                <a
+                    bx-button
+                    variant="text"
+                    color="primary"
+                    href="https://github.com/filipmazev/Blocks/tree/main/projects/blocks"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >GitHub <bx-icon name="arrow-up-right" size="16"
+                /></a>
+            </div>
+        </bx-page-footer>
+    </bx-page-container>
+    <app-light-orb [stage]="lightGardenElement().nativeElement" [cards]="lightGardenElement().nativeElement" />
+</div>

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import ts from 'typescript';
 
+import { readPreviewCompositions } from '../helpers/component-preview.helpers.mjs';
 import { formatGeneratedTypeScript } from '../helpers/generated-typescript.helpers.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -16,11 +17,6 @@ const mapTarget = `${screen}/constants/component-preview.constants.ts`;
 
 const banner = '// Generated from the preview vignettes and component catalog by tools/playground/generate-component-previews.mjs. Do not edit.';
 const read = (path) => readFile(new URL(`../../${path}`, import.meta.url), 'utf8');
-
-/** Collect every `@case ('name')` vignette rendered by the catalog template. */
-function readVignettes(template) {
-  return [...template.matchAll(/@case\s*\(\s*'([a-z][a-z-]*)'\s*\)/g)].map((match) => match[1]);
-}
 
 /** Read a named declaration using the TypeScript parser, without executing application code. */
 function readDeclaration(source, name) {
@@ -87,7 +83,7 @@ function readOverrides(source) {
 
 const [template, catalog, overridesSource, recipesSource] = await Promise.all([read(templatePath), read(catalogPath), read(overridesPath), read(recipesPath)]);
 
-const templateKinds = readVignettes(template);
+const templateKinds = readPreviewCompositions(template, templatePath);
 const recipeKinds = [...readProperties(readDeclaration(recipesSource, 'COMPONENT_PREVIEW_RECIPES')).keys()];
 const allKinds = [...templateKinds, ...recipeKinds];
 const duplicates = allKinds.filter((kind, index) => allKinds.indexOf(kind) !== index);

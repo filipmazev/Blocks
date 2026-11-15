@@ -1,0 +1,11 @@
+:host {
+    display: block;
+    inline-size: 24rem;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+
+/* IMPORTANT: The preview Stack owns gaps; queue margins would offset the visible toasts from the card's center. */
+:host ::ng-deep bx-toast-core .toast-animator {
+    margin-block: 0;
+}

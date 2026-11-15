@@ -8095,6 +8095,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     ]
   },
   {
+    name: '--bx-modal-side-height',
+    reference: 'var(--bx-modal-side-height)',
+    category: 'components',
+    group: 'Component \u00B7 modal',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['100dvh', '100vh'],
+    selectors: [],
+    sources: ['projects/blocks/modal/components/views/side/modal-side.scss']
+  },
+  {
     name: '--bx-modal-text',
     reference: 'var(--bx-modal-text)',
     category: 'components',
