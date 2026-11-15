@@ -35,7 +35,7 @@
     min-block-size: spacing(12);
     padding: var(--bx-collapsible-padding, #{spacing(3)} #{spacing(4)});
     border: 0;
-    border-radius: max(0px, calc(var(--bx-glass-radius) - 1px));
+    border-radius: nested-radius(var(--bx-glass-radius), var(--bx-border-width, 1px));
     background: transparent;
     color: inherit;
     font: inherit;

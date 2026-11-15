@@ -29,6 +29,9 @@ Generated `LUCIDE_CATEGORIES`, `LUCIDE_ICON_CATEGORIES`, and `LucideCategoryId` 
 official upstream snapshot and include multiple assignments, resolved inheritance, aliases, and an uncategorized fallback. See the
 [generator guide](../../../../../tools/icons/README.md) for synchronization. The mapping contains only icons generated into Blocks.
 
+Changes to a mounted icon retain the previous SVG until the new request resolves, then crossfade through the shared effects transition. `animated` defaults to
+true; set it to false to snap changes. Live reduced motion always snaps. Initial icons appear immediately.
+
 ## Appearance and customization
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting

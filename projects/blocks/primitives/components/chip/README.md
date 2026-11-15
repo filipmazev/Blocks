@@ -46,6 +46,8 @@ the separate circular remove action for tonal/outlined chips. Filled chips prese
 contrast stable; `--bx-chip-hover-background` can override that behavior. Filled chips default to an opaque semantic fill (`--bx-chip-fill-opacity: 1`),
 matching filled-button intent and keeping primary selection visible.
 
+The main action's focus and hover contours subtract the shared border width from the chip radius, clamped at zero. The separate remove action stays circular.
+
 ## Behavior and accessibility
 
 Enter and Space activate native buttons. Delete or Backspace on the main action requests removal when enabled. Selection has a check mark and inset outline. The

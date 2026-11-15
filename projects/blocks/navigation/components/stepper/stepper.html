@@ -130,11 +130,11 @@
             } @else if (row.status === 'skipped') {
                 <span class="marker-symbol">−</span>
             } @else if (row.awaitingConfirmation) {
-                <bx-icon class="marker-symbol" name="clock" [size]="markerIconSize()" />
+                <bx-icon class="marker-symbol" name="clock" [animated]="false" [size]="markerIconSize()" />
             } @else if (row.complete) {
                 <span class="marker-symbol">✓</span>
             } @else if (row.step.icon) {
-                <bx-icon class="marker-symbol" [size]="markerIconSize()" [name]="row.step.icon" />
+                <bx-icon class="marker-symbol" [animated]="false" [size]="markerIconSize()" [name]="row.step.icon" />
             } @else {
                 <span class="marker-symbol">{{ index + 1 }}</span>
             }

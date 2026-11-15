@@ -3,6 +3,7 @@ import type { InputSignal, OutputEmitterRef, Signal } from '@angular/core';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
+import { VisualTransition } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
@@ -11,7 +12,7 @@ import { ModalCloseMode } from '@modal/types/modal.types';
 
 @Component({
   selector: 'bx-modal-banner',
-  imports: [Icon, LoadingSpinner],
+  imports: [Icon, LoadingSpinner, VisualTransition],
   templateUrl: './modal-banner.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './modal-banner.scss'

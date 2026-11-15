@@ -1,0 +1,22 @@
+:host {
+    display: inline-grid;
+    position: relative;
+    place-items: center;
+    vertical-align: middle;
+    isolation: isolate;
+}
+
+.bx-visual-layer {
+    display: inline-grid;
+    grid-area: 1 / 1;
+    place-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+}
+
+.bx-visual-outgoing {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}

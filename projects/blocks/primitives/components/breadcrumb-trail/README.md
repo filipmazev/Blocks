@@ -85,7 +85,9 @@ the existing menu/overlay mechanisms. Changing items, language, or configuration
 Interactive overflow uses the horizontal `ellipsis` icon in a native named menu button. Hover opens its interactive menu; pointer-crossing dismissal keeps it
 reachable. Enter/Space, Down, or Up opens it with focus. Up/Down/Home/End browse actions, Escape returns focus to the trigger, and outside pointer activation
 dismisses it. Hidden route entries remain native links; hidden browsing entries use Blocks MenuItem buttons. Route entries reuse the same shared menu-item
-styling. The final current-page label stays visible and retains `aria-current="page"`.
+styling, disabled presentation and shared hover/focus backing. Row and backing corners follow the menu radius minus padding and border width, with the same
+`--bx-menu-radius`, `--bx-menu-padding` and `--bx-menu-item-radius` overrides as ordinary menus. The final current-page label stays visible and retains
+`aria-current="page"`.
 
 Labels, separator text, and overflow text/names support `ResolvableText` through optional `BX_I18N`, including mounted language changes and key fallbacks
 without an adapter. Existing menu cleanup, reduced-motion behavior, theme inheritance, and focus restoration remain authoritative.

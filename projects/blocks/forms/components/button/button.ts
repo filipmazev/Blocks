@@ -7,17 +7,20 @@ import {
   Component,
   computed,
   contentChild,
+  DestroyRef,
   ElementRef,
   HostListener,
   inject,
   input,
-  signal
+  signal,
+  viewChild
 } from '@angular/core';
 
-import type { GlassinessMode } from '@filip.mazev/blocks/effects/runtime';
+import type { GlassinessMode, IVisualPresence } from '@filip.mazev/blocks/effects/runtime';
 
 import { BxA11yService } from '@filip.mazev/blocks/core';
-import { injectComponentSurface } from '@filip.mazev/blocks/effects';
+import { BxVisualPresenceDirective, injectComponentSurface } from '@filip.mazev/blocks/effects';
+import { createVisualPresence } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
@@ -28,7 +31,7 @@ import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
 @Component({
   selector: 'bx-button, button[bx-button], a[bx-button]',
   standalone: true,
-  imports: [LoadingSpinner],
+  imports: [LoadingSpinner, BxVisualPresenceDirective],
   templateUrl: './button.html',
   styleUrl: './button.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,9 +54,15 @@ export class Button {
   private readonly iconElement: Signal<ElementRef<HTMLElement> | undefined> = contentChild(Icon, { read: ElementRef<HTMLElement> });
   private readonly customIcon: Signal<ButtonIconDirective | undefined> = contentChild(ButtonIconDirective);
 
+  private readonly contentWrapper: Signal<ElementRef<HTMLElement>> = viewChild.required('contentWrapper');
+
   protected readonly hasProjectedIcon: Signal<boolean> = computed(() => !!this.customIcon() || !!this.projectedIcon());
 
   protected readonly spinnerSize: WritableSignal<number> = signal(20);
+
+  protected readonly spinnerLeft: WritableSignal<number | null> = signal(null);
+
+  protected readonly retainSpinner: WritableSignal<boolean> = signal(false);
 
   /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */
   public readonly isAnimated: Signal<boolean> = computed(() => {
@@ -81,6 +90,9 @@ export class Button {
   /** Opt this button into backdrop refraction. Omitted buttons retain the existing material and lighting. */
   public readonly glassiness: InputSignal<GlassinessMode | undefined> = input<GlassinessMode | undefined>();
 
+  private presence: IVisualPresence | undefined;
+  private presenceElement: HTMLElement | SVGElement | undefined;
+
   constructor() {
     injectComponentSurface(
       () => ({
@@ -101,21 +113,39 @@ export class Button {
 
     afterRenderEffect((onCleanup) => {
       const icon = this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
-      const size = Number(this.projectedIcon()?.size());
-      // Keep the spinner in CSS pixels; bounding rectangles include page zoom and surface transforms.
-      const measured = icon?.offsetWidth || icon?.clientWidth;
 
-      if (measured || !icon) this.spinnerSize.set(measured || (Number.isFinite(size) && size > 0 ? size : 20));
+      this.projectedIcon()?.size();
+      this.measureSpinner(icon);
 
-      if (!icon || !this.loading()) return;
+      if (!icon || typeof ResizeObserver === 'undefined') return;
 
-      const display = icon.style.display;
+      const resizeObserver = new ResizeObserver(() => this.measureSpinner(icon));
 
-      icon.style.display = 'none';
-      onCleanup(() => {
-        icon.style.display = display;
-      });
+      resizeObserver.observe(this.contentWrapper().nativeElement);
+      resizeObserver.observe(icon);
+      onCleanup(() => resizeObserver.disconnect());
     });
+    afterRenderEffect(() => {
+      const icon = this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
+      const loading = this.loading();
+      const reduced = this.bxA11yService.isReducedMotion();
+      const changed = icon !== this.presenceElement;
+
+      if (loading) this.retainSpinner.set(true);
+
+      if (changed) {
+        this.presence?.destroy();
+        this.presenceElement = icon;
+        this.presence = icon ? createVisualPresence(icon, { initiallyVisible: !loading }) : undefined;
+      }
+
+      this.presence?.update(!loading, reduced || changed);
+    });
+    inject(DestroyRef).onDestroy(() => this.presence?.destroy());
+  }
+
+  protected releaseSpinner(): void {
+    if (!this.loading()) this.retainSpinner.set(false);
   }
 
   @HostListener('click', ['$event'])
@@ -125,4 +155,22 @@ export class Button {
       event.stopImmediatePropagation();
     }
   }
+
+  //#region Helpers
+
+  private measureSpinner(icon: HTMLElement | SVGElement | undefined): void {
+    const wrapper = this.contentWrapper().nativeElement;
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const iconRect = icon?.getBoundingClientRect();
+    const measured = icon ? ('offsetWidth' in icon ? icon.offsetWidth : icon.clientWidth) : 0;
+    const requestedSize = Number(this.projectedIcon()?.size());
+    const layoutWidth = Number.parseFloat(getComputedStyle(wrapper).width);
+    const scaleX = layoutWidth > 0 ? wrapperRect.width / layoutWidth : 1;
+
+    this.spinnerSize.set(measured || (Number.isFinite(requestedSize) && requestedSize > 0 ? requestedSize : 20));
+    // SVG has no offsetLeft. Rect centers retain the anchor through local icon scaling, RTL and positioned custom wrappers.
+    this.spinnerLeft.set(iconRect && scaleX > 0 ? (iconRect.left + iconRect.width / 2 - wrapperRect.left) / scaleX : null);
+  }
+
+  //#endregion
 }

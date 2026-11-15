@@ -51,6 +51,10 @@ material. These variables apply consistently to the dropdown family.
 
 `BxA11yService` controls reduced motion. Forced colors preserve native contrast and focus states.
 
+`--bx-menu-radius` defaults to shared radius `lg`; `--bx-menu-padding` accepts one length and defaults to shared spacing `1`. Row corners automatically subtract
+that padding and `--bx-border-width` from the outer radius, clamped at zero. `--bx-menu-item-radius` explicitly overrides row corners. The shared hover/focus
+surface copies all four computed row corners, including native route links in breadcrumb overflow menus.
+
 ## Behavior and accessibility
 
 Keep menu labels action-oriented. The container provides one shared surface for its items. Avoid nested interactive controls inside one item.

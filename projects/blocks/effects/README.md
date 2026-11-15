@@ -187,3 +187,8 @@ Use `/appearance` to configure the entire application and `/components/surface` 
 Inputs, searches, selects, checkboxes, radio buttons and switches inherit automatic interaction lighting. Invalid fields use the error color. Projected native
 controls wrapped in `bxSurface` inside `bx-form-field` receive the same field material, focus outline and invalid glow as packaged inputs. All emitters respect
 overlay boundaries and occlusion; light does not pass through a modal into the page or another dialog.
+
+## Visual state transitions
+
+Use [VisualTransition](components/visual-transition/README.md) for keyed icon/spinner changes and
+[BxVisualPresenceDirective](directives/visual-presence/README.md) for persistent visual layers. Both reuse the shared spring and live reduced-motion policy.

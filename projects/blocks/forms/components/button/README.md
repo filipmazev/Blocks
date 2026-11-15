@@ -38,6 +38,10 @@ Use the active palette's second tone for supporting actions:
 <button bx-button variant="tonal" color="accent">Explore</button>
 ```
 
+Loading crossfades through the shared visual presence resource. Standard and custom `bxButtonIcon` visuals retain their layout slot; the spinner remains
+centered over that slot, including SVG icons and RTL layouts. Text-only labels fade without scaling and retain their accessible name. Button dimensions and
+neighboring action wrapping stay stable; live reduced motion snaps immediately.
+
 ## Appearance
 
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting

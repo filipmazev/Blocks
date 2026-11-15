@@ -118,8 +118,8 @@
 .bx-card-media {
     min-inline-size: 0;
     overflow: hidden;
-    border-start-start-radius: var(--bx-glass-radius);
-    border-start-end-radius: var(--bx-glass-radius);
+    border-start-start-radius: nested-radius(var(--bx-glass-radius), var(--bx-border-width, 1px));
+    border-start-end-radius: nested-radius(var(--bx-glass-radius), var(--bx-border-width, 1px));
 
     &:empty {
         display: none;

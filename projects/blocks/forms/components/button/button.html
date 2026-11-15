@@ -1,6 +1,10 @@
-<span class="bx-btn-content-wrapper" [class.has-icon]="hasProjectedIcon()" [class.is-text-loading]="loading() && !hasProjectedIcon()">
-    @if (loading()) {
-        <bx-loading-spinner [size]="spinnerSize()" [decorative]="true" />
-    }
-    <span class="bx-btn-label"><ng-content></ng-content></span>
+<span #contentWrapper class="bx-btn-content-wrapper" [class.has-icon]="hasProjectedIcon()">
+    <span class="bx-btn-spinner" aria-hidden="true" [style.left.px]="spinnerLeft()">
+        <span class="bx-btn-spinner-visual" [bxVisualPresence]="loading()" (presenceHidden)="releaseSpinner()">
+            @if (loading() || retainSpinner()) {
+                <bx-loading-spinner [size]="spinnerSize()" [decorative]="true" />
+            }
+        </span>
+    </span>
+    <span class="bx-btn-label" [bxVisualPresence]="!loading() || hasProjectedIcon()" [bxVisualPresenceScale]="1"><ng-content></ng-content></span>
 </span>

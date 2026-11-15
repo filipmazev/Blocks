@@ -9,6 +9,13 @@
     align-items: center;
     justify-content: center;
 
+    bx-visual-transition,
+    .icon-svg {
+        display: inline-grid;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
     &.has-bg {
         border-radius: var(--bx-rounded-sm);
         padding: spacing(1);

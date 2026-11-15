@@ -4,6 +4,7 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { BX_I18N, resolveText } from '@filip.mazev/blocks/core';
+import { VisualTransition } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
@@ -13,7 +14,7 @@ import { ISimpleToastData } from '@toastr/interfaces/isimple-toast-data.interfac
 @Component({
   selector: 'bx-simple-toast',
   standalone: true,
-  imports: [NgClass, Icon, LoadingSpinner],
+  imports: [NgClass, Icon, LoadingSpinner, VisualTransition],
   templateUrl: './simple-toast.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './simple-toast.scss'

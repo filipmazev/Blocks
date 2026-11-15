@@ -48,7 +48,7 @@ import {
   valueHighlightRange,
   WindowDimensionsService
 } from '@filip.mazev/blocks/core';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { BxSurfaceDirective, VisualTransition } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import {
   Calendar,
@@ -83,7 +83,20 @@ import { resolveValidationMessage } from '@forms/helpers/validation.helpers';
  */
 @Component({
   selector: 'bx-date-picker',
-  imports: [BxSurfaceDirective, Button, Calendar, DatePresetList, FormField, Icon, LoadingSpinner, PickerSurface, Tag, TooltipDirective, TruncateDirective],
+  imports: [
+    VisualTransition,
+    BxSurfaceDirective,
+    Button,
+    Calendar,
+    DatePresetList,
+    FormField,
+    Icon,
+    LoadingSpinner,
+    PickerSurface,
+    Tag,
+    TooltipDirective,
+    TruncateDirective
+  ],
   templateUrl: './date-picker.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './date-picker.scss'

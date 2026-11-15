@@ -70,6 +70,8 @@ space.
 Existing variables: `--bx-card-background`, `--bx-card-color`, `--bx-card-border`, `--bx-card-radius`, `--bx-card-shadow`, `--bx-card-padding` and
 `--bx-card-title-size`.
 
+Media's top corners follow the card radius minus the shared border width, clamped at zero, so custom borders and radii stay concentric.
+
 Interactive variables: `--bx-card-highlight` (defaults to `--bx-primary`), `--bx-card-selected-background` (element active), `--bx-card-selected-border` (custom
 card border or semantic brand border), `--bx-card-hover-background` (element hover), `--bx-card-pressed-background` (element active), `--bx-card-focus-color`
 (highlight), and `--bx-card-disabled-opacity` (0.6).

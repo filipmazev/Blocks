@@ -1,0 +1,13 @@
+@for (layer of layers(); track layer.id) {
+    <span
+        class="bx-visual-layer"
+        [class.bx-visual-outgoing]="layer.id !== activeId()"
+        [attr.aria-hidden]="layer.id !== activeId() ? 'true' : null"
+        [inert]="layer.id !== activeId()"
+        [bxVisualPresence]="layer.id === activeId()"
+        [bxVisualPresenceEnter]="layer.enter"
+        [bxVisualPresenceAnimated]="animated()"
+        (presenceHidden)="removeHidden(layer.id)">
+        <ng-container [ngTemplateOutlet]="template()" [ngTemplateOutletContext]="{ $implicit: layer.value }" />
+    </span>
+}

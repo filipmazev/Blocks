@@ -93,6 +93,7 @@ button {
 .bx-chip-action {
     position: static;
     flex: 1 1 auto;
+    border-radius: nested-radius(var(--bx-chip-radius, #{radius(pill)}), var(--bx-border-width, 1px));
     text-align: center;
 
     &::before {

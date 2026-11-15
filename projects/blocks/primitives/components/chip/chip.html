@@ -15,9 +15,7 @@
         [attr.aria-pressed]="selectable() ? selected() : null"
         (click)="activate()"
         (keydown)="onKeydown($event)">
-        @if (selectable() && selected()) {
-            <bx-icon name="check" size="16" />
-        } @else if (settings().icon; as icon) {
+        @if (selectable() && selected() ? 'check' : settings().icon; as icon) {
             <bx-icon size="16" [name]="icon" />
         }
         <span>{{ resolvedLabel() }}</span>

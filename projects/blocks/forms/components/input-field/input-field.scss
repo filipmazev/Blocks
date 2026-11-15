@@ -207,6 +207,10 @@
     @include glass-field;
 }
 
+.bx-input-wrapper[data-bx-surface] .bx-input-actions {
+    border-radius: nested-radius(radius(lg), var(--bx-border-width, 1px));
+}
+
 .bx-input-wrapper[data-bx-surface].is-invalid {
     @include invalid-glass-field;
 }
@@ -249,4 +253,8 @@ textarea.bx-native-input {
 
 .bx-input-wrapper.is-outline.is-invalid {
     border-color: var(--bx-border-danger);
+}
+
+.bx-input-wrapper.is-outline .bx-input-actions {
+    border-radius: nested-radius(var(--bx-field-radius, #{radius(md)}), var(--bx-border-width, 1px));
 }

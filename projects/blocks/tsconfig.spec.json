@@ -9,6 +9,7 @@
         "navigation/components/step/**/*.spec.ts",
         "primitives/components/tabs/**/*.spec.ts",
         "effects/runtime/helpers/*.spec.ts",
+        "effects/components/**/*.spec.ts",
         "forms/components/slide-toggle/**/*.spec.ts",
         "forms/components/button/**/*.spec.ts",
         "forms/components/range-slider/**/*.spec.ts",

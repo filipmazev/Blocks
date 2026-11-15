@@ -43,6 +43,10 @@
     @return var(--bx-rounded-#{$key}, #{map.get($radiuses, $key)});
 }
 
+@function nested-radius($outer, $inset) {
+    @return max(0px, calc(#{$outer} - (#{$inset})));
+}
+
 @function shadow($key, $static: false) {
     @if not map.has-key($shadows, $key) {
         @error "Unknown shadow token '#{$key}'.";

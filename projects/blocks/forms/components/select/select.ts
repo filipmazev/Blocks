@@ -4,7 +4,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { BxSurfaceDirective, VisualTransition } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingIndicator, LoadingSpinner, Tag, TooltipDirective, TruncateDirective } from '@filip.mazev/blocks/primitives';
 
@@ -19,6 +19,7 @@ import { ISelectionChange } from '@forms/interfaces/iselection-change.interface'
 @Component({
   selector: 'bx-select',
   imports: [
+    VisualTransition,
     BxSurfaceDirective,
     OverlayModule,
     FormField,

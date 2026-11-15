@@ -322,6 +322,21 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
   },
   {
+    name: '--bx-autocomplete-option-radius',
+    reference: 'var(--bx-autocomplete-option-radius)',
+    category: 'components',
+    group: 'Component \u00B7 autocomplete',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [
+      'max(0px, var(--bx-autocomplete-radius, var(--bx-rounded-lg, 0.75rem)) - (calc(var(--bx-autocomplete-panel-padding, var(--bx-space-1, 0.25rem)) + var(--bx-border-width, 1px))))'
+    ],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/autocomplete/autocomplete.scss']
+  },
+  {
     name: '--bx-autocomplete-panel-height',
     reference: 'var(--bx-autocomplete-panel-height)',
     category: 'components',
@@ -1227,11 +1242,13 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
       'projects/blocks/primitives/components/bottom-drawer/bottom-drawer.scss',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/calendar/calendar.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/divider/divider.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/menu/menu.scss',
       'projects/blocks/primitives/components/popover/popover.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
@@ -1360,7 +1377,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    defaults: ['transparent', 'var(--bx-accent-subtle)', 'var(--bx-calendar-range-fill)'],
     fallbacks: [],
     selectors: [
       '.bx-calendar-cell',
@@ -1380,7 +1397,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    defaults: ['transparent', 'var(--bx-accent-subtle)', 'var(--bx-calendar-range-fill)'],
     fallbacks: [],
     selectors: [
       '.bx-calendar-cell',
@@ -1400,7 +1417,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    defaults: ['transparent', 'var(--bx-accent-subtle)', 'var(--bx-calendar-range-fill)'],
     fallbacks: [],
     selectors: [
       '.bx-calendar-cell',
@@ -1420,7 +1437,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['transparent', 'var(--bx-accent)', 'var(--bx-accent-subtle)'],
+    defaults: ['transparent', 'var(--bx-accent-subtle)', 'var(--bx-calendar-range-fill)'],
     fallbacks: [],
     selectors: [
       '.bx-calendar-cell',
@@ -1456,6 +1473,32 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     defaults: ['0%', '100%'],
     fallbacks: [],
     selectors: ['.bx-calendar-cell', '.bx-calendar-cell:dir(rtl)', '.bx-calendar-period', '.bx-calendar-period:dir(rtl)'],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-range-background',
+    reference: 'var(--bx-calendar-range-background)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['color-mix(in srgb, var(--bx-accent) 20%, transparent)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
+  },
+  {
+    name: '--bx-calendar-range-fill',
+    reference: 'var(--bx-calendar-range-fill)',
+    category: 'components',
+    group: 'Component \u00B7 calendar',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['var(--bx-calendar-range-background, color-mix(in srgb, var(--bx-accent) 20%, transparent))'],
+    fallbacks: [],
+    selectors: ['.bx-calendar'],
     sources: ['projects/blocks/primitives/components/calendar/calendar.scss']
   },
   {
@@ -6981,14 +7024,18 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-card-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-chip-radius, var(--bx-rounded-pill, 9999px))',
       'var(--bx-collapsible-radius, var(--bx-rounded-md, 0.5rem))',
+      'var(--bx-menu-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-popover-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-rounded-lg, 0.75rem)',
       'var(--bx-rounded-md, 0.5rem)',
       'var(--bx-rounded-pill, 9999px)',
       'var(--bx-rounded-sm, 0.25rem)',
+      'var(--bx-select-panel-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-stepper-card-radius, var(--bx-rounded-md, 0.5rem))',
       'var(--bx-stepper-marker-radius, var(--bx-rounded-pill, 9999px))',
       'var(--bx-stepper-segment-radius, var(--bx-rounded-pill, 9999px))',
+      'var(--bx-tabs-item-radius, var(--bx-tabs-inner-radius))',
+      'var(--bx-tabs-radius, var(--bx-rounded-md, 0.5rem))',
       'var(--bx-tag-radius, var(--bx-rounded-sm, 0.25rem))'
     ],
     fallbacks: [
@@ -7048,11 +7095,9 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/navigation/components/top-nav/top-nav.scss',
       'projects/blocks/primitives/components/alert/alert.scss',
-      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/card/card.scss',
       'projects/blocks/primitives/components/chip/chip.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
-      'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/menu/menu.scss',
       'projects/blocks/primitives/components/popover/popover.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
@@ -7828,6 +7873,23 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/primitives/components/loading-indicator/loading-indicator.scss']
   },
   {
+    name: '--bx-menu-inner-radius',
+    reference: 'var(--bx-menu-inner-radius)',
+    category: 'components',
+    group: 'Component \u00B7 menu',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['max(0px, var(--bx-glass-radius) - (calc(var(--bx-menu-padding, var(--bx-space-1, 0.25rem)) + var(--bx-border-width, 1px))))'],
+    fallbacks: ['max(0px, var(--bx-rounded-lg, 0.75rem) - (calc(var(--bx-space-1, 0.25rem) + var(--bx-border-width, 1px))))'],
+    selectors: ['.bx-menu-wrapper'],
+    sources: [
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
+      'projects/blocks/primitives/components/menu/menu.scss'
+    ]
+  },
+  {
     name: '--bx-menu-item-gap',
     reference: 'var(--bx-menu-item-gap)',
     category: 'components',
@@ -7841,6 +7903,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/primitives/components/menu/menu.scss']
   },
   {
+    name: '--bx-menu-item-radius',
+    reference: 'var(--bx-menu-item-radius)',
+    category: 'components',
+    group: 'Component \u00B7 menu',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-menu-inner-radius, max(0px, var(--bx-rounded-lg, 0.75rem) - (calc(var(--bx-space-1, 0.25rem) + var(--bx-border-width, 1px)))))'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss', 'projects/blocks/primitives/components/menu-item/menu-item.scss']
+  },
+  {
     name: '--bx-menu-min-width',
     reference: 'var(--bx-menu-min-width)',
     category: 'components',
@@ -7852,6 +7927,32 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['12rem'],
     selectors: ['.bx-breadcrumb-overflow-menu'],
     sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss', 'projects/blocks/primitives/components/menu/menu.scss']
+  },
+  {
+    name: '--bx-menu-padding',
+    reference: 'var(--bx-menu-padding)',
+    category: 'components',
+    group: 'Component \u00B7 menu',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/menu/menu.scss']
+  },
+  {
+    name: '--bx-menu-radius',
+    reference: 'var(--bx-menu-radius)',
+    category: 'components',
+    group: 'Component \u00B7 menu',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-glass-radius, var(--bx-rounded-lg, 0.75rem))', 'var(--bx-rounded-lg, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/menu/menu.scss']
   },
   {
     name: '--bx-modal-backdrop-background',
@@ -8509,6 +8610,26 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['var(--bx-text-warn)'],
     selectors: ['.blocks-catalog-theme'],
     sources: ['global', 'projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-option-radius',
+    reference: 'var(--bx-option-radius)',
+    category: 'components',
+    group: 'Component \u00B7 option',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [
+      'max(0px, var(--bx-rounded-lg, 0.75rem) - (calc(var(--bx-space-3, 0.75rem) + var(--bx-space-1, 0.25rem) + var(--bx-border-width, 1px))))',
+      'max(0px, var(--bx-select-panel-radius, var(--bx-rounded-lg, 0.75rem)) - (calc(var(--bx-select-panel-padding, var(--bx-space-1, 0.25rem)) + var(--bx-border-width, 1px))))'
+    ],
+    fallbacks: ['var(--bx-rounded-sm, 0.25rem)'],
+    selectors: ['.bx-select-panel', '.bx-time-list'],
+    sources: [
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/time-picker/time-picker.scss'
+    ]
   },
   {
     name: '--bx-origin',
@@ -9814,7 +9935,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/side-panel/side-panel.scss',
       'projects/blocks/primitives/components/skeleton/skeleton.scss',
-      'projects/blocks/primitives/components/tabs/tabs.scss',
       'projects/blocks/primitives/components/tag/tag.scss',
       'projects/blocks/primitives/components/tooltip/tooltip.scss',
       'projects/blocks/toastr/components/toast-core/toast-core.scss'
@@ -9903,6 +10023,23 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     ]
   },
   {
+    name: '--bx-select-option-radius',
+    reference: 'var(--bx-select-option-radius)',
+    category: 'components',
+    group: 'Component \u00B7 select',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-option-radius, var(--bx-rounded-sm, 0.25rem))'],
+    selectors: [],
+    sources: [
+      'projects/blocks/forms/components/multi-select/multi-select.scss',
+      'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/time-picker/time-picker.scss'
+    ]
+  },
+  {
     name: '--bx-select-panel-background',
     reference: 'var(--bx-select-panel-background)',
     category: 'components',
@@ -9938,6 +10075,32 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['22rem'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
+  },
+  {
+    name: '--bx-select-panel-padding',
+    reference: 'var(--bx-select-panel-padding)',
+    category: 'components',
+    group: 'Component \u00B7 select',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
+  },
+  {
+    name: '--bx-select-panel-radius',
+    reference: 'var(--bx-select-panel-radius)',
+    category: 'components',
+    group: 'Component \u00B7 select',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-lg, 0.75rem)'],
     selectors: [],
     sources: ['projects/blocks/forms/components/multi-select/multi-select.scss', 'projects/blocks/forms/components/select/select.scss']
   },
@@ -11608,6 +11771,45 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },
   {
+    name: '--bx-tabs-header-padding',
+    reference: 'var(--bx-tabs-header-padding)',
+    category: 'components',
+    group: 'Component \u00B7 tabs',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
+  },
+  {
+    name: '--bx-tabs-inner-radius',
+    reference: 'var(--bx-tabs-inner-radius)',
+    category: 'components',
+    group: 'Component \u00B7 tabs',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['max(0px, var(--bx-glass-radius) - (calc(var(--bx-tabs-header-padding, var(--bx-space-1, 0.25rem)) + var(--bx-border-width, 1px) + 1px)))'],
+    fallbacks: [],
+    selectors: ['.bx-tab-header'],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
+  },
+  {
+    name: '--bx-tabs-item-radius',
+    reference: 'var(--bx-tabs-item-radius)',
+    category: 'components',
+    group: 'Component \u00B7 tabs',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-tabs-inner-radius)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
+  },
+  {
     name: '--bx-tabs-max-panel-height',
     reference: 'var(--bx-tabs-max-panel-height)',
     category: 'components',
@@ -11643,6 +11845,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['visible'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
+  },
+  {
+    name: '--bx-tabs-radius',
+    reference: 'var(--bx-tabs-radius)',
+    category: 'components',
+    group: 'Component \u00B7 tabs',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-md, 0.5rem)'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/tabs/tabs.scss']
   },

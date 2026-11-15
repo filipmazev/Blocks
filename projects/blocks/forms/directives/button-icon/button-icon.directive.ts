@@ -4,5 +4,5 @@ import { Directive, ElementRef, inject } from '@angular/core';
 @Directive({ selector: '[bxButtonIcon]' })
 export class ButtonIconDirective {
   /** Native host reference exposed for coordinated button-icon replacement during loading. */
-  public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  public readonly elementRef = inject<ElementRef<HTMLElement | SVGElement>>(ElementRef);
 }

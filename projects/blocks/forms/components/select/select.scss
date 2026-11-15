@@ -147,6 +147,11 @@
 }
 
 .bx-select-panel {
+    --bx-option-radius: #{nested-radius(
+            var(--bx-select-panel-radius, #{radius(lg)}),
+            calc(var(--bx-select-panel-padding, #{spacing(1)}) + var(--bx-border-width, 1px))
+        )};
+
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -155,7 +160,7 @@
     max-width: 100%;
     background-color: var(--bx-glass-surface, var(--bx-bg-surface));
     border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-glass-edge, var(--bx-border-default));
-    border-radius: radius(lg);
+    border-radius: var(--bx-select-panel-radius, #{radius(lg)});
     box-shadow: shadow(sm);
     overflow: hidden;
     max-height: 18rem;
@@ -173,7 +178,7 @@
     min-height: 0;
     overflow: hidden auto;
     overscroll-behavior: contain;
-    padding: spacing(1);
+    padding: var(--bx-select-panel-padding, #{spacing(1)});
 
     &::-webkit-scrollbar {
         width: 6px;
@@ -234,7 +239,7 @@
 .bx-select-panel[data-bx-surface] {
     @include dropdown-material;
 
-    --bx-glass-radius: #{radius(lg)};
+    --bx-glass-radius: var(--bx-select-panel-radius, #{radius(lg)});
     --bx-glass-surface: var(--bx-select-panel-background, var(--bx-bg-surface));
     --bx-glass-text: var(--bx-text-primary);
     --bx-glass-edge: var(--bx-border-default);

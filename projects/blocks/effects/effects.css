@@ -677,6 +677,11 @@
     pointer-events: none;
 }
 
+[data-bx-selection-surface='true']:is([role='menu'], [role='listbox'])
+    [role='menuitem']:is(:hover, :active):not(:disabled, [aria-disabled='true'], .is-disabled) {
+    background: transparent !important;
+}
+
 @media (forced-colors: active) {
     .bx-selection-surface {
         display: none;

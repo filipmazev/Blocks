@@ -131,8 +131,11 @@ stable backdrop layer and monotonic opacity so the lens does not flash as its sp
 `--bx-wheel-band-opacity` customize the band; background and opacity default to transparent/zero. The [TimeWheel guide](../time-wheel/README.md) describes
 standalone wheel customization.
 
-List rows share Select/MultiSelect typography, padding, radius, selected/disabled styling, checkmarks, immediate hover feedback and `--bx-select-option-gap`
-(default shared spacing 1). There is no quick-select sidebar, repeated time title or reserved footer space.
+List rows share Select/MultiSelect typography, padding, selected/disabled styling, checkmarks, immediate hover feedback and `--bx-select-option-gap` (default
+shared spacing 1). There is no quick-select sidebar, repeated time title or reserved footer space.
+
+List-row corners subtract the body padding, list padding and shared border width from the panel radius, clamped at zero. `--bx-select-option-radius` supplies an
+explicit override, and the shared hover/focus backing follows the row's computed corners.
 
 All configurable text uses `ResolvableText` and optional `BX_I18N`, including semantic choices, field labels, placeholders, errors, actions and accessible wheel
 names. Locale/format settings follow explicit inputs, shared application settings, then library defaults.

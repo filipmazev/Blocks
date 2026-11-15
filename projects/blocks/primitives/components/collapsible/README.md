@@ -54,8 +54,8 @@ disabled/readonly sections.
 `--bx-collapsible-background`, `--bx-collapsible-border`, `--bx-collapsible-radius`, `--bx-collapsible-padding` and `--bx-collapsible-content-padding` follow
 shared semantic defaults.
 
-The heading's hover background follows the surface's inner corners. Expanded headings keep rounded top corners and square bottom corners, with no divider
-between the heading and content. Accordion items share this appearance.
+The heading's hover background follows the surface radius minus the shared border width, clamped at zero. Expanded headings keep rounded top corners and square
+bottom corners, with no divider between the heading and content. Accordion items share this appearance.
 
 ## Behavior and accessibility
 

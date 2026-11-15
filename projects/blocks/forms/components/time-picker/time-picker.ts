@@ -56,7 +56,7 @@ import {
   WindowDimensionsService,
   zonedTimeOfInstant
 } from '@filip.mazev/blocks/core';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { BxSurfaceDirective, VisualTransition } from '@filip.mazev/blocks/effects';
 import { ISelectionMotion, mountSelectionMotion } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
 import {
@@ -88,6 +88,7 @@ import { resolveValidationMessage } from '@forms/helpers/validation.helpers';
 @Component({
   selector: 'bx-time-picker',
   imports: [
+    VisualTransition,
     BxSurfaceDirective,
     Button,
     FormField,

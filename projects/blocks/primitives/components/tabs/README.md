@@ -96,6 +96,10 @@ colors use a visible selected outline.
 Tabs resolve their own minimum material opacity inside panels and dialogs. Inactive triggers stay transparent so a containing surface cannot cover the moving
 selection with its opacity floor. Header, selection and label stacking keep their existing clipping and motion behavior.
 
+For pill headers, `--bx-tabs-radius` defaults to shared radius `md`, and `--bx-tabs-header-padding` accepts one length (shared spacing `1` by default). Trigger
+and selection corners subtract the header padding, shared border width and the list's 1px inset from the header radius, clamped at zero. Set
+`--bx-tabs-item-radius` for an explicit override. Underline tabs retain their edge-corner treatment.
+
 Reduced transparency gives the header and selected tint opaque fills. Foreground tab triggers leave that selection visible; hover uses a separate neutral fill.
 The selected shape and underline remain visible independently of text color, and live preference changes preserve selection, scrolling, and dragging.
 

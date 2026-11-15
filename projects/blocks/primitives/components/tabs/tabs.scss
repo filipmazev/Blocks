@@ -17,7 +17,8 @@
     --bx-glass-shadow: none;
     --bx-glass-min-opacity: 0;
     --bx-glass-opacity: calc(0.1 + 0.25 * var(--bx-glass-material-strength, 0.1469));
-    --bx-glass-radius: #{radius(md)};
+    --bx-glass-radius: var(--bx-tabs-radius, #{radius(md)});
+    --bx-tabs-inner-radius: #{nested-radius(var(--bx-glass-radius), calc(var(--bx-tabs-header-padding, #{spacing(1)}) + var(--bx-border-width, 1px) + 1px))};
 
     display: flex;
     align-self: flex-start;
@@ -25,9 +26,9 @@
     box-sizing: border-box;
     width: fit-content;
     max-width: 100%;
-    padding: spacing(1);
+    padding: var(--bx-tabs-header-padding, #{spacing(1)});
     border: var(--bx-border-width, 1px) var(--bx-border-style, solid) var(--bx-border-default);
-    border-radius: radius(md);
+    border-radius: var(--bx-glass-radius);
 }
 
 .bx-tab-viewport {
@@ -65,7 +66,7 @@
     --bx-glass-decoration-opacity: 0.5;
     --bx-glass-rim-visibility: 0.65;
     --bx-glass-shadow: #{shadow(sm)};
-    --bx-glass-radius: #{radius(sm)};
+    --bx-glass-radius: var(--bx-tabs-item-radius, var(--bx-tabs-inner-radius));
 
     position: absolute;
     inset: 0 auto auto 0;
@@ -90,7 +91,7 @@
     --bx-glass-opaque-surface: transparent;
     --bx-glass-text: var(--bx-tab-text, var(--bx-text-secondary));
     --bx-glass-edge: transparent;
-    --bx-glass-radius: #{radius(sm)};
+    --bx-glass-radius: var(--bx-tabs-item-radius, var(--bx-tabs-inner-radius));
     --bx-glass-min-opacity: 0;
     --bx-glass-opacity: 0;
     --bx-glass-decoration-opacity: 0;
@@ -105,7 +106,7 @@
     flex: none;
     padding: spacing(2) spacing(3);
     border: var(--bx-border-width, 1px) var(--bx-border-style, solid) transparent;
-    border-radius: radius(sm);
+    border-radius: var(--bx-glass-radius);
     font: inherit;
     font-size: 0.875rem;
     white-space: nowrap;

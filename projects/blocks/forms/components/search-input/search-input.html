@@ -20,11 +20,15 @@
         [class.is-keyboard-focused]="keyboardFocused()"
         [bxTooltip]="searchOverflow.text() | bxTruncatedText: searchOverflow.truncated() : resolvedTooltipOnTruncate()">
         <span class="bx-search-icon-left" aria-hidden="true">
-            @if (isBusy() && !showRetry()) {
-                <bx-loading-spinner [size]="16" [decorative]="true" />
-            } @else {
-                <bx-icon name="search" size="16" />
-            }
+            <bx-visual-transition [value]="isBusy() && !showRetry()">
+                <ng-template let-busy>
+                    @if (busy) {
+                        <bx-loading-spinner [size]="16" [decorative]="true" />
+                    } @else {
+                        <bx-icon name="search" size="16" />
+                    }
+                </ng-template>
+            </bx-visual-transition>
         </span>
         <input
             #searchOverflow="bxTruncate"

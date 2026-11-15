@@ -2,6 +2,7 @@
 
 @mixin menu-item {
     width: 100%;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     background: transparent !important;
@@ -10,8 +11,8 @@
     cursor: pointer;
     font-family: inherit;
     font-size: 0.875rem;
-    text-align: left;
-    border-radius: max(0px, calc(var(--bx-glass-radius, #{radius(lg)}) - #{spacing(1)}));
+    text-align: start;
+    border-radius: var(--bx-menu-item-radius, var(--bx-menu-inner-radius, #{nested-radius(radius(lg), calc(#{spacing(1)} + var(--bx-border-width, 1px)))}));
     color: var(--bx-text-primary);
 
     --bx-glass-decoration-opacity: 0;
@@ -71,6 +72,12 @@
     }
 
     &.is-disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    &[aria-disabled='true'] {
         opacity: 0.4;
         cursor: not-allowed;
         pointer-events: none;

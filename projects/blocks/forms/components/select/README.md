@@ -79,6 +79,10 @@ refraction. `--bx-dropdown-opacity` overrides the backing; shared opaque and acc
 Uses Blocks semantic tokens and the active `ThemingService` configuration. Customize through documented inputs, templates and CSS variables. Existing components
 update when the application theme changes. Keyboard focus, forced colors, reduced transparency and `BxA11yService` reduced-motion preferences remain supported.
 
+`--bx-select-panel-radius` defaults to shared radius `lg`; `--bx-select-panel-padding` accepts one length and defaults to shared spacing `1`. Select and
+MultiSelect option corners subtract this padding and the shared border width from the panel radius, clamped at zero. `--bx-select-option-radius` supplies an
+explicit override. The shared selection backing follows each option's computed corners.
+
 Text inputs accept `ResolvableText`: plain text or `{ key: 'translation.key' }`. With `BX_I18N`, text is resolved reactively, including already-mounted controls
 when the adapter's `version` signal changes. Plain text works without an adapter.
 

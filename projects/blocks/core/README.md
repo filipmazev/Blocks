@@ -209,6 +209,11 @@ Use shared spacing, radius, elevation, motion, z-index, and responsive helpers. 
 [appearance guide](../../playground/src/app/components/screens/appearance/README.md) for palette pairs, semantic colors, translucency, glassiness, and
 application-wide rendering configuration.
 
+For contours nested inside the same rounded surface, use `nested-radius($outer, $inset)` from `core/styles/helpers`. It emits `max(0px, calc(outer - inset))`
+with live CSS tokens. Measure the inset between the two border boxes, including the parent's border, padding and any intervening gap. For example, a 12px menu
+radius with 4px padding and a 1px border gives a 7px row radius. Derive both axes separately for unequal insets. Independent controls and circular markers keep
+their own shape; moving selection backings copy their target's computed corners. Keep explicit component overrides available.
+
 ### Theme-token audit and customization contract
 
 The token audit separates application theme controls from the full CSS implementation inventory. The generated catalog reports the current implementation

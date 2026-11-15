@@ -13,6 +13,7 @@ import {
   ThemedColor,
   ThemingService
 } from '@filip.mazev/blocks/core';
+import { VisualTransition } from '@filip.mazev/blocks/effects';
 
 import { loadIcon } from '@icons/helpers/icon-resolve.helpers';
 import { IIconDefinition } from '@icons/interfaces/icon-definition.interface';
@@ -21,6 +22,7 @@ import { IconName, IconSize } from '@icons/types/icon.types';
 @Component({
   selector: 'bx-icon',
   standalone: true,
+  imports: [VisualTransition],
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './icon.scss'
@@ -130,6 +132,8 @@ export class Icon {
   public readonly bgColor: InputSignal<'auto' | ThemedColor | undefined> = input<ThemedColor | 'auto' | undefined>(undefined);
   /** Positive finite SVG stroke width. Omission and invalid values use 1.5; fractional values are supported. */
   public readonly strokeWidth: InputSignal<number | undefined> = input<number | undefined>(undefined);
+  /** Crossfade resolved icon changes using the shared spring; defaults to true. Live reduced motion always disables decorative transitions. */
+  public readonly animated: InputSignal<boolean> = input(true);
   /** Whether the visual is decorative and should be hidden from assistive technology. Defaults to `true`. */
   public readonly decorative: InputSignal<boolean> = input(true);
   /** Optional accessible name when visible text does not provide an appropriate control name. Optional; omission leaves the value undefined. */
@@ -146,7 +150,6 @@ export class Icon {
       onCleanup(() => {
         requestId++;
       });
-      this.icon.set(undefined);
       this.loadError.set(null);
 
       loadIcon(name)

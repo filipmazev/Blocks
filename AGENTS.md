@@ -4,6 +4,13 @@ These rules apply throughout this repository, including the library, playground,
 precedence. Existing files can contain older patterns; do not copy a pattern that conflicts with these rules. Apply the rules to new and changed code without
 reorganizing unrelated code.
 
+## Release notes
+
+- Whenever changing the Blocks library itself, update the latest unpublished version's release notes in `documentation/releases/<version>/README.md` in the same
+  change. Keep those notes current with the final behavior, public APIs, fixes, and any migration requirements.
+- Check the release's publication status before editing its notes. Once a version is published, its release notes are immutable; document subsequent changes
+  under the latest unpublished version instead. Do not infer publication solely from the local package version.
+
 ## Design priorities
 
 - Prioritize mobile responsiveness, accessibility, customization, theming, and developer experience in every API and interaction.
@@ -160,6 +167,11 @@ reorganizing unrelated code.
 
 - Use Blocks semantic CSS variables and shared Sass helpers for color, spacing, radius, elevation, motion, and responsive behavior. Do not hardcode a palette or
   create a separate theme system.
+- For nested shapes that follow the same outer contour, derive each inner corner with `nested-radius(outer, inset)` from `core/styles/helpers`:
+  `inner radius = max(0px, outer radius - inset)`. The inset is the actual border-box distance, including parent border width, padding, and intervening gaps.
+  Use the same live tokens for geometry and radius; account for each axis/corner when insets differ, and preserve explicit consumer overrides. Apply this to
+  menu/option rows, selection backings, inset media, and other related surfaces. Independent controls and circular markers retain their own silhouette. Moving
+  highlights must match their target's computed corner radii. Verify custom radii, padding, border widths, and the zero-radius clamp in the Playground.
 - Import Sass definitions through `core/styles/helpers`; include global styles only through the established global entry point, not repeatedly from component
   styles.
 - Follow `ThemingService` and the shared surface/effects APIs. Theme and appearance changes must update mounted components and their overlays.

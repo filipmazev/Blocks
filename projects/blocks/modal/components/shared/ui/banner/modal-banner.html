@@ -4,18 +4,20 @@
         <div class="modal-top-banner-title-container">
             @if (headerData.icon || headerData.loading !== undefined) {
                 <span class="modal-icon-area" [style.min-inline-size.px]="iconSize()" [style.min-block-size.px]="iconSize()">
-                    @if (headerData.icon; as icon) {
-                        <bx-icon
-                            [name]="icon.name"
-                            [size]="iconSize()"
-                            [color]="icon.color"
-                            [bgColor]="icon.bgColor"
-                            [strokeWidth]="icon.strokeWidth"
-                            [style.visibility]="headerData.loading ? 'hidden' : 'visible'" />
-                    }
-                    @if (headerData.loading) {
-                        <bx-loading-spinner [size]="iconSize()" [label]="headerData.loadingLabel ?? 'Loading'" />
-                    }
+                    <bx-visual-transition [value]="headerData.loading ? 'loading' : headerData.icon">
+                        <ng-template let-visual>
+                            @if (visual === 'loading') {
+                                <bx-loading-spinner [size]="iconSize()" [label]="headerData.loadingLabel ?? 'Loading'" />
+                            } @else if (visual) {
+                                <bx-icon
+                                    [name]="visual.name"
+                                    [size]="iconSize()"
+                                    [color]="visual.color"
+                                    [bgColor]="visual.bgColor"
+                                    [strokeWidth]="visual.strokeWidth" />
+                            }
+                        </ng-template>
+                    </bx-visual-transition>
                 </span>
             }
             <span aria-live="polite" aria-atomic="true" [id]="titleId()">{{ resolvedText() }}</span>

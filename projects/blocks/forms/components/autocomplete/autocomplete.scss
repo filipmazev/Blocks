@@ -100,7 +100,10 @@
     min-block-size: spacing(10);
     padding: spacing(2) spacing(3);
     border: 0;
-    border-radius: radius(sm);
+    border-radius: var(
+        --bx-autocomplete-option-radius,
+        #{nested-radius(var(--bx-autocomplete-radius, #{radius(lg)}), calc(var(--bx-autocomplete-panel-padding, #{spacing(1)}) + var(--bx-border-width, 1px)))}
+    );
     background: transparent;
     color: inherit;
     font: inherit;

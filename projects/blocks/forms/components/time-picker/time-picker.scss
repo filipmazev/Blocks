@@ -217,6 +217,8 @@
 }
 
 .bx-time-list {
+    --bx-option-radius: #{nested-radius(radius(lg), calc(#{spacing(3)} + #{spacing(1)} + var(--bx-border-width, 1px)))};
+
     block-size: min(14rem, 50dvh);
     min-block-size: 6rem;
     box-sizing: border-box;

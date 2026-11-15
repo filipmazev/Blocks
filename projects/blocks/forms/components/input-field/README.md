@@ -29,6 +29,9 @@ Shared presentation includes labels, hints, tooltips, required/readonly/disabled
 Appearance uses Blocks semantic colors, spacing, radius and motion tokens. Glass surfaces inherit the application configuration from `ThemingService`; adjusting
 translucency updates existing components and overlays. Content-only parts share their containing surface instead of adding another backdrop filter.
 
+Numeric spinner groups follow their field's inner corners, subtracting the shared border width from the glass or outlined field radius and clamping at zero.
+Outlined fields retain the `--bx-field-radius` override.
+
 ```ts
 import { inject } from '@angular/core';
 import { ThemingService } from '@filip.mazev/blocks/core';

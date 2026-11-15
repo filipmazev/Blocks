@@ -3,7 +3,7 @@ import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@ang
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { BxSurfaceDirective, VisualTransition } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingSpinner, TooltipDirective, TruncateDirective, TruncatedTextPipe } from '@filip.mazev/blocks/primitives';
 
@@ -14,7 +14,7 @@ import { ISearchRetryConfig } from '@forms/interfaces/isearch-retry-config.inter
 
 @Component({
   selector: 'bx-search-input',
-  imports: [BxSurfaceDirective, FormField, Icon, LoadingSpinner, Button, TooltipDirective, TruncateDirective, TruncatedTextPipe],
+  imports: [VisualTransition, BxSurfaceDirective, FormField, Icon, LoadingSpinner, Button, TooltipDirective, TruncateDirective, TruncatedTextPipe],
   templateUrl: './search-input.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './search-input.scss'

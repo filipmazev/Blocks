@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, mo
 import type { IResolvedSelectOption } from '@forms/interfaces/iresolved-select-option.interface';
 
 import { BX_I18N, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
-import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { BxSurfaceDirective, VisualTransition } from '@filip.mazev/blocks/effects';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { LoadingIndicator, LoadingSpinner, Tag, TooltipDirective, TruncateDirective } from '@filip.mazev/blocks/primitives';
 
@@ -25,6 +25,7 @@ import { ISelectionChange } from '@forms/interfaces/iselection-change.interface'
 @Component({
   selector: 'bx-multi-select',
   imports: [
+    VisualTransition,
     BxSurfaceDirective,
     OverlayModule,
     FormField,

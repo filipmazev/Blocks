@@ -72,6 +72,10 @@ marker, focus state and filled/outlined appearance. Its inline completion shares
 Select/MultiSelect and date/time pickers, with shared opaque and reduced-transparency fallbacks. Options wrap, panel width follows the control, and height is
 constrained to the viewport. Custom option templates receive the option, resolved label, active state and index.
 
+Option corners derive from `--bx-autocomplete-radius` minus the panel padding and shared border width, clamped at zero. Use a single length for
+`--bx-autocomplete-panel-padding` to keep this automatic relationship, or pair asymmetric padding with an explicit `--bx-autocomplete-option-radius` (which also
+accepts an elliptical radius). The shared selection backing copies the option's computed corners.
+
 ## Behavior and accessibility
 
 Typing `Sk` can show a muted `opje` suffix for `Skopje`, without changing the form value. The hint appears only with the caret at the end, no selection, and an

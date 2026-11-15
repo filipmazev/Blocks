@@ -85,6 +85,14 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     const origin = root.getBoundingClientRect();
     const target = [bounds.left - origin.left - root.clientLeft, bounds.top - origin.top - root.clientTop, bounds.width, bounds.height];
     const first = !motion;
+    const style = view.getComputedStyle(active);
+
+    paintMotionStyles(surface, {
+      'border-top-left-radius': style.borderTopLeftRadius,
+      'border-top-right-radius': style.borderTopRightRadius,
+      'border-bottom-right-radius': style.borderBottomRightRadius,
+      'border-bottom-left-radius': style.borderBottomLeftRadius
+    });
 
     // Keep the clipped layer over the viewport without contributing to its scrollable extent.
     paintMotionStyles(layer, {
@@ -204,7 +212,12 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
   preference.addEventListener('change', onPreference);
   root.ownerDocument.addEventListener(configurationEvent, onPreference);
   observer?.observe(root);
-  mutation.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-selected', 'disabled', 'aria-disabled'] });
+  mutation.observe(root, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['aria-selected', 'disabled', 'aria-disabled', 'class', 'style']
+  });
   active = fallback();
   measure();
 

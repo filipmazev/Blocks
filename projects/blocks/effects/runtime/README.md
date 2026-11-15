@@ -397,3 +397,15 @@ motion.destroy();
 seconds and an animation timestamp in milliseconds. Return `false` when settled or blocked; call the returned cleanup function on release, cancellation and
 teardown. Without `requestAnimationFrame`, it schedules no work. It is not an automatic reduced-motion policy: callers must distinguish useful direct
 interaction from optional decorative movement. Tabs demonstrate continuous edge scrolling with this clock.
+
+## Visual presence
+
+`createVisualPresence(element, options?)` fades an HTML or SVG visual through the exact snappy spring and shared lazy frame scheduler. `initiallyVisible`
+defaults to true; `hiddenScale` defaults to 0.9 and is clamped to 0–1. Set it to 1 for opacity-only labels. An optional `onHidden` callback runs once a hidden
+destination settles, including a reduced-motion snap. `update(visible, immediate?)` preserves current velocity on interruption; pass true for immediate live
+reduced-motion updates. `destroy()` cancels frames and restores owned opacity, scale and transform-origin styles.
+
+Keep positioning/centering transforms on an outer wrapper. The controller preserves layout and accessible text; callers own semantics, hit testing and focus.
+Use Angular's [VisualTransition](../components/visual-transition/README.md) for bounded outgoing/current layers or
+[BxVisualPresenceDirective](../directives/visual-presence/README.md) for persistent layers. Neither adds a lighting renderer or changes committed application
+state.

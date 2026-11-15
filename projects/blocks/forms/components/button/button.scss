@@ -167,6 +167,7 @@
 }
 
 .bx-btn-content-wrapper {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -183,20 +184,17 @@
         display: contents;
     }
 
-    &.is-text-loading {
-        position: relative;
+    .bx-btn-spinner {
+        position: absolute;
+        display: inline-flex;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
 
-        .bx-btn-label {
-            display: inline;
-            opacity: 0;
-        }
-
-        bx-loading-spinner {
-            position: absolute;
-            inset-block-start: 50%;
-            inset-inline-start: 50%;
-            transform: translate(-50%, -50%);
-        }
+    .bx-btn-spinner-visual {
+        display: inline-flex;
     }
 }
 

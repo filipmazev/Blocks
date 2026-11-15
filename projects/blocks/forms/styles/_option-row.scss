@@ -5,7 +5,7 @@
     width: 100%;
     padding: spacing(2) spacing(3);
     border: 0;
-    border-radius: radius(sm);
+    border-radius: var(--bx-select-option-radius, var(--bx-option-radius, #{radius(sm)}));
     background: transparent;
     color: var(--bx-text-primary);
     font: inherit;
