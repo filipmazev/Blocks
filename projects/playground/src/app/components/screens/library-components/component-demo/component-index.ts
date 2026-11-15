@@ -12,53 +12,16 @@ import type { ComponentExample } from '@playground/components/screens/library-co
 import type { IComponentCatalogGroup } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-catalog-group.interface';
 
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
-import {
-  Button,
-  Checkbox,
-  CheckboxIndicator,
-  FormField,
-  InputField,
-  MultiSelect,
-  NativeControlDirective,
-  PrefixDirective,
-  Radio,
-  RadioGroup,
-  RangeSlider,
-  SearchInput,
-  SliderDirective,
-  SlideToggle,
-  SuffixDirective
-} from '@filip.mazev/blocks/forms';
-import { Icon } from '@filip.mazev/blocks/icons';
-import { Stepper } from '@filip.mazev/blocks/navigation';
-import {
-  Accordion,
-  Alert,
-  Card,
-  Chip,
-  Collapsible,
-  Divider,
-  InfiniteScrollDirective,
-  Menu,
-  MenuItem,
-  PageContainer,
-  PageHeader,
-  Popover,
-  ProgressBar,
-  Skeleton,
-  Tag
-} from '@filip.mazev/blocks/primitives';
+import { Button, MultiSelect, SearchInput } from '@filip.mazev/blocks/forms';
+import { Card, Divider, InfiniteScrollDirective, PageContainer, PageHeader } from '@filip.mazev/blocks/primitives';
 
 import { COMPONENT_EXAMPLES } from '@playground/components/screens/library-components/component-demo/component-catalog';
+import { ComponentPreview } from '@playground/components/screens/library-components/component-demo/components/component-preview/component-preview';
 import { COMPONENT_CATEGORIES } from '@playground/components/screens/library-components/component-demo/constants/component-categories.constants';
-import {
-  COMPONENT_PREVIEW_DAYS,
-  COMPONENT_PREVIEW_WEEKDAYS
-} from '@playground/components/screens/library-components/component-demo/constants/component-preview-fixtures.constants';
 import { componentPreviewKind } from '@playground/components/screens/library-components/component-demo/helpers/component-preview.helpers';
 import { componentRoute } from '@playground/components/screens/library-components/component-demo/helpers/component-route.helpers';
-import { STEPPER_GALLERY_STEPS } from '@playground/components/screens/library-components/stepper-examples/constants/stepper-demo.constants';
 import { ScrollToTop } from '@playground/components/shared/scroll-to-top/scroll-to-top';
+import { FIGMA_LIBRARY_URL } from '@playground/shared/constants/figma-library.constants';
 
 @Component({
   selector: 'app-component-index',
@@ -70,36 +33,12 @@ import { ScrollToTop } from '@playground/components/shared/scroll-to-top/scroll-
     FormsModule,
     SearchInput,
     MultiSelect,
-    InputField,
-    FormField,
-    NativeControlDirective,
-    Checkbox,
-    CheckboxIndicator,
-    Radio,
-    RadioGroup,
-    SlideToggle,
-    RangeSlider,
-    SliderDirective,
-    PrefixDirective,
-    SuffixDirective,
     Button,
     Card,
-    Chip,
-    BxSurfaceDirective,
-    Collapsible,
-    Accordion,
-    Stepper,
     Divider,
-    Icon,
-    Tag,
-    Alert,
-    Skeleton,
-    Menu,
-    MenuItem,
-    Popover,
-    ProgressBar,
     InfiniteScrollDirective,
-    ScrollToTop
+    ScrollToTop,
+    ComponentPreview
   ],
   templateUrl: './component-index.html',
   styleUrl: './component-index.scss',
@@ -120,11 +59,9 @@ export class ComponentIndex {
   private readonly catalogScrollRef: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('catalogScroll');
   private readonly resultsRef: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('results');
 
-  protected readonly gallerySteps: typeof STEPPER_GALLERY_STEPS = STEPPER_GALLERY_STEPS;
+  protected readonly figmaLibraryUrl: string = FIGMA_LIBRARY_URL;
   protected readonly componentRoute: typeof componentRoute = componentRoute;
   protected readonly previewKind: typeof componentPreviewKind = componentPreviewKind;
-  protected readonly weekdays: readonly string[] = COMPONENT_PREVIEW_WEEKDAYS;
-  protected readonly days: readonly number[] = COMPONENT_PREVIEW_DAYS;
 
   protected readonly layoutOnly: Signal<boolean> = computed(() => this.routeData()['layout'] === true);
   protected readonly category: Signal<string | undefined> = computed(() => {

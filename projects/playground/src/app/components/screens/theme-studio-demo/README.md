@@ -24,6 +24,8 @@ Color-role metadata is defined in `theme-studio-showcase.constants.ts`. The expo
 
 ## Appearance and customization
 
+The section typography, spacing, and alternating layout are shared with Home through `shared/styles/_showcase.scss`.
+
 The introduction retains the [glass aperture](../../shared/theme-palette-preview/README.md) and current palette label. Four sections demonstrate the theme:
 
 - **Colors:** six live swatches explain primary, accent, surface, text, border and hover roles, with their semantic CSS variable names.

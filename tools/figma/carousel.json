@@ -1,0 +1,32 @@
+[
+    {
+        "file": "01-components.png",
+        "title": "Components, ready to compose.",
+        "description": "Reusable controls, selection and feedback in light and dark.",
+        "nodeId": "49:2237"
+    },
+    {
+        "file": "02-tokens-and-themes.png",
+        "title": "One system. Light and dark.",
+        "description": "Semantic color, typography, spacing and shape.",
+        "nodeId": "49:2381"
+    },
+    {
+        "file": "03-forms-and-states.png",
+        "title": "Design the whole interaction.",
+        "description": "Form controls with validation and loading states.",
+        "nodeId": "49:2489"
+    },
+    {
+        "file": "04-materials-and-feedback.png",
+        "title": "Glass with a purpose.",
+        "description": "Theme-aware materials and clear semantic feedback.",
+        "nodeId": "49:2612"
+    },
+    {
+        "file": "05-responsive-layouts.png",
+        "title": "Layouts for every screen.",
+        "description": "Theme Studio examples for desktop, tablet and mobile.",
+        "nodeId": "49:2785"
+    }
+]

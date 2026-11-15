@@ -5,11 +5,7 @@
         [class.is-visible]="!isOrbHome()"
         [attr.inert]="isOrbHome() ? '' : null"
         [attr.aria-hidden]="isOrbHome()"
-        [bxTooltip]="
-            mood() === 'danger'
-                ? 'The orb needs a moment to cool down before returning to its pod in the theme card.'
-                : 'Bring the orb back to its pod in the theme card.'
-        ">
+        [bxTooltip]="mood() === 'danger' ? 'The orb needs a moment to cool down before returning to its pod.' : 'Bring the orb back to its pod.'">
         <button
             bx-button
             variant="tonal"

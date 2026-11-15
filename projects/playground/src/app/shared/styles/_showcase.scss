@@ -1,0 +1,101 @@
+@use 'core/styles/helpers' as *;
+
+.showcase-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+    min-inline-size: 0;
+    margin-block-start: 4rem;
+
+    @include respond-down(lg) {
+        gap: 7rem;
+    }
+
+    @include respond-down(md) {
+        gap: spacing(12);
+    }
+}
+
+.showcase-section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(6);
+    min-inline-size: 0;
+
+    > a {
+        align-self: flex-start;
+    }
+
+    h2,
+    h3,
+    p {
+        margin: 0;
+    }
+
+    h2,
+    h3 {
+        color: var(--bx-text-heading);
+    }
+
+    h2 {
+        font-size: clamp(1.5rem, 2.5vw, 2rem);
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    p {
+        color: var(--bx-text-secondary);
+        line-height: 1.65;
+    }
+}
+
+.intro-copy,
+.section-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: spacing(4);
+    min-inline-size: 0;
+}
+
+.split-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: spacing(12);
+    inline-size: 100%;
+    min-inline-size: 0;
+
+    > * {
+        min-inline-size: 0;
+    }
+
+    &:nth-of-type(even) {
+        > :first-child {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        > :last-child {
+            grid-column: 1;
+            grid-row: 1;
+        }
+    }
+
+    @include respond-up(2xl) {
+        column-gap: 5rem;
+    }
+
+    @include respond-down(lg) {
+        grid-template-columns: minmax(0, 1fr);
+
+        &:nth-of-type(even) {
+            > :first-child,
+            > :last-child {
+                grid-column: auto;
+                grid-row: auto;
+            }
+        }
+    }
+}

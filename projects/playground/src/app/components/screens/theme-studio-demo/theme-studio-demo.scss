@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'core/styles/helpers' as *;
 @use '../../../shared/styles/hero';
+@use '../../../shared/styles/showcase';
 
 :host {
     --bx-divider-margin: 0;
@@ -30,88 +31,14 @@
     }
 }
 
-h2,
-h3,
-p {
-    margin: 0;
-}
-
-h2,
-h3 {
-    color: var(--bx-text-heading);
-}
-
-h2 {
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-    line-height: 1.2;
-    letter-spacing: -0.025em;
-}
-
-p {
-    color: var(--bx-text-secondary);
-    line-height: 1.65;
-}
-
 code {
     overflow-wrap: anywhere;
     color: var(--bx-text-secondary);
     font-size: 0.75rem;
 }
 
-.studio-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 10rem;
-    margin-top: 4rem;
-
-    @include respond-down(lg) {
-        gap: 7rem;
-    }
-}
-
-.showcase-section {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: spacing(6);
-    min-inline-size: 0;
-
-    > a {
-        align-self: flex-start;
-    }
-}
-
-.intro-copy,
-.section-copy {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: spacing(4);
-    min-inline-size: 0;
-}
-
 .section-note {
     font-size: 0.875rem;
-}
-
-.split-section {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: center;
-    gap: spacing(12);
-    min-inline-size: 0;
-
-    > * {
-        min-inline-size: 0;
-    }
-
-    @include respond-up(2xl) {
-        column-gap: 5rem;
-    }
-
-    @include respond-down(lg) {
-        grid-template-columns: minmax(0, 1fr);
-    }
 }
 
 .studio-intro {
@@ -137,33 +64,6 @@ code {
     align-items: center;
     gap: spacing(3);
     margin-bottom: 3rem;
-}
-
-.split-section {
-    width: 100%;
-    align-items: center;
-
-    &:nth-of-type(2n) {
-        > :first-child {
-            grid-column: 2;
-            grid-row: 1;
-        }
-
-        > :last-child {
-            grid-column: 1;
-            grid-row: 1;
-        }
-    }
-
-    @include respond-down(lg) {
-        &:nth-of-type(2n) {
-            > :first-child,
-            > :last-child {
-                grid-column: auto;
-                grid-row: auto;
-            }
-        }
-    }
 }
 
 .color-section-container {

@@ -1,4 +1,17 @@
-<div #reader class="preview-reader" tabindex="0" role="region" aria-label="Scrollable national parks article">
+<div
+    #reader
+    class="preview-reader"
+    appPreviewScroll
+    role="region"
+    aria-label="Scrollable national parks article"
+    [attr.tabindex]="showcase() ? null : 0"
+    [attr.aria-hidden]="showcase() ? true : null"
+    [attr.inert]="showcase() ? '' : null"
+    [previewScrollRepeat]="showcase()"
+    [previewScrollTarget]="showcase() ? articleTitle : null"
+    [previewScrollCover]="showcase() ? glassBar : null"
+    [previewScrollDwell]="showcase() ? 2400 : 0"
+    [previewScrollPaused]="paused()">
     <article class="park-article">
         <img
             class="article-hero"
@@ -16,7 +29,7 @@
             fetchpriority="high"
             decoding="async" />
         <header class="article-copy article-heading">
-            <h2>National Parks</h2>
+            <h2 #articleTitle>National Parks</h2>
         </header>
         <div class="article-copy">
             <p class="article-eyebrow">Discover Macedonia</p>
@@ -73,7 +86,12 @@
     </article>
 </div>
 
-<div class="preview-tools" role="group" aria-label="Nature journal controls">
+<div
+    class="preview-tools"
+    role="group"
+    aria-label="Nature journal controls"
+    [attr.inert]="showcase() ? '' : null"
+    [attr.aria-hidden]="showcase() ? true : null">
     <button
         bx-button
         glassiness="auto"
@@ -85,15 +103,19 @@
         (click)="scrollTo(reader)">
         <bx-icon name="arrow-up" size="16" />
     </button>
-    <div bxSurface bxSurfaceGlassiness="auto" bxSurfaceInteractive bxSurfaceFocusEmission="var(--bx-primary)" class="preview-search">
+    <div #glassBar bxSurface bxSurfaceGlassiness="auto" bxSurfaceInteractive bxSurfaceFocusEmission="var(--bx-primary)" class="preview-search">
         <bx-icon name="search" size="16" />
-        <input
-            #query
-            type="search"
-            aria-label="Search the national parks article"
-            placeholder="Find a place"
-            [value]="search()"
-            (input)="search.set(query.value)" />
+        @if (showcase()) {
+            <span class="preview-query">Find a place</span>
+        } @else {
+            <input
+                #query
+                type="search"
+                aria-label="Search the national parks article"
+                placeholder="Find a place"
+                [value]="search()"
+                (input)="search.set(query.value)" />
+        }
     </div>
     <button
         bx-button
@@ -121,14 +143,29 @@
     </button>
 </div>
 
-<nav bxSurface bxSurfaceGlassiness="auto" class="preview-navigation" aria-label="Places in this article">
-    <span class="preview-saved-status" bxTruncate role="status">{{ saved() ? 'Saved to your places' : 'Explore Macedonia' }}</span>
-    @for (park of parks(); track park.id) {
-        <button type="button" (click)="scrollTo(reader, park.id)">
-            <bx-icon name="mountain" size="16" /><span>{{ park.shortTitle }}</span>
-        </button>
-    }
-</nav>
+@if (showcase()) {
+    <button
+        bx-button
+        type="button"
+        variant="icon"
+        color="grayscale"
+        glassiness="auto"
+        class="preview-playback"
+        [attr.aria-label]="paused() ? 'Play glass preview' : 'Pause glass preview'"
+        [attr.aria-pressed]="paused()"
+        (click)="paused.set(!paused())">
+        <bx-icon size="18" [name]="paused() ? 'play' : 'pause'" />
+    </button>
+} @else {
+    <nav bxSurface bxSurfaceGlassiness="auto" class="preview-navigation" aria-label="Places in this article">
+        <span class="preview-saved-status" bxTruncate role="status">{{ saved() ? 'Saved to your places' : 'Explore Macedonia' }}</span>
+        @for (park of parks(); track park.id) {
+            <button type="button" (click)="scrollTo(reader, park.id)">
+                <bx-icon name="mountain" size="16" /><span>{{ park.shortTitle }}</span>
+            </button>
+        }
+    </nav>
+}
 
 <ng-template #contents>
     <bx-menu>

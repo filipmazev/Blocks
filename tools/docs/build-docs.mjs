@@ -54,12 +54,16 @@ await collect('projects/playground/src/app/components/screens/tools');
 await collect('projects/playground/src/app/components/shared/sidenav');
 await collect('projects/playground/src/app/components/shared/theme-studio');
 await collect('projects/playground/src/app/components/shared/theme-material-preview');
+await collect('projects/playground/src/app/components/shared/theme-swatch-preview');
+await collect('projects/playground/src/app/components/shared/figma-library-preview');
+await collect('projects/playground/src/app/directives/preview-scroll');
 await collect('projects/playground/src/app/components/shared/theme-palette-preview');
 await collect('projects/playground/src/app/components/shared/theme-studio-setup');
 await collect('projects/playground/src/app/components/shared/theme-studio-import');
 await collect('projects/playground/src/app/components/screens/theme-studio-demo');
 await collect('projects/playground/src/app/components/screens/installation');
 await collect('projects/playground/src/app/components/screens/theme-studio-new-project');
+await collect('projects/playground/src/app/components/screens/library-components/component-demo');
 await collect('projects/playground/src/app/components/screens/library-components/page-examples');
 await collect('projects/playground/src/app/components/screens/library-components/breadcrumb-examples');
 files.sort();
@@ -96,6 +100,7 @@ const catalog = catalogArray.elements.map((entry) => {
   return { id: readString('id'), readme: readString('readme'), layout };
 });
 const routes = new Map();
+routes.set('projects/playground/src/app/components/screens/library-components/component-demo/components/component-preview/README.md', 'components');
 
 // Basic components precede composed examples; shared guides keep their first canonical route.
 for (const entry of catalog) {
@@ -106,6 +111,9 @@ routes.set('projects/playground/src/app/components/screens/appearance/README.md'
 routes.set('projects/playground/src/app/components/screens/home/README.md', 'home');
 routes.set('projects/playground/src/app/components/shared/theme-material-preview/README.md', 'home');
 routes.set('projects/playground/src/app/components/shared/theme-palette-preview/README.md', 'studio');
+routes.set('projects/playground/src/app/components/shared/theme-swatch-preview/README.md', 'home');
+routes.set('projects/playground/src/app/components/shared/figma-library-preview/README.md', 'home');
+routes.set('projects/playground/src/app/directives/preview-scroll/README.md', 'appearance');
 routes.set('projects/playground/src/app/components/shared/theme-studio/README.md', 'studio');
 routes.set('projects/playground/src/app/components/shared/theme-studio-setup/README.md', 'studio');
 routes.set('projects/playground/src/app/components/shared/theme-studio-import/README.md', 'studio');

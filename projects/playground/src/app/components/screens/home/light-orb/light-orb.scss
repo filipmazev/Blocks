@@ -1,9 +1,14 @@
+@use 'core/styles/helpers' as *;
+
 :host {
     display: contents;
 }
 
 .orb-controls {
-    position: relative;
+    position: absolute;
+    inset-block-start: spacing(4);
+    inset-inline-end: 0;
+    z-index: 3;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -263,4 +268,12 @@
     background:
         radial-gradient(ellipse at 40% 58%, color-mix(in srgb, currentcolor 32%, transparent), transparent 68%),
         radial-gradient(ellipse at 62% 40%, color-mix(in srgb, currentcolor 24%, transparent), transparent 62%);
+}
+
+@include respond-down(md) {
+    .orb-controls {
+        position: fixed;
+        inset-block: auto spacing(4);
+        inset-inline-end: spacing(4);
+    }
 }

@@ -34,6 +34,9 @@ The 6:5 composition is capped at 32rem. The “Design & code.” title and short
 degrees while overlapping, and a taller landscape Blocks pane (about 1.76:1) covers their shared center with extra internal spacing. The front samples use
 accent, primary and a blend of both, so all three respond to palette changes and Theme Studio overrides instead of retaining status colors across palettes.
 
+The foreground card also contains Orby’s pod, aligned with its heading. The interactive orb is rendered in Home’s separate foreground layer; the decorative
+preview stays inert and hidden from assistive technology.
+
 ## Behavior and accessibility
 
 The illustration is decorative, hidden from assistive technology and contains no buttons or focus stops. Only the stationary foreground pane participates in the

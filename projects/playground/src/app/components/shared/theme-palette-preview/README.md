@@ -32,6 +32,8 @@ invisible rotated positioning bounds so the decoration cannot create horizontal 
 When the Studio introduction’s container is narrow, the illustration shrinks to at most 11rem and becomes a faint backing beside the heading, without adding a
 separate row. This also applies when the Studio sidebar constrains the page. The compact backing is hidden in forced-colors and increased-contrast modes.
 
+Panel colors are shared with the Figma cover through `shared/styles/_palette-panels.scss`; both use the same live semantic roles and color mixes.
+
 ## Behavior and accessibility
 
 The illustration is decorative, hidden from assistive technology and has no focus targets or press feedback. The ring turns as one unit at two degrees per

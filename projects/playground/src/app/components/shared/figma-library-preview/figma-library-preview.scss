@@ -1,0 +1,33 @@
+@use '../../../shared/styles/palette-panels';
+
+:host {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: clip;
+}
+
+svg {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+}
+
+.cover-panel-ring,
+.cover-panel {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.cover-panel {
+    @include palette-panels.colors;
+
+    > rect:first-child {
+        fill: var(--panel-color);
+        fill-opacity: 0.18;
+    }
+
+    > rect:nth-child(2) {
+        fill: var(--panel-color);
+    }
+}

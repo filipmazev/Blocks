@@ -1,0 +1,25 @@
+@mixin colors {
+    &:nth-child(1) {
+        --panel-color: var(--bx-primary);
+    }
+
+    &:nth-child(2) {
+        --panel-color: color-mix(in srgb, var(--bx-text-info) 70%, var(--bx-accent));
+    }
+
+    &:nth-child(3) {
+        --panel-color: color-mix(in srgb, var(--bx-text-success) 80%, var(--bx-primary));
+    }
+
+    &:nth-child(4) {
+        --panel-color: var(--bx-accent);
+    }
+
+    &:nth-child(5) {
+        --panel-color: color-mix(in srgb, var(--bx-text-warn) 80%, var(--bx-primary));
+    }
+
+    &:nth-child(6) {
+        --panel-color: color-mix(in srgb, var(--bx-text-danger) 75%, var(--bx-accent));
+    }
+}

@@ -1,40 +1,55 @@
 # Playground home
 
-Introduces Blocks with a short headline, two primary actions, a portfolio homage and the interactive light garden.
+Introduces Blocks and links to component examples, Theme Studio, Appearance, and the Figma UI kit.
 
 ## Import
 
-Home uses Blocks buttons, icons, tooltips and surfaces, plus the private [theme material preview](../../shared/theme-material-preview/README.md). There is no
-external background renderer.
+Home uses Blocks buttons, cards, tags, alerts, time picker, icons, and surfaces, plus the private
+[theme material preview](../../shared/theme-material-preview/README.md), [theme samples](../../shared/theme-swatch-preview/README.md),
+[Figma cover](../../shared/figma-library-preview/README.md), and Appearance journal.
 
 ## Usage
 
-Open `/`. A gently floating glass composition complements the introduction without requiring interaction. The hero has a brief description and generous spacing;
-three compact feature links lead to Appearance, Theme Studio and the interaction demo. Theme Studio changes its colors and corners; Appearance changes its
-translucency and glassiness. Updates flow through semantic CSS variables.
+Open `/`. Four alternating sections pair short descriptions with component, color, material, and Figma previews. Links open the corresponding playground pages.
+Theme selectors and settings remain in Theme Studio and Appearance.
+
+The Figma links use the shared library URL, preferring the published Community listing when registered. The supplied SVG is rendered directly as vector artwork.
 
 ## API
 
-Theme and appearance preferences remain owned by the existing shared services. Orby retains its existing wake, drag and keyboard interactions. Its lighting
-scene and physics use the full Home content region, including the page gutters; no visible enclosure or nested padding is needed. The footer is separated with a
-Blocks `Divider` rather than a CSS border.
+Theme and appearance preferences remain owned by the shared services. The examples inherit their semantic tokens without changing those preferences. The theme
+loupe reveals the opposite mode locally; its search-icon button supports keyboard and touch exploration.
+
+Orby retains its wake, drag, fling, mood, recall, and keyboard interactions. Its stage is a separate layer above the hero and section previews, including their
+floating tools. Its pod sits in the hero’s foreground glass card, before the sections. Its automatic tour visits nearby visible sections, following the
+alternating layout without scrolling the page or moving focus. After the reader scrolls and pauses, Orby catches up at a bounded speed and resumes its slower
+tour. Scrolling inside the glass preview does not trigger following.
+
+Direct interaction interrupts the tour. A later pause in page scrolling can resume following once manipulation and mood recovery finish. Explicit recall keeps
+Orby at home; keyboard focus, active gestures, and reduced motion remain authoritative.
 
 ## Appearance and customization
 
-Two miniature pages recall the author’s first portfolio through its wave silhouette. A compact title and introduction sit behind the front glass; the second
-page contains abstract shapes, gradients and short text. A readable Blocks glass card overlaps them with static text and theme color samples. It uses the same
-shared glass defaults as Appearance’s search bar. All artwork is HTML, CSS and SVG, without imported image assets. The front samples use primary, accent and a
-blend of both; the headline uses the readable accent color. Rendering quality follows global preferences. Only the front pane receives Orby’s light; the
-background cards have surface effects disabled.
+Home and Theme Studio share typography, section spacing, copy layout, alternating columns, and breakpoints through `shared/styles/_showcase.scss`. Narrow
+layouts stack descriptions above previews. The first section is a compact meeting composition using real Blocks cards, tags, saved-state alert, and time-picker
+field. The guest and time tiles tilt in opposite directions. The composition is inert and decorative, with no editable or focusable demo controls; Orby can
+still illuminate its surfaces. Component changes flow directly into the showcase instead of being copied into custom mock controls.
+
+The hero retains its miniature portfolio composition. The glass section reuses the Appearance journal with a repeating, visibility-aware scroll and pause
+action. The compact Home journal pauses for 2.4 seconds with its title covered by the glass search bar. The Figma cover's decorative panels rotate and shrink on
+hover or keyboard focus while its text stays fixed; their colors share the Studio aperture's semantic palette.
 
 ## Behavior and accessibility
 
-The decorative illustration is hidden from assistive technology and adds no controls or keyboard stops. Reduced transparency, forced colors and material quality
-use the shared Blocks behavior. The rear pages float independently using sideways and vertical CSS translation with gentle rocking, pausing when offscreen or
-the document is hidden. Reduced motion stops decorative movement; observers and listeners are cleaned up on navigation. Home no longer resolves theme colors
-through a canvas or runs a background rendering loop. The existing light orb remains a separate, user-activated demonstration. It bounces against the unframed
-page bounds, which update on resize and content changes.
+Every section has a named heading. The orb's instructions remain available to assistive technology without a visible message block. Its button supports Enter,
+arrow keys, and Escape; pointer and touch users can drag and fling it. Recall respects its existing mood guard.
+
+Animation uses the shared frame scheduler and exact springs where appropriate. Reduced motion stops decorative travel and scrolling while preserving direct
+positioning and the local theme peek. Hidden and offscreen previews stop animation work. Theme, transparency, and accessibility changes update mounted surfaces.
+Listeners, observers, timers, animation effects, and scene controllers are released on navigation.
 
 ## Playground
 
-Open `/`. See the [Theme Studio guide](../../shared/theme-studio/README.md) for editing, import and export behavior.
+Open `/`. See the [Theme Studio guide](../../shared/theme-studio/README.md) for editing, import, and export, the
+[scroll preview guide](../../../directives/preview-scroll/README.md) for its presentation behavior, and the
+[Figma publishing guide](../../../../../../../tools/figma/README.md) for Community releases.

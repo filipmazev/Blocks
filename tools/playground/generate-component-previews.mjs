@@ -1,25 +1,20 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
+import ts from 'typescript';
+
 import { formatGeneratedTypeScript } from '../helpers/generated-typescript.helpers.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const screen = 'projects/playground/src/app/components/screens/library-components/component-demo';
 const catalogPath = `${screen}/constants/component-catalog.constants.ts`;
-const templatePath = `${screen}/component-index.html`;
+const templatePath = `${screen}/components/component-preview/component-preview.html`;
+const recipesPath = `${screen}/constants/component-preview-recipes.constants.ts`;
 const overridesPath = `${screen}/constants/component-preview.overrides.constants.ts`;
 const typeTarget = `${screen}/types/component-preview.types.ts`;
 const mapTarget = `${screen}/constants/component-preview.constants.ts`;
 
 const banner = '// Generated from the preview vignettes and component catalog by tools/playground/generate-component-previews.mjs. Do not edit.';
-const defaultKinds = {
-  Primitives: 'surface',
-  Forms: 'field',
-  Navigation: 'nav',
-  Modals: 'modal',
-  Notifications: 'toast'
-};
-
 const read = (path) => readFile(new URL(`../../${path}`, import.meta.url), 'utf8');
 
 /** Collect every `@case ('name')` vignette rendered by the catalog template. */
@@ -27,70 +22,79 @@ function readVignettes(template) {
   return [...template.matchAll(/@case\s*\(\s*'([a-z][a-z-]*)'\s*\)/g)].map((match) => match[1]);
 }
 
-/** Read top-level catalog entries without executing the TypeScript source. */
-function readCatalog(source) {
-  const declaration = source.indexOf('=', source.indexOf('COMPONENT_EXAMPLES'));
-  const arrayStart = source.indexOf('[', declaration);
-  const entries = [];
+/** Read a named declaration using the TypeScript parser, without executing application code. */
+function readDeclaration(source, name) {
+  const file = ts.createSourceFile('preview.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const declaration = file.statements
+    .filter(ts.isVariableStatement)
+    .flatMap((statement) => [...statement.declarationList.declarations])
+    .find((entry) => ts.isIdentifier(entry.name) && entry.name.text === name);
+  let initializer = declaration?.initializer;
 
-  let depth = 0;
-  let objectStart = -1;
-
-  for (let index = arrayStart; index < source.length; index++) {
-    const character = source[index];
-
-    if (character === '/' && source[index + 1] === '/') {
-      index = source.indexOf('\n', index);
-      continue;
-    }
-
-    if (character === "'" || character === '"' || character === '`') {
-      const quote = character;
-
-      index++;
-
-      while (index < source.length) {
-        if (source[index] === '\\') index += 2;
-        else if (source[index] === quote) break;
-        else index++;
-      }
-
-      continue;
-    }
-
-    if (character === '[') depth++;
-    if (character === ']') {
-      depth--;
-
-      if (depth === 0) break;
-    }
-
-    if (depth !== 1) continue;
-
-    if (character === '{' && objectStart < 0) objectStart = index;
-
-    if (character === '}' && objectStart >= 0) {
-      const block = source.slice(objectStart, index + 1);
-      const id = block.match(/\bid:\s*'([^']+)'/)?.[1];
-      const group = block.match(/\bgroup:\s*'([^']+)'/)?.[1];
-
-      if (id) entries.push({ id, group });
-
-      objectStart = -1;
-    }
+  while (initializer && (ts.isSatisfiesExpression(initializer) || ts.isAsExpression(initializer) || ts.isParenthesizedExpression(initializer))) {
+    initializer = initializer.expression;
   }
 
-  return entries;
+  if (!initializer) throw new Error(`Missing ${name} declaration.`);
+
+  return initializer;
+}
+
+/** Read explicit object keys, rejecting duplicate or computed names instead of silently dropping them. */
+function readProperties(object) {
+  if (!ts.isObjectLiteralExpression(object)) throw new Error('Preview registrations must be an object literal.');
+
+  const properties = new Map();
+
+  for (const property of object.properties) {
+    if (!ts.isPropertyAssignment(property) || (!ts.isIdentifier(property.name) && !ts.isStringLiteral(property.name))) {
+      throw new Error('Preview registrations must use explicit property names.');
+    }
+
+    const key = property.name.text;
+
+    if (properties.has(key)) throw new Error(`Duplicate preview registration: ${key}.`);
+
+    properties.set(key, property.initializer);
+  }
+
+  return properties;
+}
+
+/** Read catalog identifiers without depending on quote style or property ordering. */
+function readCatalog(source) {
+  const array = readDeclaration(source, 'COMPONENT_EXAMPLES');
+
+  if (!ts.isArrayLiteralExpression(array)) throw new Error('COMPONENT_EXAMPLES must be an array literal.');
+
+  return array.elements.map((entry) => {
+    const id = readProperties(entry).get('id');
+
+    if (!id || !ts.isStringLiteralLike(id)) throw new Error('Catalog identifiers must be string literals.');
+
+    return { id: id.text };
+  });
 }
 
 /** Read the explicit per-entry vignette intent maintained by hand. */
 function readOverrides(source) {
-  return [...source.matchAll(/(?:'([a-z][a-z0-9-]*)'|([a-z][a-z0-9-]*))\s*:\s*'([a-z][a-z-]*)'/g)].map((match) => [match[1] ?? match[2], match[3]]);
+  return [...readProperties(readDeclaration(source, 'COMPONENT_PREVIEW_OVERRIDES'))].map(([id, kind]) => {
+    if (!ts.isStringLiteralLike(kind)) throw new Error(`Preview mapping for ${id} must be a string literal.`);
+
+    return [id, kind.text];
+  });
 }
 
-const [template, catalog, overridesSource] = await Promise.all([read(templatePath), read(catalogPath), read(overridesPath)]);
+const [template, catalog, overridesSource, recipesSource] = await Promise.all([read(templatePath), read(catalogPath), read(overridesPath), read(recipesPath)]);
 
-const vignettes = [...new Set(readVignettes(template))].sort();
+const templateKinds = readVignettes(template);
+const recipeKinds = [...readProperties(readDeclaration(recipesSource, 'COMPONENT_PREVIEW_RECIPES')).keys()];
+const allKinds = [...templateKinds, ...recipeKinds];
+const duplicates = allKinds.filter((kind, index) => allKinds.indexOf(kind) !== index);
+
+if (duplicates.length) throw new Error(`Preview kinds must have one renderer: ${duplicates.join(', ')}.`);
+
+const vignettes = [...new Set(allKinds)].sort();
 const entries = readCatalog(catalog);
 const overrides = new Map(readOverrides(overridesSource));
 const ids = new Set(entries.map((entry) => entry.id));
@@ -103,7 +107,7 @@ if (!entries.length) throw new Error(`No catalog entries found in ${catalogPath}
 
 if (unknownKinds.length) {
   throw new Error(
-    `Unknown component preview kinds in ${overridesPath}: ${unknownKinds.join(', ')}. Add a matching @case to ${templatePath} or use one of: ${vignettes.join(', ')}.`
+    `Unknown component preview kinds in ${overridesPath}: ${unknownKinds.join(', ')}. Add a real component recipe to ${recipesPath}, a matching @case to ${templatePath}, or use one of: ${vignettes.join(', ')}.`
   );
 }
 
@@ -115,7 +119,9 @@ if (missing.length) {
 
 if (stale.length) console.warn(`[component-previews] Ignoring mappings for catalog entries that no longer exist: ${stale.join(', ')}.`);
 
-const mapping = entries.map((entry) => [entry.id, overrides.get(entry.id) ?? defaultKinds[entry.group] ?? 'surface']);
+if (ids.size !== entries.length) throw new Error('Catalog identifiers must be unique.');
+
+const mapping = entries.map((entry) => [entry.id, overrides.get(entry.id)]);
 const typeSource = `${banner}\nexport type ComponentPreviewKind = ${vignettes.map((kind) => `'${kind}'`).join(' | ')};\n`;
 const mapSource = `${banner}\nimport type { ComponentPreviewKind } from '@playground/components/screens/library-components/component-demo/types/component-preview.types';\n\nexport const COMPONENT_PREVIEW_KINDS: Readonly<Record<string, ComponentPreviewKind>> = {\n${mapping
   .map(([id, kind]) => `  '${id}': '${kind}'`)
@@ -136,6 +142,8 @@ for (const [target, generated] of outputs) {
 
   if (previous === generated) {
     console.log(`Unchanged ${target}`);
+  } else if (process.argv.includes('--check')) {
+    throw new Error(`Outdated ${target}. Run npm run tools:generate:component-previews.`);
   } else {
     await writeFile(destination, generated);
     console.log(`Updated ${target}`);

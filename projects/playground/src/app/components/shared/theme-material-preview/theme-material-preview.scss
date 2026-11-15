@@ -230,6 +230,25 @@
     color: var(--bx-text-accent);
 }
 
+.orb-nest {
+    display: block;
+    flex: none;
+    margin-inline-start: auto;
+}
+
+.orb-nest-well {
+    display: block;
+    box-sizing: border-box;
+
+    /* IMPORTANT: Match the orb's fixed 52px interaction geometry independently of text scaling. */
+    inline-size: 56px;
+    block-size: 56px;
+    border: 1px solid color-mix(in srgb, var(--bx-primary) 25%, var(--bx-border-default));
+    border-radius: radius(pill);
+    background: color-mix(in srgb, var(--bx-bg-canvas) 70%, transparent);
+    box-shadow: inset 0 2px 6px color-mix(in srgb, var(--bx-text-primary) 8%, transparent);
+}
+
 .glass-spectrum {
     display: flex;
     gap: 2cqi;

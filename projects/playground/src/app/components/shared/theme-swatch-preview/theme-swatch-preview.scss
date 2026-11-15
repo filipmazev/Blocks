@@ -1,0 +1,110 @@
+@use 'core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.swatch-gallery {
+    --loupe-x: 50%;
+    --loupe-y: 50%;
+    --loupe-radius: 4.5rem;
+
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    border-radius: radius(lg);
+}
+
+.theme-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 6rem), 1fr));
+    gap: spacing(3);
+}
+
+.theme-swatch {
+    --bx-glass-opacity: 1;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: spacing(8);
+    min-inline-size: 0;
+    padding: spacing(4);
+    border: var(--bx-border-width) var(--bx-border-style) var(--bx-border-default);
+    border-radius: radius(lg);
+
+    strong {
+        padding-block-start: spacing(10);
+        font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+    }
+
+    span {
+        font-size: 0.75rem;
+        overflow-wrap: anywhere;
+    }
+}
+
+.theme-peek {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    pointer-events: none;
+    clip-path: circle(var(--loupe-radius) at var(--loupe-x) var(--loupe-y));
+    background: var(--bx-bg-canvas);
+}
+
+.peek-ring {
+    position: absolute;
+    inset-block-start: var(--loupe-y);
+
+    /* IMPORTANT: Pointer and clip-path positions use the physical left edge in both writing directions. */
+    left: var(--loupe-x);
+    inline-size: calc(var(--loupe-radius) * 2);
+    block-size: calc(var(--loupe-radius) * 2);
+    box-sizing: border-box;
+    border: 2px solid var(--bx-border-brand);
+    border-radius: radius(pill);
+    box-shadow: shadow(md);
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.is-peeking {
+    .theme-peek,
+    .peek-ring {
+        visibility: visible;
+    }
+}
+
+.theme-study-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(3);
+    margin-block-start: spacing(5);
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .swatch-gallery.is-peeking {
+        cursor: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .peek-ring {
+        border-color: Highlight;
+    }
+}
+
+@include respond-down(md) {
+    .theme-swatch {
+        padding: spacing(3);
+    }
+}

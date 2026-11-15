@@ -1,66 +1,123 @@
 <bx-page-container class="home-container" [showBreadcrumbs]="false" [autoResolveTitlesFromNavigation]="false">
     <bx-page-content>
-        <div #lightGarden>
+        <div #lightGarden class="light-garden">
             <header class="hero">
                 <div class="hero-content">
                     <h1>Build with <span>Blocks.</span></h1>
                     <p class="hero-subtitle">Angular components with shared theming and accessible controls.</p>
                     <div class="hero-actions">
                         <a bx-button variant="filled" color="primary" routerLink="/installation">Get started<bx-icon name="arrow-right" size="20" /></a>
+                        <a bx-button variant="tonal" color="primary" target="_blank" rel="noopener noreferrer" [href]="figmaLibraryUrl"
+                            >Figma library<bx-icon name="arrow-up-right" size="20"
+                        /></a>
                     </div>
                 </div>
                 <app-theme-material-preview />
             </header>
+            <app-light-orb [stage]="lightGardenElement().nativeElement" [cards]="lightGardenElement().nativeElement" />
 
-            <section class="features" aria-labelledby="features-title">
-                <div class="features-heading">
-                    <div class="features-title" [attr.data-bx-reduced-motion]="isReducedMotion()">
-                        <h2 id="features-title">Explore Blocks</h2>
-
-                        <p
-                            id="orb-instructions"
-                            class="orb-message"
-                            role="status"
-                            placement="top"
-                            [bxTooltip]="
-                                orb.isOrbHome()
-                                    ? 'Hover over the orb in its pod to wake it up. Once awake, drag it around to see its light fall on nearby surfaces.'
-                                    : ''
-                            "
-                            [class.is-home]="orb.isOrbHome()"
-                            [attr.tabindex]="orb.isOrbHome() ? 0 : null">
-                            <span class="mood-dot" aria-hidden="true" [class.is-disabled]="orb.isOrbHome()" [attr.data-mood]="orb.mood()"> </span>
-
-                            @for (message of [orb.message()]; track message) {
-                                <span class="orb-message-text">{{ message }}</span>
-                            }
+            <span id="orb-instructions" class="cdk-visually-hidden">Drag Orby to play, use arrow keys to move, or Escape to return home.</span>
+            <div class="home-sections showcase-sections">
+                <section class="showcase-section split-section" aria-labelledby="components-title">
+                    <div class="section-copy">
+                        <span class="eyebrow">01 / Components</span>
+                        <h2 id="components-title">Find the components you need.</h2>
+                        <p>
+                            {{ componentCount }} components and directives for forms, navigation, overlays, and more. Browse working examples and see how they
+                            fit into your application.
                         </p>
+                        <a bx-button variant="tonal" routerLink="/components">Explore components<bx-icon name="arrow-right" size="18" /></a>
                     </div>
+                    <div data-orb-stop class="component-study" aria-hidden="true">
+                        <bx-card
+                            class="meeting-study"
+                            title="Design review"
+                            subtitle="Meeting"
+                            bxSurface
+                            bxSurfaceGlassiness="auto"
+                            [surfaceEffects]="false"
+                            [bxSurfaceInteractive]="false">
+                            <div class="meeting-tags" inert>
+                                <bx-tag text="Design" color="accent" variant="tonal" [tooltipOnTruncate]="false" /><bx-tag
+                                    text="30 min"
+                                    color="neutral"
+                                    variant="tonal"
+                                    [tooltipOnTruncate]="false" />
+                            </div>
+                        </bx-card>
+                        <bx-alert class="meeting-notice" tone="success" message="Changes saved" [emissive]="false" />
+                        <bx-card class="meeting-guests" variant="elevated"><bx-icon name="users" size="20" /><strong>3</strong><span>Guests</span></bx-card>
+                        <bx-card class="time-study" bxSurface bxSurfaceGlassiness="auto" [surfaceEffects]="false" [bxSurfaceInteractive]="false">
+                            <div inert>
+                                <bx-time-picker
+                                    label="Meeting time"
+                                    subscriptSizing="dynamic"
+                                    [hourCycle]="24"
+                                    [minuteStep]="15"
+                                    [clearable]="false"
+                                    [value]="exampleTime" />
+                            </div>
+                        </bx-card>
+                    </div>
+                </section>
 
-                    <app-light-orb #orb [stage]="lightGardenElement().nativeElement" [cards]="featureGrid" />
-                </div>
-                <div #featureGrid class="feature-grid">
-                    @for (feature of features; track feature.title) {
-                        <a bxSurface bxSurfaceGlassiness="auto" bxSurfaceQuality="auto" class="feature-card" [routerLink]="feature.route"
-                            ><bx-icon size="24" color="text-accent" [name]="feature.icon" />
-                            @if (feature.icon === 'palette') {
-                                <span class="orb-nest" aria-hidden="true"><span class="orb-nest-well"></span><span class="orb-nest-label">Primary</span></span>
-                            }
-                            <h3>{{ feature.title }}</h3>
-                            <p>{{ feature.description }}</p>
-                            <span class="feature-link">Explore<bx-icon name="arrow-up-right" size="16" /></span>
-                        </a>
-                    }
-                </div>
-            </section>
+                <section class="showcase-section split-section" aria-labelledby="theming-title">
+                    <div class="section-copy">
+                        <span class="eyebrow">02 / Theme Studio</span>
+                        <h2 id="theming-title">Customize a shared theme.</h2>
+                        <p>
+                            Set colors, corners, spacing, and shadows in Theme Studio. Preview your changes across components, then export the theme for your
+                            application.
+                        </p>
+                        <a bx-button variant="tonal" routerLink="/studio">Explore Theme Studio<bx-icon name="arrow-right" size="18" /></a>
+                    </div>
+                    <app-theme-swatch-preview data-orb-stop />
+                </section>
+
+                <section class="showcase-section split-section" aria-labelledby="appearance-title">
+                    <div class="section-copy">
+                        <span class="eyebrow">03 / Appearance</span>
+                        <h2 id="appearance-title">Glass, light, and motion.</h2>
+                        <p>
+                            Adjust translucency, lighting, and motion from one place. Surfaces respond to your theme and accessibility preferences, including
+                            reduced motion and opaque materials.
+                        </p>
+                        <a bx-button variant="tonal" routerLink="/appearance">Explore appearance<bx-icon name="arrow-right" size="18" /></a>
+                    </div>
+                    <app-appearance-preview data-orb-stop [showcase]="true" />
+                </section>
+
+                <section class="showcase-section split-section" aria-labelledby="design-library-title">
+                    <div class="section-copy">
+                        <span class="eyebrow">04 / Design in Figma</span>
+                        <h2 id="design-library-title">Design with the<br />components you build.</h2>
+                        <p>
+                            Use the Blocks UI kit to work with components, shared tokens, and page layouts in Figma. Copy what you need or duplicate the kit
+                            into your own workspace.
+                        </p>
+                        <a bx-button variant="tonal" color="primary" target="_blank" rel="noopener noreferrer" [href]="figmaLibraryUrl"
+                            >Open the Figma library<bx-icon name="arrow-up-right" size="18"
+                        /></a>
+                    </div>
+                    <a
+                        data-orb-stop
+                        class="design-library-preview"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Preview the Blocks Angular UI kit in Figma"
+                        bxSurface
+                        bxSurfaceGlassiness="auto"
+                        [href]="figmaLibraryUrl">
+                        <app-figma-library-preview />
+                    </a>
+                </section>
+            </div>
         </div>
     </bx-page-content>
 
     <bx-page-footer class="home-footer">
         <span>Designed &amp; developed by Filip Mazev</span>
-
         <span>Blocks {{ version }}</span>
-
         <div class="footer-links">
             <a bx-button variant="text" color="primary" target="_blank" rel="noopener noreferrer" [href]="packageReleaseService.npmPackageUrl()"
                 >npm package <bx-icon name="arrow-up-right" size="16"

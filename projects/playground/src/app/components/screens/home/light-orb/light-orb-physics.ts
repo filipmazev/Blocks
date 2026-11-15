@@ -1,5 +1,8 @@
 import type { IOrbBounds } from '@playground/components/screens/home/light-orb/interfaces/iorb-bounds.interface';
 import type { IOrbPointerSample } from '@playground/components/screens/home/light-orb/interfaces/iorb-pointer-sample.interface';
+import type { IOrbGuidePoint } from '@playground/interfaces/iorb-guide-point.interface';
+
+import { MOTION_PRESETS, Spring } from '@filip.mazev/blocks/effects/runtime';
 export type OrbState = 'asleep' | 'waking' | 'flying' | 'coasting' | 'dragging' | 'falling' | 'recovering' | 'returning';
 export type OrbMood = 'primary' | 'success' | 'warn' | 'danger' | 'info';
 export type OrbWall = 'left' | 'right' | 'top' | 'bottom';
@@ -9,6 +12,11 @@ export type { IOrbPointerSample } from '@playground/components/screens/home/ligh
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 export class LightOrbPhysics {
+  private readonly guideX: Spring = new Spring(0, MOTION_PRESETS.soft);
+  private readonly guideY: Spring = new Spring(0, MOTION_PRESETS.soft);
+
+  /** Optional slow tour target; cleared as soon as the user takes control. */
+  public guideTarget: IOrbGuidePoint | undefined;
   public x: number = 0;
   public y: number = 0;
   public vx: number = 0;
@@ -217,6 +225,23 @@ export class LightOrbPhysics {
         this.age = 0;
       }
     } else if (this.state === 'flying' && this.mood !== 'danger') {
+      if (this.guideTarget) {
+        this.guideX.value = this.x;
+        this.guideY.value = this.y;
+        this.guideX.velocity = this.vx;
+        this.guideY.velocity = this.vy;
+        this.guideX.target = clamp(this.guideTarget.x, b.left, b.right);
+        this.guideY.target = clamp(this.guideTarget.y, b.top, b.bottom);
+        this.guideX.step(dt);
+        this.guideY.step(dt);
+        this.x = this.guideX.value;
+        this.y = this.guideY.value;
+        this.vx = this.guideX.velocity;
+        this.vy = this.guideY.velocity;
+
+        return;
+      }
+
       const width = b.right - b.left;
       const patrolX = b.left + width * (0.5 + Math.sin(this.clock * 0.48 + 0.8) * 0.4);
       const patrolY = clamp(b.cruiseY + Math.sin(this.clock * 0.9) * 48, b.top, b.bottom - 24);

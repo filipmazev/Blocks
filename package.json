@@ -4,6 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
+        "figma:prepare": "node tools/figma/prepare-community.mjs",
         "prebuild": "npm run tools:build-effects && npm run tools:generate-tokens && node tools/version-sync.mjs",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",

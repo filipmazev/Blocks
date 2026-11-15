@@ -1,0 +1,49 @@
+<div
+    #gallery
+    class="swatch-gallery"
+    [class.is-peeking]="active()"
+    (pointermove)="move($event)"
+    (pointerdown)="move($event)"
+    (pointerleave)="leave()"
+    (pointercancel)="leave()">
+    <div class="theme-swatches">
+        @for (role of roles; track role.token) {
+            <div
+                class="theme-swatch"
+                bxSurface
+                [bxSurfaceEmission]="false"
+                [style.--bx-glass-surface]="'var(' + role.token + ')'"
+                [style.--bx-glass-text]="'var(' + role.textColorToken + ')'">
+                <ng-container [ngTemplateOutlet]="sample" [ngTemplateOutletContext]="{ role }" />
+            </div>
+        }
+    </div>
+    <div class="theme-peek" aria-hidden="true" inert [style]="oppositeStyles()" [attr.data-theme]="opposite()">
+        <div class="theme-swatches">
+            @for (role of roles; track role.token) {
+                <div class="theme-swatch" [style.background]="'var(' + role.token + ')'" [style.color]="'var(' + role.textColorToken + ')'">
+                    <ng-container [ngTemplateOutlet]="sample" [ngTemplateOutletContext]="{ role }" />
+                </div>
+            }
+        </div>
+    </div>
+    <span class="peek-ring" aria-hidden="true"></span>
+</div>
+<div class="theme-study-footer">
+    <span>Theme preview</span>
+    <button
+        bx-button
+        variant="icon"
+        color="grayscale"
+        type="button"
+        [attr.aria-label]="label()"
+        [attr.aria-pressed]="pinned()"
+        [bxTooltip]="label()"
+        (click)="toggle()"
+        (keydown)="keydown($event)">
+        <bx-icon name="search" size="16" />
+    </button>
+</div>
+<ng-template #sample let-role="role">
+    <strong>Aa</strong><span>{{ role.label }}</span>
+</ng-template>

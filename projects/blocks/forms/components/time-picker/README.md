@@ -164,15 +164,6 @@ Inherited `errorMessages` accepts plain text, callbacks or translation keys. Sup
 `timeAvailability`, `timeLoading` and `timeStep`. Callback parameters include `format`, `hourCycle`, formatted bounds and configured steps. Omit
 `invalidSelectionLabel` to retain contextual errors.
 
-### Compatibility with the branch draft
-
-Time-range mode, segmented presentation and the preset sidebar are removed. Use separate TimePicker controls for time endpoints with application validation
-between them; use labeled `ITimePickerOption` entries in list mode for semantic choices. `TimePresetList` and the combined DateTimePicker component are removed.
-Core time-range/preset and date-time utilities remain available for application logic.
-
-`commitPolicy`, `applyLabel`, `cancelLabel` and `errorWrap` remain compatibility inputs without rendered footer actions. Programmatic `apply()` and `cancel()`
-remain available for draft integration; they do not delay automatic commits or undo values already committed.
-
 ## Playground
 
 The component is available at `/components/time-picker`; this guide describes the library contract and defaults.

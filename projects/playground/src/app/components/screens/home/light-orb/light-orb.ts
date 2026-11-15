@@ -16,12 +16,15 @@ import {
 } from '@angular/core';
 
 import type { IPointerSample } from '@playground/components/screens/home/light-orb/interfaces/ipointer-sample.interface';
+import type { IOrbGuidePoint } from '@playground/interfaces/iorb-guide-point.interface';
 
 import { BxA11yService, ThemingService } from '@filip.mazev/blocks/core';
-import { GlassScene, mountGlassScene } from '@filip.mazev/blocks/effects/runtime';
+import { GlassScene, mountGlassScene, subscribeFrame } from '@filip.mazev/blocks/effects/runtime';
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
+
+import { LightOrbGuide } from '@playground/classes/light-orb-guide';
 
 import { LightOrbPhysics, OrbMood, orbReleaseMotion, OrbState } from './light-orb-physics';
 
@@ -49,6 +52,7 @@ export class LightOrb {
   protected readonly isReducedMotion = inject(BxA11yService).isReducedMotion;
 
   private readonly physics: LightOrbPhysics = new LightOrbPhysics();
+  private readonly guide: LightOrbGuide = new LightOrbGuide();
 
   private readonly orb: Signal<ElementRef<HTMLButtonElement>> = viewChild.required<ElementRef<HTMLButtonElement>>('orb');
   private readonly plane: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('plane');
@@ -115,7 +119,12 @@ export class LightOrb {
   private events?: AbortController;
   private resize?: ResizeObserver;
   private intersection?: IntersectionObserver;
-  private frame?: number;
+  private stopFrame?: () => void;
+  private guideInterrupted: boolean = false;
+  private followTimer?: number;
+  private followPending: boolean = false;
+  private followTarget?: string;
+  private lastInteraction: number = -Infinity;
   private wakeTimer?: number;
   private lastTime?: number;
   private lastLight: number = -Infinity;
@@ -141,11 +150,33 @@ export class LightOrb {
     this.dirtyGeometry = true;
     this.start(true);
   };
+  private pageScrolled: (event: Event) => void = (event: Event): void => {
+    const target = event.target;
+    const stage = this.stage();
+
+    if (target !== stage.ownerDocument && !(target instanceof HTMLElement && target.contains(stage))) return;
+
+    this.invalidateGeometry();
+
+    if (!this.view || !this.motionEnabled || this.stayHome) return;
+
+    this.clearFollow();
+    this.followTimer = this.view.setTimeout(
+      () => {
+        this.followTimer = undefined;
+        this.measure();
+        this.followPending = true;
+        this.resumeFollowing();
+      },
+      Math.max(1500, 3500 - (performance.now() - this.lastInteraction))
+    );
+  };
   private visibilityChange: () => void = (): void => {
     if (!this.visible || this.stage().ownerDocument.hidden) {
       this.cancelDrag();
       this.stop();
       this.clearWake();
+      this.clearFollow();
     } else {
       this.dirtyGeometry = true;
       this.start(true);
@@ -156,6 +187,7 @@ export class LightOrb {
 
     this.stayHome = false;
     this.clearWake();
+    this.guide.reset();
     this.physics.wake();
     this.start();
   };
@@ -163,6 +195,7 @@ export class LightOrb {
     if (this.pointer !== undefined || !event.isPrimary || event.button !== 0) return;
 
     event.preventDefault();
+    this.interruptGuide();
 
     if (this.dirtyGeometry) this.measure();
 
@@ -247,8 +280,6 @@ export class LightOrb {
     this.start();
   };
   private tick: (time: number) => void = (time: number): void => {
-    this.frame = undefined;
-
     if (this.dirtyGeometry) this.measure();
 
     if (this.colorsDirty) this.readColors();
@@ -256,7 +287,10 @@ export class LightOrb {
     const elapsed = this.lastTime === undefined ? 1 / 60 : Math.min(0.15, (time - this.lastTime) / 1000);
 
     if (this.motionEnabled) {
+      this.physics.guideTarget =
+        this.guideInterrupted || this.physics.state !== 'flying' ? undefined : this.guide.step(elapsed, this.physics.x, this.physics.y);
       this.physics.step(elapsed);
+      this.resumeFollowing();
       this.ribbonTime += elapsed;
     }
 
@@ -273,7 +307,7 @@ export class LightOrb {
     if (state === 'asleep') this.scheduleWake();
 
     if (state !== 'asleep' || this.lightLevel > 0) this.start();
-    else this.lastTime = undefined;
+    else this.stop();
   };
 
   constructor() {
@@ -295,6 +329,7 @@ export class LightOrb {
           this.lightLevel = 0;
           this.stop();
           this.clearWake();
+          this.clearFollow();
         }
 
         this.start(true);
@@ -303,6 +338,7 @@ export class LightOrb {
     inject(DestroyRef).onDestroy(() => {
       this.stop();
       this.clearWake();
+      this.clearFollow();
       this.events?.abort();
       this.resize?.disconnect();
       this.intersection?.disconnect();
@@ -318,6 +354,7 @@ export class LightOrb {
   protected bringHome(): void {
     if (this.physics.mood === 'danger') return;
 
+    this.interruptGuide();
     this.stayHome = true;
     this.clearWake();
     this.cancelDrag();
@@ -332,6 +369,7 @@ export class LightOrb {
   protected toss(event: MouseEvent): void {
     if (event.detail !== 0 || !this.motionEnabled) return;
 
+    this.interruptGuide();
     this.clearWake();
 
     if (this.physics.state === 'asleep') this.physics.wake();
@@ -347,6 +385,7 @@ export class LightOrb {
       return;
     } else if (event.key.startsWith('Arrow')) {
       event.preventDefault();
+      this.interruptGuide();
       this.clearWake();
 
       const dx = event.key === 'ArrowLeft' ? -30 : event.key === 'ArrowRight' ? 30 : 0;
@@ -403,11 +442,27 @@ export class LightOrb {
     orb.addEventListener('pointerup', this.release, { signal });
     orb.addEventListener('pointercancel', this.cancelDrag, { signal });
     orb.addEventListener('lostpointercapture', this.cancelDrag, { signal });
-    orb.addEventListener('pointerenter', this.wake, { signal });
-    orb.addEventListener('focus', this.wake, { signal });
+    orb.addEventListener(
+      'pointerenter',
+      () => {
+        this.interruptGuide();
+        this.wake();
+      },
+      { signal }
+    );
+    orb.addEventListener(
+      'focus',
+      () => {
+        this.interruptGuide();
+        this.wake();
+      },
+      { signal }
+    );
     view.addEventListener('blur', this.cancelDrag, { signal });
     view.addEventListener('resize', this.invalidateGeometry, { signal, passive: true });
-    stage.ownerDocument.addEventListener('scroll', this.invalidateGeometry, {
+    view.visualViewport?.addEventListener('resize', this.invalidateGeometry, { signal, passive: true });
+    view.visualViewport?.addEventListener('scroll', this.invalidateGeometry, { signal, passive: true });
+    stage.ownerDocument.addEventListener('scroll', this.pageScrolled, {
       signal,
       capture: true,
       passive: true
@@ -416,6 +471,9 @@ export class LightOrb {
     this.resize = new ResizeObserver(this.invalidateGeometry);
     this.resize.observe(stage);
     this.resize.observe(this.cards());
+    this.stage()
+      .querySelectorAll<HTMLElement>('[data-orb-stop]')
+      .forEach((element) => this.resize?.observe(element));
     this.intersection = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === stage) this.visible = entry.isIntersecting;
@@ -438,6 +496,9 @@ export class LightOrb {
     const plane = this.plane().nativeElement.getBoundingClientRect();
     const cards = this.cards().getBoundingClientRect();
     const home = this.home?.getBoundingClientRect() ?? cards;
+
+    this.measureGuide(plane);
+
     const geometry = `${plane.left}:${plane.top}:${plane.width}:${plane.height}:${cards.left}:${cards.top}:${cards.width}:${cards.height}:${home.left}:${home.top}:${home.width}:${home.height}`;
 
     if (geometry === this.lastGeometry) {
@@ -491,18 +552,102 @@ export class LightOrb {
     if (pointer !== undefined && orb.hasPointerCapture(pointer)) orb.releasePointerCapture(pointer);
   }
 
+  private interruptGuide(): void {
+    this.lastInteraction = performance.now();
+    this.clearFollow();
+
+    if (this.guideInterrupted) return;
+
+    this.guideInterrupted = true;
+
+    const guided = this.physics.guideTarget !== undefined;
+
+    this.physics.guideTarget = undefined;
+
+    if (guided && this.physics.state === 'flying') this.physics.nudge(this.physics.vx, this.physics.vy, this.physics.spin);
+  }
+
+  private measureGuide(plane: DOMRect): void {
+    const viewport = this.view?.visualViewport;
+    const top = Math.max(0, viewport?.offsetTop ?? 0);
+    const bottom = top + (viewport?.height ?? this.view?.innerHeight ?? 0);
+    const points: IOrbGuidePoint[] = [];
+
+    let coverage = 0;
+
+    this.followTarget = undefined;
+
+    this.stage()
+      .querySelectorAll<HTMLElement>('[data-orb-stop]')
+      .forEach((element, index) => {
+        const rect = element.getBoundingClientRect();
+
+        if (rect.bottom < top + 64 || rect.top > bottom - 64) return;
+
+        const id = element.closest('section')?.getAttribute('aria-labelledby') ?? String(index);
+        const visibleHeight = Math.min(bottom, rect.bottom) - Math.max(top + 64, rect.top);
+
+        if (visibleHeight > coverage) {
+          coverage = visibleHeight;
+          this.followTarget = id;
+        }
+
+        points.push({
+          id,
+          x: Math.max(radius + 2, Math.min(plane.width - radius - 2, rect.left - plane.left + rect.width * (index % 2 === 0 ? 0.8 : 0.2))),
+          y: Math.max(top + 100, Math.min(bottom - 64, rect.top + 12)) - plane.top
+        });
+      });
+    this.guide.update(points);
+  }
+
+  private resumeFollowing(): void {
+    if (!this.followPending || !this.motionEnabled || !this.followTarget || this.stayHome || this.stage().ownerDocument.hidden) return;
+
+    if (
+      this.pointer !== undefined ||
+      ['dragging', 'falling', 'recovering', 'returning'].includes(this.physics.state) ||
+      ['danger', 'warn', 'info'].includes(this.physics.mood)
+    )
+      return;
+
+    if (this.orb().nativeElement.matches(':focus-visible')) return;
+
+    this.followPending = false;
+    this.guideInterrupted = false;
+    this.guide.focus(this.followTarget);
+    this.physics.guideTarget = undefined;
+
+    if (this.physics.state === 'asleep' || this.physics.state === 'coasting') this.physics.fly();
+
+    this.start();
+  }
+
+  private clearFollow(): void {
+    if (this.followTimer !== undefined) this.view?.clearTimeout(this.followTimer);
+
+    this.followTimer = undefined;
+    this.followPending = false;
+  }
+
   private start(force = false): void {
-    if (!this.view || this.frame !== undefined || !this.visible || this.stage().ownerDocument.hidden) return;
+    if (!this.view || this.stopFrame || !this.visible || this.stage().ownerDocument.hidden) return;
 
     if (!force && (!this.motionEnabled || (this.physics.state === 'asleep' && this.lightLevel === 0))) return;
 
-    this.frame = this.view.requestAnimationFrame(this.tick);
+    this.stopFrame = subscribeFrame((_delta, time) => {
+      this.tick(time);
+
+      if (!this.motionEnabled) this.stop();
+
+      return !!this.stopFrame;
+    });
   }
 
   private stop(): void {
-    if (this.frame !== undefined) this.view?.cancelAnimationFrame(this.frame);
-
-    this.frame = this.lastTime = undefined;
+    this.stopFrame?.();
+    this.stopFrame = undefined;
+    this.lastTime = undefined;
   }
 
   private clearWake(): void {

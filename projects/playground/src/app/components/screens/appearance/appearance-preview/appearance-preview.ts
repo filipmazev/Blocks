@@ -1,6 +1,6 @@
-import type { Signal, WritableSignal } from '@angular/core';
+import type { InputSignal, Signal, WritableSignal } from '@angular/core';
 
-import { afterNextRender, ChangeDetectionStrategy, Component, computed, DestroyRef, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal, viewChild } from '@angular/core';
 
 import type { IAppearancePreviewParksState } from '@playground/components/screens/appearance/appearance-preview/interfaces/iappearance-preview-parks-state.interface';
 
@@ -10,16 +10,19 @@ import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
 import { DropdownDirective, Menu, MenuItem, TruncateDirective } from '@filip.mazev/blocks/primitives';
 
+import { PreviewScrollDirective } from '@playground/directives/preview-scroll/preview-scroll.directive';
+
 import { PARK_ARTICLES } from './appearance-preview.data';
 
 @Component({
   selector: 'app-appearance-preview',
-  imports: [BxSurfaceDirective, Button, Icon, DropdownDirective, Menu, MenuItem, TruncateDirective],
+  imports: [BxSurfaceDirective, Button, Icon, DropdownDirective, Menu, MenuItem, TruncateDirective, PreviewScrollDirective],
   templateUrl: './appearance-preview.html',
   styleUrl: './appearance-preview.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'data-bx-light-scope': '',
+    '[class.is-showcase]': 'showcase()',
     '(pointerdown)': 'stopScrollHint()',
     '(wheel)': 'stopScrollHint()',
     '(keydown)': 'stopScrollHint()',
@@ -29,11 +32,12 @@ import { PARK_ARTICLES } from './appearance-preview.data';
 export class AppearancePreview {
   private readonly bxA11yService = inject(BxA11yService);
 
-  private readonly reader: Signal<ElementRef<HTMLElement>> = viewChild.required<ElementRef<HTMLElement>>('reader');
+  private readonly scrollHint: Signal<PreviewScrollDirective> = viewChild.required(PreviewScrollDirective);
 
   protected readonly search: WritableSignal<string> = signal('');
 
   protected readonly saved: WritableSignal<boolean> = signal(false);
+  protected readonly paused: WritableSignal<boolean> = signal(false);
 
   protected readonly parks: Signal<
     (
@@ -73,67 +77,11 @@ export class AppearancePreview {
     );
   });
 
-  private scrollHintCleanup?: () => void;
-
-  constructor() {
-    inject(DestroyRef).onDestroy(() => this.stopScrollHint());
-    effect(() => {
-      if (this.bxA11yService.isReducedMotion()) this.stopScrollHint();
-    });
-    afterNextRender(() => {
-      if (this.bxA11yService.isReducedMotion()) return;
-
-      const reader = this.reader().nativeElement;
-      const window = reader.ownerDocument.defaultView;
-
-      if (!window) return;
-
-      let timer: number | undefined;
-      let frame: number | undefined;
-
-      // Play once when visible, without moving the surrounding page or taking over user scrolling.
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (!entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5)) return;
-
-          observer.disconnect();
-          timer = window.setTimeout(() => {
-            if (reader.scrollTop !== 0 || this.bxA11yService.isReducedMotion()) return;
-
-            const distance = Math.min(280, reader.scrollHeight - reader.clientHeight);
-
-            if (distance <= 0) return;
-
-            const start = window.performance.now();
-            const animate = (now: number) => {
-              const progress = Math.min((now - start) / 2800, 1);
-
-              reader.scrollTop = (distance * (1 - Math.cos(progress * Math.PI * 2))) / 2;
-
-              if (progress < 1) frame = window.requestAnimationFrame(animate);
-              else this.stopScrollHint();
-            };
-
-            frame = window.requestAnimationFrame(animate);
-          }, 900);
-        },
-        { threshold: 0.5 }
-      );
-
-      this.scrollHintCleanup = () => {
-        observer.disconnect();
-        window.clearTimeout(timer);
-
-        if (frame !== undefined) window.cancelAnimationFrame(frame);
-      };
-
-      observer.observe(reader);
-    });
-  }
+  /** Present the journal as a decorative repeating glass showcase with a pause action. Defaults to false. */
+  public readonly showcase: InputSignal<boolean> = input(false);
 
   protected stopScrollHint(): void {
-    this.scrollHintCleanup?.();
-    this.scrollHintCleanup = undefined;
+    if (!this.showcase()) this.scrollHint().stop();
   }
 
   protected scrollTo(reader: HTMLElement, id?: string): void {

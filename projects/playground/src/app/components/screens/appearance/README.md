@@ -267,6 +267,10 @@ themingService.setApplicationTheme('dark');
 themingService.setApplicationTheme(null); // Follow the system appearance.
 ```
 
+The journal also appears on Home as a decorative glass showcase, with a shorter, repeating scroll and a pause/play action. The Home presentation holds “National
+Parks” beneath the search bar briefly before returning. Both pages use the shared `PreviewScrollDirective`; the interactive journal retains its one-time hint
+and stops it as soon as the user takes over.
+
 The Surfaces section places its Surface Appearance title beside the scrolling journal on wide layouts and above it on smaller screens. The padded pill slider
 sits below the demo, followed by its description; Reset restores surface preferences. Its Blocks Advanced settings disclosure contains rendering and glassiness
 options. Automatic and Baseline are the available rendering choices. Rendering, glassiness, translucency and reduced transparency are saved together in
