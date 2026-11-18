@@ -33,3 +33,6 @@ Use `bxStepContent` for deferred creation. The stepper supports eager, lazy-reta
 ## Playground
 
 Open `/components/stepper` for validated workflows and content/label customization.
+
+`iconTemplate` accepts a custom noninteractive marker visual. Data-driven steps use `IStepDefinition.iconTemplate`. The template overrides the ordinary
+icon/number; busy, error, completion and other semantic marker states retain priority.

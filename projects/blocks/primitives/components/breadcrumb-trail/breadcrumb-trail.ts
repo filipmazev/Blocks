@@ -1,4 +1,4 @@
-import type { InputSignal, OutputEmitterRef, Signal, WritableSignal } from '@angular/core';
+import type { InputSignal, OutputEmitterRef, Signal, TemplateRef, WritableSignal } from '@angular/core';
 
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -107,7 +107,9 @@ export class BreadcrumbTrail {
   public readonly config: InputSignal<IBreadcrumbTrailConfig> = input<IBreadcrumbTrailConfig>({});
   /** Translatable accessible name of the navigation region. Defaults to Breadcrumbs. */
   public readonly ariaLabel: InputSignal<ResolvableText> = input<ResolvableText>('Breadcrumbs');
-  /** Optional icon separator. Omission uses the separator text input. */
+  /** Optional custom noninteractive separator visual; takes precedence over the divider icon and separator text. */
+  public readonly dividerTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
+  /** Optional built-in icon separator when dividerTemplate is absent. */
   public readonly divider: InputSignal<IconName | undefined> = input<IconName | undefined>(undefined);
   /** Translatable separator text when divider is absent. Defaults to ›; separators are hidden from assistive technology. */
   public readonly separator: InputSignal<ResolvableText> = input<ResolvableText>('›');

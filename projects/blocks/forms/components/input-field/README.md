@@ -77,3 +77,6 @@ the frame. Prefix/suffix and rich errors can be projected directly into the conv
 
 Prefix/suffix content uses `--bx-field-adornment-padding` and `--bx-field-adornment-gap`, so text such as # and ID remains inset from the field edges.
 Supporting text uses `--bx-field-support-padding`.
+
+`bxIconStart` and `bxIconEnd` also project custom noninteractive visuals into the leading and trailing positions. Existing `bxPrefix` and `bxSuffix` remain
+supported. See the [custom icon slot guide](../../../primitives/directives/icon-content/README.md).

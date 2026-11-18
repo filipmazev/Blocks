@@ -1,3 +1,6 @@
+<ng-template #stepVisual>
+    <img src="blocks-app-icon.svg" width="20" height="20" alt="" />
+</ng-template>
 <bx-stepper
     [mode]="args().mode"
     [variant]="args().variant"
@@ -38,7 +41,8 @@
         [valid]="args().firstValid"
         [error]="args().firstError"
         [loading]="args().firstLoading"
-        [statusText]="args().firstStatusText">
+        [statusText]="args().firstStatusText"
+        [iconTemplate]="args().useIconTemplate ? stepVisual : undefined">
         <p>
             {{ args().content }}
         </p>

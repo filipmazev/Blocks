@@ -68,6 +68,10 @@ export class Tab {
   public readonly contentColor: InputSignal<Color | undefined> = input<Color>();
   /** Optional leading icon displayed with the label. Optional; omission leaves the value undefined. */
   public readonly icon: InputSignal<IconName | undefined> = input<IconName>();
+  /** Optional custom leading visual in the tab trigger; takes precedence over icon. Noninteractive content only. */
+  public readonly iconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
+  /** Optional custom trailing visual in the tab trigger; takes precedence over endIcon. Noninteractive content only. */
+  public readonly endIconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
   /** Optional trailing icon displayed after the label. Optional; omission leaves the value undefined. */
   public readonly endIcon: InputSignal<IconName | undefined> = input<IconName>();
 }

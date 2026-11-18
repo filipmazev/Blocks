@@ -597,7 +597,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           description: 'Projected example content. This is story content, not a component input.',
           defaultExpression: '"Icon"',
           defaultValue: 'Icon',
-          editor: 'text',
+          editor: 'documentation',
           required: false,
           nullable: false,
           optional: false,
@@ -607,9 +607,10 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           name: 'name',
           binding: 'name',
           kind: 'input',
-          type: '"a-arrow-down" | "a-arrow-up" | "a-large-small" | "accessibility" | "activity-square" | "activity" | "ad" | "air-vent" | "airplay" | "alarm-check" | "alarm-clock-check" | "alarm-clock-minus" | ... 2304 more ... | "zoom-out"',
-          description: 'Icon definition or registered Lucide icon name to render. Required input.',
-          defaultExpression: 'Required',
+          type: '"a-arrow-down" | "a-arrow-up" | "a-large-small" | "accessibility" | "activity-square" | "activity" | "ad" | "air-vent" | "airplay" | "alarm-check" | "alarm-clock-check" | "alarm-clock-minus" | ... 2305 more ... | undefined',
+          description:
+            'Icon definition or registered Lucide name. Optional when supplying projected content or contentTemplate; omission renders no built-in glyph.',
+          defaultExpression: 'undefined',
           options: [
             'a-arrow-down',
             'a-arrow-up',
@@ -2930,9 +2931,24 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
             'zoom-out'
           ],
           editor: 'select',
-          required: true,
+          required: false,
           nullable: false,
-          optional: false
+          optional: true
+        },
+        {
+          name: 'contentTemplate',
+          binding: 'contentTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description:
+            'Optional custom noninteractive visual inside the normal icon frame; takes precedence over name. Preserves size, color and decorative semantics.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
         },
         {
           name: 'size',
@@ -3762,12 +3778,37 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           nullable: false,
           optional: true,
           category: 'Accessibility'
+        },
+        {
+          name: 'useIconTemplate',
+          binding: 'useIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Render a custom visual through contentTemplate instead of the named glyph.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
-      args: { content: 'Icon', bgColor: 'auto', name: 'sparkles', size: 32, decorative: false, ariaLabel: 'Highlights', animated: true },
-      presets: [{ name: 'Default', args: {} }],
+      args: {
+        content: 'Icon',
+        bgColor: 'auto',
+        name: 'sparkles',
+        size: 32,
+        decorative: false,
+        ariaLabel: 'Highlights',
+        animated: true,
+        useIconTemplate: false
+      },
+      presets: [
+        { name: 'Default', args: {} },
+        { name: 'Custom icon template', args: { useIconTemplate: true } }
+      ],
       template:
-        '<bx-icon\n    [name]="args().name"\n    [size]="args().size"\n    [color]="args().color"\n    [bgColor]="args().bgColor"\n    [strokeWidth]="args().strokeWidth"\n    [animated]="args().animated"\n    [decorative]="args().decorative"\n    [ariaLabel]="args().ariaLabel">\n    {{ args().content }}\n</bx-icon>\n',
+        '<ng-template #customIcon>\n    <img src="blocks-app-icon.svg" alt="" [width]="args().size" [height]="args().size" />\n</ng-template>\n<bx-icon\n    [name]="args().name"\n    [size]="args().size"\n    [color]="args().color"\n    [bgColor]="args().bgColor"\n    [strokeWidth]="args().strokeWidth"\n    [animated]="args().animated"\n    [decorative]="args().decorative"\n    [ariaLabel]="args().ariaLabel"\n    [contentTemplate]="args().useIconTemplate ? customIcon : undefined" />\n',
       componentType: 'Icon',
       hasActions: false,
       source:
@@ -3941,12 +3982,18 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           optional: true
         }
       ],
-      args: { content: 'Workspace material', bxSurfaceTranslucency: 0.4, bxSurfaceGlassiness: 'auto', bxSurfaceLocalRefraction: false },
+      args: {
+        content: 'Workspace material',
+        bxSurfaceTranslucency: 0.4,
+        bxSurfaceGlassiness: 'auto',
+        bxSurfaceLocalRefraction: true,
+        bxSurfaceInteractive: true
+      },
       presets: [{ name: 'Default', args: {} }],
       template:
         '<div class="surface-scene">\n    <div class="surface-art" aria-hidden="true">\n        <bx-icon name="orbit" size="100" />\n        <bx-icon name="sparkles" size="56" />\n    </div>\n    <bx-alert\n        class="surface-light"\n        title="Live light source"\n        message="This alert illuminates the neighboring material."\n        [emissive]="true"\n        [emissionIntensity]="0.8" />\n    <section\n        class="surface-sample"\n        bxSurface\n        [bxSurfaceInteractive]="args().bxSurfaceInteractive"\n        [bxSurfaceTranslucency]="args().bxSurfaceTranslucency"\n        [bxSurfaceGlassiness]="args().bxSurfaceGlassiness"\n        [bxSurfaceLocalRefraction]="args().bxSurfaceLocalRefraction"\n        [bxSurfaceQuality]="args().bxSurfaceQuality"\n        [bxSurfaceEmission]="args().bxSurfaceEmission"\n        [bxSurfaceEmissionOrigin]="args().bxSurfaceEmissionOrigin"\n        [bxSurfaceEmissionStrength]="args().bxSurfaceEmissionStrength"\n        [bxSurfaceFocusEmission]="args().bxSurfaceFocusEmission"\n        [bxReducedTransparency]="args().bxReducedTransparency">\n        <h3>\n            {{ args().content }}\n        </h3>\n        <p>Move over this surface to inspect light, opacity and refraction.</p>\n        <button type="button" bx-button variant="tonal">Inspect material</button>\n    </section>\n</div>\n',
       styles:
-        '.surface-scene {\n    position: relative;\n    display: grid;\n    gap: 1rem;\n    padding: 1.5rem;\n    isolation: isolate;\n    background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-bg-element) 2rem 4rem);\n}\n\n.surface-art {\n    position: absolute;\n    inset: 25% 10%;\n    display: flex;\n    justify-content: space-between;\n    color: var(--bx-text-accent);\n    z-index: -1;\n}\n\n.surface-sample {\n    display: grid;\n    gap: 1rem;\n    padding: 1.5rem;\n    border: 1px solid var(--bx-border-default);\n    background: color-mix(in srgb, var(--bx-bg-surface) 55%, transparent);\n}\n',
+        "@use 'core/styles/helpers' as *;\n\n.surface-scene {\n    position: relative;\n    display: grid;\n    gap: spacing(4);\n    padding: spacing(6);\n    isolation: isolate;\n    box-sizing: border-box;\n    background: repeating-linear-gradient(\n        35deg,\n        var(--bx-bg-surface-alt) 0 2rem,\n        var(--bx-border-default) 2rem calc(2rem + 2px),\n        var(--bx-bg-element) calc(2rem + 2px) 4rem\n    );\n}\n\n.surface-art {\n    position: absolute;\n    inset: 0;\n    display: flex;\n    align-items: center;\n    justify-content: space-around;\n    color: var(--bx-text-accent);\n    pointer-events: none;\n}\n\n.surface-light {\n    position: relative;\n}\n\n.surface-sample {\n    display: grid;\n    gap: spacing(4);\n    min-inline-size: 0;\n    padding: spacing(6);\n    border: 1px solid var(--bx-border-default);\n    border-radius: radius(lg);\n    overflow-wrap: anywhere;\n}\n\n.surface-sample h3,\n.surface-sample p {\n    margin: 0;\n}\n\n.surface-sample button {\n    justify-self: start;\n    max-inline-size: 100%;\n    white-space: normal;\n}\n",
       componentType: 'BxSurfaceDirective',
       hasActions: false,
       source:
@@ -11770,7 +11817,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           type: 'Signal<IStepDefinition>',
           description: 'Current metadata snapshot consumed by the owning Stepper; content templates follow its lifecycle policy.',
           defaultExpression:
-            '() => ({\n    id: this.id(),\n    label: this.label(),\n    description: this.description(),\n    icon: this.icon(),\n    disabled: this.disabled(),\n    optional: this.optional(),\n    editable: this.editable(),\n    completed: this.completed(),\n    skipped: this.skipped(),\n    valid: this.valid(),\n    validation: this.validation(),\n    error: this.error(),\n    loading: this.loading(),\n    statusText: this.statusText(),\n    canExit: this.canExit(),\n    canEnter: this.canEnter(),\n    content: this.lazyContent()?.templateRef ?? this.directContent(),\n    labelTemplate: this.customLabel()?.templateRef\n  })',
+            '() => ({\n    id: this.id(),\n    label: this.label(),\n    description: this.description(),\n    icon: this.icon(),\n    iconTemplate: this.iconTemplate(),\n    disabled: this.disabled(),\n    optional: this.optional(),\n    editable: this.editable(),\n    completed: this.completed(),\n    skipped: this.skipped(),\n    valid: this.valid(),\n    validation: this.validation(),\n    error: this.error(),\n    loading: this.loading(),\n    statusText: this.statusText(),\n    canExit: this.canExit(),\n    canEnter: this.canEnter(),\n    content: this.lazyContent()?.templateRef ?? this.directContent(),\n    labelTemplate: this.customLabel()?.templateRef\n  })',
           editor: 'documentation',
           required: false,
           nullable: false,
@@ -11824,6 +11871,23 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           originalName: 'description',
           ownerType: 'Step',
           group: 'First step'
+        },
+        {
+          name: 'firstIconTemplate',
+          binding: 'firstIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom noninteractive marker visual; takes precedence over icon.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          originalName: 'iconTemplate',
+          ownerType: 'Step',
+          group: 'First step',
+          category: 'Template'
         },
         {
           name: 'firstIcon',
@@ -14354,7 +14418,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           type: 'Signal<IStepDefinition>',
           description: 'Current metadata snapshot consumed by the owning Stepper; content templates follow its lifecycle policy.',
           defaultExpression:
-            '() => ({\n    id: this.id(),\n    label: this.label(),\n    description: this.description(),\n    icon: this.icon(),\n    disabled: this.disabled(),\n    optional: this.optional(),\n    editable: this.editable(),\n    completed: this.completed(),\n    skipped: this.skipped(),\n    valid: this.valid(),\n    validation: this.validation(),\n    error: this.error(),\n    loading: this.loading(),\n    statusText: this.statusText(),\n    canExit: this.canExit(),\n    canEnter: this.canEnter(),\n    content: this.lazyContent()?.templateRef ?? this.directContent(),\n    labelTemplate: this.customLabel()?.templateRef\n  })',
+            '() => ({\n    id: this.id(),\n    label: this.label(),\n    description: this.description(),\n    icon: this.icon(),\n    iconTemplate: this.iconTemplate(),\n    disabled: this.disabled(),\n    optional: this.optional(),\n    editable: this.editable(),\n    completed: this.completed(),\n    skipped: this.skipped(),\n    valid: this.valid(),\n    validation: this.validation(),\n    error: this.error(),\n    loading: this.loading(),\n    statusText: this.statusText(),\n    canExit: this.canExit(),\n    canEnter: this.canEnter(),\n    content: this.lazyContent()?.templateRef ?? this.directContent(),\n    labelTemplate: this.customLabel()?.templateRef\n  })',
           editor: 'documentation',
           required: false,
           nullable: false,
@@ -14408,6 +14472,23 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           originalName: 'description',
           ownerType: 'Step',
           group: 'Second step'
+        },
+        {
+          name: 'secondIconTemplate',
+          binding: 'secondIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom noninteractive marker visual; takes precedence over icon.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          originalName: 'iconTemplate',
+          ownerType: 'Step',
+          group: 'Second step',
+          category: 'Template'
         },
         {
           name: 'secondIcon',
@@ -16930,6 +17011,19 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           originalName: 'canEnter',
           ownerType: 'Step',
           group: 'Second step'
+        },
+        {
+          name: 'useIconTemplate',
+          binding: 'useIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Custom iconTemplate for the first step marker; status feedback retains priority.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
@@ -16966,11 +17060,12 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         secondOptional: false,
         secondEditable: true,
         secondError: false,
-        secondLoading: false
+        secondLoading: false,
+        useIconTemplate: false
       },
       presets: [{ name: 'Default', args: {} }],
       template:
-        '<bx-stepper\n    [mode]="args().mode"\n    [variant]="args().variant"\n    [size]="args().size"\n    [orientation]="args().orientation"\n    [responsive]="args().responsive"\n    [showLabels]="args().showLabels"\n    [showDescriptions]="args().showDescriptions"\n    [indicatorInteractive]="args().indicatorInteractive"\n    [readOnly]="args().readOnly"\n    [readonly]="args().readonly"\n    [linear]="args().linear"\n    [selectionMode]="args().selectionMode"\n    [controls]="args().controls"\n    [contentPolicy]="args().contentPolicy"\n    [focusOnChange]="args().focusOnChange"\n    [progressValue]="args().progressValue"\n    [progressFormat]="args().progressFormat"\n    [showPercentage]="args().showPercentage"\n    [glassiness]="args().glassiness"\n    [surfaceEffects]="args().surfaceEffects"\n    [activeStep]="args().activeStep"\n    (stepRequested)="onAction(\'stepRequested\', $event)"\n    (selectionChanged)="onAction(\'selectionChanged\', $event)"\n    (transitionFinished)="onAction(\'transitionFinished\', $event)"\n    (completed)="onAction(\'completed\', $event)"\n    (activeStepChange)="onAction(\'activeStepChange\', $event)">\n    <bx-step\n        [id]="args().firstId"\n        [label]="args().firstLabel"\n        [description]="args().firstDescription"\n        [icon]="args().firstIcon"\n        [disabled]="args().firstDisabled"\n        [optional]="args().firstOptional"\n        [editable]="args().firstEditable"\n        [completed]="args().firstCompleted"\n        [skipped]="args().firstSkipped"\n        [valid]="args().firstValid"\n        [error]="args().firstError"\n        [loading]="args().firstLoading"\n        [statusText]="args().firstStatusText">\n        <p>\n            {{ args().content }}\n        </p>\n    </bx-step>\n    <bx-step\n        [id]="args().secondId"\n        [label]="args().secondLabel"\n        [description]="args().secondDescription"\n        [icon]="args().secondIcon"\n        [disabled]="args().secondDisabled"\n        [optional]="args().secondOptional"\n        [editable]="args().secondEditable"\n        [completed]="args().secondCompleted"\n        [skipped]="args().secondSkipped"\n        [valid]="args().secondValid"\n        [error]="args().secondError"\n        [loading]="args().secondLoading"\n        [statusText]="args().secondStatusText">\n        <p>Review your project</p>\n    </bx-step>\n</bx-stepper>\n',
+        '<ng-template #stepVisual>\n    <img src="blocks-app-icon.svg" width="20" height="20" alt="" />\n</ng-template>\n<bx-stepper\n    [mode]="args().mode"\n    [variant]="args().variant"\n    [size]="args().size"\n    [orientation]="args().orientation"\n    [responsive]="args().responsive"\n    [showLabels]="args().showLabels"\n    [showDescriptions]="args().showDescriptions"\n    [indicatorInteractive]="args().indicatorInteractive"\n    [readOnly]="args().readOnly"\n    [readonly]="args().readonly"\n    [linear]="args().linear"\n    [selectionMode]="args().selectionMode"\n    [controls]="args().controls"\n    [contentPolicy]="args().contentPolicy"\n    [focusOnChange]="args().focusOnChange"\n    [progressValue]="args().progressValue"\n    [progressFormat]="args().progressFormat"\n    [showPercentage]="args().showPercentage"\n    [glassiness]="args().glassiness"\n    [surfaceEffects]="args().surfaceEffects"\n    [activeStep]="args().activeStep"\n    (stepRequested)="onAction(\'stepRequested\', $event)"\n    (selectionChanged)="onAction(\'selectionChanged\', $event)"\n    (transitionFinished)="onAction(\'transitionFinished\', $event)"\n    (completed)="onAction(\'completed\', $event)"\n    (activeStepChange)="onAction(\'activeStepChange\', $event)">\n    <bx-step\n        [id]="args().firstId"\n        [label]="args().firstLabel"\n        [description]="args().firstDescription"\n        [icon]="args().firstIcon"\n        [disabled]="args().firstDisabled"\n        [optional]="args().firstOptional"\n        [editable]="args().firstEditable"\n        [completed]="args().firstCompleted"\n        [skipped]="args().firstSkipped"\n        [valid]="args().firstValid"\n        [error]="args().firstError"\n        [loading]="args().firstLoading"\n        [statusText]="args().firstStatusText"\n        [iconTemplate]="args().useIconTemplate ? stepVisual : undefined">\n        <p>\n            {{ args().content }}\n        </p>\n    </bx-step>\n    <bx-step\n        [id]="args().secondId"\n        [label]="args().secondLabel"\n        [description]="args().secondDescription"\n        [icon]="args().secondIcon"\n        [disabled]="args().secondDisabled"\n        [optional]="args().secondOptional"\n        [editable]="args().secondEditable"\n        [completed]="args().secondCompleted"\n        [skipped]="args().secondSkipped"\n        [valid]="args().secondValid"\n        [error]="args().secondError"\n        [loading]="args().secondLoading"\n        [statusText]="args().secondStatusText">\n        <p>Review your project</p>\n    </bx-step>\n</bx-stepper>\n',
       componentType: 'Stepper',
       hasActions: true,
       source:
@@ -20751,6 +20846,40 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           originalName: 'icon',
           ownerType: 'Tab',
           group: 'First tab'
+        },
+        {
+          name: 'firstIconTemplate',
+          binding: 'firstIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom leading visual in the tab trigger; takes precedence over icon. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          originalName: 'iconTemplate',
+          ownerType: 'Tab',
+          group: 'First tab',
+          category: 'Template'
+        },
+        {
+          name: 'firstEndIconTemplate',
+          binding: 'firstEndIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom trailing visual in the tab trigger; takes precedence over endIcon. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          originalName: 'endIconTemplate',
+          ownerType: 'Tab',
+          group: 'First tab',
+          category: 'Template'
         },
         {
           name: 'firstEndIcon',
@@ -26774,6 +26903,40 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           group: 'Second tab'
         },
         {
+          name: 'secondIconTemplate',
+          binding: 'secondIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom leading visual in the tab trigger; takes precedence over icon. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          originalName: 'iconTemplate',
+          ownerType: 'Tab',
+          group: 'Second tab',
+          category: 'Template'
+        },
+        {
+          name: 'secondEndIconTemplate',
+          binding: 'secondEndIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom trailing visual in the tab trigger; takes precedence over endIcon. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          originalName: 'endIconTemplate',
+          ownerType: 'Tab',
+          group: 'Second tab',
+          category: 'Template'
+        },
+        {
           name: 'secondEndIcon',
           binding: 'secondEndIcon',
           kind: 'input',
@@ -29106,6 +29269,32 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           originalName: 'endIcon',
           ownerType: 'Tab',
           group: 'Second tab'
+        },
+        {
+          name: 'useIconTemplate',
+          binding: 'useIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Custom iconTemplate on the first tab.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
+        },
+        {
+          name: 'useEndIconTemplate',
+          binding: 'useEndIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Custom endIconTemplate on the first tab.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
@@ -29119,14 +29308,16 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         firstColor: 'primary',
         secondLabel: 'Details',
         secondDisabled: false,
-        secondColor: 'primary'
+        secondColor: 'primary',
+        useIconTemplate: false,
+        useEndIconTemplate: false
       },
       presets: [
         { name: 'Default', args: {} },
         { name: 'Underline', args: { variant: 'underline' } }
       ],
       template:
-        '<bx-tabs\n    [variant]="args().variant"\n    [ariaLabel]="args().ariaLabel"\n    [dragSelection]="args().dragSelection"\n    [selectedValue]="args().selectedValue"\n    (selectedValueChange)="onAction(\'selectedValueChange\', $event)">\n    <bx-tab\n        [label]="args().firstLabel"\n        [disabled]="args().firstDisabled"\n        [color]="args().firstColor"\n        [textColor]="args().firstTextColor"\n        [highlightColor]="args().firstHighlightColor"\n        [contentColor]="args().firstContentColor"\n        [icon]="args().firstIcon"\n        [endIcon]="args().firstEndIcon">\n        <ng-template bxTabContent>Project overview</ng-template>\n    </bx-tab>\n    <bx-tab\n        [label]="args().secondLabel"\n        [disabled]="args().secondDisabled"\n        [color]="args().secondColor"\n        [textColor]="args().secondTextColor"\n        [highlightColor]="args().secondHighlightColor"\n        [contentColor]="args().secondContentColor"\n        [icon]="args().secondIcon"\n        [endIcon]="args().secondEndIcon">\n        <ng-template bxTabContent>Workspace settings</ng-template>\n    </bx-tab>\n</bx-tabs>\n',
+        '<ng-template #tabVisual>\n    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />\n</ng-template>\n<ng-template #tabEnd>\n    <span aria-hidden="true">Pro</span>\n</ng-template>\n<bx-tabs\n    [variant]="args().variant"\n    [ariaLabel]="args().ariaLabel"\n    [dragSelection]="args().dragSelection"\n    [selectedValue]="args().selectedValue"\n    (selectedValueChange)="onAction(\'selectedValueChange\', $event)">\n    <bx-tab\n        [label]="args().firstLabel"\n        [disabled]="args().firstDisabled"\n        [color]="args().firstColor"\n        [textColor]="args().firstTextColor"\n        [highlightColor]="args().firstHighlightColor"\n        [contentColor]="args().firstContentColor"\n        [icon]="args().firstIcon"\n        [endIcon]="args().firstEndIcon"\n        [iconTemplate]="args().useIconTemplate ? tabVisual : undefined"\n        [endIconTemplate]="args().useEndIconTemplate ? tabEnd : undefined">\n        <ng-template bxTabContent>Project overview</ng-template>\n    </bx-tab>\n    <bx-tab\n        [label]="args().secondLabel"\n        [disabled]="args().secondDisabled"\n        [color]="args().secondColor"\n        [textColor]="args().secondTextColor"\n        [highlightColor]="args().secondHighlightColor"\n        [contentColor]="args().secondContentColor"\n        [icon]="args().secondIcon"\n        [endIcon]="args().secondEndIcon">\n        <ng-template bxTabContent>Workspace settings</ng-template>\n    </bx-tab>\n</bx-tabs>\n',
       componentType: 'Tabs',
       hasActions: true,
       source:
@@ -29512,7 +29703,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_36
+          schema: schemas.DEMO_SCHEMA_35
         },
         {
           name: 'rightSwipeActions',
@@ -29527,7 +29718,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_36
+          schema: schemas.DEMO_SCHEMA_35
         },
         {
           name: 'swipePreviousLabel',
@@ -29582,7 +29773,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_37
+          schema: schemas.DEMO_SCHEMA_36
         },
         {
           name: 'swipeCompletion',
@@ -29961,7 +30152,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
       template:
         '<div\n    #swipeRow="bxSwipeActions"\n    bxSwipeActions\n    class="mail-row"\n    [swipeDismissFocus]="restoreFocus"\n    [swipeDisabled]="args().swipeDisabled"\n    [swipeLoading]="args().swipeLoading"\n    [leftSwipeActions]="args().leftSwipeActions"\n    [rightSwipeActions]="args().rightSwipeActions"\n    [swipePreviousLabel]="args().swipePreviousLabel"\n    [swipeNextLabel]="args().swipeNextLabel"\n    [swipeTooltipDwell]="args().swipeTooltipDwell"\n    [swipeFullAction]="args().swipeFullAction"\n    [swipeCompletion]="args().swipeCompletion"\n    [swipeRetryLabel]="args().swipeRetryLabel"\n    [swipeLoadingLabel]="args().swipeLoadingLabel"\n    [swipeCompletedLabel]="args().swipeCompletedLabel"\n    [attr.dir]="args().direction"\n    [style.inline-size.px]="args().rowWidth"\n    (swipeDismissed)="onAction(\'swipeDismissed\', $event)"\n    (swipeAction)="onAction(\'swipeAction\', $event); $event.action.id === \'read\' && onAction(\'rowUnreadChange\', !args().rowUnread)"\n    (swipeActionError)="onAction(\'swipeActionError\', $event)">\n    <button\n        type="button"\n        class="message-row"\n        [disabled]="args().swipeDisabled || args().swipeLoading"\n        [attr.aria-label]="args().rowLabel"\n        [attr.aria-describedby]="\'swipe-preview-status\'"\n        (click)="onAction(\'rowOpen\', $event)">\n        <span bxSwipeContent class="message-copy">\n            <span class="message-meta">\n                <span class="unread-dot" aria-hidden="true" [hidden]="!args().rowUnread"> </span>\n                <span class="message-time" id="swipe-preview-status"> {{ args().rowUnread ? \'Unread\' : \'Read\' }} · Today</span>\n            </span>\n            <strong class="message-heading">\n                {{ args().rowLabel }}\n            </strong>\n            <span class="message-subject">\n                {{ args().rowSubject }}\n            </span>\n            <span class="message-preview">\n                {{ args().rowPreview }}\n            </span>\n        </span>\n    </button>\n</div>\n<span #restoreFocus>\n    <button bx-button type="button" variant="tonal" (click)="swipeRow.restoreSwipeRow()">Restore row</button>\n</span>\n',
       styles:
-        "@use '@filip.mazev/blocks/core/styles/helpers' as *;\n\n.mail-row {\n    display: block;\n    min-inline-size: 0;\n    max-inline-size: 100%;\n    border-radius: var(--bx-swipe-row-radius, #{radius(lg)});\n}\n\n.message-row {\n    display: block;\n    inline-size: 100%;\n    padding: spacing(3) spacing(4);\n    border: 0;\n    border-radius: inherit;\n    font: inherit;\n    text-align: start;\n    color: var(--bx-text-primary);\n    background: transparent;\n    cursor: pointer;\n\n    &:hover:not(:disabled) {\n        background: var(--bx-bg-element-hover);\n    }\n\n    &:active:not(:disabled) {\n        background: var(--bx-bg-element-active);\n    }\n\n    &:focus-visible {\n        outline: var(--bx-border-width) solid var(--bx-border-brand);\n        outline-offset: calc(-1 * var(--bx-border-width));\n    }\n\n    &:disabled {\n        opacity: 0.55;\n        cursor: default;\n    }\n}\n\n.message-copy {\n    display: flex;\n    flex-direction: column;\n    gap: spacing(1);\n    min-inline-size: 0;\n}\n\n.message-meta {\n    display: flex;\n    align-items: center;\n    gap: spacing(2);\n    margin-block-end: spacing(1);\n}\n\n.message-time {\n    margin-inline-start: auto;\n}\n\n.message-time,\n.message-preview {\n    color: var(--bx-text-secondary);\n    font-size: 0.75rem;\n}\n\n.message-heading,\n.message-subject,\n.message-preview {\n    display: block;\n    max-inline-size: 100%;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n\n.unread-dot {\n    flex: none;\n    inline-size: spacing(2);\n    block-size: spacing(2);\n    border-radius: radius(pill);\n    background: var(--bx-color-blue-500);\n\n    &[hidden] {\n        display: none;\n    }\n}\n\n@media (forced-colors: active) {\n    .unread-dot {\n        background: Highlight;\n    }\n}\n",
+        "@use '@filip.mazev/blocks/core/styles/helpers' as *;\n\n.mail-row {\n    display: block;\n    min-inline-size: 0;\n    max-inline-size: 100%;\n    border-radius: var(--bx-swipe-row-radius, #{radius(lg)});\n}\n\n.message-row {\n    display: block;\n    inline-size: 100%;\n    padding: spacing(3) spacing(4);\n    border: 0;\n    border-radius: inherit;\n    font: inherit;\n    text-align: start;\n    color: var(--bx-text-primary);\n    background: transparent;\n    cursor: pointer;\n\n    &:hover:not(:disabled) {\n        background: var(--bx-bg-element-hover);\n    }\n\n    &:active:not(:disabled) {\n        background: var(--bx-bg-element-active);\n    }\n\n    &:focus-visible {\n        outline: var(--bx-border-width) solid var(--bx-border-brand);\n        outline-offset: calc(-1 * var(--bx-border-width));\n    }\n\n    &:disabled {\n        opacity: 0.55;\n        cursor: default;\n    }\n}\n\n.message-copy {\n    display: flex;\n    flex-direction: column;\n    gap: spacing(1);\n    min-inline-size: 0;\n}\n\n.message-meta {\n    display: flex;\n    align-items: center;\n    gap: spacing(2);\n    margin-block-end: spacing(1);\n}\n\n.message-time {\n    margin-inline-start: auto;\n}\n\n.message-time,\n.message-preview {\n    color: var(--bx-text-secondary);\n    font-size: 0.75rem;\n}\n\n.message-heading,\n.message-subject,\n.message-preview {\n    display: block;\n    max-inline-size: 100%;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n\n.unread-dot {\n    flex: none;\n    inline-size: spacing(2);\n    block-size: spacing(2);\n    border-radius: radius(pill);\n    background: var(--bx-color-blue-500);\n\n    &[hidden] {\n        display: none;\n    }\n}\n\n@media (forced-colors: active) {\n    .unread-dot {\n        background: Highlight;\n    }\n}\n\n.message-row[data-bx-swipe-active='true']:not(:disabled, :active) {\n    background: var(--bx-bg-element-hover);\n}\n",
       componentType: 'SwipeActionsDirective',
       hasActions: true,
       source:
@@ -29982,7 +30173,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           description: 'Projected example content. This is story content, not a component input.',
           defaultExpression: '"Menu item"',
           defaultValue: 'Menu item',
-          editor: 'text',
+          editor: 'documentation',
           required: false,
           nullable: false,
           optional: false,
@@ -32330,6 +32521,34 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: true
+        },
+        {
+          name: 'iconTemplate',
+          binding: 'iconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom leading visual; takes precedence over icon and yields to the loading spinner. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
+          name: 'endIconTemplate',
+          binding: 'endIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom trailing visual; takes precedence over endIcon. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
         },
         {
           name: 'endIcon',
@@ -34778,6 +34997,32 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false
+        },
+        {
+          name: 'useIconTemplate',
+          binding: 'useIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Replace the leading icon through iconTemplate.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
+        },
+        {
+          name: 'useEndIconTemplate',
+          binding: 'useEndIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Replace the trailing icon through endIconTemplate.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
@@ -34788,11 +35033,16 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         tooltipOnTruncate: true,
         disabled: false,
         loading: false,
-        danger: false
+        danger: false,
+        useIconTemplate: false,
+        useEndIconTemplate: false
       },
-      presets: [{ name: 'Default', args: {} }],
+      presets: [
+        { name: 'Default', args: {} },
+        { name: 'Custom icon templates', args: { useIconTemplate: true, useEndIconTemplate: true } }
+      ],
       template:
-        '<bx-menu-item\n    [icon]="args().icon"\n    [endIcon]="args().endIcon"\n    [label]="args().label"\n    [ariaLabel]="args().ariaLabel"\n    [wrapLabel]="args().wrapLabel"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    [disabled]="args().disabled"\n    [loading]="args().loading"\n    [danger]="args().danger"\n    [shortcut]="args().shortcut"\n    (action)="onAction(\'action\', $event)">\n    {{ args().content }}\n</bx-menu-item>\n',
+        '<ng-template #startIcon>\n    <img src="blocks-app-icon.svg" width="20" height="20" alt="" />\n</ng-template>\n<ng-template #endIcon>\n    <span aria-hidden="true">Pro</span>\n</ng-template>\n<bx-menu-item\n    [icon]="args().icon"\n    [endIcon]="args().endIcon"\n    [label]="args().label"\n    [ariaLabel]="args().ariaLabel"\n    [wrapLabel]="args().wrapLabel"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    [disabled]="args().disabled"\n    [loading]="args().loading"\n    [danger]="args().danger"\n    [shortcut]="args().shortcut"\n    [iconTemplate]="args().useIconTemplate ? startIcon : undefined"\n    [endIconTemplate]="args().useEndIconTemplate ? endIcon : undefined"\n    (action)="onAction(\'action\', $event)" />\n',
       componentType: 'MenuItem',
       hasActions: true,
       source:
@@ -35683,6 +35933,19 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           optional: true
         },
         {
+          name: 'resizeInitialWidth',
+          binding: 'resizeInitialWidth',
+          kind: 'input',
+          type: 'number | undefined',
+          description:
+            'Optional original width in CSS pixels for double-click/Enter reset and shrink prevention, constrained by current resize bounds.\nOmission captures the rendered width at the first gesture. Supply a fixed value when width restores a saved preference.',
+          defaultExpression: 'undefined',
+          editor: 'number',
+          required: false,
+          nullable: false,
+          optional: true
+        },
+        {
           name: 'resizeDisableShrink',
           binding: 'resizeDisableShrink',
           kind: 'input',
@@ -35919,7 +36182,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
       },
       presets: [{ name: 'Default', args: {} }],
       template:
-        '<bx-side-panel-layout style="block-size: 26rem">\n    <bx-side-panel\n        [open]="args().open"\n        [placement]="args().placement"\n        [width]="args().width"\n        [resizable]="args().resizable"\n        [resizeMinWidth]="args().resizeMinWidth"\n        [resizeMaxWidth]="args().resizeMaxWidth"\n        [resizeDisableShrink]="args().resizeDisableShrink"\n        [resizeLabel]="args().resizeLabel"\n        [resizeIdleDelay]="args().resizeIdleDelay"\n        [layoutMode]="args().layoutMode"\n        [backdrop]="args().backdrop"\n        [closeOnBackdrop]="args().closeOnBackdrop"\n        [closeOnEscape]="args().closeOnEscape"\n        [showCloseButton]="args().showCloseButton"\n        [ariaLabel]="args().ariaLabel"\n        [closeLabel]="args().closeLabel"\n        [labelledBy]="args().labelledBy"\n        [autoFocus]="args().autoFocus"\n        [restoreFocus]="args().restoreFocus"\n        [animationDuration]="args().animationDuration"\n        (openChange)="onAction(\'openChange\', $event)"\n        (widthChange)="onAction(\'widthChange\', $event)">\n        {{ args().content }}\n    </bx-side-panel>\n    <div class="panel-scene-content">\n        <button type="button" bx-button variant="tonal" (click)="onAction(\'openChange\', true)"><bx-icon name="panel-right-open" />Open panel</button>\n        <p>Project content remains available beside the panel.</p>\n    </div>\n</bx-side-panel-layout>\n',
+        '<bx-side-panel-layout style="block-size: 26rem">\n    <bx-side-panel\n        [open]="args().open"\n        [placement]="args().placement"\n        [width]="args().width"\n        [resizable]="args().resizable"\n        [resizeMinWidth]="args().resizeMinWidth"\n        [resizeMaxWidth]="args().resizeMaxWidth"\n        [resizeInitialWidth]="args().resizeInitialWidth"\n        [resizeDisableShrink]="args().resizeDisableShrink"\n        [resizeLabel]="args().resizeLabel"\n        [resizeIdleDelay]="args().resizeIdleDelay"\n        [layoutMode]="args().layoutMode"\n        [backdrop]="args().backdrop"\n        [closeOnBackdrop]="args().closeOnBackdrop"\n        [closeOnEscape]="args().closeOnEscape"\n        [showCloseButton]="args().showCloseButton"\n        [ariaLabel]="args().ariaLabel"\n        [closeLabel]="args().closeLabel"\n        [labelledBy]="args().labelledBy"\n        [autoFocus]="args().autoFocus"\n        [restoreFocus]="args().restoreFocus"\n        [animationDuration]="args().animationDuration"\n        (openChange)="onAction(\'openChange\', $event)"\n        (widthChange)="onAction(\'widthChange\', $event)">\n        {{ args().content }}\n    </bx-side-panel>\n    <div class="panel-scene-content">\n        <button type="button" bx-button variant="tonal" (click)="onAction(\'openChange\', true)"><bx-icon name="panel-right-open" />Open panel</button>\n        <p>Project content remains available beside the panel.</p>\n    </div>\n</bx-side-panel-layout>\n',
       styles: '.panel-scene-content {\n    display: grid;\n    gap: 1rem;\n    padding: 1rem;\n}\n',
       componentType: 'SidePanel',
       hasActions: true,
@@ -36154,7 +36417,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_39
+          schema: schemas.DEMO_SCHEMA_38
         },
         {
           name: 'trackBy',
@@ -36465,6 +36728,32 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: true
+        },
+        {
+          name: 'customStartIcon',
+          binding: 'customStartIcon',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Project a custom logo with bxIconStart, including measured loading feedback.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
+        },
+        {
+          name: 'customEndIcon',
+          binding: 'customEndIcon',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Project custom trailing content with bxIconEnd.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
@@ -36477,7 +36766,9 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         disabled: false,
         loading: false,
         interactive: true,
-        surfaceEffects: true
+        surfaceEffects: true,
+        customStartIcon: false,
+        customEndIcon: false
       },
       presets: [
         { name: 'Default', args: {} },
@@ -36485,15 +36776,16 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         { name: 'With icon', args: { icon: 'save' } },
         { name: 'Icon only', args: { icon: 'save', variant: 'icon' } },
         { name: 'Capsule', args: { icon: 'save', variant: 'filled', shape: 'capsule' } },
+        { name: 'Custom projected icons', args: { customStartIcon: true, customEndIcon: true } },
         { name: 'Loading', args: { loading: true } },
         { name: 'Disabled', args: { disabled: true } }
       ],
       template:
-        '<button\n    type="button"\n    bx-button\n    [variant]="args().variant"\n    [shape]="args().shape"\n    [color]="args().color"\n    [outlined]="args().outlined"\n    [elevated]="args().elevated"\n    [disabled]="args().disabled"\n    [loading]="args().loading"\n    [interactive]="args().interactive"\n    [surfaceEffects]="args().surfaceEffects"\n    [glassiness]="args().glassiness"\n    [attr.aria-label]="args().content"\n    (click)="onAction(\'click\', $event)">\n    @if (args().icon; as icon) {\n        <bx-icon [name]="icon" />\n    }\n    @if (args().variant !== \'icon\' && args().shape !== \'capsule\') {\n        {{ args().content }}\n    }\n</button>\n',
+        '<button\n    type="button"\n    bx-button\n    [variant]="args().variant"\n    [shape]="args().shape"\n    [color]="args().color"\n    [outlined]="args().outlined"\n    [elevated]="args().elevated"\n    [disabled]="args().disabled"\n    [loading]="args().loading"\n    [interactive]="args().interactive"\n    [surfaceEffects]="args().surfaceEffects"\n    [glassiness]="args().glassiness"\n    [attr.aria-label]="args().content"\n    (click)="onAction(\'click\', $event)">\n    @if (args().customStartIcon) {\n        <img bxIconStart src="blocks-app-icon.svg" width="20" height="20" alt="" />\n    } @else if (args().icon; as icon) {\n        <bx-icon [name]="icon" />\n    }\n    @if (args().variant !== \'icon\' && args().shape !== \'capsule\') {\n        {{ args().content }}\n    }\n    @if (args().customEndIcon) {\n        <span bxIconEnd aria-hidden="true">Pro</span>\n    }\n</button>\n',
       componentType: 'Button',
       hasActions: true,
       source:
-        "import type { WritableSignal } from '@angular/core';\n\nimport { ChangeDetectionStrategy, Component, signal } from '@angular/core';\n\nimport { Button } from '@filip.mazev/blocks/forms';\nimport { Icon } from '@filip.mazev/blocks/icons';\n@Component({ selector: 'app-example', imports: [Button, Icon], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './example.html' })\nexport class Example {\n  public readonly __FIELDS__: WritableSignal<unknown> = signal<unknown>(undefined);\n}\n"
+        "import type { WritableSignal } from '@angular/core';\n\nimport { ChangeDetectionStrategy, Component, signal } from '@angular/core';\n\nimport { Button } from '@filip.mazev/blocks/forms';\nimport { Icon } from '@filip.mazev/blocks/icons';\nimport { IconContentDirective } from '@filip.mazev/blocks/primitives';\n@Component({\n  selector: 'app-example',\n  imports: [Button, Icon, IconContentDirective],\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  templateUrl: './example.html'\n})\nexport class Example {\n  public readonly __FIELDS__: WritableSignal<unknown> = signal<unknown>(undefined);\n}\n"
     },
     load: () => import('@playground/generated/demo-stories/components/button/button-story').then((module) => module.ButtonStory)
   },
@@ -37957,7 +38249,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: true,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_40
+          schema: schemas.DEMO_SCHEMA_39
         },
         {
           name: 'isReadonly',
@@ -38670,7 +38962,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           description: 'Projected example content. This is story content, not a component input.',
           defaultExpression: '"Date picker"',
           defaultValue: 'Date picker',
-          editor: 'text',
+          editor: 'documentation',
           required: false,
           nullable: false,
           optional: false,
@@ -38691,11 +38983,25 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           optional: false
         },
         {
+          name: 'pickerIconTemplate',
+          binding: 'pickerIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom noninteractive visual for the picker action; takes precedence over pickerIcon and preserves busy feedback.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
           name: 'pickerIcon',
           binding: 'pickerIcon',
           kind: 'input',
           type: '"a-arrow-down" | "a-arrow-up" | "a-large-small" | "accessibility" | "activity-square" | "activity" | "ad" | "air-vent" | "airplay" | "alarm-check" | "alarm-clock-check" | "alarm-clock-minus" | ... 2304 more ... | "zoom-out"',
-          description: "Icon on the field's picker action. Defaults to 'calendar'; accepts any Blocks icon name.",
+          description: 'Built-in picker icon, used when pickerIconTemplate is absent.',
           defaultExpression: "'calendar'",
           defaultValue: 'calendar',
           options: [
@@ -42662,10 +42968,24 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false
+        },
+        {
+          name: 'usePickerIconTemplate',
+          binding: 'usePickerIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Use a custom pickerIconTemplate; busy feedback retains the spinner.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
         content: 'Date picker',
+        label: 'Project date',
         mode: 'single',
         pickerIcon: 'calendar',
         openPickerLabel: 'Choose date',
@@ -42711,11 +43031,15 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         hidden: false,
         required: false,
         loading: false,
-        submitted: false
+        submitted: false,
+        usePickerIconTemplate: false
       },
-      presets: [{ name: 'Default', args: {} }],
+      presets: [
+        { name: 'Default', args: {} },
+        { name: 'Custom picker icon', args: { usePickerIconTemplate: true } }
+      ],
       template:
-        '<bx-date-picker\n    [mode]="args().mode"\n    [pickerIcon]="args().pickerIcon"\n    [openPickerLabel]="args().openPickerLabel"\n    [startAt]="args().startAt"\n    [startView]="args().startView"\n    [locale]="args().locale"\n    [calendarId]="args().calendarId"\n    [timeZone]="args().timeZone"\n    [weekStartsOn]="args().weekStartsOn"\n    [minimalDaysInFirstWeek]="args().minimalDaysInFirstWeek"\n    [dateFormat]="args().dateFormat"\n    [allowNaturalLanguage]="args().allowNaturalLanguage"\n    [editable]="args().editable"\n    [presentation]="args().presentation"\n    [weekdayNameFormat]="args().weekdayNameFormat"\n    [monthNameFormat]="args().monthNameFormat"\n    [months]="args().months"\n    [separateFields]="args().separateFields"\n    [commitPolicy]="args().commitPolicy"\n    [closeOnSelect]="args().closeOnSelect"\n    [clearable]="args().clearable"\n    [presetsPlacement]="args().presetsPlacement"\n    [min]="args().min"\n    [max]="args().max"\n    [crossingPolicy]="args().crossingPolicy"\n    [minRangeLength]="args().minRangeLength"\n    [maxRangeLength]="args().maxRangeLength"\n    [allowSameDay]="args().allowSameDay"\n    [selectionLimit]="args().selectionLimit"\n    [loadingLabel]="args().loadingLabel"\n    [retryLabel]="args().retryLabel"\n    [loadErrorMessage]="args().loadErrorMessage"\n    [invalidSelectionLabel]="args().invalidSelectionLabel"\n    [applyLabel]="args().applyLabel"\n    [cancelLabel]="args().cancelLabel"\n    [clearLabel]="args().clearLabel"\n    [todayLabel]="args().todayLabel"\n    [presetsLabel]="args().presetsLabel"\n    [showToday]="args().showToday"\n    [showTodayButton]="args().showTodayButton"\n    [startLabel]="args().startLabel"\n    [endLabel]="args().endLabel"\n    [moreDatesLabel]="args().moreDatesLabel"\n    [selectedDatesLabel]="args().selectedDatesLabel"\n    [clearTooltip]="args().clearTooltip"\n    [visibleTagCount]="args().visibleTagCount"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    (viewChange)="onAction(\'viewChange\', $event)"\n    (monthSelected)="onAction(\'monthSelected\', $event)"\n    (yearSelected)="onAction(\'yearSelected\', $event)"\n    (valueCommit)="onAction(\'valueCommit\', $event)"\n    (draftChange)="onAction(\'draftChange\', $event)"\n    (openChange)="onAction(\'openChange\', $event)"\n    (visibleRangeChange)="onAction(\'visibleRangeChange\', $event)"\n    (request)="onAction(\'request\', $event)"\n    (retry)="onAction(\'retry\', $event)"\n    (parseFailed)="onAction(\'parseFailed\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)">\n    {{ args().content }}\n</bx-date-picker>\n',
+        '<ng-template #pickerVisual>\n    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />\n</ng-template>\n<bx-date-picker\n    [mode]="args().mode"\n    [pickerIcon]="args().pickerIcon"\n    [openPickerLabel]="args().openPickerLabel"\n    [startAt]="args().startAt"\n    [startView]="args().startView"\n    [locale]="args().locale"\n    [calendarId]="args().calendarId"\n    [timeZone]="args().timeZone"\n    [weekStartsOn]="args().weekStartsOn"\n    [minimalDaysInFirstWeek]="args().minimalDaysInFirstWeek"\n    [dateFormat]="args().dateFormat"\n    [allowNaturalLanguage]="args().allowNaturalLanguage"\n    [editable]="args().editable"\n    [presentation]="args().presentation"\n    [weekdayNameFormat]="args().weekdayNameFormat"\n    [monthNameFormat]="args().monthNameFormat"\n    [months]="args().months"\n    [separateFields]="args().separateFields"\n    [commitPolicy]="args().commitPolicy"\n    [closeOnSelect]="args().closeOnSelect"\n    [clearable]="args().clearable"\n    [presetsPlacement]="args().presetsPlacement"\n    [min]="args().min"\n    [max]="args().max"\n    [crossingPolicy]="args().crossingPolicy"\n    [minRangeLength]="args().minRangeLength"\n    [maxRangeLength]="args().maxRangeLength"\n    [allowSameDay]="args().allowSameDay"\n    [selectionLimit]="args().selectionLimit"\n    [loadingLabel]="args().loadingLabel"\n    [retryLabel]="args().retryLabel"\n    [loadErrorMessage]="args().loadErrorMessage"\n    [invalidSelectionLabel]="args().invalidSelectionLabel"\n    [applyLabel]="args().applyLabel"\n    [cancelLabel]="args().cancelLabel"\n    [clearLabel]="args().clearLabel"\n    [todayLabel]="args().todayLabel"\n    [presetsLabel]="args().presetsLabel"\n    [showToday]="args().showToday"\n    [showTodayButton]="args().showTodayButton"\n    [startLabel]="args().startLabel"\n    [endLabel]="args().endLabel"\n    [moreDatesLabel]="args().moreDatesLabel"\n    [selectedDatesLabel]="args().selectedDatesLabel"\n    [clearTooltip]="args().clearTooltip"\n    [visibleTagCount]="args().visibleTagCount"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    [pickerIconTemplate]="args().usePickerIconTemplate ? pickerVisual : undefined"\n    (viewChange)="onAction(\'viewChange\', $event)"\n    (monthSelected)="onAction(\'monthSelected\', $event)"\n    (yearSelected)="onAction(\'yearSelected\', $event)"\n    (valueCommit)="onAction(\'valueCommit\', $event)"\n    (draftChange)="onAction(\'draftChange\', $event)"\n    (openChange)="onAction(\'openChange\', $event)"\n    (visibleRangeChange)="onAction(\'visibleRangeChange\', $event)"\n    (request)="onAction(\'request\', $event)"\n    (retry)="onAction(\'retry\', $event)"\n    (parseFailed)="onAction(\'parseFailed\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)" />\n',
       componentType: 'DatePicker',
       hasActions: true,
       source:
@@ -42736,7 +43060,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           description: 'Projected example content. This is story content, not a component input.',
           defaultExpression: '"Time picker"',
           defaultValue: 'Time picker',
-          editor: 'text',
+          editor: 'documentation',
           required: false,
           nullable: false,
           optional: false,
@@ -42784,11 +43108,25 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           optional: false
         },
         {
+          name: 'pickerIconTemplate',
+          binding: 'pickerIconTemplate',
+          kind: 'input',
+          type: 'TemplateRef<unknown> | undefined',
+          description: 'Optional custom noninteractive visual for the picker action; takes precedence over pickerIcon and preserves busy feedback.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
           name: 'pickerIcon',
           binding: 'pickerIcon',
           kind: 'input',
           type: '"a-arrow-down" | "a-arrow-up" | "a-large-small" | "accessibility" | "activity-square" | "activity" | "ad" | "air-vent" | "airplay" | "alarm-check" | "alarm-clock-check" | "alarm-clock-minus" | ... 2304 more ... | "zoom-out"',
-          description: "Icon used to open the panel. Defaults to 'clock'.",
+          description: 'Built-in picker icon, used when pickerIconTemplate is absent.',
           defaultExpression: "'clock'",
           defaultValue: 'clock',
           options: [
@@ -46501,10 +46839,24 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false
+        },
+        {
+          name: 'usePickerIconTemplate',
+          binding: 'usePickerIconTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Use a custom pickerIconTemplate; busy feedback retains the spinner.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
         content: 'Time picker',
+        label: 'Project time',
         pickerIcon: 'clock',
         openPickerLabel: 'Choose time',
         timePresentation: 'wheel',
@@ -46544,11 +46896,15 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         hidden: false,
         required: false,
         loading: false,
-        submitted: false
+        submitted: false,
+        usePickerIconTemplate: false
       },
-      presets: [{ name: 'Default', args: {} }],
+      presets: [
+        { name: 'Default', args: {} },
+        { name: 'Custom picker icon', args: { usePickerIconTemplate: true } }
+      ],
       template:
-        '<bx-time-picker\n    [interval]="args().interval"\n    [pickerIcon]="args().pickerIcon"\n    [openPickerLabel]="args().openPickerLabel"\n    [timePresentation]="args().timePresentation"\n    [presentation]="args().presentation"\n    [locale]="args().locale"\n    [timeZone]="args().timeZone"\n    [hourCycle]="args().hourCycle"\n    [precision]="args().precision"\n    [minuteStep]="args().minuteStep"\n    [secondStep]="args().secondStep"\n    [millisecondStep]="args().millisecondStep"\n    [timeFormat]="args().timeFormat"\n    [loopColumns]="args().loopColumns"\n    [min]="args().min"\n    [max]="args().max"\n    [commitPolicy]="args().commitPolicy"\n    [closeOnSelect]="args().closeOnSelect"\n    [clearable]="args().clearable"\n    [showTimeZone]="args().showTimeZone"\n    [showTimeZoneLabel]="args().showTimeZoneLabel"\n    [loadingLabel]="args().loadingLabel"\n    [retryLabel]="args().retryLabel"\n    [applyLabel]="args().applyLabel"\n    [cancelLabel]="args().cancelLabel"\n    [clearLabel]="args().clearLabel"\n    [nowLabel]="args().nowLabel"\n    [clearTooltip]="args().clearTooltip"\n    [hourLabel]="args().hourLabel"\n    [minuteLabel]="args().minuteLabel"\n    [secondLabel]="args().secondLabel"\n    [millisecondLabel]="args().millisecondLabel"\n    [periodLabel]="args().periodLabel"\n    [timeZoneLabel]="args().timeZoneLabel"\n    [loadErrorMessage]="args().loadErrorMessage"\n    [invalidSelectionLabel]="args().invalidSelectionLabel"\n    [emptyLabel]="args().emptyLabel"\n    [errorWrap]="args().errorWrap"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    (valueCommit)="onAction(\'valueCommit\', $event)"\n    (openChange)="onAction(\'openChange\', $event)"\n    (timeZoneChange)="onAction(\'timeZoneChange\', $event)"\n    (slotRequest)="onAction(\'slotRequest\', $event)"\n    (slotRetry)="onAction(\'slotRetry\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)">\n    {{ args().content }}\n</bx-time-picker>\n',
+        '<ng-template #pickerVisual>\n    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />\n</ng-template>\n<bx-time-picker\n    [interval]="args().interval"\n    [pickerIcon]="args().pickerIcon"\n    [openPickerLabel]="args().openPickerLabel"\n    [timePresentation]="args().timePresentation"\n    [presentation]="args().presentation"\n    [locale]="args().locale"\n    [timeZone]="args().timeZone"\n    [hourCycle]="args().hourCycle"\n    [precision]="args().precision"\n    [minuteStep]="args().minuteStep"\n    [secondStep]="args().secondStep"\n    [millisecondStep]="args().millisecondStep"\n    [timeFormat]="args().timeFormat"\n    [loopColumns]="args().loopColumns"\n    [min]="args().min"\n    [max]="args().max"\n    [commitPolicy]="args().commitPolicy"\n    [closeOnSelect]="args().closeOnSelect"\n    [clearable]="args().clearable"\n    [showTimeZone]="args().showTimeZone"\n    [showTimeZoneLabel]="args().showTimeZoneLabel"\n    [loadingLabel]="args().loadingLabel"\n    [retryLabel]="args().retryLabel"\n    [applyLabel]="args().applyLabel"\n    [cancelLabel]="args().cancelLabel"\n    [clearLabel]="args().clearLabel"\n    [nowLabel]="args().nowLabel"\n    [clearTooltip]="args().clearTooltip"\n    [hourLabel]="args().hourLabel"\n    [minuteLabel]="args().minuteLabel"\n    [secondLabel]="args().secondLabel"\n    [millisecondLabel]="args().millisecondLabel"\n    [periodLabel]="args().periodLabel"\n    [timeZoneLabel]="args().timeZoneLabel"\n    [loadErrorMessage]="args().loadErrorMessage"\n    [invalidSelectionLabel]="args().invalidSelectionLabel"\n    [emptyLabel]="args().emptyLabel"\n    [errorWrap]="args().errorWrap"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    [pickerIconTemplate]="args().usePickerIconTemplate ? pickerVisual : undefined"\n    (valueCommit)="onAction(\'valueCommit\', $event)"\n    (openChange)="onAction(\'openChange\', $event)"\n    (timeZoneChange)="onAction(\'timeZoneChange\', $event)"\n    (slotRequest)="onAction(\'slotRequest\', $event)"\n    (slotRetry)="onAction(\'slotRetry\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)" />\n',
       componentType: 'TimePicker',
       hasActions: true,
       source:
@@ -48417,7 +48773,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'name',
@@ -48759,7 +49115,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: true,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_41
+          schema: schemas.DEMO_SCHEMA_40
         },
         {
           name: 'reset',
@@ -51181,7 +51537,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           description: 'Projected example content. This is story content, not a component input.',
           defaultExpression: '"Select"',
           defaultValue: 'Select',
-          editor: 'text',
+          editor: 'documentation',
           required: false,
           nullable: false,
           optional: false,
@@ -51371,7 +51727,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_56
+          schema: schemas.DEMO_SCHEMA_57
         },
         {
           name: 'compareWith',
@@ -51547,6 +51903,46 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           category: 'Template'
         },
         {
+          name: 'panelWidth',
+          binding: 'panelWidth',
+          kind: 'input',
+          type: 'string | number | undefined',
+          description: 'Optional popup width as a CSS length or pixels; defaults to the trigger width and is always bounded by the viewport.',
+          defaultExpression: 'undefined',
+          editor: 'text',
+          required: false,
+          nullable: false,
+          optional: true
+        },
+        {
+          name: 'optionStartTemplate',
+          binding: 'optionStartTemplate',
+          kind: 'input',
+          type: 'TemplateRef<ISelectOptionContext<T>> | undefined',
+          description: 'Default leading visual template for options; per-option startTemplate takes precedence. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
+          name: 'optionEndTemplate',
+          binding: 'optionEndTemplate',
+          kind: 'input',
+          type: 'TemplateRef<ISelectOptionContext<T>> | undefined',
+          description: 'Default trailing visual template for options; per-option endTemplate takes precedence. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
           name: 'panelClass',
           binding: 'panelClass',
           kind: 'input',
@@ -51678,7 +52074,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: true,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_41
+          schema: schemas.DEMO_SCHEMA_40
         },
         {
           name: 'reset',
@@ -52348,6 +52744,32 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false
+        },
+        {
+          name: 'useOptionStartTemplate',
+          binding: 'useOptionStartTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Render a custom optionStartTemplate before the label.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
+        },
+        {
+          name: 'useOptionEndTemplate',
+          binding: 'useOptionEndTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Render a custom optionEndTemplate after the label.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
@@ -52384,16 +52806,19 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         hidden: false,
         required: false,
         loading: false,
-        submitted: false
+        submitted: false,
+        useOptionStartTemplate: false,
+        useOptionEndTemplate: false
       },
       presets: [
         { name: 'Default', args: {} },
+        { name: 'Custom option visuals', args: { useOptionStartTemplate: true, useOptionEndTemplate: true } },
         { name: 'Searchable', args: { isSearchable: true } },
         { name: 'Readonly', args: { readOnly: true } },
         { name: 'Loading', args: { loading: true } }
       ],
       template:
-        '<bx-select\n    [clearable]="args().clearable"\n    [clearLabel]="args().clearLabel"\n    [clearTooltip]="args().clearTooltip"\n    [selectionDisplay]="args().selectionDisplay"\n    [visibleTagCount]="args().visibleTagCount"\n    [tagOverflowText]="args().tagOverflowText"\n    [options]="args().options"\n    [isSearchable]="args().isSearchable"\n    [externalFiltering]="args().externalFiltering"\n    [searchValue]="args().searchValue"\n    [searchDebounce]="args().searchDebounce"\n    [searchPlaceholder]="args().searchPlaceholder"\n    [emptyMessage]="args().emptyMessage"\n    [loadingLabel]="args().loadingLabel"\n    [loadingAriaLabel]="args().loadingAriaLabel"\n    [hasMore]="args().hasMore"\n    [loadError]="args().loadError"\n    [panelClass]="args().panelClass"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    (selectionChange)="onAction(\'selectionChange\', $event)"\n    (search)="onAction(\'search\', $event)"\n    (loadMore)="onAction(\'loadMore\', $event)"\n    (openedChange)="onAction(\'openedChange\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (searchValueChange)="onAction(\'searchValueChange\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)">\n    {{ args().content }}\n</bx-select>\n',
+        '<ng-template #startVisual let-option>\n    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />\n</ng-template>\n<ng-template #endVisual let-option>\n    <span aria-hidden="true">Pro</span>\n</ng-template>\n<bx-select\n    [clearable]="args().clearable"\n    [clearLabel]="args().clearLabel"\n    [clearTooltip]="args().clearTooltip"\n    [selectionDisplay]="args().selectionDisplay"\n    [visibleTagCount]="args().visibleTagCount"\n    [tagOverflowText]="args().tagOverflowText"\n    [options]="args().options"\n    [isSearchable]="args().isSearchable"\n    [externalFiltering]="args().externalFiltering"\n    [searchValue]="args().searchValue"\n    [searchDebounce]="args().searchDebounce"\n    [searchPlaceholder]="args().searchPlaceholder"\n    [emptyMessage]="args().emptyMessage"\n    [loadingLabel]="args().loadingLabel"\n    [loadingAriaLabel]="args().loadingAriaLabel"\n    [hasMore]="args().hasMore"\n    [loadError]="args().loadError"\n    [panelWidth]="args().panelWidth"\n    [panelClass]="args().panelClass"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    [optionStartTemplate]="args().useOptionStartTemplate ? startVisual : undefined"\n    [optionEndTemplate]="args().useOptionEndTemplate ? endVisual : undefined"\n    (selectionChange)="onAction(\'selectionChange\', $event)"\n    (search)="onAction(\'search\', $event)"\n    (loadMore)="onAction(\'loadMore\', $event)"\n    (openedChange)="onAction(\'openedChange\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (searchValueChange)="onAction(\'searchValueChange\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)" />\n',
       componentType: 'Select<unknown>',
       hasActions: true,
       source:
@@ -52414,7 +52839,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           description: 'Projected example content. This is story content, not a component input.',
           defaultExpression: '"Multiselect"',
           defaultValue: 'Multiselect',
-          editor: 'text',
+          editor: 'documentation',
           required: false,
           nullable: false,
           optional: false,
@@ -52745,7 +53170,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_56
+          schema: schemas.DEMO_SCHEMA_57
         },
         {
           name: 'compareWith',
@@ -52921,6 +53346,46 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           category: 'Template'
         },
         {
+          name: 'panelWidth',
+          binding: 'panelWidth',
+          kind: 'input',
+          type: 'string | number | undefined',
+          description: 'Optional popup width as a CSS length or pixels; defaults to the trigger width and is always bounded by the viewport.',
+          defaultExpression: 'undefined',
+          editor: 'text',
+          required: false,
+          nullable: false,
+          optional: true
+        },
+        {
+          name: 'optionStartTemplate',
+          binding: 'optionStartTemplate',
+          kind: 'input',
+          type: 'TemplateRef<ISelectOptionContext<T>> | undefined',
+          description: 'Default leading visual template for options; per-option startTemplate takes precedence. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
+          name: 'optionEndTemplate',
+          binding: 'optionEndTemplate',
+          kind: 'input',
+          type: 'TemplateRef<ISelectOptionContext<T>> | undefined',
+          description: 'Default trailing visual template for options; per-option endTemplate takes precedence. Noninteractive content only.',
+          defaultExpression: 'undefined',
+          options: [],
+          editor: 'documentation',
+          required: false,
+          nullable: false,
+          optional: true,
+          category: 'Template'
+        },
+        {
           name: 'panelClass',
           binding: 'panelClass',
           kind: 'input',
@@ -53053,7 +53518,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: true,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_57
+          schema: schemas.DEMO_SCHEMA_58
         },
         {
           name: 'isReadonly',
@@ -53710,6 +54175,32 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false
+        },
+        {
+          name: 'useOptionStartTemplate',
+          binding: 'useOptionStartTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Render a custom optionStartTemplate before the label.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
+        },
+        {
+          name: 'useOptionEndTemplate',
+          binding: 'useOptionEndTemplate',
+          kind: 'input',
+          type: 'boolean',
+          description: 'Render a custom optionEndTemplate after the label.',
+          defaultExpression: 'false',
+          defaultValue: false,
+          editor: 'boolean',
+          required: true,
+          nullable: false,
+          optional: false
         }
       ],
       args: {
@@ -53751,15 +54242,18 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
         hidden: false,
         required: false,
         loading: false,
-        submitted: false
+        submitted: false,
+        useOptionStartTemplate: false,
+        useOptionEndTemplate: false
       },
       presets: [
         { name: 'Default', args: {} },
+        { name: 'Custom option visuals', args: { useOptionStartTemplate: true, useOptionEndTemplate: true } },
         { name: 'Searchable', args: { isSearchable: true } },
         { name: 'Readonly', args: { readOnly: true } }
       ],
       template:
-        '<bx-multi-select\n    [allSelectedTooltip]="args().allSelectedTooltip"\n    [allSelectedText]="args().allSelectedText"\n    [selectedCountText]="args().selectedCountText"\n    [summaryThreshold]="args().summaryThreshold"\n    [showSelectAll]="args().showSelectAll"\n    [selectAllLabel]="args().selectAllLabel"\n    [selectionScope]="args().selectionScope"\n    [selectAll]="args().selectAll"\n    [clearable]="args().clearable"\n    [clearLabel]="args().clearLabel"\n    [clearTooltip]="args().clearTooltip"\n    [selectionDisplay]="args().selectionDisplay"\n    [visibleTagCount]="args().visibleTagCount"\n    [tagOverflowText]="args().tagOverflowText"\n    [options]="args().options"\n    [isSearchable]="args().isSearchable"\n    [externalFiltering]="args().externalFiltering"\n    [searchValue]="args().searchValue"\n    [searchDebounce]="args().searchDebounce"\n    [searchPlaceholder]="args().searchPlaceholder"\n    [emptyMessage]="args().emptyMessage"\n    [loadingLabel]="args().loadingLabel"\n    [loadingAriaLabel]="args().loadingAriaLabel"\n    [hasMore]="args().hasMore"\n    [loadError]="args().loadError"\n    [panelClass]="args().panelClass"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    (selectionChange)="onAction(\'selectionChange\', $event)"\n    (selectAllIntentChange)="onAction(\'selectAllIntentChange\', $event)"\n    (search)="onAction(\'search\', $event)"\n    (loadMore)="onAction(\'loadMore\', $event)"\n    (openedChange)="onAction(\'openedChange\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (selectAllChange)="onAction(\'selectAllChange\', $event)"\n    (searchValueChange)="onAction(\'searchValueChange\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)">\n    {{ args().content }}\n</bx-multi-select>\n',
+        '<ng-template #startVisual let-option>\n    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />\n</ng-template>\n<ng-template #endVisual let-option>\n    <span aria-hidden="true">Pro</span>\n</ng-template>\n<bx-multi-select\n    [allSelectedTooltip]="args().allSelectedTooltip"\n    [allSelectedText]="args().allSelectedText"\n    [selectedCountText]="args().selectedCountText"\n    [summaryThreshold]="args().summaryThreshold"\n    [showSelectAll]="args().showSelectAll"\n    [selectAllLabel]="args().selectAllLabel"\n    [selectionScope]="args().selectionScope"\n    [selectAll]="args().selectAll"\n    [clearable]="args().clearable"\n    [clearLabel]="args().clearLabel"\n    [clearTooltip]="args().clearTooltip"\n    [selectionDisplay]="args().selectionDisplay"\n    [visibleTagCount]="args().visibleTagCount"\n    [tagOverflowText]="args().tagOverflowText"\n    [options]="args().options"\n    [isSearchable]="args().isSearchable"\n    [externalFiltering]="args().externalFiltering"\n    [searchValue]="args().searchValue"\n    [searchDebounce]="args().searchDebounce"\n    [searchPlaceholder]="args().searchPlaceholder"\n    [emptyMessage]="args().emptyMessage"\n    [loadingLabel]="args().loadingLabel"\n    [loadingAriaLabel]="args().loadingAriaLabel"\n    [hasMore]="args().hasMore"\n    [loadError]="args().loadError"\n    [panelWidth]="args().panelWidth"\n    [panelClass]="args().panelClass"\n    [value]="args().value"\n    [id]="args().id"\n    [label]="args().label"\n    [placeholder]="args().placeholder"\n    [tooltip]="args().tooltip"\n    [hint]="args().hint"\n    [hintEnd]="args().hintEnd"\n    [error]="args().error"\n    [ariaLabel]="args().ariaLabel"\n    [ariaLabelledBy]="args().ariaLabelledBy"\n    [ariaDescribedBy]="args().ariaDescribedBy"\n    [dataTestId]="args().dataTestId"\n    [name]="args().name"\n    [invalid]="args().invalid"\n    [pending]="args().pending"\n    [touched]="args().touched"\n    [dirty]="args().dirty"\n    [disabled]="args().disabled"\n    [readonly]="args().readonly"\n    [readOnly]="args().readOnly"\n    [hidden]="args().hidden"\n    [required]="args().required"\n    [loading]="args().loading"\n    [submitted]="args().submitted"\n    [errorPolicy]="args().errorPolicy"\n    [errorMode]="args().errorMode"\n    [appearance]="args().appearance"\n    [floatLabel]="args().floatLabel"\n    [hideRequiredMarker]="args().hideRequiredMarker"\n    [subscriptSizing]="args().subscriptSizing"\n    [tooltipOnTruncate]="args().tooltipOnTruncate"\n    [optionStartTemplate]="args().useOptionStartTemplate ? startVisual : undefined"\n    [optionEndTemplate]="args().useOptionEndTemplate ? endVisual : undefined"\n    (selectionChange)="onAction(\'selectionChange\', $event)"\n    (selectAllIntentChange)="onAction(\'selectAllIntentChange\', $event)"\n    (search)="onAction(\'search\', $event)"\n    (loadMore)="onAction(\'loadMore\', $event)"\n    (openedChange)="onAction(\'openedChange\', $event)"\n    (touch)="onAction(\'touch\', $event)"\n    (selectAllChange)="onAction(\'selectAllChange\', $event)"\n    (searchValueChange)="onAction(\'searchValueChange\', $event)"\n    (valueChange)="onAction(\'valueChange\', $event)" />\n',
       componentType: 'MultiSelect<unknown>',
       hasActions: true,
       source:
@@ -53811,7 +54305,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_59
+          schema: schemas.DEMO_SCHEMA_60
         },
         {
           name: 'inlineCompletion',
@@ -54130,7 +54624,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: true,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_60
+          schema: schemas.DEMO_SCHEMA_61
         },
         {
           name: 'reset',
@@ -58523,7 +59017,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: true,
-          schema: schemas.DEMO_SCHEMA_63
+          schema: schemas.DEMO_SCHEMA_64
         },
         {
           name: 'breadcrumbConfig',
@@ -58728,7 +59222,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_71
+          schema: schemas.DEMO_SCHEMA_72
         },
         {
           name: 'groups',
@@ -58742,7 +59236,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: true,
-          schema: schemas.DEMO_SCHEMA_96
+          schema: schemas.DEMO_SCHEMA_97
         },
         {
           name: 'itemTemplate',
@@ -59006,7 +59500,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'breadcrumbConfig'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.searchable',
@@ -59022,7 +59516,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'searchable'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.showSearchGuide',
@@ -59038,7 +59532,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'showSearchGuide'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.backLabel',
@@ -59054,7 +59548,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'backLabel'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.pathLabel',
@@ -59070,7 +59564,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'pathLabel'],
           group: 'Top navigation',
           category: 'Accessibility',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.ariaLabel',
@@ -59087,7 +59581,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'ariaLabel'],
           group: 'Top navigation',
           category: 'Accessibility',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.searchPlaceholder',
@@ -59103,7 +59597,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'searchPlaceholder'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.searchLabel',
@@ -59119,7 +59613,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'searchLabel'],
           group: 'Top navigation',
           category: 'Accessibility',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.clearSearchLabel',
@@ -59135,7 +59629,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'clearSearchLabel'],
           group: 'Top navigation',
           category: 'Accessibility',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.emptyText',
@@ -59151,7 +59645,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'emptyText'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.openLabel',
@@ -59167,7 +59661,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'openLabel'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.closeLabel',
@@ -59183,7 +59677,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'closeLabel'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.submenuLabel',
@@ -59199,7 +59693,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'submenuLabel'],
           group: 'Top navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         },
         {
           name: 'config.resultLabel',
@@ -59215,7 +59709,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'resultLabel'],
           group: 'Top navigation',
           category: 'Accessibility',
-          schema: schemas.DEMO_SCHEMA_38
+          schema: schemas.DEMO_SCHEMA_37
         }
       ],
       args: {
@@ -59351,7 +59845,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_100
+          schema: schemas.DEMO_SCHEMA_101
         },
         {
           name: 'groups',
@@ -59365,7 +59859,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: false,
           nullable: false,
           optional: true,
-          schema: schemas.DEMO_SCHEMA_96
+          schema: schemas.DEMO_SCHEMA_97
         },
         {
           name: 'itemTemplate',
@@ -59696,7 +60190,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           path: ['config', 'breadcrumbConfig'],
           group: 'Side navigation',
           category: 'Configuration',
-          schema: schemas.DEMO_SCHEMA_70
+          schema: schemas.DEMO_SCHEMA_71
         },
         {
           name: 'config.side',
@@ -60249,7 +60743,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',
@@ -60790,7 +61284,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: true,
-          schema: schemas.DEMO_SCHEMA_106
+          schema: schemas.DEMO_SCHEMA_107
         },
         {
           name: 'closeLabel',
@@ -61109,7 +61603,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',
@@ -61872,7 +62366,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',
@@ -62635,7 +63129,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',
@@ -63398,7 +63892,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',
@@ -64161,7 +64655,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',
@@ -64924,7 +65418,7 @@ export const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {
           required: true,
           nullable: false,
           optional: false,
-          schema: schemas.DEMO_SCHEMA_104
+          schema: schemas.DEMO_SCHEMA_105
         },
         {
           name: 'IModalConfig.open',

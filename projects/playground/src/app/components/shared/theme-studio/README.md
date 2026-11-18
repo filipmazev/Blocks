@@ -17,8 +17,8 @@ Merge an existing Blocks import instead of loading global styles twice. Keep the
 ## Usage
 
 1. Open Theme Studio from the toolbar or the [component preview](../../screens/theme-studio-demo/README.md).
-2. Use the Light/Dark segmented selector and Theme palette dropdown at the top. Palette options and the selected value show the same paired swatches as
-   Appearance. Below Explore Theme Studio, choose Corner radius, Base color, Menu color and Menu accent.
+2. Use the Light/Dark segmented selector and Theme dropdown at the top. Palette options and the selected value show the same paired swatches as Appearance;
+   saved custom themes appear first under My Themes. Below Explore Theme Studio, choose Corner radius, Base color, Menu color and Menu accent.
 3. Adjust common colors with color pickers and opacity sliders. Sun/moon icons identify both modes. The strip below each editor previews its opposite-mode
    color; use its pencil to expand a second editor. Advanced semantic roles remain available in a disclosure.
 4. Choose Default, None, Small, Medium or Large corner radii; Layout also offers coordinated spacing and border settings.
@@ -52,9 +52,9 @@ values with an explanation until a preset is chosen. Unsupported Custom options 
 every nonzero shared spacing step.
 
 Base color uses generated neutral shade inventories for Carbon or Slate and updates surfaces, text and neutral borders in both modes. Default removes those
-overrides. Theme chooses the existing built-in palette and preserves explicit overrides. Menu color controls shared surface tokens; Menu accent controls shared
-hover/active tokens. These selectors also affect cards and other controls that consume those roles, as stated in the editor. They do not create a separate menu
-theme or add private component hooks to the document.
+overrides. Theme chooses the existing built-in palette, preserves geometry edits and previews that palette's colors. Menu color controls shared surface tokens;
+Menu accent controls shared hover/active tokens. These selectors also affect cards and other controls that consume those roles, as stated in the editor. They do
+not create a separate menu theme or add private component hooks to the document.
 
 The shadow editor supports All resting shadows, Controls, Surfaces, Cards, Modals and Toasts. It reads the current first layer and preserves imported lists
 until a control is edited; editing replaces selected targets with one validated layer. Opacity is 0–100%, blur 0–64px, spread ±32px and offsets ±64px. Reduced
@@ -105,8 +105,34 @@ Export includes the named built-in base in both modes and sparse validated overr
 `data-theme="dark"` and `.high-contrast` on the root. Place declarations after existing palette rules. Commands initialize Blocks' built-in base using its
 existing Angular schematic; paste the generated SCSS afterward to apply Studio customizations. There is no command that silently downloads a private draft.
 
-Drafts and history last for the current application session. Reload starts a fresh draft. Palette, mode, appearance and catalog preferences keep their existing
-storage behavior. There is no named-preset storage or cloud sharing.
+Drafts and history last for the current application session. Reload restores the selected saved theme, or starts a fresh draft when a built-in palette is
+selected. Palette, mode, appearance and catalog preferences keep their existing storage behavior. Saved themes persist separately in IndexedDB; see Saved
+themes.
+
+### Saved themes
+
+**Save Theme** appears after token overrides or preset edits and names and persists the current draft as a custom theme. A palette switch alone does not show
+it. Saved themes appear in the Theme dropdown before the built-in palettes under **My Themes**, and survive refresh and browser restart through IndexedDB. Up to
+five custom themes can be saved per browser profile; built-in palettes do not count toward the limit. At the limit, Save Theme is disabled and the editor
+explains it. Deleting a theme frees its slot immediately.
+
+Selecting a saved theme restores its complete configuration: palette, shared overrides, and both light and dark colors. Selecting a built-in palette preserves
+corner radii, spacing, borders and shadows while previewing that palette's colors. The saved-theme identity is retained when editing a custom theme. When a
+saved theme is selected, **Save Changes** updates that snapshot explicitly; edits never overwrite a stored theme on their own. Saving a customized built-in
+palette as a new theme creates a copy without mutating the built-in definition.
+
+Saved-theme rows in each grouped `bx-select` expose Download, Rename and Delete through swipe actions and the shared context menu. A rightward swipe reveals
+Download and Rename; a leftward swipe reveals Delete. Right-click or Shift+F10 shows the same commands. Download writes that theme's persisted JSON snapshot
+without activating it, using a sanitized filename. Rename updates only the name, preserving the stable ID and configuration. Delete confirms first and, when the
+active theme is removed, returns the editor to the Carbon / Cobalt fallback. Built-in themes never expose destructive actions.
+
+Storage failures leave the existing editor functional and report the error instead of falsely indicating success. Persisted records are schema-versioned and
+validated before use. The selected custom theme ID is remembered alongside the built-in palette preference and restored after IndexedDB loads. A missing or
+invalid saved record clears that selection and keeps the restored built-in palette. Unsaved edits are never persisted automatically.
+
+Appearance uses the same selector with a **Custom Themes** group and its **Create a theme** action opens the editor. Theme Studio and its demo use **My
+Themes**, followed by **Built-in Themes**. Theme option rows are viewport-bounded and wide enough to reveal Download and Rename together; full swipe remains
+enabled.
 
 ## Appearance and customization
 
@@ -129,11 +155,12 @@ fixed or reset. Choosing a color preserves its alpha; opacity sliders change it 
 
 ## Behavior and accessibility
 
-Reset returns to Carbon / Cobalt and clears all Studio overrides; mode and appearance preferences remain unchanged. Reset is undoable. Randomize chooses a
-coordinated built-in palette and a curated recipe linking neutral base, menu treatment, interaction accent, corners and elevation. Current spacing overrides
-remain unchanged so randomization preserves the layout's spacing. The recipes keep menu surfaces neutral and use one subtle brand or accent hue for interaction.
-Menu presets reuse the same semantic roles as the manual controls. Candidate recipes check primary and secondary text at 4.5:1 against canvas, surfaces and
-interaction fills in both modes. These checks cover the generated combinations, not every consumer-defined component state.
+Reset clears overrides on a built-in draft while keeping its current palette. For a saved custom theme it restores the saved snapshot, including its original
+palette and custom colors. Mode and appearance preferences remain unchanged. Reset is undoable. Randomize chooses a coordinated built-in palette and a curated
+recipe linking neutral base, menu treatment, interaction accent, corners and elevation. Current spacing overrides remain unchanged so randomization preserves
+the layout's spacing. The recipes keep menu surfaces neutral and use one subtle brand or accent hue for interaction. Menu presets reuse the same semantic roles
+as the manual controls. Candidate recipes check primary and secondary text at 4.5:1 against canvas, surfaces and interaction fills in both modes. These checks
+cover the generated combinations, not every consumer-defined component state.
 
 While Studio is open, Ctrl/Cmd+Z undoes a theme change and Ctrl/Cmd+Shift+Z redoes it. Text inputs, textareas, editable content and open modals retain their
 normal keyboard behavior. At the retained history boundaries, focusable tooltip wrappers explain why Undo or Redo is unavailable. The Undo tooltip distinguishes
@@ -177,3 +204,16 @@ the overrides fades the light out; resuming preview fades it back in. Both layer
 Blocks lighting scene; colors, brightness and the border move together on the shared lazy frame clock. Frame work stops after fading out and while the document
 or button is hidden. Reduced motion changes brightness immediately and leaves static colors; forced colors and high contrast remove the decoration and its light
 sources while preserving the ordinary Blocks button and focus outline.
+
+Save actions span the editor width. Saved-theme downloads keep their current snapshot and show the existing busy feedback for a brief 250ms interval before
+creating the file; destroying the picker cancels that timer. Rename and Delete dialogs appear above the open selector, keep it open while the dialog is used,
+and restore its focus and availability on dismissal.
+
+Palette-only changes on a built-in draft do not create a saveable customization or a discard prompt. Geometry and other existing edits survive palette changes;
+colors follow the chosen palette. On a saved custom theme, a different preview palette counts as an unsaved edit, so **Save Changes** and **Save As New Theme**
+become available. Returning to its saved palette restores its saved colors, and Reset restores its complete snapshot. Save actions stay hidden on a clean saved
+theme. Selecting another saved snapshot asks before discarding an edited draft.
+
+Custom theme names contain 1–25 characters after whitespace normalization and are checked for case-insensitive duplicates. The naming field enforces the length
+limit for both Save and Rename, and storage validates it independently. Displayed names stay on one line with ellipsis; the selector and option rows show their
+full name in a tooltip only when truncated, including keyboard focus and touch long-press.

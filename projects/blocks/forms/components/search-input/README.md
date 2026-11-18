@@ -137,3 +137,6 @@ update with the active `BX_I18N` language.
 
 Open `/components/search-input` for cancellable, debounced fake API requests, loading text, empty results, retained results on failure, retry through to
 success, and readonly/disabled controls. Enabling Show loading text starts a preview request so the message is immediately observable.
+
+Project `bxIconStart` content to replace the normal leading search glyph with a custom noninteractive visual. Busy feedback still uses the existing loading
+spinner.

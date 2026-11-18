@@ -140,6 +140,11 @@ export class SidePanel {
   public readonly resizeMinWidth: InputSignal<number | undefined> = input<number | undefined>(undefined);
   /** Optional maximum resize width in CSS pixels. Omission uses 50% of the container, retaining space for adjacent content and backdrop dismissal. */
   public readonly resizeMaxWidth: InputSignal<number | undefined> = input<number | undefined>(undefined);
+  /**
+   * Optional original width in CSS pixels for double-click/Enter reset and shrink prevention, constrained by current resize bounds.
+   * Omission captures the rendered width at the first gesture. Supply a fixed value when width restores a saved preference.
+   */
+  public readonly resizeInitialWidth: InputSignal<number | undefined> = input<number | undefined>(undefined);
   /** Prevent resizing below the original rendered width, default true. False enables the configured or 30% minimum. */
   public readonly resizeDisableShrink: InputSignal<boolean> = input(true);
   /** Accessible resize-handle name, accepting a string or translation key. Defaults to Resize panel width. */

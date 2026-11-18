@@ -76,3 +76,7 @@ Open `/components/context-menu` for a working example and its current value or a
 keyboard event; keyboard requests position beside that element and focus the first enabled command. The origin supplies theme inheritance and receives focus on
 keyboard dismissal. Existing native right-click/long-press and custom templates keep their current behavior. MenuItem actions uses this method for its shared
 action list; an explicit context template on the row retains native invocation priority.
+
+The context backdrop belongs to its invoking surface. Dismissing that backdrop dismisses the context surface before its parent dropdown. Secondary-button
+release events after opening a context menu do not dismiss the parent Select or Dropdown, including a physical right-click on a Mac trackpad; ordinary outside
+clicks and context-menu requests still follow normal dismissal rules.

@@ -218,7 +218,13 @@ legend {
     flex-wrap: wrap;
 }
 
+.palette-picker > app-theme-palette-select {
+    flex: 1 1 18rem;
+    max-inline-size: 28rem;
+}
+
 .palette-picker > button {
+    align-self: stretch;
     padding-inline: spacing(3);
 }
 

@@ -28,3 +28,6 @@ Use direct content for simple panels, or `ng-template bxTabContent` to create th
 accessible panel; `bx-tab` is the projected declaration.
 
 See the Tabs documentation and `/components/tabs` for appearance, lifecycle, two-way selection and keyboard behavior.
+
+`iconTemplate` and `endIconTemplate` accept noninteractive visual templates for the leading and trailing trigger positions, overriding `icon` and `endIcon`. The
+visible label remains the accessible identifying text.

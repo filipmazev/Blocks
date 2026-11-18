@@ -345,6 +345,11 @@ device detection, independent scroll-lock owners, UUIDs, color-token helpers, an
 
 ### Popup containment
 
-`containsOverlayTarget(owner, target)` checks ordinary descendants plus popup panes registered by `inheritOverlayTheme(source, pane)`, following nested origins.
-Use it when a parent menu must retain ownership of a context menu rendered in another overlay pane. The inheritance teardown removes the registration. It adds
-no DOM semantics or independent theme/positioning system. Both helpers are exported from `@filip.mazev/blocks/core`.
+`containsOverlayTarget(owner, target)` checks ordinary descendants plus surfaces registered by `inheritOverlayOwnership(source, pane)` or
+`inheritOverlayTheme(source, pane)`, following nested origins. Use it when a parent menu must retain ownership of a context menu rendered in another overlay
+pane. The inheritance teardown removes the registration. It adds no DOM semantics or independent theme/positioning system. These helpers are exported from
+`@filip.mazev/blocks/core`.
+
+`inheritOverlayOwnership(source, pane)` links a portal-rendered surface or task boundary to its invoking element for `containsOverlayTarget`, independently of
+styling. Keep the source connected and invoke the returned cleanup before removing the surface. `inheritOverlayTheme` uses the same registration while copying
+theme context; Modal uses it for task boundaries opened from select/menu actions.

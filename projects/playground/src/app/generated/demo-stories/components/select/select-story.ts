@@ -36,6 +36,7 @@ export class SelectStory {
       | 'loadingAriaLabel'
       | 'hasMore'
       | 'loadError'
+      | 'panelWidth'
       | 'panelClass'
       | 'value'
       | 'id'
@@ -68,7 +69,7 @@ export class SelectStory {
       | 'hideRequiredMarker'
       | 'subscriptSizing'
       | 'tooltipOnTruncate'
-    > & { content: string }
+    > & { content: string; useOptionStartTemplate: boolean; useOptionEndTemplate: boolean }
   > = input.required<
     Pick<
       DemoInputs<Select<unknown>>,
@@ -89,6 +90,7 @@ export class SelectStory {
       | 'loadingAriaLabel'
       | 'hasMore'
       | 'loadError'
+      | 'panelWidth'
       | 'panelClass'
       | 'value'
       | 'id'
@@ -121,7 +123,7 @@ export class SelectStory {
       | 'hideRequiredMarker'
       | 'subscriptSizing'
       | 'tooltipOnTruncate'
-    > & { content: string }
+    > & { content: string; useOptionStartTemplate: boolean; useOptionEndTemplate: boolean }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

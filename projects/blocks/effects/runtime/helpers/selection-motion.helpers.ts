@@ -60,11 +60,12 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     root.contains(element) &&
     !element.matches(':disabled, [aria-disabled="true"], .is-disabled') &&
     !element.hasAttribute('data-bx-selection-exclude') &&
-    !element.closest('[data-bx-swipe-active="true"]') &&
-    element.closest('[role="menu"], [role="listbox"]') === root;
+    element.closest('[role="menu"], [role="listbox"], [role="grid"]') === root;
   const row = (target: EventTarget | null): HTMLElement | null => {
     const element = target && 'nodeType' in target ? (target as Element) : null;
-    const found = element?.closest(options.selector ?? '[role="menuitem"], [role="option"]') ?? null;
+    const selector = options.selector ?? '[role="menuitem"], [role="option"]';
+    const owner = element?.closest('bx-swipe-action-panel')?.parentElement;
+    const found = owner ? owner.querySelector(selector) : (element?.closest(selector) ?? null);
 
     return eligible(found) ? found : null;
   };
@@ -127,7 +128,11 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
   const fallback = (): HTMLElement | null => {
     const focused = row(root.ownerDocument.activeElement);
 
-    return focused?.matches(':focus-visible') ? focused : row(root.querySelector('[aria-selected="true"]'));
+    const revealed = Array.from(root.querySelectorAll(options.selector ?? '[role="menuitem"], [role="option"]')).find(
+      (element) => element.getAttribute('data-bx-swipe-active') === 'true' && eligible(element)
+    );
+
+    return focused?.matches(':focus-visible') ? focused : row(revealed ?? root.querySelector('[aria-selected="true"]'));
   };
 
   const underPointer = (): HTMLElement | null =>
@@ -218,7 +223,7 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ['aria-selected', 'disabled', 'aria-disabled', 'class', 'style']
+    attributeFilter: ['data-bx-swipe-active', 'aria-selected', 'disabled', 'aria-disabled', 'class', 'style']
   });
   active = fallback();
   measure();

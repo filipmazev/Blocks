@@ -8,11 +8,17 @@
     [style.background-color]="resolvedBgColor()"
     [attr.aria-hidden]="decorative() ? 'true' : null"
     [attr.aria-label]="decorative() ? null : ariaLabel()">
-    @if (svg(); as markup) {
-        <bx-visual-transition [value]="markup" [animated]="animated()">
-            <ng-template let-content>
-                <span class="icon-svg" [innerHTML]="content"></span>
-            </ng-template>
-        </bx-visual-transition>
-    }
+    <ng-content>
+        @if (contentTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template" />
+        } @else {
+            @if (svg(); as markup) {
+                <bx-visual-transition [value]="markup" [animated]="animated()">
+                    <ng-template let-content>
+                        <span class="icon-svg" [innerHTML]="content"></span>
+                    </ng-template>
+                </bx-visual-transition>
+            }
+        }
+    </ng-content>
 </span>

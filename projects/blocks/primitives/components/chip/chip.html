@@ -15,8 +15,14 @@
         [attr.aria-pressed]="selectable() ? selected() : null"
         (click)="activate()"
         (keydown)="onKeydown($event)">
-        @if (selectable() && selected() ? 'check' : settings().icon; as icon) {
-            <bx-icon size="16" [name]="icon" />
+        @if (selectable() && selected()) {
+            <bx-icon name="check" size="16" />
+        } @else {
+            <ng-content select="[bxIconStart]">
+                @if (settings().icon; as icon) {
+                    <bx-icon size="16" [name]="icon" />
+                }
+            </ng-content>
         }
         <span>{{ resolvedLabel() }}</span>
     </button>

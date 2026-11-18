@@ -190,3 +190,9 @@ select-all feedback.
 The playground defaults to application-formatted text using the fake API's `selectableTotal`: 23 selectable locations across 24 results, excluding disabled
 Vienna even before its page loads. The total follows search scope. **Select-all tooltip** also demonstrates custom finished text, disabled feedback and the
 optional loaded-label compatibility behavior, in text and tag display.
+
+Options also support leading/trailing visual templates and per-row swipe commands through the shared
+[Select option contract](../select/README.md#option-visuals-and-swipe-commands). Rich option commands use a grid popup; selection remains owned by MultiSelect.
+
+Default option labels use a single line with ellipsis. With `tooltipOnTruncate` enabled, clipped labels show their full text on hover, keyboard focus or touch
+long-press. Custom `optionTemplate` content retains control of wrapping and overflow.

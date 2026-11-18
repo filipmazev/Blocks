@@ -151,3 +151,28 @@ configuration controls such as page size deliberately hide the clear action.
 ```html
 <bx-select [options]="options" [clearable]="false" />
 ```
+
+## Option visuals and swipe commands
+
+Options accept `startTemplate` and `endTemplate` for logos, color swatches or other noninteractive visuals. They receive the same `ISelectOptionContext<T>` as
+`optionTemplate` and take precedence over `icon` and `endIcon`. Use `optionStartTemplate` / `optionEndTemplate` for shared defaults. Keep the option's visible
+text label intact. `triggerTemplate` can show the same visuals in the closed control. `panelWidth` accepts a CSS length or pixel number; the popup always
+remains bounded by the viewport.
+
+`leftSwipeActions`, `rightSwipeActions` and `swipeFullAction` on an option reuse `SwipeActionsDirective`. Commands preserve selection and use its existing
+full-swipe, cancellation, async, context-menu, translated-label and reduced-motion behavior. Disabled options and disabled/readonly controls block commands.
+Full swipe defaults to true. No actions are configured for ordinary options.
+
+When any loaded option has commands, the popup uses an ARIA grid: each row has a selection cell and a separate command cell. Plain selects retain listbox/option
+semantics. Arrow Up/Down navigates selection cells; Shift+F10 opens the focused row's commands. Escape dismisses the owned swipe or context surface before the
+select. Swipe command buttons retain their own accessible names. MultiSelect supports the same option visuals and commands.
+
+```html
+<bx-select label="Theme" panelWidth="26rem" [options]="themes()" [optionStartTemplate]="swatches" />
+<ng-template #swatches let-option>
+    <span aria-hidden="true">{{ colorPreview(option.value) }}</span>
+</ng-template>
+```
+
+Default option labels use a single line with ellipsis. With `tooltipOnTruncate` enabled, clipped labels show their full text on hover, keyboard focus or touch
+long-press. Custom `optionTemplate` content retains control of wrapping and overflow.

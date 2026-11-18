@@ -17,7 +17,7 @@
         [class.is-keyboard-focused]="keyboardFocused()"
         [class.has-spinners]="type() === 'number' && !multiline()"
         [class.is-floating]="isFloating()">
-        <ng-content select="[bxPrefix]" />
+        <ng-content select="[bxPrefix], [bxIconStart]" />
         <div
             class="bx-input-container"
             bxTooltipTouch="longpress"
@@ -99,7 +99,7 @@
             }
         </div>
         <div class="bx-input-actions">
-            <ng-content select="[bxSuffix]" />
+            <ng-content select="[bxSuffix], [bxIconEnd]" />
             @if (type() === 'number' && !multiline()) {
                 <div class="bx-spinners-group">
                     <button

@@ -293,3 +293,11 @@ results and guarded dismissal.
 
 The `/modal` dialog includes an editable draft note, live presentation controls, and a review/save flow. Patches retain that note and the wizard step. The page
 also exposes an action to patch heading and dismissal settings on its last open reference.
+
+Header icon data accepts `template` for a custom noninteractive logo or visual. It uses the existing icon frame and remains consistent across centered and
+responsive presentations; header loading feedback retains priority.
+
+Service-created modals place their persistent task boundary in the browser top layer when supported, above already-open popovers. Existing stack isolation,
+focus trapping, nested dialogs and responsive sheets keep the same task boundary. The invoking element is registered through Core's overlay ownership so actions
+opened from a select keep that select open underneath; the ownership registration is released on teardown. Browsers without native popovers retain the
+established positioned modal layer.

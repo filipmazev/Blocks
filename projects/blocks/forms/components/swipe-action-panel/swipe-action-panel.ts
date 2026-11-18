@@ -45,6 +45,7 @@ export class SwipeActionPanel {
   private readonly measured: WritableSignal<ISwipeActionLayout> = signal({ left: 0, right: 0, full: 0, column: 0 });
 
   private readonly contextMenu: Signal<ContextMenuDirective> = viewChild.required(ContextMenuDirective);
+  private readonly wideProbe: Signal<ElementRef<HTMLElement>> = viewChild.required('wideProbe');
   private readonly probe: Signal<ElementRef<HTMLElement>> = viewChild.required('probe');
   private readonly pagerProbe: Signal<ElementRef<HTMLElement>> = viewChild.required('pagerProbe');
   private readonly captionProbe: Signal<ElementRef<HTMLElement>> = viewChild.required('captionProbe');
@@ -205,6 +206,9 @@ export class SwipeActionPanel {
       observer.observe(this.probe().nativeElement);
       observer.observe(this.captionProbe().nativeElement);
       observer.observe(this.gapProbe().nativeElement);
+      observer.observe(this.pagerProbe().nativeElement);
+      observer.observe(this.fullProbe().nativeElement);
+      observer.observe(this.closeProbe().nativeElement);
       measure();
       cleanup(() => observer.disconnect());
     });
@@ -599,10 +603,8 @@ export class SwipeActionPanel {
     const action = this.nativeElement.querySelector<HTMLElement>('.bx-swipe-action');
     const gap = action ? parseFloat(this.nativeElement.ownerDocument.defaultView?.getComputedStyle(action).rowGap ?? '0') : 0;
     const desiredHeight = probe.getBoundingClientRect().height;
-    const compact = this.nativeElement.clientHeight < desiredHeight + labelHeight + gap;
-    const height = Math.max(0, Math.min(desiredHeight, this.nativeElement.clientHeight - (compact ? gap : labelHeight + gap)));
-
-    if (this.compact() !== compact) this.compact.set(compact);
+    const short = this.nativeElement.clientHeight < desiredHeight + labelHeight + gap;
+    const height = Math.max(0, Math.min(desiredHeight, this.nativeElement.clientHeight - (short ? gap : labelHeight + gap)));
 
     const cssHeight = `${height}px`;
 
@@ -612,10 +614,22 @@ export class SwipeActionPanel {
 
     this.iconSize.set(Math.max(12, Math.min(20, Math.floor(height * 0.65))));
 
-    const column = probe.getBoundingClientRect().width;
     const contentGap = this.gapProbe().nativeElement.getBoundingClientRect().width;
     const close = this.closeProbe().nativeElement.getBoundingClientRect().width;
     const available = Math.max(0, this.nativeElement.clientWidth - close);
+    const wideColumn = this.wideProbe().nativeElement.getBoundingClientRect().width;
+    const circles = Math.max(this.left().length, this.right().length) * wideColumn + contentGap > available;
+    const compact = short || circles;
+
+    if (this.compact() !== compact) this.compact.set(compact);
+
+    const ratio = circles ? '1' : '2.5';
+
+    if (this.nativeElement.style.getPropertyValue('--bx-swipe-capsule-ratio') !== ratio) {
+      this.nativeElement.style.setProperty('--bx-swipe-capsule-ratio', ratio);
+    }
+
+    const column = probe.getBoundingClientRect().width;
     const capacity = Math.max(1, Math.floor((available - contentGap) / Math.max(1, column)));
     const gutters = this.pagerProbe().nativeElement.getBoundingClientRect().width;
     const maximum = Math.max(0, this.nativeElement.clientWidth - Math.min(close, desiredHeight));

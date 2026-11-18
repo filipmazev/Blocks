@@ -135,19 +135,7 @@
             </div>
         </header>
         <div class="palette-picker">
-            @for (palette of themingService.palettes; track palette.id) {
-                <button
-                    bx-button
-                    type="button"
-                    variant="tonal"
-                    [color]="themingService.palette() === palette.id ? 'accent' : 'grayscale'"
-                    [attr.aria-pressed]="themingService.palette() === palette.id"
-                    (click)="themingService.setPalette(palette.id)">
-                    <span class="palette-swatches" aria-hidden="true"
-                        ><span [style.background-color]="palette.colors[0]"></span><span [style.background-color]="palette.colors[1]"></span></span
-                    >{{ palette.label }}
-                </button>
-            }
+            <app-theme-palette-select customGroup="Custom Themes" />
             <button
                 bx-button
                 type="button"

@@ -112,6 +112,25 @@
     gap: spacing(3);
 }
 
+.studio-save {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(2);
+    min-inline-size: 0;
+}
+
+.studio-save-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: spacing(2);
+    min-inline-size: 0;
+
+    > button {
+        inline-size: 100%;
+    }
+}
+
 .studio-mode {
     --bx-tabs-panel-gap: 0;
 }

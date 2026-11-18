@@ -148,7 +148,16 @@
                         <p role="status">Fix {{ themeStudioService.invalidCount() }} invalid value(s) before exporting. Preview keeps the last valid values.</p>
                     }
                     <div class="studio-actions">
-                        <button bx-button type="button" variant="tonal" (click)="themeStudioService.resetAll()">
+                        <button
+                            bx-button
+                            type="button"
+                            variant="tonal"
+                            [bxTooltip]="
+                                themeStudioService.selectedSavedThemeId()
+                                    ? 'Restore the saved theme, including its original palette and custom colors.'
+                                    : 'Clear custom settings and keep the current palette.'
+                            "
+                            (click)="themeStudioService.resetAll()">
                             <bx-icon name="rotate-ccw" size="16" />Reset
                         </button>
                         <button bx-button type="button" variant="tonal" (click)="studio.importTheme()"><bx-icon name="upload" size="16" />Import</button>

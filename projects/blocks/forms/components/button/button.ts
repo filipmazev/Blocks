@@ -22,7 +22,7 @@ import { BxA11yService } from '@filip.mazev/blocks/core';
 import { BxVisualPresenceDirective, injectComponentSurface } from '@filip.mazev/blocks/effects';
 import { createVisualPresence } from '@filip.mazev/blocks/effects/runtime';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
+import { IconContentDirective, LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
 import { ButtonIconDirective } from '@forms/directives/button-icon/button-icon.directive';
 import { buttonEmissionStrength } from '@forms/helpers/button-material.helpers';
@@ -53,11 +53,12 @@ export class Button {
 
   private readonly projectedIcon: Signal<Icon | undefined> = contentChild(Icon);
   private readonly iconElement: Signal<ElementRef<HTMLElement> | undefined> = contentChild(Icon, { read: ElementRef<HTMLElement> });
+  private readonly iconContent: Signal<IconContentDirective | undefined> = contentChild(IconContentDirective);
   private readonly customIcon: Signal<ButtonIconDirective | undefined> = contentChild(ButtonIconDirective);
 
   private readonly contentWrapper: Signal<ElementRef<HTMLElement>> = viewChild.required('contentWrapper');
 
-  protected readonly hasProjectedIcon: Signal<boolean> = computed(() => !!this.customIcon() || !!this.projectedIcon());
+  protected readonly hasProjectedIcon: Signal<boolean> = computed(() => !!this.iconContent() || !!this.customIcon() || !!this.projectedIcon());
 
   protected readonly spinnerSize: WritableSignal<number> = signal(20);
 
@@ -115,7 +116,7 @@ export class Button {
     );
 
     afterRenderEffect((onCleanup) => {
-      const icon = this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
+      const icon = this.iconContent()?.elementRef.nativeElement ?? this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
 
       this.projectedIcon()?.size();
       this.measureSpinner(icon);
@@ -129,7 +130,7 @@ export class Button {
       onCleanup(() => resizeObserver.disconnect());
     });
     afterRenderEffect(() => {
-      const icon = this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
+      const icon = this.iconContent()?.elementRef.nativeElement ?? this.customIcon()?.elementRef.nativeElement ?? this.iconElement()?.nativeElement;
       const loading = this.loading();
       const reduced = this.bxA11yService.isReducedMotion();
       const changed = icon !== this.presenceElement;

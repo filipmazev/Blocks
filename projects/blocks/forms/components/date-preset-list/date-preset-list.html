@@ -14,8 +14,13 @@
                         [attr.aria-pressed]="item.active"
                         [attr.aria-label]="item.description ? item.label + '. ' + item.description : item.label"
                         (click)="onSelect(item.preset, item.disabled)">
-                        @if (item.icon && iconName(item.icon); as icon) {
-                            <bx-icon class="bx-preset-icon" size="16" [name]="icon" [decorative]="true" />
+                        @if (item.icon || item.preset.iconTemplate) {
+                            <bx-icon
+                                class="bx-preset-icon"
+                                size="16"
+                                [name]="item.icon ? iconName(item.icon) : undefined"
+                                [contentTemplate]="item.preset.iconTemplate"
+                                [decorative]="true" />
                         }
                         <span class="bx-preset-label">{{ item.label }}</span>
                     </button>

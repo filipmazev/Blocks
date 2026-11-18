@@ -170,3 +170,6 @@ Inherited `errorMessages` accepts plain text, callbacks or translation keys. Sup
 ## Playground
 
 The component is available at `/components/time-picker`; this guide describes the library contract and defaults.
+
+`pickerIconTemplate` accepts a custom noninteractive picker-action visual and takes precedence over `pickerIcon`. Native action labels, disabled/readonly guards
+and loading feedback remain in place.

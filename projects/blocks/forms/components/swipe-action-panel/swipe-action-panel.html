@@ -1,7 +1,8 @@
 <span #pagerProbe class="bx-swipe-pager-probe" aria-hidden="true"></span> <span #captionProbe class="bx-swipe-caption-probe" aria-hidden="true">M</span>
 <span #fullProbe class="bx-swipe-full-probe" aria-hidden="true"></span>
 <span #gapProbe class="bx-swipe-gap-probe" aria-hidden="true"></span>
-<span #probe class="bx-swipe-probe" aria-hidden="true"></span><span #closeProbe class="bx-swipe-close-probe" aria-hidden="true"></span>
+<span #wideProbe class="bx-swipe-wide-probe" aria-hidden="true"></span><span #probe class="bx-swipe-probe" aria-hidden="true"></span
+><span #closeProbe class="bx-swipe-close-probe" aria-hidden="true"></span>
 <div [bxContextMenu]="contextTemplate" [bxContextMenuLongPress]="false">
     @for (group of groups(); track group) {
         <div
@@ -67,6 +68,7 @@
                                               ? 'check'
                                               : action.icon
                                     "
+                                    [contentTemplate]="!failed().includes(action.id) && completedAction()?.id !== action.id ? action.iconTemplate : undefined"
                                     [size]="iconSize()" />
                                 @if (fullActionId() === action.id && failed().includes(action.id)) {
                                     <span
@@ -121,6 +123,7 @@
                 [ariaLabel]="failed().includes(action.id) ? actionText(action) : action.ariaLabel"
                 [wrapLabel]="true"
                 [icon]="failed().includes(action.id) ? (action.retryIcon ?? 'rotate-cw') : completedAction()?.id === action.id ? 'check' : action.icon"
+                [iconTemplate]="!failed().includes(action.id) && completedAction()?.id !== action.id ? action.iconTemplate : undefined"
                 [danger]="action.role === 'destructive'"
                 [disabled]="disabled() || !!action.disabled"
                 [loading]="busy(action)"

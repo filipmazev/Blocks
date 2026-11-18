@@ -49,7 +49,7 @@ import {
   TimePicker
 } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
-import { LoadingIndicator, LoadingSpinner, ProgressBar } from '@filip.mazev/blocks/primitives';
+import { IconContentDirective, LoadingIndicator, LoadingSpinner, Menu, MenuItem, ProgressBar, Tag } from '@filip.mazev/blocks/primitives';
 
 import {
   DEMO_ALL_SELECTED_TOOLTIP_OPTIONS,
@@ -76,6 +76,10 @@ import { Highlight } from 'ngx-highlightjs';
     FormRoot,
     Button,
     ButtonIconDirective,
+    IconContentDirective,
+    Menu,
+    MenuItem,
+    Tag,
     BxError,
     BxHint,
     Checkbox,

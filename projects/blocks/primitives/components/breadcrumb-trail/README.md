@@ -101,3 +101,6 @@ native result link.
 `/components/breadcrumbs` demonstrates long explicit trails, count changes, unlimited display, hover toggling, and real ancestor destinations.
 `/components/layout/page-container` and `/components/side-nav` demonstrate the same API through public owners. See the
 [Breadcrumbs guide](../../../navigation/components/breadcrumbs/README.md) and [PageContainer guide](../page-container/README.md).
+
+`dividerTemplate` accepts a custom noninteractive separator template, taking precedence over the `divider` icon and separator text. It does not change
+breadcrumb link names or navigation.

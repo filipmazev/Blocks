@@ -12,10 +12,10 @@
             #origin="cdkOverlayOrigin"
             type="button"
             role="combobox"
-            aria-haspopup="listbox"
             cdkOverlayOrigin
             bxSurface
             class="bx-select-trigger"
+            [attr.aria-haspopup]="hasOptionActions() ? 'grid' : 'listbox'"
             [bxTooltip]="selectionTooltip()"
             [bxTooltipHover]="selectionDisplay() !== 'tags' || (selectAll() && !!allSelectedText())"
             [bxTooltipTouch]="selectionDisplay() === 'tags' && !(selectAll() && allSelectedText()) ? 'none' : 'longpress'"
@@ -41,6 +41,7 @@
             (click)="toggleOpen()"
             (keydown)="onTriggerKey($event)"
             (blur)="onTriggerBlur()">
+            <ng-content select="[bxIconStart], [bxPrefix]" />
             <div class="bx-select-container">
                 @if (label()) {
                     <span class="bx-floating-label"
@@ -87,7 +88,7 @@
                 </span>
                 <span #summaryOverflow="bxTruncate" class="bx-select-measure" bxTruncate aria-hidden="true">{{ selectedOptionLabel() }}</span>
             </div>
-            <ng-content select="[bxSuffix]" />
+            <ng-content select="[bxSuffix], [bxIconEnd]" />
             <span class="bx-select-caret" aria-hidden="true">
                 <bx-visual-transition [value]="loading() || pending() || isSearching()">
                     <ng-template let-busy>
@@ -127,7 +128,7 @@
             [cdkConnectedOverlayViewportMargin]="8"
             [cdkConnectedOverlayScrollStrategy]="panelScrollStrategy"
             [cdkConnectedOverlayUsePopover]="overlayPopoverLocation(origin.elementRef.nativeElement)"
-            [cdkConnectedOverlayWidth]="origin.elementRef.nativeElement.offsetWidth"
+            [cdkConnectedOverlayWidth]="panelInlineSize(origin.elementRef.nativeElement.offsetWidth)"
             (overlayOutsideClick)="onOutsideClick($event)"
             (attach)="onPanelAttach(panelOverlay)"
             (detach)="onPanelDetach()"
@@ -178,37 +179,69 @@
                     [loadMoreRevision]="options()"
                     (loadMore)="requestMore($event)">
                     <div
-                        role="listbox"
+                        [attr.role]="hasOptionActions() ? 'grid' : 'listbox'"
                         [hidden]="isSearching()"
                         [attr.aria-multiselectable]="true"
                         [attr.aria-label]="ariaLabel() || resolvedLabel()"
                         [id]="controlId() + '-options'">
                         @for (option of filteredOptions(); track option.value; let index = $index) {
                             @if (option.resolvedGroup && (index === 0 || filteredOptions()[index - 1].resolvedGroup !== option.resolvedGroup)) {
-                                <div class="bx-select-group" [id]="controlId() + '-group-' + index">{{ option.resolvedGroup }}</div>
+                                <div class="bx-select-group" [attr.role]="hasOptionActions() ? 'row' : null" [id]="controlId() + '-group-' + index">
+                                    <span [attr.role]="hasOptionActions() ? 'columnheader' : null">{{ option.resolvedGroup }}</span>
+                                </div>
                             }
-                            <button
-                                type="button"
-                                class="bx-select-option"
-                                role="option"
-                                tabindex="-1"
-                                [attr.aria-selected]="isSelected(option.value)"
-                                [disabled]="option.disabled || option.groupDisabled || false"
-                                (click)="selectOption(option)">
-                                <bx-checkbox-indicator
-                                    [checked]="isSelected(option.value)"
-                                    [disabled]="disabled() || !!option.disabled || !!option.groupDisabled" />
-                                @if (option.icon) {
-                                    <bx-icon size="16" [name]="option.icon" />
-                                }
-                                @if (optionTemplate(); as template) {
-                                    <ng-container
-                                        [ngTemplateOutlet]="template"
-                                        [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }" />
-                                } @else {
-                                    <span>{{ option.resolvedStr }}</span>
-                                }
-                            </button>
+                            <div
+                                class="bx-select-option-row"
+                                bxSwipeActions
+                                [attr.role]="hasOptionActions() ? 'row' : 'none'"
+                                [leftSwipeActions]="option.leftSwipeActions ?? []"
+                                [rightSwipeActions]="option.rightSwipeActions ?? []"
+                                [swipeFullAction]="option.swipeFullAction ?? true"
+                                [swipeDisabled]="disabled() || isReadonly() || !!option.disabled || !!option.groupDisabled">
+                                <button
+                                    type="button"
+                                    class="bx-select-option"
+                                    tabindex="-1"
+                                    bxTooltipTouch="longpress"
+                                    [bxTooltip]="resolvedTooltipOnTruncate() && optionText.truncated() ? option.resolvedStr : ''"
+                                    [attr.role]="hasOptionActions() ? 'gridcell' : 'option'"
+                                    [attr.aria-selected]="isSelected(option.value)"
+                                    [disabled]="option.disabled || option.groupDisabled || false"
+                                    (click)="selectOption(option)">
+                                    <span bxSwipeContent class="bx-select-item-inner"
+                                        ><bx-checkbox-indicator
+                                            [checked]="isSelected(option.value)"
+                                            [disabled]="disabled() || !!option.disabled || !!option.groupDisabled" />
+                                        @if (option.startTemplate ?? optionStartTemplate(); as template) {
+                                            <span class="bx-select-adornment"
+                                                ><ng-container
+                                                    [ngTemplateOutlet]="template"
+                                                    [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }"
+                                            /></span>
+                                        } @else if (option.icon) {
+                                            <bx-icon size="16" [name]="option.icon" />
+                                        }
+                                        <span #optionText="bxTruncate" class="bx-select-option-label" [bxTruncate]="!optionTemplate()">
+                                            @if (optionTemplate(); as template) {
+                                                <ng-container
+                                                    [ngTemplateOutlet]="template"
+                                                    [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }" />
+                                            } @else {
+                                                {{ option.resolvedStr }}
+                                            }
+                                        </span>
+                                        @if (option.endTemplate ?? optionEndTemplate(); as template) {
+                                            <span class="bx-select-adornment bx-select-adornment-end"
+                                                ><ng-container
+                                                    [ngTemplateOutlet]="template"
+                                                    [ngTemplateOutletContext]="{ $implicit: option, selected: isSelected(option.value), index: index }"
+                                            /></span>
+                                        } @else if (option.endIcon) {
+                                            <bx-icon class="bx-select-adornment-end" size="16" [name]="option.endIcon" />
+                                        }
+                                    </span>
+                                </button>
+                            </div>
                         } @empty {
                             @if (!loading()) {
                                 <div class="bx-select-empty" role="status">{{ resolvedEmptyMessage() }}</div>

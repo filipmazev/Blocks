@@ -89,3 +89,7 @@
         background: Highlight;
     }
 }
+
+.message-row[data-bx-swipe-active='true']:not(:disabled, :active) {
+    background: var(--bx-bg-element-hover);
+}

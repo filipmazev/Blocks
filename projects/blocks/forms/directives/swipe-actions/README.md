@@ -173,31 +173,32 @@ can immediately open the other side while the previous close is settling.
 
 ## Appearance and customization
 
-Wide horizontal Button capsules have centered icons and separate captions below. Their dimensions adapt to the row's actual height; actions do not enlarge the
-row or reflow its content. The primary control moves at its original width and height, carrying its rounded hover/active highlight with it. The host clips the
-movement and the action gutter stays transparent. Keep generic row material on the moving primary control, not on the host around the actions. The examples use
-borderless rows within one list container.
+Wide horizontal Button capsules have centered icons and separate captions below. Lanes that would require carousel paging switch to icon-only circles; short
+rows retain pills when the action group fits. Their dimensions adapt to the row's actual height; actions do not enlarge the row or reflow its content. The
+primary control moves at its original width and height, carrying its rounded hover/active highlight with it. The host clips the movement and the action gutter
+stays transparent. Keep generic row material on the moving primary control, not on the host around the actions. The examples use borderless rows within one list
+container.
 
 Larger rows show single-line captions underneath, with shared truncation and a tooltip only on clipped text. Compact rows omit captions and show the action name
 on mouse hover or keyboard focus after `swipeTooltipDwell` (400 ms initially). Compact names use TooltipDirective's `bxTooltipDwell`; large clipped-caption
 tooltips keep their immediate default. Touch tooltips remain disabled. Disabled and busy captions are muted independently of the Button's guarded appearance.
 The same native icon slot is retained in a busy context row.
 
-| CSS variable                                              | Behavior                                                                                                           |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `--bx-swipe-content-gap`                                  | Space between the rounded moving content and the action lane, default `spacing(2)`.                                |
-| `--bx-swipe-action-height`                                | Desired capsule height, default `spacing(10)`, bounded by the available row/caption space.                         |
-| `--bx-swipe-action-width`                                 | Action column width, default measured capsule height × 2.5 plus `spacing(2)`.                                      |
-| `--bx-swipe-content-min-width`                            | Desired visible content region, default 50%; overflow may reserve extra room for one full action and its controls. |
-| `--bx-swipe-overflow-gap`, `--bx-swipe-overflow-padding`  | Gaps around paging controls and outer inset; both default to `spacing(2)`.                                         |
-| `--bx-swipe-overflow-fade`                                | Overflow edge fade, default `spacing(3)`; only edges with more actions fade. Forced colors omit the mask.          |
-| `--bx-button-capsule-width`, `--bx-button-capsule-height` | Independent Button capsule geometry outside the swipe panel.                                                       |
+| CSS variable                                              | Behavior                                                                                                                       |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `--bx-swipe-content-gap`                                  | Space between the rounded moving content and the action lane, default `spacing(2)`.                                            |
+| `--bx-swipe-action-height`                                | Desired capsule height, default `spacing(10)`, bounded by the available row/caption space.                                     |
+| `--bx-swipe-action-width`                                 | Action column width, default measured capsule height × 2.5 plus `spacing(2)`, or height plus `spacing(2)` for compact circles. |
+| `--bx-swipe-content-min-width`                            | Desired visible content region, default 50%; overflow may reserve extra room for one full action and its controls.             |
+| `--bx-swipe-overflow-gap`, `--bx-swipe-overflow-padding`  | Gaps around paging controls and outer inset; both default to `spacing(1)`.                                                     |
+| `--bx-swipe-overflow-fade`                                | Overflow edge fade, default `spacing(3)`; only edges with more actions fade. Forced colors omit the mask.                      |
+| `--bx-button-capsule-width`, `--bx-button-capsule-height` | Independent Button capsule geometry outside the swipe panel.                                                                   |
 
 Keep touch-oriented row content tall enough for comfortable targets. Compact desktop menus retain their existing density. Long action groups remain in their
-native horizontal lane with circular, vertically centered Previous/Next controls in dedicated padded gutters. A directional mask softens overflow edges. Paging
-springs to measured action anchors and retargets repeated clicks; native touch/trackpad input interrupts it. There is no competing CSS snap at completion.
-Keyboard focus also reaches overflow; extremely narrow layouts that cannot fit a complete action and both controls retain right-click/keyboard context access.
-No action is moved into a three-dot menu. Context lists independently scroll within viewport bounds.
+native horizontal lane with circular, vertically centered Previous/Next controls in compact padded gutters with 32px hit targets. A directional mask softens
+overflow edges. Paging springs to measured action anchors and retargets repeated clicks; native touch/trackpad input interrupts it. There is no competing CSS
+snap at completion. Keyboard focus also reaches overflow; extremely narrow layouts that cannot fit a complete action and both controls retain
+right-click/keyboard context access. No action is moved into a three-dot menu. Context lists independently scroll within viewport bounds.
 
 Disabled overflow arrows keep their hit area inside the revealed action group. Pressing a disabled arrow preserves focus and leaves the row open; enabled arrows
 retain native focus and keyboard activation.
@@ -207,11 +208,13 @@ retaining direct manipulation. Reduced transparency adapts the material independ
 
 ## Behavior and accessibility
 
-Pointer gestures claim horizontal intent only after a shared threshold; vertical movement and pinch zoom remain native. Horizontal wheel/trackpad bursts use the
-same rendered position, signed velocity and bounded release destination. Content follows each horizontal event directly; the shared spring settles only on
-release. Predominantly vertical wheel input scrolls normally; Ctrl+wheel zoom is never claimed. Ordinary trackpad bursts settle after an 80 ms idle interval; A
-stretched gesture invokes at the commit threshold; the same idle interval determines when ongoing input has ended for completion presentation. Physical gesture
-directions and configured action ordering remain unchanged in RTL; row and caption text retain their own direction.
+Pointer gestures claim horizontal intent only after a shared threshold. Touch gestures that start vertically retain native scrolling; once a horizontal swipe is
+claimed, vertical drift cannot scroll the page or an enclosing menu until release or cancellation. Adding a second touch cancels the swipe and leaves pinch zoom
+available. Horizontal wheel/trackpad bursts use the same rendered position, signed velocity and bounded release destination. Content follows each horizontal
+event directly; the shared spring settles only on release. Predominantly vertical wheel input scrolls normally; Ctrl+wheel zoom is never claimed. Ordinary
+trackpad bursts settle after an 80 ms idle interval; A stretched gesture invokes at the commit threshold; the same idle interval determines when ongoing input
+has ended for completion presentation. Physical gesture directions and configured action ordering remain unchanged in RTL; row and caption text retain their own
+direction.
 
 Recent signed velocity, stationary-pause detection and bounded projection come from the existing effects runtime. Settling can be grabbed or reversed without a
 jump. Ordinary reveal release never executes a command; only the full-swipe threshold described above does. Cancellation, lost capture, Escape, hidden
@@ -243,3 +246,16 @@ previews.
 The configurable Playground uses a large mail-style row with editable sender, subject, preview, unread indicator and width. Compact MenuItems remain in
 Examples. Message-list Read/Unread actions synchronously update a blue unread dot above the title and visible status, then collapse without removing the row.
 Read messages omit the dot without leaving a title indent.
+
+Each action also accepts `iconTemplate` for a custom noninteractive visual in both the capsule and context row. It takes precedence over `icon`; retry,
+completion and busy feedback retain their established icons and spinner.
+
+Exposed MenuItem and Select/MultiSelect rows retain the shared selection highlight while actions are visible, including when the pointer moves into the action
+lane. The highlight does not commit selection; selected and danger states retain their semantic colors.
+
+Generic composed rows receive `data-bx-swipe-active` on both the host and the moving primary control. Use this presentation attribute to retain the row's
+existing hover/highlight fill while actions are exposed; the directive restores any original control attribute on teardown. The shared mail example and
+generated configurable preview use the same styling source.
+
+The shared menu/option highlight tracks the moving primary control during reveal and remains associated with that row while hovering its action lane. Generic
+mail previews keep their own existing hover fill; neither path changes committed selection or covers the action gutter with another backing.

@@ -1,3 +1,6 @@
+<ng-template #pickerVisual>
+    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />
+</ng-template>
 <bx-time-picker
     [interval]="args().interval"
     [pickerIcon]="args().pickerIcon"
@@ -68,12 +71,11 @@
     [hideRequiredMarker]="args().hideRequiredMarker"
     [subscriptSizing]="args().subscriptSizing"
     [tooltipOnTruncate]="args().tooltipOnTruncate"
+    [pickerIconTemplate]="args().usePickerIconTemplate ? pickerVisual : undefined"
     (valueCommit)="onAction('valueCommit', $event)"
     (openChange)="onAction('openChange', $event)"
     (timeZoneChange)="onAction('timeZoneChange', $event)"
     (slotRequest)="onAction('slotRequest', $event)"
     (slotRetry)="onAction('slotRetry', $event)"
     (touch)="onAction('touch', $event)"
-    (valueChange)="onAction('valueChange', $event)">
-    {{ args().content }}
-</bx-time-picker>
+    (valueChange)="onAction('valueChange', $event)" />

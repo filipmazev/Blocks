@@ -17,6 +17,7 @@ import { CheckboxIndicator } from '@forms/components/checkbox-indicator/checkbox
 import { FormField } from '@forms/components/form-field/form-field';
 import { SearchInput } from '@forms/components/search-input/search-input';
 import { LoadMoreDirective } from '@forms/directives/load-more/load-more.directive';
+import { SwipeActionsDirective } from '@forms/directives/swipe-actions/swipe-actions.directive';
 import { summaryThreshold } from '@forms/helpers/summary-threshold.helpers';
 import { IBxSelectOption } from '@forms/interfaces/ibx-select-option.interface';
 import { ISelectAllChange } from '@forms/interfaces/iselect-all-change.interface';
@@ -34,6 +35,7 @@ import { ISelectionChange } from '@forms/interfaces/iselection-change.interface'
     Icon,
     SearchInput,
     LoadMoreDirective,
+    SwipeActionsDirective,
     NgTemplateOutlet,
     LoadingIndicator,
     LoadingSpinner,

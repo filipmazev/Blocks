@@ -38,6 +38,15 @@ export const UTILITY_EXAMPLES: readonly IUtilityExample[] = [
     loadComponent: () => import('@playground/components/screens/utilities/components/identifiers/identifiers').then((m) => m.Identifiers)
   },
   {
+    id: 'indexed-db',
+    title: 'IndexedDB storage',
+    description: 'Open a typed database, run promise-based transactions, and confirm records survive reloads.',
+    symbol: 'IndexedDbService',
+    icon: 'database',
+    readme: 'projects/playground/src/app/components/screens/utilities/components/indexed-db/README.md',
+    loadComponent: () => import('@playground/components/screens/utilities/components/indexed-db/indexed-db').then((m) => m.IndexedDb)
+  },
+  {
     id: 'color-tokens',
     title: 'Color-token helpers',
     description: 'Explore CSS references, complementary colors, palette inversion, and saved palette validation.',

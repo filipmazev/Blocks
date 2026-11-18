@@ -17,6 +17,8 @@ export interface IStepDefinition {
   readonly description?: ResolvableText;
   /** Optional Blocks icon; otherwise the step number is displayed. */
   readonly icon?: IconName;
+  /** Optional custom visual in the step marker; takes precedence over icon in ordinary states. Status/loading markers remain authoritative. */
+  readonly iconTemplate?: TemplateRef<unknown>;
   /** Excludes the step from user navigation and required workflow completion. Defaults to false. */
   readonly disabled?: boolean;
   /** Allows skipping without claiming completion. Defaults to false. */

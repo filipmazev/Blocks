@@ -19,15 +19,18 @@
         <div class="panel-banner" [hidden]="!banner()"><ng-content select="[bxSidePanelBanner]" /></div>
         <div class="panel-header" [hidden]="!header() && !headerIcon() && !showCloseButton()">
             <div class="panel-heading">
-                @if (headerIcon(); as icon) {
-                    <bx-icon
-                        aria-hidden="true"
-                        [name]="icon.name"
-                        [size]="icon.size ?? '24'"
-                        [color]="icon.color"
-                        [bgColor]="icon.bgColor"
-                        [strokeWidth]="icon.strokeWidth" />
-                }
+                <ng-content select="[bxIconStart]">
+                    @if (headerIcon(); as icon) {
+                        <bx-icon
+                            aria-hidden="true"
+                            [name]="icon.name"
+                            [contentTemplate]="icon.template"
+                            [size]="icon.size ?? '24'"
+                            [color]="icon.color"
+                            [bgColor]="icon.bgColor"
+                            [strokeWidth]="icon.strokeWidth" />
+                    }
+                </ng-content>
                 <ng-content select="[bxSidePanelHeader]" />
             </div>
             @if (showCloseButton()) {
@@ -53,6 +56,7 @@
             [resizeActivityContainer]="resizeActivityContainer()"
             [resizeMinSize]="resizeMinWidth()"
             [resizeMaxSize]="resizeMaxWidth()"
+            [resizeInitialSize]="resizeInitialWidth()"
             [resizeDisableShrink]="resizeDisableShrink()"
             [resizeDisabled]="!open()"
             [resizeLabel]="resizeLabel()"

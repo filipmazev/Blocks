@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { afterRenderEffect, computed, DOCUMENT, inject, Injectable, OnDestroy, PLATFORM_ID, signal, untracked } from '@angular/core';
 
 import type { BxThemeId, ThemeCssVariable } from '@filip.mazev/blocks/core';
+import type { ISavedTheme } from '@playground/interfaces/isaved-theme.interface';
 import type { IThemeStudioDocument } from '@playground/interfaces/itheme-studio-document.interface';
 import type { IThemeStudioSnapshot } from '@playground/interfaces/itheme-studio-snapshot.interface';
 import type { StudioColorToken, StudioMode, StudioValues } from '@playground/types/theme-studio.types';
@@ -11,6 +12,7 @@ import type { StudioColorToken, StudioMode, StudioValues } from '@playground/typ
 import { BORDER_VALUES, RADIUS_VALUES, SHADOW_VALUES, SPACING_VALUES, ThemingService } from '@filip.mazev/blocks/core';
 
 import { formatCatalogColor } from '@playground/components/screens/token-catalog/helpers/token-color.helpers';
+import { SELECTED_SAVED_THEME_KEY } from '@playground/shared/constants/theme-storage.constants';
 import { STUDIO_CONTROLS } from '@playground/shared/constants/theme-studio.constants';
 import { STUDIO_HISTORY_LIMIT } from '@playground/shared/constants/theme-studio-history.constants';
 import { studioColorContrast } from '@playground/shared/helpers/theme-studio-contrast.helpers';
@@ -20,6 +22,7 @@ import { studioOppositeColor } from '@playground/shared/helpers/theme-studio-opp
 import { randomStudioTheme } from '@playground/shared/helpers/theme-studio-random.helpers';
 import { isStudioDocument, normalizeStudioValue } from '@playground/shared/helpers/theme-studio-validation.helpers';
 
+import { SavedThemesStorageService } from './saved-themes-storage.service';
 import { ThemeStudioPreviewService } from './theme-studio-preview.service';
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +30,7 @@ export class ThemeStudioService implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly themeStudioPreviewService = inject(ThemeStudioPreviewService);
+  private readonly savedThemesStorageService = inject(SavedThemesStorageService);
 
   public readonly themingService = inject(ThemingService);
 
@@ -47,6 +51,8 @@ export class ThemeStudioService implements OnDestroy {
   private readonly editedText: WritableSignal<Readonly<Record<string, string>>> = signal({});
   private readonly errors: WritableSignal<Readonly<Record<string, string>>> = signal({});
 
+  private readonly referenceDocument: WritableSignal<IThemeStudioDocument | null> = signal(null);
+
   private readonly onForcedColors: (event: MediaQueryListEvent) => void = (event) => this.forcedColors.set(event.matches);
 
   public readonly open: WritableSignal<boolean> = signal(false);
@@ -56,6 +62,8 @@ export class ThemeStudioService implements OnDestroy {
   public readonly baseline: Signal<StudioValues> = computed(() => this.modeBaselines()[this.themingService.activeTheme()]);
 
   public readonly status: WritableSignal<string> = signal('');
+
+  public readonly selectedSavedThemeId: WritableSignal<string | null> = signal(null);
 
   public readonly revision: Signal<number> = this.themeStudioPreviewService.revision;
 
@@ -88,11 +96,46 @@ export class ThemeStudioService implements OnDestroy {
   public readonly redoHint: Signal<string> = computed(() =>
     this.canRedo() ? '' : 'Redo limit reached: this is the latest retained theme. A new edit clears the redo branch.'
   );
+  public readonly savedThemes: Signal<readonly ISavedTheme[]> = computed(() => this.savedThemesStorageService.themes());
+  public readonly storageAvailable: Signal<boolean> = computed(() => this.savedThemesStorageService.available());
+  public readonly storageLoading: Signal<boolean> = computed(() => this.savedThemesStorageService.loading());
+  public readonly storageError: Signal<string> = computed(() => this.savedThemesStorageService.error());
+  public readonly hasSaveableCustomization: Signal<boolean> = computed(() => (this.selectedSavedThemeId() !== null ? this.dirty() : this.overrideCount() > 0));
+  public readonly canSaveNew: Signal<boolean> = computed(
+    () => this.hasSaveableCustomization() && this.invalidCount() === 0 && !this.storageLoading() && this.savedThemesStorageService.canCreate()
+  );
+  public readonly remainingThemeSlots: Signal<number> = computed(() => this.savedThemesStorageService.remainingSlots());
+  public readonly selectedSavedTheme: Signal<ISavedTheme | null> = computed(() => {
+    const id = this.selectedSavedThemeId();
 
+    return id ? (this.savedThemesStorageService.get(id) ?? null) : null;
+  });
+  public readonly dirty: Signal<boolean> = computed(() => {
+    const reference = this.referenceDocument();
+
+    const current = this.themeDocument();
+
+    return (
+      reference !== null &&
+      ((this.selectedSavedThemeId() !== null && reference.palette !== current.palette) ||
+        !this.sameValues(reference.shared, current.shared) ||
+        !this.sameValues(reference.light, current.light) ||
+        !this.sameValues(reference.dark, current.dark))
+    );
+  });
+  public readonly canSaveChanges: Signal<boolean> = computed(
+    () => this.selectedSavedThemeId() !== null && this.dirty() && this.invalidCount() === 0 && !this.storageLoading()
+  );
+
+  private initialization: Promise<void> | undefined;
+  private selectionRevision: number = 0;
   private media: MediaQueryList | undefined;
   private colorContext: CanvasRenderingContext2D | null = null;
 
   constructor() {
+    this.referenceDocument.set(structuredClone(this.themeDocument()));
+    this.initializeSavedThemes();
+
     const win = isPlatformBrowser(this.platformId) ? this.document.defaultView : null;
 
     if (win) {
@@ -240,16 +283,17 @@ export class ThemeStudioService implements OnDestroy {
   }
 
   public resetAll(): void {
-    this.finishEdit();
-    this.recordChange();
-    this.shared.set({});
-    this.light.set({});
-    this.dark.set({});
-    this.editedText.set({});
-    this.errors.set({});
-    this.manualColors.set([]);
-    this.themingService.setPalette('carbon-cobalt');
-    this.status.set('Reset to Carbon / Cobalt and cleared all Studio overrides. Mode and appearance preferences retained.');
+    const saved = this.selectedSavedTheme();
+    const next: IThemeStudioDocument = saved
+      ? structuredClone(saved.document)
+      : { version: 1, palette: this.themingService.palette(), shared: {}, light: {}, dark: {} };
+
+    ++this.selectionRevision;
+    this.applyDocument(
+      next,
+      saved ? `Restored saved theme "${saved.name}" and its original palette.` : 'Cleared Studio overrides and kept the current palette.'
+    );
+    this.referenceDocument.set(structuredClone(next));
   }
 
   public applyDocument(next: IThemeStudioDocument, message: string): boolean {
@@ -404,6 +448,172 @@ export class ThemeStudioService implements OnDestroy {
     );
   }
 
+  /** Begin loading persisted custom themes; the reactive list populates without blocking rendering. */
+  public initializeSavedThemes(): void {
+    if (this.initialization) return;
+
+    const revision = this.selectionRevision;
+    const initial = structuredClone(this.themeDocument());
+    const id = this.storedSelection();
+
+    this.initialization = this.savedThemesStorageService.initialize().then(() => {
+      if (!id || !this.storageAvailable() || revision !== this.selectionRevision || !this.sameDocument(initial, this.themeDocument())) return;
+
+      if (this.getSavedTheme(id)) {
+        this.selectSavedTheme(id);
+        this.setHistory([], []);
+      } else this.persistSelection(null);
+    });
+  }
+
+  /** Retrieve a saved theme by its stable ID from the reactive list.
+   * @param id - Stable saved-theme ID.
+   */
+  public getSavedTheme(id: string): ISavedTheme | undefined {
+    return this.savedThemesStorageService.get(id);
+  }
+
+  /** Preview a built-in palette while retaining geometry and the active saved-theme identity.
+   * @param palette - Palette whose colors should replace the current color preview; returning to a saved theme's original palette restores its saved colors.
+   */
+  public selectBuiltIn(palette: BxThemeId): void {
+    const saved = this.selectedSavedTheme();
+    const original = saved?.document.palette === palette ? saved.document : null;
+    const colorNames = new Set<string>(STUDIO_CONTROLS.filter((control) => control.family === 'Colors').map((control) => control.name));
+    const keepGeometryText = (values: Readonly<Record<string, string>>): Readonly<Record<string, string>> =>
+      Object.fromEntries(Object.entries(values).filter(([name]) => !colorNames.has(name.slice(name.indexOf(':') + 1))));
+
+    ++this.selectionRevision;
+    this.finishEdit();
+    this.recordChange();
+    this.restore({
+      document: { version: 1, palette, shared: this.shared(), light: structuredClone(original?.light ?? {}), dark: structuredClone(original?.dark ?? {}) },
+      mode: this.themingService.applicationTheme(),
+      text: keepGeometryText(this.editedText()),
+      errors: keepGeometryText(this.errors()),
+      autoResolve: this.autoResolve()
+    });
+
+    if (!saved) {
+      this.selectedSavedThemeId.set(null);
+      this.persistSelection(null);
+      this.referenceDocument.set({ version: 1, palette, shared: {}, light: {}, dark: {} });
+    }
+
+    this.status.set(
+      saved
+        ? `Previewing palette ${palette} for "${saved.name}". Save Changes commits it; Reset restores the saved theme.`
+        : `Applied palette ${palette}; geometry and other custom settings retained.`
+    );
+  }
+
+  /** Select a saved theme and restore its complete configuration, light/dark counterparts included.
+   * @param id - Stable saved-theme ID.
+   */
+  public selectSavedTheme(id: string): void {
+    const theme = this.savedThemesStorageService.get(id);
+
+    if (!theme) return;
+
+    if (this.applyDocument(theme.document, `Applied saved theme "${theme.name}".`)) {
+      ++this.selectionRevision;
+      this.selectedSavedThemeId.set(id);
+      this.persistSelection(id);
+      this.referenceDocument.set(structuredClone(theme.document));
+    }
+  }
+
+  /** Persist the current working configuration as a new saved theme.
+   * @param name - Validated, trimmed theme name.
+   */
+  public async saveAsNew(name: string): Promise<ISavedTheme | null> {
+    if (!this.canSaveNew()) return null;
+
+    this.finishEdit();
+
+    const document = structuredClone(this.themeDocument());
+    const revision = this.selectionRevision;
+
+    try {
+      const theme = await this.savedThemesStorageService.create(name, document);
+
+      if (revision === this.selectionRevision) {
+        ++this.selectionRevision;
+        this.selectedSavedThemeId.set(theme.id);
+        this.persistSelection(theme.id);
+        this.referenceDocument.set(structuredClone(theme.document));
+      }
+
+      this.status.set(`Saved theme "${theme.name}".`);
+
+      return theme;
+    } catch (error) {
+      this.status.set(this.failureMessage(error, 'The theme could not be saved.'));
+
+      return null;
+    }
+  }
+
+  /** Update the currently selected saved theme with the current working configuration. */
+  public async saveChanges(): Promise<ISavedTheme | null> {
+    const id = this.selectedSavedThemeId();
+
+    if (!id || !this.canSaveChanges()) return null;
+
+    this.finishEdit();
+
+    const document = structuredClone(this.themeDocument());
+    const revision = this.selectionRevision;
+
+    try {
+      const theme = await this.savedThemesStorageService.update(id, document);
+
+      if (revision === this.selectionRevision) this.referenceDocument.set(structuredClone(theme.document));
+
+      this.status.set(`Updated saved theme "${theme.name}".`);
+
+      return theme;
+    } catch (error) {
+      this.status.set(this.failureMessage(error, 'The theme changes could not be saved.'));
+
+      return null;
+    }
+  }
+
+  /** Rename a saved theme, preserving its ID and configuration.
+   * @param id - Stable saved-theme ID.
+   * @param name - Validated, trimmed new name.
+   */
+  public async renameSavedTheme(id: string, name: string): Promise<ISavedTheme | null> {
+    try {
+      const theme = await this.savedThemesStorageService.rename(id, name);
+
+      this.status.set(`Renamed theme to "${theme.name}".`);
+
+      return theme;
+    } catch (error) {
+      this.status.set(this.failureMessage(error, 'The theme could not be renamed.'));
+
+      return null;
+    }
+  }
+
+  /** Delete a saved theme and free its slot; deleting the active theme returns to the built-in fallback.
+   * @param id - Stable saved-theme ID.
+   */
+  public async deleteSavedTheme(id: string): Promise<void> {
+    try {
+      await this.savedThemesStorageService.remove(id);
+
+      if (this.selectedSavedThemeId() === id) this.fallbackToBuiltIn();
+      else this.status.set('Deleted saved theme.');
+    } catch (error) {
+      this.status.set(this.failureMessage(error, 'The theme could not be deleted.'));
+
+      throw error;
+    }
+  }
+
   //#region Helpers
 
   private colorMatchesAuto(name: ThemeCssVariable, mode: StudioMode): boolean {
@@ -531,6 +741,65 @@ export class ThemeStudioService implements OnDestroy {
 
   private editKey(name: ThemeCssVariable, mode: StudioMode = this.themingService.activeTheme()): string {
     return `${STUDIO_CONTROLS.find((item) => item.name === name)?.family === 'Colors' ? mode : 'shared'}:${name}`;
+  }
+
+  private fallbackToBuiltIn(): void {
+    this.finishEdit();
+    this.recordChange();
+    this.shared.set({});
+    this.light.set({});
+    this.dark.set({});
+    this.editedText.set({});
+    this.errors.set({});
+    this.manualColors.set([]);
+    this.themingService.setPalette('carbon-cobalt');
+    ++this.selectionRevision;
+    this.selectedSavedThemeId.set(null);
+    this.persistSelection(null);
+    this.referenceDocument.set(this.themeDocument());
+    this.status.set('Deleted the active theme and returned to Carbon / Cobalt.');
+  }
+
+  private storedSelection(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+
+    try {
+      return this.document.defaultView?.localStorage.getItem(SELECTED_SAVED_THEME_KEY) ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private persistSelection(id: string | null): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      const storage = this.document.defaultView?.localStorage;
+
+      if (id) storage?.setItem(SELECTED_SAVED_THEME_KEY, id);
+      else storage?.removeItem(SELECTED_SAVED_THEME_KEY);
+    } catch {
+      // Storage policies must not prevent editing or applying a theme.
+    }
+  }
+
+  private failureMessage(error: unknown, fallback: string): string {
+    return error instanceof Error && error.message ? error.message : fallback;
+  }
+
+  private sameDocument(first: IThemeStudioDocument, second: IThemeStudioDocument): boolean {
+    return (
+      first.palette === second.palette &&
+      this.sameValues(first.shared, second.shared) &&
+      this.sameValues(first.light, second.light) &&
+      this.sameValues(first.dark, second.dark)
+    );
+  }
+
+  private sameValues(first: StudioValues, second: StudioValues): boolean {
+    const keys = Object.keys(first) as ThemeCssVariable[];
+
+    return keys.length === Object.keys(second).length && keys.every((key) => first[key] === second[key]);
   }
 
   private measureBaseline(palette: BxThemeId, mode: StudioMode): StudioValues {

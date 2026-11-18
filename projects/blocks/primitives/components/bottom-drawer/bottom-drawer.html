@@ -34,9 +34,11 @@
 
         @if (showHeader()) {
             <header class="bx-drawer-header">
-                @if (icon(); as iconName) {
-                    <bx-icon class="bx-drawer-icon" size="20" [name]="iconName" [decorative]="true" />
-                }
+                <ng-content select="[bxIconStart]">
+                    @if (icon(); as iconName) {
+                        <bx-icon class="bx-drawer-icon" size="20" [name]="iconName" [decorative]="true" />
+                    }
+                </ng-content>
                 <div class="bx-drawer-heading">
                     @if (title()) {
                         <h2 class="bx-drawer-title" [id]="titleId">{{ resolvedTitle() }}</h2>

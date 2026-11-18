@@ -261,7 +261,9 @@ export class DatePicker extends BxValueControl<DatePickerValue> {
 
   /** Selection mode rendered by the picker. Defaults to `'single'`. */
   public readonly mode: InputSignal<DatePickerMode> = input<DatePickerMode>('single');
-  /** Icon on the field's picker action. Defaults to 'calendar'; accepts any Blocks icon name. */
+  /** Optional custom noninteractive visual for the picker action; takes precedence over pickerIcon and preserves busy feedback. */
+  public readonly pickerIconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
+  /** Built-in picker icon, used when pickerIconTemplate is absent. */
   public readonly pickerIcon: InputSignal<IconName> = input<IconName>('calendar');
   /** Accessible name of the picker action; accepts translation keys. Defaults to 'Choose date'. */
   public readonly openPickerLabel: InputSignal<ResolvableText> = input<ResolvableText>('Choose date');

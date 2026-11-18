@@ -20,12 +20,12 @@ export class MenuItemStory {
     Pick<
       DemoInputs<MenuItem>,
       'icon' | 'endIcon' | 'label' | 'ariaLabel' | 'wrapLabel' | 'tooltipOnTruncate' | 'disabled' | 'loading' | 'danger' | 'shortcut'
-    > & { content: string }
+    > & { content: string; useIconTemplate: boolean; useEndIconTemplate: boolean }
   > = input.required<
     Pick<
       DemoInputs<MenuItem>,
       'icon' | 'endIcon' | 'label' | 'ariaLabel' | 'wrapLabel' | 'tooltipOnTruncate' | 'disabled' | 'loading' | 'danger' | 'shortcut'
-    > & { content: string }
+    > & { content: string; useIconTemplate: boolean; useEndIconTemplate: boolean }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

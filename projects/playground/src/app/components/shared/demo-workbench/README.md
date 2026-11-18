@@ -31,9 +31,15 @@ colors: green Code, blue Actions, and distinct accents for Playground, Examples 
 Code and Actions sit below the preview. The code file menu selects HTML, TypeScript and supporting files; Copy copies the selected file's current contents. A
 shared horizontal resize handle adjusts the preview and results heights. Switching Code/Actions retains the chosen allocation instead of resizing the preview.
 Results start at 320px, constrained by the space available for the preview, and remain resizable. The code viewer fills that allocation even for short files.
-Only the snippet scrolls; the file picker and Copy stay visible at the top. Actions appears only when the generated preview or service adapter can emit events,
-including native host events. Components without events show code directly without a tab bar. It retains a bounded history of event names and expandable payload
-snapshots, with a Clear actions button. The counter displays `99+` after 99 events while retaining its bounded log.
+The properties width and code/events height are shared across component pages and persist across refreshes using local storage. Viewport constraints limit the
+rendered panels without discarding the preferred sizes. If storage is blocked, sizes remain shared for the current application session. Reset story restores
+component arguments while preserving the panel layout. Only the snippet scrolls; the file picker and Copy stay visible at the top. Actions appears only when the
+generated preview or service adapter can emit events, including native host events. Components without events show code directly without a tab bar. It retains a
+bounded history of event names and expandable payload snapshots, with a Clear actions button. The counter displays `99+` after 99 events while retaining its
+bounded log.
+
+Double-click a resize handle or press Enter while it is focused to restore its original size: 480px for Properties and 320px for code/events, within the
+available viewport. These reset sizes stay fixed after navigation and refresh; resetting a panel also saves its restored size.
 
 ## API
 
@@ -142,3 +148,10 @@ the same geometry.
 
 A recipe may expand a `sharedView` template and stylesheet into both preview and copied source. This keeps the Swipe Actions first-row presentation synchronized
 with its Examples component without requiring consumers to import Playground internals.
+
+PageContainer and Container size metadata appears inside the preview surface at its top-start corner, using the same responsive padding as the example. It stays
+above the scrolling preview content and wraps within narrow workbench widths.
+
+Icon-template APIs have live toggles and presets in the Icon, MenuItem, Select/MultiSelect, DatePicker/TimePicker, Tabs and Stepper Playgrounds. They bind
+actual `TemplateRef` values rather than serializing templates through JSON. The Button Playground also demonstrates projected `bxIconStart`/`bxIconEnd` content.
+Custom visuals use the bundled Blocks logo; replace that asset URL when copying the example into an application.

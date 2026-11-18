@@ -18,8 +18,8 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`name` is required. `size`, `strokeWidth`, `color`, `bgColor`, `decorative`, `ariaLabel` configure rendering. Color accepts a semantic token or themed color;
-`bgColor="auto"` derives a complementary token.
+`name` selects a built-in glyph and may be omitted when projecting custom artwork or providing `contentTemplate`. `size`, `strokeWidth`, `color`, `bgColor`,
+`decorative`, `ariaLabel` configure rendering. Color accepts a semantic token or themed color; `bgColor="auto"` derives a complementary token.
 
 `size` accepts positive finite numbers or numeric strings in CSS pixels, including `[size]="64"`, `size="18"`, and the existing presets. The default is `'24'`;
 invalid dimensions fall back to 24. `strokeWidth` accepts positive finite numbers, including fractional values; omission or invalid values use 1.5. Icon
@@ -60,3 +60,13 @@ itself. The catalog progressively renders icon previews in bounded batches.
 ## Playground
 
 Open `/components/icon` for a working example, or `/icons` for categories, persistent catalog preferences, and a live customization inspector.
+
+## Custom visuals
+
+Use `[contentTemplate]` or project noninteractive content inside `bx-icon` to render a logo or other visual in its sized, themed, accessible frame. A template
+takes precedence over `name`; direct projection takes precedence over both. No built-in glyph is loaded when `contentTemplate` is provided. Supply image
+dimensions and meaningful external text labels; decorative visuals remain hidden from assistive technology by default.
+
+`IIconData.template` forwards this capability through navigation icons and end icons, modal header icons and SidePanel headers. `name` is optional for these
+custom visuals. Components with direct icon positions also expose [custom icon content](../../../primitives/directives/icon-content/README.md). Existing Lucide
+names and icon definitions remain supported.

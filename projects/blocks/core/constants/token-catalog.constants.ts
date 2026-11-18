@@ -1416,7 +1416,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     kind: 'value',
     scope: 'local',
     themeEditable: false,
-    defaults: ['calc(var(--bx-swipe-capsule-height) * 2.5 + var(--bx-swipe-stretch-extra, 0px))'],
+    defaults: ['calc(var(--bx-swipe-capsule-height) * var(--bx-swipe-capsule-ratio, 2.5) + var(--bx-swipe-stretch-extra, 0px))'],
     fallbacks: ['calc(var(--bx-space-10, 2.5rem) * 2.5)'],
     selectors: ['.bx-swipe-action'],
     sources: ['projects/blocks/forms/components/button/button.scss', 'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
@@ -11531,6 +11531,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/range-slider/range-slider.scss',
       'projects/blocks/forms/components/search-input/search-input.scss',
       'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
@@ -11926,8 +11927,9 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: [
-      'calc(var(--bx-swipe-capsule-height) * 2.5 + var(--bx-space-2, 0.5rem))',
-      'calc(var(--bx-swipe-capsule-height, var(--bx-space-10, 2.5rem)) * 2.5 + var(--bx-space-2, 0.5rem))'
+      'calc(var(--bx-swipe-capsule-height) * var(--bx-swipe-capsule-ratio, 2.5) + var(--bx-space-2, 0.5rem))',
+      'calc(var(--bx-swipe-capsule-height, var(--bx-space-10, 2.5rem)) * 2.5 + var(--bx-space-2, 0.5rem))',
+      'calc(var(--bx-swipe-capsule-height, var(--bx-space-10, 2.5rem)) * var(--bx-swipe-capsule-ratio, 2.5) + var(--bx-space-2, 0.5rem))'
     ],
     selectors: [],
     sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
@@ -11942,6 +11944,22 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['var(--bx-space-10, 2.5rem)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.ts'
+    ]
+  },
+  {
+    name: '--bx-swipe-capsule-ratio',
+    reference: 'var(--bx-swipe-capsule-ratio)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2.5'],
     selectors: [],
     sources: [
       'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
@@ -12035,7 +12053,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
     selectors: [],
     sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
   },
@@ -12048,7 +12066,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     scope: 'local',
     themeEditable: false,
     defaults: [],
-    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    fallbacks: ['var(--bx-space-1, 0.25rem)'],
     selectors: [],
     sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
   },

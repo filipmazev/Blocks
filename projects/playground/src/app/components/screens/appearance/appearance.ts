@@ -16,6 +16,7 @@ import { AppearanceModePreview } from '@playground/components/screens/appearance
 import { AppearancePreview } from '@playground/components/screens/appearance/appearance-preview/appearance-preview';
 import { APPEARANCE_MODES, APPEARANCE_QUALITIES, GLASSINESS_MODES } from '@playground/components/screens/appearance/constants/appearance-controls.constants';
 import { Readme } from '@playground/components/shared/readme/readme';
+import { ThemePaletteSelect } from '@playground/components/shared/theme-palette-select/theme-palette-select';
 import { ThemeStudioService } from '@playground/services/theme-studio.service';
 
 import { Highlight } from 'ngx-highlightjs';
@@ -37,7 +38,8 @@ import { Highlight } from 'ngx-highlightjs';
     TooltipDirective,
     Readme,
     AppearancePreview,
-    AppearanceModePreview
+    AppearanceModePreview,
+    ThemePaletteSelect
   ],
   templateUrl: './appearance.html',
   styleUrl: './appearance.scss',

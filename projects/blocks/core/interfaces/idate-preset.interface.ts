@@ -1,3 +1,5 @@
+import type { TemplateRef } from '@angular/core';
+
 import type { IDatePresetContext } from '@core/interfaces/idate-preset-context.interface';
 import type { ResolvableText } from '@core/types/core.types';
 import type { DatePickerValue } from '@core/types/date-time.types';
@@ -12,6 +14,8 @@ export interface IDatePreset {
   readonly description?: ResolvableText;
   /** Optional Blocks icon name. */
   readonly icon?: string;
+  /** Optional custom noninteractive visual; takes precedence over icon. */
+  readonly iconTemplate?: TemplateRef<unknown>;
   /** Optional translated grouping label. */
   readonly group?: ResolvableText;
   /** Optional disabled state; defaults to false. Disabled items cannot be selected. */

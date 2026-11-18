@@ -56,3 +56,6 @@ Listeners, observers, timers, animation effects, and scene controllers are relea
 Open `/`. See the [Theme Studio guide](../../shared/theme-studio/README.md) for editing, import, and export, the
 [scroll preview guide](../../../directives/preview-scroll/README.md) for its presentation behavior, and the
 [Figma publishing guide](../../../../../../../tools/figma/README.md) for Community releases.
+
+Orby's controls clamp their cached width to the current stage while Theme Studio's push panel expands or resizes, preventing temporary horizontal page scrolling
+without clipping the page's reading content.

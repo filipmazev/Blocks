@@ -17,7 +17,11 @@ import { Tab, TabContentDirective, Tabs } from '@filip.mazev/blocks/primitives';
 })
 export class TabsStory {
   public readonly args: InputSignal<
-    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & { content: string } & {
+    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & {
+      content: string;
+      useIconTemplate: boolean;
+      useEndIconTemplate: boolean;
+    } & {
       firstLabel: DemoInputs<Tab>['label'];
       firstDisabled: DemoInputs<Tab>['disabled'];
       firstColor: DemoInputs<Tab>['color'];
@@ -37,7 +41,11 @@ export class TabsStory {
       secondEndIcon: DemoInputs<Tab>['endIcon'];
     }
   > = input.required<
-    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & { content: string } & {
+    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & {
+      content: string;
+      useIconTemplate: boolean;
+      useEndIconTemplate: boolean;
+    } & {
       firstLabel: DemoInputs<Tab>['label'];
       firstDisabled: DemoInputs<Tab>['disabled'];
       firstColor: DemoInputs<Tab>['color'];

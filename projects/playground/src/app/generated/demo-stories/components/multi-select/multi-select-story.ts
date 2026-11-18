@@ -44,6 +44,7 @@ export class MultiSelectStory {
       | 'loadingAriaLabel'
       | 'hasMore'
       | 'loadError'
+      | 'panelWidth'
       | 'panelClass'
       | 'value'
       | 'id'
@@ -76,7 +77,7 @@ export class MultiSelectStory {
       | 'hideRequiredMarker'
       | 'subscriptSizing'
       | 'tooltipOnTruncate'
-    > & { content: string }
+    > & { content: string; useOptionStartTemplate: boolean; useOptionEndTemplate: boolean }
   > = input.required<
     Pick<
       DemoInputs<MultiSelect<unknown>>,
@@ -105,6 +106,7 @@ export class MultiSelectStory {
       | 'loadingAriaLabel'
       | 'hasMore'
       | 'loadError'
+      | 'panelWidth'
       | 'panelClass'
       | 'value'
       | 'id'
@@ -137,7 +139,7 @@ export class MultiSelectStory {
       | 'hideRequiredMarker'
       | 'subscriptSizing'
       | 'tooltipOnTruncate'
-    > & { content: string }
+    > & { content: string; useOptionStartTemplate: boolean; useOptionEndTemplate: boolean }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

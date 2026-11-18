@@ -41,8 +41,8 @@
     </ol>
 </nav>
 <ng-template #separatorTemplate>
-    @if (divider(); as icon) {
-        <bx-icon class="bx-breadcrumb-divider" size="16" aria-hidden="true" [name]="icon" />
+    @if (divider() || dividerTemplate()) {
+        <bx-icon class="bx-breadcrumb-divider" size="16" aria-hidden="true" [name]="divider()" [contentTemplate]="dividerTemplate()" />
     } @else {
         <span class="bx-breadcrumb-divider" aria-hidden="true">{{ separatorText() }}</span>
     }

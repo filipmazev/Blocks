@@ -80,3 +80,9 @@ adjust foregrounds that need contrast. See [Core's readable status roles](../../
 Open `/components/tag` for configurable text, colors, variants, icons, both counters, number-only tags, disabled appearance, an English/Spanish/French/German
 translation dropdown, and resizable conditional tooltips. `/components/truncate` demonstrates the shared directive directly. `/components/multi-select` includes
 selected-tag mode, visible-tag limits, and a Skopje +2 style overflow example.
+
+## Custom icon positions
+
+Project noninteractive elements marked `bxIconStart` or `bxIconEnd` to place logos or custom visuals beside the label. Import `IconContentDirective` from
+`@filip.mazev/blocks/primitives`. These slots take precedence over the built-in icons in the same positions. Keep the identifying label visible and mark
+decorative content appropriately. See the [shared slot guide](../../directives/icon-content/README.md).

@@ -1,5 +1,6 @@
-import type { InputSignal, Signal, WritableSignal } from '@angular/core';
+import type { InputSignal, Signal, TemplateRef, WritableSignal } from '@angular/core';
 
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, isDevMode, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -22,7 +23,7 @@ import { IconName, IconSize } from '@icons/types/icon.types';
 @Component({
   selector: 'bx-icon',
   standalone: true,
-  imports: [VisualTransition],
+  imports: [VisualTransition, NgTemplateOutlet],
   templateUrl: './icon.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './icon.scss'
@@ -122,8 +123,10 @@ export class Icon {
     return this.domSanitizer.bypassSecurityTrustHtml(svg);
   });
 
-  /** Icon definition or registered Lucide icon name to render. Required input. */
-  public readonly name: InputSignal<IconName> = input.required<IconName>();
+  /** Icon definition or registered Lucide name. Optional when supplying projected content or contentTemplate; omission renders no built-in glyph. */
+  public readonly name: InputSignal<IconName | undefined> = input<IconName | undefined>(undefined);
+  /** Optional custom noninteractive visual inside the normal icon frame; takes precedence over name. Preserves size, color and decorative semantics. */
+  public readonly contentTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
   /** Positive icon dimension in CSS pixels as a number or numeric string. Defaults to '24'; invalid values fall back to 24. */
   public readonly size: InputSignal<IconSize> = input<IconSize>('24');
   /** Semantic color role applied to the component presentation. Optional; omission leaves the value undefined. */
@@ -146,11 +149,18 @@ export class Icon {
       const currentId = ++requestId;
 
       const name = this.name();
+      const custom = this.contentTemplate();
 
       onCleanup(() => {
         requestId++;
       });
       this.loadError.set(null);
+
+      if (!name || custom) {
+        this.icon.set(undefined);
+
+        return;
+      }
 
       loadIcon(name)
         .then((resolved) => {

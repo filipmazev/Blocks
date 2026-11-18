@@ -1,3 +1,5 @@
+import type { TemplateRef } from '@angular/core';
+
 import type { ResolvableText } from '@filip.mazev/blocks/core';
 import type { IconName } from '@filip.mazev/blocks/icons';
 import type { ButtonColor } from '@forms/types/form.types';
@@ -12,8 +14,10 @@ export interface ISwipeAction {
   readonly id: string;
   /** Visible text under the capsule and beside the context icon; supports BX_I18N. */
   readonly label: ResolvableText;
-  /** Lucide icon centered inside the capsule and leading the context row. */
-  readonly icon: IconName;
+  /** Optional Lucide icon centered inside the capsule and leading the context row; omit when iconTemplate supplies the visual. */
+  readonly icon?: IconName;
+  /** Custom noninteractive action visual; overrides icon in ordinary states. Pending, retry and completion feedback retain their established meaning. */
+  readonly iconTemplate?: TemplateRef<unknown>;
   /** Semantic button intent. Defaults to primary, or danger for a destructive action. */
   readonly color?: ButtonColor;
   /** Blocks activation in both presentations. Defaults to false. */

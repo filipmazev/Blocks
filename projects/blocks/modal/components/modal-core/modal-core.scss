@@ -11,6 +11,19 @@
     pointer-events: none;
 }
 
+:host([popover]) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+    max-block-size: none;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
+}
+
 :host(.has-backdrop) {
     --bx-modal-dimming-background: var(--bx-modal-backdrop-tone);
 }

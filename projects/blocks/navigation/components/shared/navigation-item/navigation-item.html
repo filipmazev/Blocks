@@ -76,6 +76,7 @@
         <bx-icon
             class="bx-nav-icon"
             [name]="item().icon?.name ?? item().data?.icon?.name ?? 'circle'"
+            [contentTemplate]="item().icon?.template ?? item().data?.icon?.template"
             [size]="item().icon?.size ?? item().data?.icon?.size ?? '20'"
             [color]="item().icon?.color ?? item().data?.icon?.color"
             [bgColor]="item().icon?.bgColor ?? item().data?.icon?.bgColor"
@@ -87,7 +88,13 @@
             <bx-tag size="small" [opaque]="true" [text]="tag.text" [config]="tag.config ?? {}" [focusable]="false" />
         }
         @if (item().data?.endIcon; as icon) {
-            <bx-icon [name]="icon.name" [size]="icon.size ?? '16'" [color]="icon.color" [bgColor]="icon.bgColor" [strokeWidth]="icon.strokeWidth" />
+            <bx-icon
+                [name]="icon.name"
+                [contentTemplate]="icon.template"
+                [size]="icon.size ?? '16'"
+                [color]="icon.color"
+                [bgColor]="icon.bgColor"
+                [strokeWidth]="icon.strokeWidth" />
         }
     }
 </ng-template>

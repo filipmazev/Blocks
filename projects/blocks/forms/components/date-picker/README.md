@@ -190,3 +190,6 @@ combined DateTimePicker component is removed.
 ## Playground
 
 The component is available at `/components/date-picker`; this guide describes the library contract and defaults.
+
+`pickerIconTemplate` accepts a custom noninteractive picker-action visual and takes precedence over `pickerIcon`. Native action labels, disabled/readonly guards
+and loading feedback remain in place.

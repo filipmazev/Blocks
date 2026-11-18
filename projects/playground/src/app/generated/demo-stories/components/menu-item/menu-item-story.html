@@ -1,3 +1,9 @@
+<ng-template #startIcon>
+    <img src="blocks-app-icon.svg" width="20" height="20" alt="" />
+</ng-template>
+<ng-template #endIcon>
+    <span aria-hidden="true">Pro</span>
+</ng-template>
 <bx-menu-item
     [icon]="args().icon"
     [endIcon]="args().endIcon"
@@ -9,6 +15,6 @@
     [loading]="args().loading"
     [danger]="args().danger"
     [shortcut]="args().shortcut"
-    (action)="onAction('action', $event)">
-    {{ args().content }}
-</bx-menu-item>
+    [iconTemplate]="args().useIconTemplate ? startIcon : undefined"
+    [endIconTemplate]="args().useEndIconTemplate ? endIcon : undefined"
+    (action)="onAction('action', $event)" />

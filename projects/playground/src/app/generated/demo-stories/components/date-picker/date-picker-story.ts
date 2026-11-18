@@ -96,7 +96,7 @@ export class DatePickerStory {
       | 'hideRequiredMarker'
       | 'subscriptSizing'
       | 'tooltipOnTruncate'
-    > & { content: string }
+    > & { content: string; usePickerIconTemplate: boolean }
   > = input.required<
     Pick<
       DemoInputs<DatePicker>,
@@ -177,7 +177,7 @@ export class DatePickerStory {
       | 'hideRequiredMarker'
       | 'subscriptSizing'
       | 'tooltipOnTruncate'
-    > & { content: string }
+    > & { content: string; usePickerIconTemplate: boolean }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

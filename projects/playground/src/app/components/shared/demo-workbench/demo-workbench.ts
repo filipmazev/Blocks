@@ -49,6 +49,8 @@ import {
 import { Code } from '@playground/components/shared/code/code';
 import { DemoInspectorModal } from '@playground/components/shared/demo-inspector-modal/demo-inspector-modal';
 import { DEMO_STORIES } from '@playground/generated/demo-stories/constants/demo-stories.constants';
+import { DemoLayoutService } from '@playground/services/demo-layout.service';
+import { DEMO_LAYOUT_DEFAULTS } from '@playground/shared/constants/demo-layout.constants';
 import { DEMO_PROPERTY_BADGES } from '@playground/shared/constants/demo-property-badges.constants';
 import { demoSourceFiles, describeDemoPayload } from '@playground/shared/helpers/demo-source.helpers';
 import { validateDemoConstraints, validateDemoValue } from '@playground/shared/helpers/demo-validation.helpers';
@@ -85,6 +87,7 @@ export class DemoWorkbench {
   private readonly modalService = inject(ModalService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly windowDimensionsService = inject(WindowDimensionsService);
+  private readonly demoLayoutService = inject(DemoLayoutService);
 
   private readonly loadedComponents: Map<string, Type<unknown>> = new Map();
 
@@ -105,12 +108,13 @@ export class DemoWorkbench {
 
   protected readonly propertiesOpen: WritableSignal<boolean> = signal(!this.windowDimensionsService.isBelow('xl'));
 
-  protected readonly panelWidth: WritableSignal<number | string> = signal<number | string>(480);
-  protected readonly resultsHeight: WritableSignal<number> = signal(320);
+  protected readonly panelWidth: WritableSignal<number | string> = this.demoLayoutService.panelWidth;
+  protected readonly resultsHeight: WritableSignal<number> = this.demoLayoutService.resultsHeight;
 
   protected readonly showLoading: WritableSignal<boolean> = signal(false);
 
   protected readonly propertyBadges: typeof DEMO_PROPERTY_BADGES = DEMO_PROPERTY_BADGES;
+  protected readonly layoutDefaults: typeof DEMO_LAYOUT_DEFAULTS = DEMO_LAYOUT_DEFAULTS;
   protected readonly panelBreakpoints: SidePanelBreakpoints = { xl: 'push' };
 
   protected readonly phone: Signal<boolean> = computed(() => this.windowDimensionsService.isBelow('md'));

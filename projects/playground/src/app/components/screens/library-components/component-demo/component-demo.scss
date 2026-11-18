@@ -149,6 +149,8 @@ output {
     padding: spacing(6);
     border-radius: radius(lg);
     max-width: 28rem;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
 }
 
 .demo-stage p {
@@ -221,13 +223,34 @@ a {
 }
 
 .surface-example-scene {
+    position: relative;
     display: grid;
+    isolation: isolate;
     gap: spacing(4);
     inline-size: 100%;
     padding: spacing(6);
-    background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-bg-element) 2rem 4rem);
+    background: repeating-linear-gradient(
+        35deg,
+        var(--bx-bg-surface-alt) 0 2rem,
+        var(--bx-border-default) 2rem calc(2rem + 2px),
+        var(--bx-bg-element) calc(2rem + 2px) 4rem
+    );
     border-radius: radius(lg);
     box-sizing: border-box;
+}
+
+.surface-example-art {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: var(--bx-text-accent);
+    pointer-events: none;
+}
+
+.surface-example-scene > bx-alert {
+    position: relative;
 }
 
 .menu-examples {

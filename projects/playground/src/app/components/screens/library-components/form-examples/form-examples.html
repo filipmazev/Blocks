@@ -319,6 +319,23 @@
                 <bx-icon name="save" size="20" />
             </button>
         </div>
+        <div class="actions">
+            <button bx-button type="button" variant="tonal" [loading]="loadingAction()" (click)="runAction()">
+                <img bxIconStart src="blocks-app-icon.svg" width="24" height="24" alt="" />
+                Save with logo
+                <span bxIconEnd aria-hidden="true">⌘S</span>
+            </button>
+            <bx-menu>
+                <bx-menu-item label="Workspace with logo" [loading]="loadingAction()" (action)="runAction()">
+                    <img bxIconStart src="blocks-app-icon.svg" width="20" height="20" alt="" />
+                    <span bxIconEnd aria-hidden="true">Pro</span>
+                </bx-menu-item>
+            </bx-menu>
+            <bx-tag text="Custom visual">
+                <img bxIconStart src="blocks-app-icon.svg" width="16" height="16" alt="" />
+                <span bxIconEnd aria-hidden="true">Pro</span>
+            </bx-tag>
+        </div>
         <p role="status">{{ loadingAction() ? 'Saving with fake API requests…' : 'Ready. Buttons restore their original icons after loading.' }}</p>
     </div>
 } @else if (example() === 'range-slider') {

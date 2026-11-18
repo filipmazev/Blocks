@@ -74,7 +74,7 @@
                             [attr.aria-label]="resolvedOpenPickerLabel()"
                             [disabled]="effectiveDisabled() || isReadonly()"
                             (click)="onTriggerClick($event)">
-                            <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                            <bx-icon size="16" [name]="pickerIcon()" [contentTemplate]="pickerIconTemplate()" [decorative]="true" />
                         </button>
                     </div>
                 }
@@ -156,7 +156,7 @@
                             @if (busy) {
                                 <bx-loading-spinner [size]="16" [decorative]="true" />
                             } @else {
-                                <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                                <bx-icon size="16" [name]="pickerIcon()" [contentTemplate]="pickerIconTemplate()" [decorative]="true" />
                             }
                         </ng-template>
                     </bx-visual-transition>
@@ -217,7 +217,7 @@
                             @if (busy) {
                                 <bx-loading-spinner [size]="16" [decorative]="true" />
                             } @else {
-                                <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                                <bx-icon size="16" [name]="pickerIcon()" [contentTemplate]="pickerIconTemplate()" [decorative]="true" />
                             }
                         </ng-template>
                     </bx-visual-transition>
@@ -292,7 +292,7 @@
                         @if (busy) {
                             <bx-loading-spinner [size]="16" [decorative]="true" />
                         } @else {
-                            <bx-icon size="16" [name]="pickerIcon()" [decorative]="true" />
+                            <bx-icon size="16" [name]="pickerIcon()" [contentTemplate]="pickerIconTemplate()" [decorative]="true" />
                         }
                     </ng-template>
                 </bx-visual-transition>

@@ -1,3 +1,6 @@
+<ng-template #customIcon>
+    <img src="blocks-app-icon.svg" alt="" [width]="args().size" [height]="args().size" />
+</ng-template>
 <bx-icon
     [name]="args().name"
     [size]="args().size"
@@ -6,6 +9,5 @@
     [strokeWidth]="args().strokeWidth"
     [animated]="args().animated"
     [decorative]="args().decorative"
-    [ariaLabel]="args().ariaLabel">
-    {{ args().content }}
-</bx-icon>
+    [ariaLabel]="args().ariaLabel"
+    [contentTemplate]="args().useIconTemplate ? customIcon : undefined" />

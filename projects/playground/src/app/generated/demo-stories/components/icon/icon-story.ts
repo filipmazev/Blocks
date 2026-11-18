@@ -17,9 +17,15 @@ import { Icon } from '@filip.mazev/blocks/icons';
 })
 export class IconStory {
   public readonly args: InputSignal<
-    Pick<DemoInputs<Icon>, 'name' | 'size' | 'color' | 'bgColor' | 'strokeWidth' | 'animated' | 'decorative' | 'ariaLabel'> & { content: string }
+    Pick<DemoInputs<Icon>, 'name' | 'size' | 'color' | 'bgColor' | 'strokeWidth' | 'animated' | 'decorative' | 'ariaLabel'> & {
+      content: string;
+      useIconTemplate: boolean;
+    }
   > = input.required<
-    Pick<DemoInputs<Icon>, 'name' | 'size' | 'color' | 'bgColor' | 'strokeWidth' | 'animated' | 'decorative' | 'ariaLabel'> & { content: string }
+    Pick<DemoInputs<Icon>, 'name' | 'size' | 'color' | 'bgColor' | 'strokeWidth' | 'animated' | 'decorative' | 'ariaLabel'> & {
+      content: string;
+      useIconTemplate: boolean;
+    }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

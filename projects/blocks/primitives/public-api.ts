@@ -100,3 +100,5 @@ export * from '@primitives/types/calendar.types';
 export * from '@primitives/helpers/calendar-grid.helpers';
 
 export type { ICalendarRetryContext } from '@primitives/interfaces/icalendar-retry-context.interface';
+
+export * from '@primitives/directives/icon-content/icon-content.directive';

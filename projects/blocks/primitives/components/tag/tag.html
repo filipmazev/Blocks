@@ -15,9 +15,11 @@
     [attr.tabindex]="resolvedTooltip() && focusable() ? 0 : null"
     [bxTooltip]="resolvedTooltip()"
     [placement]="tooltipPlacement()">
-    @if (resolvedLeadingIcon(); as icon) {
-        <bx-icon [name]="icon" [size]="resolvedIconSize()" />
-    }
+    <ng-content select="[bxIconStart]">
+        @if (resolvedLeadingIcon(); as icon) {
+            <bx-icon [name]="icon" [size]="resolvedIconSize()" />
+        }
+    </ng-content>
     @if (resolvedLeadingNumber()) {
         <span class="bx-tag-number">{{ resolvedLeadingNumber() }}</span>
     }
@@ -27,7 +29,9 @@
     @if (resolvedTrailingNumber()) {
         <span class="bx-tag-number">{{ resolvedTrailingNumber() }}</span>
     }
-    @if (resolvedTrailingIcon(); as icon) {
-        <bx-icon [name]="icon" [size]="resolvedIconSize()" />
-    }
+    <ng-content select="[bxIconEnd]">
+        @if (resolvedTrailingIcon(); as icon) {
+            <bx-icon [name]="icon" [size]="resolvedIconSize()" />
+        }
+    </ng-content>
 </span>

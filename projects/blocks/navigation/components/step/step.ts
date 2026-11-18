@@ -30,6 +30,7 @@ export class Step {
     label: this.label(),
     description: this.description(),
     icon: this.icon(),
+    iconTemplate: this.iconTemplate(),
     disabled: this.disabled(),
     optional: this.optional(),
     editable: this.editable(),
@@ -52,6 +53,8 @@ export class Step {
   public readonly label: InputSignal<ResolvableText> = input.required<ResolvableText>();
   /** Optional translated supporting text. */
   public readonly description: InputSignal<ResolvableText | undefined> = input<ResolvableText>();
+  /** Optional custom noninteractive marker visual; takes precedence over icon. */
+  public readonly iconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
   /** Optional Blocks icon; omission displays the step number. */
   public readonly icon: InputSignal<IconName | undefined> = input<IconName>();
   /** Excludes this step from navigation and required completion. Defaults to false. */

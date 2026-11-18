@@ -40,7 +40,7 @@ export class StepperStory {
       | 'glassiness'
       | 'surfaceEffects'
       | 'activeStep'
-    > & { content: string } & {
+    > & { content: string; useIconTemplate: boolean } & {
       firstId: DemoInputs<Step>['id'];
       firstLabel: DemoInputs<Step>['label'];
       firstDescription: DemoInputs<Step>['description'];
@@ -93,7 +93,7 @@ export class StepperStory {
       | 'glassiness'
       | 'surfaceEffects'
       | 'activeStep'
-    > & { content: string } & {
+    > & { content: string; useIconTemplate: boolean } & {
       firstId: DemoInputs<Step>['id'];
       firstLabel: DemoInputs<Step>['label'];
       firstDescription: DemoInputs<Step>['description'];

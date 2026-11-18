@@ -1,6 +1,6 @@
 import type { InputSignal, InputSignalWithTransform, Signal } from '@angular/core';
 
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, inject, input, viewChild } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, computed, contentChild, inject, input, viewChild } from '@angular/core';
 
 import type { ITagPalette } from '@primitives/interfaces/itag-palette.interface';
 
@@ -9,6 +9,7 @@ import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Icon, IconName, IconSize } from '@filip.mazev/blocks/icons';
 
 import { TAG_PALETTES } from '@primitives/constants/tag.constants';
+import { IconContentDirective } from '@primitives/directives/icon-content/icon-content.directive';
 import { TooltipDirective } from '@primitives/directives/tooltip/tooltip.directive';
 import { TruncateDirective } from '@primitives/directives/truncate/truncate.directive';
 import { formatTagNumber } from '@primitives/helpers/tag-number.helpers';
@@ -32,6 +33,8 @@ import { TagColor, TagSize, TagVariant } from '@primitives/types/tag.types';
 })
 export class Tag {
   private readonly i18n = inject(BX_I18N, { optional: true });
+
+  private readonly iconContent: Signal<IconContentDirective | undefined> = contentChild(IconContentDirective);
 
   private readonly textOverflow: Signal<TruncateDirective | undefined> = viewChild(TruncateDirective);
 
@@ -62,7 +65,11 @@ export class Tag {
   protected readonly palette: Signal<ITagPalette> = computed(() => TAG_PALETTES[this.color() ?? this.config().color ?? 'accent']);
   protected readonly isNumberOnly: Signal<boolean> = computed(
     () =>
-      !this.resolvedText() && !this.resolvedLeadingIcon() && !this.resolvedTrailingIcon() && !!this.resolvedLeadingNumber() !== !!this.resolvedTrailingNumber()
+      !this.iconContent() &&
+      !this.resolvedText() &&
+      !this.resolvedLeadingIcon() &&
+      !this.resolvedTrailingIcon() &&
+      !!this.resolvedLeadingNumber() !== !!this.resolvedTrailingNumber()
   );
 
   /** Optional opaque surface; true removes translucency and blur. False or absent follows application appearance. */

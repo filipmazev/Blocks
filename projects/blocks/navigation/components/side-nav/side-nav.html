@@ -126,7 +126,7 @@
                                             [attr.data-section-id]="group.id"
                                             [attr.aria-expanded]="false"
                                             (click)="openSection(group, $event)">
-                                            <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                            <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" [contentTemplate]="group.icon?.template" />
                                         </button>
                                     } @else if (group.collapsible) {
                                         <button
@@ -137,7 +137,7 @@
                                             [attr.aria-controls]="id + '-section-' + $index"
                                             (click)="toggleSection(group)">
                                             @if (resolvedConfig().showSectionIcons) {
-                                                <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                                <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" [contentTemplate]="group.icon?.template" />
                                             }
                                             <span>{{ group.title }}</span
                                             ><bx-icon
@@ -148,7 +148,7 @@
                                     } @else {
                                         <h2 class="bx-nav-section-heading" [class.is-active]="sectionActive(group)">
                                             @if (resolvedConfig().showSectionIcons) {
-                                                <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                                <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" [contentTemplate]="group.icon?.template" />
                                             }
                                             <span>{{ group.title }}</span>
                                         </h2>

@@ -18,6 +18,7 @@ import { RouterLink } from '@angular/router';
 import type { ThemeCssVariable } from '@filip.mazev/blocks/core';
 import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
 import type { ICodeFile } from '@playground/interfaces/icode-file.interface';
+import type { IThemeNameDialogData } from '@playground/interfaces/itheme-name-dialog-data.interface';
 import type { IThemeStudioControl } from '@playground/interfaces/itheme-studio-control.interface';
 import type { IThemeStudioShadow } from '@playground/interfaces/itheme-studio-shadow.interface';
 import type { StudioColorToken, StudioMode, StudioValues } from '@playground/types/theme-studio.types';
@@ -34,6 +35,7 @@ import { Readme } from '@playground/components/shared/readme/readme';
 import { ThemePaletteSelect } from '@playground/components/shared/theme-palette-select/theme-palette-select';
 import { ThemeStudioImport } from '@playground/components/shared/theme-studio-import/theme-studio-import';
 import { ThemeStudioService } from '@playground/services/theme-studio.service';
+import { SAVED_THEME_LIMIT } from '@playground/shared/constants/theme-storage.constants';
 import { STUDIO_BORDER_STYLES, STUDIO_CONTROLS } from '@playground/shared/constants/theme-studio.constants';
 import {
   STUDIO_BASE_OPTIONS,
@@ -45,6 +47,7 @@ import {
   STUDIO_SHADOW_TARGETS,
   STUDIO_STYLE_OPTIONS
 } from '@playground/shared/constants/theme-studio-presets.constants';
+import { openThemeNameDialog } from '@playground/shared/helpers/theme-dialog.helpers';
 import { applyStudioMode, openThemeStudioSetup } from '@playground/shared/helpers/theme-studio.helpers';
 import { studioBaseColors, studioMenuColors } from '@playground/shared/helpers/theme-studio-colors.helpers';
 import { studioScale } from '@playground/shared/helpers/theme-studio-presets.helpers';
@@ -88,6 +91,7 @@ export class ThemeStudio {
 
   protected readonly styles: readonly IBxSelectOption<string>[] = STUDIO_STYLE_OPTIONS;
   protected readonly bases: typeof STUDIO_BASE_OPTIONS = STUDIO_BASE_OPTIONS;
+  protected readonly savedThemeLimit: number = SAVED_THEME_LIMIT;
   protected readonly menus: typeof STUDIO_MENU_OPTIONS = STUDIO_MENU_OPTIONS;
   protected readonly densities: readonly IBxSelectOption<string>[] = STUDIO_DENSITY_OPTIONS;
   protected readonly shadowTargets: typeof STUDIO_SHADOW_TARGETS = STUDIO_SHADOW_TARGETS;
@@ -132,6 +136,24 @@ export class ThemeStudio {
   public importTheme(): void {
     this.themeStudioService.finishEdit();
     this.modalService.open<undefined, undefined>(ThemeStudioImport, { header: { text: 'Import a theme' }, style: { layout: 'center' } });
+  }
+
+  public saveNewTheme(): void {
+    const data: IThemeNameDialogData = {
+      title: this.themeStudioService.selectedSavedThemeId() ? 'Save as new theme' : 'Save theme',
+      name: '',
+      hint: 'Save the current theme as a new custom theme. It appears in the Theme dropdown.',
+      confirmLabel: 'Save',
+      takenNames: this.themeStudioService.savedThemes().map((theme) => theme.name)
+    };
+
+    void openThemeNameDialog(this.modalService, data).then((name) => {
+      if (name) void this.themeStudioService.saveAsNew(name);
+    });
+  }
+
+  public saveChanges(): void {
+    void this.themeStudioService.saveChanges();
   }
 
   public download(format: 'scss' | 'json' = 'scss'): void {

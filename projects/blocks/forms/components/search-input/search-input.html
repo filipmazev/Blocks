@@ -25,7 +25,7 @@
                     @if (busy) {
                         <bx-loading-spinner [size]="16" [decorative]="true" />
                     } @else {
-                        <bx-icon name="search" size="16" />
+                        <ng-content select="[bxIconStart]"><bx-icon name="search" size="16" /></ng-content>
                     }
                 </ng-template>
             </bx-visual-transition>

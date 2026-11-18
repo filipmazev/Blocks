@@ -570,12 +570,16 @@
                                     }
                                     @case ('surface') {
                                         <div class="surface-example-scene">
+                                            <div class="surface-example-art" aria-hidden="true">
+                                                <bx-icon name="orbit" size="100" />
+                                                <bx-icon name="sparkles" size="56" />
+                                            </div>
                                             <bx-alert
                                                 title="Live light source"
                                                 message="Light from this alert reaches the sample material."
                                                 [emissive]="true"
                                                 [emissionIntensity]="0.8" />
-                                            <section bxSurface class="custom-surface">
+                                            <section bxSurface bxSurfaceGlassiness="auto" class="custom-surface" [bxSurfaceLocalRefraction]="true">
                                                 <bx-icon name="layers" size="28" />
                                                 <h3>A custom Blocks surface</h3>
                                                 <p>Material, blur, tint, lighting and motion follow the same global configuration as the controls around it.</p>

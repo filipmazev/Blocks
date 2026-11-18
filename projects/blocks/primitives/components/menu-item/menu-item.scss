@@ -59,3 +59,14 @@
     inline-size: 100%;
     min-inline-size: 0;
 }
+
+.bx-menu-item-leading,
+.bx-icon-pos-end {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+
+    &:empty {
+        display: none;
+    }
+}

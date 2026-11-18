@@ -23,6 +23,8 @@ import { filter, skip } from 'rxjs';
 import type { IModalIsolationState } from '@modal/interfaces/imodal-isolation-state.interface';
 import type { IModalStackEntry } from '@modal/interfaces/imodal-stack-entry.interface';
 
+import { inheritOverlayOwnership } from '@filip.mazev/blocks/core';
+
 import { ModalConfig } from '@modal/classes/modal-config';
 import { ModalRef } from '@modal/classes/modal-ref';
 import { ModalCore } from '@modal/components/modal-core/modal-core';
@@ -76,6 +78,7 @@ export class ModalService implements IModalService {
    * @returns A ModalRef instance representing the opened modal.
    */
   public open<D, R, C extends IModal<D, R> = IModal<D, R>>(component: ComponentType<C>, config?: IModalConfig<D, R>): ModalRef<D, R, C> {
+    const origin = this.document.activeElement;
     const resolvedConfig = this.resolveConfig(config);
     const modal = new ModalRef<D, R, C>(new ModalConfig(resolvedConfig), component, this);
     const dataInjector = Injector.create({
@@ -91,15 +94,25 @@ export class ModalService implements IModalService {
       elementInjector: dataInjector
     });
 
+    const nativeElement = wrapperRef.location.nativeElement as HTMLElement;
+    const disconnectOwnership = this.document.defaultView && origin instanceof HTMLElement ? inheritOverlayOwnership(origin, nativeElement) : undefined;
+
     modal.attachContainer(wrapperRef);
     wrapperRef.onDestroy(() => {
+      disconnectOwnership?.();
       this.applicationRef.detachView(wrapperRef.hostView);
       wrapperRef.location.nativeElement.remove();
     });
 
     try {
       this.applicationRef.attachView(wrapperRef.hostView);
-      this.document.body.appendChild(wrapperRef.location.nativeElement);
+      this.document.body.appendChild(nativeElement);
+
+      if (typeof nativeElement.showPopover === 'function') {
+        nativeElement.popover = 'manual';
+        nativeElement.showPopover();
+      }
+
       this.modals.update((current) => new Set(current).add(modal));
       this.syncNestingDepth();
 

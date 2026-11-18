@@ -1,5 +1,5 @@
 <div #surface class="bx-alert" bxSurface [bxSurfaceInteractive]="false" [class.has-emission]="emissive()">
-    <bx-icon class="bx-alert-icon" size="20" [name]="icon()" />
+    <ng-content select="[bxIconStart]"><bx-icon class="bx-alert-icon" size="20" [name]="icon()" /></ng-content>
     <div class="bx-alert-content">
         <div
             [attr.role]="announcement() === 'off' ? null : announcement() === 'assertive' ? 'alert' : 'status'"

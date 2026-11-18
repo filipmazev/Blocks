@@ -48,7 +48,10 @@
 }
 
 .preview {
+    --demo-preview-padding: #{spacing(6)};
+
     display: flex;
+    flex-direction: column;
     flex: 1 1 0;
     min-inline-size: 0;
     min-block-size: 12rem;
@@ -66,7 +69,7 @@
     flex: 1 1 0;
     min-inline-size: 0;
     min-block-size: 0;
-    padding: spacing(6);
+    padding: var(--demo-preview-padding);
     box-sizing: border-box;
     border-radius: nested-radius(radius(lg), 1px);
     overflow: auto;
@@ -202,8 +205,8 @@ p,
 }
 
 @include respond-down(sm) {
-    .preview-scroll {
-        padding: spacing(4);
+    .preview {
+        --demo-preview-padding: #{spacing(4)};
     }
 }
 
@@ -264,7 +267,9 @@ p,
     flex: none;
     flex-wrap: wrap;
     gap: spacing(2);
-    padding-block-end: spacing(2);
+    align-self: flex-start;
+    margin: var(--demo-preview-padding) var(--demo-preview-padding) 0;
+    max-inline-size: calc(100% - 2 * var(--demo-preview-padding));
     color: var(--bx-text-secondary);
     font-size: 0.75rem;
 }

@@ -8,10 +8,11 @@ import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
+import { IconContentDirective } from '@filip.mazev/blocks/primitives';
 
 @Component({
   selector: 'app-button-story',
-  imports: [Button, Icon],
+  imports: [Button, Icon, IconContentDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './button-story.html',
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
@@ -21,12 +22,12 @@ export class ButtonStory {
     Pick<
       DemoInputs<Button>,
       'variant' | 'shape' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'
-    > & { content: string; icon: 'save' | 'check' | 'plus' | undefined }
+    > & { content: string; icon: 'save' | 'check' | 'plus' | undefined; customStartIcon: boolean; customEndIcon: boolean }
   > = input.required<
     Pick<
       DemoInputs<Button>,
       'variant' | 'shape' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'
-    > & { content: string; icon: 'save' | 'check' | 'plus' | undefined }
+    > & { content: string; icon: 'save' | 'check' | 'plus' | undefined; customStartIcon: boolean; customEndIcon: boolean }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

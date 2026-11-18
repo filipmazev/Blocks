@@ -183,3 +183,9 @@ cancelable full pointer/touch swipes, trackpad reveal, reduced motion, and async
 While shared swipe actions are revealed, the whole primary control moves with its existing rounded hover/active material, including standalone items. A
 configurable content gap separates it from the action lane. Action gutters stay transparent and capsules retain their semantic colors. Full-swipe promises
 retain the stretched loading/retry capsule; success can collapse or dismiss the row through the shared directive.
+
+## Custom icon positions
+
+Project noninteractive elements marked `bxIconStart` or `bxIconEnd` to place logos or custom visuals beside the label. Import `IconContentDirective` from
+`@filip.mazev/blocks/primitives`. These slots take precedence over the built-in icons in the same positions. Keep the identifying label visible and mark
+decorative content appropriately. See the [shared slot guide](../../directives/icon-content/README.md).

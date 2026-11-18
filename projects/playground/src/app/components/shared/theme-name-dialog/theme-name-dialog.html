@@ -1,0 +1,18 @@
+<p class="name-hint">{{ data.hint }}</p>
+<bx-input-field
+    label="Theme name"
+    errorPolicy="always"
+    subscriptSizing="dynamic"
+    [spellcheck]="false"
+    [minLength]="1"
+    [maxLength]="nameMaxLength"
+    [value]="name()"
+    [error]="error()"
+    [invalid]="!!error()"
+    (valueChange)="change($event)" />
+<div *appModalFooter class="name-footer">
+    <div class="name-actions">
+        <button bx-button type="button" variant="tonal" color="grayscale" (click)="close()">Cancel</button>
+        <button bx-button type="button" variant="filled" [disabled]="!valid()" (click)="confirm()">{{ data.confirmLabel }}</button>
+    </div>
+</div>

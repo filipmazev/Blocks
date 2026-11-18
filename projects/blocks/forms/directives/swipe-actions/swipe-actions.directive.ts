@@ -93,6 +93,7 @@ export class SwipeActionsDirective {
   private dismissal: SwipeRowDismissal | undefined;
   private panel: ComponentRef<SwipeActionPanel> | undefined;
   private row: HTMLElement | undefined;
+  private originalRowActive: string | null = null;
   private movable: HTMLElement | undefined;
   private motion: ISpringMotion | undefined;
   private listeners: AbortController | undefined;
@@ -240,6 +241,7 @@ export class SwipeActionsDirective {
     if (!row || !movable || !win || row === this.nativeElement || movable === this.nativeElement || !this.nativeElement.contains(movable)) return;
 
     this.row = row;
+    this.originalRowActive = row.getAttribute('data-bx-swipe-active');
     this.movable = movable;
     this.style(this.nativeElement, 'position', 'relative');
     this.style(this.nativeElement, 'overflow', 'clip');
@@ -253,6 +255,9 @@ export class SwipeActionsDirective {
 
     this.panel = panel;
     panel.setInput('origin', this.focusOrigin());
+
+    if (row.getAttribute('role') === 'gridcell') panel.location.nativeElement.setAttribute('role', 'gridcell');
+
     this.nativeElement.append(panel.location.nativeElement);
     this.dismissal = new SwipeRowDismissal(this.nativeElement, [row, panel.location.nativeElement]);
     panel.instance.selected.subscribe((event) => this.invoke(event));
@@ -789,6 +794,26 @@ export class SwipeActionsDirective {
     const options = { signal: this.gestureListeners.signal };
     const doc = this.nativeElement.ownerDocument;
 
+    if (event.pointerType === 'touch') {
+      // Pointer capture and pointermove cancellation do not suppress native touch scrolling.
+      // Keep vertical scrolling and pinch zoom available until this single-touch swipe claims horizontal intent.
+      doc.addEventListener(
+        'touchmove',
+        (move) => {
+          if (move.touches.length !== 1) this.cancelGesture();
+          else if (this.gesture?.claimed && move.cancelable) move.preventDefault();
+        },
+        { ...options, passive: false }
+      );
+      doc.addEventListener(
+        'touchstart',
+        (start) => {
+          if (start.touches.length > 1) this.cancelGesture();
+        },
+        { ...options, passive: true }
+      );
+    }
+
     doc.addEventListener('pointermove', (move) => this.onMove(move), { ...options, passive: false });
     doc.addEventListener('pointerup', (end) => this.onUp(end), options);
     doc.addEventListener(
@@ -916,7 +941,11 @@ export class SwipeActionsDirective {
   private paint(): void {
     const side: SwipeSide | null = this.position < -0.1 ? 'left' : this.position > 0.1 ? 'right' : null;
 
-    this.nativeElement.dataset['bxSwipeActive'] = side ? 'true' : 'false';
+    const active = side ? 'true' : 'false';
+
+    this.nativeElement.dataset['bxSwipeActive'] = active;
+
+    if (this.row?.getAttribute('data-bx-swipe-active') !== active) this.row?.setAttribute('data-bx-swipe-active', active);
 
     const full = this.fullOptions(side);
 
@@ -1162,6 +1191,11 @@ export class SwipeActionsDirective {
     }
 
     this.originalStyles.clear();
+
+    if (this.originalRowActive === null) this.row?.removeAttribute('data-bx-swipe-active');
+    else this.row?.setAttribute('data-bx-swipe-active', this.originalRowActive);
+
+    this.originalRowActive = null;
     this.row = undefined;
     this.movable = undefined;
     delete this.nativeElement.dataset['bxSwipeActive'];

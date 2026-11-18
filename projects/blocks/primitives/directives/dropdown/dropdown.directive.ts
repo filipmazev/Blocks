@@ -265,6 +265,8 @@ export class DropdownDirective {
     this.subscriptions.add(overlay.backdropClick().subscribe(() => this.close()));
     this.subscriptions.add(
       overlay.outsidePointerEvents().subscribe((event) => {
+        if (event.type === 'auxclick' && event.button === 2) return;
+
         if (!containsOverlayTarget(this.elementRef.nativeElement, event.target as Node) && !containsOverlayTarget(overlay.overlayElement, event.target as Node))
           this.close();
       })

@@ -104,3 +104,6 @@ leave a translated surface in its containing scroll area. Pointer cancellation r
 ## Playground
 
 See the Bottom drawer demo at `/components/bottom-drawer` and the Modal bottom-sheet regression demo at `/components/modal`.
+
+The header accepts projected `bxIconStart` artwork in place of its icon. Heading, busy and close behavior remain owned by the drawer. See the
+[custom icon slot guide](../../directives/icon-content/README.md).

@@ -1,4 +1,4 @@
-import type { InputSignal, InputSignalWithTransform, OutputEmitterRef, Signal } from '@angular/core';
+import type { InputSignal, InputSignalWithTransform, OutputEmitterRef, Signal, TemplateRef } from '@angular/core';
 
 import { booleanAttribute, ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
@@ -47,6 +47,10 @@ export class MenuItem {
 
   /** Optional leading icon displayed with the label. Optional; omission leaves the value undefined. */
   public readonly icon: InputSignal<IconName | undefined> = input<IconName | undefined>(undefined);
+  /** Optional custom leading visual; takes precedence over icon and yields to the loading spinner. Noninteractive content only. */
+  public readonly iconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
+  /** Optional custom trailing visual; takes precedence over endIcon. Noninteractive content only. */
+  public readonly endIconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
   /** Optional trailing icon displayed after the label. Optional; omission leaves the value undefined. */
   public readonly endIcon: InputSignal<IconName | undefined> = input<IconName | undefined>(undefined);
   /** Visible or accessible label for the component; translation-key values resolve through BX_I18N. Optional; omission leaves the value undefined. */

@@ -61,3 +61,6 @@ adjust foregrounds that need contrast. See [Core's readable status roles](../../
 ## Playground
 
 `/components/alert` includes live examples and shared appearance controls.
+
+Project a noninteractive `bxIconStart` visual to replace the leading status icon while preserving the alert title, message and announcements. See the
+[custom icon slot guide](../../directives/icon-content/README.md).

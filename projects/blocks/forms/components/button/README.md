@@ -154,3 +154,9 @@ For another icon implementation, import `ButtonIconDirective` and mark its eleme
 loading. Spinner colors inherit the button foreground; `BxA11yService` removes rotation in reduced-motion mode.
 
 Open `/components/button-loading` for fake asynchronous actions with and without icons. Application code owns the promise and loading state.
+
+## Custom icon positions
+
+Project noninteractive elements marked `bxIconStart` or `bxIconEnd` to place logos or custom visuals beside the label. Import `IconContentDirective` from
+`@filip.mazev/blocks/primitives`. These slots take precedence over the built-in icons in the same positions. Keep the identifying label visible and mark
+decorative content appropriately. See the [shared slot guide](../../../primitives/directives/icon-content/README.md).

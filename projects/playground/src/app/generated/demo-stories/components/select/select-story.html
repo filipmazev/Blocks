@@ -1,3 +1,9 @@
+<ng-template #startVisual let-option>
+    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />
+</ng-template>
+<ng-template #endVisual let-option>
+    <span aria-hidden="true">Pro</span>
+</ng-template>
 <bx-select
     [clearable]="args().clearable"
     [clearLabel]="args().clearLabel"
@@ -16,6 +22,7 @@
     [loadingAriaLabel]="args().loadingAriaLabel"
     [hasMore]="args().hasMore"
     [loadError]="args().loadError"
+    [panelWidth]="args().panelWidth"
     [panelClass]="args().panelClass"
     [value]="args().value"
     [id]="args().id"
@@ -48,12 +55,12 @@
     [hideRequiredMarker]="args().hideRequiredMarker"
     [subscriptSizing]="args().subscriptSizing"
     [tooltipOnTruncate]="args().tooltipOnTruncate"
+    [optionStartTemplate]="args().useOptionStartTemplate ? startVisual : undefined"
+    [optionEndTemplate]="args().useOptionEndTemplate ? endVisual : undefined"
     (selectionChange)="onAction('selectionChange', $event)"
     (search)="onAction('search', $event)"
     (loadMore)="onAction('loadMore', $event)"
     (openedChange)="onAction('openedChange', $event)"
     (touch)="onAction('touch', $event)"
     (searchValueChange)="onAction('searchValueChange', $event)"
-    (valueChange)="onAction('valueChange', $event)">
-    {{ args().content }}
-</bx-select>
+    (valueChange)="onAction('valueChange', $event)" />

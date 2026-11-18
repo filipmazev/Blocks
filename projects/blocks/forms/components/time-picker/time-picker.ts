@@ -284,7 +284,9 @@ export class TimePicker extends BxValueControl<IsoTime> {
   public readonly interval: InputSignal<number | string | undefined> = input<number | string | undefined>(undefined);
   /** Optional ordered strict input patterns; omission uses the display timeFormat. Explicit patterns are tried in order without locale guessing. */
   public readonly parseFormats: InputSignal<readonly string[]> = input<readonly string[]>([]);
-  /** Icon used to open the panel. Defaults to 'clock'. */
+  /** Optional custom noninteractive visual for the picker action; takes precedence over pickerIcon and preserves busy feedback. */
+  public readonly pickerIconTemplate: InputSignal<TemplateRef<unknown> | undefined> = input<TemplateRef<unknown> | undefined>(undefined);
+  /** Built-in picker icon, used when pickerIconTemplate is absent. */
   public readonly pickerIcon: InputSignal<IconName> = input<IconName>('clock');
   /** Translated accessible name of the opening action. Defaults to 'Choose time'. */
   public readonly openPickerLabel: InputSignal<ResolvableText> = input<ResolvableText>('Choose time');

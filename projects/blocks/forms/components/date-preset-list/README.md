@@ -31,3 +31,6 @@ Buttons are native, keyboard reachable and expose `aria-pressed`. Disabled prese
 ## Playground
 
 See `/components/date-picker`.
+
+Presets accept `iconTemplate` for a custom noninteractive leading visual, overriding the built-in `icon` name while retaining the preset label and selection
+behavior.

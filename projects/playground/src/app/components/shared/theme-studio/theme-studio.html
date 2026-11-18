@@ -10,6 +10,23 @@
     </bx-tabs>
     <app-theme-palette-select />
 </div>
+<div class="studio-save">
+    <div class="studio-save-actions">
+        @if (themeStudioService.hasSaveableCustomization()) {
+            <button bx-button type="button" variant="filled" color="primary" [disabled]="!themeStudioService.canSaveNew()" (click)="saveNewTheme()">
+                <bx-icon name="save" size="16" />{{ themeStudioService.selectedSavedThemeId() ? 'Save As New Theme' : 'Save Theme' }}
+            </button>
+        }
+        @if (themeStudioService.canSaveChanges()) {
+            <button bx-button type="button" variant="tonal" (click)="saveChanges()"><bx-icon name="save" size="16" />Save Changes</button>
+        }
+    </div>
+    @if (themeStudioService.storageError()) {
+        <p class="studio-note" role="status">{{ themeStudioService.storageError() }}</p>
+    } @else if (themeStudioService.savedThemes().length >= savedThemeLimit) {
+        <p class="studio-note">You've saved the maximum of {{ savedThemeLimit }} themes. Delete one to save another.</p>
+    }
+</div>
 <a bx-button variant="tonal" routerLink="/studio">Explore Theme Studio</a>
 <div class="studio-settings">
     <bx-select

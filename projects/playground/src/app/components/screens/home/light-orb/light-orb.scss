@@ -5,6 +5,8 @@
 }
 
 .orb-controls {
+    /* IMPORTANT: Clamp the cached stage width while a push panel changes the containing block between measurements. */
+    max-inline-size: 100%;
     position: absolute;
     inset-block-start: calc(var(--bx-page-padding-block, clamp(#{spacing(4)}, 3vw, #{spacing(10)})) + #{spacing(4)});
     inset-inline: 0;

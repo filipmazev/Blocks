@@ -24,7 +24,7 @@ supporting types.
 
 ## Usage
 
-Search `/utilities` by utility or API name, then follow **Explore utility**. Direct URLs are supported, and the sidenav exposes the same six pages.
+Search `/utilities` by utility or API name, then follow **Explore utility**. Direct URLs are supported, and the sidenav exposes the same seven pages.
 
 | Utility                  | Playground                       | Guide                                                     |
 | ------------------------ | -------------------------------- | --------------------------------------------------------- |
@@ -32,6 +32,7 @@ Search `/utilities` by utility or API name, then follow **Explore utility**. Dir
 | Device detection         | `/utilities/device`              | [Device guide](components/device/README.md)               |
 | Shared scroll locking    | `/utilities/scroll-lock`         | [Scroll-lock guide](components/scroll-lock/README.md)     |
 | Stable identifiers       | `/utilities/identifiers`         | [Identifier guide](components/identifiers/README.md)      |
+| IndexedDB storage        | `/utilities/indexed-db`          | [IndexedDB guide](components/indexed-db/README.md)        |
 | Color-token helpers      | `/utilities/color-tokens`        | [Color-token guide](components/color-tokens/README.md)    |
 | Overlay positioning      | `/utilities/overlay-positioning` | [Overlay guide](components/overlay-positioning/README.md) |
 
@@ -65,6 +66,7 @@ content viewports.
 | Scroll-boundary directive and helpers            | Local batch/height controls, overflow status, asynchronous fallback/retry example; linked virtual collection coverage |
 | `BxDateTimeConfigService`, date/time helpers     | Conversion round-trips, strict and natural-language parsing, time display cycle/precision, DST duration               |
 | `uuidv4()`                                       | Regenerated UUID and stable instance ID comparison                                                                    |
+| `IndexedDbService`, `IIndexedDbStore`            | Typed database open, promise-based requests/transactions, count/clear, and reload persistence                         |
 | Color-token helpers, `resolveThemeId()`          | Semantic/palette selection, CSS reference, complementary/inverted tokens, saved palette validation                    |
 | `BxOverlayPositionService`, origin/theme helpers | Preferred placement, viewport fallback, tracked origin, inherited theme, teardown                                     |
 
@@ -125,7 +127,7 @@ and `/modal`; the overlay positioning demo continues to cover placement, inherit
 
 ## Playground
 
-Open `/utilities` from **Core → Utilities**. Expand its sidenav item for all six utility pages, or use the overview search and links. On each page, the
+Open `/utilities` from **Core → Utilities**. Expand its sidenav item for all seven utility pages, or use the overview search and links. On each page, the
 interactive example precedes the documentation and source tabs.
 
 ### Owned popup containment
@@ -133,3 +135,7 @@ interactive example precedes the documentation and source tabs.
 `containsOverlayTarget(owner, target)` is part of the existing Core overlay infrastructure. It follows theme-inherited popup origins so nested context menus
 remain owned by their parent interaction even when CDK renders them outside the parent's DOM. The Menu/MenuItem swipe examples at `/components/menu-item`
 exercise this integration; see [Core popup containment](../../../../../../blocks/core/README.md#popup-containment) for its contract.
+
+`inheritOverlayOwnership(source, pane)` registers an invoking element for a popup or task boundary without copying theme variables. Call its returned cleanup
+before removing the surface. `containsOverlayTarget` follows this registration alongside theme-inherited popups. Modal already uses it; exercise a saved theme's
+Rename/Delete dialog from Theme Studio to verify that the source selector stays open.

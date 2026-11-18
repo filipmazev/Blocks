@@ -40,12 +40,12 @@
                     (lostpointercapture)="onPointerEnd($event, true)"
                     (click)="onTriggerClick($event, tab)"
                     (keydown)="onTabKey($event, tab)">
-                    @if (tab.icon()) {
-                        <bx-icon size="16" [name]="tab.icon()!" />
+                    @if (tab.icon() || tab.iconTemplate()) {
+                        <bx-icon size="16" [name]="tab.icon()" [contentTemplate]="tab.iconTemplate()" />
                     }
                     <span>{{ tab.resolvedLabel() }}</span>
-                    @if (tab.endIcon()) {
-                        <bx-icon size="16" [name]="tab.endIcon()!" />
+                    @if (tab.endIcon() || tab.endIconTemplate()) {
+                        <bx-icon size="16" [name]="tab.endIcon()" [contentTemplate]="tab.endIconTemplate()" />
                     }
                 </button>
             }

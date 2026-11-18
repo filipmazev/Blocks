@@ -6,6 +6,7 @@ export * from '@core/services/bx-a11y.service';
 export * from '@core/services/bx-overlay-position.service';
 export * from '@core/services/bx-shortcut.service';
 export * from '@core/services/device-type.service';
+export * from '@core/services/indexed-db.service';
 export * from '@core/services/scroll-lock.service';
 export * from '@core/services/theming.service';
 export * from '@core/services/window-dimension.service';
@@ -18,6 +19,8 @@ export * from '@core/enums/mobile-os.enum';
 export * from '@core/interfaces/ibx-custom-validators.interface';
 export * from '@core/interfaces/ibx-i18n-adapter.interface';
 export * from '@core/interfaces/idevice-state.interface';
+export * from '@core/interfaces/iindexed-db-index.interface';
+export * from '@core/interfaces/iindexed-db-store.interface';
 export * from '@core/interfaces/iscroll-lock-config.interface';
 export * from '@core/interfaces/iwindow-dimensions.interface';
 
@@ -124,4 +127,4 @@ export * from '@core/types/date-time-config.types';
 export * from '@core/types/date-time-serialization.types';
 export * from '@core/types/calendar.types';
 
-export { containsOverlayTarget } from '@core/helpers/overlay-ownership.helpers';
+export { containsOverlayTarget, inheritOverlayOwnership } from '@core/helpers/overlay-ownership.helpers';

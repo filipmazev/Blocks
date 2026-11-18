@@ -23,6 +23,7 @@ import {
 import {
   BX_I18N,
   BxA11yService,
+  containsOverlayTarget,
   DEFAULT_DEBOUNCE_TIME,
   inheritOverlayTheme,
   ResolvableText,
@@ -67,6 +68,10 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   private readonly searchInputRef: Signal<SearchInput | undefined> = viewChild<SearchInput>('searchInput');
   private readonly originRef: Signal<ElementRef<HTMLElement> | undefined> = viewChild('origin', { read: ElementRef<HTMLElement> });
 
+  /** Whether rich option commands require a grid popup so their buttons remain accessible outside the selection cell. */
+  protected readonly hasOptionActions: Signal<boolean> = computed(() =>
+    this.options().some((option) => !!(option.leftSwipeActions?.length || option.rightSwipeActions?.length))
+  );
   protected readonly hasSelection: Signal<boolean> = computed(() => this.internalValue() !== null && this.internalValue() !== undefined);
   protected readonly showClear: Signal<boolean> = computed(() => this.clearable() && this.hasSelection() && !this.isReadonly());
   protected readonly resolvedClearLabel: Signal<string> = computed(() => resolveText(this.clearLabel(), this.i18n));
@@ -197,6 +202,16 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
    * undefined.
    */
   public readonly loadMoreTemplate: InputSignal<TemplateRef<ILoadMoreContext> | undefined> = input<TemplateRef<ILoadMoreContext> | undefined>(undefined);
+  /** Optional popup width as a CSS length or pixels; defaults to the trigger width and is always bounded by the viewport. */
+  public readonly panelWidth: InputSignal<string | number | undefined> = input<string | number | undefined>(undefined);
+  /** Default leading visual template for options; per-option startTemplate takes precedence. Noninteractive content only. */
+  public readonly optionStartTemplate: InputSignal<TemplateRef<ISelectOptionContext<TOption>> | undefined> = input<
+    TemplateRef<ISelectOptionContext<TOption>> | undefined
+  >(undefined);
+  /** Default trailing visual template for options; per-option endTemplate takes precedence. Noninteractive content only. */
+  public readonly optionEndTemplate: InputSignal<TemplateRef<ISelectOptionContext<TOption>> | undefined> = input<
+    TemplateRef<ISelectOptionContext<TOption>> | undefined
+  >(undefined);
   /** Optional application CSS class applied to the options panel. Defaults to `''`. */
   public readonly panelClass: InputSignal<string> = input('');
   /**
@@ -360,11 +375,13 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
       this.disconnectTheme = this.ngZone.runOutsideAngular(() => inheritOverlayTheme(attachedOrigin, attachedOverlay.overlayElement));
       attachedOverlay.updatePosition();
 
-      const list = attachedOverlay.overlayElement.querySelector<HTMLElement>('[role="listbox"]');
+      const list = attachedOverlay.overlayElement.querySelector<HTMLElement>('[role="listbox"], [role="grid"]');
 
       this.selectionMotion?.destroy();
       this.selectionMotion = list
-        ? this.ngZone.runOutsideAngular(() => mountSelectionMotion(list, { reducedMotion: this.bxA11yService.isReducedMotion() }))
+        ? this.ngZone.runOutsideAngular(() =>
+            mountSelectionMotion(list, { selector: '.bx-select-option', reducedMotion: this.bxA11yService.isReducedMotion() })
+          )
         : undefined;
 
       if (!this.bxA11yService.isReducedMotion()) {
@@ -420,6 +437,13 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
     this.transition?.refresh();
   }
 
+  protected panelInlineSize(triggerWidth: number): string {
+    const width = this.panelWidth();
+    const requested = typeof width === 'number' ? `${width}px` : (width ?? `${triggerWidth}px`);
+
+    return `min(${requested}, calc(100vw - 16px))`;
+  }
+
   protected onTriggerKey(event: KeyboardEvent): void {
     if (this.disabled() || this.isReadonly()) return;
 
@@ -451,6 +475,9 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
     }
 
     const target = event.target as HTMLElement;
+
+    if (target.closest('bx-swipe-action-panel') && !['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+
     const editing = target.matches('input,textarea');
 
     if (editing && !['ArrowDown', 'ArrowUp'].includes(event.key)) return;
@@ -465,7 +492,8 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
 
     if (!items.length) return;
 
-    const current = items.indexOf(items[0].ownerDocument.activeElement as HTMLElement);
+    const active = items[0].ownerDocument.activeElement as HTMLElement;
+    const current = items.findIndex((item) => item === active || item.closest('.bx-select-option-row')?.contains(active));
     const next =
       event.key === 'Home'
         ? 0
@@ -486,9 +514,15 @@ export abstract class BxSelectBase<TValue, TOption> extends BxValueControl<TValu
   }
 
   protected onOutsideClick(event: MouseEvent): void {
+    if (event.type === 'auxclick' && event.button === 2) return;
+
     const clickTarget = event.target as Node;
 
-    if (this.originRef()?.nativeElement.contains(clickTarget)) {
+    const pane = this.connectedOverlay()?.overlayRef?.overlayElement;
+
+    const origin = this.originRef()?.nativeElement;
+
+    if ((origin && containsOverlayTarget(origin, clickTarget)) || (pane && containsOverlayTarget(pane, clickTarget))) {
       return;
     }
 

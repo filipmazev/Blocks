@@ -129,7 +129,7 @@
                             @if (group.title) {
                                 <h2 class="bx-top-nav-heading" [class.is-active]="sectionActive(group)">
                                     @if (resolvedConfig().showSectionIcons) {
-                                        <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" />
+                                        <bx-icon size="20" [name]="group.icon?.name ?? 'folder'" [contentTemplate]="group.icon?.template" />
                                     }
                                     <span>{{ group.title }}</span>
                                 </h2>

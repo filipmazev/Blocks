@@ -3,15 +3,20 @@ import type { IDemoRecipe } from '@playground/interfaces/idemo-recipe.interface'
 export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
   button: {
     template:
-      '<button type="button" bx-button DEMO_BINDINGS [attr.aria-label]="args().content" (click)="onAction(\'click\', $event)">@if (args().icon; as icon) { <bx-icon [name]="icon" /> } @if (args().variant !== \'icon\' && args().shape !== \'capsule\') { {{ args().content }} }</button>',
-    imports: { '@filip.mazev/blocks/icons': ['Icon'] },
-    extras: { icon: { description: 'Optional projected Lucide icon.', editor: 'select', options: ['save', 'check', 'plus'] } },
+      '<button type="button" bx-button DEMO_BINDINGS [attr.aria-label]="args().content" (click)="onAction(\'click\', $event)">@if (args().customStartIcon) { <img bxIconStart src="blocks-app-icon.svg" width="20" height="20" alt="" /> } @else if (args().icon; as icon) { <bx-icon [name]="icon" /> } @if (args().variant !== \'icon\' && args().shape !== \'capsule\') { {{ args().content }} } @if (args().customEndIcon) { <span bxIconEnd aria-hidden="true">Pro</span> }</button>',
+    imports: { '@filip.mazev/blocks/icons': ['Icon'], '@filip.mazev/blocks/primitives': ['IconContentDirective'] },
+    extras: {
+      icon: { description: 'Optional projected Lucide icon.', editor: 'select', options: ['save', 'check', 'plus'] },
+      customStartIcon: { description: 'Project a custom logo with bxIconStart, including measured loading feedback.', editor: 'boolean', defaultValue: false },
+      customEndIcon: { description: 'Project custom trailing content with bxIconEnd.', editor: 'boolean', defaultValue: false }
+    },
     args: { content: 'Save changes', variant: 'filled' },
     presets: [
       { name: 'Tonal', args: { variant: 'tonal' } },
       { name: 'With icon', args: { icon: 'save' } },
       { name: 'Icon only', args: { icon: 'save', variant: 'icon' } },
       { name: 'Capsule', args: { icon: 'save', variant: 'filled', shape: 'capsule' } },
+      { name: 'Custom projected icons', args: { customStartIcon: true, customEndIcon: true } },
       { name: 'Loading', args: { loading: true } },
       { name: 'Disabled', args: { disabled: true } }
     ]
@@ -37,7 +42,15 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
   },
   grid: { template: '<bx-grid DEMO_BINDINGS><p>Design</p><p>Engineering</p><p>Documentation</p></bx-grid>' },
   stack: { template: '<bx-stack DEMO_BINDINGS><span>Design</span><span>Engineering</span><span>Documentation</span></bx-stack>' },
-  icon: { args: { bgColor: 'auto', name: 'sparkles', size: 32, decorative: false, ariaLabel: 'Highlights' } },
+  icon: {
+    template:
+      '<ng-template #customIcon><img src="blocks-app-icon.svg" [width]="args().size" [height]="args().size" alt="" /></ng-template><bx-icon DEMO_BINDINGS [contentTemplate]="args().useIconTemplate ? customIcon : undefined" />',
+    extras: {
+      useIconTemplate: { description: 'Render a custom visual through contentTemplate instead of the named glyph.', editor: 'boolean', defaultValue: false }
+    },
+    args: { bgColor: 'auto', name: 'sparkles', size: 32, decorative: false, ariaLabel: 'Highlights' },
+    presets: [{ name: 'Custom icon template', args: { useIconTemplate: true } }]
+  },
   tag: { args: { text: 'Design', leadingIcon: 'palette' } },
   chip: {
     args: { label: 'Design', removable: true },
@@ -71,7 +84,11 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
   },
   tabs: {
     template:
-      '<bx-tabs DEMO_BINDINGS><bx-tab FIRST_BINDINGS><ng-template bxTabContent>Project overview</ng-template></bx-tab><bx-tab SECOND_BINDINGS><ng-template bxTabContent>Workspace settings</ng-template></bx-tab></bx-tabs>',
+      '<ng-template #tabVisual><img src="blocks-app-icon.svg" width="16" height="16" alt="" /></ng-template><ng-template #tabEnd><span aria-hidden="true">Pro</span></ng-template><bx-tabs DEMO_BINDINGS><bx-tab FIRST_BINDINGS [iconTemplate]="args().useIconTemplate ? tabVisual : undefined" [endIconTemplate]="args().useEndIconTemplate ? tabEnd : undefined"><ng-template bxTabContent>Project overview</ng-template></bx-tab><bx-tab SECOND_BINDINGS><ng-template bxTabContent>Workspace settings</ng-template></bx-tab></bx-tabs>',
+    extras: {
+      useIconTemplate: { description: 'Custom iconTemplate on the first tab.', editor: 'boolean', defaultValue: false },
+      useEndIconTemplate: { description: 'Custom endIconTemplate on the first tab.', editor: 'boolean', defaultValue: false }
+    },
     imports: { '@filip.mazev/blocks/primitives': ['Tabs', 'Tab', 'TabContentDirective'] },
     children: {
       first: { symbol: 'Tab', label: 'First tab', args: { label: 'Overview', value: 'overview' } },
@@ -82,7 +99,14 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
   },
   stepper: {
     template:
-      '<bx-stepper DEMO_BINDINGS><bx-step FIRST_BINDINGS><p>{{ args().content }}</p></bx-step><bx-step SECOND_BINDINGS><p>Review your project</p></bx-step></bx-stepper>',
+      '<ng-template #stepVisual><img src="blocks-app-icon.svg" width="20" height="20" alt="" /></ng-template><bx-stepper DEMO_BINDINGS><bx-step FIRST_BINDINGS [iconTemplate]="args().useIconTemplate ? stepVisual : undefined"><p>{{ args().content }}</p></bx-step><bx-step SECOND_BINDINGS><p>Review your project</p></bx-step></bx-stepper>',
+    extras: {
+      useIconTemplate: {
+        description: 'Custom iconTemplate for the first step marker; status feedback retains priority.',
+        editor: 'boolean',
+        defaultValue: false
+      }
+    },
     imports: { '@filip.mazev/blocks/navigation': ['Stepper', 'Step'] },
     args: { mode: 'wizard', content: 'Project details' },
     children: {
@@ -156,7 +180,16 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
     },
     template: `<div #swipeRow="bxSwipeActions" bxSwipeActions class="mail-row" [swipeDismissFocus]="restoreFocus" DEMO_BINDINGS [attr.dir]="args().direction" [style.inline-size.px]="args().rowWidth">SHARED_VIEW</div><span #restoreFocus><button bx-button type="button" variant="tonal" (click)="swipeRow.restoreSwipeRow()">Restore row</button></span>`
   },
-  'menu-item': { args: { label: 'Open project', icon: 'external-link' } },
+  'menu-item': {
+    template:
+      '<ng-template #startIcon><img src="blocks-app-icon.svg" width="20" height="20" alt="" /></ng-template><ng-template #endIcon><span aria-hidden="true">Pro</span></ng-template><bx-menu-item DEMO_BINDINGS [iconTemplate]="args().useIconTemplate ? startIcon : undefined" [endIconTemplate]="args().useEndIconTemplate ? endIcon : undefined" />',
+    extras: {
+      useIconTemplate: { description: 'Replace the leading icon through iconTemplate.', editor: 'boolean', defaultValue: false },
+      useEndIconTemplate: { description: 'Replace the trailing icon through endIconTemplate.', editor: 'boolean', defaultValue: false }
+    },
+    args: { label: 'Open project', icon: 'external-link' },
+    presets: [{ name: 'Custom icon templates', args: { useIconTemplate: true, useEndIconTemplate: true } }]
+  },
   menu: {
     template:
       '<bx-menu DEMO_BINDINGS><bx-menu-item label="Duplicate" icon="copy" (action)="onAction(\'duplicate\', $event)" /><bx-menu-item label="Archive" icon="archive" (action)="onAction(\'archive\', $event)" /></bx-menu>',
@@ -256,7 +289,31 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
       value: { minimumProperty: 'min', maximumProperty: 'max' }
     }
   },
+  'date-picker': {
+    template:
+      '<ng-template #pickerVisual><img src="blocks-app-icon.svg" width="16" height="16" alt="" /></ng-template><bx-date-picker DEMO_BINDINGS [pickerIconTemplate]="args().usePickerIconTemplate ? pickerVisual : undefined" />',
+    extras: {
+      usePickerIconTemplate: { description: 'Use a custom pickerIconTemplate; busy feedback retains the spinner.', editor: 'boolean', defaultValue: false }
+    },
+    args: { label: 'Project date' },
+    presets: [{ name: 'Custom picker icon', args: { usePickerIconTemplate: true } }]
+  },
+  'time-picker': {
+    template:
+      '<ng-template #pickerVisual><img src="blocks-app-icon.svg" width="16" height="16" alt="" /></ng-template><bx-time-picker DEMO_BINDINGS [pickerIconTemplate]="args().usePickerIconTemplate ? pickerVisual : undefined" />',
+    extras: {
+      usePickerIconTemplate: { description: 'Use a custom pickerIconTemplate; busy feedback retains the spinner.', editor: 'boolean', defaultValue: false }
+    },
+    args: { label: 'Project time' },
+    presets: [{ name: 'Custom picker icon', args: { usePickerIconTemplate: true } }]
+  },
   select: {
+    template:
+      '<ng-template #startVisual let-option><img src="blocks-app-icon.svg" width="16" height="16" alt="" /></ng-template><ng-template #endVisual let-option><span aria-hidden="true">Pro</span></ng-template><bx-select DEMO_BINDINGS [optionStartTemplate]="args().useOptionStartTemplate ? startVisual : undefined" [optionEndTemplate]="args().useOptionEndTemplate ? endVisual : undefined" />',
+    extras: {
+      useOptionStartTemplate: { description: 'Render a custom optionStartTemplate before the label.', editor: 'boolean', defaultValue: false },
+      useOptionEndTemplate: { description: 'Render a custom optionEndTemplate after the label.', editor: 'boolean', defaultValue: false }
+    },
     args: {
       label: 'Destination',
       options: [
@@ -268,12 +325,19 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
     },
     json: ['options', 'value'],
     presets: [
+      { name: 'Custom option visuals', args: { useOptionStartTemplate: true, useOptionEndTemplate: true } },
       { name: 'Searchable', args: { isSearchable: true } },
       { name: 'Readonly', args: { readOnly: true } },
       { name: 'Loading', args: { loading: true } }
     ]
   },
   'multi-select': {
+    template:
+      '<ng-template #startVisual let-option><img src="blocks-app-icon.svg" width="16" height="16" alt="" /></ng-template><ng-template #endVisual let-option><span aria-hidden="true">Pro</span></ng-template><bx-multi-select DEMO_BINDINGS [optionStartTemplate]="args().useOptionStartTemplate ? startVisual : undefined" [optionEndTemplate]="args().useOptionEndTemplate ? endVisual : undefined" />',
+    extras: {
+      useOptionStartTemplate: { description: 'Render a custom optionStartTemplate before the label.', editor: 'boolean', defaultValue: false },
+      useOptionEndTemplate: { description: 'Render a custom optionEndTemplate after the label.', editor: 'boolean', defaultValue: false }
+    },
     args: {
       label: 'Destinations',
       options: [
@@ -285,6 +349,7 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
     },
     json: ['options', 'value'],
     presets: [
+      { name: 'Custom option visuals', args: { useOptionStartTemplate: true, useOptionEndTemplate: true } },
       { name: 'Searchable', args: { isSearchable: true } },
       { name: 'Readonly', args: { readOnly: true } }
     ]
@@ -381,12 +446,23 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
     }
   },
   surface: {
-    styles:
-      '.surface-scene { position: relative; display: grid; gap: 1rem; padding: 1.5rem; isolation: isolate; background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-bg-element) 2rem 4rem); } .surface-art { position: absolute; inset: 25% 10%; display: flex; justify-content: space-between; color: var(--bx-text-accent); z-index: -1; } .surface-sample { display: grid; gap: 1rem; padding: 1.5rem; border: 1px solid var(--bx-border-default); background: color-mix(in srgb, var(--bx-bg-surface) 55%, transparent); }',
+    styles: `@use 'core/styles/helpers' as *;
+      .surface-scene { position: relative; display: grid; gap: spacing(4); padding: spacing(6); isolation: isolate; box-sizing: border-box; background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-border-default) 2rem calc(2rem + 2px), var(--bx-bg-element) calc(2rem + 2px) 4rem); }
+      .surface-art { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-around; color: var(--bx-text-accent); pointer-events: none; }
+      .surface-light { position: relative; }
+      .surface-sample { display: grid; gap: spacing(4); min-inline-size: 0; padding: spacing(6); border: 1px solid var(--bx-border-default); border-radius: radius(lg); overflow-wrap: anywhere; }
+      .surface-sample h3, .surface-sample p { margin: 0; }
+      .surface-sample button { justify-self: start; max-inline-size: 100%; white-space: normal; }`,
     template:
       '<div class="surface-scene"><div class="surface-art" aria-hidden="true"><bx-icon name="orbit" size="100" /><bx-icon name="sparkles" size="56" /></div><bx-alert class="surface-light" title="Live light source" message="This alert illuminates the neighboring material." [emissive]="true" [emissionIntensity]="0.8" /><section class="surface-sample" bxSurface DEMO_BINDINGS><h3>{{ args().content }}</h3><p>Move over this surface to inspect light, opacity and refraction.</p><button type="button" bx-button variant="tonal">Inspect material</button></section></div>',
     imports: { '@filip.mazev/blocks/primitives': ['Alert'], '@filip.mazev/blocks/forms': ['Button'], '@filip.mazev/blocks/icons': ['Icon'] },
-    args: { content: 'Workspace material', bxSurfaceTranslucency: 0.4, bxSurfaceGlassiness: 'auto' }
+    args: {
+      content: 'Workspace material',
+      bxSurfaceTranslucency: 0.4,
+      bxSurfaceGlassiness: 'auto',
+      bxSurfaceLocalRefraction: true,
+      bxSurfaceInteractive: true
+    }
   },
   'modal-banner': { args: { header: { text: 'Project settings' }, showCloseButton: true }, json: ['header'] },
   'bottom-drawer': {

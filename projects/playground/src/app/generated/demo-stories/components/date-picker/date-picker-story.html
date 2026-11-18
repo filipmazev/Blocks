@@ -1,3 +1,6 @@
+<ng-template #pickerVisual>
+    <img src="blocks-app-icon.svg" width="16" height="16" alt="" />
+</ng-template>
 <bx-date-picker
     [mode]="args().mode"
     [pickerIcon]="args().pickerIcon"
@@ -76,6 +79,7 @@
     [hideRequiredMarker]="args().hideRequiredMarker"
     [subscriptSizing]="args().subscriptSizing"
     [tooltipOnTruncate]="args().tooltipOnTruncate"
+    [pickerIconTemplate]="args().usePickerIconTemplate ? pickerVisual : undefined"
     (viewChange)="onAction('viewChange', $event)"
     (monthSelected)="onAction('monthSelected', $event)"
     (yearSelected)="onAction('yearSelected', $event)"
@@ -87,6 +91,4 @@
     (retry)="onAction('retry', $event)"
     (parseFailed)="onAction('parseFailed', $event)"
     (touch)="onAction('touch', $event)"
-    (valueChange)="onAction('valueChange', $event)">
-    {{ args().content }}
-</bx-date-picker>
+    (valueChange)="onAction('valueChange', $event)" />

@@ -13,6 +13,7 @@
                     [resizeDisableShrink]="false"
                     [resizeMinWidth]="320"
                     [resizeMaxWidth]="720"
+                    [resizeInitialWidth]="layoutDefaults.panelWidth"
                     [autoFocus]="false"
                     [(open)]="propertiesOpen"
                     [(width)]="panelWidth">
@@ -21,12 +22,12 @@
                 </bx-side-panel>
             }
             <div #stage class="stage-column">
-                @if (storyId() === 'page-container' || storyId() === 'container') {
-                    <div class="preview-size" role="status">
-                        <bx-icon name="ruler" size="14" /><span>{{ previewSize() }}</span>
-                    </div>
-                }
                 <div id="demo-preview" class="preview" bxSurface aria-label="Live preview" [attr.aria-busy]="loading()">
+                    @if (storyId() === 'page-container' || storyId() === 'container') {
+                        <div class="preview-size" role="status">
+                            <bx-icon name="ruler" size="14" /><span>{{ previewSize() }}</span>
+                        </div>
+                    }
                     <div class="preview-scroll">
                         <div class="preview-content"><ng-container #preview /></div>
                         @if (showLoading()) {
@@ -50,6 +51,7 @@
                     [resizeTarget]="results"
                     [resizeContainer]="stage"
                     [resizeMinSize]="160"
+                    [resizeInitialSize]="layoutDefaults.resultsHeight"
                     [resizeMaxSize]="stage.clientHeight - (storyId() === 'page-container' || storyId() === 'container' ? 240 : 216)"
                     [resizeDisableShrink]="false"
                     [resizeValue]="resultsHeight()"

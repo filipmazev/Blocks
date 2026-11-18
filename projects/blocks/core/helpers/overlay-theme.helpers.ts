@@ -1,5 +1,6 @@
-import { OVERLAY_ORIGINS } from '@core/constants/overlay-ownership.constants';
 import { THEME_CSS_VARIABLES } from '@core/constants/tokens.constants';
+
+import { inheritOverlayOwnership } from './overlay-ownership.helpers';
 
 /**
  * Copy the source's active theme/appearance context to an overlay pane and return cleanup.
@@ -10,13 +11,11 @@ import { THEME_CSS_VARIABLES } from '@core/constants/tokens.constants';
  * @param pane - Overlay pane receiving synchronized theme classes, attributes, and CSS variables.
  */
 export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () => void {
-  const previousOrigin = OVERLAY_ORIGINS.get(pane);
-
   const win = source.ownerDocument.defaultView;
 
   if (!win) return () => {};
 
-  OVERLAY_ORIGINS.set(pane, source);
+  const disconnectOwnership = inheritOverlayOwnership(source, pane);
 
   const task = source.closest<HTMLElement>('[data-bx-modal-task]');
   const owner = task?.dataset['bxModalTask'] ?? source.closest<HTMLElement>('[data-bx-overlay-modal-owner]')?.dataset['bxOverlayModalOwner'];
@@ -80,8 +79,7 @@ export function inheritOverlayTheme(source: HTMLElement, pane: HTMLElement): () 
   }
 
   return () => {
-    if (previousOrigin) OVERLAY_ORIGINS.set(pane, previousOrigin);
-    else OVERLAY_ORIGINS.delete(pane);
+    disconnectOwnership();
 
     observer.disconnect();
 

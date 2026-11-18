@@ -2351,132 +2351,140 @@ export const DEMO_SCHEMA_19: DemoValueSchema = {
     'zoom-out'
   ]
 };
-export const DEMO_SCHEMA_20: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_19] };
-export const DEMO_SCHEMA_21: DemoValueSchema = { kind: 'enum', values: ['info', 'primary', 'accent', 'success', 'danger', 'warn', 'grayscale'] };
-export const DEMO_SCHEMA_22: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_21, DEMO_SCHEMA_0] };
-export const DEMO_SCHEMA_23: DemoValueSchema = { kind: 'literal', value: 'normal' };
-export const DEMO_SCHEMA_24: DemoValueSchema = { kind: 'literal', value: 'destructive' };
-export const DEMO_SCHEMA_25: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_23, DEMO_SCHEMA_24] };
-export const DEMO_SCHEMA_26: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_8] };
-export const DEMO_SCHEMA_27: DemoValueSchema = {
+export const DEMO_SCHEMA_20: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_19, DEMO_SCHEMA_0] };
+export const DEMO_SCHEMA_21: DemoValueSchema = { kind: 'unsupported' };
+export const DEMO_SCHEMA_22: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_21] };
+export const DEMO_SCHEMA_23: DemoValueSchema = { kind: 'enum', values: ['info', 'primary', 'accent', 'success', 'danger', 'warn', 'grayscale'] };
+export const DEMO_SCHEMA_24: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_23, DEMO_SCHEMA_0] };
+export const DEMO_SCHEMA_25: DemoValueSchema = { kind: 'literal', value: 'normal' };
+export const DEMO_SCHEMA_26: DemoValueSchema = { kind: 'literal', value: 'destructive' };
+export const DEMO_SCHEMA_27: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_25, DEMO_SCHEMA_26] };
+export const DEMO_SCHEMA_28: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_8] };
+export const DEMO_SCHEMA_29: DemoValueSchema = {
   kind: 'object',
   properties: {
     enabled: DEMO_SCHEMA_12,
-    armThreshold: DEMO_SCHEMA_26,
-    commitThreshold: DEMO_SCHEMA_26,
-    resistance: DEMO_SCHEMA_26,
-    resistancePlateau: DEMO_SCHEMA_26,
-    resistanceEnd: DEMO_SCHEMA_26,
+    armThreshold: DEMO_SCHEMA_28,
+    commitThreshold: DEMO_SCHEMA_28,
+    resistance: DEMO_SCHEMA_28,
+    resistancePlateau: DEMO_SCHEMA_28,
+    resistanceEnd: DEMO_SCHEMA_28,
     readyLabel: DEMO_SCHEMA_10
   },
   required: []
 };
-export const DEMO_SCHEMA_28: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_27] };
-export const DEMO_SCHEMA_29: DemoValueSchema = { kind: 'literal', value: 'collapse' };
-export const DEMO_SCHEMA_30: DemoValueSchema = { kind: 'literal', value: 'dismiss' };
-export const DEMO_SCHEMA_31: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_29, DEMO_SCHEMA_30] };
-export const DEMO_SCHEMA_32: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_19, DEMO_SCHEMA_0] };
-export const DEMO_SCHEMA_33: DemoValueSchema = { kind: 'unsupported' };
-export const DEMO_SCHEMA_34: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_33] };
-export const DEMO_SCHEMA_35: DemoValueSchema = {
+export const DEMO_SCHEMA_30: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_29] };
+export const DEMO_SCHEMA_31: DemoValueSchema = { kind: 'literal', value: 'collapse' };
+export const DEMO_SCHEMA_32: DemoValueSchema = { kind: 'literal', value: 'dismiss' };
+export const DEMO_SCHEMA_33: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_31, DEMO_SCHEMA_32] };
+export const DEMO_SCHEMA_34: DemoValueSchema = {
   kind: 'object',
   properties: {
     id: DEMO_SCHEMA_1,
     label: DEMO_SCHEMA_3,
     icon: DEMO_SCHEMA_20,
-    color: DEMO_SCHEMA_22,
+    iconTemplate: DEMO_SCHEMA_22,
+    color: DEMO_SCHEMA_24,
     disabled: DEMO_SCHEMA_12,
     loading: DEMO_SCHEMA_12,
-    role: DEMO_SCHEMA_25,
+    role: DEMO_SCHEMA_27,
     fullSwipe: DEMO_SCHEMA_12,
-    fullSwipeConfig: DEMO_SCHEMA_28,
-    completion: DEMO_SCHEMA_31,
+    fullSwipeConfig: DEMO_SCHEMA_30,
+    completion: DEMO_SCHEMA_33,
     retryLabel: DEMO_SCHEMA_10,
-    retryIcon: DEMO_SCHEMA_32,
+    retryIcon: DEMO_SCHEMA_20,
     ariaLabel: DEMO_SCHEMA_10,
-    handler: DEMO_SCHEMA_34
+    handler: DEMO_SCHEMA_22
   },
-  required: ['id', 'label', 'icon']
+  required: ['id', 'label']
 };
-export const DEMO_SCHEMA_36: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_35 };
-export const DEMO_SCHEMA_37: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_11, DEMO_SCHEMA_11, DEMO_SCHEMA_27] };
-export const DEMO_SCHEMA_38: DemoValueSchema = { kind: 'unknown' };
-export const DEMO_SCHEMA_39: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_38 };
-export const DEMO_SCHEMA_40: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_1, DEMO_SCHEMA_8] };
-export const DEMO_SCHEMA_41: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_38] };
-export const DEMO_SCHEMA_42: DemoValueSchema = { kind: 'enum', values: ['info', 'primary', 'accent', 'success', 'danger', 'warn', 'neutral'] };
-export const DEMO_SCHEMA_43: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_42, DEMO_SCHEMA_0] };
-export const DEMO_SCHEMA_44: DemoValueSchema = { kind: 'literal', value: 'filled' };
-export const DEMO_SCHEMA_45: DemoValueSchema = { kind: 'literal', value: 'tonal' };
-export const DEMO_SCHEMA_46: DemoValueSchema = { kind: 'literal', value: 'outlined' };
-export const DEMO_SCHEMA_47: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_44, DEMO_SCHEMA_45, DEMO_SCHEMA_46] };
-export const DEMO_SCHEMA_48: DemoValueSchema = { kind: 'literal', value: 'small' };
-export const DEMO_SCHEMA_49: DemoValueSchema = { kind: 'literal', value: 'medium' };
-export const DEMO_SCHEMA_50: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_48, DEMO_SCHEMA_49] };
-export const DEMO_SCHEMA_51: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_8, DEMO_SCHEMA_1] };
-export const DEMO_SCHEMA_52: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_7, DEMO_SCHEMA_1, DEMO_SCHEMA_8] };
-export const DEMO_SCHEMA_53: DemoValueSchema = {
+export const DEMO_SCHEMA_35: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_34 };
+export const DEMO_SCHEMA_36: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_11, DEMO_SCHEMA_11, DEMO_SCHEMA_29] };
+export const DEMO_SCHEMA_37: DemoValueSchema = { kind: 'unknown' };
+export const DEMO_SCHEMA_38: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_37 };
+export const DEMO_SCHEMA_39: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_1, DEMO_SCHEMA_8] };
+export const DEMO_SCHEMA_40: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_37] };
+export const DEMO_SCHEMA_41: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_35] };
+export const DEMO_SCHEMA_42: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_11, DEMO_SCHEMA_11, DEMO_SCHEMA_29] };
+export const DEMO_SCHEMA_43: DemoValueSchema = { kind: 'enum', values: ['info', 'primary', 'accent', 'success', 'danger', 'warn', 'neutral'] };
+export const DEMO_SCHEMA_44: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_43, DEMO_SCHEMA_0] };
+export const DEMO_SCHEMA_45: DemoValueSchema = { kind: 'literal', value: 'filled' };
+export const DEMO_SCHEMA_46: DemoValueSchema = { kind: 'literal', value: 'tonal' };
+export const DEMO_SCHEMA_47: DemoValueSchema = { kind: 'literal', value: 'outlined' };
+export const DEMO_SCHEMA_48: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_45, DEMO_SCHEMA_46, DEMO_SCHEMA_47] };
+export const DEMO_SCHEMA_49: DemoValueSchema = { kind: 'literal', value: 'small' };
+export const DEMO_SCHEMA_50: DemoValueSchema = { kind: 'literal', value: 'medium' };
+export const DEMO_SCHEMA_51: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_49, DEMO_SCHEMA_50] };
+export const DEMO_SCHEMA_52: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_8, DEMO_SCHEMA_1] };
+export const DEMO_SCHEMA_53: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_7, DEMO_SCHEMA_1, DEMO_SCHEMA_8] };
+export const DEMO_SCHEMA_54: DemoValueSchema = {
   kind: 'object',
   properties: {
     opaque: DEMO_SCHEMA_12,
-    color: DEMO_SCHEMA_43,
-    variant: DEMO_SCHEMA_47,
-    size: DEMO_SCHEMA_50,
-    leadingIcon: DEMO_SCHEMA_32,
-    trailingIcon: DEMO_SCHEMA_32,
-    iconSize: DEMO_SCHEMA_51,
-    leadingNumber: DEMO_SCHEMA_52,
-    trailingNumber: DEMO_SCHEMA_52,
+    color: DEMO_SCHEMA_44,
+    variant: DEMO_SCHEMA_48,
+    size: DEMO_SCHEMA_51,
+    leadingIcon: DEMO_SCHEMA_20,
+    trailingIcon: DEMO_SCHEMA_20,
+    iconSize: DEMO_SCHEMA_52,
+    leadingNumber: DEMO_SCHEMA_53,
+    trailingNumber: DEMO_SCHEMA_53,
     tooltip: DEMO_SCHEMA_10,
     tooltipOnTruncate: DEMO_SCHEMA_12
   },
   required: []
 };
-export const DEMO_SCHEMA_54: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_53] };
-export const DEMO_SCHEMA_55: DemoValueSchema = {
+export const DEMO_SCHEMA_55: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_54] };
+export const DEMO_SCHEMA_56: DemoValueSchema = {
   kind: 'object',
   properties: {
     label: DEMO_SCHEMA_3,
-    value: DEMO_SCHEMA_38,
+    value: DEMO_SCHEMA_37,
     disabled: DEMO_SCHEMA_12,
-    icon: DEMO_SCHEMA_32,
-    tagConfig: DEMO_SCHEMA_54,
+    icon: DEMO_SCHEMA_20,
+    endIcon: DEMO_SCHEMA_20,
+    startTemplate: DEMO_SCHEMA_22,
+    endTemplate: DEMO_SCHEMA_22,
+    leftSwipeActions: DEMO_SCHEMA_41,
+    rightSwipeActions: DEMO_SCHEMA_41,
+    swipeFullAction: DEMO_SCHEMA_42,
+    tagConfig: DEMO_SCHEMA_55,
     group: DEMO_SCHEMA_10,
     groupDisabled: DEMO_SCHEMA_12
   },
   required: ['label', 'value']
 };
-export const DEMO_SCHEMA_56: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_55 };
-export const DEMO_SCHEMA_57: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_39] };
-export const DEMO_SCHEMA_58: DemoValueSchema = {
+export const DEMO_SCHEMA_57: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_56 };
+export const DEMO_SCHEMA_58: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_38] };
+export const DEMO_SCHEMA_59: DemoValueSchema = {
   kind: 'object',
   properties: { value: DEMO_SCHEMA_1, label: DEMO_SCHEMA_10, disabled: DEMO_SCHEMA_12 },
   required: ['value']
 };
-export const DEMO_SCHEMA_59: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_58 };
-export const DEMO_SCHEMA_60: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_1] };
-export const DEMO_SCHEMA_61: DemoValueSchema = { kind: 'object', properties: { label: DEMO_SCHEMA_1, route: DEMO_SCHEMA_1 }, required: ['label', 'route'] };
-export const DEMO_SCHEMA_62: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_61 };
-export const DEMO_SCHEMA_63: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_62] };
-export const DEMO_SCHEMA_64: DemoValueSchema = { kind: 'literal', value: 'inline' };
-export const DEMO_SCHEMA_65: DemoValueSchema = { kind: 'literal', value: 'sticky' };
-export const DEMO_SCHEMA_66: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_64, DEMO_SCHEMA_65] };
-export const DEMO_SCHEMA_67: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_1] };
-export const DEMO_SCHEMA_68: DemoValueSchema = { kind: 'enum', values: ['sm', 'md', 'lg', 'xl', 'xs', '2xl', '3xl', '4xl'] };
-export const DEMO_SCHEMA_69: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_68, DEMO_SCHEMA_0] };
-export const DEMO_SCHEMA_70: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_18] };
-export const DEMO_SCHEMA_71: DemoValueSchema = {
+export const DEMO_SCHEMA_60: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_59 };
+export const DEMO_SCHEMA_61: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_7, DEMO_SCHEMA_1] };
+export const DEMO_SCHEMA_62: DemoValueSchema = { kind: 'object', properties: { label: DEMO_SCHEMA_1, route: DEMO_SCHEMA_1 }, required: ['label', 'route'] };
+export const DEMO_SCHEMA_63: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_62 };
+export const DEMO_SCHEMA_64: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_63] };
+export const DEMO_SCHEMA_65: DemoValueSchema = { kind: 'literal', value: 'inline' };
+export const DEMO_SCHEMA_66: DemoValueSchema = { kind: 'literal', value: 'sticky' };
+export const DEMO_SCHEMA_67: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_65, DEMO_SCHEMA_66] };
+export const DEMO_SCHEMA_68: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_1] };
+export const DEMO_SCHEMA_69: DemoValueSchema = { kind: 'enum', values: ['sm', 'md', 'lg', 'xl', 'xs', '2xl', '3xl', '4xl'] };
+export const DEMO_SCHEMA_70: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_69, DEMO_SCHEMA_0] };
+export const DEMO_SCHEMA_71: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_18] };
+export const DEMO_SCHEMA_72: DemoValueSchema = {
   kind: 'object',
   properties: {
     showItemIcons: DEMO_SCHEMA_12,
     showSectionIcons: DEMO_SCHEMA_12,
-    position: DEMO_SCHEMA_66,
-    top: DEMO_SCHEMA_67,
-    compactBreakpoint: DEMO_SCHEMA_69,
+    position: DEMO_SCHEMA_67,
+    top: DEMO_SCHEMA_68,
+    compactBreakpoint: DEMO_SCHEMA_70,
     compact: DEMO_SCHEMA_12,
-    panelWidth: DEMO_SCHEMA_67,
-    panelMaxHeight: DEMO_SCHEMA_67,
-    breadcrumbConfig: DEMO_SCHEMA_70,
+    panelWidth: DEMO_SCHEMA_68,
+    panelMaxHeight: DEMO_SCHEMA_68,
+    breadcrumbConfig: DEMO_SCHEMA_71,
     searchable: DEMO_SCHEMA_12,
     showSearchGuide: DEMO_SCHEMA_12,
     backLabel: DEMO_SCHEMA_10,
@@ -2493,7 +2501,7 @@ export const DEMO_SCHEMA_71: DemoValueSchema = {
   },
   required: []
 };
-export const DEMO_SCHEMA_72: DemoValueSchema = {
+export const DEMO_SCHEMA_73: DemoValueSchema = {
   kind: 'enum',
   values: [
     'primary-50',
@@ -2865,11 +2873,11 @@ export const DEMO_SCHEMA_72: DemoValueSchema = {
     'scroll-thumb-hover'
   ]
 };
-export const DEMO_SCHEMA_73: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_72] };
-export const DEMO_SCHEMA_74: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_72, DEMO_SCHEMA_0] };
-export const DEMO_SCHEMA_75: DemoValueSchema = { kind: 'object', properties: { light: DEMO_SCHEMA_73, dark: DEMO_SCHEMA_74 }, required: ['light'] };
-export const DEMO_SCHEMA_76: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_72, DEMO_SCHEMA_0, DEMO_SCHEMA_75] };
-export const DEMO_SCHEMA_77: DemoValueSchema = {
+export const DEMO_SCHEMA_74: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_73] };
+export const DEMO_SCHEMA_75: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_73, DEMO_SCHEMA_0] };
+export const DEMO_SCHEMA_76: DemoValueSchema = { kind: 'object', properties: { light: DEMO_SCHEMA_74, dark: DEMO_SCHEMA_75 }, required: ['light'] };
+export const DEMO_SCHEMA_77: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_73, DEMO_SCHEMA_0, DEMO_SCHEMA_76] };
+export const DEMO_SCHEMA_78: DemoValueSchema = {
   kind: 'enum',
   values: [
     'primary-50',
@@ -3242,92 +3250,99 @@ export const DEMO_SCHEMA_77: DemoValueSchema = {
     'auto'
   ]
 };
-export const DEMO_SCHEMA_78: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_77, DEMO_SCHEMA_0, DEMO_SCHEMA_75] };
-export const DEMO_SCHEMA_79: DemoValueSchema = {
-  kind: 'object',
-  properties: { name: DEMO_SCHEMA_20, size: DEMO_SCHEMA_51, strokeWidth: DEMO_SCHEMA_26, color: DEMO_SCHEMA_76, bgColor: DEMO_SCHEMA_78 },
-  required: ['name']
-};
-export const DEMO_SCHEMA_80: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_79] };
-export const DEMO_SCHEMA_81: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_11, DEMO_SCHEMA_11] };
-export const DEMO_SCHEMA_82: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_38] };
-export const DEMO_SCHEMA_83: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_1, DEMO_SCHEMA_2, DEMO_SCHEMA_33] };
-export const DEMO_SCHEMA_84: DemoValueSchema = { kind: 'object', properties: { text: DEMO_SCHEMA_10, config: DEMO_SCHEMA_54 }, required: [] };
-export const DEMO_SCHEMA_85: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_84 };
-export const DEMO_SCHEMA_86: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_85] };
-export const DEMO_SCHEMA_87: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_1, DEMO_SCHEMA_2, DEMO_SCHEMA_33] };
-export const DEMO_SCHEMA_88: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_87 };
-export const DEMO_SCHEMA_89: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_88] };
-export const DEMO_SCHEMA_90: DemoValueSchema = {
+export const DEMO_SCHEMA_79: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_78, DEMO_SCHEMA_0, DEMO_SCHEMA_76] };
+export const DEMO_SCHEMA_80: DemoValueSchema = {
   kind: 'object',
   properties: {
-    label: DEMO_SCHEMA_83,
-    breadcrumb: DEMO_SCHEMA_83,
-    icon: DEMO_SCHEMA_80,
-    endIcon: DEMO_SCHEMA_80,
-    tags: DEMO_SCHEMA_86,
-    keywords: DEMO_SCHEMA_89,
-    disabled: DEMO_SCHEMA_12,
-    showInBreadcrumbs: DEMO_SCHEMA_12,
-    section: DEMO_SCHEMA_67,
-    menu: DEMO_SCHEMA_12,
-    hidden: DEMO_SCHEMA_12,
-    order: DEMO_SCHEMA_26,
-    root: DEMO_SCHEMA_12,
-    visible: DEMO_SCHEMA_34
+    name: DEMO_SCHEMA_20,
+    template: DEMO_SCHEMA_22,
+    size: DEMO_SCHEMA_52,
+    strokeWidth: DEMO_SCHEMA_28,
+    color: DEMO_SCHEMA_77,
+    bgColor: DEMO_SCHEMA_79
   },
   required: []
 };
-export const DEMO_SCHEMA_91: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_90] };
-export const DEMO_SCHEMA_92: DemoValueSchema = {
+export const DEMO_SCHEMA_81: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_80] };
+export const DEMO_SCHEMA_82: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_11, DEMO_SCHEMA_11] };
+export const DEMO_SCHEMA_83: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_37] };
+export const DEMO_SCHEMA_84: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_1, DEMO_SCHEMA_2, DEMO_SCHEMA_21] };
+export const DEMO_SCHEMA_85: DemoValueSchema = { kind: 'object', properties: { text: DEMO_SCHEMA_10, config: DEMO_SCHEMA_55 }, required: [] };
+export const DEMO_SCHEMA_86: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_85 };
+export const DEMO_SCHEMA_87: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_86] };
+export const DEMO_SCHEMA_88: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_1, DEMO_SCHEMA_2, DEMO_SCHEMA_21] };
+export const DEMO_SCHEMA_89: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_88 };
+export const DEMO_SCHEMA_90: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_89] };
+export const DEMO_SCHEMA_91: DemoValueSchema = {
+  kind: 'object',
+  properties: {
+    label: DEMO_SCHEMA_84,
+    breadcrumb: DEMO_SCHEMA_84,
+    icon: DEMO_SCHEMA_81,
+    endIcon: DEMO_SCHEMA_81,
+    tags: DEMO_SCHEMA_87,
+    keywords: DEMO_SCHEMA_90,
+    disabled: DEMO_SCHEMA_12,
+    showInBreadcrumbs: DEMO_SCHEMA_12,
+    section: DEMO_SCHEMA_68,
+    menu: DEMO_SCHEMA_12,
+    hidden: DEMO_SCHEMA_12,
+    order: DEMO_SCHEMA_28,
+    root: DEMO_SCHEMA_12,
+    visible: DEMO_SCHEMA_22
+  },
+  required: []
+};
+export const DEMO_SCHEMA_92: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_91] };
+export const DEMO_SCHEMA_93: DemoValueSchema = {
   kind: 'object',
   properties: {
     id: DEMO_SCHEMA_1,
     route: DEMO_SCHEMA_1,
     label: DEMO_SCHEMA_1,
-    icon: DEMO_SCHEMA_80,
-    section: DEMO_SCHEMA_67,
-    visible: DEMO_SCHEMA_81,
+    icon: DEMO_SCHEMA_81,
+    section: DEMO_SCHEMA_68,
+    visible: DEMO_SCHEMA_82,
     showInBreadcrumbs: DEMO_SCHEMA_12,
-    children: DEMO_SCHEMA_82,
-    data: DEMO_SCHEMA_91
+    children: DEMO_SCHEMA_83,
+    data: DEMO_SCHEMA_92
   },
   required: ['id', 'route', 'label', 'visible']
 };
-export const DEMO_SCHEMA_93: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_92 };
-export const DEMO_SCHEMA_94: DemoValueSchema = {
+export const DEMO_SCHEMA_94: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_93 };
+export const DEMO_SCHEMA_95: DemoValueSchema = {
   kind: 'object',
   properties: {
     title: DEMO_SCHEMA_1,
-    items: DEMO_SCHEMA_93,
-    icon: DEMO_SCHEMA_80,
+    items: DEMO_SCHEMA_94,
+    icon: DEMO_SCHEMA_81,
     id: DEMO_SCHEMA_1,
-    order: DEMO_SCHEMA_26,
+    order: DEMO_SCHEMA_28,
     collapsible: DEMO_SCHEMA_12,
     collapsed: DEMO_SCHEMA_12,
     showInBreadcrumbs: DEMO_SCHEMA_12
   },
   required: ['title', 'items', 'id']
 };
-export const DEMO_SCHEMA_95: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_94 };
-export const DEMO_SCHEMA_96: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_95] };
-export const DEMO_SCHEMA_97: DemoValueSchema = { kind: 'literal', value: 'fixed' };
-export const DEMO_SCHEMA_98: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_97, DEMO_SCHEMA_64] };
-export const DEMO_SCHEMA_99: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_15, DEMO_SCHEMA_16] };
-export const DEMO_SCHEMA_100: DemoValueSchema = {
+export const DEMO_SCHEMA_96: DemoValueSchema = { kind: 'array', item: DEMO_SCHEMA_95 };
+export const DEMO_SCHEMA_97: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_96] };
+export const DEMO_SCHEMA_98: DemoValueSchema = { kind: 'literal', value: 'fixed' };
+export const DEMO_SCHEMA_99: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_98, DEMO_SCHEMA_65] };
+export const DEMO_SCHEMA_100: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_15, DEMO_SCHEMA_16] };
+export const DEMO_SCHEMA_101: DemoValueSchema = {
   kind: 'object',
   properties: {
-    position: DEMO_SCHEMA_98,
-    width: DEMO_SCHEMA_67,
-    collapsedWidth: DEMO_SCHEMA_67,
+    position: DEMO_SCHEMA_99,
+    width: DEMO_SCHEMA_68,
+    collapsedWidth: DEMO_SCHEMA_68,
     collapsible: DEMO_SCHEMA_12,
     collapsed: DEMO_SCHEMA_12,
-    persistenceKey: DEMO_SCHEMA_67,
-    mobileBreakpoint: DEMO_SCHEMA_69,
+    persistenceKey: DEMO_SCHEMA_68,
+    mobileBreakpoint: DEMO_SCHEMA_70,
     mobile: DEMO_SCHEMA_12,
     showMobileTrigger: DEMO_SCHEMA_12,
-    breadcrumbConfig: DEMO_SCHEMA_70,
-    side: DEMO_SCHEMA_99,
+    breadcrumbConfig: DEMO_SCHEMA_71,
+    side: DEMO_SCHEMA_100,
     searchable: DEMO_SCHEMA_12,
     showItemIcons: DEMO_SCHEMA_12,
     showSectionIcons: DEMO_SCHEMA_12,
@@ -3348,26 +3363,26 @@ export const DEMO_SCHEMA_100: DemoValueSchema = {
   },
   required: []
 };
-export const DEMO_SCHEMA_101: DemoValueSchema = { kind: 'literal', value: 'center' };
-export const DEMO_SCHEMA_102: DemoValueSchema = { kind: 'literal', value: 'bottom-sheet' };
-export const DEMO_SCHEMA_103: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_15, DEMO_SCHEMA_16, DEMO_SCHEMA_101, DEMO_SCHEMA_102] };
-export const DEMO_SCHEMA_104: DemoValueSchema = {
+export const DEMO_SCHEMA_102: DemoValueSchema = { kind: 'literal', value: 'center' };
+export const DEMO_SCHEMA_103: DemoValueSchema = { kind: 'literal', value: 'bottom-sheet' };
+export const DEMO_SCHEMA_104: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_15, DEMO_SCHEMA_16, DEMO_SCHEMA_102, DEMO_SCHEMA_103] };
+export const DEMO_SCHEMA_105: DemoValueSchema = {
   kind: 'object',
   properties: {
-    sm: DEMO_SCHEMA_103,
-    md: DEMO_SCHEMA_103,
-    lg: DEMO_SCHEMA_103,
-    xl: DEMO_SCHEMA_103,
-    xs: DEMO_SCHEMA_103,
-    '2xl': DEMO_SCHEMA_103,
-    '3xl': DEMO_SCHEMA_103,
-    '4xl': DEMO_SCHEMA_103
+    sm: DEMO_SCHEMA_104,
+    md: DEMO_SCHEMA_104,
+    lg: DEMO_SCHEMA_104,
+    xl: DEMO_SCHEMA_104,
+    xs: DEMO_SCHEMA_104,
+    '2xl': DEMO_SCHEMA_104,
+    '3xl': DEMO_SCHEMA_104,
+    '4xl': DEMO_SCHEMA_104
   },
   required: []
 };
-export const DEMO_SCHEMA_105: DemoValueSchema = {
+export const DEMO_SCHEMA_106: DemoValueSchema = {
   kind: 'object',
-  properties: { text: DEMO_SCHEMA_3, icon: DEMO_SCHEMA_80, loading: DEMO_SCHEMA_12, loadingLabel: DEMO_SCHEMA_10 },
+  properties: { text: DEMO_SCHEMA_3, icon: DEMO_SCHEMA_81, loading: DEMO_SCHEMA_12, loadingLabel: DEMO_SCHEMA_10 },
   required: ['text']
 };
-export const DEMO_SCHEMA_106: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_105] };
+export const DEMO_SCHEMA_107: DemoValueSchema = { kind: 'union', choices: [DEMO_SCHEMA_0, DEMO_SCHEMA_106] };

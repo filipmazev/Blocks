@@ -72,6 +72,9 @@ enabled. `resizeDisableShrink` defaults to true: growth and return to the origin
 reference is the original rendered width at the first resize gesture. Double-clicking the grip or pressing Enter while it is focused restores that width, within
 the current resize bounds. A custom initial width remains as simple as `[width]="360"`.
 
+When restoring a saved `width`, supply a fixed `resizeInitialWidth` to keep double-click and Enter reset tied to the original default rather than the saved
+size. This reference also sets the shrink-prevention floor and relative minimum; current container and explicit resize bounds still take precedence.
+
 ```html
 <bx-side-panel
     [(open)]="editorOpen"
@@ -80,6 +83,7 @@ the current resize bounds. A custom initial width remains as simple as `[width]=
     [resizeDisableShrink]="false"
     [resizeMinWidth]="240"
     [resizeMaxWidth]="720"
+    [resizeInitialWidth]="400"
     resizeLabel="Resize editor width"
     ariaLabel="Editor">
     <!-- Editor content -->
@@ -88,33 +92,34 @@ the current resize bounds. A custom initial width remains as simple as `[width]=
 
 ## API
 
-| Input/model             | Default                | Purpose                                                                                                         |
-| ----------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `open` / `openChange`   | `false`                | Parent-controlled model and user dismissal updates                                                              |
-| `panelId`               | Generated unique ID    | Stable surface ID for `aria-controls`                                                                           |
-| `placement`             | `'right'`              | Physical `'left'` or `'right'` edge                                                                             |
-| `headerIcon`            | `undefined`            | Decorative `IIconData` beside projected heading; defaults to 24px and supports semantic color/background/stroke |
-| `width` / `widthChange` | `400`                  | Initial/current pixel or CSS-length width model; user resizing writes numeric pixels                            |
-| `resizable`             | `false`                | Enable an inner-edge width separator                                                                            |
-| `resizeMinWidth`        | Relative               | Optional pixel minimum; defaults to 30% when shrinking is enabled                                               |
-| `resizeMaxWidth`        | Relative               | Optional pixel maximum; defaults to 50% of container                                                            |
-| `resizeDisableShrink`   | `true`                 | Prevent shrinking below the original rendered width                                                             |
-| `resizeLabel`           | `'Resize panel width'` | Translatable accessible handle name                                                                             |
-| `resizeIdleDelay`       | `2000`                 | Milliseconds before the idle grip fades; zero keeps it revealed                                                 |
-| `container`             | `undefined`            | Nearest SidePanelLayout, or viewport without one; explicit element bounds or 'viewport' override this           |
-| `layoutMode`            | `'overlay'`            | Base push/overlay mode; push requires SidePanelLayout                                                           |
-| `breakpoints`           | `undefined`            | Typed minimum-width modes; the highest matching configured threshold wins                                       |
-| `currentLayoutMode()`   | Resolved               | Effective mode after viewport resolution and layout availability                                                |
-| `backdrop`              | `false`                | Blocks pointer interaction inside the configured bounds                                                         |
-| `closeOnBackdrop`       | `true`                 | Backdrop activation requests model closure                                                                      |
-| `closeOnEscape`         | `true`                 | Unhandled Escape closes the open panel, including focus on the surrounding page                                 |
-| `showCloseButton`       | `true`                 | Built-in accessible close control                                                                               |
-| `ariaLabel`             | `'Side panel'`         | `ResolvableText` accessible region name                                                                         |
-| `labelledBy`            | `undefined`            | Visible label element ID, taking precedence over `ariaLabel`                                                    |
-| `closeLabel`            | `'Close panel'`        | `ResolvableText` close-control name                                                                             |
-| `autoFocus`             | `true`                 | Focuses the surface once when opening                                                                           |
-| `restoreFocus`          | `true`                 | Returns focus if it remains inside the closing surface                                                          |
-| `animationDuration`     | `175`                  | Entrance/exit milliseconds; reduced-motion preferences force zero                                               |
+| Input/model             | Default                      | Purpose                                                                                                         |
+| ----------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `open` / `openChange`   | `false`                      | Parent-controlled model and user dismissal updates                                                              |
+| `panelId`               | Generated unique ID          | Stable surface ID for `aria-controls`                                                                           |
+| `placement`             | `'right'`                    | Physical `'left'` or `'right'` edge                                                                             |
+| `headerIcon`            | `undefined`                  | Decorative `IIconData` beside projected heading; defaults to 24px and supports semantic color/background/stroke |
+| `width` / `widthChange` | `400`                        | Initial/current pixel or CSS-length width model; user resizing writes numeric pixels                            |
+| `resizable`             | `false`                      | Enable an inner-edge width separator                                                                            |
+| `resizeInitialWidth`    | First rendered gesture width | Optional original pixel width for reset, shrink prevention and relative minimum; independent of saved `width`   |
+| `resizeMinWidth`        | Relative                     | Optional pixel minimum; defaults to 30% when shrinking is enabled                                               |
+| `resizeMaxWidth`        | Relative                     | Optional pixel maximum; defaults to 50% of container                                                            |
+| `resizeDisableShrink`   | `true`                       | Prevent shrinking below the original rendered width                                                             |
+| `resizeLabel`           | `'Resize panel width'`       | Translatable accessible handle name                                                                             |
+| `resizeIdleDelay`       | `2000`                       | Milliseconds before the idle grip fades; zero keeps it revealed                                                 |
+| `container`             | `undefined`                  | Nearest SidePanelLayout, or viewport without one; explicit element bounds or 'viewport' override this           |
+| `layoutMode`            | `'overlay'`                  | Base push/overlay mode; push requires SidePanelLayout                                                           |
+| `breakpoints`           | `undefined`                  | Typed minimum-width modes; the highest matching configured threshold wins                                       |
+| `currentLayoutMode()`   | Resolved                     | Effective mode after viewport resolution and layout availability                                                |
+| `backdrop`              | `false`                      | Blocks pointer interaction inside the configured bounds                                                         |
+| `closeOnBackdrop`       | `true`                       | Backdrop activation requests model closure                                                                      |
+| `closeOnEscape`         | `true`                       | Unhandled Escape closes the open panel, including focus on the surrounding page                                 |
+| `showCloseButton`       | `true`                       | Built-in accessible close control                                                                               |
+| `ariaLabel`             | `'Side panel'`               | `ResolvableText` accessible region name                                                                         |
+| `labelledBy`            | `undefined`                  | Visible label element ID, taking precedence over `ariaLabel`                                                    |
+| `closeLabel`            | `'Close panel'`              | `ResolvableText` close-control name                                                                             |
+| `autoFocus`             | `true`                       | Focuses the surface once when opening                                                                           |
+| `restoreFocus`          | `true`                       | Returns focus if it remains inside the closing surface                                                          |
+| `animationDuration`     | `175`                        | Entrance/exit milliseconds; reduced-motion preferences force zero                                               |
 
 Slots are `[bxSidePanelBanner]`, `[bxSidePanelHeader]`, `[bxSidePanelFooter]`, and unmarked body content. Omitted sections consume no spacing. The body scrolls
 independently; header and footer stay reachable. The component has no imperative opening methods or separate lifecycle events; the open model is the state
@@ -180,3 +185,6 @@ Text accepts plain strings without an adapter. Optional `BX_I18N` resolution tra
 
 Open `/components/side-panel` to change placement, width, containment, and backdrop while open and verify persistent form content. `/icons` demonstrates
 coordinated Filters and Details panels constrained to the main content region.
+
+The header accepts projected `bxIconStart` artwork or `headerIcon.template` through `IIconData`. Both preserve heading and dismissal behavior. See the
+[custom icon slot guide](../../directives/icon-content/README.md).

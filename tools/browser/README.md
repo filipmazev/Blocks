@@ -82,3 +82,11 @@ to full opacity before Angular removes its panel.
 
 Multi-select hover checks cover leaving the menu with zero, one, or several selections: the backing hides or restores immediately without sweeping across
 options. Selecting and deselecting a hovered row keeps the backing beneath that row. Keyboard navigation remains available after pointer exit.
+
+Component workbench checks cover surface material controls, nested local refraction, opaque and quality policies, shared panel dimensions across navigation and
+refresh, double-click/Enter reset to original defaults, keyboard resizing and cancellation, blocked storage, and narrow touch layouts:
+
+```sh
+BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright node --test tools/browser/workbench.cjs
+BLOCKS_PLAYWRIGHT_PATH=/absolute/path/to/playwright BLOCKS_BROWSER=webkit node --test tools/browser/workbench.cjs
+```

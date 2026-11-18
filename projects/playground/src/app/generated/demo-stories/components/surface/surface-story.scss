@@ -1,25 +1,51 @@
+@use 'core/styles/helpers' as *;
+
 .surface-scene {
     position: relative;
     display: grid;
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: spacing(4);
+    padding: spacing(6);
     isolation: isolate;
-    background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-bg-element) 2rem 4rem);
+    box-sizing: border-box;
+    background: repeating-linear-gradient(
+        35deg,
+        var(--bx-bg-surface-alt) 0 2rem,
+        var(--bx-border-default) 2rem calc(2rem + 2px),
+        var(--bx-bg-element) calc(2rem + 2px) 4rem
+    );
 }
 
 .surface-art {
     position: absolute;
-    inset: 25% 10%;
+    inset: 0;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: space-around;
     color: var(--bx-text-accent);
-    z-index: -1;
+    pointer-events: none;
+}
+
+.surface-light {
+    position: relative;
 }
 
 .surface-sample {
     display: grid;
-    gap: 1rem;
-    padding: 1.5rem;
+    gap: spacing(4);
+    min-inline-size: 0;
+    padding: spacing(6);
     border: 1px solid var(--bx-border-default);
-    background: color-mix(in srgb, var(--bx-bg-surface) 55%, transparent);
+    border-radius: radius(lg);
+    overflow-wrap: anywhere;
+}
+
+.surface-sample h3,
+.surface-sample p {
+    margin: 0;
+}
+
+.surface-sample button {
+    justify-self: start;
+    max-inline-size: 100%;
+    white-space: normal;
 }

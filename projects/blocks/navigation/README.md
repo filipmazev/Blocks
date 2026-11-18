@@ -65,3 +65,6 @@ nesting by default and the threshold can be configured on each container. Existi
 
 [Stepper](components/stepper/README.md) provides passive progress, externally controlled section navigation and guarded wizards through the same `bx-stepper`
 component. Import `Stepper`, `Step` and its optional template directives from `@filip.mazev/blocks/navigation`.
+
+Data-driven leading and trailing icons accept `IIconData.template` for logos and other noninteractive visuals. A template overrides the named glyph inside its
+normal sized icon frame. Existing text labels, compact navigation naming and focus behavior remain unchanged.

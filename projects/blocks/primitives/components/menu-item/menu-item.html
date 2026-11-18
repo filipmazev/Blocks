@@ -17,8 +17,13 @@
     <span bxSwipeContent class="bx-menu-item-visual">
         @if (loading()) {
             <bx-loading-spinner class="bx-menu-item-leading" aria-hidden="true" [size]="20" />
-        } @else if (icon()) {
-            <bx-icon class="bx-menu-item-leading" size="20" [name]="icon()!" />
+        } @else {
+            <span class="bx-menu-item-leading"
+                ><ng-content select="[bxIconStart]">
+                    @if (icon() || iconTemplate()) {
+                        <bx-icon size="20" [name]="icon()" [contentTemplate]="iconTemplate()" />
+                    }</ng-content
+            ></span>
         }
 
         <span #menuText="bxTruncate" class="bx-menu-item-content" [bxTruncate]="!wrapLabel()" [class.bx-menu-item-content-wrapped]="wrapLabel()">
@@ -37,8 +42,11 @@
             </span>
         }
 
-        @if (endIcon()) {
-            <bx-icon class="bx-icon-pos-end" size="20" [name]="endIcon()!" />
-        }
+        <span class="bx-icon-pos-end"
+            ><ng-content select="[bxIconEnd]">
+                @if (endIcon() || endIconTemplate()) {
+                    <bx-icon size="20" [name]="endIcon()" [contentTemplate]="endIconTemplate()" />
+                }</ng-content
+        ></span>
     </span>
 </button>

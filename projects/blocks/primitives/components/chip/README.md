@@ -57,3 +57,6 @@ primitive is not a form field; use selectedChange to coordinate application or f
 ## Playground
 
 `/components/chip` includes live examples and shared appearance controls.
+
+Project a noninteractive `bxIconStart` visual to replace the configured leading icon. The selected checkmark remains authoritative. See the
+[custom icon slot guide](../../directives/icon-content/README.md).

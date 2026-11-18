@@ -1,0 +1,40 @@
+<bx-stack [gap]="5">
+    <bx-card title="Typed IndexedDB repository">
+        <bx-stack [gap]="4">
+            <p>
+                IndexedDbService wraps <code>open</code>, requests and transactions in promises, owns one connection per database name, and rejects on
+                unavailable, blocked, quota or failed storage.
+            </p>
+            <output aria-live="polite">{{ supported ? 'IndexedDB is available.' : 'IndexedDB is unavailable in this browser.' }}</output>
+            <bx-stack direction="horizontal" [wrap]="true">
+                <button bx-button type="button" variant="tonal" [disabled]="!supported || !ready() || loading()" (click)="addRecord()">Add a record</button>
+                <button bx-button type="button" variant="tonal" [disabled]="!supported || !ready() || loading()" (click)="countRecords()">Count records</button>
+                <button bx-button type="button" variant="tonal" color="grayscale" [disabled]="!supported || !ready() || loading()" (click)="clearRecords()">
+                    Clear records
+                </button>
+            </bx-stack>
+            @if (status()) {
+                <p class="status" role="status">{{ status() }}</p>
+            }
+            @if (error()) {
+                <bx-alert title="Storage error" [message]="error()" />
+            }
+        </bx-stack>
+    </bx-card>
+    <bx-card title="Stored records">
+        <bx-stack [gap]="3">
+            @if (records().length) {
+                <ul class="records">
+                    @for (record of records(); track record.id) {
+                        <li>
+                            <code>{{ record.id }}</code>
+                            <span>{{ record.label }}</span>
+                        </li>
+                    }
+                </ul>
+            } @else {
+                <p>No records yet. Add one above.</p>
+            }
+        </bx-stack>
+    </bx-card>
+</bx-stack>

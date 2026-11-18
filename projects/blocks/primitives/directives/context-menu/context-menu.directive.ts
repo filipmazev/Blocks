@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 import type { ITouchPress } from '@primitives/interfaces/itouch-press.interface';
 
-import { BxA11yService, BxOverlayPositionService, inheritOverlayTheme, ScrollLockService, uuidv4 } from '@filip.mazev/blocks/core';
+import { BxA11yService, BxOverlayPositionService, inheritOverlayOwnership, inheritOverlayTheme, ScrollLockService, uuidv4 } from '@filip.mazev/blocks/core';
 import { createGlassTransition, inheritGlassLighting } from '@filip.mazev/blocks/effects/runtime';
 
 import { BX_OVERLAY_CONTEXT } from '@primitives/tokens/overlay-context.token';
@@ -92,6 +92,7 @@ export class ContextMenuDirective {
   private overlayRef: OverlayRef | null = null;
   private transition?: ReturnType<typeof createGlassTransition>;
   private point?: HTMLElement;
+  private disconnectBackdropOwnership?: () => void;
   private disconnectTheme?: () => void;
   private disconnectLighting?: () => void;
   private subscriptions: Subscription = new Subscription();
@@ -361,7 +362,12 @@ export class ContextMenuDirective {
       });
     }
 
-    this.subscriptions.add(this.overlayRef.backdropClick().subscribe(() => this.close()));
+    this.subscriptions.add(
+      this.overlayRef.backdropClick().subscribe((event) => {
+        event.stopPropagation();
+        this.close();
+      })
+    );
     this.subscriptions.add(this.overlayRef.detachments().subscribe(() => this.dispose()));
     this.subscriptions.add(this.overlayRef.keydownEvents().subscribe((event) => this.onMenuKey(event)));
 
@@ -371,6 +377,9 @@ export class ContextMenuDirective {
     this.disconnectLighting = inheritGlassLighting(pane, source);
 
     const view = this.overlayRef.attach(new TemplatePortal(this.bxContextMenu(), this.viewContainerRef));
+    const backdrop = this.overlayRef.backdropElement;
+
+    if (backdrop) this.disconnectBackdropOwnership = inheritOverlayOwnership(source, backdrop);
 
     view.detectChanges();
     this.overlayRef.updatePosition();
@@ -437,6 +446,8 @@ export class ContextMenuDirective {
 
   private dispose(): void {
     this.subscriptions.unsubscribe();
+    this.disconnectBackdropOwnership?.();
+    this.disconnectBackdropOwnership = undefined;
     this.disconnectTheme?.();
     this.disconnectTheme = undefined;
     this.transition?.destroy();

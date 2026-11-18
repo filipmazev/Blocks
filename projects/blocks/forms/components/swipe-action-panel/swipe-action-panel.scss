@@ -8,14 +8,19 @@
     border-radius: inherit;
 }
 
+.bx-swipe-wide-probe,
 .bx-swipe-probe,
 .bx-swipe-close-probe,
 .bx-swipe-full-probe {
     position: absolute;
     visibility: hidden;
     pointer-events: none;
-    inline-size: var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height, #{spacing(10)}) * 2.5 + #{spacing(2)}));
+    inline-size: var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height, #{spacing(10)}) * var(--bx-swipe-capsule-ratio, 2.5) + #{spacing(2)}));
     block-size: var(--bx-swipe-action-height, #{spacing(10)});
+}
+
+.bx-swipe-wide-probe {
+    inline-size: var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height, #{spacing(10)}) * 2.5 + #{spacing(2)}));
 }
 
 .bx-swipe-close-probe {
@@ -37,9 +42,9 @@
     box-sizing: border-box;
 
     &.has-overflow {
-        grid-template-columns: spacing(8) minmax(0, 1fr) spacing(8);
-        gap: var(--bx-swipe-overflow-gap, #{spacing(2)});
-        padding-inline: var(--bx-swipe-overflow-padding, #{spacing(2)});
+        grid-template-columns: spacing(6) minmax(0, 1fr) spacing(6);
+        gap: var(--bx-swipe-overflow-gap, #{spacing(1)});
+        padding-inline: var(--bx-swipe-overflow-padding, #{spacing(1)});
         box-sizing: border-box;
     }
 }
@@ -73,7 +78,7 @@
 
 .bx-swipe-action {
     --bx-button-capsule-height: var(--bx-swipe-capsule-height);
-    --bx-button-capsule-width: calc(var(--bx-swipe-capsule-height) * 2.5 + var(--bx-swipe-stretch-extra, 0px));
+    --bx-button-capsule-width: calc(var(--bx-swipe-capsule-height) * var(--bx-swipe-capsule-ratio, 2.5) + var(--bx-swipe-stretch-extra, 0px));
     --bx-button-capsule-min-height: 0;
     --bx-button-capsule-min-width: 0;
 
@@ -83,7 +88,10 @@
     align-items: center;
     flex: none;
     gap: spacing(1);
-    inline-size: calc(var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height) * 2.5 + #{spacing(2)})) + var(--bx-swipe-stretch-extra, 0px));
+    inline-size: calc(
+        var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height) * var(--bx-swipe-capsule-ratio, 2.5) + #{spacing(2)})) +
+            var(--bx-swipe-stretch-extra, 0px)
+    );
     padding-inline: spacing(1);
     box-sizing: border-box;
     overflow: clip;
@@ -134,7 +142,7 @@
     position: absolute;
     visibility: hidden;
     pointer-events: none;
-    inline-size: calc(2 * #{spacing(8)} + 2 * var(--bx-swipe-overflow-gap, #{spacing(2)}) + 2 * var(--bx-swipe-overflow-padding, #{spacing(2)}));
+    inline-size: calc(2 * #{spacing(6)} + 2 * var(--bx-swipe-overflow-gap, #{spacing(1)}) + 2 * var(--bx-swipe-overflow-padding, #{spacing(1)}));
 }
 
 .bx-swipe-context-actions {
@@ -221,10 +229,10 @@
 
 .bx-swipe-action-region.has-overflow {
     &.bx-swipe-left {
-        padding-left: calc(var(--bx-swipe-overflow-padding, #{spacing(2)}) + var(--bx-swipe-content-gap, #{spacing(2)}));
+        padding-left: calc(var(--bx-swipe-overflow-padding, #{spacing(1)}) + var(--bx-swipe-content-gap, #{spacing(2)}));
     }
 
     &.bx-swipe-right {
-        padding-right: calc(var(--bx-swipe-overflow-padding, #{spacing(2)}) + var(--bx-swipe-content-gap, #{spacing(2)}));
+        padding-right: calc(var(--bx-swipe-overflow-padding, #{spacing(1)}) + var(--bx-swipe-content-gap, #{spacing(2)}));
     }
 }

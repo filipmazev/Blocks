@@ -13,10 +13,15 @@
     [glassiness]="args().glassiness"
     [attr.aria-label]="args().content"
     (click)="onAction('click', $event)">
-    @if (args().icon; as icon) {
+    @if (args().customStartIcon) {
+        <img bxIconStart src="blocks-app-icon.svg" width="20" height="20" alt="" />
+    } @else if (args().icon; as icon) {
         <bx-icon [name]="icon" />
     }
     @if (args().variant !== 'icon' && args().shape !== 'capsule') {
         {{ args().content }}
+    }
+    @if (args().customEndIcon) {
+        <span bxIconEnd aria-hidden="true">Pro</span>
     }
 </button>

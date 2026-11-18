@@ -1,0 +1,9 @@
+<p class="confirm-message">{{ data.message }}</p>
+<div *appModalFooter class="confirm-footer">
+    <div class="confirm-actions">
+        <button bx-button type="button" variant="tonal" color="grayscale" (click)="close(false)">Cancel</button>
+        <button bx-button type="button" variant="filled" [color]="data.danger ? 'danger' : 'primary'" (click)="confirm()">
+            {{ data.confirmLabel }}
+        </button>
+    </div>
+</div>
