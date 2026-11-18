@@ -2,6 +2,103 @@
 
 Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has not been published; these notes may change before release.
 
+- Vertical labelled dividers retain visible line segments around their label, including intrinsically sized containers.
+- Disabled collapsible and accordion-item triggers use the shared disabled foreground and opacity while readonly triggers retain enabled presentation.
+- Embedded bottom drawers remove their closed surface, reset gesture state when reopened, and no longer leave translated content in scrollable overflow.
+- Native sliders render themed tick marks above the custom rail when `showTickMarks` is enabled, independently of browser datalist painting.
+
+## Shared row swipe actions
+
+- Successful actions display a checkmark during their existing closing/exit animation, with translated `swipeCompletedLabel` status feedback and no added dwell.
+  Only returned promises show a loading spinner; synchronous Read/Unread updates remain immediate even while ongoing wheel input retains the row.
+- The primary control now translates at fixed dimensions with its rounded hover/active highlight intact. Added `--bx-swipe-content-gap` (default `spacing(2)`)
+  before the transparent action gutter. The examples remove per-row material borders and share their first message’s template/styles with the Playground. A blue
+  unread dot sits above the title and disappears for read messages without leaving a title indent.
+
+- Added configurable successful completion: action `completion` overrides row `swipeCompletion` (`collapse` by default). `dismiss` animates the row out and
+  collapses its space before hiding it and emitting `swipeDismissed` for application-owned collection removal. `restoreSwipeRow()` restores retained hidden
+  rows; `swipeDismissFocus` controls focus fallback. Reduced motion removes decorative exit travel.
+- Full-swipe promise handlers keep the capsule fully stretched while pending, with the spinner replacing its icon. Rejection retains the expanded action with an
+  explicit retry label/icon. Added action `retryLabel`/`retryIcon`, row `swipeRetryLabel`/`swipeLoadingLabel`, event `retry`, and pending/error/dismissal
+  states. Pending requests resist outside closure and repeated activation. Stale completions and teardown cannot update a newer presentation.
+- Archive/Delete examples now simulate requests, failure/retry and animated row removal, with a switch for collapse-on-success and row restoration. Generated
+  Playground controls expose completion and translated retry/status text alongside gesture settings.
+
+- Trackpads invoke immediately when actual input crosses the full-swipe commit threshold, so momentum tails do not delay loading feedback. Remaining input is
+  consumed without repeated invocation. Successful completion waits for an ongoing wheel burst to end before closing/removing the row. Pointer/touch holds
+  continue to activate on release; reversing before commit cancels.
+- The configurable Swipe Actions Playground now renders a large mail-style row with editable sender, subject, preview, unread status and width. Example messages
+  implement Read/Unread actions with a blue unread dot and explicit status; those updates collapse the actions and preserve the message.
+- Extra trackpad resistance scales down for stretches wider than two measured action columns, bounding additional effort on long rows without accelerating
+  movement beyond one-to-one. Reversals use the same continuous curve and ordinary reveal remains unresisted.
+- Archive uses the same strong resistance curve as Delete in the examples. The Playground now exposes individual resistance, plateau/end, arm/commit threshold,
+  enabled and ready-label controls, row presentation/width inputs, RTL and editable action arrays. Configuration field generation supports boolean/object unions
+  and preserves disabled state when editing a boolean configuration as an object.
+- MenuItems retain their rounded hover/active material on the moving primary control while actions are revealed; action gutters stay transparent. Example
+  toggles and buttons align using dynamic support sizing.
+- Disabled overflow arrows retain their hit area and preserve focus. Repeated clicks after reaching either end of the action carousel no longer collapse the
+  row.
+
+- Trackpad content now follows input directly; the shared spring handles release rather than continuously chasing wheel events.
+- Added per-action `fullSwipeConfig` and trackpad `resistance`. Initial resistance is 1.25 for ordinary actions and 8 for destructive actions; default commit
+  fractions are 0.78 and 0.94 respectively. Explicit per-action settings override row settings and role defaults. Pointer/touch travel stays one-to-one. Icon
+  travel and caption fade now complete at the resolved commit threshold. Equal-sized Archive/Delete examples share strong stretch resistance and demonstrate
+  their different commit thresholds. Applications requiring the former 0.9 commit fraction can preserve it with
+  `[swipeFullAction]="{ commitThreshold: 0.9, resistance: 1 }"`.
+
+- Trackpad readiness follows visible action entrance completion and remains valid across continuation bursts. Exposed action strips retain hit testing during
+  gestures, with wheel capture on the shared item container, so content, buttons, captions and padding support continued swiping. Dragging actions remain
+  outside keyboard navigation until released. Vertical wheel tails settle the horizontal reveal without full activation; zero-delta events no longer cancel it.
+
+- Removed the fixed trackpad readiness interval and separate-burst requirement. Multiple actions unlock stretching when their visible entrance springs finish;
+  steady, accelerating or decaying opening input stays at reveal. Stretch requires a renewed outward push after easing off, or a fresh swipe. Reduced motion
+  completes appearance immediately while retaining intent checks. Pre-unlock movement is discarded rather than applied later.
+- At the closed boundary, a direction change or renewed wheel impulse immediately starts the next reveal without waiting for the previous tail to stop. Decaying
+  collapse momentum remains closed. Release springs cannot create extra action stretch beyond direct input or the normal reveal destination.
+- Trackpad resistance now supports `resistancePlateau` and `resistanceEnd`. Destructive actions use a resistance factor of 8 through 15% of travel, tapering to
+  one at 90%; wide rows scale the excess resistance down. Ordinary actions taper from 1.25 to one at 40%. Resistance applies only to additional stretch after
+  normal reveal, for both single and multiple actions. Revealing always follows input one-to-one. Reversal follows the same continuous curve, with no stored
+  excess input. Pointer/touch movement remains one-to-one.
+- Appearance uses a separate elastic spring for each entering capsule and caption, with visible growth, bounded overshoot and staggered starts. Opacity stays
+  stable; live reduced motion snaps the sequence and closing cancels pending starts.
+
+- Added the dedicated `/components/swipe-actions` catalog page with configurable Playground, shared compact/large examples and generated documentation.
+- Added ordered spring appearance for capsules and captions, reversed in RTL and subtler for one action. Live reduced motion removes decorative deformation.
+  Content now translates without resizing or reflow. A reverse gesture only collapses the exposed side; a fresh gesture immediately interrupts that collapse.
+- Added cancelable full pointer/touch and trackpad swipes, `swipeFullAction: boolean | ISwipeFullActionConfig`, action-level `fullSwipe`, and the `full-swipe`
+  activation source. The visible physical edge command stretches, peers fade and move away, and its caption fades as the icon moves toward content. Actual
+  pointer/touch release or trackpad input crossing the configurable commit threshold activates; rollback, cancellation and projected velocity never do. Long
+  rows cap stretch through `--bx-swipe-full-max-width`. Trackpad commit dispatches immediately; reversing before the commit threshold cancels.
+- Gestures now start on exposed action capsules as well as row content, restoring collapse, opposite-side reveal and continued stretch on touch and trackpads.
+  Transferring touch capture from a descendant no longer cancels the row gesture. Appearance keeps opacity stable throughout the spring pop to prevent flashing.
+
+- Added optional `SwipeActionsDirective` in Forms. Apply `bxSwipeActions` to list-row containers or MenuItem and configure typed
+  `leftSwipeActions`/`rightSwipeActions`; existing items and empty action groups retain their previous behavior. Physical gesture directions and configured
+  ordering are preserved in RTL.
+- Swipe capsules, automatic right-click and ContextMenu/Shift+F10 commands share semantic colors, translated labels, disabled/loading state, typed activation
+  events and optional promise handlers. Promises keep actions visible while pending, apply configured completion on success, and expose explicit retry on
+  failure. Explicit context templates retain native invocation priority.
+- Touch, pointer and horizontal trackpad gestures preserve native vertical scrolling and pinch zoom, track recent signed velocity through the existing exact
+  spring, and roll back cancellation, lost capture and Escape. One row stays exposed at a time; overflow stays in a native action lane with reachable paging
+  controls. No three-dot action menu is added.
+- Added independent `Button.shape="capsule"` with configurable width/height and existing lighting, material, busy and pressure behavior. Large-row captions
+  appear below capsules and only clipped captions receive tooltips. Compact rows use delayed hover/focus names. Action regions retain row height; the rounded
+  primary control moves independently of transparent action gutters, preserving readable content, pill geometry and busy label alignment. MenuItem adds optional
+  translated `ariaLabel`, `loading` and semantic `--bx-menu-item-color` customization.
+- Overflow paging uses circular, vertically centered controls in padded gutters, with directional mask fades. Its shared spring targets measured action anchors,
+  retargets repeated clicks and yields to direct scrolling; exact scroll-padding-aware destinations and removal of competing CSS snapping prevent a second
+  adjustment after settling. Both compact and large constrained rows are demonstrated.
+- Added optional `TooltipDirective.bxTooltipDwell` in milliseconds, defaulting to `0`; pending opening cancels on leave, focus loss, scroll, Escape and
+  teardown. Compact swipe action names default to 400 ms through `swipeTooltipDwell`; large clipped-caption tooltips stay immediate, and neither presentation
+  enables touch tooltips. The Tooltip Playground exposes an adjustable dwell control.
+- Filled action controls opt out of shared menu-row background suppression through `data-bx-selection-exclude`, keeping semantic hover/active fills and their
+  paired foregrounds intact, including accent actions inside constrained groups.
+- ContextMenuDirective supports `openFrom(origin, event)` for composed controls. Shared overlay theme inheritance now tracks nested popup ownership through
+  `containsOverlayTarget`, keeping parent menu focus and interaction intact. Menu selection lighting excludes rows during an active swipe.
+- Menu and MenuItem Playground examples cover both gesture directions, ordinary rows, overflow, custom/nested/overlay contexts, RTL and asynchronous
+  failure/retry, including visible retry feedback for the same failed request and configurable row removal. Theme Studio persistence and layout changes remain
+  deferred. No existing API requires migration.
+
 ## Date and time controls
 
 - Added `DatePicker` and `TimePicker` to `@filip.mazev/blocks/forms`, with standalone values, Reactive Forms, `ngModel` and Signal Forms integration. Both use
