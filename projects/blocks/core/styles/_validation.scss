@@ -56,10 +56,14 @@
     flex: 0 0 auto;
 }
 
-.bx-field-prefix {
+.bx-field-prefix,
+.bx-input-wrapper > [bxIconStart],
+.bx-select-trigger > [bxIconStart] {
     padding-inline: var(--bx-field-adornment-padding, #{spacing(3)}) var(--bx-field-adornment-gap, #{spacing(2)});
 }
 
-.bx-field-suffix {
+.bx-field-suffix,
+.bx-input-actions > [bxIconEnd],
+.bx-select-trigger > [bxIconEnd] {
     padding-inline: var(--bx-field-adornment-gap, #{spacing(2)}) var(--bx-field-adornment-padding, #{spacing(3)});
 }

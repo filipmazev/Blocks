@@ -22,6 +22,9 @@ Button, MenuItem and Tag support both positions. Chip, Alert, BottomDrawer and S
 Select/MultiSelect accept these markers alongside their existing prefix/suffix slots. Buttons recognize the directive during loading, replace the custom visual
 with a measured spinner, and retain their dimensions and accessible name. `bxButtonIcon` remains supported.
 
+InputField and Select/MultiSelect custom visuals use the same `--bx-field-adornment-padding` and `--bx-field-adornment-gap` spacing as projected prefixes and
+suffixes, on both the leading and trailing sides. These logical insets follow the field's text direction.
+
 Data-driven renderers use templates: Select/MultiSelect options accept `startTemplate`/`endTemplate` and default `optionStartTemplate`/`optionEndTemplate`
 inputs; MenuItem and Tab accept `iconTemplate`/`endIconTemplate`; Step and picker actions accept `iconTemplate` and `pickerIconTemplate` respectively.
 `IIconData.template` works in navigation, modal headers and side-panel headers. `Icon.contentTemplate` or direct projection renders custom artwork inside the

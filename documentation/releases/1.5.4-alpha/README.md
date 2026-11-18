@@ -2,6 +2,9 @@
 
 Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has not been published; these notes may change before release.
 
+- InputField, Select and MultiSelect inset projected `bxIconStart` and `bxIconEnd` visuals using the existing field adornment padding and gap in either text
+  direction, fixing theme swatches and custom field icons against the control edges.
+
 - SidePanel adds optional `resizeInitialWidth` for a stable double-click/Enter reset and shrink reference when restoring saved widths. The Playground's
   persisted panel sizes now reset to their original defaults across navigation and refresh.
 - Vertical labelled dividers retain visible line segments around their label, including intrinsically sized containers.
