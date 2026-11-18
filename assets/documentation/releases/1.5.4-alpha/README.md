@@ -433,8 +433,9 @@ accessibility.
 - Menu and option selection surfaces use a clipped decorative layer so spring overshoot cannot create scrolling. Field, disclosure and panel feedback uses
   shared motion curves. The runtime guide records interaction contracts and Playground review routes across component families.
 
-- Swipe actions retain pills while the action group fits and use icon-only circles when the lane would need carousel paging. Smaller paging gutters preserve
-  keyboard access, named actions and full-swipe behavior.
+- Swipe actions keep pill-shaped commands while the configured group fits the area the row can reveal and use icon-only circles only when it does not, so the
+  presentation follows the measured row width and action count rather than the viewport. Smaller paging gutters preserve keyboard access, named actions and
+  full-swipe behavior.
 
 - Select and MultiSelect options now support typed per-row swipe commands, leading/trailing visual templates, trailing icons and viewport-bounded `panelWidth`.
   Option commands use a grid popup with separate selection and action cells; ordinary options retain listbox semantics. No migration is required for existing
