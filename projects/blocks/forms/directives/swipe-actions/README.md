@@ -173,26 +173,28 @@ can immediately open the other side while the previous close is settling.
 
 ## Appearance and customization
 
-Wide horizontal Button capsules have centered icons and separate captions below. Lanes that would require carousel paging switch to icon-only circles; short
-rows retain pills when the action group fits. Their dimensions adapt to the row's actual height; actions do not enlarge the row or reflow its content. The
-primary control moves at its original width and height, carrying its rounded hover/active highlight with it. The host clips the movement and the action gutter
-stays transparent. Keep generic row material on the moving primary control, not on the host around the actions. The examples use borderless rows within one list
-container.
+Wide horizontal Button capsules have centered icons and separate captions below. The panel measures its own row width, not the viewport, and compares it with
+the configured action count: a group whose capsules fit the area the row can reveal keeps its pills, and only a group that no longer fits switches to icon-only
+circles in the same lane and pages through them with the Previous/Next controls. A narrow menu item therefore shows pills when its commands fit, while a wide
+row switches to circles as soon as its commands no longer do. Their dimensions adapt to the row's actual height; actions do not enlarge the row or reflow its
+content. The primary control moves at its original width and height, carrying its rounded hover/active highlight with it. The host clips the movement and the
+action gutter stays transparent. Keep generic row material on the moving primary control, not on the host around the actions. The examples use borderless rows
+within one list container.
 
 Larger rows show single-line captions underneath, with shared truncation and a tooltip only on clipped text. Compact rows omit captions and show the action name
 on mouse hover or keyboard focus after `swipeTooltipDwell` (400 ms initially). Compact names use TooltipDirective's `bxTooltipDwell`; large clipped-caption
 tooltips keep their immediate default. Touch tooltips remain disabled. Disabled and busy captions are muted independently of the Button's guarded appearance.
 The same native icon slot is retained in a busy context row.
 
-| CSS variable                                              | Behavior                                                                                                                       |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `--bx-swipe-content-gap`                                  | Space between the rounded moving content and the action lane, default `spacing(2)`.                                            |
-| `--bx-swipe-action-height`                                | Desired capsule height, default `spacing(10)`, bounded by the available row/caption space.                                     |
-| `--bx-swipe-action-width`                                 | Action column width, default measured capsule height × 2.5 plus `spacing(2)`, or height plus `spacing(2)` for compact circles. |
-| `--bx-swipe-content-min-width`                            | Desired visible content region, default 50%; overflow may reserve extra room for one full action and its controls.             |
-| `--bx-swipe-overflow-gap`, `--bx-swipe-overflow-padding`  | Gaps around paging controls and outer inset; both default to `spacing(1)`.                                                     |
-| `--bx-swipe-overflow-fade`                                | Overflow edge fade, default `spacing(3)`; only edges with more actions fade. Forced colors omit the mask.                      |
-| `--bx-button-capsule-width`, `--bx-button-capsule-height` | Independent Button capsule geometry outside the swipe panel.                                                                   |
+| CSS variable                                              | Behavior                                                                                                                                                                              |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--bx-swipe-content-gap`                                  | Space between the rounded moving content and the action lane, default `spacing(2)`.                                                                                                   |
+| `--bx-swipe-action-height`                                | Desired capsule height, default `spacing(10)`, bounded by the available row/caption space.                                                                                            |
+| `--bx-swipe-action-width`                                 | Action column width, default measured capsule height × 2.5 plus `spacing(2)`, or height plus `spacing(2)` for compact circles.                                                        |
+| `--bx-swipe-content-min-width`                            | Preferred visible content region, default 50%. Circle lanes stay inside it where they can; pill groups may use the rest of the row while a readable strip of content remains visible. |
+| `--bx-swipe-overflow-gap`, `--bx-swipe-overflow-padding`  | Gaps around paging controls and outer inset; both default to `spacing(1)`.                                                                                                            |
+| `--bx-swipe-overflow-fade`                                | Overflow edge fade, default `spacing(3)`; only edges with more actions fade. Forced colors omit the mask.                                                                             |
+| `--bx-button-capsule-width`, `--bx-button-capsule-height` | Independent Button capsule geometry outside the swipe panel.                                                                                                                          |
 
 Keep touch-oriented row content tall enough for comfortable targets. Compact desktop menus retain their existing density. Long action groups remain in their
 native horizontal lane with circular, vertically centered Previous/Next controls in compact padded gutters with 32px hit targets. A directional mask softens

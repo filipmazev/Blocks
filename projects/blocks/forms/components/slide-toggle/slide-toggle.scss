@@ -103,8 +103,8 @@
 
 .bx-slide-toggle-thumb {
     position: absolute;
-    top: 2px;
-    inset-inline-start: 2px;
+    top: calc(3px - var(--bx-border-width, 1px));
+    inset-inline-start: calc(3px - var(--bx-border-width, 1px));
     width: 18px;
     height: 18px;
     background: var(--bx-text-secondary);

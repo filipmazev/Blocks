@@ -617,8 +617,9 @@ export class SwipeActionPanel {
     const contentGap = this.gapProbe().nativeElement.getBoundingClientRect().width;
     const close = this.closeProbe().nativeElement.getBoundingClientRect().width;
     const available = Math.max(0, this.nativeElement.clientWidth - close);
+    const reveal = Math.max(0, this.nativeElement.clientWidth - Math.min(close, desiredHeight));
     const wideColumn = this.wideProbe().nativeElement.getBoundingClientRect().width;
-    const circles = Math.max(this.left().length, this.right().length) * wideColumn + contentGap > available;
+    const circles = Math.max(this.left().length, this.right().length) * wideColumn + contentGap > reveal;
     const compact = short || circles;
 
     if (this.compact() !== compact) this.compact.set(compact);
@@ -630,19 +631,20 @@ export class SwipeActionPanel {
     }
 
     const column = probe.getBoundingClientRect().width;
-    const capacity = Math.max(1, Math.floor((available - contentGap) / Math.max(1, column)));
+    const capacity = circles ? Math.max(1, Math.floor((available - contentGap) / Math.max(1, column))) : Math.max(1, this.left().length, this.right().length);
     const gutters = this.pagerProbe().nativeElement.getBoundingClientRect().width;
-    const maximum = Math.max(0, this.nativeElement.clientWidth - Math.min(close, desiredHeight));
     const width = (count: number): number => {
       if (!count) return 0;
 
       const total = count * column + contentGap;
 
+      if (!circles) return Math.min(total, reveal);
+
       if (total <= available) return total;
 
-      if (maximum < column + gutters + contentGap) return 0;
+      if (reveal < column + gutters + contentGap) return 0;
 
-      return Math.min(maximum, Math.max(available, column + gutters + contentGap));
+      return Math.min(reveal, Math.max(available, column + gutters + contentGap));
     };
 
     const layout = {
