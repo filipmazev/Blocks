@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Accordion, Collapsible } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-accordion-story',
   imports: [Accordion, Collapsible],
@@ -15,8 +16,46 @@ import { Accordion, Collapsible } from '@filip.mazev/blocks/primitives';
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
 })
 export class AccordionStory {
-  public readonly args: InputSignal<Pick<DemoInputs<Accordion>, 'multiple'> & { content: string }> = input.required<
-    Pick<DemoInputs<Accordion>, 'multiple'> & { content: string }
+  public readonly args: InputSignal<
+    Pick<DemoInputs<Accordion>, 'multiple'> & { content: string } & {
+      firstId: DemoInputs<Collapsible>['id'];
+      firstTitle: DemoInputs<Collapsible>['title'];
+      firstExpanded: DemoInputs<Collapsible>['expanded'];
+      firstDisabled: DemoInputs<Collapsible>['disabled'];
+      firstReadonly: DemoInputs<Collapsible>['readonly'];
+      firstReadOnly: DemoInputs<Collapsible>['readOnly'];
+      firstHeadingLevel: DemoInputs<Collapsible>['headingLevel'];
+      firstRegion: DemoInputs<Collapsible>['region'];
+    } & {
+      secondId: DemoInputs<Collapsible>['id'];
+      secondTitle: DemoInputs<Collapsible>['title'];
+      secondExpanded: DemoInputs<Collapsible>['expanded'];
+      secondDisabled: DemoInputs<Collapsible>['disabled'];
+      secondReadonly: DemoInputs<Collapsible>['readonly'];
+      secondReadOnly: DemoInputs<Collapsible>['readOnly'];
+      secondHeadingLevel: DemoInputs<Collapsible>['headingLevel'];
+      secondRegion: DemoInputs<Collapsible>['region'];
+    }
+  > = input.required<
+    Pick<DemoInputs<Accordion>, 'multiple'> & { content: string } & {
+      firstId: DemoInputs<Collapsible>['id'];
+      firstTitle: DemoInputs<Collapsible>['title'];
+      firstExpanded: DemoInputs<Collapsible>['expanded'];
+      firstDisabled: DemoInputs<Collapsible>['disabled'];
+      firstReadonly: DemoInputs<Collapsible>['readonly'];
+      firstReadOnly: DemoInputs<Collapsible>['readOnly'];
+      firstHeadingLevel: DemoInputs<Collapsible>['headingLevel'];
+      firstRegion: DemoInputs<Collapsible>['region'];
+    } & {
+      secondId: DemoInputs<Collapsible>['id'];
+      secondTitle: DemoInputs<Collapsible>['title'];
+      secondExpanded: DemoInputs<Collapsible>['expanded'];
+      secondDisabled: DemoInputs<Collapsible>['disabled'];
+      secondReadonly: DemoInputs<Collapsible>['readonly'];
+      secondReadOnly: DemoInputs<Collapsible>['readOnly'];
+      secondHeadingLevel: DemoInputs<Collapsible>['headingLevel'];
+      secondRegion: DemoInputs<Collapsible>['region'];
+    }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

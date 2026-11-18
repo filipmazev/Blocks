@@ -31,6 +31,7 @@ export class SliderDirective {
 
   private shell?: HTMLSpanElement;
   private valueLabel?: HTMLSpanElement;
+  private tickMarks: HTMLElement | undefined;
   private tickList?: HTMLDataListElement;
   private thumb?: HTMLSpanElement;
   private motion?: ISpringMotion;
@@ -162,6 +163,13 @@ export class SliderDirective {
       tickList.id = `bx-slider-ticks-${input.id || Math.random().toString(36).slice(2)}`;
       shell.append(tickList);
       this.tickList = tickList;
+
+      const ticks = input.ownerDocument.createElement('span');
+
+      ticks.className = 'bx-slider-ticks';
+      ticks.setAttribute('aria-hidden', 'true');
+      shell.append(ticks);
+      this.tickMarks = ticks;
       this.sync();
 
       const place = () => {
@@ -277,6 +285,7 @@ export class SliderDirective {
 
       if (this.tickList.dataset['range'] !== key) {
         this.tickList.replaceChildren();
+        this.tickMarks?.replaceChildren();
         this.tickList.dataset['range'] = key;
 
         if (this.showTickMarks() && count > 0) {
@@ -285,6 +294,12 @@ export class SliderDirective {
 
             option.value = String(min + index * (Number(input.step) || 1));
             this.tickList.append(option);
+
+            const tick = input.ownerDocument.createElement('span');
+
+            tick.className = 'bx-slider-tick';
+            tick.style.setProperty('--bx-slider-tick-position', String(index / count));
+            this.tickMarks?.append(tick);
           }
         }
       }

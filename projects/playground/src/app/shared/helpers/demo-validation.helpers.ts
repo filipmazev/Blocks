@@ -31,6 +31,8 @@ export function validateDemoValue(value: unknown, schema: DemoValueSchema, path:
       return value === null ? undefined : `${path} must be null.`;
     case 'literal':
       return value === schema.value ? undefined : `${path} must be ${JSON.stringify(schema.value)}.`;
+    case 'enum':
+      return (typeof value === 'string' || typeof value === 'number') && schema.values.includes(value) ? undefined : `${path} must be a documented option.`;
     case 'string':
       return typeof value === 'string' ? undefined : `${path} must be a string.`;
     case 'number':

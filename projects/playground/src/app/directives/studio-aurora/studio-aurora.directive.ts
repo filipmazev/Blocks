@@ -11,7 +11,7 @@ import { STUDIO_AURORA_COLORS } from '@playground/shared/constants/theme-studio-
 
 @Directive({ selector: '[appStudioAurora]' })
 export class StudioAuroraDirective {
-  private readonly elementRef = inject<ElementRef<HTMLButtonElement>>(ElementRef);
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly destroyRef = inject(DestroyRef);
   private readonly ngZone = inject(NgZone);
   private readonly bxA11yService = inject(BxA11yService);
@@ -120,9 +120,10 @@ export class StudioAuroraDirective {
     }
 
     const origins = [...source.querySelectorAll<HTMLElement>('.studio-light-origin')];
+    const button = source.querySelector<HTMLButtonElement>('.studio-button');
     const target = this.enabled ? 1 : 0;
 
-    if (!rings.length || origins.length !== 4) return;
+    if (!button || !rings.length || origins.length !== 4) return;
 
     if (this.reduced) {
       this.rotation = 0;
@@ -143,7 +144,7 @@ export class StudioAuroraDirective {
 
       const lights: IGlassLight[] = origins.map((element, index) => ({
         element,
-        excludeElement: source,
+        excludeElement: button,
         color: this.colorAt(
           Math.atan2((index === 0 || index === 3 ? -0.35 : 0.35) * source.clientWidth, (index < 2 ? 0.5 : -0.5) * source.clientHeight) / (2 * Math.PI) -
             this.rotation

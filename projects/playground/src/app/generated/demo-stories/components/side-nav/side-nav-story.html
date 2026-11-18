@@ -1,10 +1,11 @@
 <bx-side-nav
     [config]="args().config"
+    [groups]="args().groups"
     [collapsed]="args().collapsed"
     [mobileOpen]="args().mobileOpen"
     (collapsedChange)="onAction('collapsedChange', $event)"
     (itemSelected)="onAction('itemSelected', $event)"
     (layoutChange)="onAction('layoutChange', $event)"
-    (mobileOpenChange)="onAction('mobileOpenChange', $event)"
-    >{{ args().content }}</bx-side-nav
->
+    (mobileOpenChange)="onAction('mobileOpenChange', $event)">
+    {{ args().content }}
+</bx-side-nav>

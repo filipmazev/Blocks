@@ -24,6 +24,39 @@
     (selectionChanged)="onAction('selectionChanged', $event)"
     (transitionFinished)="onAction('transitionFinished', $event)"
     (completed)="onAction('completed', $event)"
-    (activeStepChange)="onAction('activeStepChange', $event)"
-    ><bx-step id="details" label="Details">Project details</bx-step><bx-step id="review" label="Review">Review your project</bx-step></bx-stepper
->
+    (activeStepChange)="onAction('activeStepChange', $event)">
+    <bx-step
+        [id]="args().firstId"
+        [label]="args().firstLabel"
+        [description]="args().firstDescription"
+        [icon]="args().firstIcon"
+        [disabled]="args().firstDisabled"
+        [optional]="args().firstOptional"
+        [editable]="args().firstEditable"
+        [completed]="args().firstCompleted"
+        [skipped]="args().firstSkipped"
+        [valid]="args().firstValid"
+        [error]="args().firstError"
+        [loading]="args().firstLoading"
+        [statusText]="args().firstStatusText">
+        <p>
+            {{ args().content }}
+        </p>
+    </bx-step>
+    <bx-step
+        [id]="args().secondId"
+        [label]="args().secondLabel"
+        [description]="args().secondDescription"
+        [icon]="args().secondIcon"
+        [disabled]="args().secondDisabled"
+        [optional]="args().secondOptional"
+        [editable]="args().secondEditable"
+        [completed]="args().secondCompleted"
+        [skipped]="args().secondSkipped"
+        [valid]="args().secondValid"
+        [error]="args().secondError"
+        [loading]="args().secondLoading"
+        [statusText]="args().secondStatusText">
+        <p>Review your project</p>
+    </bx-step>
+</bx-stepper>

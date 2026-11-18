@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { ContextMenuDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-context-menu-story',
   imports: [ContextMenuDirective, Menu, MenuItem],

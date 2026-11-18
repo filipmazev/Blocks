@@ -12,7 +12,7 @@
     &::before,
     &.has-label::after {
         content: '';
-        flex: 1 1 0;
+        flex: 1 1 var(--bx-divider-segment-min-length, #{spacing(4)});
         border-block-start: var(--bx-divider-thickness, var(--bx-border-width, 1px)) var(--bx-divider-style, var(--bx-border-style, solid))
             var(--bx-divider-color, var(--bx-border-default));
     }
@@ -24,6 +24,7 @@
     inline-size: auto;
     min-block-size: var(--bx-divider-min-height, #{spacing(6)});
     margin-block: 0;
+    block-size: auto;
     margin-inline: var(--bx-divider-margin, #{spacing(3)});
 
     &::before,

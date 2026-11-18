@@ -92,11 +92,12 @@ or accessibility conformance.
 
 The workbench uses Blocks SidePanelLayout, a resizable SidePanel, BottomDrawer, Tabs, menus, form controls, tooltips, collapsibles, buttons, icons and shared
 surface effects. Reset and the icon-only Properties action sit at the far right of the component tab row. Property cells align vertically at their centers. It
-inherits the active theme and appearance settings. The Properties panel reserves space on wide screens and opens as a modal bottom drawer on narrow screens,
-with the same pinned search and inspection tabs. The preview, property list and results content scroll independently within their own bounds. Surface decoration
-stays outside the preview scroll container so rims do not create scrollbars. Generated preview hosts use the existing examples’ wrapping, spacing and
-constrained control widths. Compact components center horizontally and vertically; block content such as alerts, banners and accordions spans the available
-preview width. Oversized previews remain scrollable from their leading edge. Full documentation is outside the workbench's constrained region.
+inherits the active theme and appearance settings. The Properties panel reserves space from `xl` upward, opens as a side modal between `md` and `xl`, and uses a
+modal bottom drawer below `md`, with the same pinned search and inspection tabs. The preview, property list and results content scroll independently within
+their own bounds. Surface decoration stays outside the preview scroll container so rims do not create scrollbars. Generated preview hosts use the existing
+examples’ wrapping, spacing and constrained control widths. Compact components center horizontally and vertically; block content such as alerts, banners and
+accordions spans the available preview width. Oversized previews remain scrollable from their leading edge. Full documentation is outside the workbench's
+constrained region.
 
 Descriptions, types and defaults are disclosed through property tooltips and API entries rather than repeated beside every control. Supporting text wraps, code
 has its own scrollbar, and the page header uses the existing page sizing tokens for a compact composition.
@@ -116,3 +117,28 @@ every emitted event. Successful copies use a neutral bottom-right Blocks toast s
 
 Every component catalog route includes the shared Playground tab. Start with `/components/button`, `/components/select`, `/components/modal-centered` and
 `/components/simple-toast`. The icon catalog remains available at `/icons`; it is the reference for the existing bounded side-panel interaction.
+
+## Audit refinements
+
+Page and content containers retain normal text size and actual Container presets. The size readout identifies the selected maximum width and explains that a
+narrow preview constrains every preset; expanding the preview shows their different maximums. No scaling or zoom is applied.
+
+Property metadata distinguishes accessibility (blue), projected content (green), DOM targets (amber), templates (accent) and configuration (neutral), using
+compact icon tags. Grid subrows align field editors across each pair, including a tagged field beside an untagged field and a checkbox beside a taller input.
+DOM targets, callbacks and templates remain API references instead of misleading text inputs. Child tabs, accordion items and steps expose grouped
+declaration-derived inputs. Navigation and swipe configuration expose scalar fields alongside typed JSON, including breadcrumb overflow settings and swipe
+resistance. Boolean/object configuration unions retain their enabled state when an individual field is edited; changing resistance while full swipe is false
+does not enable it.
+
+The Surface Effects scene and examples include a patterned backing and a semantic light emitter. Resize Handle provides a visible grip; Side Panel and Bottom
+Drawer provide reopening actions. Loading Indicator demonstrates projected rich content; Signal Forms uses a multi-field Angular signal form with validation.
+Stepper content is visible in wizard mode; progress-only properties appear only for the progress variant, with their constraint described in help text.
+
+Generated source separates imports from decorators and uses the repository ESLint/Prettier rules. Styles needed by a copied scene are included as a separately
+formatted SCSS file and checked with Stylelint. Shared JSON schemas are interned to avoid repeating large navigation and icon contracts across the registry.
+
+Recipe-specific styles are generated into the live story as well as the copyable example, so composed previews such as the large Swipe Actions mail row share
+the same geometry.
+
+A recipe may expand a `sharedView` template and stylesheet into both preview and copied source. This keeps the Swipe Actions first-row presentation synchronized
+with its Examples component without requiring consumers to import Playground internals.

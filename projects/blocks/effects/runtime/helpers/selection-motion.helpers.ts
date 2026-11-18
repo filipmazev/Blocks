@@ -59,6 +59,8 @@ export function mountSelectionMotion(root: HTMLElement, initial: ISelectionMotio
     !!element &&
     root.contains(element) &&
     !element.matches(':disabled, [aria-disabled="true"], .is-disabled') &&
+    !element.hasAttribute('data-bx-selection-exclude') &&
+    !element.closest('[data-bx-swipe-active="true"]') &&
     element.closest('[role="menu"], [role="listbox"]') === root;
   const row = (target: EventTarget | null): HTMLElement | null => {
     const element = target && 'nodeType' in target ? (target as Element) : null;

@@ -1,7 +1,8 @@
 <bx-top-nav
     [config]="args().config"
+    [groups]="args().groups"
     [opened]="args().opened"
     (itemSelected)="onAction('itemSelected', $event)"
-    (openedChange)="onAction('openedChange', $event)"
-    >{{ args().content }}</bx-top-nav
->
+    (openedChange)="onAction('openedChange', $event)">
+    {{ args().content }}
+</bx-top-nav>

@@ -31,6 +31,7 @@
     [subscriptSizing]="args().subscriptSizing"
     [tooltipOnTruncate]="args().tooltipOnTruncate"
     (touch)="onAction('touch', $event)"
-    (valueChange)="onAction('valueChange', $event)"
-    ><bx-radio label="Weekly" value="weekly" /><bx-radio label="Monthly" value="monthly"
-/></bx-radio-group>
+    (valueChange)="onAction('valueChange', $event)">
+    <bx-radio label="Weekly" value="weekly" />
+    <bx-radio label="Monthly" value="monthly" />
+</bx-radio-group>

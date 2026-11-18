@@ -21,6 +21,11 @@
                 </bx-side-panel>
             }
             <div #stage class="stage-column">
+                @if (storyId() === 'page-container' || storyId() === 'container') {
+                    <div class="preview-size" role="status">
+                        <bx-icon name="ruler" size="14" /><span>{{ previewSize() }}</span>
+                    </div>
+                }
                 <div id="demo-preview" class="preview" bxSurface aria-label="Live preview" [attr.aria-busy]="loading()">
                     <div class="preview-scroll">
                         <div class="preview-content"><ng-container #preview /></div>
@@ -45,7 +50,7 @@
                     [resizeTarget]="results"
                     [resizeContainer]="stage"
                     [resizeMinSize]="160"
-                    [resizeMaxSize]="stage.clientHeight - 216"
+                    [resizeMaxSize]="stage.clientHeight - (storyId() === 'page-container' || storyId() === 'container' ? 240 : 216)"
                     [resizeDisableShrink]="false"
                     [resizeValue]="resultsHeight()"
                     (resizeValueChange)="resultsHeight.set($event)"></div>
@@ -91,7 +96,7 @@
                 </div>
             </div>
         </bx-side-panel-layout>
-        @if (compact()) {
+        @if (phone()) {
             <bx-bottom-drawer
                 title="Properties"
                 icon="sliders-horizontal"
@@ -110,40 +115,57 @@
                         ><ng-template bxTabContent>
                             <div class="controls">
                                 @for (property of controls(); track property.name) {
-                                    <div class="control-row" [class.control-wide]="property.editor === 'json'">
-                                        @switch (property.editor) {
-                                            @case ('boolean') {
-                                                <bx-checkbox
-                                                    subscriptSizing="dynamic"
-                                                    [label]="property.binding"
-                                                    [tooltip]="propertyHelp(property)"
-                                                    [checked]="booleanValue(property)"
-                                                    (checkedChange)="setValue(property, $event)" />
+                                    <div class="control-row" [class.control-wide]="property.editor === 'json' || property.editor === 'documentation'">
+                                        <div class="property-tags">
+                                            @if (property.group) {
+                                                <small>{{ property.group }}</small>
                                             }
-                                            @case ('select') {
-                                                <bx-select
-                                                    subscriptSizing="dynamic"
-                                                    [label]="property.binding"
-                                                    [tooltip]="propertyHelp(property)"
-                                                    [options]="options(property)"
-                                                    [value]="args()[property.name]"
-                                                    [isSearchable]="true"
-                                                    [clearable]="property.optional || property.nullable"
-                                                    (valueChange)="setValue(property, $event)" />
+                                            @if (property.category; as category) {
+                                                <bx-tag [config]="propertyBadges[category]" [focusable]="false" [text]="category" />
                                             }
-                                            @default {
-                                                <bx-input-field
-                                                    subscriptSizing="dynamic"
-                                                    errorPolicy="always"
-                                                    [label]="property.binding"
-                                                    [tooltip]="propertyHelp(property)"
-                                                    [type]="property.editor === 'number' ? 'number' : 'text'"
-                                                    [multiline]="property.editor === 'json'"
-                                                    [value]="textValue(property)"
-                                                    [error]="errors()[property.name] || undefined"
-                                                    (valueChange)="setValue(property, $event)" />
+                                        </div>
+                                        <div class="property-editor">
+                                            @switch (property.editor) {
+                                                @case ('documentation') {
+                                                    <div class="property-reference">
+                                                        <strong>{{ property.binding }}</strong
+                                                        ><code>{{ property.type }}</code>
+                                                        <p>{{ property.description }}</p>
+                                                    </div>
+                                                }
+                                                @case ('boolean') {
+                                                    <bx-checkbox
+                                                        subscriptSizing="dynamic"
+                                                        [label]="property.binding"
+                                                        [tooltip]="propertyHelp(property)"
+                                                        [checked]="booleanValue(property)"
+                                                        (checkedChange)="setValue(property, $event)" />
+                                                }
+                                                @case ('select') {
+                                                    <bx-select
+                                                        subscriptSizing="dynamic"
+                                                        [label]="property.binding"
+                                                        [tooltip]="propertyHelp(property)"
+                                                        [options]="options(property)"
+                                                        [value]="propertyValue(property)"
+                                                        [isSearchable]="true"
+                                                        [clearable]="property.optional || property.nullable"
+                                                        (valueChange)="setValue(property, $event)" />
+                                                }
+                                                @default {
+                                                    <bx-input-field
+                                                        subscriptSizing="dynamic"
+                                                        errorPolicy="always"
+                                                        [label]="property.binding"
+                                                        [tooltip]="propertyHelp(property)"
+                                                        [type]="property.editor === 'number' ? 'number' : 'text'"
+                                                        [multiline]="property.editor === 'json'"
+                                                        [value]="textValue(property)"
+                                                        [error]="errors()[property.name] || undefined"
+                                                        (valueChange)="setValue(property, $event)" />
+                                                }
                                             }
-                                        }
+                                        </div>
                                     </div>
                                 } @empty {
                                     <p class="empty-state">No editable properties match. Browse API for templates and callbacks.</p>
@@ -186,7 +208,7 @@
                     variant="icon"
                     aria-label="Properties"
                     bxTooltip="Properties"
-                    [attr.aria-controls]="compact() ? 'demo-properties-drawer' : 'demo-properties'"
+                    [attr.aria-controls]="phone() ? 'demo-properties-drawer' : medium() ? null : 'demo-properties'"
                     [attr.aria-expanded]="propertiesOpen()"
                     (click)="propertiesOpen.set(!propertiesOpen())">
                     <bx-icon name="sliders-horizontal" size="18" />

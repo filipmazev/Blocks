@@ -96,7 +96,9 @@
     display: flex;
     flex-direction: column;
     gap: spacing(3);
-    block-size: 100%;
+    block-size: var(--demo-inspector-height, 100%);
+    inline-size: 100%;
+    box-sizing: border-box;
     min-block-size: 0;
     min-inline-size: 0;
 }
@@ -117,12 +119,16 @@
 .controls {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-    align-items: center;
+    align-items: stretch;
     gap: spacing(3);
     padding: spacing(1);
 }
 
 .control-row {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2;
+    row-gap: spacing(1);
     min-inline-size: 0;
 }
 
@@ -216,4 +222,49 @@ p,
 .toolbar-actions > button {
     inline-size: var(--workbench-action-size);
     block-size: var(--workbench-action-size);
+}
+
+.property-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: spacing(2);
+    min-block-size: 0;
+    align-self: end;
+    color: var(--bx-text-secondary);
+}
+
+.property-reference {
+    display: grid;
+    gap: spacing(2);
+    padding: spacing(2);
+    overflow-wrap: anywhere;
+}
+
+.property-reference code,
+.property-reference p {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.property-editor {
+    display: flex;
+    align-items: center;
+    min-inline-size: 0;
+}
+
+.property-editor > * {
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.preview-size {
+    display: flex;
+    align-items: center;
+    flex: none;
+    flex-wrap: wrap;
+    gap: spacing(2);
+    padding-block-end: spacing(2);
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
 }

@@ -1,0 +1,28 @@
+.resize-surface {
+    position: relative;
+    min-block-size: 12rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    border: 1px solid var(--bx-border-default);
+    border-radius: var(--bx-radius-lg);
+    background: var(--bx-bg-surface-alt);
+}
+
+.demo-resize-grip {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: 1.5rem;
+    cursor: ew-resize;
+}
+
+.demo-resize-grip::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    inline-size: 4px;
+    block-size: 2rem;
+    border-radius: 2px;
+    background: var(--bx-border-strong);
+}

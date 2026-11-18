@@ -10,8 +10,7 @@
     [emissionRadius]="args().emissionRadius"
     [visible]="args().visible"
     [announcement]="args().announcement"
-    [dismissFocusTarget]="args().dismissFocusTarget"
     (dismissed)="onAction('dismissed', $event)"
-    (visibleChange)="onAction('visibleChange', $event)"
-    >{{ args().content }}</bx-alert
->
+    (visibleChange)="onAction('visibleChange', $event)">
+    {{ args().content }}
+</bx-alert>

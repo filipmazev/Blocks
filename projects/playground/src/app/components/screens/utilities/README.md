@@ -127,3 +127,9 @@ and `/modal`; the overlay positioning demo continues to cover placement, inherit
 
 Open `/utilities` from **Core → Utilities**. Expand its sidenav item for all six utility pages, or use the overview search and links. On each page, the
 interactive example precedes the documentation and source tabs.
+
+### Owned popup containment
+
+`containsOverlayTarget(owner, target)` is part of the existing Core overlay infrastructure. It follows theme-inherited popup origins so nested context menus
+remain owned by their parent interaction even when CDK renders them outside the parent's DOM. The Menu/MenuItem swipe examples at `/components/menu-item`
+exercise this integration; see [Core popup containment](../../../../../../blocks/core/README.md#popup-containment) for its contract.

@@ -28,7 +28,7 @@
 }
 
 [data-bx-selection-surface='true']:is([role='menu'], [role='listbox'])
-    [role='menuitem']:is(:hover, :active):not(:disabled, [aria-disabled='true'], .is-disabled) {
+    [role='menuitem']:is(:hover, :active):not(:disabled, [aria-disabled='true'], .is-disabled, [data-bx-selection-exclude], [data-bx-swipe-active='true'] *) {
     background: transparent !important;
 }
 

@@ -1,6 +1,8 @@
 <div tabindex="0" [bxContextMenu]="menu" [bxContextMenuLongPress]="args().bxContextMenuLongPress">
     Right-click, touch and hold, or press the context-menu key here.
 </div>
-<ng-template #menu
-    ><bx-menu><bx-menu-item label="Copy" (action)="onAction('copy', $event)" /></bx-menu
-></ng-template>
+<ng-template #menu>
+    <bx-menu>
+        <bx-menu-item label="Copy" (action)="onAction('copy', $event)" />
+    </bx-menu>
+</ng-template>

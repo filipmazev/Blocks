@@ -7,12 +7,13 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { ResizeHandleDirective } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-resize-handle-story',
   imports: [ResizeHandleDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './resize-handle-story.html',
-  styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
+  styleUrls: ['../../../../components/shared/demo-workbench/demo-preview.scss', './resize-handle-story.scss']
 })
 export class ResizeHandleStory {
   public readonly args: InputSignal<

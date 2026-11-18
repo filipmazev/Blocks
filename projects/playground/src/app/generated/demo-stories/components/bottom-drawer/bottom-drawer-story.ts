@@ -6,10 +6,13 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import type { IDemoAction } from '@playground/interfaces/idemo-action.interface';
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
+import { Button } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
 import { BottomDrawer } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-bottom-drawer-story',
-  imports: [BottomDrawer],
+  imports: [BottomDrawer, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './bottom-drawer-story.html',
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
@@ -19,7 +22,6 @@ export class BottomDrawerStory {
     Pick<
       DemoInputs<BottomDrawer>,
       | 'open'
-      | 'offset'
       | 'animationDuration'
       | 'modal'
       | 'embedded'
@@ -50,7 +52,6 @@ export class BottomDrawerStory {
     Pick<
       DemoInputs<BottomDrawer>,
       | 'open'
-      | 'offset'
       | 'animationDuration'
       | 'modal'
       | 'embedded'

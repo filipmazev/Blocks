@@ -123,3 +123,5 @@ export * from '@core/types/time-availability.types';
 export * from '@core/types/date-time-config.types';
 export * from '@core/types/date-time-serialization.types';
 export * from '@core/types/calendar.types';
+
+export { containsOverlayTarget } from '@core/helpers/overlay-ownership.helpers';

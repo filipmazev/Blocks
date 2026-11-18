@@ -1,4 +1,8 @@
-<button type="button" bx-button [bxDropdown]="menu" [placement]="args().placement" [bxTransition]="args().bxTransition">{{ args().content }}</button
-><ng-template #menu
-    ><bx-menu><bx-menu-item label="Save changes" (action)="onAction('save', $event)" /></bx-menu
-></ng-template>
+<button type="button" bx-button [bxDropdown]="menu" [placement]="args().placement" [bxTransition]="args().bxTransition">
+    {{ args().content }}
+</button>
+<ng-template #menu>
+    <bx-menu>
+        <bx-menu-item label="Save changes" (action)="onAction('save', $event)" />
+    </bx-menu>
+</ng-template>

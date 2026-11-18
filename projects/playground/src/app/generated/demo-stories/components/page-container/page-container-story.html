@@ -1,12 +1,16 @@
 <bx-page-container
     [size]="args().size"
-    [sectionTitle]="args().sectionTitle"
-    [pageTitle]="args().pageTitle"
+    [sectionTitle]="args().autoResolveTitlesFromNavigation ? undefined : args().sectionTitle"
+    [pageTitle]="args().autoResolveTitlesFromNavigation ? undefined : args().pageTitle"
     [pageDescription]="args().pageDescription"
     [autoResolveTitlesFromNavigation]="args().autoResolveTitlesFromNavigation"
+    [breadcrumbs]="args().breadcrumbs"
     [showBreadcrumbs]="args().showBreadcrumbs"
     [breadcrumbsAfter]="args().breadcrumbsAfter"
     [breadcrumbLabel]="args().breadcrumbLabel"
-    ><bx-page-content>{{ args().content }}</bx-page-content
-    ><bx-page-footer>Project actions</bx-page-footer></bx-page-container
->
+    [breadcrumbConfig]="args().breadcrumbConfig">
+    <bx-page-content>
+        {{ args().content }}
+    </bx-page-content>
+    <bx-page-footer>Project actions</bx-page-footer>
+</bx-page-container>

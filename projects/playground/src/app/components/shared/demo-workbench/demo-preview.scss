@@ -53,3 +53,82 @@
 :host > bx-top-nav {
     inline-size: 100%;
 }
+
+:host > bx-divider.is-vertical {
+    align-self: center;
+}
+
+.resize-scene,
+.drawer-scene,
+.surface-scene {
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.resize-surface {
+    padding: spacing(4);
+    box-sizing: border-box;
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    background: var(--bx-bg-surface-alt);
+}
+
+.demo-resize-grip {
+    @include resize-grip;
+
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: spacing(6);
+}
+
+.panel-scene-content,
+.drawer-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: spacing(4);
+    padding: spacing(4);
+}
+
+.drawer-scene {
+    overflow: clip;
+    box-sizing: border-box;
+}
+
+.surface-scene {
+    position: relative;
+    display: grid;
+    gap: spacing(4);
+    padding: spacing(6);
+    box-sizing: border-box;
+    isolation: isolate;
+    background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-bg-element) 2rem 4rem);
+    border-radius: radius(lg);
+}
+
+.surface-art {
+    position: absolute;
+    inset: 25% 10%;
+    display: flex;
+    justify-content: space-between;
+    color: var(--bx-text-accent);
+    z-index: -1;
+}
+
+.surface-sample {
+    display: grid;
+    gap: spacing(4);
+    padding: spacing(6);
+    border: 1px solid var(--bx-border-default);
+    border-radius: radius(lg);
+    background: color-mix(in srgb, var(--bx-bg-surface) 55%, transparent);
+}
+
+.signal-form-scene {
+    display: grid;
+    gap: spacing(4);
+    inline-size: min(100%, 32rem);
+    min-inline-size: 0;
+}

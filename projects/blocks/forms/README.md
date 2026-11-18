@@ -130,3 +130,17 @@ disabled/readonly, reset and reactive validation status. Use Fill valid data to 
 rejection.
 
 The load-more and selection pages include fake APIs, failed requests, retry and small pages without scrollbars.
+
+## Shared row swipe actions
+
+[SwipeActionsDirective](directives/swipe-actions/README.md) works with list rows and Primitives MenuItem, sharing Forms Button capsules and one gesture
+controller. Import it alongside MenuItem and apply `bxSwipeActions`; optional `leftSwipeActions` and `rightSwipeActions` share handlers, translations and state
+across touch, trackpad and pointer gestures, plus right-click and keyboard context menus. `Button.shape="capsule"` is also available independently.
+`/components/menu-item` demonstrates gestures, overflow and asynchronous commands.
+
+Shared swipe actions have a dedicated `/components/swipe-actions` Playground page. It demonstrates ordered appearance motion, immediate collapse interruption,
+cancelable full pointer/touch swipes, trackpad reveal, reduced motion, and asynchronous failure/retry. Content translates without being resized.
+
+Full-swipe handlers keep their capsule stretched while pending or failed, with a spinner and explicit retry. Set action `completion` or row `swipeCompletion` to
+`dismiss` to animate the row away, then remove application data on `swipeDismissed`; the default `collapse` retains the row. See the shared guide for translated
+retry/status text, focus and restoration.

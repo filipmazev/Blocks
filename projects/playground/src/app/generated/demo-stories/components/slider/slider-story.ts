@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { SliderDirective } from '@filip.mazev/blocks/forms';
+
 @Component({
   selector: 'app-slider-story',
   imports: [SliderDirective],

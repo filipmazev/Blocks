@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Alert } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-alert-story',
   imports: [Alert],
@@ -29,7 +30,6 @@ export class AlertStory {
       | 'emissionRadius'
       | 'visible'
       | 'announcement'
-      | 'dismissFocusTarget'
     > & { content: string }
   > = input.required<
     Pick<
@@ -45,7 +45,6 @@ export class AlertStory {
       | 'emissionRadius'
       | 'visible'
       | 'announcement'
-      | 'dismissFocusTarget'
     > & { content: string }
   >();
 

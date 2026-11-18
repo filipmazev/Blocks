@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { InputField } from '@filip.mazev/blocks/forms';
+
 @Component({
   selector: 'app-input-field-story',
   imports: [InputField],

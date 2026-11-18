@@ -66,3 +66,11 @@ export * from '@forms/components/time-picker/time-picker';
 export * from '@forms/types/date-picker.types';
 
 export type { ITimePickerOption } from '@forms/interfaces/itime-picker-option.interface';
+
+export * from '@forms/directives/swipe-actions/swipe-actions.directive';
+export * from '@forms/interfaces/iswipe-action.interface';
+export * from '@forms/interfaces/iswipe-action-event.interface';
+export * from '@forms/interfaces/iswipe-action-error.interface';
+export * from '@forms/types/swipe-actions.types';
+
+export type { ISwipeFullActionConfig } from '@forms/interfaces/iswipe-full-action-config.interface';

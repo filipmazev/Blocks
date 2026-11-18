@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
+
 @Component({
   selector: 'app-breadcrumbs-story',
   imports: [Breadcrumbs],
@@ -15,9 +16,9 @@ import { Breadcrumbs } from '@filip.mazev/blocks/navigation';
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
 })
 export class BreadcrumbsStory {
-  public readonly args: InputSignal<Pick<DemoInputs<Breadcrumbs>, 'minimumBreadcrumbs' | 'divider' | 'label'> & { content: string }> = input.required<
-    Pick<DemoInputs<Breadcrumbs>, 'minimumBreadcrumbs' | 'divider' | 'label'> & { content: string }
-  >();
+  public readonly args: InputSignal<
+    Pick<DemoInputs<Breadcrumbs>, 'minimumBreadcrumbs' | 'divider' | 'items' | 'breadcrumbConfig' | 'label'> & { content: string }
+  > = input.required<Pick<DemoInputs<Breadcrumbs>, 'minimumBreadcrumbs' | 'divider' | 'items' | 'breadcrumbConfig' | 'label'> & { content: string }>();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();
 

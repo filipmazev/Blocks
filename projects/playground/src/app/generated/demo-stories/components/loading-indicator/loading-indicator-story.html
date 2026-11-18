@@ -1,1 +1,6 @@
-<bx-loading-indicator [label]="args().label" [size]="args().size">{{ args().content }}</bx-loading-indicator>
+<bx-loading-indicator [label]="args().label" [size]="args().size">
+    <bx-tag text="Workspace sync" leadingIcon="cloud-upload" />
+    <span>
+        {{ args().content }}
+    </span>
+</bx-loading-indicator>

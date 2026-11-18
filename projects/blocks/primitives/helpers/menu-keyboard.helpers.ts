@@ -15,7 +15,11 @@ export function navigateMenuKey(event: KeyboardEvent, menu: HTMLElement, options
   if (![forward, backward, 'Home', 'End'].includes(event.key)) return false;
 
   const items = Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]')).filter(
-    (item) => item.closest('[role="menu"], [role="menubar"]') === menu && !item.matches(':disabled, [aria-disabled="true"]') && item.getClientRects().length > 0
+    (item) =>
+      item.closest('[role="menu"], [role="menubar"]') === menu &&
+      !item.matches(':disabled, [aria-disabled="true"]') &&
+      !item.closest('[inert], [hidden], [aria-hidden="true"]') &&
+      item.getClientRects().length > 0
   );
 
   if (!items.length) return false;

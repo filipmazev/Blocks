@@ -2,7 +2,7 @@ import type { InputSignal, Signal } from '@angular/core';
 
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
-import { BX_I18N, BxA11yService, isTextWithKey, ResolvableText } from '@filip.mazev/blocks/core';
+import { BX_I18N, BxA11yService, ResolvableText, resolveText } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 
 @Component({
@@ -23,11 +23,7 @@ export class Tooltip {
 
     if (!textData) return undefined;
 
-    if (isTextWithKey(textData)) {
-      return this.i18n?.translate(textData.key) ?? textData.key;
-    }
-
-    return textData;
+    return resolveText(textData, this.i18n);
   });
 
   /** Whether decorative motion is enabled after applying shared reduced-motion preferences. */

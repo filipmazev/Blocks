@@ -1,5 +1,5 @@
-<bx-side-panel-layout style="block-size: 18rem"
-    ><bx-side-panel
+<bx-side-panel-layout style="block-size: 26rem">
+    <bx-side-panel
         [open]="args().open"
         [placement]="args().placement"
         [width]="args().width"
@@ -9,7 +9,6 @@
         [resizeDisableShrink]="args().resizeDisableShrink"
         [resizeLabel]="args().resizeLabel"
         [resizeIdleDelay]="args().resizeIdleDelay"
-        [container]="args().container"
         [layoutMode]="args().layoutMode"
         [backdrop]="args().backdrop"
         [closeOnBackdrop]="args().closeOnBackdrop"
@@ -22,8 +21,11 @@
         [restoreFocus]="args().restoreFocus"
         [animationDuration]="args().animationDuration"
         (openChange)="onAction('openChange', $event)"
-        (widthChange)="onAction('widthChange', $event)"
-        >{{ args().content }}</bx-side-panel
-    >
-    <p>Project content remains available beside the panel.</p></bx-side-panel-layout
->
+        (widthChange)="onAction('widthChange', $event)">
+        {{ args().content }}
+    </bx-side-panel>
+    <div class="panel-scene-content">
+        <button type="button" bx-button variant="tonal" (click)="onAction('openChange', true)"><bx-icon name="panel-right-open" />Open panel</button>
+        <p>Project content remains available beside the panel.</p>
+    </div>
+</bx-side-panel-layout>

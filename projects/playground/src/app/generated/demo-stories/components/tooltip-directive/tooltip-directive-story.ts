@@ -8,6 +8,7 @@ import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Button } from '@filip.mazev/blocks/forms';
 import { TooltipDirective } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-tooltip-directive-story',
   imports: [TooltipDirective, Button],
@@ -17,9 +18,13 @@ import { TooltipDirective } from '@filip.mazev/blocks/primitives';
 })
 export class TooltipDirectiveStory {
   public readonly args: InputSignal<
-    Pick<DemoInputs<TooltipDirective>, 'bxTooltip' | 'placement' | 'bxTooltipTouch' | 'bxTooltipHover' | 'bxTooltipTruncatedOnly'> & { content: string }
+    Pick<DemoInputs<TooltipDirective>, 'bxTooltip' | 'placement' | 'bxTooltipTouch' | 'bxTooltipHover' | 'bxTooltipDwell' | 'bxTooltipTruncatedOnly'> & {
+      content: string;
+    }
   > = input.required<
-    Pick<DemoInputs<TooltipDirective>, 'bxTooltip' | 'placement' | 'bxTooltipTouch' | 'bxTooltipHover' | 'bxTooltipTruncatedOnly'> & { content: string }
+    Pick<DemoInputs<TooltipDirective>, 'bxTooltip' | 'placement' | 'bxTooltipTouch' | 'bxTooltipHover' | 'bxTooltipDwell' | 'bxTooltipTruncatedOnly'> & {
+      content: string;
+    }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

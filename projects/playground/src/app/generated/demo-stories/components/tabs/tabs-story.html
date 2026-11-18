@@ -3,7 +3,27 @@
     [ariaLabel]="args().ariaLabel"
     [dragSelection]="args().dragSelection"
     [selectedValue]="args().selectedValue"
-    (selectedValueChange)="onAction('selectedValueChange', $event)"
-    ><bx-tab label="Overview" value="overview"><ng-template bxTabContent>Project overview</ng-template></bx-tab
-    ><bx-tab label="Details" value="details"><ng-template bxTabContent>Workspace settings</ng-template></bx-tab></bx-tabs
->
+    (selectedValueChange)="onAction('selectedValueChange', $event)">
+    <bx-tab
+        [label]="args().firstLabel"
+        [disabled]="args().firstDisabled"
+        [color]="args().firstColor"
+        [textColor]="args().firstTextColor"
+        [highlightColor]="args().firstHighlightColor"
+        [contentColor]="args().firstContentColor"
+        [icon]="args().firstIcon"
+        [endIcon]="args().firstEndIcon">
+        <ng-template bxTabContent>Project overview</ng-template>
+    </bx-tab>
+    <bx-tab
+        [label]="args().secondLabel"
+        [disabled]="args().secondDisabled"
+        [color]="args().secondColor"
+        [textColor]="args().secondTextColor"
+        [highlightColor]="args().secondHighlightColor"
+        [contentColor]="args().secondContentColor"
+        [icon]="args().secondIcon"
+        [endIcon]="args().secondEndIcon">
+        <ng-template bxTabContent>Workspace settings</ng-template>
+    </bx-tab>
+</bx-tabs>

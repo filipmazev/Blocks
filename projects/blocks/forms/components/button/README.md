@@ -21,6 +21,18 @@ Add the standalone component or directive to your component's `imports`.
 `variant`: text, filled, tonal, icon, fab, mini-fab, extended-fab. `color`: primary, accent, success, danger, info, warn, grayscale. `outlined`, `elevated`,
 `disabled`, and `interactive` control presentation and availability.
 
+`shape` defaults to `default`. Use `shape="capsule"` with a filled semantic variant for a horizontal pill icon action; keep any visible caption outside the
+button and provide an accessible name. Capsule geometry preserves existing lighting, pressure, loading and disabled behavior.
+
+```html
+<button bx-button variant="filled" shape="capsule" color="danger" aria-label="Delete"><bx-icon name="trash-2" /></button>
+```
+
+`--bx-button-capsule-height` defaults to `spacing(10)` and width to `spacing(10) × 2.5`. Both can be overridden without affecting other shapes;
+`--bx-button-capsule-min-width` defaults to `spacing(10)` and `--bx-button-capsule-min-height` to `spacing(8)`. Icons remain centered.
+`--bx-button-capsule-radius` defaults to the shared pill radius locally, preventing an ancestor row radius from flattening its material.
+[Shared swipe actions](../../directives/swipe-actions/README.md) uses this shape with captions underneath.
+
 `glassiness` is an explicit per-button opt-in: omitted buttons keep their existing material. Set `glassiness="auto"` for supported browsers, or `"on"` to test
 other engines. Application-wide Off, baseline quality, opaque intent fills and accessibility still take precedence. Automatic rendering uses one SVG backdrop
 pass; Enhanced adds the full reflection/bevel treatment. Text and icons keep their semantic theme colors; active refraction maintains a minimum tint and blur

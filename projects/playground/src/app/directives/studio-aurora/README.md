@@ -8,8 +8,10 @@ Private playground directive, used by the application toolbar as `appStudioAuror
 
 ## Usage
 
-The toolbar supplies its masked border and four invisible origin points. The border reads the same radius variable as the Blocks button. Palette primitives
-provide the gradient and emitted colors; this directive does not replace the button's own surface renderer or interaction lighting.
+The toolbar applies the directive to a fitted wrapper containing the `.studio-button`, masked border and four invisible origin points as siblings. This anchors
+the decoration to the entire button rather than its projected label wrapper, including the compact icon-only layout. The border reads the same radius variable
+as the Blocks button. Palette primitives provide the gradient and emitted colors; this directive does not replace the button's own surface renderer or
+interaction lighting.
 
 ## API
 

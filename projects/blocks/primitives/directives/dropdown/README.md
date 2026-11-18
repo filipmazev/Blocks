@@ -57,3 +57,10 @@ the fade. Content keeps its full dimensions and the overlay retains a solid back
 ## Playground
 
 Open `/components/dropdown` for a working example and its current value or action result.
+
+### Swipe commands inside dropdowns
+
+A `bx-menu-item` enhanced with `SwipeActionsDirective` can reveal commands directly inside the dropdown. Those commands consume their own activation and retain
+the parent dropdown while a promise is pending. Successful completion collapses the action presentation; rejection keeps it available for explicit retry.
+Right-click context panes retain parent ownership through the shared overlay helpers. See [Swipe actions](../../../forms/directives/swipe-actions/README.md) and
+the Menu/MenuItem Examples tabs for working overlay and nested demonstrations.

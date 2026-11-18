@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { ModalBanner } from '@filip.mazev/blocks/modal';
+
 @Component({
   selector: 'app-modal-banner-story',
   imports: [ModalBanner],

@@ -26,6 +26,7 @@ import {
   BxA11yService,
   BxOverlayPositionService,
   BxPlacement,
+  containsOverlayTarget,
   inheritOverlayTheme,
   ScrollLockService,
   trackOverlayOrigin,
@@ -231,7 +232,7 @@ export class DropdownDirective {
 
     if (!target || this.elementRef.nativeElement.contains(target)) return;
 
-    const inside = this.overlayRef.overlayElement.contains(target);
+    const inside = containsOverlayTarget(this.overlayRef.overlayElement, target);
 
     // Preserve existing menu item click-to-close behavior; embedded inputs can stay open.
     if (!inside || this.bxTransition() === 'none' || (target instanceof Element && target.closest('button, a, [role="menuitem"]'))) {
@@ -264,7 +265,8 @@ export class DropdownDirective {
     this.subscriptions.add(overlay.backdropClick().subscribe(() => this.close()));
     this.subscriptions.add(
       overlay.outsidePointerEvents().subscribe((event) => {
-        if (!this.elementRef.nativeElement.contains(event.target as Node)) this.close();
+        if (!containsOverlayTarget(this.elementRef.nativeElement, event.target as Node) && !containsOverlayTarget(overlay.overlayElement, event.target as Node))
+          this.close();
       })
     );
     this.subscriptions.add(

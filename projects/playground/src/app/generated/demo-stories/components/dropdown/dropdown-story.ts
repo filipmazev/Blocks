@@ -8,6 +8,7 @@ import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Button } from '@filip.mazev/blocks/forms';
 import { DropdownDirective, Menu, MenuItem } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-dropdown-story',
   imports: [DropdownDirective, Menu, MenuItem, Button],

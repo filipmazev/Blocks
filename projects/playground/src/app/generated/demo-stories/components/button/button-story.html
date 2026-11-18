@@ -2,6 +2,7 @@
     type="button"
     bx-button
     [variant]="args().variant"
+    [shape]="args().shape"
     [color]="args().color"
     [outlined]="args().outlined"
     [elevated]="args().elevated"
@@ -15,7 +16,7 @@
     @if (args().icon; as icon) {
         <bx-icon [name]="icon" />
     }
-    @if (args().variant !== 'icon') {
+    @if (args().variant !== 'icon' && args().shape !== 'capsule') {
         {{ args().content }}
     }
 </button>

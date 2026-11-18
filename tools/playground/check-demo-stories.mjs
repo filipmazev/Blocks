@@ -7,6 +7,7 @@ import { promisify } from 'node:util';
 
 import { ESLint } from 'eslint';
 import { format, resolveConfig } from 'prettier';
+import stylelint from 'stylelint';
 import ts from 'typescript';
 
 import sourceLintConfig from '../../eslint.config.js';
@@ -16,8 +17,18 @@ const temporary = await mkdtemp(path.join(tmpdir(), 'blocks-angular-examples-'))
 
 async function importSource(relative) {
   const source = await readFile(path.join(root, relative), 'utf8');
-  const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+  const prepared = source.replace(
+    "import * as schemas from './demo-schemas.constants';",
+    `const schemas = await import(${JSON.stringify(await schemaModule())});`
+  );
+  const compiled = ts.transpileModule(prepared, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
   return import(`data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`);
+}
+
+async function schemaModule() {
+  const source = await readFile(path.join(root, 'projects/playground/src/app/generated/demo-stories/constants/demo-schemas.constants.ts'), 'utf8');
+  const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+  return `data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`;
 }
 
 try {
@@ -50,7 +61,14 @@ try {
         const destination = path.join(directory, file.path);
         const content = await format(file.content, DEMO_SOURCE_FORMAT_OPTIONS[file.language]);
         await writeFile(destination, content);
-        lintFiles.push(destination);
+        if (file.language === 'scss') {
+          const result = await stylelint.lint({
+            code: content,
+            codeFilename: path.join(root, 'projects/playground/example.scss'),
+            configFile: path.join(root, '.stylelintrc.json')
+          });
+          if (result.errored) throw new Error(`Invalid copied styles for ${story.id}: ${JSON.stringify(result.results[0].warnings)}`);
+        } else lintFiles.push(destination);
         if (file.language === 'typescript') files.push(destination);
       }
       examples++;

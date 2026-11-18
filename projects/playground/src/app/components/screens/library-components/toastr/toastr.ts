@@ -69,13 +69,16 @@ export class Toastr {
     const args = this.args();
     const toast = this.toastrService.queueToast<IDemoToastData, IDemoToastResult, DemoToast>(DemoToast, {
       position: args.position,
+      glassiness: args.glassiness,
+      glassQuality: args.glassQuality,
+      wrapperClass: args.wrapperClass,
       durationInMs: args.durationInMs,
       animate: args.animate,
       swipeToDismiss: args.swipeToDismiss,
       hasDefaultBackground: args.hasDefaultBackground,
       showCloseButton: args.showCloseButton,
       showProgressBar: args.showProgressBar,
-      closeLabel: { key: 'overlay.closeToast' },
+      closeLabel: args.closeLabel || { key: 'overlay.closeToast' },
       data: { title: args.title, message: args.message, openedCount: this.openedCount }
     });
 
@@ -96,6 +99,9 @@ export class Toastr {
     const args = this.args();
     const toast = this.toastrService.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: args.position,
+      glassiness: args.glassiness,
+      glassQuality: args.glassQuality,
+      wrapperClass: args.wrapperClass,
       durationInMs: persistent ? 0 : args.durationInMs,
       animate: args.animate,
       swipeToDismiss: args.swipeToDismiss,
@@ -104,7 +110,7 @@ export class Toastr {
       hasDefaultBackground: args.hasDefaultBackground,
       closeButtonColor: `text-${type}`,
       progressBarColor: `text-${type}`,
-      closeLabel: { key: 'overlay.closeToast' },
+      closeLabel: args.closeLabel || { key: 'overlay.closeToast' },
       data: { title: args.title, message: args.message, type, icon: args.icon ? { name: args.icon } : null, loading: args.loading }
     });
 

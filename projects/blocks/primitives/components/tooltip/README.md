@@ -53,3 +53,9 @@ Prefer the directive for interactive pages.
 ## Playground
 
 Open `/components/tooltip` for a working example and its current value or action result.
+
+### Trigger dwell and translated parameters
+
+Visual opening is controlled by [TooltipDirective](../../directives/tooltip/README.md). Its optional `bxTooltipDwell` is measured in milliseconds, defaults to
+zero, and is independent from touch hold/tap timing and explicit `show()`. Tooltip copy and screen-reader descriptions resolve shared translation parameters and
+update with the adapter version. Compact swipe-action names use a dwell; truncated captions on larger rows remain immediate.

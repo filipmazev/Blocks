@@ -1,0 +1,230 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: clip;
+    border-radius: inherit;
+}
+
+.bx-swipe-probe,
+.bx-swipe-close-probe,
+.bx-swipe-full-probe {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    inline-size: var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height, #{spacing(10)}) * 2.5 + #{spacing(2)}));
+    block-size: var(--bx-swipe-action-height, #{spacing(10)});
+}
+
+.bx-swipe-close-probe {
+    inline-size: var(--bx-swipe-content-min-width, 50%);
+}
+
+.bx-swipe-full-probe {
+    inline-size: min(100%, var(--bx-swipe-full-max-width, calc(#{spacing(12)} * 12)));
+}
+
+.bx-swipe-action-region {
+    position: absolute;
+    inset-block: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    pointer-events: auto;
+    direction: ltr;
+    box-sizing: border-box;
+
+    &.has-overflow {
+        grid-template-columns: spacing(8) minmax(0, 1fr) spacing(8);
+        gap: var(--bx-swipe-overflow-gap, #{spacing(2)});
+        padding-inline: var(--bx-swipe-overflow-padding, #{spacing(2)});
+        box-sizing: border-box;
+    }
+}
+
+.bx-swipe-left {
+    padding-left: var(--bx-swipe-content-gap, #{spacing(2)});
+    right: 0;
+    clip-path: inset(0 0 0 max(0px, calc(100% - var(--bx-action-reveal, 0px))));
+}
+
+.bx-swipe-right {
+    padding-right: var(--bx-swipe-content-gap, #{spacing(2)});
+    left: 0;
+    clip-path: inset(0 max(0px, calc(100% - var(--bx-action-reveal, 0px))) 0 0);
+}
+
+.bx-swipe-lane {
+    touch-action: pan-y pinch-zoom;
+    display: flex;
+    align-items: stretch;
+    block-size: 100%;
+    overflow: auto hidden;
+    scrollbar-width: none;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: var(--bx-swipe-overflow-fade, #{spacing(3)});
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.bx-swipe-action {
+    --bx-button-capsule-height: var(--bx-swipe-capsule-height);
+    --bx-button-capsule-width: calc(var(--bx-swipe-capsule-height) * 2.5 + var(--bx-swipe-stretch-extra, 0px));
+    --bx-button-capsule-min-height: 0;
+    --bx-button-capsule-min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: none;
+    gap: spacing(1);
+    inline-size: calc(var(--bx-swipe-action-width, calc(var(--bx-swipe-capsule-height) * 2.5 + #{spacing(2)})) + var(--bx-swipe-stretch-extra, 0px));
+    padding-inline: spacing(1);
+    box-sizing: border-box;
+    overflow: clip;
+}
+
+.bx-swipe-action-visual {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    inline-size: 100%;
+    block-size: 100%;
+    gap: inherit;
+    transform-origin: center;
+}
+
+.bx-swipe-action-label,
+.bx-swipe-caption-probe {
+    display: block;
+    max-inline-size: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--bx-text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    text-align: center;
+    cursor: pointer;
+}
+
+.bx-swipe-page-slot {
+    display: grid;
+    place-items: center;
+    align-self: center;
+    block-size: spacing(8);
+}
+
+.bx-swipe-page {
+    --bx-glass-radius: #{radius(pill)};
+
+    inline-size: spacing(8);
+    block-size: spacing(8);
+    align-self: center;
+    border-radius: radius(pill);
+}
+
+.bx-swipe-pager-probe {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    inline-size: calc(2 * #{spacing(8)} + 2 * var(--bx-swipe-overflow-gap, #{spacing(2)}) + 2 * var(--bx-swipe-overflow-padding, #{spacing(2)}));
+}
+
+.bx-swipe-context-actions {
+    display: block;
+    max-inline-size: calc(100vw - #{spacing(4)});
+    max-block-size: calc(100dvh - #{spacing(8)});
+    overflow: auto;
+}
+
+.bx-swipe-action.is-unavailable {
+    .bx-swipe-action-label {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.bx-swipe-caption-probe {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.bx-swipe-action-label[hidden] {
+    display: none;
+}
+
+.has-overflow .bx-swipe-lane {
+    --bx-swipe-fade-start: 0px;
+    --bx-swipe-fade-end: 0px;
+
+    mask-image: linear-gradient(to right, transparent, #000000 var(--bx-swipe-fade-start), #000000 calc(100% - var(--bx-swipe-fade-end)), transparent);
+}
+
+.can-scroll-before .bx-swipe-lane {
+    --bx-swipe-fade-start: var(--bx-swipe-overflow-fade, #{spacing(3)});
+}
+
+.can-scroll-after .bx-swipe-lane {
+    --bx-swipe-fade-end: var(--bx-swipe-overflow-fade, #{spacing(3)});
+}
+
+@media (forced-colors: active) {
+    .has-overflow .bx-swipe-lane {
+        mask-image: none;
+    }
+}
+
+.is-stretching {
+    .bx-swipe-page-slot {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .bx-swipe-lane {
+        mask-image: none;
+        overflow-x: hidden;
+    }
+}
+
+.bx-swipe-status {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.bx-swipe-retry-label {
+    margin-inline-start: spacing(2);
+    min-inline-size: 0;
+    max-inline-size: calc(100% - #{spacing(12)});
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bx-swipe-gap-probe {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    inline-size: var(--bx-swipe-content-gap, #{spacing(2)});
+}
+
+.bx-swipe-action-region.has-overflow {
+    &.bx-swipe-left {
+        padding-left: calc(var(--bx-swipe-overflow-padding, #{spacing(2)}) + var(--bx-swipe-content-gap, #{spacing(2)}));
+    }
+
+    &.bx-swipe-right {
+        padding-right: calc(var(--bx-swipe-overflow-padding, #{spacing(2)}) + var(--bx-swipe-content-gap, #{spacing(2)}));
+    }
+}

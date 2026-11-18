@@ -73,6 +73,6 @@
     </div>
 </ng-template>
 
-@if (embedded()) {
+@if (embedded() && open()) {
     <ng-container [ngTemplateOutlet]="surfaceTemplate" />
 }

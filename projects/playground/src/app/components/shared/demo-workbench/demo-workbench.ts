@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 
 import type { IBxSelectOption } from '@filip.mazev/blocks/forms';
+import type { ModalRef } from '@filip.mazev/blocks/modal';
 import type { SidePanelBreakpoints } from '@filip.mazev/blocks/primitives';
 import type { ICodeFile } from '@playground/interfaces/icode-file.interface';
 import type { IDemoAction } from '@playground/interfaces/idemo-action.interface';
@@ -29,6 +30,7 @@ import { WindowDimensionsService } from '@filip.mazev/blocks/core';
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
 import { Button, Checkbox, InputField, Select } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
+import { ModalService } from '@filip.mazev/blocks/modal';
 import {
   BottomDrawer,
   Collapsible,
@@ -40,11 +42,14 @@ import {
   Tab,
   TabContentDirective,
   Tabs,
+  Tag,
   TooltipDirective
 } from '@filip.mazev/blocks/primitives';
 
 import { Code } from '@playground/components/shared/code/code';
+import { DemoInspectorModal } from '@playground/components/shared/demo-inspector-modal/demo-inspector-modal';
 import { DEMO_STORIES } from '@playground/generated/demo-stories/constants/demo-stories.constants';
+import { DEMO_PROPERTY_BADGES } from '@playground/shared/constants/demo-property-badges.constants';
 import { demoSourceFiles, describeDemoPayload } from '@playground/shared/helpers/demo-source.helpers';
 import { validateDemoConstraints, validateDemoValue } from '@playground/shared/helpers/demo-validation.helpers';
 
@@ -59,6 +64,7 @@ import { validateDemoConstraints, validateDemoValue } from '@playground/shared/h
     Select,
     Icon,
     Tabs,
+    Tag,
     Tab,
     TabContentDirective,
     BxSurfaceDirective,
@@ -76,11 +82,13 @@ import { validateDemoConstraints, validateDemoValue } from '@playground/shared/h
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoWorkbench {
+  private readonly modalService = inject(ModalService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly windowDimensionsService = inject(WindowDimensionsService);
 
   private readonly loadedComponents: Map<string, Type<unknown>> = new Map();
 
+  private readonly inspector: Signal<TemplateRef<unknown> | undefined> = viewChild('inspector');
   private readonly preview: Signal<ViewContainerRef | undefined> = viewChild('preview', { read: ViewContainerRef });
 
   protected readonly args: WritableSignal<DemoArgs> = signal({});
@@ -102,9 +110,18 @@ export class DemoWorkbench {
 
   protected readonly showLoading: WritableSignal<boolean> = signal(false);
 
+  protected readonly propertyBadges: typeof DEMO_PROPERTY_BADGES = DEMO_PROPERTY_BADGES;
   protected readonly panelBreakpoints: SidePanelBreakpoints = { xl: 'push' };
 
+  protected readonly phone: Signal<boolean> = computed(() => this.windowDimensionsService.isBelow('md'));
+  protected readonly medium: Signal<boolean> = computed(() => !this.phone() && this.windowDimensionsService.isBelow('xl'));
   protected readonly compact: Signal<boolean> = computed(() => this.windowDimensionsService.isBelow('xl'));
+  protected readonly previewSize: Signal<string> = computed(() => {
+    const size = this.args()['size'] ?? (this.storyId() === 'page-container' ? 'xl' : 'lg');
+    const width = this.windowDimensionsService.breakpoints[size as keyof typeof this.windowDimensionsService.breakpoints];
+
+    return size === 'full' ? 'Full width · fits the available preview' : `${String(size)} · maximum ${width}px · fits the available preview`;
+  });
   protected readonly story: Signal<IDemoStory | undefined> = computed(() => DEMO_STORIES[this.storyId()]);
   protected readonly files: Signal<ICodeFile[]> = computed(() => {
     const story = this.story();
@@ -112,7 +129,11 @@ export class DemoWorkbench {
     return story ? demoSourceFiles(story, this.args()) : [];
   });
   protected readonly controls: Signal<readonly IDemoProperty[]> = computed(() =>
-    this.filteredProperties().filter((property) => property.editor !== 'documentation')
+    this.filteredProperties().filter(
+      (property) =>
+        (property.kind === 'input' || property.kind === 'model') &&
+        (!property.visibleWhen || this.args()[property.visibleWhen.property] === property.visibleWhen.value)
+    )
   );
   protected readonly filteredProperties: Signal<readonly IDemoProperty[]> = computed(() => {
     const query = this.search().toLowerCase().trim();
@@ -124,12 +145,41 @@ export class DemoWorkbench {
 
   public readonly actionsTemplate: Signal<TemplateRef<unknown> | undefined> = viewChild<TemplateRef<unknown>>('workbenchActions');
 
+  private inspectorModal: ModalRef<TemplateRef<unknown>, undefined> | undefined;
   private loadingTimer: ReturnType<typeof setTimeout> | undefined;
   private component: ComponentRef<unknown> | undefined;
   private revision: number = 0;
   private sequence: number = 0;
 
   constructor() {
+    effect(() => {
+      const medium = this.medium();
+      const open = this.propertiesOpen();
+      const inspector = this.inspector();
+
+      untracked(() => {
+        if (medium && open && inspector && !this.inspectorModal) {
+          const modal = this.modalService.open<TemplateRef<unknown>, undefined>(DemoInspectorModal, {
+            data: inspector,
+            header: { text: 'Properties', icon: { name: 'sliders-horizontal' } },
+            style: { layout: 'right', breakpoints: {}, contentWrapper: false, wrapperStyles: 'width: min(100vw, 36rem); max-width: 100vw' }
+          });
+
+          this.inspectorModal = modal;
+          modal.afterClosed().subscribe(() => {
+            if (this.inspectorModal !== modal) return;
+
+            this.inspectorModal = undefined;
+            this.propertiesOpen.set(false);
+          });
+        } else if ((!medium || !open) && this.inspectorModal) {
+          const modal = this.inspectorModal;
+
+          this.inspectorModal = undefined;
+          modal.close('cancel');
+        }
+      });
+    });
     effect(() => {
       const story = this.story();
       const preview = this.preview();
@@ -149,6 +199,7 @@ export class DemoWorkbench {
       this.component?.setInput('args', args);
     });
     this.destroyRef.onDestroy(() => {
+      this.inspectorModal?.close('cancel');
       this.revision++;
       clearTimeout(this.loadingTimer);
     });
@@ -204,7 +255,15 @@ export class DemoWorkbench {
         if (error) throw new Error(error);
       }
 
-      this.args.update((args) => ({ ...args, [property.name]: parsed }));
+      this.args.update((args) => {
+        if (!property.path) return { ...args, [property.name]: parsed };
+
+        const parent = args[property.path[0]];
+        const hasEnabledField = this.story()?.properties.some((entry) => entry.path?.[0] === property.path?.[0] && entry.path?.[1] === 'enabled');
+        const configuration = typeof parent === 'boolean' && hasEnabledField ? { enabled: parent } : (parent as Record<string, DemoValue>);
+
+        return { ...args, [property.path[0]]: { ...configuration, [property.path[1]]: parsed } };
+      });
       this.errors.update((errors) => ({ ...errors, [property.name]: '' }));
       this.clearDraft(property.name);
     } catch (error: unknown) {
@@ -225,13 +284,23 @@ export class DemoWorkbench {
 
     if (draft !== undefined) return draft;
 
-    const value = this.args()[property.name];
+    const value = this.propertyValue(property);
 
     return property.editor === 'json' ? (JSON.stringify(value, null, 2) ?? '') : value === undefined || value === null ? '' : String(value);
   }
 
+  protected propertyValue(property: IDemoProperty): DemoValue {
+    if (!property.path) return this.args()[property.name];
+
+    const parent = this.args()[property.path[0]];
+
+    if (typeof parent === 'boolean' && property.path[1] === 'enabled') return parent;
+
+    return parent && typeof parent === 'object' && !Array.isArray(parent) ? (parent as Record<string, DemoValue>)[property.path[1]] : undefined;
+  }
+
   protected booleanValue(property: IDemoProperty): boolean {
-    return this.args()[property.name] === true;
+    return this.propertyValue(property) === true;
   }
 
   protected options(property: IDemoProperty): IBxSelectOption<DemoValue>[] {

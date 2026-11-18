@@ -36,18 +36,19 @@ export class DemoSourceFormatterService {
   //#region Helpers
 
   private async loadFormatter(): Promise<(file: ICodeFile) => Promise<string>> {
-    const [prettier, typescript, estree, html, angular] = await Promise.all([
+    const [prettier, typescript, estree, html, angular, postcss] = await Promise.all([
       import('prettier/standalone'),
       import('prettier/plugins/typescript'),
       import('prettier/plugins/estree'),
       import('prettier/plugins/html'),
-      import('prettier/plugins/angular')
+      import('prettier/plugins/angular'),
+      import('prettier/plugins/postcss')
     ]);
 
     return (file) =>
       prettier.format(file.content ?? '', {
-        ...DEMO_SOURCE_FORMAT_OPTIONS[file.language === 'typescript' ? 'typescript' : 'html'],
-        plugins: [typescript, estree, html, angular]
+        ...DEMO_SOURCE_FORMAT_OPTIONS[file.language === 'typescript' || file.language === 'scss' ? file.language : 'html'],
+        plugins: [typescript, estree, html, angular, postcss]
       });
   }
 

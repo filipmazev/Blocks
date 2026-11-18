@@ -55,3 +55,9 @@ Left/Right with optional RTL direction and a roving tab stop. This supports the 
 
 `menuClosing` fires before DOM detachment (after the overlay enters its closing path), allowing owners to retain current scroll/focus context. `menuClosed`
 still fires after cleanup.
+
+## Nested swipe and context actions
+
+Bind a nested trigger's `menuParent` to its opening trigger; this retains the parent path while the pointer crosses into the child. Shared overlay containment
+also retains context menus opened by an item inside the path. Closed/inert action lanes are excluded from keyboard navigation. The Menu/MenuItem Examples
+section demonstrates parent-linked submenus with shared SwipeActionsDirective commands and pending/error/retry feedback.

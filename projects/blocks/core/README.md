@@ -342,3 +342,9 @@ carries both the restored originals and the new foreground roles, with copy/fill
 Open `/utilities` for the cumulative [utilities playground guide](../../playground/src/app/components/screens/utilities/README.md), including viewport and
 device detection, independent scroll-lock owners, UUIDs, color-token helpers, and overlay infrastructure. Open `/components` for the component catalog,
 `/appearance` for shared preferences, `/components/menu-item` for shortcuts, and `/components/side-nav` or `/modal` for coordinated overlays.
+
+### Popup containment
+
+`containsOverlayTarget(owner, target)` checks ordinary descendants plus popup panes registered by `inheritOverlayTheme(source, pane)`, following nested origins.
+Use it when a parent menu must retain ownership of a context menu rendered in another overlay pane. The inheritance teardown removes the registration. It adds
+no DOM semantics or independent theme/positioning system. Both helpers are exported from `@filip.mazev/blocks/core`.

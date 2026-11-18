@@ -7,12 +7,16 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { BxSurfaceDirective } from '@filip.mazev/blocks/effects';
+import { Button } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
+import { Alert } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-surface-story',
-  imports: [BxSurfaceDirective],
+  imports: [BxSurfaceDirective, Alert, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './surface-story.html',
-  styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
+  styleUrls: ['../../../../components/shared/demo-workbench/demo-preview.scss', './surface-story.scss']
 })
 export class SurfaceStory {
   public readonly args: InputSignal<

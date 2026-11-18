@@ -13,6 +13,7 @@ export interface IDemoStory {
   presets: readonly IDemoPreset[];
   template: string;
   source: string;
+  styles?: string;
   componentType?: string;
   adapter?: 'modal' | 'toast';
   load: () => Promise<Type<unknown>>;

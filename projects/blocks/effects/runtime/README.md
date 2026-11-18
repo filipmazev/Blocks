@@ -321,15 +321,18 @@ toggles, menus and overlays.
 ## Shared row and overlay motion
 
 `mountSelectionMotion(root, { selector?, reducedMotion? })` adds one noninteractive surface behind an existing `role="menu"` or `role="listbox"` container. The
-default selector is `[role="menuitem"], [role="option"]`. Disabled rows and nested lists are excluded. Pointer hover and exit restore the backing immediately;
-pointer exit hides it when there is no selected or keyboard-focused row. Mouse-only focus does not keep a hover highlight after exit. Pointer
-selection/deselection retains the hovered row without traveling to another selected option. Actual keyboard focus and `aria-selected` changes may spring without
-changing selection. The controller keeps its clipped layer aligned with the scroll viewport, refreshes the row beneath a stationary pointer during scrolling or
-virtual-row replacement, and snaps geometry during native scrolling. It follows ancestor scroll containers as well as the list itself without increasing
-scrollable content. It bounds stretch and releases its scroll/pointer listeners, observers and surface renderer on `destroy()`. Omitted motion policy follows
-live inherited/system preferences; call `update({ reducedMotion })` to change an explicit application override. Use a div container with unrestricted children.
-Set `--bx-selection-surface` to customize the backing; defaults use existing semantic hover/error surfaces. Focus rings and persistent selection/checkmarks
-remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this at their existing Playground routes.
+default selector is `[role="menuitem"], [role="option"]`. Disabled rows, nested lists, and elements marked `data-bx-selection-exclude` are excluded. Use that
+marker on filled action controls that keep their own semantic material inside a menu; the shared row hover CSS also leaves their backgrounds intact. Swipe rows
+are excluded while moving; their primary control carries its native rounded hover/active material as it translates and their action capsules retain independent
+semantic fills. Pointer hover and exit restore the backing immediately; pointer exit hides it when there is no selected or keyboard-focused row. Mouse-only
+focus does not keep a hover highlight after exit. Pointer selection/deselection retains the hovered row without traveling to another selected option. Actual
+keyboard focus and `aria-selected` changes may spring without changing selection. The controller keeps its clipped layer aligned with the scroll viewport,
+refreshes the row beneath a stationary pointer during scrolling or virtual-row replacement, and snaps geometry during native scrolling. It follows ancestor
+scroll containers as well as the list itself without increasing scrollable content. It bounds stretch and releases its scroll/pointer listeners, observers and
+surface renderer on `destroy()`. Omitted motion policy follows live inherited/system preferences; call `update({ reducedMotion })` to change an explicit
+application override. Use a div container with unrestricted children. Set `--bx-selection-surface` to customize the backing; defaults use existing semantic
+hover/error surfaces. Focus rings and persistent selection/checkmarks remain owned by the rows. Menus, selects, multi-selects, and autocomplete demonstrate this
+at their existing Playground routes.
 
 `createGlassTransition` now uses the shared retargetable spring for opacity and restrained scale. `IGlassTransitionOptions.scale` is the closed scale, clamped
 from 0.9 to 1 and defaulting to 0.985. Use 1 for opacity-only motion. Opacity progresses monotonically even when the scale spring overshoots. A retained opacity

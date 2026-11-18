@@ -30,8 +30,9 @@ Also exports `DividerOrientation` and `DividerStyle`. The stack example addition
 ## Appearance and customization
 
 `--bx-divider-color`, `--bx-divider-thickness`, `--bx-divider-margin`, `--bx-divider-gap`, `--bx-divider-text`, `--bx-divider-font-size` and
-`--bx-divider-min-height` override shared defaults. Thickness falls back to `--bx-border-width` (`1px`). The explicit `lineStyle` input defaults to `solid` and
-continues to take precedence over shared border style. Spacing follows the live shared spacing tokens.
+`--bx-divider-min-height` override shared defaults. Vertical rule segments keep a shared spacing-4 minimum length on either side of a label, so the label cannot
+consume the entire line. Override this with `--bx-divider-segment-min-length` when needed. Thickness falls back to `--bx-border-width` (`1px`). The explicit
+`lineStyle` input defaults to `solid` and continues to take precedence over shared border style. Spacing follows the live shared spacing tokens.
 
 ## Behavior and accessibility
 

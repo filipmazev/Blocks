@@ -88,6 +88,7 @@ export class ContextMenuDirective {
   /** Whether touch long-press opens the context menu. Defaults to `true`. */
   public readonly bxContextMenuLongPress: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
 
+  private openingOrigin: HTMLElement | undefined;
   private overlayRef: OverlayRef | null = null;
   private transition?: ReturnType<typeof createGlassTransition>;
   private point?: HTMLElement;
@@ -147,6 +148,24 @@ export class ContextMenuDirective {
   }
 
   /**
+   * Open the configured context menu for a composed control, retaining its real trigger as the theme and focus origin.
+   * @param origin - Visible, focusable command that owns this context menu.
+   * @param event - Pointer context event, or keyboard context-menu invocation; keyboard opening focuses the first enabled command.
+   */
+  public openFrom(origin: HTMLElement, event: MouseEvent | KeyboardEvent): void {
+    event.preventDefault();
+    this.cancelTouchPress();
+    this.clearTouchGuard();
+
+    const keyboard = event instanceof KeyboardEvent;
+    const rect = origin.getBoundingClientRect();
+
+    this.openAt(keyboard ? rect.left : event.clientX, keyboard ? rect.bottom : event.clientY, origin);
+
+    if (keyboard) this.items()[0]?.focus();
+  }
+
+  /**
    * Close the component's overlay and apply its configured focus-restoration behavior.
    *
    * @param restoreFocus - Whether focus should return to the opening control after closing. Defaults to `false`.
@@ -159,7 +178,7 @@ export class ContextMenuDirective {
     this.scrollLockService.enableScroll(this.scrollLockId);
 
     if (restoreFocus || this.overlayRef.overlayElement.contains(this.elementRef.nativeElement.ownerDocument.activeElement)) {
-      this.elementRef.nativeElement.focus({ preventScroll: true });
+      (this.openingOrigin ?? this.elementRef.nativeElement).focus({ preventScroll: true });
     }
 
     this.overlayRef.overlayElement.inert = true;
@@ -308,12 +327,13 @@ export class ContextMenuDirective {
     this.touchGuardTimer = undefined;
   }
 
-  private openAt(x: number, y: number): void {
+  private openAt(x: number, y: number, origin: HTMLElement = this.elementRef.nativeElement): void {
     this.dispose();
     ++this.revision;
 
-    const source = this.elementRef.nativeElement;
+    const source = origin;
 
+    this.openingOrigin = origin;
     this.overlayRef = this.overlay.create({
       positionStrategy: this.bxOverlayPositionService.getCoordinateStrategy(x, y),
       scrollStrategy: this.overlay.scrollStrategies.noop(),
@@ -427,6 +447,7 @@ export class ContextMenuDirective {
     const overlay = this.overlayRef;
 
     this.overlayRef = null;
+    this.openingOrigin = undefined;
     overlay?.dispose();
     this.scrollLockService.enableScroll(this.scrollLockId);
     this.disconnectLighting?.();

@@ -21,6 +21,15 @@ Add the standalone component or directive to your component's `imports`.
 `bxTooltip`: required text or translation key. `placement`: top, bottom, left, right, and supported aligned placements. `show()` and `hide()` expose explicit
 lifecycle control.
 
+`bxTooltipDwell` configures mouse-hover and keyboard-focus dwell in milliseconds; its default is `0`, preserving immediate opening. Negative and nonfinite
+values act as zero. Changing the dwell while an opening is pending restarts that wait. Leaving, losing keyboard focus, scrolling, hiding the document, window
+blur, Escape, empty text and destruction cancel pending opening. Re-entering an already-visible bubble retains the same surface without another delay. `show()`
+remains immediate, and touch hold/tap timing stays independent. Screen-reader descriptions remain available during the wait.
+
+```html
+<button bx-button bxTooltip="Download project" [bxTooltipDwell]="400">Download</button>
+```
+
 Changing the text updates an open tooltip. Empty text dismisses it; restoring text while hovered or keyboard-focused reveals it again. This supports labels that
 only need a tooltip while truncated.
 
@@ -92,4 +101,5 @@ announcements. Existing touch hold/tap, scrolling cancellation and teardown beha
 
 ## Playground
 
-Open `/components/tooltip-directive` for a working example and its current value or action result.
+Open `/components/tooltip-directive` for a working example, adjustable Tooltip dwell (ms), and observable actions. Compact swipe actions at
+`/components/menu-item` use a 400 ms dwell with touch tooltips disabled.

@@ -41,7 +41,9 @@ Chrome at enlarged zoom. The resting border returns after the pressure spring se
 ## Labels and ticks
 
 Native `[formField]` binding is supported alongside existing Angular form directives. `discrete` adds a formatted visible value; `displayWith(value)` controls
-that label. `showTickMarks` adds bounded native tick metadata. For a pair of values use [RangeSlider](../../components/range-slider/README.md).
+that label. `showTickMarks` adds bounded native tick metadata and visible themed marks above the custom rail. Marks update with min, max, and step; their size
+and color can be adjusted with `--bx-slider-tick-size` (2px) and `--bx-slider-tick-color` (primary text). For a pair of values use
+[RangeSlider](../../components/range-slider/README.md).
 
 ## Behavior and accessibility
 

@@ -19,6 +19,7 @@ import {
   PLATFORM_ID,
   signal,
   TemplateRef,
+  untracked,
   viewChild,
   ViewContainerRef
 } from '@angular/core';
@@ -176,7 +177,18 @@ export class BottomDrawer {
     effect(() => {
       if (!this.browser || !this.embedded()) return;
 
-      if (!this.open()) {
+      const open = this.open();
+
+      untracked(() => {
+        this.cleanupDrag?.();
+        this.cleanupDrag = undefined;
+        this.returnMotion?.destroy();
+        this.returnMotion = undefined;
+        this.isClosing.set(false);
+        this.offset.set(0);
+      });
+
+      if (!open) {
         this.isEntering.set(false);
 
         return;
@@ -184,7 +196,7 @@ export class BottomDrawer {
 
       this.isEntering.set(true);
       this.document.defaultView?.requestAnimationFrame(() => {
-        if (!this.open()) return;
+        if (!this.open() || this.destroyRef.destroyed) return;
 
         this.isEntering.set(false);
         this.startDragDetection();

@@ -49,6 +49,10 @@ export class Modal {
     const modal = this.modalService.open<IDemoModalData, IDemoModalResult>(DemoModal, {
       ariaLabel: values.headerText ? undefined : values.title,
       header: { text: values.headerText, icon: { name: 'info', color: 'text-info', bgColor: 'auto' } },
+      closeLabel: values.closeLabel,
+      disableCloseOnNavigation: values.disableCloseOnNavigation,
+      closeGuardOnlyOnCancel: values.closeGuardOnlyOnCancel,
+      contentStyles: values.contentStyles,
       data: {
         title: values.title,
         body: 'Confirm to apply the example, or cancel to return to the playground. The nested menus, live heading controls and wizard remain interactive.',
@@ -56,6 +60,11 @@ export class Modal {
       },
       style: {
         layout: values.layout,
+        closeDelay: values.closeDelay,
+        contentWrapper: values.contentWrapper,
+        wrapperStyles: values.wrapperStyles,
+        wrapperClasses: values.wrapperClasses,
+        overrideFullHeight: values.overrideFullHeight,
         animate: values.animate,
         hasBackdrop: values.hasBackdrop,
         showCloseButton: values.showCloseButton,

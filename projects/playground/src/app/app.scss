@@ -174,7 +174,7 @@
     }
 
     .toolbar-actions > .appearance-button,
-    .toolbar-actions > .studio-button {
+    .toolbar-actions .studio-button {
         flex: none;
         width: clamp(2.5rem, #{spacing(10)}, 3rem);
         height: clamp(2.5rem, #{spacing(10)}, 3rem);
@@ -182,7 +182,7 @@
     }
 
     .toolbar-actions > a span,
-    .toolbar-actions > button span:not(.studio-aurora, .studio-aurora-halo, .studio-light-origin) {
+    .toolbar-actions .studio-button span {
         display: none;
     }
 }
@@ -214,8 +214,11 @@
     }
 }
 
-.studio-button {
+.studio-button-frame {
     position: relative;
+    display: inline-flex;
+    flex: none;
+    isolation: isolate;
 }
 
 .studio-aurora,

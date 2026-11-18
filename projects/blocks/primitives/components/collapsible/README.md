@@ -59,6 +59,8 @@ bottom corners, with no divider between the heading and content. Accordion items
 
 ## Behavior and accessibility
 
+Disabled triggers use the shared disabled foreground and opacity and block interaction. Readonly triggers remain focusable with their enabled appearance.
+
 Native button activation, aria-expanded and aria-controls connect the heading and panel. Hidden panels are inert. Programmatic collapse moves contained focus to
 the heading. Optional regions avoid filling the page with unnecessary landmarks.
 

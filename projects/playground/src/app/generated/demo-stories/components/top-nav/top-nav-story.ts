@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { TopNav } from '@filip.mazev/blocks/navigation';
+
 @Component({
   selector: 'app-top-nav-story',
   imports: [TopNav],
@@ -15,8 +16,8 @@ import { TopNav } from '@filip.mazev/blocks/navigation';
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
 })
 export class TopNavStory {
-  public readonly args: InputSignal<Pick<DemoInputs<TopNav>, 'config' | 'opened'> & { content: string }> = input.required<
-    Pick<DemoInputs<TopNav>, 'config' | 'opened'> & { content: string }
+  public readonly args: InputSignal<Pick<DemoInputs<TopNav>, 'config' | 'groups' | 'opened'> & { content: string }> = input.required<
+    Pick<DemoInputs<TopNav>, 'config' | 'groups' | 'opened'> & { content: string }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

@@ -3,7 +3,7 @@ import type { InputSignal, InputSignalWithTransform } from '@angular/core';
 import { AriaDescriber, FocusMonitor } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { booleanAttribute, ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone } from '@angular/core';
+import { booleanAttribute, ComponentRef, DestroyRef, Directive, effect, ElementRef, HostListener, inject, input, NgZone, numberAttribute } from '@angular/core';
 
 import {
   BX_I18N,
@@ -11,8 +11,8 @@ import {
   BxOverlayPositionService,
   BxPlacement,
   inheritOverlayTheme,
-  isTextWithKey,
   ResolvableText,
+  resolveText,
   trackOverlayOrigin,
   uuidv4
 } from '@filip.mazev/blocks/core';
@@ -45,6 +45,8 @@ export class TooltipDirective {
   public readonly bxTooltipTouch: InputSignal<'none' | 'longpress' | 'tap'> = input<'none' | 'longpress' | 'tap'>('none');
   /** Whether pointer hover may show the tooltip. Defaults to `true`. */
   public readonly bxTooltipHover: InputSignal<boolean> = input(true);
+  /** Mouse-hover and keyboard-focus dwell in milliseconds before visual opening. Defaults to 0. Negative/nonfinite values act as 0; touch timing and explicit show() are independent. */
+  public readonly bxTooltipDwell: InputSignalWithTransform<number, unknown> = input(0, { transform: numberAttribute });
   /** Whether the tooltip only appears when the host's own text is visually truncated. Defaults to `false`. */
   public readonly bxTooltipTruncatedOnly: InputSignalWithTransform<boolean, unknown> = input(false, { transform: booleanAttribute });
 
@@ -62,6 +64,8 @@ export class TooltipDirective {
   private hoverGap: boolean = false;
   private hoverHideTimer?: ReturnType<typeof setTimeout>;
   private hoverEvents?: AbortController;
+  private dwellTimer?: ReturnType<typeof setTimeout>;
+  private dwellEvents?: AbortController;
   private focused: boolean = false;
   private lastPointerType: string = '';
   private touchEvents?: AbortController;
@@ -79,7 +83,7 @@ export class TooltipDirective {
 
             if (this.focused) {
               this.clearTouchInteraction();
-              this.show();
+              this.scheduleShow();
             } else if (!this.hovered && !this.bubbleHovered && !this.touchEvents) this.scheduleHoverHide();
           })
         )
@@ -87,9 +91,11 @@ export class TooltipDirective {
 
     effect((onCleanup) => {
       this.i18n?.version?.();
+      this.bxTooltipDwell();
+      this.cancelDwell();
 
       const text = this.bxTooltip();
-      const description = isTextWithKey(text) ? (this.i18n?.translate(text.key) ?? text.key) : text;
+      const description = resolveText(text, this.i18n);
 
       if (!description) {
         if (this.overlayRef) this.hide();
@@ -99,7 +105,7 @@ export class TooltipDirective {
 
       this.tooltipComponent?.setInput('text', text);
 
-      if (this.hovered || this.focused) this.show();
+      if (this.hovered || this.focused) this.scheduleShow();
 
       this.ariaDescriber.describe(source, description, 'tooltip');
       onCleanup(() => this.ariaDescriber.removeDescription(source, description, 'tooltip'));
@@ -117,6 +123,7 @@ export class TooltipDirective {
 
   /** Show nonempty tooltip content using shared positioning, theming, and accessibility behavior. */
   public show(): void {
+    this.cancelDwell();
     clearTimeout(this.hoverHideTimer);
     this.hoverHideTimer = undefined;
 
@@ -213,6 +220,7 @@ export class TooltipDirective {
 
   /** Dismiss the owned tooltip and release its current overlay state. */
   public hide(): void {
+    this.cancelDwell();
     clearTimeout(this.hoverHideTimer);
     this.hoverHideTimer = undefined;
     this.clearTouchInteraction();
@@ -242,7 +250,7 @@ export class TooltipDirective {
 
     this.clearTouchInteraction();
     this.hovered = true;
-    this.show();
+    this.scheduleShow();
   }
 
   @HostListener('pointerleave', ['$event'])
@@ -285,7 +293,7 @@ export class TooltipDirective {
 
   @HostListener('document:keydown', ['$event'])
   protected onEscape(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && this.overlayRef) {
+    if (event.key === 'Escape' && (this.overlayRef || this.dwellTimer !== undefined)) {
       event.preventDefault();
       event.stopPropagation();
       this.hovered = false;
@@ -295,6 +303,62 @@ export class TooltipDirective {
   }
 
   //#region Helpers
+
+  private scheduleShow(): void {
+    if (this.overlayRef) {
+      this.show();
+
+      return;
+    }
+
+    if (this.dwellTimer !== undefined || !this.bxTooltip()) return;
+
+    const requested = this.bxTooltipDwell();
+    const delay = Number.isFinite(requested) ? Math.max(0, requested) : 0;
+    const source = this.elementRef.nativeElement;
+    const win = source.ownerDocument.defaultView;
+
+    if (!delay || !win) {
+      this.show();
+
+      return;
+    }
+
+    this.dwellEvents = new AbortController();
+
+    const options = { signal: this.dwellEvents.signal, capture: true, passive: true };
+
+    source.ownerDocument.addEventListener('scroll', () => this.cancelDwell(), options);
+    source.ownerDocument.addEventListener(
+      'visibilitychange',
+      () => {
+        if (source.ownerDocument.hidden) this.cancelDwell();
+      },
+      options
+    );
+    win.addEventListener('blur', () => this.cancelDwell(), options);
+    this.dwellTimer = setTimeout(() => {
+      this.dwellTimer = undefined;
+      this.dwellEvents?.abort();
+      this.dwellEvents = undefined;
+
+      if (
+        ((this.hovered && this.bxTooltipHover()) || this.focused) &&
+        source.isConnected &&
+        !source.closest('[inert], [hidden], [aria-hidden="true"]') &&
+        !source.ownerDocument.hidden
+      ) {
+        this.ngZone.run(() => this.show());
+      }
+    }, delay);
+  }
+
+  private cancelDwell(): void {
+    clearTimeout(this.dwellTimer);
+    this.dwellTimer = undefined;
+    this.dwellEvents?.abort();
+    this.dwellEvents = undefined;
+  }
 
   private onHoverMove(event: PointerEvent): void {
     if (event.pointerType !== 'mouse' || !this.overlayRef) return;
@@ -317,6 +381,8 @@ export class TooltipDirective {
   }
 
   private scheduleHoverHide(): void {
+    if (!this.hovered && !this.focused) this.cancelDwell();
+
     if (this.hovered || this.bubbleHovered || this.hoverGap || this.focused || this.touchVisible) {
       clearTimeout(this.hoverHideTimer);
       this.hoverHideTimer = undefined;
@@ -475,6 +541,7 @@ export class TooltipDirective {
   }
 
   private dispose(): void {
+    this.cancelDwell();
     clearTimeout(this.hoverHideTimer);
     this.hoverHideTimer = undefined;
     this.hoverEvents?.abort();

@@ -1,7 +1,8 @@
-<div #container style="position: relative; inline-size: 100%; min-block-size: 12rem">
-    <div #surface style="max-inline-size: 100%" [style.inline-size.px]="args().resizeValue">
+<div #container class="resize-scene" style="position: relative; inline-size: 100%; min-block-size: 12rem">
+    <div #surface class="resize-surface" style="position: relative; min-block-size: 12rem; max-inline-size: 100%" [style.inline-size.px]="args().resizeValue">
         {{ args().content }}
         <div
+            class="demo-resize-grip"
             bxResizeHandle
             [resizeContainer]="container"
             [resizeTarget]="surface"

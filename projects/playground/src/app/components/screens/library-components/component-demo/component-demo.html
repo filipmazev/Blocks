@@ -3,7 +3,7 @@
 
     <div class="component-workspace" [class.has-workbench-actions]="!!workbench()">
         <div class="navigation-actions"><ng-container [ngTemplateOutlet]="workbench()?.actionsTemplate() ?? null" /></div>
-        <bx-tabs class="component-sections" ariaLabel="Component documentation and examples">
+        <bx-tabs class="component-sections" ariaLabel="Component documentation and examples" [(selectedValue)]="section">
             <bx-tab label="Playground" value="playground" icon="flask-conical" color="primary" textColor="text-brand"
                 ><ng-template bxTabContent><app-demo-workbench [storyId]="entry().id" /></ng-template
             ></bx-tab>
@@ -409,10 +409,13 @@
                                         </div>
                                     }
                                     @case ('menu') {
-                                        <app-menu-shortcut-examples />
+                                        <div class="demo-stack menu-examples"><app-menu-shortcut-examples /><app-menu-swipe-examples /></div>
+                                    }
+                                    @case ('swipe-actions') {
+                                        <app-menu-swipe-examples />
                                     }
                                     @case ('menu-item') {
-                                        <app-menu-shortcut-examples />
+                                        <div class="demo-stack menu-examples"><app-menu-shortcut-examples /><app-menu-swipe-examples /></div>
                                     }
                                     @case ('tooltip') {
                                         <div class="demo-stack">
@@ -423,6 +426,13 @@
                                     }
                                     @case ('tooltip-directive') {
                                         <div class="demo-stack">
+                                            <bx-input-field
+                                                label="Tooltip dwell (ms)"
+                                                type="number"
+                                                subscriptSizing="dynamic"
+                                                [min]="0"
+                                                [value]="tooltipDwell()"
+                                                (valueChange)="setTooltipDwell($event)" />
                                             <div class="demo-row">
                                                 <button
                                                     type="button"
@@ -430,6 +440,7 @@
                                                     variant="tonal"
                                                     bxTooltip="Saves the current project"
                                                     placement="top"
+                                                    [bxTooltipDwell]="tooltipDwell()"
                                                     (click)="activate('Saved')">
                                                     Save project</button
                                                 ><button
@@ -541,7 +552,9 @@
                                                 ><button type="button" bx-button variant="tonal" color="danger" (click)="notify('danger')">Error</button>
                                             </div>
                                             <p>The toast host manages the progress indicator, dismiss action, pause and cleanup.</p>
-                                            <a routerLink="/toastr">Explore notification documentation</a>
+                                            <button bx-button type="button" variant="tonal" (click)="section.set('documentation')">
+                                                <bx-icon name="book-open" />Explore notification documentation
+                                            </button>
                                         </div>
                                     }
                                     @case ('simple-toast') {
@@ -556,23 +569,30 @@
                                         </div>
                                     }
                                     @case ('surface') {
-                                        <section bxSurface class="custom-surface">
-                                            <bx-icon name="layers" size="28" />
-                                            <h3>A custom Blocks surface</h3>
-                                            <p>Material, blur, tint, lighting and motion follow the same global configuration as the controls around it.</p>
-                                            <bx-checkbox label="Emit interaction light" [(checked)]="surfaceEmission" />
-                                            <button
-                                                type="button"
-                                                bx-button
-                                                bxSurface
-                                                variant="tonal"
-                                                [surfaceEffects]="false"
-                                                [bxSurfaceEmission]="surfaceEmission() ? undefined : false"
-                                                (click)="activate('Custom surface action')">
-                                                Try an action
-                                            </button>
-                                            <p>Hover, keyboard focus and press retain local feedback. Enable emission to add the themed light source.</p>
-                                        </section>
+                                        <div class="surface-example-scene">
+                                            <bx-alert
+                                                title="Live light source"
+                                                message="Light from this alert reaches the sample material."
+                                                [emissive]="true"
+                                                [emissionIntensity]="0.8" />
+                                            <section bxSurface class="custom-surface">
+                                                <bx-icon name="layers" size="28" />
+                                                <h3>A custom Blocks surface</h3>
+                                                <p>Material, blur, tint, lighting and motion follow the same global configuration as the controls around it.</p>
+                                                <bx-checkbox label="Emit interaction light" [(checked)]="surfaceEmission" />
+                                                <button
+                                                    type="button"
+                                                    bx-button
+                                                    bxSurface
+                                                    variant="tonal"
+                                                    [surfaceEffects]="false"
+                                                    [bxSurfaceEmission]="surfaceEmission() ? undefined : false"
+                                                    (click)="activate('Custom surface action')">
+                                                    Try an action
+                                                </button>
+                                                <p>Hover, keyboard focus and press retain local feedback. Enable emission to add the themed light source.</p>
+                                            </section>
+                                        </div>
                                     }
                                     @default {
                                         <div class="demo-stack">
@@ -588,7 +608,9 @@
                                                 Try editing, saving, pressing Escape, and dismissing through the backdrop. This is the actual service-created
                                                 component.
                                             </p>
-                                            <a routerLink="/modal">Explore modal documentation</a>
+                                            <button bx-button type="button" variant="tonal" (click)="section.set('documentation')">
+                                                <bx-icon name="book-open" />Explore modal documentation
+                                            </button>
                                         </div>
                                     }
                                 }

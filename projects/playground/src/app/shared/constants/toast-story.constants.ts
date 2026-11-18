@@ -2,6 +2,10 @@ import type { IToastStoryArgs } from '@playground/interfaces/itoast-story-args.i
 
 export const TOAST_STORY_DEFAULTS: IToastStoryArgs = {
   position: 'top-right',
+  glassiness: 'auto',
+  glassQuality: 'enhanced',
+  wrapperClass: '',
+  closeLabel: '',
   title: 'Workspace update',
   message: 'Your preferences have been saved.',
   durationInMs: 5000,

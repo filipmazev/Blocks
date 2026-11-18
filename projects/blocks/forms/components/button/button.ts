@@ -26,7 +26,7 @@ import { LoadingSpinner } from '@filip.mazev/blocks/primitives';
 
 import { ButtonIconDirective } from '@forms/directives/button-icon/button-icon.directive';
 import { buttonEmissionStrength } from '@forms/helpers/button-material.helpers';
-import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
+import { ButtonColor, ButtonShape, ButtonVariant } from '@forms/types/form.types';
 
 @Component({
   selector: 'bx-button, button[bx-button], a[bx-button]',
@@ -37,6 +37,7 @@ import { ButtonColor, ButtonVariant } from '@forms/types/form.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': '"bx-btn bx-btn-" + variant() + " bx-btn-color-" + color()',
+    '[class.bx-btn-capsule]': 'shape() === "capsule"',
     '[class.bx-btn-is-outlined]': 'outlined()',
     '[class.bx-btn-is-elevated]': 'elevated()',
     '[class.bx-btn-animated]': 'isAnimated()',
@@ -73,6 +74,8 @@ export class Button {
 
   /** Visual presentation variant using the shared Blocks theme and component styles. Defaults to `'text'`. */
   public readonly variant: InputSignal<ButtonVariant> = input<ButtonVariant>('text');
+  /** Geometry independent of variant. Defaults to 'default'; 'capsule' uses configurable pill-shaped icon-button dimensions. Supply an accessible name. */
+  public readonly shape: InputSignal<ButtonShape> = input<ButtonShape>('default');
   /** Semantic color role applied to the component presentation. Defaults to `'primary'`. */
   public readonly color: InputSignal<ButtonColor> = input<ButtonColor>('primary');
   /** Whether the button renders an outline treatment. Defaults to `false`. */

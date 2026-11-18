@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { ESLint } from 'eslint';
 import { format, resolveConfig } from 'prettier';
+import stylelint from 'stylelint';
 import ts from 'typescript';
 
 import { formatGeneratedTypeScript } from '../helpers/generated-typescript.helpers.mjs';
@@ -132,7 +133,7 @@ function propertiesOf(owner) {
                 ? 'text'
                 : 'documentation'
         : 'documentation';
-    if (defaultValue === unresolved) editor = 'documentation';
+    if (defaultValue === unresolved || /HTMLElement|ElementRef|TemplateRef|\(.*=>/.test(checker.typeToString(valueType))) editor = 'documentation';
     properties.push({
       name,
       binding,
@@ -154,11 +155,18 @@ function propertiesOf(owner) {
 async function write(target, source, typescript = true) {
   const file = path.join(root, target);
   if (target.endsWith('.html')) {
+    source = source
+      .replace(/>\s*</g, '>\n<')
+      .replace(/>\s*{{/g, '>\n    {{')
+      .replace(/}}\s*</g, '}}\n<');
     const [result] = await templateLint.lintText(source, { filePath: file });
     if (result.errorCount) throw new Error(`Invalid generated template ${target}: ${result.messages.map((message) => message.message).join('; ')}`);
     source = result.output ?? source;
   }
-  const formatted = typescript ? await formatGeneratedTypeScript(source, target) : await format(source, { ...(await resolveConfig(file)), filepath: file });
+  const formattedOutput = typescript
+    ? await formatGeneratedTypeScript(source, target)
+    : await format(source, { ...(await resolveConfig(file)), filepath: file });
+  const formatted = typescript ? formattedOutput.replace(/;\n@Component/g, ';\n\n@Component') : formattedOutput;
   const previous = await readFile(file, 'utf8').catch(() => undefined);
   if (previous === formatted) return;
   if (process.argv.includes('--check')) throw new Error(`Outdated ${target}. Run npm run tools:generate:demo-stories.`);
@@ -169,7 +177,13 @@ async function write(target, source, typescript = true) {
 function valueSchema(type, seen = new Set()) {
   if (seen.has(type) || type.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown | ts.TypeFlags.TypeParameter)) return { kind: 'unknown' };
   const next = new Set([...seen, type]);
-  if (type.isUnion()) return { kind: 'union', choices: type.types.map((item) => valueSchema(item, next)) };
+  if (type.isUnion()) {
+    const literals = type.types.filter((item) => item.isStringLiteral() || item.isNumberLiteral());
+    const others = type.types.filter((item) => !literals.includes(item));
+    if (literals.length > 4)
+      return { kind: 'union', choices: [{ kind: 'enum', values: literals.map((item) => item.value) }, ...others.map((item) => valueSchema(item, next))] };
+    return { kind: 'union', choices: type.types.map((item) => valueSchema(item, next)) };
+  }
   if (type.isStringLiteral() || type.isNumberLiteral()) return { kind: 'literal', value: type.value };
   if (type.flags & ts.TypeFlags.StringLike) return { kind: 'string' };
   if (type.flags & ts.TypeFlags.NumberLike) return { kind: 'number' };
@@ -278,6 +292,24 @@ for (const entry of catalog) {
   const override = recipes[entry.id] ?? {};
   const base = override.use ? recipes[override.use] : {};
   const recipe = { ...base, ...override, args: { ...base.args, ...override.args } };
+  if (recipe.sharedView) {
+    let fragment = await readFile(path.join(root, recipe.sharedView.template), 'utf8');
+    for (const [expression, replacement] of Object.entries(recipe.sharedView.replacements)) fragment = fragment.replaceAll(expression, replacement);
+    recipe.template = recipe.template.replace('SHARED_VIEW', fragment);
+    recipe.styles = (await readFile(path.join(root, recipe.sharedView.styles), 'utf8'))
+      .replaceAll(':host', recipe.sharedView.hostSelector)
+      .replace("@use 'core/styles/helpers'", "@use '@filip.mazev/blocks/core/styles/helpers'");
+  }
+  if (recipe.styles) {
+    const result = await stylelint.lint({
+      code: await format(recipe.styles.replace(/} \./g, '}\n\n.'), { ...(await resolveConfig(path.join(root, 'example.scss'))), parser: 'scss' }),
+      codeFilename: path.join(root, 'projects/playground/example.scss'),
+      fix: true,
+      configFile: path.join(root, '.stylelintrc.json')
+    });
+    if (result.errored) throw new Error(`Invalid example styles: ${entry.id} ${JSON.stringify(result.results[0].warnings)}`);
+    recipe.styles = await format(result.code, { ...(await resolveConfig(path.join(root, 'example.scss'))), parser: 'scss' });
+  }
   if (recipe.adapter) {
     stories.push(await serviceStory(entry, recipe));
     continue;
@@ -303,13 +335,63 @@ for (const entry of catalog) {
   const outputs = properties.filter((property) => property.kind === 'output');
   const models = properties.filter((property) => property.kind === 'model');
   const bindings = [
-    ...inputs.map((property) => `[${property.binding}]="args().${property.name}"`),
-    ...outputs.map((property) => `(${property.binding})="onAction('${property.binding}', $event)"`),
+    ...inputs.map(
+      (property) =>
+        `[${property.binding}]="${entry.id === 'page-container' && ['pageTitle', 'sectionTitle'].includes(property.name) ? `args().autoResolveTitlesFromNavigation ? undefined : args().${property.name}` : `args().${property.name}`}"`
+    ),
+    ...outputs.map((property) => `(${property.binding})="${recipe.eventHandlers?.[property.binding] ?? `onAction('${property.binding}', $event)`}"`),
     ...models.map((property) => `(${property.binding}Change)="onAction('${property.binding}Change', $event)"`)
   ];
   const selector = entry.selector;
-  const template = (recipe.template ?? `<${selector} DEMO_BINDINGS>{{ args().content }}</${selector}>`).replace('DEMO_BINDINGS', bindings.join('\n'));
+  let template = (recipe.template ?? `<${selector} DEMO_BINDINGS>{{ args().content }}</${selector}>`).replace('DEMO_BINDINGS', bindings.join('\n'));
   if (template.includes('service-owned') || (selector.startsWith('[') && !recipe.template)) throw new Error(`Story composition required: ${entry.id}.`);
+  const childTypes = [];
+  for (const [prefix, child] of Object.entries(recipe.children ?? {})) {
+    const childOwner = findClass(child.package ?? packageName, child.symbol);
+    const childProperties = propertiesOf(childOwner);
+    const childBindings = [];
+    const childKeys = [];
+    for (const property of childProperties) {
+      const originalName = property.name;
+      const originalBinding = property.binding;
+      const name = `${prefix}${originalName[0].toUpperCase()}${originalName.slice(1)}`;
+      const value = child.args?.[originalName] ?? property.defaultValue;
+      if (property.editor !== 'documentation' && (!property.required || value !== undefined)) {
+        args[name] = value;
+        childKeys.push(`'${originalName}'`);
+        childBindings.push(`[${originalBinding}]="args().${name}"`);
+      } else property.editor = 'documentation';
+      if (property.kind === 'model') childBindings.push(`(${originalBinding}Change)="onAction('${name}Change', $event)"`);
+      if (property.kind === 'output') childBindings.push(`(${originalBinding})="onAction('${name}', $event)"`);
+      properties.push({ ...property, name, binding: name, originalName, ownerType: childOwner.name, group: child.label });
+    }
+    childTypes.push(`{ ${childKeys.map((key) => `${prefix}${key[1].toUpperCase()}${key.slice(2, -1)}: DemoInputs<${childOwner.name}>[${key}]`).join('; ')} }`);
+    template = template.replace(`${prefix.toUpperCase()}_BINDINGS`, childBindings.join('\n'));
+  }
+  for (const [name, typeName] of Object.entries(recipe.configFields ?? {})) {
+    const member = checker.getPropertyOfType(owner.type, name);
+    const type = member && checker.getTypeOfSymbolAtLocation(member, member.valueDeclaration).getCallSignatures()[0]?.getReturnType();
+    if (!type) throw new Error(`Missing configuration ${entry.id}.${name}`);
+    const nonnull = checker.getNonNullableType(type);
+    const objectTypes = (nonnull.isUnion() ? nonnull.types : [nonnull]).filter(
+      (candidate) => candidate.flags & (ts.TypeFlags.Object | ts.TypeFlags.Intersection)
+    );
+    const fields = new Map(objectTypes.flatMap((candidate) => checker.getPropertiesOfType(candidate)).map((field) => [field.name, field]));
+    for (const field of fields.values()) {
+      const fieldType = checker.getTypeOfSymbolAtLocation(field, field.valueDeclaration);
+      const property = argumentProperty(field, fieldType, args[name]?.[field.name]);
+      if (property.editor === 'documentation' && !/TemplateRef|HTMLElement|=>/.test(property.type)) property.editor = 'json';
+      properties.push({
+        ...property,
+        name: `${name}.${field.name}`,
+        binding: `${name}.${field.name}`,
+        path: [name, field.name],
+        group: typeName,
+        category: 'Configuration',
+        schema: property.editor === 'json' ? valueSchema(fieldType) : undefined
+      });
+    }
+  }
   const className =
     entry.id
       .split('-')
@@ -320,7 +402,9 @@ for (const entry of catalog) {
   const importText = Object.entries(imports)
     .map(([source, names]) => `import { ${names.join(', ')} } from '${source}';`)
     .join('\n');
-  const importNames = Object.values(imports).flat();
+  const importNames = Object.values(imports)
+    .flat()
+    .filter((name) => !['form', 'required', 'email'].includes(name));
   const extras = Object.entries(recipe.extras ?? {}).map(([name, extra]) => {
     const type = extra.options?.length
       ? `${extra.options.map((value) => JSON.stringify(value)).join(' | ')} | undefined`
@@ -333,7 +417,7 @@ for (const entry of catalog) {
     properties.push({
       name,
       binding: name,
-      kind: name === 'value' && entry.id === 'slider' ? 'model' : 'input',
+      kind: extra.model || (name === 'value' && entry.id === 'slider') ? 'model' : 'input',
       type,
       description: extra.description,
       defaultExpression: extra.defaultValue === undefined ? 'undefined' : JSON.stringify(extra.defaultValue),
@@ -346,7 +430,13 @@ for (const entry of catalog) {
     });
     return `${name}: ${type}`;
   });
-  const argsType = `Pick<DemoInputs<${owner.name}>, ${inputs.length ? inputs.map((property) => `'${property.name}'`).join(' | ') : 'never'}> & { content: string; ${extras.join('; ')} }`;
+  const argsType = `Pick<DemoInputs<${owner.name}>, ${inputs.length ? inputs.map((property) => `'${property.name}'`).join(' | ') : 'never'}> & { content: string; ${extras.join('; ')} } ${childTypes.map((type) => `& ${type}`).join(' ')}`;
+  const formFields =
+    entry.id === 'signal-forms'
+      ? `public readonly formModel: WritableSignal<Record<'project' | 'email' | 'notes', string>> = signal({project: 'Blocks workspace', email: 'hello@example.com', notes: 'A shared team workspace'});
+public readonly projectForm: FieldTree<Record<'project' | 'email' | 'notes', string>> = form(this.formModel, (path) => { required(path.project); email(path.email); });
+`
+      : '';
   const members =
     entry.id === 'virtual-collection'
       ? 'public trackItem(_item: unknown, index: number): number { return index; }\n'
@@ -354,10 +444,11 @@ for (const entry of catalog) {
         ? "public onNativeValue(event: Event): void { const target = event.target; if (target instanceof HTMLInputElement) this.onAction('valueChange', target.valueAsNumber); }\n"
         : '';
   if (entry.id === 'slider') models.push({ name: 'value', binding: 'value' });
-  const source = `import type { WritableSignal } from '@angular/core';\nimport { ChangeDetectionStrategy, Component, signal } from '@angular/core';\n${importText}\n@Component({selector: 'app-example', imports: [${importNames.join(', ')}], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './example.html'})\nexport class Example {\npublic readonly __FIELDS__: WritableSignal<unknown> = signal<unknown>(undefined);\n${members.replace("this.onAction('valueChange', target.valueAsNumber)", 'this.value.set(target.valueAsNumber)')}\n}\n`;
-  const preview = `${banner}import type { InputSignal, OutputEmitterRef } from '@angular/core';\nimport { ChangeDetectionStrategy, Component, input, output } from '@angular/core';\n${importText}\nimport type { DemoInputs } from '@playground/types/demo-inputs.types';\nimport type { IDemoAction } from '@playground/interfaces/idemo-action.interface';\n@Component({selector: 'app-${entry.id}-story', imports: [${importNames.join(', ')}], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './${entry.id}-story.html', styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'})\nexport class ${className} {\npublic readonly args: InputSignal<${argsType}> = input.required<${argsType}>();\npublic readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();\npublic onAction(name: string, payload: unknown): void {this.action.emit({name, payload});}\n}\n`;
+  const source = `import type { WritableSignal } from '@angular/core';\nimport { ChangeDetectionStrategy, Component, signal } from '@angular/core';\n${importText}\n${entry.id === 'signal-forms' ? "import type { FieldTree } from '@angular/forms/signals';\n" : ''}@Component({selector: 'app-example', imports: [${importNames.join(', ')}], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './example.html'${recipe.styles ? ", styleUrl: './example.scss'" : ''}})\nexport class Example {\n${formFields}public readonly __FIELDS__: WritableSignal<unknown> = signal<unknown>(undefined);\n${members.replace("this.onAction('valueChange', target.valueAsNumber)", 'this.value.set(target.valueAsNumber)')}\n}\n`;
+  const preview = `${banner}import type { InputSignal, OutputEmitterRef${entry.id === 'signal-forms' ? ', WritableSignal' : ''} } from '@angular/core';\nimport { ChangeDetectionStrategy, Component, input, output${entry.id === 'signal-forms' ? ', signal' : ''} } from '@angular/core';\n${importText}\n${entry.id === 'signal-forms' ? "import type { FieldTree } from '@angular/forms/signals';\n" : ''}import type { DemoInputs } from '@playground/types/demo-inputs.types';\nimport type { IDemoAction } from '@playground/interfaces/idemo-action.interface';\n@Component({selector: 'app-${entry.id}-story', imports: [${importNames.join(', ')}], changeDetection: ChangeDetectionStrategy.OnPush, templateUrl: './${entry.id}-story.html', ${recipe.styles ? `styleUrls: ['../../../../components/shared/demo-workbench/demo-preview.scss', './${entry.id}-story.scss']` : `styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'`}})\nexport class ${className} {\n${formFields}public readonly args: InputSignal<${argsType}> = input.required<${argsType}>();\npublic readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();\npublic onAction(name: string, payload: unknown): void {this.action.emit({name, payload});}\n}\n`;
   await write(`${generated}/components/${entry.id}/${entry.id}-story.ts`, preview.replace('public onAction', `${members}public onAction`));
   await write(`${generated}/components/${entry.id}/${entry.id}-story.html`, template, false);
+  if (recipe.styles) await write(`${generated}/components/${entry.id}/${entry.id}-story.scss`, recipe.styles, false);
   await write(
     `${generated}/components/${entry.id}/README.md`,
     `# ${entry.title} story preview\n\nGenerated Angular preview for the Blocks ${entry.title.toLowerCase()} workbench.\n\n## Import\n\nInternal Playground component. Consumers copy the files from the Code panel instead.\n\n## Usage\n\nEdit the owning recipe in \`shared/constants/demo-recipes.constants.ts\` and run \`npm run tools:generate:demo-stories\`. Do not edit generated files.\n\n## API\n\nThe typed \`args\` input receives the active story configuration. The \`action\` output reports component events and model changes to the shared workbench.\n\n## Appearance and customization\n\nThe preview uses the public Blocks component, its semantic tokens and the active application appearance.\n\n## Behavior and accessibility\n\nPreview and copied example share the generated Angular template. The library component owns its normal interaction and accessibility behavior.\n\n## Playground\n\nOpen \`/components/${entry.layout ? 'layout/' : ''}${entry.id}\`. See the colocated library guide at \`${entry.readme}\`.\n`,
@@ -384,6 +475,7 @@ for (const entry of catalog) {
     args,
     presets: [{ name: 'Default', args: {} }, ...(recipe.presets ?? [])],
     template: await readFile(path.join(root, `${generated}/components/${entry.id}/${entry.id}-story.html`), 'utf8'),
+    styles: recipe.styles,
     componentType: owner.name,
     hasActions: template.includes('onAction(') || members.includes('onAction('),
     source: await formatGeneratedTypeScript(source, `${generated}/components/${entry.id}/example.ts`),
@@ -394,6 +486,22 @@ for (const story of stories) {
   const editable = new Set(
     story.properties.filter((property) => property.editor !== 'documentation' || property.name === 'content').map((property) => property.name)
   );
+  for (const property of story.properties) {
+    const name = property.originalName ?? property.name;
+    if (/HTMLElement|ElementRef/.test(property.type)) property.category = 'DOM target';
+    else if (/TemplateRef/.test(property.type)) property.category = 'Template';
+    else if (
+      /^(aria|decorative|announcement|role$)/i.test(name) ||
+      (/label/i.test(name) && /accessible|assistive|screen reader|announc/i.test(property.description))
+    )
+      property.category = 'Accessibility';
+    if (property.name === 'content') property.category = 'Projected content';
+    if (story.id === 'stepper' && ['showPercentage', 'progressValue', 'progressFormat'].includes(name)) {
+      property.visibleWhen = { property: 'variant', value: 'progress' };
+      property.description += ' Available only when variant is progress.';
+    }
+    if (story.id === 'icon' && name === 'bgColor') property.options = ['auto', ...(property.options ?? []).filter((option) => option !== 'auto')];
+  }
   const ownRecipe = recipes[story.id];
   const constraints = ownRecipe?.constraints ?? recipes[ownRecipe?.use]?.constraints;
   for (const property of story.properties) if (constraints?.[property.name]) property.constraints = constraints[property.name];
@@ -402,23 +510,57 @@ for (const story of stories) {
       if (!editable.has(key)) throw new Error(`Argument ${story.id}.${key} has no editable binding. Supply a typed adapter or remove the override.`);
   }
 }
+const schemaNames = new Map();
+const schemaDeclarations = [];
+function schemaReference(schema) {
+  const key = JSON.stringify(schema);
+  if (schemaNames.has(key)) return schemaNames.get(key);
+  const children =
+    schema.kind === 'union'
+      ? { ...schema, choices: schema.choices.map((child) => ({ __ref: schemaReference(child) })) }
+      : schema.kind === 'array'
+        ? { ...schema, item: { __ref: schemaReference(schema.item) } }
+        : schema.kind === 'object'
+          ? {
+              ...schema,
+              properties: Object.fromEntries(Object.entries(schema.properties).map(([name, child]) => [name, { __ref: schemaReference(child) }])),
+              additional: schema.additional ? { __ref: schemaReference(schema.additional) } : undefined
+            }
+          : schema;
+  const name = `DEMO_SCHEMA_${schemaNames.size}`;
+  schemaNames.set(key, name);
+  schemaDeclarations.push(`export const ${name}: DemoValueSchema = ${JSON.stringify(children).replace(/\{"__ref":"(DEMO_SCHEMA_\d+)"\}/g, '$1')};`);
+  return name;
+}
+const registry = stories.map(({ className, modulePath, ...story }) => {
+  const data = JSON.stringify(story, (key, value) => (key === 'schema' && value ? { __ref: schemaReference(value) } : value)).replace(
+    /\{"__ref":"(DEMO_SCHEMA_\d+)"\}/g,
+    'schemas.$1'
+  );
+  return `${JSON.stringify(story.id)}: { ...${data}, load: () => import('${modulePath ?? `@playground/generated/demo-stories/components/${story.id}/${story.id}-story`}').then((module) => module.${className}) }`;
+});
+await write(
+  `${generated}/constants/demo-schemas.constants.ts`,
+  `${banner}import type { DemoValueSchema } from '@playground/types/demo-schema.types';\n${schemaDeclarations.join('\n')}`
+);
 await write(
   `${generated}/constants/demo-stories.constants.ts`,
-  `${banner}import type { IDemoStory } from '@playground/interfaces/idemo-story.interface';\nexport const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {\n${stories.map(({ className, modulePath, ...story }) => `${JSON.stringify(story.id)}: { ...${JSON.stringify(story)}, load: () => import('${modulePath ?? `@playground/generated/demo-stories/components/${story.id}/${story.id}-story`}').then((module) => module.${className}) }`).join(',\n')}\n};\n`
+  `${banner}import type { IDemoStory } from '@playground/interfaces/idemo-story.interface';\nimport * as schemas from './demo-schemas.constants';\nexport const DEMO_STORIES: Readonly<Record<string, IDemoStory>> = {\n${registry.join(',\n')}\n};\n`
 );
 console.log(`Generated ${stories.length} Angular stories with declaration-derived APIs.`);
 
 const sourceFormatOptions = {};
 for (const [language, filename] of [
   ['typescript', 'example.ts'],
-  ['html', 'example.html']
+  ['html', 'example.html'],
+  ['scss', 'example.scss']
 ]) {
   const options = { ...(await resolveConfig(path.join(root, filename))) };
   delete options.plugins;
   delete options.overrides;
-  sourceFormatOptions[language] = { ...options, parser: language === 'html' ? 'angular' : 'typescript' };
+  sourceFormatOptions[language] = { ...options, parser: language === 'html' ? 'angular' : language };
 }
 await write(
   `${generated}/constants/demo-source-format.constants.ts`,
-  `${banner}import type { Options } from 'prettier';\nexport const DEMO_SOURCE_FORMAT_OPTIONS: Readonly<Record<'typescript' | 'html', Options>> = ${JSON.stringify(sourceFormatOptions)};\n`
+  `${banner}import type { Options } from 'prettier';\nexport const DEMO_SOURCE_FORMAT_OPTIONS: Readonly<Record<'typescript' | 'html' | 'scss', Options>> = ${JSON.stringify(sourceFormatOptions)};\n`
 );

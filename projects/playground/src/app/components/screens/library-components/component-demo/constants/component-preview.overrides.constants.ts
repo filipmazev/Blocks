@@ -28,6 +28,7 @@ export const COMPONENT_PREVIEW_OVERRIDES: Readonly<Partial<Record<string, Compon
   'tooltip-directive': 'tooltip-trigger',
   truncate: 'truncate',
   'menu-item': 'menu-item',
+  'swipe-actions': 'menu-item',
   menu: 'menu',
   dropdown: 'dropdown',
   'context-menu': 'context-menu',

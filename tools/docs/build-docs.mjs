@@ -139,6 +139,9 @@ for (const section of ['page-header', 'page-content', 'page-footer']) {
 }
 routes.set('projects/blocks/primitives/components/side-panel-layout/README.md', 'components/side-panel');
 routes.set('projects/blocks/primitives/directives/virtual-item/README.md', 'components/virtual-collection');
+routes.set('projects/blocks/forms/directives/swipe-actions/README.md', 'components/swipe-actions');
+routes.set('projects/blocks/forms/components/swipe-action-panel/README.md', 'components/swipe-actions');
+routes.set('projects/playground/src/app/components/screens/library-components/menu-swipe-examples/README.md', 'components/swipe-actions');
 for (const guide of ['components/step', 'directives/step-content', 'directives/step-label']) {
   routes.set(`projects/blocks/navigation/${guide}/README.md`, 'components/stepper');
 }

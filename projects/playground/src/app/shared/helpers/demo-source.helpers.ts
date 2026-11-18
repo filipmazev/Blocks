@@ -29,20 +29,44 @@ export function demoSourceFiles(story: IDemoStory, args: DemoArgs): ICodeFile[] 
   let template = story.template;
 
   for (const property of story.properties) {
-    if (property.kind === 'model' || property.required || property.editor === 'documentation' || property.binding.startsWith('bx')) continue;
+    if (
+      property.ownerType ||
+      property.path ||
+      property.kind === 'model' ||
+      property.required ||
+      property.editor === 'documentation' ||
+      property.binding.startsWith('bx')
+    )
+      continue;
 
     if (serializeDemoValue(args[property.name]) !== serializeDemoValue(property.defaultValue)) continue;
 
     template = template.replace(`[${property.binding}]="args().${property.name}"`, '');
   }
 
-  template = template.replace(/\([\w.-]+\)="onAction\('([^']+)', \$event\)"/g, (_match: string, event: string) => {
+  template = template.replace(/\(([\w.-]+)\)="onAction\('([^']+)', \$event\)"/g, (_match: string, binding: string, event: string) => {
     const model = story.properties.find(
       (property) => property.kind === 'model' && property.editor !== 'documentation' && `${property.binding}Change` === event
     );
 
-    return model ? `(${event})="${model.name}.set($event)"` : '';
+    return model ? `(${binding})="${model.name}.set($event)"` : '';
   });
+
+  template = template
+    .replace(/\([\w.-]+\)="onAction\('([^']+)', (true|false)\)"/g, (_match: string, event: string, value: string) => {
+      const model = story.properties.find((property) => property.kind === 'model' && `${property.binding}Change` === event);
+
+      return model ? `(${event})="${model.name}.set(${value})"` : '';
+    })
+    .replace(/\([\w.-]+\)="onAction\('[^']+', formModel\(\)\)"/g, '');
+
+  template = template
+    .replace(/onAction\('([^']+)', (!?args\(\)\.\w+)\)/g, (match: string, event: string, expression: string) => {
+      const model = story.properties.find((property) => property.kind === 'model' && `${property.binding}Change` === event);
+
+      return model ? `${model.name}.set(${expression})` : match;
+    })
+    .replace(/onAction\('[^']+', \$event\);\s*/g, '');
 
   const used = new Set([...template.matchAll(/args\(\)\.(\w+)/g)].map((match) => match[1]));
   const fields = story.properties
@@ -64,6 +88,7 @@ export function demoSourceFiles(story: IDemoStory, args: DemoArgs): ICodeFile[] 
 
   template =
     template
+      .replace(/>\s*</g, '>\n<')
       .replace(/args\(\)\.(\w+)/g, '$1()')
       .split('\n')
       .filter((line) => line.trim())
@@ -73,7 +98,10 @@ export function demoSourceFiles(story: IDemoStory, args: DemoArgs): ICodeFile[] 
 
   let source = story.source.replace(/public readonly __FIELDS__: WritableSignal<unknown> = signal<unknown>\(undefined\);/, () => declarations);
 
-  if (!fields.length) source = source.replace("import type { WritableSignal } from '@angular/core';\n", '').replace(', signal', '');
+  if (!fields.length && story.id !== 'signal-forms')
+    source = source.replace("import type { WritableSignal } from '@angular/core';\n", '').replace(', signal', '');
+
+  source = source.replace(/;\n@Component/g, ';\n\n@Component');
 
   source = source.replace(
     /export class Example\s*\{\s*\}/,
@@ -82,15 +110,20 @@ export function demoSourceFiles(story: IDemoStory, args: DemoArgs): ICodeFile[] 
 
   return [
     { title: 'example.html', path: 'example.html', language: 'html', content: template },
-    { title: 'example.ts', path: 'example.ts', language: 'typescript', content: source }
+    { title: 'example.ts', path: 'example.ts', language: 'typescript', content: source },
+    ...(story.styles ? [{ title: 'example.scss', path: 'example.scss', language: 'scss' as const, content: story.styles }] : [])
   ];
 }
 
 /** Use ordinary Angular state and public input contracts for complex consumer configuration. */
 export function consumerValueType(story: IDemoStory, property: IDemoProperty, value: unknown): string {
-  if (property.kind === 'model' && story.id !== 'slider') return `ReturnType<${story.componentType}['${property.name}']>`;
+  if (property.kind === 'model' && ['boolean', 'number', 'string'].includes(property.type)) return property.type;
 
-  if (property.editor === 'json' || (property.options?.length ?? 0) > 32) return `ReturnType<${story.componentType}['${property.name}']>`;
+  if (property.kind === 'model' && story.id !== 'slider')
+    return `ReturnType<${property.ownerType ?? story.componentType}['${property.originalName ?? property.name}']>`;
+
+  if (property.editor === 'json' || (property.options?.length ?? 0) > 32)
+    return `ReturnType<${property.ownerType ?? story.componentType}['${property.originalName ?? property.name}']>`;
 
   const base = property.options?.length
     ? property.options.map((item) => JSON.stringify(item)).join(' | ')
@@ -141,6 +174,9 @@ export class Example {
 
     return this.toastrService.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: ${value('position')},
+      glassiness: ${value('glassiness')},
+      glassQuality: ${value('glassQuality')},
+      wrapperClass: ${value('wrapperClass')},
       durationInMs: ${value('durationInMs')},
       animate: ${value('animate')},
       swipeToDismiss: ${value('swipeToDismiss')},
@@ -149,7 +185,7 @@ export class Example {
       hasDefaultBackground: ${value('hasDefaultBackground')},
       closeButtonColor: ${serializeDemoValue('text-' + args['type'])},
       progressBarColor: ${serializeDemoValue('text-' + args['type'])},
-      closeLabel: ${serializeDemoValue(closeLabel)},
+      closeLabel: ${args['closeLabel'] ? value('closeLabel') : serializeDemoValue(closeLabel)},
       data: {
         title: ${value('title')},
         message: ${value('message')},
@@ -192,11 +228,20 @@ export class Example {
 
   public openModal(): ModalRef<string, undefined> {
     return this.modalService.open<string, undefined>(ConfirmationContent, {
+      closeLabel: ${value('closeLabel')},
+      disableCloseOnNavigation: ${value('disableCloseOnNavigation')},
+      closeGuardOnlyOnCancel: ${value('closeGuardOnlyOnCancel')},
+      contentStyles: ${value('contentStyles')},
       ariaLabel: ${args['headerText'] ? 'undefined' : value('title')},
       header: { text: ${value('headerText')}, icon: { name: 'info', color: 'text-info', bgColor: 'auto' } },
       data: ${value('title')},
       style: {
         layout: ${value('layout')},
+        closeDelay: ${value('closeDelay')},
+        contentWrapper: ${value('contentWrapper')},
+        wrapperStyles: ${value('wrapperStyles')},
+        wrapperClasses: ${value('wrapperClasses')},
+        overrideFullHeight: ${value('overrideFullHeight')},
         animate: ${value('animate')},
         hasBackdrop: ${value('hasBackdrop')},
         showCloseButton: ${value('showCloseButton')},

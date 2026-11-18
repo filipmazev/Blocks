@@ -369,3 +369,22 @@ input.bx-slider {
         }
     }
 }
+
+.bx-slider-ticks {
+    position: absolute;
+    inset-inline: calc(var(--bx-slider-thumb-size, #{spacing(6)}) / 2);
+    inset-block-start: var(--bx-slider-center-y, 50%);
+    block-size: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.bx-slider-tick {
+    position: absolute;
+    inset-inline-start: calc(var(--bx-slider-tick-position) * 100%);
+    inline-size: var(--bx-slider-tick-size, 2px);
+    block-size: var(--bx-slider-tick-size, 2px);
+    border-radius: radius(pill);
+    background: var(--bx-slider-tick-color, var(--bx-text-primary));
+    transform: translate(-50%, -50%);
+}

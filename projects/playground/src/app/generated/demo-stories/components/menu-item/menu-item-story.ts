@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { MenuItem } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-menu-item-story',
   imports: [MenuItem],
@@ -16,9 +17,15 @@ import { MenuItem } from '@filip.mazev/blocks/primitives';
 })
 export class MenuItemStory {
   public readonly args: InputSignal<
-    Pick<DemoInputs<MenuItem>, 'icon' | 'endIcon' | 'label' | 'wrapLabel' | 'tooltipOnTruncate' | 'disabled' | 'danger' | 'shortcut'> & { content: string }
+    Pick<
+      DemoInputs<MenuItem>,
+      'icon' | 'endIcon' | 'label' | 'ariaLabel' | 'wrapLabel' | 'tooltipOnTruncate' | 'disabled' | 'loading' | 'danger' | 'shortcut'
+    > & { content: string }
   > = input.required<
-    Pick<DemoInputs<MenuItem>, 'icon' | 'endIcon' | 'label' | 'wrapLabel' | 'tooltipOnTruncate' | 'disabled' | 'danger' | 'shortcut'> & { content: string }
+    Pick<
+      DemoInputs<MenuItem>,
+      'icon' | 'endIcon' | 'label' | 'ariaLabel' | 'wrapLabel' | 'tooltipOnTruncate' | 'disabled' | 'loading' | 'danger' | 'shortcut'
+    > & { content: string }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { SideNav } from '@filip.mazev/blocks/navigation';
+
 @Component({
   selector: 'app-side-nav-story',
   imports: [SideNav],
@@ -15,8 +16,8 @@ import { SideNav } from '@filip.mazev/blocks/navigation';
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
 })
 export class SideNavStory {
-  public readonly args: InputSignal<Pick<DemoInputs<SideNav>, 'config' | 'collapsed' | 'mobileOpen'> & { content: string }> = input.required<
-    Pick<DemoInputs<SideNav>, 'config' | 'collapsed' | 'mobileOpen'> & { content: string }
+  public readonly args: InputSignal<Pick<DemoInputs<SideNav>, 'config' | 'groups' | 'collapsed' | 'mobileOpen'> & { content: string }> = input.required<
+    Pick<DemoInputs<SideNav>, 'config' | 'groups' | 'collapsed' | 'mobileOpen'> & { content: string }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

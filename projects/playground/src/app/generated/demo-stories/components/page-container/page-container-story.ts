@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { PageContainer, PageContent, PageFooter } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-page-container-story',
   imports: [PageContainer, PageContent, PageFooter],
@@ -18,12 +19,30 @@ export class PageContainerStory {
   public readonly args: InputSignal<
     Pick<
       DemoInputs<PageContainer>,
-      'size' | 'sectionTitle' | 'pageTitle' | 'pageDescription' | 'autoResolveTitlesFromNavigation' | 'showBreadcrumbs' | 'breadcrumbsAfter' | 'breadcrumbLabel'
+      | 'size'
+      | 'sectionTitle'
+      | 'pageTitle'
+      | 'pageDescription'
+      | 'autoResolveTitlesFromNavigation'
+      | 'breadcrumbs'
+      | 'showBreadcrumbs'
+      | 'breadcrumbsAfter'
+      | 'breadcrumbLabel'
+      | 'breadcrumbConfig'
     > & { content: string }
   > = input.required<
     Pick<
       DemoInputs<PageContainer>,
-      'size' | 'sectionTitle' | 'pageTitle' | 'pageDescription' | 'autoResolveTitlesFromNavigation' | 'showBreadcrumbs' | 'breadcrumbsAfter' | 'breadcrumbLabel'
+      | 'size'
+      | 'sectionTitle'
+      | 'pageTitle'
+      | 'pageDescription'
+      | 'autoResolveTitlesFromNavigation'
+      | 'breadcrumbs'
+      | 'showBreadcrumbs'
+      | 'breadcrumbsAfter'
+      | 'breadcrumbLabel'
+      | 'breadcrumbConfig'
     > & { content: string }
   >();
 

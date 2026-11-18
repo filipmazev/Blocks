@@ -1,15 +1,31 @@
-<section
-    bxSurface
-    style="padding: 1rem"
-    [bxSurfaceInteractive]="args().bxSurfaceInteractive"
-    [bxSurfaceTranslucency]="args().bxSurfaceTranslucency"
-    [bxSurfaceGlassiness]="args().bxSurfaceGlassiness"
-    [bxSurfaceLocalRefraction]="args().bxSurfaceLocalRefraction"
-    [bxSurfaceQuality]="args().bxSurfaceQuality"
-    [bxSurfaceEmission]="args().bxSurfaceEmission"
-    [bxSurfaceEmissionOrigin]="args().bxSurfaceEmissionOrigin"
-    [bxSurfaceEmissionStrength]="args().bxSurfaceEmissionStrength"
-    [bxSurfaceFocusEmission]="args().bxSurfaceFocusEmission"
-    [bxReducedTransparency]="args().bxReducedTransparency">
-    {{ args().content }}
-</section>
+<div class="surface-scene">
+    <div class="surface-art" aria-hidden="true">
+        <bx-icon name="orbit" size="100" />
+        <bx-icon name="sparkles" size="56" />
+    </div>
+    <bx-alert
+        class="surface-light"
+        title="Live light source"
+        message="This alert illuminates the neighboring material."
+        [emissive]="true"
+        [emissionIntensity]="0.8" />
+    <section
+        class="surface-sample"
+        bxSurface
+        [bxSurfaceInteractive]="args().bxSurfaceInteractive"
+        [bxSurfaceTranslucency]="args().bxSurfaceTranslucency"
+        [bxSurfaceGlassiness]="args().bxSurfaceGlassiness"
+        [bxSurfaceLocalRefraction]="args().bxSurfaceLocalRefraction"
+        [bxSurfaceQuality]="args().bxSurfaceQuality"
+        [bxSurfaceEmission]="args().bxSurfaceEmission"
+        [bxSurfaceEmissionOrigin]="args().bxSurfaceEmissionOrigin"
+        [bxSurfaceEmissionStrength]="args().bxSurfaceEmissionStrength"
+        [bxSurfaceFocusEmission]="args().bxSurfaceFocusEmission"
+        [bxReducedTransparency]="args().bxReducedTransparency">
+        <h3>
+            {{ args().content }}
+        </h3>
+        <p>Move over this surface to inspect light, opacity and refraction.</p>
+        <button type="button" bx-button variant="tonal">Inspect material</button>
+    </section>
+</div>

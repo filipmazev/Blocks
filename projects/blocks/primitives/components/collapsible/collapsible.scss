@@ -65,7 +65,10 @@
     }
 
     &:disabled {
-        color: var(--bx-text-secondary);
+        --bx-glass-text: var(--bx-text-disabled);
+
+        color: var(--bx-text-disabled);
+        opacity: var(--bx-disabled-opacity, 0.5);
         cursor: not-allowed;
     }
 

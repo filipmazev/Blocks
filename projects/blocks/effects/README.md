@@ -195,3 +195,14 @@ Use [VisualTransition](components/visual-transition/README.md) for keyed icon/sp
 
 For passive or inert visuals covered by a containing hit area, `bxSurfaceLightingTarget` (runtime `lightingTarget`) optionally supplies that containing element
 for lighting visibility checks. Surface dimensions, lighting geometry and interaction ownership stay on the original visual; omission uses the surface itself.
+
+## Swipe rows and semantic action materials
+
+[SwipeActionsDirective](../forms/directives/swipe-actions/README.md) moves the primary control at its original dimensions, carrying its rounded material and
+lighting with it. The host clips overflow and leaves the action gutter transparent. Generic rows put optional material on their primary control and
+`bxSwipeContent` on its inner content; MenuItem adapts automatically. `--bx-swipe-content-gap` separates content from capsules. Capsule and circular paging
+contours stay independent of the row radius, including live zero-radius overrides.
+
+Filled controls inside a shared selection menu use `data-bx-selection-exclude` to keep their own semantic hover/active backgrounds and paired foregrounds. The
+existing row selection mechanism ignores those controls instead of painting another backing. Overflow uses a directional mask over the same material; forced
+colors omit that mask. Paging reuses the exact shared spring and yields to native touch/trackpad scrolling.

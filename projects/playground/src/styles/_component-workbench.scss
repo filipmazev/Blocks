@@ -31,3 +31,26 @@ app-component-demo .component-workspace.has-workbench-actions > .component-secti
 app-demo-workbench .results-tabs > .bx-tab-panels > .bx-tab-panel:not([hidden]) {
     block-size: 100%;
 }
+
+/* IMPORTANT: The inspector is projected into a modal; keep shared tab and form content bounded inside that separately rendered surface. */
+app-demo-inspector-modal .inspector-content {
+    block-size: calc(100dvh - 7rem);
+    min-inline-size: 0;
+}
+
+app-demo-workbench .controls bx-checkbox .bx-inline-label,
+app-demo-inspector-modal .controls bx-checkbox .bx-inline-label {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+app-demo-workbench .controls bx-checkbox .bx-inline-wrapper,
+app-demo-inspector-modal .controls bx-checkbox .bx-inline-wrapper {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
+
+app-demo-workbench .controls bx-checkbox .bx-inline-label,
+app-demo-inspector-modal .controls bx-checkbox .bx-inline-label {
+    min-inline-size: 0;
+}

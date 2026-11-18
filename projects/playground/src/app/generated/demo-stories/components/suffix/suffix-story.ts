@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { InputField, SuffixDirective } from '@filip.mazev/blocks/forms';
+
 @Component({
   selector: 'app-suffix-story',
   imports: [SuffixDirective, InputField],

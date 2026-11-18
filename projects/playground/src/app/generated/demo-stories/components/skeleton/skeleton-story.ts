@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Skeleton } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-skeleton-story',
   imports: [Skeleton],

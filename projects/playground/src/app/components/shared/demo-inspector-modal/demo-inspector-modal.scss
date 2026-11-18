@@ -1,0 +1,9 @@
+:host {
+    --demo-inspector-height: calc(100dvh - 7rem);
+
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+}

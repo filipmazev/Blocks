@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs';
 import {
   BxOverlayPositionService,
   BxPlacement,
+  containsOverlayTarget,
   inheritOverlayTheme,
   OverlayOriginTracker,
   ScrollLockService,
@@ -263,7 +264,7 @@ export class MenuTriggerDirective {
    * @param target - DOM node to check against the trigger and attached overlay.
    */
   public contains(target: Node): boolean {
-    return this.nativeElement.contains(target) || !!this.overlayRef?.overlayElement.contains(target);
+    return containsOverlayTarget(this.nativeElement, target) || (!!this.overlayRef && containsOverlayTarget(this.overlayRef.overlayElement, target));
   }
 
   /** Schedule hover dismissal while retaining focused or pinned menu branches. */

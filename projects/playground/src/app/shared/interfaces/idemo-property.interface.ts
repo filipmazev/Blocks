@@ -17,5 +17,11 @@ export interface IDemoProperty {
   nullable: boolean;
   optional: boolean;
   schema?: DemoValueSchema;
+  group?: string;
+  category?: 'Accessibility' | 'Projected content' | 'DOM target' | 'Template' | 'Configuration';
+  ownerType?: string;
+  originalName?: string;
+  path?: readonly string[];
+  visibleWhen?: { property: string; value: string };
   constraints?: IDemoConstraint;
 }

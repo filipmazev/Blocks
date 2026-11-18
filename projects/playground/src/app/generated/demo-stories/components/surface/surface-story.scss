@@ -1,0 +1,25 @@
+.surface-scene {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    isolation: isolate;
+    background: repeating-linear-gradient(35deg, var(--bx-bg-surface-alt) 0 2rem, var(--bx-bg-element) 2rem 4rem);
+}
+
+.surface-art {
+    position: absolute;
+    inset: 25% 10%;
+    display: flex;
+    justify-content: space-between;
+    color: var(--bx-text-accent);
+    z-index: -1;
+}
+
+.surface-sample {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--bx-border-default);
+    background: color-mix(in srgb, var(--bx-bg-surface) 55%, transparent);
+}

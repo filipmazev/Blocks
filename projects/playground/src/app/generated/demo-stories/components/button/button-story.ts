@@ -8,6 +8,7 @@ import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Button } from '@filip.mazev/blocks/forms';
 import { Icon } from '@filip.mazev/blocks/icons';
+
 @Component({
   selector: 'app-button-story',
   imports: [Button, Icon],
@@ -17,15 +18,15 @@ import { Icon } from '@filip.mazev/blocks/icons';
 })
 export class ButtonStory {
   public readonly args: InputSignal<
-    Pick<DemoInputs<Button>, 'variant' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'> & {
-      content: string;
-      icon: 'save' | 'check' | 'plus' | undefined;
-    }
+    Pick<
+      DemoInputs<Button>,
+      'variant' | 'shape' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'
+    > & { content: string; icon: 'save' | 'check' | 'plus' | undefined }
   > = input.required<
-    Pick<DemoInputs<Button>, 'variant' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'> & {
-      content: string;
-      icon: 'save' | 'check' | 'plus' | undefined;
-    }
+    Pick<
+      DemoInputs<Button>,
+      'variant' | 'shape' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'
+    > & { content: string; icon: 'save' | 'check' | 'plus' | undefined }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

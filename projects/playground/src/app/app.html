@@ -44,22 +44,25 @@
                             <bx-icon size="20" [name]="themeStudioService.preview() ? 'eye-off' : 'eye'" />
                         </button>
                     }
-                    <button
-                        bx-button
-                        type="button"
-                        class="studio-button"
-                        aria-label="Theme Studio"
-                        variant="tonal"
-                        color="grayscale"
-                        aria-controls="theme-studio-panel"
-                        [appStudioAurora]="themeStudioService.overrideCount() > 0 && themeStudioService.preview() && !themeStudioService.suspended()"
-                        [attr.aria-expanded]="themeStudioService.open()"
-                        (click)="themeStudioService.open.set(!themeStudioService.open())">
+                    <div
+                        class="studio-button-frame"
+                        [appStudioAurora]="themeStudioService.overrideCount() > 0 && themeStudioService.preview() && !themeStudioService.suspended()">
+                        <button
+                            bx-button
+                            type="button"
+                            class="studio-button"
+                            aria-label="Theme Studio"
+                            variant="tonal"
+                            color="grayscale"
+                            aria-controls="theme-studio-panel"
+                            [attr.aria-expanded]="themeStudioService.open()"
+                            (click)="themeStudioService.open.set(!themeStudioService.open())">
+                            <bx-icon name="palette" size="20" /><span>Theme Studio</span>
+                        </button>
                         <span class="studio-aurora-halo" aria-hidden="true"></span><span class="studio-aurora" aria-hidden="true"></span
                         ><span class="studio-light-origin" aria-hidden="true"></span><span class="studio-light-origin" aria-hidden="true"></span
-                        ><span class="studio-light-origin" aria-hidden="true"></span><span class="studio-light-origin" aria-hidden="true"></span
-                        ><bx-icon name="palette" size="20" /><span>Theme Studio</span>
-                    </button>
+                        ><span class="studio-light-origin" aria-hidden="true"></span><span class="studio-light-origin" aria-hidden="true"></span>
+                    </div>
                     <a
                         bx-button
                         class="appearance-button"

@@ -2,11 +2,13 @@
     [icon]="args().icon"
     [endIcon]="args().endIcon"
     [label]="args().label"
+    [ariaLabel]="args().ariaLabel"
     [wrapLabel]="args().wrapLabel"
     [tooltipOnTruncate]="args().tooltipOnTruncate"
     [disabled]="args().disabled"
+    [loading]="args().loading"
     [danger]="args().danger"
     [shortcut]="args().shortcut"
-    (action)="onAction('action', $event)"
-    >{{ args().content }}</bx-menu-item
->
+    (action)="onAction('action', $event)">
+    {{ args().content }}
+</bx-menu-item>

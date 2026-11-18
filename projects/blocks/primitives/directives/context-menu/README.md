@@ -69,3 +69,10 @@ lock, which freezes page scrolling without releasing a surrounding dialog, drawe
 ## Playground
 
 Open `/components/context-menu` for a working example and its current value or action result.
+
+### Composed trigger origins
+
+`openFrom(origin, event)` opens the existing template on behalf of a visible composed control. It accepts the focusable `HTMLElement` origin and a pointer or
+keyboard event; keyboard requests position beside that element and focus the first enabled command. The origin supplies theme inheritance and receives focus on
+keyboard dismissal. Existing native right-click/long-press and custom templates keep their current behavior. MenuItem actions uses this method for its shared
+action list; an explicit context template on the row retains native invocation priority.

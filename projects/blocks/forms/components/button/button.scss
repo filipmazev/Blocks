@@ -373,3 +373,19 @@
         outline-offset: -2px;
     }
 }
+
+:host(.bx-btn-capsule) {
+    --bx-glass-radius: var(--bx-button-capsule-radius, #{radius(pill)});
+
+    inline-size: var(--bx-button-capsule-width, calc(#{spacing(10)} * 2.5));
+    block-size: var(--bx-button-capsule-height, #{spacing(10)});
+    min-inline-size: var(--bx-button-capsule-min-width, #{spacing(10)});
+    min-block-size: var(--bx-button-capsule-min-height, #{spacing(8)});
+    padding: 0;
+    flex: none;
+    border-radius: var(--bx-glass-radius, #{radius(pill)});
+
+    .bx-btn-content-wrapper {
+        gap: 0;
+    }
+}

@@ -18,10 +18,24 @@ Add the standalone component or directive to your component's `imports`.
 
 ## API
 
-`label`, `icon`, `endIcon`, `shortcut`, `disabled`, `danger`, and `wrapLabel`. Set `wrapLabel` to `true` when a menu item should wrap long content instead of
-truncating it. `action` emits the mouse event for enabled items. Clipped labels and projected text use the shared `TruncateDirective` and receive an automatic
-tooltip. `[tooltipOnTruncate]="false"` disables that tooltip while retaining ellipsis, allowing application-owned feedback. `wrapLabel` disables truncation
-itself.
+`label`, `ariaLabel`, `icon`, `endIcon`, `shortcut`, `disabled`, `loading`, `danger`, and `wrapLabel`. Set `wrapLabel` to `true` when a menu item should wrap
+long content instead of truncating it. `action` emits the mouse event for enabled items. Clipped labels and projected text use the shared `TruncateDirective`
+and receive an automatic tooltip. `[tooltipOnTruncate]="false"` disables that tooltip while retaining ellipsis, allowing application-owned feedback. `wrapLabel`
+disables truncation itself.
+
+`loading` defaults to false, displays a spinner and `aria-busy`, retains the visible command label and rejects activation until cleared. Optional `ariaLabel`
+uses `ResolvableText`; its identifying text must contain the visible label. `--bx-menu-item-color` optionally supplies a semantic foreground; ordinary rows
+retain their existing default and danger behavior.
+
+### Swipe and context commands
+
+Import the optional `SwipeActionsDirective` from `@filip.mazev/blocks/forms` and apply `bxSwipeActions` to this component. Bind `leftSwipeActions` and/or
+`rightSwipeActions` to typed `ISwipeAction` arrays. The same definitions render horizontal Button capsules, their captions, and the existing context menu. See
+[Shared swipe actions](../../../forms/directives/swipe-actions/README.md) for complete API, promise handling, overflow, RTL and custom-context behavior.
+
+```html
+<bx-menu-item bxSwipeActions label="Project" [leftSwipeActions]="projectActions" (swipeAction)="handleAction($event)" />
+```
 
 ## Shortcut definitions
 
@@ -162,3 +176,10 @@ excluded, semantic danger text remains visible, and focus outlines remain native
 
 Open `/components/menu-item` or `/components/menu` for working menu-opening combinations and sequences, OS previews, disabled-command guards, an editable field,
 and visible action results.
+
+Shared swipe actions have a dedicated `/components/swipe-actions` Playground page. It demonstrates ordered appearance motion, immediate collapse interruption,
+cancelable full pointer/touch swipes, trackpad reveal, reduced motion, and asynchronous failure/retry. Content translates without being resized.
+
+While shared swipe actions are revealed, the whole primary control moves with its existing rounded hover/active material, including standalone items. A
+configurable content gap separates it from the action lane. Action gutters stay transparent and capsules retain their semantic colors. Full-swipe promises
+retain the stretched loading/retry capsule; success can collapse or dismiss the row through the shared directive.

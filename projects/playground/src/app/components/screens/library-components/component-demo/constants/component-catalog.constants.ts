@@ -252,6 +252,17 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<span bxTruncate #overflow="bxTruncate" [bxTooltip]="label() | bxTruncatedText: overflow.truncated()">{{ label() }}</span>'
   },
   {
+    id: 'swipe-actions',
+    title: 'Swipe actions',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/directives/swipe-actions/README.md',
+    symbol: 'SwipeActionsDirective',
+    package: '@filip.mazev/blocks/forms',
+    selector: '[bxSwipeActions]',
+    description: 'Shared list and menu actions with trackpad reveal, cancelable full touch swipes, asynchronous commands and keyboard context access.',
+    example: '<div bxSwipeActions [leftSwipeActions]="actions"><button type="button"><span bxSwipeContent>Project</span></button></div>'
+  },
+  {
     id: 'menu-item',
     title: 'Menu item',
     group: 'Primitives',

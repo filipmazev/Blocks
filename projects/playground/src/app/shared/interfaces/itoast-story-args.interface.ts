@@ -1,9 +1,18 @@
+import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
 import type { IconName } from '@filip.mazev/blocks/icons';
 import type { SimpleToastType, ToastPosition } from '@filip.mazev/blocks/toastr';
 
 export interface IToastStoryArgs {
   /** Placement for the next notification. Existing notifications keep their position. */
   position: ToastPosition;
+  /** Material refraction policy for the next toast. */
+  glassiness: GlassinessMode;
+  /** Rendering quality for the next toast. */
+  glassQuality: GlassQuality;
+  /** Application CSS class on the toast wrapper. */
+  wrapperClass: string;
+  /** Optional explicit close-action text. Empty uses the selected language. */
+  closeLabel: string;
   /** Notification title. */
   title: string;
   /** Notification message; content patches update already-open notifications. */

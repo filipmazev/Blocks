@@ -6,10 +6,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import type { IDemoAction } from '@playground/interfaces/idemo-action.interface';
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
-import { LoadingIndicator } from '@filip.mazev/blocks/primitives';
+import { LoadingIndicator, Tag } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-loading-indicator-story',
-  imports: [LoadingIndicator],
+  imports: [LoadingIndicator, Tag],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './loading-indicator-story.html',
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'

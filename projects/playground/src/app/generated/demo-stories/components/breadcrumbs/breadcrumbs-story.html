@@ -1,1 +1,8 @@
-<bx-breadcrumbs [minimumBreadcrumbs]="args().minimumBreadcrumbs" [divider]="args().divider" [label]="args().label">{{ args().content }}</bx-breadcrumbs>
+<bx-breadcrumbs
+    [minimumBreadcrumbs]="args().minimumBreadcrumbs"
+    [divider]="args().divider"
+    [items]="args().items"
+    [breadcrumbConfig]="args().breadcrumbConfig"
+    [label]="args().label">
+    {{ args().content }}
+</bx-breadcrumbs>

@@ -98,6 +98,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/primitives/components/accordion/accordion.scss']
   },
   {
+    name: '--bx-action-reveal',
+    reference: 'var(--bx-action-reveal)',
+    category: 'components',
+    group: 'Component \u00B7 action',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0px'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
     name: '--bx-alert-background',
     reference: 'var(--bx-alert-background)',
     category: 'components',
@@ -1342,6 +1355,71 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['12rem'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss']
+  },
+  {
+    name: '--bx-button-capsule-height',
+    reference: 'var(--bx-button-capsule-height)',
+    category: 'components',
+    group: 'Component \u00B7 button',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['var(--bx-swipe-capsule-height)'],
+    fallbacks: ['var(--bx-space-10, 2.5rem)'],
+    selectors: ['.bx-swipe-action'],
+    sources: ['projects/blocks/forms/components/button/button.scss', 'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-button-capsule-min-height',
+    reference: 'var(--bx-button-capsule-min-height)',
+    category: 'components',
+    group: 'Component \u00B7 button',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['var(--bx-space-8, 2rem)'],
+    selectors: ['.bx-swipe-action'],
+    sources: ['projects/blocks/forms/components/button/button.scss', 'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-button-capsule-min-width',
+    reference: 'var(--bx-button-capsule-min-width)',
+    category: 'components',
+    group: 'Component \u00B7 button',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0'],
+    fallbacks: ['var(--bx-space-10, 2.5rem)'],
+    selectors: ['.bx-swipe-action'],
+    sources: ['projects/blocks/forms/components/button/button.scss', 'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-button-capsule-radius',
+    reference: 'var(--bx-button-capsule-radius)',
+    category: 'components',
+    group: 'Component \u00B7 button',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-rounded-pill, 9999px)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/button/button.scss']
+  },
+  {
+    name: '--bx-button-capsule-width',
+    reference: 'var(--bx-button-capsule-width)',
+    category: 'components',
+    group: 'Component \u00B7 button',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['calc(var(--bx-swipe-capsule-height) * 2.5 + var(--bx-swipe-stretch-extra, 0px))'],
+    fallbacks: ['calc(var(--bx-space-10, 2.5rem) * 2.5)'],
+    selectors: ['.bx-swipe-action'],
+    sources: ['projects/blocks/forms/components/button/button.scss', 'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
   },
   {
     name: '--bx-button-press-shadow',
@@ -5724,6 +5802,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['projects/blocks/primitives/components/container/container.scss', 'projects/blocks/primitives/components/page-container/page-container.scss']
   },
   {
+    name: '--bx-disabled-opacity',
+    reference: 'var(--bx-disabled-opacity)',
+    category: 'components',
+    group: 'Component \u00B7 disabled',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0.5'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
+  },
+  {
     name: '--bx-divider-color',
     reference: 'var(--bx-divider-color)',
     category: 'components',
@@ -5785,6 +5876,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     themeEditable: false,
     defaults: [],
     fallbacks: ['var(--bx-space-6, 1.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/divider/divider.scss']
+  },
+  {
+    name: '--bx-divider-segment-min-length',
+    reference: 'var(--bx-divider-segment-min-length)',
+    category: 'components',
+    group: 'Component \u00B7 divider',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-4, 1rem)'],
     selectors: [],
     sources: ['projects/blocks/primitives/components/divider/divider.scss']
   },
@@ -7021,6 +7125,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'inherit',
       'var(--bx-alert-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-autocomplete-radius, var(--bx-rounded-lg, 0.75rem))',
+      'var(--bx-button-capsule-radius, var(--bx-rounded-pill, 9999px))',
       'var(--bx-card-radius, var(--bx-rounded-lg, 0.75rem))',
       'var(--bx-chip-radius, var(--bx-rounded-pill, 9999px))',
       'var(--bx-collapsible-radius, var(--bx-rounded-md, 0.5rem))',
@@ -7060,6 +7165,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.bx-popover-surface',
       '.bx-select-panel[data-bx-surface]',
       '.bx-selection-surface',
+      '.bx-swipe-page',
       '.bx-tab-header',
       '.bx-tab-selection',
       '.bx-tab-trigger',
@@ -7076,6 +7182,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.step-connector-fill',
       '.step-selection',
       ':host',
+      ':host(.bx-btn-capsule)',
       ':host(.bx-tabs-underline) .bx-tab-selection',
       ':host([data-variant=cards]) .step-body',
       ':host([data-variant=progress]) .step-selection',
@@ -7088,6 +7195,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/date-picker/date-picker.scss',
       'projects/blocks/forms/components/multi-select/multi-select.scss',
       'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/forms/components/time-wheel/time-wheel.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
@@ -7637,6 +7745,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'var(--bx-text-accent)',
       'var(--bx-text-danger)',
       'var(--bx-text-danger-readable, var(--bx-text-danger))',
+      'var(--bx-text-disabled)',
       'var(--bx-text-info-readable, var(--bx-text-info))',
       'var(--bx-text-primary)',
       'var(--bx-text-secondary)',
@@ -7658,6 +7767,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       '.bx-chip',
       '.bx-chip.is-filled',
       '.bx-collapsible',
+      '.bx-collapsible-trigger:disabled',
       '.bx-date-panel-content[data-bx-surface]',
       '.bx-drawer',
       '.bx-menu-wrapper',
@@ -7888,6 +7998,19 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/components/menu/menu.scss'
     ]
+  },
+  {
+    name: '--bx-menu-item-color',
+    reference: 'var(--bx-menu-item-color)',
+    category: 'components',
+    group: 'Component \u00B7 menu',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-danger-readable, var(--bx-text-danger))', 'var(--bx-text-primary)'],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss', 'projects/blocks/primitives/components/menu-item/menu-item.scss']
   },
   {
     name: '--bx-menu-item-gap',
@@ -9905,6 +10028,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/range-slider/range-slider.scss',
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
@@ -11027,6 +11151,45 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: ['global', 'projects/blocks/forms/components/range-slider/range-slider.scss']
   },
   {
+    name: '--bx-slider-tick-color',
+    reference: 'var(--bx-slider-tick-color)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-text-primary)'],
+    selectors: [],
+    sources: ['global']
+  },
+  {
+    name: '--bx-slider-tick-position',
+    reference: 'var(--bx-slider-tick-position)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'runtime',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['global', 'projects/blocks/forms/directives/slider/slider.directive.ts']
+  },
+  {
+    name: '--bx-slider-tick-size',
+    reference: 'var(--bx-slider-tick-size)',
+    category: 'components',
+    group: 'Component \u00B7 slider',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['2px'],
+    selectors: [],
+    sources: ['global']
+  },
+  {
     name: '--bx-slider-track-start',
     reference: 'var(--bx-slider-track-start)',
     category: 'components',
@@ -11098,6 +11261,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/multi-select/multi-select.scss',
       'projects/blocks/forms/components/search-input/search-input.scss',
       'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/forms/components/time-wheel/time-wheel.scss',
       'projects/blocks/icons/components/icon/icon.scss',
@@ -11137,9 +11301,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/autocomplete/autocomplete.scss',
+      'projects/blocks/forms/components/button/button.scss',
       'projects/blocks/forms/components/date-picker/date-picker.scss',
       'projects/blocks/forms/components/range-slider/range-slider.scss',
       'projects/blocks/forms/components/search-input/search-input.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/navigation/components/shared/navigation-level/navigation-level.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
@@ -11167,6 +11333,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     selectors: [':root'],
     sources: [
       'global',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/grid/grid.scss',
@@ -11200,6 +11367,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/shared/load-more/load-more-footer.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
@@ -11250,6 +11418,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/multi-select/multi-select.scss',
       'projects/blocks/forms/components/search-input/search-input.scss',
       'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
@@ -11291,6 +11460,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/date-picker/date-picker.scss',
       'projects/blocks/forms/components/multi-select/multi-select.scss',
       'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/bottom-sheet/modal-bottom-sheet.scss',
@@ -11389,9 +11559,11 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     selectors: [':root'],
     sources: [
       'global',
+      'projects/blocks/forms/components/button/button.scss',
       'projects/blocks/forms/components/date-picker/date-picker.scss',
       'projects/blocks/forms/components/multi-select/multi-select.scss',
       'projects/blocks/forms/components/select/select.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
@@ -11730,6 +11902,171 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     fallbacks: ['0.125rem', '0.25rem', '0.5rem'],
     selectors: [],
     sources: ['projects/blocks/navigation/components/stepper/stepper.scss']
+  },
+  {
+    name: '--bx-swipe-action-height',
+    reference: 'var(--bx-swipe-action-height)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-10, 2.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-action-width',
+    reference: 'var(--bx-swipe-action-width)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [
+      'calc(var(--bx-swipe-capsule-height) * 2.5 + var(--bx-space-2, 0.5rem))',
+      'calc(var(--bx-swipe-capsule-height, var(--bx-space-10, 2.5rem)) * 2.5 + var(--bx-space-2, 0.5rem))'
+    ],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-capsule-height',
+    reference: 'var(--bx-swipe-capsule-height)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-10, 2.5rem)'],
+    selectors: [],
+    sources: [
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.ts'
+    ]
+  },
+  {
+    name: '--bx-swipe-content-gap',
+    reference: 'var(--bx-swipe-content-gap)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-content-min-width',
+    reference: 'var(--bx-swipe-content-min-width)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['50%'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-fade-end',
+    reference: 'var(--bx-swipe-fade-end)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0px', 'var(--bx-swipe-overflow-fade, var(--bx-space-3, 0.75rem))'],
+    fallbacks: [],
+    selectors: ['.can-scroll-after .bx-swipe-lane', '.has-overflow .bx-swipe-lane'],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-fade-start',
+    reference: 'var(--bx-swipe-fade-start)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: ['0px', 'var(--bx-swipe-overflow-fade, var(--bx-space-3, 0.75rem))'],
+    fallbacks: [],
+    selectors: ['.can-scroll-before .bx-swipe-lane', '.has-overflow .bx-swipe-lane'],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-full-max-width',
+    reference: 'var(--bx-swipe-full-max-width)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['calc(var(--bx-space-12, 3rem) * 12)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-overflow-fade',
+    reference: 'var(--bx-swipe-overflow-fade)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-3, 0.75rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-overflow-gap',
+    reference: 'var(--bx-swipe-overflow-gap)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-overflow-padding',
+    reference: 'var(--bx-swipe-overflow-padding)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['var(--bx-space-2, 0.5rem)'],
+    selectors: [],
+    sources: ['projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss']
+  },
+  {
+    name: '--bx-swipe-stretch-extra',
+    reference: 'var(--bx-swipe-stretch-extra)',
+    category: 'components',
+    group: 'Component \u00B7 swipe',
+    kind: 'value',
+    scope: 'local',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: ['0px'],
+    selectors: [],
+    sources: [
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.ts'
+    ]
   },
   {
     name: '--bx-tab-highlight',
@@ -12154,6 +12491,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/navigation/components/stepper/stepper.scss',
@@ -12179,6 +12517,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'global',
       'projects/blocks/forms/components/button/button.scss',
       'projects/blocks/forms/components/form-field/form-field.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/navigation/components/side-nav/side-nav.scss',
       'projects/blocks/primitives/components/page-header/page-header.scss',
       'projects/blocks/primitives/components/tabs/tabs.scss',
@@ -12214,6 +12553,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/shared/load-more/load-more-footer.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/navigation/components/stepper/stepper.scss',
       'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/calendar/calendar.scss',
@@ -12236,9 +12576,25 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
+      'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
+      'projects/blocks/primitives/components/menu-item/menu-item.scss',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]
+  },
+  {
+    name: '--bx-text-disabled',
+    reference: 'var(--bx-text-disabled)',
+    category: 'components',
+    group: 'Component \u00B7 text',
+    kind: 'value',
+    scope: 'runtime',
+    themeEditable: false,
+    defaults: [],
+    fallbacks: [],
+    selectors: [],
+    sources: ['projects/blocks/primitives/components/collapsible/collapsible.scss']
   },
   {
     name: '--bx-text-heading',
@@ -12278,6 +12634,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]
@@ -12296,6 +12653,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]
@@ -12342,6 +12700,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/forms/components/time-wheel/time-wheel.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/modal/components/shared/ui/banner/modal-banner.scss',
       'projects/blocks/modal/components/views/centered/modal-centered.scss',
       'projects/blocks/modal/components/views/side/modal-side.scss',
@@ -12389,6 +12748,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/forms/components/search-input/search-input.scss',
       'projects/blocks/forms/components/select/select.scss',
       'projects/blocks/forms/components/slide-toggle/slide-toggle.scss',
+      'projects/blocks/forms/components/swipe-action-panel/swipe-action-panel.scss',
       'projects/blocks/forms/components/time-picker/time-picker.scss',
       'projects/blocks/forms/components/time-wheel/time-wheel.scss',
       'projects/blocks/navigation/components/shared/navigation-item/navigation-item.scss',
@@ -12400,7 +12760,6 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
       'projects/blocks/primitives/components/breadcrumb-trail/breadcrumb-trail.scss',
       'projects/blocks/primitives/components/calendar/calendar.scss',
       'projects/blocks/primitives/components/card/card.scss',
-      'projects/blocks/primitives/components/collapsible/collapsible.scss',
       'projects/blocks/primitives/components/divider/divider.scss',
       'projects/blocks/primitives/components/loading-indicator/loading-indicator.scss',
       'projects/blocks/primitives/components/menu-item/menu-item.scss',
@@ -12423,6 +12782,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]
@@ -12441,6 +12801,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]
@@ -12472,6 +12833,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]
@@ -12490,6 +12852,7 @@ export const CSS_TOKEN_CATALOG: readonly ICssToken[] = [
     sources: [
       'global',
       'projects/blocks/forms/components/button/button.scss',
+      'projects/blocks/forms/constants/swipe-actions.constants.ts',
       'projects/blocks/primitives/constants/tag.constants.ts',
       'projects/blocks/toastr/components/views/simple-toast/simple-toast.scss'
     ]

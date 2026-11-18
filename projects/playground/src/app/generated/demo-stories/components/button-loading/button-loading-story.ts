@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Button } from '@filip.mazev/blocks/forms';
+
 @Component({
   selector: 'app-button-loading-story',
   imports: [Button],
@@ -16,13 +17,15 @@ import { Button } from '@filip.mazev/blocks/forms';
 })
 export class ButtonLoadingStory {
   public readonly args: InputSignal<
-    Pick<DemoInputs<Button>, 'variant' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'> & {
-      content: string;
-    }
+    Pick<
+      DemoInputs<Button>,
+      'variant' | 'shape' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'
+    > & { content: string }
   > = input.required<
-    Pick<DemoInputs<Button>, 'variant' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'> & {
-      content: string;
-    }
+    Pick<
+      DemoInputs<Button>,
+      'variant' | 'shape' | 'color' | 'outlined' | 'elevated' | 'disabled' | 'loading' | 'interactive' | 'surfaceEffects' | 'glassiness'
+    > & { content: string }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

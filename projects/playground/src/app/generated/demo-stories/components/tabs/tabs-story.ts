@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Tab, TabContentDirective, Tabs } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-tabs-story',
   imports: [Tabs, Tab, TabContentDirective],
@@ -15,8 +16,46 @@ import { Tab, TabContentDirective, Tabs } from '@filip.mazev/blocks/primitives';
   styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
 })
 export class TabsStory {
-  public readonly args: InputSignal<Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & { content: string }> = input.required<
-    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & { content: string }
+  public readonly args: InputSignal<
+    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & { content: string } & {
+      firstLabel: DemoInputs<Tab>['label'];
+      firstDisabled: DemoInputs<Tab>['disabled'];
+      firstColor: DemoInputs<Tab>['color'];
+      firstTextColor: DemoInputs<Tab>['textColor'];
+      firstHighlightColor: DemoInputs<Tab>['highlightColor'];
+      firstContentColor: DemoInputs<Tab>['contentColor'];
+      firstIcon: DemoInputs<Tab>['icon'];
+      firstEndIcon: DemoInputs<Tab>['endIcon'];
+    } & {
+      secondLabel: DemoInputs<Tab>['label'];
+      secondDisabled: DemoInputs<Tab>['disabled'];
+      secondColor: DemoInputs<Tab>['color'];
+      secondTextColor: DemoInputs<Tab>['textColor'];
+      secondHighlightColor: DemoInputs<Tab>['highlightColor'];
+      secondContentColor: DemoInputs<Tab>['contentColor'];
+      secondIcon: DemoInputs<Tab>['icon'];
+      secondEndIcon: DemoInputs<Tab>['endIcon'];
+    }
+  > = input.required<
+    Pick<DemoInputs<Tabs>, 'variant' | 'ariaLabel' | 'dragSelection' | 'selectedValue'> & { content: string } & {
+      firstLabel: DemoInputs<Tab>['label'];
+      firstDisabled: DemoInputs<Tab>['disabled'];
+      firstColor: DemoInputs<Tab>['color'];
+      firstTextColor: DemoInputs<Tab>['textColor'];
+      firstHighlightColor: DemoInputs<Tab>['highlightColor'];
+      firstContentColor: DemoInputs<Tab>['contentColor'];
+      firstIcon: DemoInputs<Tab>['icon'];
+      firstEndIcon: DemoInputs<Tab>['endIcon'];
+    } & {
+      secondLabel: DemoInputs<Tab>['label'];
+      secondDisabled: DemoInputs<Tab>['disabled'];
+      secondColor: DemoInputs<Tab>['color'];
+      secondTextColor: DemoInputs<Tab>['textColor'];
+      secondHighlightColor: DemoInputs<Tab>['highlightColor'];
+      secondContentColor: DemoInputs<Tab>['contentColor'];
+      secondIcon: DemoInputs<Tab>['icon'];
+      secondEndIcon: DemoInputs<Tab>['endIcon'];
+    }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

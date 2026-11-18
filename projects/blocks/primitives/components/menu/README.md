@@ -70,3 +70,21 @@ materialization spring. Live reduced motion snaps movement; focus outlines remai
 ## Playground
 
 Open `/components/menu` for a working example and its current value or action result.
+
+## Shared swipe actions
+
+Import `SwipeActionsDirective` from `@filip.mazev/blocks/forms` and apply `bxSwipeActions` to a MenuItem to share touch, trackpad and pointer gestures with
+native list-row integrations. Configure `leftSwipeActions`/`rightSwipeActions`; right-click and keyboard context invocation use the same command definitions.
+Compact menus show horizontal capsules with delayed hover/focus names; taller rows show captions underneath, with immediate tooltips only when truncated.
+
+The rounded row material moves with its primary control, action controls preserve their semantic hover/active fills, and overflow uses circular gutter controls
+with spring paging and directional fades. Promise handlers keep their action visible and busy until success; failure permits explicit retry. See
+[Swipe actions](../../../forms/directives/swipe-actions/README.md). Both `/components/menu` and `/components/menu-item` include the complete Examples section.
+
+Shared swipe actions have a dedicated `/components/swipe-actions` Playground page. It demonstrates ordered appearance motion, immediate collapse interruption,
+cancelable full pointer/touch swipes, trackpad reveal, reduced motion, and asynchronous failure/retry. Content translates without being resized.
+
+Shared swipe rows move their existing rounded content hover material intact while a content gap separates it from transparent action gutters. Full-swipe promise
+handlers keep the stretched capsule visible for loading and retry; successful commands can collapse or dismiss the row. See the
+[shared Swipe actions lifecycle](../../../forms/directives/swipe-actions/README.md#asynchronous-lifecycle) and the Archive/Delete examples for application-owned
+removal after the exit.

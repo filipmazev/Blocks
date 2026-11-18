@@ -14,6 +14,7 @@ import { Button, BxError, Checkbox, CheckboxIndicator, FormField, InputField, Ra
 import { Icon } from '@filip.mazev/blocks/icons';
 import { ModalBanner, ModalService } from '@filip.mazev/blocks/modal';
 import {
+  Alert,
   ContextMenuDirective,
   DropdownDirective,
   Menu,
@@ -38,6 +39,7 @@ import { EssentialsExamples } from '@playground/components/screens/library-compo
 import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
 import { InfiniteScrollExamples } from '@playground/components/screens/library-components/infinite-scroll-examples/infinite-scroll-examples';
 import { MenuShortcutExamples } from '@playground/components/screens/library-components/menu-shortcut-examples/menu-shortcut-examples';
+import { MenuSwipeExamples } from '@playground/components/screens/library-components/menu-swipe-examples/menu-swipe-examples';
 import { PageExamples } from '@playground/components/screens/library-components/page-examples/page-examples';
 import { ResizeHandleExamples } from '@playground/components/screens/library-components/resize-handle-examples/resize-handle-examples';
 import { SearchExamples } from '@playground/components/screens/library-components/search-examples/search-examples';
@@ -60,6 +62,7 @@ import { ComponentDialog } from './component-dialog';
 @Component({
   selector: 'app-component-demo',
   imports: [
+    Alert,
     NgTemplateOutlet,
     PageExamples,
     BottomDrawerExamples,
@@ -78,6 +81,7 @@ import { ComponentDialog } from './component-dialog';
     SearchExamples,
     EssentialsExamples,
     MenuShortcutExamples,
+    MenuSwipeExamples,
     TagExamples,
     StepperExamples,
     SideNavExamples,
@@ -121,11 +125,14 @@ export class ComponentDemo {
 
   private readonly contextMenu: Signal<ContextMenuDirective | undefined> = viewChild(ContextMenuDirective);
 
+  protected readonly section: WritableSignal<string> = signal('playground');
+
   protected readonly entry: Signal<ComponentExample> = computed(
     () => COMPONENT_EXAMPLES.find((item) => item.id === this.routeData()['componentId']) ?? COMPONENT_EXAMPLES[0]
   );
 
   protected readonly count: WritableSignal<number> = signal(0);
+  protected readonly tooltipDwell: WritableSignal<number> = signal(400);
 
   protected readonly status: WritableSignal<string> = signal('Ready to try.');
   protected readonly fieldValue: WritableSignal<string> = signal('');
@@ -179,6 +186,12 @@ export class ComponentDemo {
 
   protected updateField(event: Event): void {
     this.fieldValue.set((event.target as HTMLInputElement).value);
+  }
+
+  protected setTooltipDwell(value: unknown): void {
+    const delay = Number(value);
+
+    this.tooltipDwell.set(Number.isFinite(delay) ? Math.max(0, delay) : 0);
   }
 
   protected openContextMenu(event: MouseEvent | KeyboardEvent): void {

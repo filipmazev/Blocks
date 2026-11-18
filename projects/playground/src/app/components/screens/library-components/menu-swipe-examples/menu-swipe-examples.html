@@ -1,0 +1,152 @@
+<section class="examples" aria-label="Swipe and context actions">
+    <h3>Swipe and context actions</h3>
+    <p>
+        Use a horizontal two-finger trackpad gesture, touch swipe, or mouse drag. Right-click and Shift+F10 expose the same commands. Vertical scrolling remains
+        native. On a trackpad, let multiple actions finish appearing, ease off and push outward again to stretch the edge action. You can also start a fresh
+        swipe anywhere on the item. Reveal follows your swipe directly. Stretching beyond reveal resists more at first and becomes easier as you continue. Drag
+        back before the commit threshold to cancel. Trackpads activate at that threshold; pointer and touch drags activate on release beyond it; reverse to
+        cancel. Close the exposed side before opening the other.
+    </p>
+    <p>
+        Compare the equal-sized Archive and Delete rows below: Both use the same strong stretch resistance and reveal the same way. Wider rows reduce extra
+        resistance to keep the gesture manageable. When stretching toward activation, Delete resists strongly at the start, moderately in the middle and very
+        little near the end. Reverse the stretch to cancel. Archive and Delete simulate API requests: the stretched action keeps its spinner while pending,
+        exposes Retry on failure, then removes the row on success. Turn off “Remove completed rows” to animate closed instead. Download always collapses after
+        success.
+    </p>
+    <div #settings class="settings">
+        <bx-slide-toggle subscriptSizing="dynamic" label="Full-swipe actions" [checked]="fullSwipe()" (checkedChange)="fullSwipe.set($event)" />
+        <bx-slide-toggle subscriptSizing="dynamic" label="RTL layout" [checked]="rtl()" (checkedChange)="rtl.set($event)" />
+        <bx-slide-toggle subscriptSizing="dynamic" label="Fail next download" [checked]="failNext()" (checkedChange)="failNext.set($event)" />
+        <bx-slide-toggle
+            subscriptSizing="dynamic"
+            label="Fail next archive/delete"
+            [checked]="failNextRemoval()"
+            (checkedChange)="failNextRemoval.set($event)" />
+        <bx-slide-toggle subscriptSizing="dynamic" label="Remove completed rows" [checked]="removeRows()" (checkedChange)="removeRows.set($event)" />
+        <button bx-button type="button" variant="tonal" (click)="resetRows()">Restore rows</button>
+        <button bx-button type="button" variant="tonal" [bxDropdown]="overlayMenu"><bx-icon name="panel-top" size="20" />Open overlay menu</button>
+        <button
+            #nestedRoot="bxMenuTrigger"
+            bx-button
+            type="button"
+            variant="tonal"
+            menuLabel="Nested action menu"
+            [bxMenuTrigger]="nestedMenu"
+            [menuHover]="false">
+            Open nested menu
+        </button>
+    </div>
+    <ul class="messages" [attr.dir]="rtl() ? 'rtl' : 'ltr'">
+        @for (message of messages(); track message) {
+            <li
+                bxSwipeActions
+                [swipeFullAction]="fullSwipe()"
+                [swipeDismissFocus]="settings"
+                [leftSwipeActions]="
+                    message === 'Archive comparison'
+                        ? archive()
+                        : message === 'More project actions'
+                          ? overflow()
+                          : message === 'Project update'
+                            ? left()
+                            : right()
+                "
+                [rightSwipeActions]="message.endsWith('comparison') ? [] : (readActions().get(message) ?? [])"
+                (swipeDismissed)="dismissed(message, $event)"
+                (swipeAction)="selected($event)"
+                (swipeActionError)="failed($event)">
+                <app-swipe-message-row [label]="message" [unread]="unreadMessages().has(message)" (open)="result.set(message + ' opened.')" />
+            </li>
+        }
+    </ul>
+    <p>The constrained groups below and in “More project actions” stay open when you press a disabled arrow at either end.</p>
+    <h4>Menu items use the same behavior</h4>
+    <div class="scroll-menu" [attr.dir]="rtl() ? 'rtl' : 'ltr'">
+        <bx-menu>
+            <bx-menu-item label="Standard command" icon="folder" (action)="result.set('Standard command activated.')" />
+            <bx-menu-item
+                bxSwipeActions
+                label="Left actions"
+                icon="file"
+                [swipeFullAction]="fullSwipe()"
+                [leftSwipeActions]="left()"
+                (swipeAction)="selected($event)"
+                (swipeActionError)="failed($event)"
+                (action)="result.set('Left row activated.')" />
+            <bx-menu-item
+                bxSwipeActions
+                label="Right action"
+                icon="file"
+                [swipeFullAction]="fullSwipe()"
+                [rightSwipeActions]="right()"
+                (swipeAction)="selected($event)"
+                (action)="result.set('Right row activated.')" />
+            <bx-menu-item
+                bxSwipeActions
+                label="Both directions"
+                icon="palette"
+                [swipeFullAction]="fullSwipe()"
+                [leftSwipeActions]="left()"
+                [rightSwipeActions]="right()"
+                (swipeAction)="selected($event)"
+                (swipeActionError)="failed($event)"
+                (action)="result.set('Both-directions row activated.')" />
+            <bx-menu-item
+                bxSwipeActions
+                label="Disabled and loading actions"
+                icon="cloud"
+                [swipeFullAction]="fullSwipe()"
+                [leftSwipeActions]="unavailable"
+                (swipeAction)="selected($event)" />
+            <bx-menu-item
+                bxSwipeActions
+                label="Constrained action group"
+                icon="files"
+                [swipeFullAction]="fullSwipe()"
+                [leftSwipeActions]="overflow()"
+                (swipeAction)="selected($event)"
+                (swipeActionError)="failed($event)" />
+            <bx-menu-item bxSwipeActions label="Disabled row" icon="lock" [swipeFullAction]="fullSwipe()" [disabled]="true" [leftSwipeActions]="left()" />
+            <bx-menu-item
+                bxSwipeActions
+                label="Custom context menu"
+                icon="settings"
+                [swipeFullAction]="fullSwipe()"
+                [leftSwipeActions]="left()"
+                [bxContextMenu]="customMenu"
+                (swipeAction)="selected($event)"
+                (swipeActionError)="failed($event)" />
+        </bx-menu>
+    </div>
+    <output class="result" aria-live="polite">{{ result() }}</output>
+</section>
+<ng-template #overlayMenu>
+    <bx-menu class="overlay-menu">
+        <bx-menu-item
+            bxSwipeActions
+            label="Overlay project"
+            icon="folder"
+            [swipeFullAction]="fullSwipe()"
+            [leftSwipeActions]="left()"
+            [rightSwipeActions]="right()"
+            (swipeAction)="selected($event)"
+            (swipeActionError)="failed($event)"
+            (action)="result.set('Overlay project activated.')" />
+        <bx-menu-item label="Ordinary overlay command" icon="check" (action)="result.set('Ordinary overlay command activated.')" />
+    </bx-menu>
+</ng-template>
+<ng-template #nestedMenu>
+    <bx-menu class="overlay-menu">
+        <bx-menu-item
+            label="Nested project"
+            icon="folder"
+            menuLabel="Project actions"
+            endIcon="chevron-right"
+            [bxMenuTrigger]="overlayMenu"
+            [menuParent]="nestedRoot" />
+    </bx-menu>
+</ng-template>
+<ng-template #customMenu>
+    <bx-menu><bx-menu-item label="Application-owned context command" icon="sparkles" (action)="result.set('Custom context command activated.')" /></bx-menu>
+</ng-template>

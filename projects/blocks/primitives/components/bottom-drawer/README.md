@@ -89,6 +89,9 @@ remain available.
 
 ## Behavior and accessibility
 
+An embedded drawer removes its surface when `open` becomes false. Reopening resets the previous closing and drag displacement state, so swipe dismissal cannot
+leave a translated surface in its containing scroll area. Pointer cancellation rolls back without closing.
+
 - Modal drawers render as `role="dialog"` with `aria-modal="true"`, an accessible name from `title` or `ariaLabel`, a CDK focus trap, focus restoration and a
   shared scroll lock.
 - The drag handle is a native button with an accessible name; tapping it requests dismissal and pointer dragging tracks recent velocity, cancels on Escape,

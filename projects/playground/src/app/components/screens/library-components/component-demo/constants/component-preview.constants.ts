@@ -24,6 +24,7 @@ export const COMPONENT_PREVIEW_KINDS: Readonly<Record<string, ComponentPreviewKi
   tooltip: 'tooltip',
   'tooltip-directive': 'tooltip-trigger',
   truncate: 'truncate',
+  'swipe-actions': 'menu-item',
   'menu-item': 'menu-item',
   menu: 'menu',
   dropdown: 'dropdown',

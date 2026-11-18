@@ -6,13 +6,16 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import type { IDemoAction } from '@playground/interfaces/idemo-action.interface';
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
+import { Button } from '@filip.mazev/blocks/forms';
+import { Icon } from '@filip.mazev/blocks/icons';
 import { SidePanel, SidePanelLayout } from '@filip.mazev/blocks/primitives';
+
 @Component({
   selector: 'app-side-panel-story',
-  imports: [SidePanel, SidePanelLayout],
+  imports: [SidePanel, SidePanelLayout, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './side-panel-story.html',
-  styleUrl: '../../../../components/shared/demo-workbench/demo-preview.scss'
+  styleUrls: ['../../../../components/shared/demo-workbench/demo-preview.scss', './side-panel-story.scss']
 })
 export class SidePanelStory {
   public readonly args: InputSignal<
@@ -27,7 +30,6 @@ export class SidePanelStory {
       | 'resizeDisableShrink'
       | 'resizeLabel'
       | 'resizeIdleDelay'
-      | 'container'
       | 'layoutMode'
       | 'backdrop'
       | 'closeOnBackdrop'
@@ -52,7 +54,6 @@ export class SidePanelStory {
       | 'resizeDisableShrink'
       | 'resizeLabel'
       | 'resizeIdleDelay'
-      | 'container'
       | 'layoutMode'
       | 'backdrop'
       | 'closeOnBackdrop'

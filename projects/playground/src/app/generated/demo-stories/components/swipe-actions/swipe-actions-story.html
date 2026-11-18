@@ -1,0 +1,49 @@
+<div
+    #swipeRow="bxSwipeActions"
+    bxSwipeActions
+    class="mail-row"
+    [swipeDismissFocus]="restoreFocus"
+    [swipeDisabled]="args().swipeDisabled"
+    [swipeLoading]="args().swipeLoading"
+    [leftSwipeActions]="args().leftSwipeActions"
+    [rightSwipeActions]="args().rightSwipeActions"
+    [swipePreviousLabel]="args().swipePreviousLabel"
+    [swipeNextLabel]="args().swipeNextLabel"
+    [swipeTooltipDwell]="args().swipeTooltipDwell"
+    [swipeFullAction]="args().swipeFullAction"
+    [swipeCompletion]="args().swipeCompletion"
+    [swipeRetryLabel]="args().swipeRetryLabel"
+    [swipeLoadingLabel]="args().swipeLoadingLabel"
+    [swipeCompletedLabel]="args().swipeCompletedLabel"
+    [attr.dir]="args().direction"
+    [style.inline-size.px]="args().rowWidth"
+    (swipeDismissed)="onAction('swipeDismissed', $event)"
+    (swipeAction)="onAction('swipeAction', $event); $event.action.id === 'read' && onAction('rowUnreadChange', !args().rowUnread)"
+    (swipeActionError)="onAction('swipeActionError', $event)">
+    <button
+        type="button"
+        class="message-row"
+        [disabled]="args().swipeDisabled || args().swipeLoading"
+        [attr.aria-label]="args().rowLabel"
+        [attr.aria-describedby]="'swipe-preview-status'"
+        (click)="onAction('rowOpen', $event)">
+        <span bxSwipeContent class="message-copy">
+            <span class="message-meta">
+                <span class="unread-dot" aria-hidden="true" [hidden]="!args().rowUnread"> </span>
+                <span class="message-time" id="swipe-preview-status"> {{ args().rowUnread ? 'Unread' : 'Read' }} · Today</span>
+            </span>
+            <strong class="message-heading">
+                {{ args().rowLabel }}
+            </strong>
+            <span class="message-subject">
+                {{ args().rowSubject }}
+            </span>
+            <span class="message-preview">
+                {{ args().rowPreview }}
+            </span>
+        </span>
+    </button>
+</div>
+<span #restoreFocus>
+    <button bx-button type="button" variant="tonal" (click)="swipeRow.restoreSwipeRow()">Restore row</button>
+</span>

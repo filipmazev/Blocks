@@ -7,6 +7,7 @@ import type { IDemoAction } from '@playground/interfaces/idemo-action.interface'
 import type { DemoInputs } from '@playground/types/demo-inputs.types';
 
 import { Step, Stepper } from '@filip.mazev/blocks/navigation';
+
 @Component({
   selector: 'app-stepper-story',
   imports: [Stepper, Step],
@@ -39,7 +40,35 @@ export class StepperStory {
       | 'glassiness'
       | 'surfaceEffects'
       | 'activeStep'
-    > & { content: string }
+    > & { content: string } & {
+      firstId: DemoInputs<Step>['id'];
+      firstLabel: DemoInputs<Step>['label'];
+      firstDescription: DemoInputs<Step>['description'];
+      firstIcon: DemoInputs<Step>['icon'];
+      firstDisabled: DemoInputs<Step>['disabled'];
+      firstOptional: DemoInputs<Step>['optional'];
+      firstEditable: DemoInputs<Step>['editable'];
+      firstCompleted: DemoInputs<Step>['completed'];
+      firstSkipped: DemoInputs<Step>['skipped'];
+      firstValid: DemoInputs<Step>['valid'];
+      firstError: DemoInputs<Step>['error'];
+      firstLoading: DemoInputs<Step>['loading'];
+      firstStatusText: DemoInputs<Step>['statusText'];
+    } & {
+      secondId: DemoInputs<Step>['id'];
+      secondLabel: DemoInputs<Step>['label'];
+      secondDescription: DemoInputs<Step>['description'];
+      secondIcon: DemoInputs<Step>['icon'];
+      secondDisabled: DemoInputs<Step>['disabled'];
+      secondOptional: DemoInputs<Step>['optional'];
+      secondEditable: DemoInputs<Step>['editable'];
+      secondCompleted: DemoInputs<Step>['completed'];
+      secondSkipped: DemoInputs<Step>['skipped'];
+      secondValid: DemoInputs<Step>['valid'];
+      secondError: DemoInputs<Step>['error'];
+      secondLoading: DemoInputs<Step>['loading'];
+      secondStatusText: DemoInputs<Step>['statusText'];
+    }
   > = input.required<
     Pick<
       DemoInputs<Stepper>,
@@ -64,7 +93,35 @@ export class StepperStory {
       | 'glassiness'
       | 'surfaceEffects'
       | 'activeStep'
-    > & { content: string }
+    > & { content: string } & {
+      firstId: DemoInputs<Step>['id'];
+      firstLabel: DemoInputs<Step>['label'];
+      firstDescription: DemoInputs<Step>['description'];
+      firstIcon: DemoInputs<Step>['icon'];
+      firstDisabled: DemoInputs<Step>['disabled'];
+      firstOptional: DemoInputs<Step>['optional'];
+      firstEditable: DemoInputs<Step>['editable'];
+      firstCompleted: DemoInputs<Step>['completed'];
+      firstSkipped: DemoInputs<Step>['skipped'];
+      firstValid: DemoInputs<Step>['valid'];
+      firstError: DemoInputs<Step>['error'];
+      firstLoading: DemoInputs<Step>['loading'];
+      firstStatusText: DemoInputs<Step>['statusText'];
+    } & {
+      secondId: DemoInputs<Step>['id'];
+      secondLabel: DemoInputs<Step>['label'];
+      secondDescription: DemoInputs<Step>['description'];
+      secondIcon: DemoInputs<Step>['icon'];
+      secondDisabled: DemoInputs<Step>['disabled'];
+      secondOptional: DemoInputs<Step>['optional'];
+      secondEditable: DemoInputs<Step>['editable'];
+      secondCompleted: DemoInputs<Step>['completed'];
+      secondSkipped: DemoInputs<Step>['skipped'];
+      secondValid: DemoInputs<Step>['valid'];
+      secondError: DemoInputs<Step>['error'];
+      secondLoading: DemoInputs<Step>['loading'];
+      secondStatusText: DemoInputs<Step>['statusText'];
+    }
   >();
 
   public readonly action: OutputEmitterRef<IDemoAction> = output<IDemoAction>();

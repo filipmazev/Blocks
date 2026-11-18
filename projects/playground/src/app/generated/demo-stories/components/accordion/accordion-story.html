@@ -1,4 +1,26 @@
-<bx-accordion [multiple]="args().multiple"
-    ><bx-accordion-item title="Overview">Project information</bx-accordion-item
-    ><bx-accordion-item title="Details">Workspace settings</bx-accordion-item></bx-accordion
->
+<bx-accordion [multiple]="args().multiple">
+    <bx-accordion-item
+        [id]="args().firstId"
+        [title]="args().firstTitle"
+        [expanded]="args().firstExpanded"
+        [disabled]="args().firstDisabled"
+        [readonly]="args().firstReadonly"
+        [readOnly]="args().firstReadOnly"
+        [headingLevel]="args().firstHeadingLevel"
+        [region]="args().firstRegion"
+        (expandedChange)="onAction('firstExpandedChange', $event)"
+        >Project information</bx-accordion-item
+    >
+    <bx-accordion-item
+        [id]="args().secondId"
+        [title]="args().secondTitle"
+        [expanded]="args().secondExpanded"
+        [disabled]="args().secondDisabled"
+        [readonly]="args().secondReadonly"
+        [readOnly]="args().secondReadOnly"
+        [headingLevel]="args().secondHeadingLevel"
+        [region]="args().secondRegion"
+        (expandedChange)="onAction('secondExpandedChange', $event)"
+        >Workspace settings</bx-accordion-item
+    >
+</bx-accordion>

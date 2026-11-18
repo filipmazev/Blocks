@@ -1,0 +1,17 @@
+<button
+    type="button"
+    class="message-row"
+    [disabled]="disabled() || loading()"
+    [attr.aria-label]="label()"
+    [attr.aria-describedby]="statusId"
+    (click)="open.emit($event)">
+    <span bxSwipeContent class="message-copy">
+        <span class="message-meta">
+            <span class="unread-dot" aria-hidden="true" [hidden]="!unread()"></span>
+            <span class="message-time" [id]="statusId">{{ unread() ? 'Unread' : 'Read' }} · Today</span>
+        </span>
+        <strong class="message-heading">{{ label() }}</strong>
+        <span class="message-subject">{{ subject() }}</span>
+        <span class="message-preview">{{ preview() }}</span>
+    </span>
+</button>

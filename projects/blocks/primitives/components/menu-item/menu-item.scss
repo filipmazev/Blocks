@@ -6,6 +6,10 @@
     width: 100%;
 }
 
+:host([bxSwipeActions]) {
+    border-radius: var(--bx-menu-item-radius, var(--bx-menu-inner-radius, #{nested-radius(radius(lg), calc(#{spacing(1)} + var(--bx-border-width, 1px)))}));
+}
+
 .bx-menu-item-btn {
     @include menu-item;
 }
@@ -14,7 +18,7 @@
     flex: 1 1 auto;
     min-width: 0;
     line-height: 1.4;
-    text-align: left;
+    text-align: start;
 }
 
 .bx-menu-item-content-wrapped {
@@ -42,4 +46,16 @@
         margin: 0;
         color: inherit;
     }
+}
+
+.bx-menu-item-leading {
+    flex: none;
+    margin-inline-end: spacing(2);
+}
+
+.bx-menu-item-visual {
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    min-inline-size: 0;
 }

@@ -1,6 +1,9 @@
+@use '../../../shared/styles/blocks-logo';
 @use '../../../shared/styles/palette-panels';
 
 :host {
+    @include blocks-logo.material;
+
     display: block;
     inline-size: 100%;
     aspect-ratio: 16 / 9;

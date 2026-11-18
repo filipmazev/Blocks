@@ -1,3 +1,5 @@
-<bx-virtual-collection #collection [items]="args().items" [itemRole]="args().itemRole" [trackBy]="trackItem"
-    ><ng-template let-item [bxVirtualItem]="collection">{{ item }}</ng-template></bx-virtual-collection
->
+<bx-virtual-collection #collection [items]="args().items" [itemRole]="args().itemRole" [trackBy]="trackItem">
+    <ng-template let-item [bxVirtualItem]="collection">
+        {{ item }}
+    </ng-template>
+</bx-virtual-collection>

@@ -1,0 +1,133 @@
+<span #pagerProbe class="bx-swipe-pager-probe" aria-hidden="true"></span> <span #captionProbe class="bx-swipe-caption-probe" aria-hidden="true">M</span>
+<span #fullProbe class="bx-swipe-full-probe" aria-hidden="true"></span>
+<span #gapProbe class="bx-swipe-gap-probe" aria-hidden="true"></span>
+<span #probe class="bx-swipe-probe" aria-hidden="true"></span><span #closeProbe class="bx-swipe-close-probe" aria-hidden="true"></span>
+<div [bxContextMenu]="contextTemplate" [bxContextMenuLongPress]="false">
+    @for (group of groups(); track group) {
+        <div
+            class="bx-swipe-action-region"
+            [class.has-overflow]="overflows(group)"
+            [class.is-stretching]="side() === group && stretch() > 0"
+            [class.can-scroll-before]="canScroll(group, -1)"
+            [class.can-scroll-after]="canScroll(group, 1)"
+            [class.bx-swipe-left]="group === 'left'"
+            [class.bx-swipe-right]="group === 'right'"
+            [style.visibility]="side() === group ? 'visible' : 'hidden'"
+            [style.--bx-action-reveal]="reveal() + 'px'"
+            [style.inline-size.px]="laneWidth(group)"
+            [inert]="side() !== group"
+            [attr.aria-hidden]="side() !== group || !interactive() ? true : null">
+            @if (overflows(group)) {
+                <span class="bx-swipe-page-slot" [inert]="fullActionId() !== null" (pointerdown)="!canScroll(group, -1) && $event.preventDefault()">
+                    <button
+                        bx-button
+                        type="button"
+                        variant="icon"
+                        color="grayscale"
+                        class="bx-swipe-page"
+                        [attr.tabindex]="interactive() ? null : -1"
+                        [attr.aria-label]="previousText()"
+                        [disabled]="!canScroll(group, -1)"
+                        (click)="$event.stopPropagation(); scrollActions(group, -1)">
+                        <bx-icon name="chevron-left" size="16" />
+                    </button>
+                </span>
+            }
+            <div #lane class="bx-swipe-lane" role="group" [attr.data-side]="group" (scroll)="updateScroll()">
+                @for (action of actions(group); track action.id) {
+                    <div
+                        class="bx-swipe-action"
+                        bxTooltipTouch="none"
+                        [bxTooltipDwell]="tooltipDwell()"
+                        [bxTooltip]="compact() ? actionText(action) : ''"
+                        [class.is-edge]="edge(group, action)"
+                        [inert]="fullActionId() !== null && fullActionId() !== action.id"
+                        [class.is-unavailable]="disabled() || !!action.disabled || busy(action)">
+                        <div class="bx-swipe-action-visual">
+                            <button
+                                bx-button
+                                type="button"
+                                variant="filled"
+                                shape="capsule"
+                                data-bx-selection-exclude
+                                [attr.tabindex]="interactive() ? null : -1"
+                                [attr.role]="origin().getAttribute('role') === 'menuitem' ? 'menuitem' : null"
+                                [id]="actionId(group, action)"
+                                [color]="action.color ?? (action.role === 'destructive' ? 'danger' : 'primary')"
+                                [disabled]="disabled() || !!action.disabled"
+                                [loading]="busy(action)"
+                                [attr.aria-label]="failed().includes(action.id) ? actionText(action) : text(action.ariaLabel ?? action.label)"
+                                (click)="invoke(action, 'swipe', $event)">
+                                <bx-icon
+                                    data-bx-swipe-glyph
+                                    [name]="
+                                        failed().includes(action.id)
+                                            ? (action.retryIcon ?? 'rotate-cw')
+                                            : completedAction()?.id === action.id
+                                              ? 'check'
+                                              : action.icon
+                                    "
+                                    [size]="iconSize()" />
+                                @if (fullActionId() === action.id && failed().includes(action.id)) {
+                                    <span
+                                        #retryCaption="bxTruncate"
+                                        class="bx-swipe-retry-label"
+                                        bxTooltipTouch="none"
+                                        bxTruncate
+                                        [bxTooltip]="actionText(action) | bxTruncatedText: retryCaption.truncated()"
+                                        >{{ actionText(action) }}</span
+                                    >
+                                }
+                            </button>
+                            <label
+                                #caption="bxTruncate"
+                                class="bx-swipe-action-label"
+                                dir="auto"
+                                bxTooltipTouch="none"
+                                [bxTruncate]="!compact()"
+                                [hidden]="compact()"
+                                [bxTooltip]="actionText(action) | bxTruncatedText: caption.truncated()"
+                                [for]="actionId(group, action)"
+                                >{{ actionText(action) }}</label
+                            >
+                        </div>
+                    </div>
+                }
+            </div>
+            @if (overflows(group)) {
+                <span class="bx-swipe-page-slot" [inert]="fullActionId() !== null" (pointerdown)="!canScroll(group, 1) && $event.preventDefault()">
+                    <button
+                        bx-button
+                        type="button"
+                        variant="icon"
+                        color="grayscale"
+                        class="bx-swipe-page"
+                        [attr.tabindex]="interactive() ? null : -1"
+                        [attr.aria-label]="nextText()"
+                        [disabled]="!canScroll(group, 1)"
+                        (click)="$event.stopPropagation(); scrollActions(group, 1)">
+                        <bx-icon name="chevron-right" size="16" />
+                    </button>
+                </span>
+            }
+        </div>
+    }
+</div>
+<ng-template #contextTemplate>
+    <bx-menu class="bx-swipe-context-actions">
+        @for (action of allActions(); track action.id) {
+            <bx-menu-item
+                [label]="actionText(action)"
+                [ariaLabel]="failed().includes(action.id) ? actionText(action) : action.ariaLabel"
+                [wrapLabel]="true"
+                [icon]="failed().includes(action.id) ? (action.retryIcon ?? 'rotate-cw') : completedAction()?.id === action.id ? 'check' : action.icon"
+                [danger]="action.role === 'destructive'"
+                [disabled]="disabled() || !!action.disabled"
+                [loading]="busy(action)"
+                [style.--bx-menu-item-color]="foreground(action)"
+                (action)="invoke(action, 'context', $event)" />
+        }
+    </bx-menu>
+</ng-template>
+
+<span class="bx-swipe-status" role="status">{{ statusText() }}</span>
