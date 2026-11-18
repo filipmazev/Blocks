@@ -578,16 +578,25 @@ TypeScript AST, with generated-source banners, formatting, strict generation rul
 `,"documentation/releases/1.5.4-alpha/README.md":`<h1>Blocks 1.5.4-alpha draft change notes</h1>
 <p>Draft for the next Alpha publication of <code>@filip.mazev/blocks</code>. This version has not been published; these notes may change before release.</p>
 <ul>
-<li>SidePanel adds optional <code>resizeInitialWidth</code> for a stable double-click/Enter reset and shrink reference when restoring saved widths. The Playground&#39;s
-persisted panel sizes now reset to their original defaults across navigation and refresh.</li>
-<li>Vertical labelled dividers retain visible line segments around their label, including intrinsically sized containers.</li>
-<li>Disabled collapsible and accordion-item triggers use the shared disabled foreground and opacity while readonly triggers retain enabled presentation.</li>
-<li>Embedded bottom drawers remove their closed surface, reset gesture state when reopened, and no longer leave translated content in scrollable overflow.</li>
-<li>Native sliders render themed tick marks above the custom rail when <code>showTickMarks</code> is enabled, independently of browser datalist painting.</li>
-<li>Added promise-based <code>IndexedDbService</code> to <code>@filip.mazev/blocks/core</code> with typed <code>open</code>, request/transaction helpers,
+<li><p>InputField, Select and MultiSelect inset projected <code>bxIconStart</code> and <code>bxIconEnd</code> visuals using the existing field adornment padding and gap in either text
+direction, fixing theme swatches and custom field icons against the control edges.</p>
+</li>
+<li><p>SidePanel adds optional <code>resizeInitialWidth</code> for a stable double-click/Enter reset and shrink reference when restoring saved widths. The Playground&#39;s
+persisted panel sizes now reset to their original defaults across navigation and refresh.</p>
+</li>
+<li><p>Vertical labelled dividers retain visible line segments around their label, including intrinsically sized containers.</p>
+</li>
+<li><p>Disabled collapsible and accordion-item triggers use the shared disabled foreground and opacity while readonly triggers retain enabled presentation.</p>
+</li>
+<li><p>Embedded bottom drawers remove their closed surface, reset gesture state when reopened, and no longer leave translated content in scrollable overflow.</p>
+</li>
+<li><p>Native sliders render themed tick marks above the custom rail when <code>showTickMarks</code> is enabled, independently of browser datalist painting.</p>
+</li>
+<li><p>Added promise-based <code>IndexedDbService</code> to <code>@filip.mazev/blocks/core</code> with typed <code>open</code>, request/transaction helpers,
 <code>get</code>/<code>getAll</code>/<code>put</code>/<code>delete</code>/<code>clear</code>/<code>count</code>, commit-aware transactions with rollback on operation failures, declarative <code>IIndexedDbStore</code> store/index
 additions, shared per-name connections, and SSR-safe <code>supported</code> availability reporting. See the
-<a href="utilities/indexed-db">IndexedDB guide</a>.</li>
+<a href="utilities/indexed-db">IndexedDB guide</a>.</p>
+</li>
 </ul>
 <h2>Shared row swipe actions</h2>
 <ul>
@@ -9319,6 +9328,8 @@ Do not put buttons or links inside another control&#39;s icon slots. Supply expl
 <p>Button, MenuItem and Tag support both positions. Chip, Alert, BottomDrawer and SidePanel support their existing leading positions. InputField and
 Select/MultiSelect accept these markers alongside their existing prefix/suffix slots. Buttons recognize the directive during loading, replace the custom visual
 with a measured spinner, and retain their dimensions and accessible name. <code>bxButtonIcon</code> remains supported.</p>
+<p>InputField and Select/MultiSelect custom visuals use the same <code>--bx-field-adornment-padding</code> and <code>--bx-field-adornment-gap</code> spacing as projected prefixes and
+suffixes, on both the leading and trailing sides. These logical insets follow the field&#39;s text direction.</p>
 <p>Data-driven renderers use templates: Select/MultiSelect options accept <code>startTemplate</code>/<code>endTemplate</code> and default <code>optionStartTemplate</code>/<code>optionEndTemplate</code>
 inputs; MenuItem and Tab accept <code>iconTemplate</code>/<code>endIconTemplate</code>; Step and picker actions accept <code>iconTemplate</code> and <code>pickerIconTemplate</code> respectively.
 <code>IIconData.template</code> works in navigation, modal headers and side-panel headers. <code>Icon.contentTemplate</code> or direct projection renders custom artwork inside the

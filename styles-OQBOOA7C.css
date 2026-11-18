@@ -4984,10 +4984,14 @@ input.bx-slider:disabled {
   align-items: center;
   flex: 0 0 auto;
 }
-.bx-field-prefix {
+.bx-field-prefix,
+.bx-input-wrapper > [bxIconStart],
+.bx-select-trigger > [bxIconStart] {
   padding-inline: var(--bx-field-adornment-padding, var(--bx-space-3, 0.75rem)) var(--bx-field-adornment-gap, var(--bx-space-2, 0.5rem));
 }
-.bx-field-suffix {
+.bx-field-suffix,
+.bx-input-actions > [bxIconEnd],
+.bx-select-trigger > [bxIconEnd] {
   padding-inline: var(--bx-field-adornment-gap, var(--bx-space-2, 0.5rem)) var(--bx-field-adornment-padding, var(--bx-space-3, 0.75rem));
 }
 .cdk-overlay-container {

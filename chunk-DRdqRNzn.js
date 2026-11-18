@@ -1,5 +1,5 @@
-import{u as Tn}from"./main-2C33VDGB.js";import"./chunk-BbVUWv06.js";import"./chunk-nJHBcAmt.js";import"./chunk-D2mL-a4s.js";import{J as Fr,Jr as bo,Jt as Pk,Ro as xo,ha as mb,na as lA,pi as ee,rr as Xl,tt as Go}from"./chunk-4Vch4aoV.js";var m=class t{args=ee.required();action=Pk();onAction(r,n){this.action.emit({name:r,payload:n})}static ɵfac=function(n){return new(n||t)};static ɵcmp=Fr({type:t,selectors:[[`app-breadcrumbs-story`]],inputs:{args:[1,`args`]},outputs:{action:`action`},decls:2,vars:6,consts:[[3,`minimumBreadcrumbs`,`divider`,`items`,`breadcrumbConfig`,`label`]],template:function(n,e){n&1&&(bo(0,`bx-breadcrumbs`,0),lA(1),Go()),n&2&&(xo(`minimumBreadcrumbs`,e.args().minimumBreadcrumbs)(`divider`,e.args().divider)(`items`,e.args().items)(`breadcrumbConfig`,e.args().breadcrumbConfig)(`label`,e.args().label),Xl(),mb(` `,e.args().content,`
-`))},dependencies:[Tn],styles:[`
+import{g as it}from"./main-JBIMOPO7.js";import"./chunk-BbVUWv06.js";import"./chunk-nJHBcAmt.js";import"./chunk-D2mL-a4s.js";import{J as Fr,Jr as bo,Jt as Pk,Ro as xo,Yr as br,ha as mb,na as lA,pi as ee,rr as Xl,tt as Go}from"./chunk-4Vch4aoV.js";var x=class i{args=ee.required();action=Pk();onAction(r,t){this.action.emit({name:r,payload:t})}static ɵfac=function(t){return new(t||i)};static ɵcmp=Fr({type:i,selectors:[[`app-side-nav-story`]],inputs:{args:[1,`args`]},outputs:{action:`action`},decls:2,vars:5,consts:[[3,`collapsedChange`,`itemSelected`,`layoutChange`,`mobileOpenChange`,`config`,`groups`,`collapsed`,`mobileOpen`]],template:function(t,n){t&1&&(bo(0,`bx-side-nav`,0),br(`collapsedChange`,function(e){return n.onAction(`collapsedChange`,e)})(`itemSelected`,function(e){return n.onAction(`itemSelected`,e)})(`layoutChange`,function(e){return n.onAction(`layoutChange`,e)})(`mobileOpenChange`,function(e){return n.onAction(`mobileOpenChange`,e)}),lA(1),Go()),t&2&&(xo(`config`,n.args().config)(`groups`,n.args().groups)(`collapsed`,n.args().collapsed)(`mobileOpen`,n.args().mobileOpen),Xl(),mb(` `,n.args().content,`
+`))},dependencies:[it],styles:[`
 [_nghost-%COMP%] {
   display: flex;
   flex-direction: column;
@@ -228,4 +228,4 @@ import{u as Tn}from"./main-2C33VDGB.js";import"./chunk-BbVUWv06.js";import"./chu
   gap: var(--%NS%bx-space-4, 1rem);
   inline-size: min(100%, 32rem);
   min-inline-size: 0;
-}`]})};export{m as BreadcrumbsStory};
+}`]})};export{x as SideNavStory};

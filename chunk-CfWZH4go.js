@@ -1,5 +1,5 @@
-import{f as at}from"./main-2C33VDGB.js";import"./chunk-BbVUWv06.js";import"./chunk-nJHBcAmt.js";import"./chunk-D2mL-a4s.js";import{J as Fr,Jr as bo,Jt as Pk,Ro as xo,Yr as br,ha as mb,na as lA,pi as ee,rr as Xl,tt as Go}from"./chunk-4Vch4aoV.js";var u=class o{args=ee.required();action=Pk();onAction(t,n){this.action.emit({name:t,payload:n})}static ɵfac=function(n){return new(n||o)};static ɵcmp=Fr({type:o,selectors:[[`app-top-nav-story`]],inputs:{args:[1,`args`]},outputs:{action:`action`},decls:2,vars:4,consts:[[3,`itemSelected`,`openedChange`,`config`,`groups`,`opened`]],template:function(n,e){n&1&&(bo(0,`bx-top-nav`,0),br(`itemSelected`,function(r){return e.onAction(`itemSelected`,r)})(`openedChange`,function(r){return e.onAction(`openedChange`,r)}),lA(1),Go()),n&2&&(xo(`config`,e.args().config)(`groups`,e.args().groups)(`opened`,e.args().opened),Xl(),mb(` `,e.args().content,`
-`))},dependencies:[at],styles:[`
+import{u as Tn}from"./main-JBIMOPO7.js";import"./chunk-BbVUWv06.js";import"./chunk-nJHBcAmt.js";import"./chunk-D2mL-a4s.js";import{J as Fr,Jr as bo,Jt as Pk,Ro as xo,ha as mb,na as lA,pi as ee,rr as Xl,tt as Go}from"./chunk-4Vch4aoV.js";var m=class t{args=ee.required();action=Pk();onAction(r,n){this.action.emit({name:r,payload:n})}static ɵfac=function(n){return new(n||t)};static ɵcmp=Fr({type:t,selectors:[[`app-breadcrumbs-story`]],inputs:{args:[1,`args`]},outputs:{action:`action`},decls:2,vars:6,consts:[[3,`minimumBreadcrumbs`,`divider`,`items`,`breadcrumbConfig`,`label`]],template:function(n,e){n&1&&(bo(0,`bx-breadcrumbs`,0),lA(1),Go()),n&2&&(xo(`minimumBreadcrumbs`,e.args().minimumBreadcrumbs)(`divider`,e.args().divider)(`items`,e.args().items)(`breadcrumbConfig`,e.args().breadcrumbConfig)(`label`,e.args().label),Xl(),mb(` `,e.args().content,`
+`))},dependencies:[Tn],styles:[`
 [_nghost-%COMP%] {
   display: flex;
   flex-direction: column;
@@ -228,4 +228,4 @@ import{f as at}from"./main-2C33VDGB.js";import"./chunk-BbVUWv06.js";import"./chu
   gap: var(--%NS%bx-space-4, 1rem);
   inline-size: min(100%, 32rem);
   min-inline-size: 0;
-}`]})};export{u as TopNavStory};
+}`]})};export{m as BreadcrumbsStory};
