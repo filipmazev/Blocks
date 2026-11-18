@@ -2,13 +2,21 @@
 
 Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has not been published; these notes may change before release.
 
+- SidePanel adds optional `resizeInitialWidth` for a stable double-click/Enter reset and shrink reference when restoring saved widths. The Playground's
+  persisted panel sizes now reset to their original defaults across navigation and refresh.
 - Vertical labelled dividers retain visible line segments around their label, including intrinsically sized containers.
 - Disabled collapsible and accordion-item triggers use the shared disabled foreground and opacity while readonly triggers retain enabled presentation.
 - Embedded bottom drawers remove their closed surface, reset gesture state when reopened, and no longer leave translated content in scrollable overflow.
 - Native sliders render themed tick marks above the custom rail when `showTickMarks` is enabled, independently of browser datalist painting.
+- Added promise-based `IndexedDbService` to `@filip.mazev/blocks/core` with typed `open`, request/transaction helpers,
+  `get`/`getAll`/`put`/`delete`/`clear`/`count`, commit-aware transactions with rollback on operation failures, declarative `IIndexedDbStore` store/index
+  additions, shared per-name connections, and SSR-safe `supported` availability reporting. See the
+  [IndexedDB guide](../../../projects/playground/src/app/components/screens/utilities/components/indexed-db/README.md).
 
 ## Shared row swipe actions
 
+- Touch swipes suppress native vertical scrolling after horizontal intent is claimed, preventing diagonal drift from scrolling the page or enclosing menu.
+  Gestures that start vertically retain native scrolling; release, cancellation and additional touches remove the gesture's scroll suppression.
 - Successful actions display a checkmark during their existing closing/exit animation, with translated `swipeCompletedLabel` status feedback and no added dwell.
   Only returned promises show a loading spinner; synchronous Read/Unread updates remain immediate even while ongoing wheel input retains the row.
 - The primary control now translates at fixed dimensions with its rounded hover/active highlight intact. Added `--bx-swipe-content-gap` (default `spacing(2)`)
@@ -421,3 +429,41 @@ accessibility.
 - Shared surface pressure adapts to the input modality and preserves velocity through repeated presses. Reduced motion removes deformation and all CSS delays.
 - Menu and option selection surfaces use a clipped decorative layer so spring overshoot cannot create scrolling. Field, disclosure and panel feedback uses
   shared motion curves. The runtime guide records interaction contracts and Playground review routes across component families.
+
+- Swipe actions retain pills while the action group fits and use icon-only circles when the lane would need carousel paging. Smaller paging gutters preserve
+  keyboard access, named actions and full-swipe behavior.
+
+- Select and MultiSelect options now support typed per-row swipe commands, leading/trailing visual templates, trailing icons and viewport-bounded `panelWidth`.
+  Option commands use a grid popup with separate selection and action cells; ordinary options retain listbox semantics. No migration is required for existing
+  option data.
+- Added `IconContentDirective` (`bxIconStart` / `bxIconEnd`) for custom projected visuals in supported icon positions, including loading buttons and menu items.
+  Icon, data-driven icon configurations, tabs, step markers, picker actions, date presets and breadcrumb separators accept custom visual templates while
+  preserving built-in icons and semantic feedback. `Icon.name` and `IIconData.name` are now optional when custom artwork is provided.
+
+Consumers reading `Icon.name()` or `IIconData.name` must now allow `undefined` for template-only visuals. Existing named icon configuration continues to work.
+
+## Saved-theme interaction refinements
+
+- Exposed select/menu swipe rows retain their local highlight without committing selection; selected and danger colors remain authoritative.
+- Service modals now place their existing task boundary above open native popovers, retain ownership of the invoking select/menu, and preserve the select while
+  Rename/Delete dialogs are used. Added Core's `inheritOverlayOwnership` helper for logical portal ownership without theme copying.
+- Theme Studio save actions span the editor width. Saved-theme downloads show brief asynchronous busy feedback before creating their JSON file, with timer
+  cleanup on destruction.
+- Home's Orby controls clamp cached stage width during Theme Studio expansion and resizing, eliminating the transient horizontal page scrollbar.
+
+- Context-menu backdrops retain their invoking surface's ownership. Select/Dropdown ignore the trailing secondary-button `auxclick` produced by physical
+  right-click release, preserving the parent while the option context menu is open.
+- Palette selection preserves geometry and other edits while previewing the chosen palette's colors. On a built-in draft, palette changes alone do not show Save
+  Theme. A saved theme retains its identity and exposes Save Changes / Save As New Theme when its preview palette differs. Reset keeps a built-in draft's
+  palette, or restores a saved theme's complete original snapshot.
+- Component size metadata now sits inside the Playground preview at its padded top-start corner. Generic swipe rows expose active reveal state on the moving
+  control, and shared/generated mail previews retain their highlight.
+
+- Appearance's Create a theme button matches the adjacent selector height. Menu/option hover material continues to track the moving row and its revealed action
+  lane.
+- Icon-template and custom-content toggles/presets now exercise actual template inputs in the component Playgrounds, with synchronized generated examples and
+  copyable source.
+
+- Custom theme names require 1–25 characters after whitespace normalization, enforced by naming/rename dialogs and persistence validation. Select and
+  MultiSelect default option labels stay on one line and show their full label in a tooltip only when truncated, respecting `tooltipOnTruncate`; custom
+  templates retain their own wrapping. Theme triggers use the same truncation feedback while retaining their color swatches.
