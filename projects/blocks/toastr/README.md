@@ -71,6 +71,9 @@ ref.afterClosed$.subscribe(() => console.log('Notification closed'));
 `queueToast(ContentComponent, config?)` queues custom content. Excess requests wait until an open slot becomes available; `maxOpened` defaults to four across
 positions.
 
+Pass `modal: this.modal` from a component extending `Modal` to show a toast inside its dialog, above the backdrop. Both custom and simple toasts accept this
+option. The toast stays with its owning dialog across responsive layout changes, and closing that dialog dismisses its active and queued toasts.
+
 `Toast<D, R>` provides typed reactive `data()`, the `toast` reference, `onToastInit()`, and `close(result?)`. `ToastRef<D, R>` exposes `close(result?)`,
 `pause()`, `resume()`, reactive `config()` and `data()`, and `afterClosed$`, `onPause$`, and `onResume$` observables.
 

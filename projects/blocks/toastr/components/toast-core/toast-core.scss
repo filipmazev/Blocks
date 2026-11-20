@@ -159,8 +159,11 @@
 
 .toast-close-button {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    inset-block-start: 0.5rem;
+    inset-inline-end: 0.5rem;
+    min-inline-size: spacing(8);
+    min-block-size: spacing(8);
+    padding: 0;
     background: none;
     border: none;
     cursor: pointer;

@@ -114,6 +114,13 @@
                 <input bxInput value="AB" aria-invalid="true" [id]="previewId + '-error'" />
             </bx-form-field>
         }
+        @case ('file-upload') {
+            <div class="preview-upload">
+                <bx-icon name="cloud-upload" size="28" />
+                <strong>Drag files here</strong>
+                <button bx-button type="button" variant="tonal">Browse files</button>
+            </div>
+        }
         @case ('form') {
             <div class="preview-form-preview">
                 <strong class="preview-form-title">Create workspace</strong>

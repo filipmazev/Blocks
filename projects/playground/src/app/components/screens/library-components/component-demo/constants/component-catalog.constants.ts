@@ -534,6 +534,17 @@ export const COMPONENT_EXAMPLES: readonly IComponentExample[] = [
     example: '<bx-range-slider label="Budget" [(value)]="range" [discrete]="true" />'
   },
   {
+    id: 'file-upload',
+    title: 'File upload',
+    group: 'Forms',
+    readme: 'projects/blocks/forms/components/file-upload/README.md',
+    symbol: 'FileUpload',
+    package: '@filip.mazev/blocks/forms',
+    selector: 'bx-file-upload',
+    description: 'A drop zone and file picker with application-owned progress, retry, and background notifications.',
+    example: '<bx-file-upload [session]="uploads" [selection]="{ multiple: true }" />'
+  },
+  {
     id: 'select',
     title: 'Select',
     group: 'Forms',

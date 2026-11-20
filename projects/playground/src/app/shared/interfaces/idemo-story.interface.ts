@@ -15,6 +15,6 @@ export interface IDemoStory {
   source: string;
   styles?: string;
   componentType?: string;
-  adapter?: 'modal' | 'toast';
+  adapter?: 'modal' | 'toast' | 'file-upload';
   load: () => Promise<Type<unknown>>;
 }

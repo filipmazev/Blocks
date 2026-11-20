@@ -26,9 +26,9 @@ import {
 import { studioCreateCommand } from '@playground/shared/helpers/theme-studio-setup.helpers';
 
 @Component({
-  host: { role: 'dialog', 'aria-modal': 'true', '[attr.aria-label]': 'heading().text' },
   selector: 'app-theme-studio-setup',
   imports: [Button, Icon, Code, Tabs, Tab, RouterLink, Stepper, ModalFooterDirective, ModalHeaderDirective],
+  providers: [ClipboardFeedbackService],
   templateUrl: './theme-studio-setup.html',
   styleUrl: './theme-studio-setup.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

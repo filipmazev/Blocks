@@ -24,6 +24,8 @@ notification instead of stacking duplicates. Failed writes do not show a success
 The notification uses the shared neutral toast surface, primary text and a check icon. It appears at the bottom right for 2.4 seconds without a close action or
 progress bar. It follows the active palette and material preferences.
 
+In the setup wizard, both Copy buttons share a notification hosted inside the dialog, above the backdrop.
+
 ## Behavior and accessibility
 
 The toast announces success through a polite status region without moving focus. Blocks owns timing, focus/hover pause behavior and reduced motion. The source

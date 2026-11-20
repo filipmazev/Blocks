@@ -18,11 +18,27 @@ const config = ts.readConfigFile(path.join(root, 'tsconfig.json'), ts.sys.readFi
 const options = ts.parseJsonConfigFileContent(config.config, ts.sys, root).options;
 const entryPoints = ['forms', 'primitives', 'icons', 'navigation', 'modal', 'toastr', 'effects'];
 const adapters = {
-  modal: 'projects/playground/src/app/components/screens/library-components/modal/modal.ts',
-  toast: 'projects/playground/src/app/components/screens/library-components/toastr/toastr.ts'
+  modal: {
+    source: 'projects/playground/src/app/components/screens/library-components/modal/modal.ts',
+    packageName: 'modal',
+    contracts: ['IModalConfig', 'IModalStyleConfig', 'IModalPatch', 'IBottomSheetModalConfig']
+  },
+  toast: {
+    source: 'projects/playground/src/app/components/screens/library-components/toastr/toastr.ts',
+    packageName: 'toastr',
+    contracts: ['IToastConfig', 'IToastPatch', 'IQueueSimpleToastRequest']
+  },
+  'file-upload': {
+    source: 'projects/playground/src/app/components/screens/library-components/file-upload-demo/file-upload-demo.ts',
+    packageName: 'forms',
+    contracts: ['IFileUploadSelection', 'IFileUploadButton', 'IFileUploadSessionOptions', 'IFileUploadNotifications', 'IFileUploadAttempt']
+  }
 };
 const program = ts.createProgram(
-  [...entryPoints.map((entry) => path.join(root, `projects/blocks/${entry}/public-api.ts`)), ...Object.values(adapters).map((file) => path.join(root, file))],
+  [
+    ...entryPoints.map((entry) => path.join(root, `projects/blocks/${entry}/public-api.ts`)),
+    ...Object.values(adapters).map(({ source }) => path.join(root, source))
+  ],
   options
 );
 const checker = program.getTypeChecker();
@@ -238,11 +254,15 @@ function argumentProperty(symbol, type, defaultValue, prefix = '') {
 
 async function serviceStory(entry, recipe) {
   const adapter = recipe.adapter;
-  const sourceFile = program.getSourceFile(path.join(root, adapters[adapter]));
+  const { source, packageName, contracts } = adapters[adapter];
+  const sourceFile = program.getSourceFile(path.join(root, source));
   const declaration = sourceFile.statements.find(ts.isClassDeclaration);
   const input = declaration.members.find((member) => member.name?.getText() === 'args');
   const argsType = checker.getTypeAtLocation(input).getCallSignatures()[0].getReturnType();
-  const defaults = await readConstant(`projects/playground/src/app/shared/constants/${adapter}-story.constants.ts`, `${adapter.toUpperCase()}_STORY_DEFAULTS`);
+  const defaults = await readConstant(
+    `projects/playground/src/app/shared/constants/${adapter}-story.constants.ts`,
+    `${adapter.replaceAll('-', '_').toUpperCase()}_STORY_DEFAULTS`
+  );
   const args = { ...defaults, ...recipe.args };
   const properties = checker.getPropertiesOfType(argsType).map((symbol) => {
     const property = argumentProperty(symbol, checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration), args[symbol.name]);
@@ -252,22 +272,17 @@ async function serviceStory(entry, recipe) {
     }
     return property;
   });
-  const packageName = adapter === 'modal' ? 'modal' : 'toastr';
   const module = checker.getSymbolAtLocation(program.getSourceFile(path.join(root, `projects/blocks/${packageName}/public-api.ts`)));
-  const contracts =
-    adapter === 'modal'
-      ? ['IModalConfig', 'IModalStyleConfig', 'IModalPatch', 'IBottomSheetModalConfig']
-      : ['IToastConfig', 'IToastPatch', 'IQueueSimpleToastRequest'];
   for (const name of contracts) {
     let symbol = checker.getExportsOfModule(module).find((item) => item.name === name);
     if (!symbol) continue;
     if (symbol.flags & ts.SymbolFlags.Alias) symbol = checker.getAliasedSymbol(symbol);
     const type = checker.getDeclaredTypeOfSymbol(symbol);
-    for (const member of checker.getPropertiesOfType(type))
-      properties.push({
-        ...argumentProperty(member, checker.getTypeOfSymbolAtLocation(member, member.valueDeclaration), undefined, `${name}.`),
-        editor: 'documentation'
-      });
+    for (const member of checker.getPropertiesOfType(type)) {
+      const property = argumentProperty(member, checker.getTypeOfSymbolAtLocation(member, member.valueDeclaration), undefined, `${name}.`);
+      if (property.options?.length > 50) delete property.options;
+      properties.push({ ...property, editor: 'documentation' });
+    }
   }
   return {
     id: entry.id,
@@ -280,7 +295,7 @@ async function serviceStory(entry, recipe) {
     hasActions: true,
     adapter,
     className: declaration.name.text,
-    modulePath: '@playground/' + adapters[adapter].split('/src/app/')[1].replace(/\.ts$/, '')
+    modulePath: '@playground/' + source.split('/src/app/')[1].replace(/\.ts$/, '')
   };
 }
 

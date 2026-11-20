@@ -20,6 +20,7 @@ export type ComponentPreviewKind =
   | 'error'
   | 'field'
   | 'field-hint'
+  | 'file-upload'
   | 'form'
   | 'grid'
   | 'icon'

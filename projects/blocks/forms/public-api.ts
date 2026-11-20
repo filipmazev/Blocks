@@ -74,3 +74,26 @@ export * from '@forms/interfaces/iswipe-action-error.interface';
 export * from '@forms/types/swipe-actions.types';
 
 export type { ISwipeFullActionConfig } from '@forms/interfaces/iswipe-full-action-config.interface';
+
+export * from '@forms/classes/file-upload-session';
+export * from '@forms/components/file-upload/file-upload';
+export { FILE_UPLOAD_ACCEPTED_TYPES } from '@forms/constants/file-upload.constants';
+export type { IFileUploadAttempt } from '@forms/interfaces/ifile-upload-attempt.interface';
+export type { IFileUploadBatch } from '@forms/interfaces/ifile-upload-batch.interface';
+export type { IFileUploadButton } from '@forms/interfaces/ifile-upload-button.interface';
+export type { IFileUploadFileControl } from '@forms/interfaces/ifile-upload-file-control.interface';
+export type { IFileUploadItem } from '@forms/interfaces/ifile-upload-item.interface';
+export type { IFileUploadLabels } from '@forms/interfaces/ifile-upload-labels.interface';
+export type { IFileUploadNotifications } from '@forms/interfaces/ifile-upload-notifications.interface';
+export type { IFileUploadRejection } from '@forms/interfaces/ifile-upload-rejection.interface';
+export type { IFileUploadRequest } from '@forms/interfaces/ifile-upload-request.interface';
+export type { IFileUploadSelection } from '@forms/interfaces/ifile-upload-selection.interface';
+export type { IFileUploadSessionOptions } from '@forms/interfaces/ifile-upload-session-options.interface';
+export * from '@forms/services/file-upload.service';
+export type {
+  FileUploadHandler,
+  FileUploadPauseHandler,
+  FileUploadRejectionReason,
+  FileUploadStartMode,
+  FileUploadStatus
+} from '@forms/types/file-upload.types';

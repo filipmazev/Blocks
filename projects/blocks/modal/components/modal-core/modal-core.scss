@@ -56,7 +56,9 @@
     --bx-modal-backdrop-fill: var(--bx-modal-backdrop-tone);
 }
 
-:host > * {
+:host > bx-modal-backdrop,
+:host > bx-modal-centered,
+:host > bx-modal-side {
     pointer-events: auto;
 }
 

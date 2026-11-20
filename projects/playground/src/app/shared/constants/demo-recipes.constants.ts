@@ -472,6 +472,15 @@ export const DEMO_RECIPES: Readonly<Record<string, IDemoRecipe>> = {
     exclude: ['offset'],
     args: { embedded: true, modal: false, open: true, title: 'Project details', content: 'Workspace settings' }
   },
+  'file-upload': {
+    adapter: 'file-upload',
+    constraints: { maxFiles: { minimum: 1, integer: true }, maxFileSize: { minimum: 0, integer: true } },
+    presets: [
+      { name: 'Automatic', args: { automatic: true } },
+      { name: 'Single file', args: { multiple: false } },
+      { name: 'Known progress', args: { unknownProgress: false } }
+    ]
+  },
   'modal-backdrop': { use: 'modal-centered' },
   'modal-header': { use: 'modal-centered' },
   'modal-footer': { use: 'modal-centered' },

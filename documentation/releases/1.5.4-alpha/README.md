@@ -2,6 +2,17 @@
 
 Draft for the next Alpha publication of `@filip.mazev/blocks`. This version has not been published; these notes may change before release.
 
+- Added [FileUpload](../../../projects/blocks/forms/components/file-upload/README.md) to `@filip.mazev/blocks/forms`. The inline drop zone supports single or
+  multiple files, configurable file-type, size and count limits, manual or automatic start, translated actions and projected icons. Application-owned sessions
+  report progress, failure, retry, and optional cancellation and pause/resume. Queued files support leftward swipe removal. Rows use translatable icon buttons
+  with delayed tooltips. Clear all removes available rows. An optional live batch toast follows progress across navigation and updates to success in place.
+  Separate success and failure notifications list filenames and count only the files in the current upload or retry request. Failures include a Review files
+  link or compact Retry icon. A session position overrides the global Toastr position. Long filenames use ellipsis with a tooltip. Custom interfaces can bind
+  `session.files()` to read per-file state and use file-bound pause, resume, retry, cancel, and remove controls.
+- Toast close controls have a larger hit area and follow the trailing corner in both reading directions, leaving room for content and icons in RTL.
+- Custom and simple toasts can take an owning `modal` reference so they appear above that dialog's backdrop and close with it. The Theme Studio setup wizard
+  uses this for its clipboard confirmation.
+
 - InputField, Select and MultiSelect inset projected `bxIconStart` and `bxIconEnd` visuals using the existing field adornment padding and gap in either text
   direction, fixing theme swatches and custom field icons against the control edges.
 
