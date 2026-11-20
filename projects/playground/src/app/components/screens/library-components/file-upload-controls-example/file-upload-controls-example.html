@@ -1,0 +1,72 @@
+<section aria-labelledby="custom-upload-controls">
+    <h3 #heading id="custom-upload-controls" tabindex="-1">Custom upload controls</h3>
+    <p>This example renders its own rows from the session. The sample fails on its first attempt, and its toasts appear at the bottom left.</p>
+    <button type="button" bx-button variant="tonal" (click)="uploadSample()">Upload sample file</button>
+
+    @if (session.files().length) {
+        <ul>
+            @for (file of session.files(); track file.id) {
+                <li #row tabindex="-1">
+                    <strong
+                        #filenameOverflow="bxTruncate"
+                        bxTruncate
+                        [bxTooltipTouch]="filenameOverflow.truncated() ? 'tap' : 'none'"
+                        [attr.tabindex]="filenameOverflow.truncated() ? 0 : null"
+                        [bxTooltip]="file.file.name | bxTruncatedText: filenameOverflow.truncated()"
+                        [bxTooltipDwell]="600">
+                        <bdi>{{ file.file.name }}</bdi>
+                    </strong>
+                    <span role="status">
+                        @switch (file.status) {
+                            @case ('queued') {
+                                Ready to upload
+                            }
+                            @case ('uploading') {
+                                {{ file.paused ? 'Paused' : 'Uploading' }}
+                            }
+                            @case ('uploaded') {
+                                Uploaded
+                            }
+                            @case ('failed') {
+                                Upload failed
+                            }
+                            @case ('canceled') {
+                                Canceled
+                            }
+                        }
+                    </span>
+                    @if (file.status === 'uploading' && (!file.paused || file.progress !== undefined)) {
+                        <bx-progress-bar
+                            [mode]="file.progress === undefined ? 'indeterminate' : 'determinate'"
+                            [value]="file.progress ?? 0"
+                            [label]="(file.paused ? 'Paused ' : 'Uploading ') + file.file.name" />
+                    }
+                    <div class="actions">
+                        @if (file.pausable) {
+                            <button
+                                type="button"
+                                bx-button
+                                [disabled]="!file.canPause && !file.canResume"
+                                [loading]="file.pausePending ?? false"
+                                [attr.aria-label]="(file.paused ? 'Resume ' : 'Pause ') + file.file.name"
+                                (click)="file.paused ? file.resume() : file.pause()">
+                                {{ file.paused ? 'Resume' : 'Pause' }}
+                            </button>
+                        }
+                        @if (file.canCancel) {
+                            <button type="button" bx-button [attr.aria-label]="'Cancel ' + file.file.name" (click)="row.focus(); file.cancel()">Cancel</button>
+                        }
+                        @if (file.canRetry) {
+                            <button type="button" bx-button [attr.aria-label]="'Retry ' + file.file.name" (click)="row.focus(); file.retry()">Retry</button>
+                        }
+                        @if (file.canRemove && file.status !== 'uploading') {
+                            <button type="button" bx-button [attr.aria-label]="'Remove ' + file.file.name" (click)="heading.focus(); file.remove()">
+                                Remove
+                            </button>
+                        }
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</section>

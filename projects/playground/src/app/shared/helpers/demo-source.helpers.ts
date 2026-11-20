@@ -137,8 +137,77 @@ export function consumerValueType(story: IDemoStory, property: IDemoProperty, va
 }
 
 /** Export the configured service call and only the content components it actually needs. */
-export function serviceSourceFiles(adapter: 'modal' | 'toast', args: DemoArgs): ICodeFile[] {
+export function serviceSourceFiles(adapter: 'modal' | 'toast' | 'file-upload', args: DemoArgs): ICodeFile[] {
   const value = (name: string): string => serializeDemoValue(args[name], 3);
+
+  if (adapter === 'file-upload') {
+    return [
+      {
+        title: 'example.ts',
+        path: 'example.ts',
+        language: 'typescript',
+        content: `import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+
+import type { FileUploadSession, IFileUploadSelection } from '@filip.mazev/blocks/forms';
+
+import { FileUpload, FileUploadService } from '@filip.mazev/blocks/forms';
+
+@Component({
+  selector: 'app-example',
+  imports: [FileUpload],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<bx-file-upload [session]="uploads" [selection]="selection" />'
+})
+export class Example {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly fileUploadService = inject(FileUploadService);
+
+  public readonly selection: IFileUploadSelection = {
+    multiple: ${value('multiple')},
+    startMode: ${serializeDemoValue(args['automatic'] ? 'automatic' : 'manual')},
+    maxFiles: ${value('maxFiles')},
+    maxFileSize: ${value('maxFileSize')},
+    additionalTypes: ['.txt']
+  };
+  public readonly uploads: FileUploadSession = this.fileUploadService.createSession(
+    {
+      cancelable: true,
+      upload: ({ files }) => {
+        for (const attempt of files) {
+          let progress = 0;
+          let poll: ReturnType<typeof setInterval> | undefined;
+
+          const abort = (): void => clearInterval(poll);
+          const tick = (): void => {
+            progress += 20;
+
+            if (progress >= 100) {
+              abort();
+              attempt.signal.removeEventListener('abort', abort);
+              attempt.complete();
+            } else {
+              attempt.reportProgress(progress);
+            }
+          };
+
+          ${args['unknownProgress'] ? 'attempt.reportProgress(undefined);' : 'attempt.reportProgress(0);'}
+          poll = setInterval(tick, 450);
+          attempt.setPauseHandler((paused) => {
+            abort();
+
+            if (!paused) poll = setInterval(tick, 450);
+          });
+          attempt.signal.addEventListener('abort', abort, { once: true });
+        }
+      }
+    },
+    this.destroyRef
+  );
+}
+`
+      }
+    ];
+  }
 
   if (adapter === 'toast') {
     const closeLabel =

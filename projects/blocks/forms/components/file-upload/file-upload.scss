@@ -1,0 +1,172 @@
+@use '../../../core/styles/helpers' as *;
+
+:host {
+    display: block;
+    min-inline-size: 0;
+}
+
+.drop-zone {
+    display: grid;
+    justify-items: center;
+    gap: spacing(2);
+    min-inline-size: 0;
+    padding: var(--bx-file-upload-padding, #{spacing(5)});
+    border: var(--bx-file-upload-border-width, var(--bx-border-width, 1px)) dashed var(--bx-file-upload-border, var(--bx-border-strong));
+    border-radius: var(--bx-file-upload-radius, #{radius(lg)});
+    background: var(--bx-file-upload-background, var(--bx-bg-neutral));
+    color: var(--bx-text-heading);
+    text-align: center;
+    overflow-wrap: anywhere;
+
+    &.is-dragging {
+        border-color: var(--bx-text-brand);
+        border-style: solid;
+        background: var(--bx-bg-neutral-active);
+    }
+
+    &.is-disabled {
+        color: var(--bx-text-secondary);
+    }
+}
+
+.drop-icon {
+    color: var(--bx-text-brand);
+}
+
+.drop-label,
+.drop-hint {
+    margin: 0;
+}
+
+.drop-label,
+.file-name {
+    font-weight: 600;
+}
+
+.drop-hint,
+.file-state {
+    color: var(--bx-text-secondary);
+    font-size: 0.875rem;
+}
+
+.drop-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: spacing(2);
+    max-inline-size: 100%;
+}
+
+.drop-actions button,
+.list-actions button {
+    min-block-size: 2.75rem;
+    max-inline-size: 100%;
+    white-space: normal;
+}
+
+.action-adornment {
+    align-items: center;
+    flex: none;
+
+    &:empty,
+    &:has(.projected-icon:empty):not(:has(.action-icon)) {
+        display: none;
+    }
+}
+
+.projected-icon {
+    display: inline-flex;
+    align-items: center;
+
+    &:empty,
+    &:not(:empty) + .action-icon {
+        display: none;
+    }
+}
+
+.action-label {
+    min-inline-size: 0;
+}
+
+.files,
+.rejections {
+    display: grid;
+    gap: spacing(2);
+    margin: spacing(3) 0 0;
+    padding: 0;
+    list-style: none;
+    overflow-wrap: anywhere;
+}
+
+.rejections,
+.pause-error,
+.is-failed .file-state {
+    color: var(--bx-text-danger-readable, var(--bx-text-danger));
+}
+
+.list-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-block-start: spacing(2);
+}
+
+.file {
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    padding: spacing(3);
+    border: var(--bx-border-width, 1px) solid var(--bx-border-subtle);
+    border-radius: radius(md);
+    background: var(--bx-file-upload-row-background, var(--bx-bg-neutral));
+
+    &:focus {
+        outline: 2px solid var(--bx-text-brand);
+        outline-offset: -2px;
+    }
+}
+
+.file-type-icon {
+    flex: none;
+    color: var(--bx-text-secondary);
+
+    .is-failed & {
+        color: var(--bx-text-danger-readable, var(--bx-text-danger));
+    }
+}
+
+.file-controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: spacing(1);
+}
+
+.file-icon.bx-btn {
+    @include field-clear-action;
+
+    inline-size: spacing(8);
+    block-size: spacing(8);
+
+    &.is-retry:not(:disabled) {
+        color: var(--bx-text-danger-readable, var(--bx-text-danger));
+    }
+}
+
+.file-name:focus-visible {
+    outline: 2px solid var(--bx-border-brand);
+    outline-offset: 2px;
+}
+
+.file-copy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    flex: 1 1 7rem;
+    gap: spacing(1);
+    min-inline-size: 0;
+}
+
+@media (forced-colors: active) {
+    .drop-zone.is-dragging {
+        border-color: Highlight;
+    }
+}

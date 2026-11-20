@@ -2,7 +2,7 @@ import { ComponentType } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable, Injector } from '@angular/core';
 
-import { Subscription, take } from 'rxjs';
+import { Subscription, take, takeUntil } from 'rxjs';
 
 import { ToastRef } from '@toastr/classes/toast-ref';
 import { ToastCore } from '@toastr/components/toast-core/toast-core';
@@ -28,7 +28,7 @@ export class ToastrService {
 
   private readonly toastQueue: Array<() => void> = [];
   private readonly activeToasts: Set<object> = new Set<object>();
-  private readonly containers: Map<ToastPosition, HTMLElement> = new Map<ToastPosition, HTMLElement>();
+  private readonly containers: WeakMap<HTMLElement, Map<ToastPosition, HTMLElement>> = new WeakMap();
 
   private activePauses: number = 0;
   private isProcessingQueue: boolean = false;
@@ -37,21 +37,37 @@ export class ToastrService {
    * Displays a toast notification with the specified component and configuration.
    *
    * @param componentType - Angular toast component implementing the typed data/result contract.
-   * @param config - Optional content data, placement, lifetime, dismissal, and appearance overrides.
+   * @param config - Optional content data, placement, owning modal, lifetime, dismissal, and appearance overrides.
    * @typeParam D - Application data supplied to the dynamically created overlay content.
    * @typeParam R - Application result returned when the overlay content closes.
    * @typeParam C - Angular content component implementing the corresponding data and result contract.
-   * @returns
+   * @returns A toast reference. If the supplied modal has already closed, the reference is closed immediately.
    */
   public queueToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, config?: IToastConfig<D>): ToastRef<D, R> {
     const resolvedConfig = this.resolveConfig(config);
     const toastRef = new ToastRef<D, R>(resolvedConfig);
+    const modal = resolvedConfig.modal;
+    const host = modal ? modal.modalContainerElement : this.document.body;
     const queuedSubscription = new Subscription();
+
+    if (!host) {
+      toastRef.completeClose();
+
+      return toastRef;
+    }
 
     const build = (): void => {
       queuedSubscription.unsubscribe();
 
-      if (toastRef.state() !== 'closed') this.buildAndAttachToast(componentType, toastRef);
+      if (toastRef.state() === 'closed') return;
+
+      if (modal && modal.modalContainerElement !== host) {
+        toastRef.completeClose();
+
+        return;
+      }
+
+      this.buildAndAttachToast(componentType, toastRef, host);
     };
 
     queuedSubscription.add(
@@ -63,6 +79,10 @@ export class ToastrService {
         this.processQueue();
       })
     );
+    modal
+      ?.afterClosed()
+      .pipe(take(1), takeUntil(toastRef.afterClosed$))
+      .subscribe(() => toastRef.completeClose());
     this.toastQueue.push(build);
 
     this.processQueue();
@@ -79,6 +99,7 @@ export class ToastrService {
   public queueSuccess(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
+      modal: request.modal,
       data: {
         title: request.title,
         icon: request.icon,
@@ -106,6 +127,7 @@ export class ToastrService {
   public queueInfo(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
+      modal: request.modal,
       data: {
         title: request.title,
         icon: request.icon,
@@ -133,6 +155,7 @@ export class ToastrService {
   public queueWarning(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
+      modal: request.modal,
       data: {
         title: request.title,
         icon: request.icon,
@@ -160,6 +183,7 @@ export class ToastrService {
   public queueDanger(request: IQueueSimpleToastRequest): ToastRef<ISimpleToastData, undefined> {
     return this.queueToast<ISimpleToastData, undefined, SimpleToast>(SimpleToast, {
       position: request.position ?? this.toastrGlobalSettingsService.position(),
+      modal: request.modal,
       data: {
         title: request.title,
         icon: request.icon,
@@ -196,7 +220,7 @@ export class ToastrService {
     }
   }
 
-  private buildAndAttachToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, toastRef: ToastRef<D, R>): void {
+  private buildAndAttachToast<D, R, C extends IToast<D, R>>(componentType: ComponentType<C>, toastRef: ToastRef<D, R>, host: HTMLElement): void {
     const dataInjector = Injector.create({
       providers: [
         { provide: TOAST_DATA, useValue: toastRef.config().data },
@@ -263,7 +287,7 @@ export class ToastrService {
 
     toastRef.attach((result) => wrapperRef.instance.closeToast(result));
     this.applicationRef.attachView(wrapperRef.hostView);
-    this.getContainer(toastRef.config().position ?? 'top-right').appendChild(wrapperRef.location.nativeElement);
+    this.getContainer(host, toastRef.config().position ?? 'top-right').appendChild(wrapperRef.location.nativeElement);
     contentRef.instance.onToastInit?.();
   }
 
@@ -278,17 +302,19 @@ export class ToastrService {
     this.processQueue();
   }
 
-  private getContainer(position: ToastPosition): HTMLElement {
-    if (this.containers.has(position)) {
-      return this.containers.get(position) as HTMLElement;
-    }
+  private getContainer(host: HTMLElement, position: ToastPosition): HTMLElement {
+    const positions = this.containers.get(host) ?? new Map<ToastPosition, HTMLElement>();
+    const existing = positions.get(position);
+
+    if (existing) return existing;
 
     const container = this.document.createElement('div');
 
     container.classList.add('toast-container', `toast-container-${position}`);
-    this.document.body.appendChild(container);
+    host.appendChild(container);
 
-    this.containers.set(position, container);
+    positions.set(position, container);
+    this.containers.set(host, positions);
 
     return container;
   }

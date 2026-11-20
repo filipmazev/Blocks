@@ -1,4 +1,5 @@
 import type { GlassinessMode, GlassQuality } from '@filip.mazev/blocks/effects/runtime';
+import type { IModalRef } from '@filip.mazev/blocks/modal';
 
 import { ResolvableText, ThemedColor } from '@filip.mazev/blocks/core';
 
@@ -14,6 +15,8 @@ export interface IToastConfig<D = unknown> {
   data?: D;
   /** Optional screen placement; defaults to global settings (top-right). */
   position?: ToastPosition;
+  /** Optional owning Blocks modal. The toast renders inside its dialog and closes with it. Omit for document-level notifications. */
+  modal?: Pick<IModalRef<unknown, unknown>, 'modalContainerElement' | 'afterClosed'>;
   /** Optional wrapper class override; uses the default wrapper when absent. */
   wrapperClass?: string;
   /** Optional default backing; defaults to true. False suppresses the added glassiness enhancement. */

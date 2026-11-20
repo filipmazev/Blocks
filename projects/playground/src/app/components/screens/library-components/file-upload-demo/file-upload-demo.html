@@ -1,0 +1,34 @@
+<div class="demo">
+    <bx-file-upload
+        [session]="fileUploadDemoService.session"
+        [selection]="selection()"
+        [button]="browseButton"
+        [focusBatch]="focusBatch()"
+        (filesRejected)="onRejected($event)">
+        <bx-icon bxIconStart name="folder-open" size="16" />
+    </bx-file-upload>
+    <div class="demo-actions">
+        <button
+            type="button"
+            bx-button
+            variant="tonal"
+            [bxTooltip]="simulateImmediately() ? 'Simulate upload' : 'Add sample files'"
+            [bxTooltipDwell]="400"
+            (click)="addSamples()">
+            {{ simulateImmediately() ? 'Simulate upload' : 'Add sample files' }}
+        </button>
+        <a bx-button routerLink="/components" bxTooltip="Leave upload page" [bxTooltipDwell]="400">Leave upload page</a>
+    </div>
+    @if (simulateImmediately()) {
+        <p>
+            The simulation uploads two files. Try pausing, resuming, or canceling either one. The file with the long name fails on its first attempt. Hover over
+            it when clipped to read the full name.
+        </p>
+        <app-file-upload-controls-example />
+    } @else {
+        <p>
+            Add the sample files to see one upload succeed and one fail. Hover over the clipped filename to read it in full. Leave during upload to follow it in
+            a toast.
+        </p>
+    }
+</div>

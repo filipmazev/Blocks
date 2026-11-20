@@ -100,6 +100,11 @@ Single select and multiselect support application-owned requests, comparison, te
 `LoadMoreDirective`, which can also be used by future paginated components. See the [load-more guide](directives/load-more/README.md) and
 [multiselect guide](components/multi-select/README.md).
 
+## File uploads
+
+Use [File Upload](components/file-upload/README.md) for an inline drop zone with application-owned requests, progress and retry. An upload session can be shared
+across routes to keep a batch available for background progress and retry.
+
 ## Appearance and accessibility
 
 Controls follow Blocks semantic tokens, global theme/appearance configuration, reduced motion through `BxA11yService`, and reactive text resolution through

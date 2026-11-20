@@ -8,7 +8,7 @@ import type { DemoArgs } from '@playground/types/demo.types';
 /** Only composition and example intent belong here; the public API comes from the declarations. */
 export interface IDemoRecipe {
   use?: string;
-  adapter?: 'modal' | 'toast';
+  adapter?: 'modal' | 'toast' | 'file-upload';
   symbol?: string;
   package?: string;
   styles?: string;

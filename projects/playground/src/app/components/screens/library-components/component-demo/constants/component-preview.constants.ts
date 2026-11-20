@@ -49,6 +49,7 @@ export const COMPONENT_PREVIEW_KINDS: Readonly<Record<string, ComponentPreviewKi
   'slide-toggle': 'toggle',
   slider: 'slider',
   'range-slider': 'range-slider',
+  'file-upload': 'file-upload',
   select: 'select',
   'multi-select': 'multiselect',
   autocomplete: 'autocomplete',

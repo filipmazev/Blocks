@@ -1,0 +1,241 @@
+<div
+    #zone
+    class="drop-zone"
+    [class.is-dragging]="dragging() && editable()"
+    [class.is-disabled]="disabled()"
+    (dragover)="dragOver($event)"
+    (dragleave)="dragLeave($event, zone)"
+    (drop)="drop($event)">
+    <input
+        #fileInput
+        type="file"
+        hidden
+        [attr.accept]="accept()"
+        [multiple]="selection().multiple === true"
+        [disabled]="!editable()"
+        (change)="choose(fileInput)" />
+    <bx-icon class="drop-icon" name="cloud-upload" size="28" aria-hidden="true" />
+    <p class="drop-label">{{ text().drop }}</p>
+    @if (text().hint) {
+        <p class="drop-hint">{{ text().hint }}</p>
+    }
+    <div #dropActions class="drop-actions">
+        <button
+            #browseTarget
+            type="button"
+            bx-button
+            [variant]="browseButton() ? 'tonal' : 'text'"
+            [disabled]="disabled()"
+            [interactive]="editable()"
+            [attr.aria-description]="browseDescription() || null"
+            [attr.aria-describedby]="rejections().length ? validationId : null"
+            [bxTooltip]="(browseButton() ? buttonLabel() : '') || text().browse"
+            [bxTooltipDwell]="tooltipDwell"
+            (click)="browse()">
+            <span bxIconStart class="action-adornment" aria-hidden="true">
+                @if (browseButton(); as config) {
+                    <ng-container *ngTemplateOutlet="startIcon; context: { $implicit: config }" />
+                }
+            </span>
+            <span class="action-label">{{ (browseButton() ? buttonLabel() : '') || text().browse }}</span>
+            <span bxIconEnd class="action-adornment" aria-hidden="true">
+                @if (browseButton(); as config) {
+                    <ng-container *ngTemplateOutlet="endIcon; context: { $implicit: config }" />
+                }
+            </span>
+        </button>
+        @if (uploadButton() || session().staged().length) {
+            <button
+                type="button"
+                bx-button
+                variant="filled"
+                [disabled]="!editable() || !session().staged().length"
+                [bxTooltip]="(uploadButton() ? buttonLabel() : '') || text().upload"
+                [bxTooltipDwell]="tooltipDwell"
+                (click)="start()">
+                <span bxIconStart class="action-adornment" aria-hidden="true">
+                    @if (uploadButton(); as config) {
+                        <ng-container *ngTemplateOutlet="startIcon; context: { $implicit: config }" />
+                    }
+                </span>
+                <span class="action-label">{{ (uploadButton() ? buttonLabel() : '') || text().upload }}</span>
+                <span bxIconEnd class="action-adornment" aria-hidden="true">
+                    @if (uploadButton(); as config) {
+                        <ng-container *ngTemplateOutlet="endIcon; context: { $implicit: config }" />
+                    }
+                </span>
+            </button>
+        }
+    </div>
+</div>
+
+<ng-template #startIcon let-config>
+    <span class="projected-icon"><ng-content select="[bxIconStart]" /></span>
+    @if (config.iconStart) {
+        <bx-icon class="action-icon" size="16" [name]="config.iconStart" />
+    }
+</ng-template>
+
+<ng-template #endIcon let-config>
+    <span class="projected-icon"><ng-content select="[bxIconEnd]" /></span>
+    @if (config.iconEnd) {
+        <bx-icon class="action-icon" size="16" [name]="config.iconEnd" />
+    }
+</ng-template>
+
+<div class="validation" role="status" [id]="validationId">
+    @if (rejections().length) {
+        <ul class="rejections">
+            @for (item of rejections(); track $index) {
+                <li>
+                    {{ item.file.name }} —
+                    @switch (item.reason) {
+                        @case ('type') {
+                            {{ text().invalidType }}
+                        }
+                        @case ('size') {
+                            {{ text().invalidSize }}
+                        }
+                        @case ('count') {
+                            {{ text().invalidCount }}
+                        }
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@if (rejections().length || session().staged().length || session().batches().length) {
+    <div class="list-actions">
+        <button
+            type="button"
+            bx-button
+            variant="tonal"
+            color="grayscale"
+            [disabled]="!canClear()"
+            [bxTooltip]="text().clearAll"
+            [bxTooltipDwell]="tooltipDwell"
+            (click)="clearAll()">
+            {{ text().clearAll }}
+        </button>
+    </div>
+}
+
+@if (session().staged().length || session().batches().length) {
+    <ul class="files">
+        @for (file of session().staged(); track file.id) {
+            <li
+                bxSwipeActions
+                [leftSwipeActions]="removeActions()"
+                [swipeDisabled]="!editable()"
+                [swipeDismissFocus]="dropActions"
+                [swipeTooltipDwell]="tooltipDwell"
+                (swipeDismissed)="finishSwipe(file.id)">
+                <ng-container *ngTemplateOutlet="fileRow; context: { $implicit: file }" />
+            </li>
+        }
+        @for (batch of session().batches(); track batch.id) {
+            @for (file of batch.files; track file.id) {
+                <li><ng-container *ngTemplateOutlet="fileRow; context: { $implicit: file, batchId: batch.id }" /></li>
+            }
+        }
+    </ul>
+}
+
+<ng-template #fileRow let-file let-batchId="batchId">
+    <div #row bxSwipeContent class="file" role="group" tabindex="-1" [attr.aria-label]="file.file.name" [class.is-failed]="file.status === 'failed'">
+        <bx-icon class="file-type-icon" size="24" aria-hidden="true" [name]="fileIcon(file)" />
+        <div class="file-copy">
+            <span
+                #filenameOverflow="bxTruncate"
+                class="file-name"
+                bxTruncate
+                [bxTooltipTouch]="filenameOverflow.truncated() ? 'tap' : 'none'"
+                [attr.tabindex]="filenameOverflow.truncated() ? 0 : null"
+                [bxTooltip]="file.file.name | bxTruncatedText: filenameOverflow.truncated()"
+                [bxTooltipDwell]="tooltipDwell">
+                <bdi>{{ file.file.name }}</bdi>
+            </span>
+            <span class="file-state" aria-live="polite">
+                @switch (file.status) {
+                    @case ('queued') {
+                        {{ text().queued }}
+                    }
+                    @case ('uploading') {
+                        {{ file.paused ? text().paused : text().uploading }}
+                    }
+                    @case ('uploaded') {
+                        {{ text().uploaded }}
+                    }
+                    @case ('failed') {
+                        {{ errors().get(file.id) }}
+                    }
+                    @case ('canceled') {
+                        {{ text().canceled }}
+                    }
+                }
+            </span>
+            @if (file.pauseFailed) {
+                <span class="file-state pause-error" role="status">{{ text().pauseFailed }}</span>
+            }
+            @if (file.status === 'uploading' && (!file.paused || file.progress !== undefined)) {
+                <bx-progress-bar
+                    [mode]="file.progress === undefined ? 'indeterminate' : 'determinate'"
+                    [value]="file.progress ?? 0"
+                    [label]="fileLabel()(file.paused ? text().paused : text().uploading, file.file.name)" />
+            }
+        </div>
+        @if (file.status !== 'canceled') {
+            <div class="file-controls">
+                @if (file.status === 'failed') {
+                    <button
+                        #retryTarget
+                        class="file-icon is-retry"
+                        type="button"
+                        bx-button
+                        variant="text"
+                        color="danger"
+                        [surfaceEffects]="false"
+                        [attr.data-batch]="batchId"
+                        [disabled]="!editable()"
+                        [attr.aria-label]="fileLabel()(text().retry, file.file.name)"
+                        [bxTooltip]="text().retry"
+                        [bxTooltipDwell]="tooltipDwell"
+                        (click)="retry(batchId, file.id, row)">
+                        <bx-icon name="rotate-cw" size="20" aria-hidden="true" />
+                    </button>
+                }
+                @if (file.status === 'uploading' && file.pausable) {
+                    <button
+                        class="file-icon"
+                        type="button"
+                        bx-button
+                        variant="text"
+                        [surfaceEffects]="false"
+                        [disabled]="!editable()"
+                        [loading]="file.pausePending"
+                        [attr.aria-label]="fileLabel()(file.paused ? text().resume : text().pause, file.file.name)"
+                        [bxTooltip]="file.paused ? text().resume : text().pause"
+                        [bxTooltipDwell]="tooltipDwell"
+                        (click)="togglePause(file, batchId)">
+                        <bx-icon size="20" aria-hidden="true" [name]="file.paused ? 'play' : 'pause'" />
+                    </button>
+                }
+                <button
+                    class="file-icon"
+                    type="button"
+                    bx-button
+                    variant="text"
+                    [surfaceEffects]="false"
+                    [disabled]="!canRemove(file)"
+                    [attr.aria-label]="fileLabel()(file.status === 'uploading' ? text().cancel : text().remove, file.file.name)"
+                    [bxTooltip]="file.status === 'uploading' ? text().cancel : text().remove"
+                    [bxTooltipDwell]="tooltipDwell"
+                    (click)="activateRowAction(file, row, batchId)">
+                    <bx-icon name="x" size="20" aria-hidden="true" />
+                </button>
+            </div>
+        }
+    </div>
+</ng-template>

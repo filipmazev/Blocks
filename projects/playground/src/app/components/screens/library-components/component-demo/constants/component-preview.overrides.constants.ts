@@ -40,6 +40,7 @@ export const COMPONENT_PREVIEW_OVERRIDES: Readonly<Partial<Record<string, Compon
   'load-more': 'load-more',
   button: 'button',
   'button-loading': 'loading-button',
+  'file-upload': 'file-upload',
   'form-field': 'field',
   'native-control': 'textarea',
   'input-field': 'input-field',

@@ -1,0 +1,101 @@
+@use '../../../core/styles/helpers' as *;
+
+.toast-content {
+    --upload-toast-icon: var(--bx-text-info);
+
+    display: flex;
+    align-items: flex-start;
+    gap: spacing(3);
+    padding: spacing(4);
+    padding-inline-end: spacing(10);
+
+    &[data-kind='success'] {
+        --upload-toast-icon: var(--bx-text-success);
+    }
+
+    &[data-kind='failure'] {
+        --upload-toast-icon: var(--bx-text-danger);
+    }
+}
+
+.toast-icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    min-inline-size: spacing(6);
+    min-block-size: spacing(6);
+    color: var(--upload-toast-icon);
+}
+
+.toast-copy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    flex: 1;
+    gap: spacing(1);
+    min-inline-size: 0;
+    color: var(--bx-text-secondary);
+    overflow-wrap: anywhere;
+
+    h4 {
+        margin: 0;
+        color: var(--bx-text-heading);
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    bx-progress-bar {
+        --bx-progress-color: var(--upload-toast-icon);
+
+        margin-block-start: spacing(2);
+    }
+}
+
+.toast-context,
+.toast-filenames,
+.counts {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.toast-details {
+    display: flex;
+    align-items: center;
+    column-gap: spacing(2);
+    inline-size: 100%;
+}
+
+.toast-filenames {
+    flex: 1;
+    min-inline-size: 0;
+
+    &:focus-visible {
+        outline: 2px solid var(--bx-border-brand);
+        outline-offset: 2px;
+    }
+}
+
+.counts {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: spacing(3);
+    margin-block-start: spacing(1);
+    font-variant-numeric: tabular-nums;
+}
+
+.toast-action {
+    margin-block-start: spacing(2);
+    min-block-size: 2.75rem;
+    max-inline-size: 100%;
+    text-align: start;
+    white-space: normal;
+}
+
+.toast-retry.bx-btn {
+    flex: none;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    padding: 0;
+}

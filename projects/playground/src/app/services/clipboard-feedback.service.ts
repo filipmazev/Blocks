@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 
 import type { ToastRef } from '@filip.mazev/blocks/toastr';
 
+import { ModalRef } from '@filip.mazev/blocks/modal';
 import { ToastrService } from '@filip.mazev/blocks/toastr';
 
 import { CopyFeedback } from '@playground/components/shared/copy-feedback/copy-feedback';
@@ -10,6 +11,7 @@ import { CopyFeedback } from '@playground/components/shared/copy-feedback/copy-f
 @Injectable({ providedIn: 'root' })
 export class ClipboardFeedbackService {
   private readonly clipboard = inject(Clipboard);
+  private readonly modalRef = inject(ModalRef, { optional: true });
   private readonly toastrService = inject(ToastrService);
 
   private toast: ToastRef<undefined, undefined> | undefined;
@@ -22,6 +24,7 @@ export class ClipboardFeedbackService {
     } else {
       this.toast = this.toastrService.queueToast<undefined, undefined, CopyFeedback>(CopyFeedback, {
         position: 'bottom-right',
+        modal: this.modalRef ?? undefined,
         durationInMs: 2400,
         showCloseButton: false,
         showProgressBar: false,

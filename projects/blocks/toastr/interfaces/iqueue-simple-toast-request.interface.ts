@@ -2,6 +2,7 @@ import type { IIconData } from '@filip.mazev/blocks/icons';
 
 import { ResolvableText } from '@filip.mazev/blocks/core';
 
+import { IToastConfig } from '@toastr/interfaces/itoast-config.interface';
 import { ToastPosition } from '@toastr/types/toastr.types';
 
 /**
@@ -22,6 +23,8 @@ export interface IQueueSimpleToastRequest {
   animate?: boolean;
   /** Toast placement in the viewport. Optional; omission uses the shared toast position. */
   position?: ToastPosition;
+  /** Optional owning Blocks modal. The toast renders inside its dialog and closes with it. Omit for document-level notifications. */
+  modal?: IToastConfig['modal'];
   /** Automatic dismissal delay in milliseconds; zero keeps the toast open. Optional; omission uses the shared duration. */
   durationInMs?: number;
   /** Whether to render a dismissal button. Optional; omission uses the shared toast setting. */

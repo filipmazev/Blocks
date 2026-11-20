@@ -2,6 +2,7 @@ import type { InputSignal, OutputEmitterRef, WritableSignal } from '@angular/cor
 
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 import type { ISimpleToastData, SimpleToastType, ToastRef } from '@filip.mazev/blocks/toastr';
 import type { IDemoAction } from '@playground/interfaces/idemo-action.interface';
@@ -20,7 +21,7 @@ import { TOAST_STORY_DEFAULTS } from '@playground/shared/constants/toast-story.c
 
 @Component({
   selector: 'app-toastr-demo',
-  imports: [Button, Icon, Collapsible],
+  imports: [Button, Icon, Collapsible, RouterLink],
   templateUrl: './toastr.html',
   styleUrl: './toastr.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

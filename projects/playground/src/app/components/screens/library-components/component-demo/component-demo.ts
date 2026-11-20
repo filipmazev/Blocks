@@ -36,6 +36,7 @@ import { CalendarExamples } from '@playground/components/screens/library-compone
 import { IComponentDialogData } from '@playground/components/screens/library-components/component-demo/interfaces/icomponent-dialog-data.interface';
 import { DatePickerExamples } from '@playground/components/screens/library-components/date-picker-examples/date-picker-examples';
 import { EssentialsExamples } from '@playground/components/screens/library-components/essentials-examples/essentials-examples';
+import { FileUploadDemo } from '@playground/components/screens/library-components/file-upload-demo/file-upload-demo';
 import { FormExamples } from '@playground/components/screens/library-components/form-examples/form-examples';
 import { InfiniteScrollExamples } from '@playground/components/screens/library-components/infinite-scroll-examples/infinite-scroll-examples';
 import { MenuShortcutExamples } from '@playground/components/screens/library-components/menu-shortcut-examples/menu-shortcut-examples';
@@ -77,6 +78,7 @@ import { ComponentDialog } from './component-dialog';
     PageHeader,
     DemoWorkbench,
     RouterLink,
+    FileUploadDemo,
     FormExamples,
     SearchExamples,
     EssentialsExamples,
